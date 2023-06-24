@@ -1,90 +1,63 @@
 :root {
   --theme: #02001c;
-  --background: #efefef
+  --background: #efefef;
 }
-
 .content {
-  /* Auto layout */
-
   display: flex;
   flex-direction: column;
-  align-items: center;
-  margin: 20px;
-  flex-grow: 1;
-
-  /* Inside auto layout */
-
-  flex: none;
-  order: 3;
-  align-self: stretch;
-  flex-grow: 1;
+  height: 100vh;
+  background-color: bisque;
 }
 
-.content-header {
-  /* Auto layout */
+.content > header {
+  display: block;
+  height: 30px;
+  background-color: aqua;
+}
 
+.content > main {
+  /*parent*/
   display: flex;
+  flex: 1;
+  gap: 30px 30px;
+  padding: 25px;
+  background-color: gray;
+  /*child*/
   flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 32px 50px;
-  gap: 20px;
-
-  width: 500px;
-  height: 107px;
-
-  /* Theme system shs */
-
-  background: lightblue;
-
-  /* Inside auto layout */
-
-  flex: none;
-  order: 1;
-  align-self: stretch;
-  flex-grow: 0;
+  align-items: stretch;
 }
 
 .floating {
-  /* Auto layout */
-
+  /*parent*/
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 32px 16px;
-
-  width: 500px;
-  height: auto;
-
   background: #ffffff;
   box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.25);
   border-radius: 10px;
 
-  /* Inside auto layout */
-
-  flex: none;
-  order: 0;
-  flex-grow: 0;
+  /* child */
+  flex-direction: column;
+  padding: 10px;
+  margin-block: 0px;
 }
 
-.floating-header {
-  /* Auto layout */
+/* .floating {
+  //element testing
+  border-style: solid;
+  box-sizing: border-box;
+} */
 
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  padding: 0px;
-  gap: 10px;
+.floating > header > h3 {
+  margin: 0px;
+}
 
+.floating > header > small {
+  display: block;
+}
+
+.floating > main {
+  overflow-x: auto;
+}
+
+table {
   width: 100%;
-  height: 43px;
-
-  /* Inside auto layout */
-  background: limegreen;
-  flex: none;
-  order: 0;
-  align-self: stretch;
-  flex-grow: 0;
 }

@@ -1,0 +1,14 @@
+* {
+  font-family: "Lato";
+}
+
+/* override table fonts*/
+table * {
+  font-family: "Arimo";
+}
+th {
+  font-size: 16px;
+}
+td {
+  font-size: 14px;
+}
