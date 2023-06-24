@@ -2,17 +2,64 @@
   --theme: #02001c;
   --background: #efefef;
 }
+
+/* CONTENT CONTENT CONTENT CONTENT */
+
 .content {
+  /* parent */
   display: flex;
-  flex-direction: column;
   height: 100vh;
   background-color: bisque;
+  /* child */
+  flex-direction: column;
+  align-items: stretch;
 }
 
-.content > header {
-  display: block;
+.content > nav {
   height: 30px;
+  padding: 15px 50px;
+}
+
+.content-header {
+  color: white;
+  display: flex;
+  flex-direction: column;
+  background-color: rgb(3, 0, 29);
+  position: relative;
+  padding: 30px;
+  gap: 10px;
+}
+.content-header > header > h1 {
+  margin: 0px;
+}
+.content-header > header > h1 > em {
+  font-weight: 100;
+  font-style: normal;
+}
+.content-header > header > small {
+  display: block;
+}
+.content-header > header > .action {
+  position: absolute;
+  right: 30px;
+  top: 50px;
   background-color: aqua;
+}
+
+.content-header > .cards {
+  display: flex;
+  justify-content: space-around;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.cards > .card > sub,
+.cards > .card > sup {
+  display: block;
+  font-size: medium;
+  text-align: center;
+  font-weight: normal;
+  color: gray;
 }
 
 .content > main {
@@ -27,37 +74,43 @@
   align-items: stretch;
 }
 
+/* FLOATING FLOATING FLOATING FLOATING */
+
 .floating {
   /*parent*/
   display: flex;
   background: #ffffff;
   box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.25);
+  padding: 15px;
   border-radius: 10px;
 
   /* child */
   flex-direction: column;
-  padding: 10px;
   margin-block: 0px;
+  gap: 15px;
 }
-
-/* .floating {
-  //element testing
-  border-style: solid;
-  box-sizing: border-box;
-} */
-
+.floating > header {
+  position: relative;
+}
 .floating > header > h3 {
   margin: 0px;
 }
-
 .floating > header > small {
   display: block;
 }
-
+.floating > header > .action {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  background-color: aqua;
+}
 .floating > main {
   overflow-x: auto;
 }
 
 table {
   width: 100%;
+}
+td {
+  text-align: center;
 }
