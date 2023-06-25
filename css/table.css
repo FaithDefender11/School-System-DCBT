@@ -1,3 +1,7 @@
+:root {
+  --th-color: rgb(230, 230, 230);
+}
+
 /* table scroll style */
 
 .floating > main::-webkit-scrollbar {
@@ -26,11 +30,9 @@ table {
   border-collapse: collapse;
 }
 thead {
-  background-color: #d4d4d4;
-  font-size: 16px;
+  background-color: var(--th-color);
 }
 tbody {
-  font-size: 14px;
 }
 th,
 td {
