@@ -1,6 +1,6 @@
 :root {
   --theme: #02001c;
-  --background: #efefef;
+  --mainContentBG: #efefef;
 }
 
 /* CONTENT CONTENT CONTENT CONTENT */
@@ -50,6 +50,7 @@
   justify-content: space-around;
   flex-direction: row;
   gap: 10px;
+  flex-wrap: wrap;
 }
 
 .cards > .card > sub,
@@ -61,13 +62,38 @@
   color: gray;
 }
 
+.tabs {
+  /* parent */
+  display: flex;
+  background-color: var(--theme);
+  padding: 20px 50px 0px 50px;
+  /* child */
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.tab {
+  /* parent */
+  display: flex;
+  flex: 1;
+  padding: 10px;
+  background-color: var(--mainContentBG);
+  /* child */
+  justify-content: center;
+  font-weight: bold;
+}
+
+.tab i {
+  padding: 0px 5px 0px 5px;
+}
+
 .content > main {
   /*parent*/
   display: flex;
   flex: 1;
   gap: 30px 30px;
   padding: 25px;
-  background-color: var(--background);
+  background-color: var(--mainContentBG);
   /*child*/
   flex-direction: column;
   align-items: stretch;
