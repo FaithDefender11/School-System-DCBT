@@ -5,7 +5,7 @@
         <table class="table table-bordered ">
             <thead>
                 <tr>
-                <th>Header 1</th>
+                <th>HeaderDDDD 1</th>
                 <th>Header 2</th>
                 <th>Header 3</th>
                 </tr>
