@@ -107,10 +107,3 @@
 .floating > main {
   overflow-x: auto;
 }
-
-table {
-  width: 100%;
-}
-td {
-  text-align: center;
-}

@@ -1,0 +1,47 @@
+/* table scroll style */
+
+.floating > main::-webkit-scrollbar {
+  height: 10px;
+}
+
+/* Track */
+.floating > main::-webkit-scrollbar-track {
+  background: #dddddd;
+}
+
+/* Handle */
+.floating > main::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+.floating > main::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* table design */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+thead {
+  background-color: #d4d4d4;
+  font-size: 16px;
+}
+tbody {
+  font-size: 14px;
+}
+th,
+td {
+  padding: 5px;
+  text-align: center;
+}
+/* for tables with multiple height */
+td > p {
+  margin: 0;
+}
+/*tables with important data*/
+td.important {
+  font-weight: bold;
+}
