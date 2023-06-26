@@ -1,7 +1,8 @@
-<?php include_once('includes/registrar_header.php')?>
+<?php include_once('../../includes/registrar_header.php')?>
+
 
     <div class="col-md-12 row table-responsive">
-        <h4 class="text-center">Registrar Enrollment History List</h4>
+        <h4 class="text-center">Registrar Admission List</h4>
         <table class="table table-bordered ">
             <thead>
                 <tr>
@@ -30,4 +31,4 @@
         </table>
     </div>
 
-<?php include_once('includes/footer.php') ?>
+<?php include_once('../../includes/footer.php') ?>

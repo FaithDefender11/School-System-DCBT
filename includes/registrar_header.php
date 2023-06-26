@@ -1,8 +1,10 @@
 <?php
 
-    require_once('includes/config.php');
-    require_once('includes/navigation/RegistrarNavigationMenuProvider.php');
-    require_once('includes/classes/User.php');
+    require_once('../../includes/config.php');
+    require_once('../../includes/navigation/RegistrarNavigationMenuProvider.php');
+    require_once('../../includes/classes/User.php');
+    require_once('../../includes/classes/Helper.php');
+    require_once('../../includes/classes/Constants.php');
 
     $registrarLoggedIn = isset($_SESSION["registrarLoggedIn"]) 
         ? $_SESSION["registrarLoggedIn"] : "";
@@ -13,7 +15,9 @@
         header("Location: /school-system-dcbt/enrollment_login.php");
         exit();
     }
-    // session_destroy();
+
+    $page = Helper::GetUrlPath();
+    $document_title = Helper::DocumentTitlePage($page);
 
 ?>
 
@@ -27,15 +31,20 @@
             href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
         />
 
-        <link rel="stylesheet" type="text/css" href="assets/css/main_style.css">
+        <link rel="stylesheet" type="text/css" href="../../assets/css/main_style.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> 
+        <title><?php echo "Registrar " . $document_title; ?></title>
+
+        <!-- Mododify the Logo of DCBT Here and Please apply some styling. -->
+        <link rel="icon" href="../../assets/images/icons/menu.png" type="image/png">
+
     </head>
 <body>
     <div class="pageContainer">
        
-        <div class="sidebar-nav">
+        <div class="sidebar-nav" style="color: white;">
             <div class="sidebar-profile">
                 <h3><?php echo $registrarLoggedInObj->getFirstName(); ?> <?php echo $registrarLoggedInObj->getLastName(); ?> </h3>
                 <p class="user_email"><?php echo $registrarLoggedInObj->getUsername(); ?></p>
@@ -45,7 +54,7 @@
             <!-- OOP APPROACH ( WE MUST FOLLOW THE INDUSTRY BEST PRACTICES )  -->
             <?php
                 $nav = new RegistrarNavigationMenuProvider($con, $registrarLoggedInObj);
-                echo $nav->create();
+                echo $nav->create($page);
             ?>
 
             <!-- BAD PRACTICES. -->
@@ -73,4 +82,12 @@
         <div class="mainSectionContainer">
             <div class="mainContentContainer">
 
-        
+
+<script>
+$(document).ready(function() {
+    $('.navigationItem').click(function() {
+        $('.navigationItem').removeClass('active'); // Remove "active" class from all navigation items
+        $(this).addClass('active'); // Add "active" class to the clicked navigation item
+    });
+});
+</script>

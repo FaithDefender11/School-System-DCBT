@@ -33,7 +33,9 @@ if(isset($_POST["enrollment_log_in_btn"])) {
 
         // echo "true registrar";
         $_SESSION["registrarLoggedIn"] = $username;
-        header("Location: registrar_dashboard.php");
+        // header("Location: registrar_dashboard.php");
+        header("Location: registrar/dashboard/index.php");
+
         exit();
 
     }
@@ -43,7 +45,9 @@ if(isset($_POST["enrollment_log_in_btn"])) {
 
         // echo "true cashier";
         $_SESSION["cashierLoggedIn"] = $username;
-        header("Location: cashier_dashboard.php");
+        // header("Location: cashier_dashboard.php");
+        header("Location: cashier/dashboard/index.php");
+
         exit();
 
     }

@@ -1,7 +1,7 @@
-<?php include_once('includes/cashier_header.php')?>
+<?php include_once('../../includes/cashier_header.php')?>
 
     <div class="col-md-12 row table-responsive">
-        <h4 class="text-center">Cashier Payment History</h4>
+        <h4 class="text-center">Cashier Payment Index</h4>
         <table class="table table-bordered ">
             <thead>
                 <tr>
@@ -30,4 +30,4 @@
         </table>
     </div>
 
-<?php include_once('includes/footer.php') ?>
+<?php include_once('../../includes/footer.php') ?>

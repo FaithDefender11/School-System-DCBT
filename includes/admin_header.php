@@ -4,26 +4,22 @@
     require_once('../../includes/config.php');
     require_once('../../includes/navigation/AdminNavigationMenuProvider.php');
     require_once('../../includes/classes/User.php');
+    require_once('../../includes/classes/Helper.php');
+    require_once('../../includes/classes/Constants.php');
 
     $adminLoggedIn = isset($_SESSION["adminLoggedIn"]) 
         ? $_SESSION["adminLoggedIn"] : "";
     
     $adminLoggedInObj = new User($con, $adminLoggedIn);
 
-    // session_destroy();
     if (!isset($_SESSION['adminLoggedIn']) || $_SESSION['adminLoggedIn'] == '') {
         header("Location: /school-system-dcbt/enrollment_login.php");
         exit();
     }
+ 
+    $page = Helper::GetUrlPath();
+    $document_title = Helper::DocumentTitlePage($page);
 
-    $directoryURI = $_SERVER['REQUEST_URI'];
-    $path = parse_url($directoryURI, PHP_URL_PATH);
-    $components = explode('/', $path);
-
-    // var_dump($components);
-    $page = $components[3];
-    // echo $page;
-    
 ?>
 
 <!DOCTYPE html>
@@ -41,6 +37,10 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> 
      
+        <title><?php echo "Administrator " . $document_title;?></title>
+        <!-- Mododify the Logo of DCBT Here and Please apply some styling. -->
+        <link rel="icon" href="../../assets/images/icons/menu.png" type="image/png">
+
     </head>
 <body>
 
@@ -90,25 +90,10 @@
 
 
 <script>
-//   function toggleActive(event) {
-//     event.preventDefault(); // Prevent the default behavior of the anchor tag
-
-//     // Remove "active" class from all navigation items
-//     var navigationItems = document.querySelectorAll('.navigationItem');
-//     navigationItems.forEach(function(item) {
-//       item.classList.remove('active');
-//     });
-
-//     // Add "active" class to the clicked navigation item
-//     var clickedItem = event.target.closest('.navigationItem');
-//     clickedItem.classList.add('active');
-//   }
-
-$(document).ready(function() {
-  $('.navigationItem').click(function() {
-    $('.navigationItem').removeClass('active'); // Remove "active" class from all navigation items
-    $(this).addClass('active'); // Add "active" class to the clicked navigation item
-  });
-});
-
+    $(document).ready(function() {
+    $('.navigationItem').click(function() {
+        $('.navigationItem').removeClass('active'); // Remove "active" class from all navigation items
+        $(this).addClass('active'); // Add "active" class to the clicked navigation item
+    });
+    });
 </script>

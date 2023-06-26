@@ -11,8 +11,9 @@
     define('DB_DATABASE', 'dcbt');
     
     try {
-
+        
         // string that specifies the details of the database connection, including the database driver
+
         $data_source = "mysql:host=" . DB_HOST . ";port=" . DB_PORT . ";dbname=" . DB_DATABASE;
         $con = new PDO($data_source, DB_USERNAME, DB_PASSWORD);
         $con = new PDO('mysql:host=localhost;port=3307;dbname=dcbt', 'root', '');
@@ -26,10 +27,10 @@
         
         define ('web_root' , $web_root);
 
-        $base_url = (isset($_SERVER['HTTPS']) 
-                        && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']);
+        // $base_url = (isset($_SERVER['HTTPS']) 
+        //                 && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']);
 
-        define ('base_url' , $base_url);
+        // define ('base_url' , $base_url);
 
         $currentURL = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https://" : "http://";
         $currentURL .= $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
@@ -37,12 +38,16 @@
         // Extract the directory path from the current URL
         $directoryPath = dirname($currentURL);
 
+        // echo $directoryPath;
 
         // FIX THE URL. WILL REDIRECT PROPERLY ESPECIALLY IN THE PRODUCTION
         if ($_SERVER['SERVER_NAME'] === 'localhost') {
+
             define('directoryPath', $directoryPath . '/');
             define('ROOT_DIR', basename(__DIR__));
+
         } else {
+
             $base_url2 = 'http://www.example.com/elms/admin';
             define ('base_url2' , $base_url2);
             define('directoryPath', $directoryPath . '/');

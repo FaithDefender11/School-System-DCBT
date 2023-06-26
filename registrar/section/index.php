@@ -1,11 +1,12 @@
-<?php include_once('includes/cashier_header.php')?>
+<?php include_once('../../includes/registrar_header.php')?>
+
 
     <div class="col-md-12 row table-responsive">
-        <h4 class="text-center">Cashier Dashboard</h4>
+        <h4 class="text-center">Registrar Section List</h4>
         <table class="table table-bordered ">
             <thead>
                 <tr>
-                <th>HeaderDDDD 1</th>
+                <th>Header 1</th>
                 <th>Header 2</th>
                 <th>Header 3</th>
                 </tr>
@@ -30,4 +31,4 @@
         </table>
     </div>
 
-<?php include_once('includes/footer.php') ?>
+<?php include_once('../../includes/footer.php') ?>
