@@ -168,16 +168,6 @@
   padding: 0px 20px;
 }
 
-.floating>header>.action>.add-btn {
-  width: 120px;
-  height: 32px;
-  border-radius: 10px;
-  background: #A4A7FC;
-  color: var(--mainContentBG);
-  cursor: pointer;
-  border: none;
-}
-
 .floating>main {
   overflow-x: auto;
 }
