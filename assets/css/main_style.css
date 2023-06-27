@@ -35,7 +35,6 @@ body {
 .mainContentContainer {
   flex: 1;
   padding: 10px 30px;
-  /* background-color: solid orange; */
 }
 
 .sidebar-nav h3 {

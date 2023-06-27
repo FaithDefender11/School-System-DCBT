@@ -43,7 +43,7 @@
               <h3>Teachers</h3>
             </div>
             <div class="action">
-              <button type="button" class="add-btn">+ Add new</button>
+              <button type="button" class="default large">+ Add new</button>
             </div>
           </header>
           <main>
@@ -73,7 +73,7 @@
                   <td>
                     <button
                       type="button"
-                      class="action-btn"
+                      class="information"
                       id="view"
                       onclick="view()"
                     >
@@ -93,7 +93,7 @@
               <h3>Teachers</h3>
             </div>
             <div class="action">
-              <button type="button" class="add-btn">+ Add new</button>
+              <button type="button" class="default large">+ Add new</button>
             </div>
           </header>
           <main>
@@ -123,7 +123,7 @@
                   <td>
                     <button
                       type="button"
-                      class="action-btn"
+                      class="information"
                       id="view"
                       onclick="view()"
                     >
@@ -184,7 +184,7 @@
             </table>
           </div>
           <div class="action">
-            <button type="button" class="search-btn">
+            <button type="button" class="default">
               <i class="bi bi-search"></i>Search
             </button>
           </div>
@@ -215,7 +215,7 @@
                 <td>
                   <button
                     type="button"
-                    class="action-btn"
+                    class="default"
                     id="edit"
                     onclick="edit()"
                   >
@@ -275,7 +275,7 @@
             </table>
           </div>
           <div class="action">
-            <button type="button" class="search-btn">
+            <button type="button" class="default">
               <i class="bi bi-search"></i>Search
             </button>
           </div>
@@ -306,7 +306,7 @@
                 <td>
                   <button
                     type="button"
-                    class="action-btn"
+                    class="default"
                     id="edit"
                     onclick="edit()"
                   >
