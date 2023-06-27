@@ -33,13 +33,11 @@
             href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
         />
 
-        <!-- <link rel="stylesheet" type="text/css" href="../../assets/css/main_style.css"> -->
-
-        <link rel="stylesheet" type="text/css" href="../../assets/css/content.css">
-        <link rel="stylesheet" type="text/css" href="../../assets/css/table.css">
-        <link rel="stylesheet" type="text/css" href="../../assets/css/buttons.css">
-        <link rel="stylesheet" type="text/css" href="../../assets/css/fonts.css">
-
+        <link rel="stylesheet" type="text/css" href="../../assets/css/main_style.css">
+        <link rel="stylesheet" href="../../assets/css/content.css">
+        <link rel="stylesheet" href="../../assets/css/fonts.css">
+        <link rel="stylesheet" href="../../assets/css/table.css">
+        
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> 
@@ -51,14 +49,12 @@
 <body>
 
     <div class="pageContainer">
- 
         <div class="sidebar-nav" style="color: white; display: block;">
             <div class="sidebar-profile">
                 <h3><?php echo $adminLoggedInObj->getFirstName(); ?> <?php echo $adminLoggedInObj->getLastName(); ?> </h3>
                 <p class="user_email"><?php echo $adminLoggedInObj->getUsername(); ?></p>
                 <p class="role_name">Admin</p>
             </div>
-
             <!-- OOP APPROACH ( WE MUST FOLLOW THE INDUSTRY BEST PRACTICES )  -->
             <?php
                 $nav = new AdminNavigationMenuProvider($con, $adminLoggedInObj);
@@ -87,16 +83,14 @@
 
         </div>
 
-        <div class="mainSectionContainer">
-            <div class="mainContentContainer">
-
-
-
+       <div class="mainSectionContainer">
+            <div class="mainContentContainer"> 
+                <!-- CONTENT GOES HERE-->
 <script>
     $(document).ready(function() {
-    $('.navigationItem').click(function() {
-        $('.navigationItem').removeClass('active'); // Remove "active" class from all navigation items
-        $(this).addClass('active'); // Add "active" class to the clicked navigation item
-    });
+        $('.navigationItem').click(function() {
+            $('.navigationItem').removeClass('active'); // Remove "active" class from all navigation items
+            $(this).addClass('active'); // Add "active" class to the clicked navigation item
+        });
     });
 </script>

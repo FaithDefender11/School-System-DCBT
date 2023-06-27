@@ -1,7 +1,9 @@
 <?php include_once('../../includes/admin_header.php')?>
 
 
+    <h3>This is Teacher Index</h3>
     
+
     <div class="content">
         <nav>Department</nav>
 

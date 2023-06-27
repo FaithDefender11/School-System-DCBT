@@ -17,10 +17,13 @@ class Helper {
     }
 
     public static function createNavByIcon($text, $icon, $link, $active_class){
+
+        // <span style='display:none;' class='notification_count'>1</span>
+
         return "
             <div class='$active_class'>
                 <a href='$link'>
-                    <span style='display:none;' class='notification_count'>1</span>
+                    <span class='notification_count'>5</span>
                     <i style='color: white;' class='$icon'></i>
                     <span class='span_text'>$text</span>
                 </a>
@@ -49,7 +52,7 @@ class Helper {
         // echo $page;
         return $page;
     }
-
+    
     public static function DocumentTitlePage($page) : string{
 
         $parts = explode('_', $page);

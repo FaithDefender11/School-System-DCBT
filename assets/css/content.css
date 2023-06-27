@@ -1,88 +1,196 @@
 :root {
   --theme: #02001c;
-  --background: #efefef;
+  --mainContentBG: #efefef;
+  --btnTheme: #4644bb;
+  --btnThemeHover: #1b1a57;
+  --titleTheme: #070065;
 }
 
-.content {
-  /* Auto layout */
-  flex: none;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 20px;
-  flex-grow: 1;
+/* CONTENT CONTENT CONTENT CONTENT */
 
-  flex: none;
-  order: 3;
-  align-self: stretch;
-  flex-grow: 1;
+.content {
+  /* parent */
+  display: flex;
+  height: 100vh;
+  /* child */
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.content > nav {
+  height: 30px;
+  padding: 15px 50px;
 }
 
 .content-header {
-  /* Auto layout */
-
+  color: white;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 32px 50px;
-  gap: 20px;
-
-  width: 500px;
-  height: 107px;
-
-  /* Theme system shs */
-
-  background: lightblue;
-
-  /* Inside auto layout */
-
-  flex: none;
-  order: 1;
-  align-self: stretch;
-  flex-grow: 0;
+  background-color: rgb(3, 0, 29);
+  position: relative;
+  padding: 30px;
+  gap: 10px;
 }
 
-.floating {
-  /* Auto layout */
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 32px 16px;
-
-  width: 500px;
-  height: auto;
-
-  background: #ffffff;
-  box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.25);
-  border-radius: 10px;
-
-  /* Inside auto layout */
-
-  flex: none;
-  order: 0;
-  flex-grow: 0;
-}
-
-.floating-header {
-  /* Auto layout */
-
+.content-header > header {
   display: flex;
   flex-direction: row;
-  justify-content: center;
+}
+
+.content-header > header > .title {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  margin: 0px;
+}
+
+.content-header > header > .title > h1 {
+  margin: 0px;
+}
+
+.content-header > header > .title > h1 > em {
+  font-weight: 100;
+  font-style: normal;
+}
+
+.content-header > header > .title > small {
+  display: block;
+}
+
+.content-header > header > .action {
+  display: flex;
   align-items: center;
-  padding: 0px;
+  padding: 0px 20px;
+}
+
+.content-header > .cards {
+  display: flex;
+  justify-content: space-around;
+  flex-direction: row;
   gap: 10px;
+  flex-wrap: wrap;
+}
 
-  width: 100%;
-  height: 43px;
+.cards > .card > sub,
+.cards > .card > sup {
+  display: block;
+  font-size: medium;
+  text-align: center;
+  font-weight: normal;
+  color: gray;
+}
 
-  /* Inside auto layout */
-  background: limegreen;
-  flex: none;
-  order: 0;
-  align-self: stretch;
-  flex-grow: 0;
+.tabs {
+  /* parent */
+  display: flex;
+  background-color: var(--theme);
+  padding: 0px 50px;
+  /* child */
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.tab {
+  /* parent */
+  display: flex;
+  flex: 1;
+  padding: 10px;
+  background-color: var(--mainContentBG);
+  /* child */
+  justify-content: center;
+  font-weight: bold;
+}
+
+.tab i {
+  padding: 0px 5px 0px 5px;
+}
+
+.tab > .selection-btn {
+  border: none;
+  cursor: pointer;
+  width: 550px;
+  height: 40px;
+  color: #fff;
+}
+
+.content > main {
+  /*parent*/
+  display: flex;
+  flex: 1;
+  gap: 30px 30px;
+  padding: 25px;
+  background-color: var(--mainContentBG);
+  /*child*/
+  flex-direction: column;
+  align-items: stretch;
+}
+
+/* FLOATING FLOATING FLOATING FLOATING */
+
+.floating {
+  /*parent*/
+  display: flex;
+  background: #ffffff;
+  box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.25);
+  padding: 15px;
+  border-radius: 10px;
+
+  /* child */
+  flex-direction: column;
+  margin-block: 0px;
+  gap: 15px;
+}
+
+.floating > header {
+  display: flex;
+  flex-direction: row;
+}
+
+.floating > header > .title {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  margin: 0px;
+}
+
+.floating > header > .title > h3 {
+  margin: 0px;
+  color: var(--titleTheme);
+}
+
+.floating > header > .title > small {
+  display: block;
+}
+
+.floating > header > .action {
+  display: flex;
+  align-items: center;
+  padding: 0px 20px;
+}
+
+.floating > header > .action > .add-btn {
+  width: 120px;
+  height: 32px;
+  border-radius: 10px;
+  background: #a4a7fc;
+  color: var(--mainContentBG);
+  cursor: pointer;
+  border: none;
+}
+
+.floating > main {
+  overflow-x: auto;
+  display: block;
+}
+
+/* ACTION BUTTON */
+.redirect-btn {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--btnTheme);
+}
+
+.redirect-btn:hover {
+  color: var(--btnThemeHover);
 }

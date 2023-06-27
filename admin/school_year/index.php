@@ -2,97 +2,321 @@
 
 <?php include_once('../../includes/admin_header.php')?>
 
-<div class="col-md-12 row">
-    <div class="content">
-        <table>
-            <thead>
-                <tr>
-                    <th>Subject code</th>
-                    <th>Subject name</th>
-                    <th>Section subject code</th>
-                    <th>Section</th>
-                    <th>Schedule</th>
-                    <th>Status</th>
-                    <th>Hrs/week</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td class="important">MMW</td>
-                    <td>Math in Modern World</td>
-                    <td>MMW211</td>
-                    <td>ICT-211</td>
-                    <td>
-                        <p>M 8:00am-10:00am</p>
-                        <p>M 12:00pm - 5:00pm</p>
-                    </td>
-                    <td>Pending</td>
-                    <td>9hrs</td>
-                    <td>
-                        <button class="default">action</button>
-                    </td>
+<div class="content">
+      <nav>Department</nav>
+      <div class="content-header"></div>
+      <div class="tabs">
+        <div class="tab" id="teachers-list">
+          <button
+            type="button"
+            class="selection-btn"
+            id="teachers-btn"
+            style="color: black"
+            onclick="teachers_list()"
+          >
+            <i class="bi bi-clipboard-check icon"></i>
+            Teachers List
+          </button>
+        </div>
+        <div
+          class="tab"
+          id="subjects-load"
+          style="background-color: rgb(3, 0, 29)"
+        >
+          <button
+            type="button"
+            class="selection-btn"
+            id="subjects-btn"
+            style="background-color: rgb(3, 0, 29)"
+            onclick="subject_load()"
+          >
+            <i class="bi bi-collection icon"></i>
+            Subjects Load
+          </button>
+        </div>
+      </div>
 
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
-
-
-<!-- <div class="content">
-    <div class="floating">
-        <header>
+      <!--SHS-TEACHERS-->
+      <main>
+        <div class="floating" id="shs-teachers">
+          <header>
             <div class="title">
-                <h3>Title</h3>
-                <small> comment </small>
+              <h3>Teachers</h3>
             </div>
             <div class="action">
-                <i class="bi bi-file icon"></i>
+              <button type="button" class="add-btn">+ Add new</button>
             </div>
-        </header>
-
-        <main>
-            <table>
-            <thead>
+          </header>
+          <main>
+            <table
+              class="ws-table-all cw3-striped cw3-bordered"
+              style="margin: 0"
+            >
+              <thead>
                 <tr>
-                    <th>Subject code</th>
-                    <th>Subject name</th>
-                    <th>Section subject code</th>
-                    <th>Section</th>
-                    <th>Schedule</th>
-                    <th>Status</th>
-                    <th>Hrs/week</th>
-                    <th>Action</th>
-                    <th>Action</th>
-                    <th>Action</th>
-                    <th>Action</th>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Subject load</th>
+                  <th>Hours per week</th>
+                  <th>Status</th>
+                  <th>Date added</th>
+                  <th>Action</th>
                 </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>021</td>
+                  <td>Rhandyl Tapuroc</td>
+                  <td>4</td>
+                  <td>4</td>
+                  <td>Active</td>
+                  <td>04/27/2023</td>
+                  <td>
+                    <button
+                      type="button"
+                      class="action-btn"
+                      id="view"
+                      onclick="view()"
+                    >
+                      View
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </main>
+        </div>
+
+        <!--COLLEGE-TEACHERS-->
+        <div class="floating" id="college-teachers">
+          <header>
+            <div class="title">
+              <h3>Teachers</h3>
+            </div>
+            <div class="action">
+              <button type="button" class="add-btn">+ Add new</button>
+            </div>
+          </header>
+          <main>
+            <table
+              class="ws-table-all cw3-striped cw3-bordered"
+              style="margin: 0"
+            >
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Subject load</th>
+                  <th>Hours per week</th>
+                  <th>Status</th>
+                  <th>Date added</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>021</td>
+                  <td>Rhandyl Tapuroc</td>
+                  <td>4</td>
+                  <td>4</td>
+                  <td>Active</td>
+                  <td>04/27/2023</td>
+                  <td>
+                    <button
+                      type="button"
+                      class="action-btn"
+                      id="view"
+                      onclick="view()"
+                    >
+                      View
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </main>
+        </div>
+
+        <!--SHS-SUBJECTS-LOAD-->
+        <div class="floating" id="shs-subject-load" style="display: none">
+          <header>
+            <div class="title">
+              <h3>Subject Loader</h3>
+              <small>Find subject</small>
+            </div>
+          </header>
+          <div class="filters">
+            <table>
+              <tr>
+                <th
+                  rowspan="2"
+                  class="cell1"
+                  style="border-right: 2px solid black"
+                >
+                  Filters
+                </th>
+                <th>School year</th>
+                <td>
+                  <select name="school-year">
+                    <option value="2022-2023">2022-2023</option>
+                  </select>
+                </td>
+                <th>Semester</th>
+                <td>
+                  <select name="semester">
+                    <option value="1">1</option>
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <th>Strand</th>
+                <td>
+                  <select name="strand">
+                    <option name="ICT">ICT</option>
+                  </select>
+                </td>
+                <th>Level</th>
+                <td>
+                  <select name="level">
+                    <option name="1st year">1st year</option>
+                  </select>
+                </td>
+              </tr>
+            </table>
+          </div>
+          <div class="action">
+            <button type="button" class="search-btn">
+              <i class="bi bi-search"></i>Search
+            </button>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>School year</th>
+                <th>Subject ID</th>
+                <th>Section</th>
+                <th>Level</th>
+                <th>Schedule</th>
+                <th>Hrs/week</th>
+                <th>Subject status</th>
+                <th>Teacher</th>
+                <th></th>
+              </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td class="important">MMW</td>
-                    <td>Math in Modern World</td>
-                    <td>MMW211</td>
-                    <td>ICT-211</td>
-                    <td>
-                        <p>M 8:00am-10:00am</p>
-                        <p>M 12:00pm - 5:00pm</p>
-                    </td>
-                    <td>Pending</td>
-                    <td>9hrs</td>
-                    <td>
-                        <button class="default">action</button>
-                        <button class="default">action</button>
-                        <button class="default">action</button>
-                        <button class="default">action</button>
-                        <button class="default">action</button>
-                        <button class="default">action</button>
-                    </td>
-                </tr>
+              <tr>
+                <td>2022-2023</td>
+                <td>021</td>
+                <td>ICT-101</td>
+                <td>11</td>
+                <td>1:00am-2:00pm</td>
+                <td>1hr</td>
+                <td>Active</td>
+                <td>Jeriko Coz</td>
+                <td>
+                  <button
+                    type="button"
+                    class="action-btn"
+                    id="edit"
+                    onclick="edit()"
+                  >
+                    Edit
+                  </button>
+                </td>
+              </tr>
             </tbody>
-            </table>
-        </main>
+          </table>
+        </div>
 
-    </div>
-</div> -->
+        <!--COLLEGE-SUBJECTS-LOAD-->
+        <div class="floating" id="college-subject-load" style="display: none">
+          <header>
+            <div class="title">
+              <h3>Subject Loader</h3>
+              <small>Find subject</small>
+            </div>
+          </header>
+          <div class="filters">
+            <table>
+              <tr>
+                <th
+                  rowspan="2"
+                  class="cell1"
+                  style="border-right: 2px solid black"
+                >
+                  Filters
+                </th>
+                <th>School year</th>
+                <td>
+                  <select name="school-year">
+                    <option value="2022-2023">2022-2023</option>
+                  </select>
+                </td>
+                <th>Semester</th>
+                <td>
+                  <select name="semester">
+                    <option value="1">1</option>
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <th>Strand</th>
+                <td>
+                  <select name="strand">
+                    <option name="ICT">ICT</option>
+                  </select>
+                </td>
+                <th>Level</th>
+                <td>
+                  <select name="level">
+                    <option name="1st year">1st year</option>
+                  </select>
+                </td>
+              </tr>
+            </table>
+          </div>
+          <div class="action">
+            <button type="button" class="search-btn">
+              <i class="bi bi-search"></i>Search
+            </button>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>School year</th>
+                <th>Subject ID</th>
+                <th>Section</th>
+                <th>Level</th>
+                <th>Schedule</th>
+                <th>Hrs/week</th>
+                <th>Subject status</th>
+                <th>Teacher</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>2022-2023</td>
+                <td>021</td>
+                <td>ICT-101</td>
+                <td>11</td>
+                <td>1:00am-2:00pm</td>
+                <td>1hr</td>
+                <td>Active</td>
+                <td>Jeriko Coz</td>
+                <td>
+                  <button
+                    type="button"
+                    class="action-btn"
+                    id="edit"
+                    onclick="edit()"
+                  >
+                    Edit
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </main>
+</div>
