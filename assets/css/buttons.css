@@ -5,9 +5,11 @@
   --default: rgb(77, 75, 165);
   --information: rgb(98, 191, 220);
   --warning: rgb(250, 191, 109);
+  --largeHeight: 30px;
+  --largeWidth: 150px;
 }
 
-button {
+.content button {
   border: none;
   color: white;
   cursor: pointer;
@@ -17,52 +19,79 @@ button {
   transition-duration: 0.4s;
 }
 
-td > button {
+/* overide for table buttons */
+.content td > button {
   margin: 2px;
-  font-size: 15px;
   /* min-width: 70px; */
-  padding: 5px 25px;
-  transition-duration: 0.4s;
-}
-button.default {
-  background-color: black;
 }
 
-button.default {
+/* button design based on function */
+.content button.default {
   background-color: var(--default);
 }
-button.default:hover {
+.content button.default.large {
+  min-height: var(--largeHeight);
+  min-width: var(--largeWidth);
+  border-radius: 10px;
+  font-weight: bold;
+  padding: 10px 35px;
+}
+.content button.default:hover {
   filter: brightness(var(--dark));
 }
 
-button.clean {
+.content button.clean {
   background-color: var(--clean);
 }
-
-button.clean:hover {
+.content button.clean.large {
+  min-height: var(--largeHeight);
+  min-width: var(--largeWidth);
+  border-radius: 10px;
+  font-weight: bold;
+  padding: 10px 35px;
+}
+.content button.clean:hover {
   filter: brightness(var(--dark));
 }
 
-button.information {
+.content button.information {
   background-color: var(--information);
 }
-
-button.information:hover {
+.content button.information.large {
+  min-height: var(--largeHeight);
+  min-width: var(--largeWidth);
+  border-radius: 10px;
+  font-weight: bold;
+  padding: 10px 35px;
+}
+.content button.information:hover {
   filter: brightness(var(--dark));
 }
 
-button.warning {
+.content button.warning {
   background-color: var(--warning);
 }
-
-button.warning:hover {
+.content button.warning.large {
+  min-height: var(--largeHeight);
+  min-width: var(--largeWidth);
+  border-radius: 10px;
+  font-weight: bold;
+  padding: 10px 35px;
+}
+.content button.warning:hover {
   filter: brightness(var(--dark));
 }
 
-button.danger {
+.content button.danger {
   background-color: var(--danger);
 }
-
-button.danger:hover {
+.content button.danger.large {
+  min-height: var(--largeHeight);
+  min-width: var(--largeWidth);
+  border-radius: 10px;
+  font-weight: bold;
+  padding: 10px 35px;
+}
+.content button.danger:hover {
   filter: brightness(var(--dark));
 }

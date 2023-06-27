@@ -4,6 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <link rel="stylesheet" href="assets/css/others/toggle-switch.css" />
+    <script src="assets/css/others/toggle-switch.js"></script>
     <!-- link style sheets -->
     <link rel="stylesheet" href="assets/css/buttons.css" />
     <link rel="stylesheet" href="assets/css/content.css" />
@@ -31,7 +33,15 @@
   </head>
   <body>
     <div class="content">
-      <nav>HAKDOG</nav>
+      <nav>
+        HAKDOG
+        <div class="dashboard">
+          <div class="form-box">
+            hey
+            <div class="button-box"><div class="toggle-btn"></div></div>
+          </div>
+        </div>
+      </nav>
       <div class="content-header">
         <header>
           <div class="title">
@@ -127,13 +137,14 @@
               <small> comment </small>
             </div>
             <div class="action">
-              <button class="default">button1</button>
+              <button class="default large">button1</button>
             </div>
           </header>
           <main>hey</main>
           <div class="action">
+            <button class="default large">default</button>
             <button class="default">default</button>
-            <button class="clean">go</button>
+            <button class="clean large">go</button>
             <button class="information">info</button>
             <button class="warning">warning</button>
             <button class="danger">danger</button>
@@ -244,6 +255,17 @@
               </tbody>
             </table>
           </main>
+        </div>
+        <div class="floating">
+          <header>
+            <div class="title">
+              <h3>Title1</h3>
+              <small> comment </small>
+            </div>
+            <div class="action">
+              <button class="default large">button1</button>
+            </div>
+          </header>
         </div>
       </main>
     </div>
