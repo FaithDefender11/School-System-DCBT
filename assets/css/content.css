@@ -168,6 +168,9 @@
 .floating > header > .action {
   display: flex;
   align-items: center;
+}
+
+.floating > header > .action > i {
   padding: 0px 20px;
 }
 
