@@ -21,23 +21,29 @@ table * {
 /* Font sizes */
 /* * {
   font-size: 14px;
-}
+}*/
 thead {
   font-size: 16px;
 }
+
 tbody {
   font-size: 14px;
 }
+
 h1,
-h1 > em {
+h1>em {
   font-size: 40px;
 }
+
 h2 {
   font-size: 36px;
 }
-h3 {
+
+h3,
+.selection-btn {
   font-size: 18px;
 }
+
 small {
   font-size: 14px;
-} */
+}
