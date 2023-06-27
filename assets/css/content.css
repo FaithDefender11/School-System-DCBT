@@ -1,6 +1,9 @@
 :root {
   --theme: #02001c;
   --mainContentBG: #efefef;
+  --btnTheme: #4644BB;
+  --btnThemeHover: #1b1a57;
+  --titleTheme: #070065;
 }
 
 /* CONTENT CONTENT CONTENT CONTENT */
@@ -144,6 +147,7 @@
 
 .floating>header>.title>h3 {
   margin: 0px;
+  color: var(--titleTheme);
 }
 
 .floating>header>.title>small {
@@ -158,4 +162,16 @@
 
 .floating>main {
   overflow-x: auto;
+}
+
+/* ACTION BUTTON */
+.redirect-btn {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--btnTheme);
+}
+
+.redirect-btn:hover {
+  color: var(--btnThemeHover);
 }
