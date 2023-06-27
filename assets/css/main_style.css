@@ -93,7 +93,7 @@ body {
 .sidebar-nav .navigationContainer {
   overflow-y: auto;
   /* margin-top: 15px; */
-  margin-left: 8px;
+  /* margin-left: 8px; */
 }
 
 .sidebar-nav .navigationItem {
@@ -111,10 +111,25 @@ body {
   height: 18px;
   margin-right: 15px;
 }
-.sidebar-nav .navigationItem span {
+.sidebar-nav .navigationItem .span_text {
   flex: 1;
   color: white;
   font-size: 15px;
+}
+
+.sidebar-nav .navigationItem .notification_count {
+  color: white;
+  font-size: 13px;
+  margin-right: 5px;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: rgb(223, 110, 66);
+  color: white;
+  text-align: center;
+  margin-top: 5px;
+  align-items: center;
 }
 
 .sidebar-nav .navigationItem a {

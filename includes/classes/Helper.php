@@ -20,8 +20,9 @@ class Helper {
         return "
             <div class='$active_class'>
                 <a href='$link'>
+                    <span style='display:none;' class='notification_count'>1</span>
                     <i style='color: white;' class='$icon'></i>
-                    <span>$text</span>
+                    <span class='span_text'>$text</span>
                 </a>
             </div>
         ";

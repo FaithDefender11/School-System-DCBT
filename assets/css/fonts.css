@@ -1,0 +1,19 @@
+/* IMPORT FIRST
+
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Lato"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Arimo"
+    /> */
+
+* {
+  font-family: "Lato";
+}
+
+/* override table fonts*/
+table * {
+  font-family: "Arimo";
+}

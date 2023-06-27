@@ -1,18 +1,16 @@
 :root {
   --theme: #02001c;
-  --background: #efefef
+  --background: #efefef;
 }
 
 .content {
   /* Auto layout */
-
+  flex: none;
   display: flex;
   flex-direction: column;
   align-items: center;
   margin: 20px;
   flex-grow: 1;
-
-  /* Inside auto layout */
 
   flex: none;
   order: 3;
