@@ -1,0 +1,68 @@
+:root {
+  --dark: 50%;
+  --clean: rgba(137, 220, 130);
+  --danger: rgb(232, 89, 89);
+  --default: rgb(77, 75, 165);
+  --information: rgb(98, 191, 220);
+  --warning: rgb(250, 191, 109);
+}
+
+button {
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 15px;
+  min-width: 100px;
+  padding: 5px 25px;
+  transition-duration: 0.4s;
+}
+
+td > button {
+  margin: 2px;
+  font-size: 15px;
+  /* min-width: 70px; */
+  padding: 5px 25px;
+  transition-duration: 0.4s;
+}
+button.default {
+  background-color: black;
+}
+
+button.default {
+  background-color: var(--default);
+}
+button.default:hover {
+  filter: brightness(var(--dark));
+}
+
+button.clean {
+  background-color: var(--clean);
+}
+
+button.clean:hover {
+  filter: brightness(var(--dark));
+}
+
+button.information {
+  background-color: var(--information);
+}
+
+button.information:hover {
+  filter: brightness(var(--dark));
+}
+
+button.warning {
+  background-color: var(--warning);
+}
+
+button.warning:hover {
+  filter: brightness(var(--dark));
+}
+
+button.danger {
+  background-color: var(--danger);
+}
+
+button.danger:hover {
+  filter: brightness(var(--dark));
+}
