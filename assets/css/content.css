@@ -1,6 +1,9 @@
 :root {
   --theme: #02001c;
   --mainContentBG: #efefef;
+  --btnTheme: #4644BB;
+  --btnThemeHover: #1b1a57;
+  --titleTheme: #070065;
 }
 
 /* CONTENT CONTENT CONTENT CONTENT */
@@ -12,34 +15,10 @@
   /* child */
   flex-direction: column;
   align-items: stretch;
-  transition-duration: 0.4s;
-
-  /* Font sizes */
-  * {
-    font-size: 14px;
-  }
-  thead {
-    font-size: 16px;
-  }
-  tbody {
-    font-size: 14px;
-  }
-  h1,
-  h1 > em {
-    font-size: 40px;
-  }
-  h2 {
-    font-size: 36px;
-  }
-  h3 {
-    font-size: 18px;
-  }
-  small {
-    font-size: 14px;
-  }
 }
 
-.content > nav {
+.content>nav {
+  height: 30px;
   padding: 15px 50px;
 }
 
@@ -52,35 +31,39 @@
   padding: 30px;
   gap: 10px;
 }
-.content-header > header {
+
+.content-header>header {
   display: flex;
   flex-direction: row;
 }
 
-.content-header > header > .title {
+.content-header>header>.title {
   display: flex;
   flex-direction: column;
   flex: 1;
   margin: 0px;
 }
 
-.content-header > header > .title > h1 {
+.content-header>header>.title>h1 {
   margin: 0px;
 }
-.content-header > header > .title > h1 > em {
+
+.content-header>header>.title>h1>em {
   font-weight: 100;
   font-style: normal;
 }
-.content-header > header > .title > small {
+
+.content-header>header>.title>small {
   display: block;
 }
-.content-header > header > .action {
+
+.content-header>header>.action {
   display: flex;
   align-items: center;
   padding: 0px 20px;
 }
 
-.content-header > .cards {
+.content-header>.cards {
   display: flex;
   justify-content: space-around;
   flex-direction: row;
@@ -88,8 +71,8 @@
   flex-wrap: wrap;
 }
 
-.cards > .card > sub,
-.cards > .card > sup {
+.cards>.card>sub,
+.cards>.card>sup {
   display: block;
   font-size: medium;
   text-align: center;
@@ -97,7 +80,7 @@
   color: gray;
 }
 
-.content > .tabs {
+.tabs {
   /* parent */
   display: flex;
   background-color: var(--theme);
@@ -107,7 +90,7 @@
   flex-wrap: wrap;
 }
 
-.content > .tabs > .tab {
+.tab {
   /* parent */
   display: flex;
   flex: 1;
@@ -122,7 +105,15 @@
   padding: 0px 5px 0px 5px;
 }
 
-.content > main {
+.tab>.selection-btn {
+  border: none;
+  cursor: pointer;
+  width: 550px;
+  height: 40px;
+  color: #FFF;
+}
+
+.content>main {
   /*parent*/
   display: flex;
   flex: 1;
@@ -141,7 +132,7 @@
   display: flex;
   background: #ffffff;
   box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.25);
-  padding: 20px;
+  padding: 15px;
   border-radius: 10px;
 
   /* child */
@@ -149,40 +140,56 @@
   margin-block: 0px;
   gap: 15px;
 }
-.floating > header {
+
+.floating>header {
   display: flex;
   flex-direction: row;
 }
-.floating > header > .title {
+
+.floating>header>.title {
   display: flex;
   flex-direction: column;
   flex: 1;
   margin: 0px;
 }
-.floating > header > .title > h3 {
+
+.floating>header>.title>h3 {
   margin: 0px;
-}
-.floating > header > .title > small {
-  display: block;
-}
-.floating > header > .action {
-  display: flex;
-  align-items: center;
+  color: var(--titleTheme);
 }
 
-.floating > header > .action > i {
+.floating>header>.title>small {
+  display: block;
+}
+
+.floating>header>.action {
+  display: flex;
+  align-items: center;
   padding: 0px 20px;
 }
 
-.floating > main {
+.floating>header>.action>.add-btn {
+  width: 120px;
+  height: 32px;
+  border-radius: 10px;
+  background: #A4A7FC;
+  color: var(--mainContentBG);
+  cursor: pointer;
+  border: none;
+}
+
+.floating>main {
   overflow-x: auto;
 }
 
-.floating > .action {
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: row;
-  align-items: center;
-  justify-content: end;
-  gap: 5px;
+/* ACTION BUTTON */
+.redirect-btn {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--btnTheme);
+}
+
+.redirect-btn:hover {
+  color: var(--btnThemeHover);
 }
