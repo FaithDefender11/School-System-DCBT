@@ -5,7 +5,7 @@
     date_default_timezone_set('Asia/Manila');
 
     define('DB_HOST', 'localhost');
-    define('DB_PORT', 3306); // Update with your specific port number
+    define('DB_PORT', 3307); // Update with your specific port number
     define('DB_USERNAME', 'root');
     define('DB_PASSWORD', '');
     define('DB_DATABASE', 'dcbt');

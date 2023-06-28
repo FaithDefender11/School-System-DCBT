@@ -28,6 +28,8 @@ body {
 }
 
 .mainSectionContainer {
+  /* padding-top: 56px; */
+  /* background-color: rgb(10, 10, 66); */
   display: flex;
   padding-left: 210px;
 }
@@ -35,6 +37,7 @@ body {
 .mainContentContainer {
   flex: 1;
   padding: 10px 30px;
+  /* background-color: solid orange; */
 }
 
 .sidebar-nav h3 {
