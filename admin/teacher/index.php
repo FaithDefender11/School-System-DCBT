@@ -322,3 +322,4 @@
         </div>
       </main>
     </div>
+    <script src="../../assets/js/teachers.js"></script>
