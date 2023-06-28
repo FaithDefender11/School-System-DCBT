@@ -15,19 +15,18 @@
   align-items: stretch;
 }
 
-.content > nav {
+.content>nav {
   display: flex;
   align-items: center;
   column-gap: 10px;
   padding: 15px 50px;
 }
 
-.content > nav > a {
+.content>nav>a {
   display: flex;
   align-items: center;
   column-gap: 10px;
   text-decoration: none;
-  color: ;
 }
 
 .content-header {
@@ -40,37 +39,37 @@
   gap: 10px;
 }
 
-.content-header > header {
+.content-header>header {
   display: flex;
 }
 
-.content-header > header > .title {
+.content-header>header>.title {
   display: flex;
   flex-direction: column;
   flex: 1;
   margin: 0px;
 }
 
-.content-header > header > .title > h1 {
+.content-header>header>.title>h1 {
   margin: 0px;
 }
 
-.content-header > header > .title > h1 > em {
+.content-header>header>.title>h1>em {
   font-weight: 100;
   font-style: normal;
 }
 
-.content-header > header > .title > small {
+.content-header>header>.title>small {
   display: block;
 }
 
-.content-header > header > .action {
+.content-header>header>.action {
   display: flex;
   align-items: center;
   padding: 0px 20px;
 }
 
-.content-header > header > .action button {
+.content-header>header>.action button {
   padding: 0px;
   cursor: pointer;
   margin: 0px;
@@ -78,20 +77,20 @@
   border: none;
 }
 
-.content-header > header > .action button i {
+.content-header>header>.action button i {
   color: white;
   font-size: 25px;
 }
 
-.content-header > .cards {
+.content-header>.cards {
   display: flex;
   justify-content: space-around;
   gap: 10px;
   flex-wrap: wrap;
 }
 
-.cards > .card > sub,
-.cards > .card > sup {
+.cards>.card>sub,
+.cards>.card>sup {
   display: block;
   font-size: medium;
   text-align: center;
@@ -99,7 +98,7 @@
   color: gray;
 }
 
-.content > .tabs {
+.content>.tabs {
   /* parent */
   display: flex;
   background-color: var(--theme);
@@ -108,7 +107,7 @@
   flex-wrap: wrap;
 }
 
-.content > .tabs > .tab {
+.content>.tabs>.tab {
   /* parent */
   display: flex;
   flex: 1;
@@ -122,11 +121,11 @@
   font-weight: bold;
 }
 
-.content > .tabs > .tab:hover {
+.content>.tabs>.tab:hover {
   filter: brightness(90%);
 }
 
-.tab > .selection-btn {
+.tab>.selection-btn {
   border: none;
   cursor: pointer;
   width: 550px;
@@ -134,7 +133,7 @@
   color: #fff;
 }
 
-.content > main {
+.content>main {
   /*parent*/
   display: flex;
   flex: 1;
@@ -162,38 +161,38 @@
   gap: 15px;
 }
 
-.floating > header {
+.floating>header {
   display: flex;
 }
 
-.floating > header > .title {
+.floating>header>.title {
   display: flex;
   flex-direction: column;
   flex: 1;
   margin: 0px;
 }
 
-.floating > header > .title > h3 > em {
+.floating>header>.title>h3>em {
   font-weight: 100;
   font-style: normal;
 }
 
-.floating > header > .title > h3 {
+.floating>header>.title>h3 {
   margin: 0px;
   color: var(--titleTheme);
 }
 
-.floating > header > .title > small {
+.floating>header>.title>small {
   display: block;
 }
 
-.floating > header > .action {
+.floating>header>.action {
   display: flex;
   align-items: center;
   column-gap: 5px;
 }
 
-.floating > header > .action button {
+.floating>header>.action button {
   background-color: transparent;
   border: none;
   cursor: pointer;
@@ -201,21 +200,21 @@
   padding: 0px;
 }
 
-.floating > header > .action button i {
+.floating>header>.action button i {
   color: black;
   font-size: 20px;
 }
 
-.floating > main {
+.floating>main {
   overflow-x: auto;
 }
 
-.floating > main > .menu {
+.floating>main>.menu {
   display: flex;
   flex-direction: column;
 }
 
-.floating > .action {
+.floating>.action {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
