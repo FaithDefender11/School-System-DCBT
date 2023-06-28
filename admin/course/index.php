@@ -3,11 +3,24 @@
 <?php include_once('../../includes/admin_header.php')?>
 
     <div class="content">
-      <nav>Department</nav>
+      <nav>
+        <h3>Department</h3>
+        <div class="form-box">
+          <div class="button-box">
+            <div id="btn"></div>
+            <button type="button" class="toggle-btn" onclick="shs()">
+              SHS
+            </button>
+            <button type="button" class="toggle-btn" onclick="college()">
+              College
+            </button>
+          </div>
+        </div>
+      </nav>
 
       <main>
         <!--SHS-STRAND-->
-        <div class="floating">
+        <div class="floating" id="shs-strand">
           <header>
             <div class="title">
               <h3>Strand</h3>
@@ -49,7 +62,7 @@
         </div>
 
         <!--COLLEGE-COURSES-->
-        <div class="floating">
+        <div class="floating" id="college-courses">
           <header>
             <div class="title">
               <h3>Course</h3>
@@ -91,3 +104,4 @@
         </div>
       </main>
     </div>
+    <script src="../../assets/js/courses.js"></script>
