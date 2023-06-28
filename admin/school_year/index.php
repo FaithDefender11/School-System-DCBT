@@ -26,15 +26,13 @@
             </div>
           </header>
           <main>
-            <table>
-              <tr>
-                <td style="font-weight: 700">2022-2023</td>
-                <td style="text-align: right">Current</td>
-                <td>
-                  <a href="#"><i class="bi bi-arrow-right-circle"></i></a>
-                </td>
-              </tr>
-            </table>
+            <div class="menu">
+              <div class="item">
+                <span>*insert school year*</span>
+                <span class="status">*insert "Current"*</span>
+                <span><button class="default fixed">View</button></span>
+              </div>
+            </div>
           </main>
         </div>
 
@@ -46,15 +44,13 @@
             </div>
           </header>
           <main>
-            <table>
-              <tr>
-                <td style="font-weight: 700">2022-2023</td>
-                <td style="text-align: right">Current</td>
-                <td>
-                  <a href="#"><i class="bi bi-arrow-right-circle"></i></a>
-                </td>
-              </tr>
-            </table>
+            <div class="menu">
+              <div class="item">
+                <span>*insert school year*</span>
+                <span class="status">*insert "Current"*</span>
+                <span><button class="default fixed">View</button></span>
+              </div>
+            </div>
           </main>
         </div>
       </main>
