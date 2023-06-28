@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <script src="assets/css/others/toggle-switch.js" defer></script>
     <link rel="stylesheet" href="assets/css/others/toggle-switch.css" />
-    <script src="assets/css/others/toggle-switch.js"></script>
     <!-- link style sheets -->
     <link rel="stylesheet" href="assets/css/buttons.css" />
     <link rel="stylesheet" href="assets/css/content.css" />
@@ -34,7 +34,26 @@
   <body>
     <div class="content">
       <!-- nav has two class nav and switch -->
-      <nav class="switch">hakdog wala pa</nav>
+      <nav>
+        <h3>Department</h3>
+        <div class="form-box">
+          <div class="button-box">
+            <div id="btn"></div>
+            <button type="button" class="toggle-btn" onclick="shs()">
+              SHS
+            </button>
+            <button type="button" class="toggle-btn" onclick="college()">
+              College
+            </button>
+          </div>
+        </div>
+      </nav>
+      <nav>
+        <a href="toggle-switch.html"
+          ><i class="bi bi-arrow-return-left fa-10x"></i>
+          <h3>Back</h3>
+        </a>
+      </nav>
       <div class="content-header">
         <header>
           <div class="title">
@@ -42,7 +61,7 @@
             <small> comment </small>
           </div>
           <div class="action">
-            <i class="bi bi-file icon"></i>
+            <button><i class="bi bi-three-dots-vertical large"></i></button>
           </div>
         </header>
         <div class="cards">
@@ -89,48 +108,41 @@
         </div>
       </div>
       <div class="tabs">
-        <div class="tab">
+        <button class="tab">
           <i class="bi bi-file icon"></i>
           Tab1
-        </div>
-        <div class="tab">
+        </button>
+        <button class="tab">
           <i class="bi bi-file icon"></i>
           Tab1
-        </div>
-        <div class="tab">
+        </button>
+        <button class="tab">
           <i class="bi bi-file icon"></i>
           Tab1
-        </div>
-        <div class="tab">
+        </button>
+        <button class="tab">
           <i class="bi bi-file icon"></i>
           Tab1
-        </div>
-        <div class="tab">
+        </button>
+        <button class="tab">
           <i class="bi bi-file icon"></i>
           Tab1
-        </div>
-        <div class="tab">
+        </button>
+        <button class="tab">
           <i class="bi bi-file icon"></i>
           Tab1
-        </div>
-        <div class="tab">
-          <i class="bi bi-file icon"></i>
-          Tab1
-        </div>
-        <div class="tab">
-          <i class="bi bi-file icon"></i>
-          Tab2
-        </div>
+        </button>
       </div>
       <main>
         <div class="floating">
           <header>
             <div class="title">
-              <h3>Title1</h3>
+              <h3>Title1 <em>Titlee</em></h3>
               <small> comment </small>
             </div>
             <div class="action">
               <button class="default large">button1</button>
+              <button class="default">button1</button>
             </div>
           </header>
           <main>hey</main>
@@ -150,7 +162,7 @@
               <small> comment </small>
             </div>
             <div class="action">
-              <i class="bi bi-file icon"></i>
+              <button><i class="bi bi-three-dots-vertical"></i></button>
             </div>
           </header>
           <main>
@@ -268,5 +280,17 @@
         </div>
       </main>
     </div>
+
+    <script src="/DCBT-2/sidebar.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct"
+      crossorigin="anonymous"
+    ></script>
   </body>
 </html>
