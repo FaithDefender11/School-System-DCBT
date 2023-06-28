@@ -4,10 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <script src="assets/js/subjects.js"></script>
     <!-- link style sheets -->
     <link rel="stylesheet" href="assets/css/content.css" />
     <link rel="stylesheet" href="assets/css/fonts.css" />
     <link rel="stylesheet" href="assets/css/table.css" />
+    <link rel="stylesheet" href="assets/css/buttons.css" />
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
@@ -30,7 +32,12 @@
   </head>
   <body>
     <div class="content">
-      <nav>Department</nav>
+      <nav>
+        <a href="subjects.html" onclick="shsActiveContent()"
+          ><i class="bi bi-arrow-return-left fa-10x"></i>
+          <h3>Back</h3>
+        </a>
+      </nav>
       <main>
         <div class="floating">
           <header>
@@ -41,7 +48,7 @@
               </small>
             </div>
             <div class="action">
-              <button type="button">+ Add New</button>
+              <button type="button" class="default large">+ Add New</button>
             </div>
           </header>
           <main>

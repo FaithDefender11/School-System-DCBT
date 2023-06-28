@@ -4,10 +4,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <script src="assets/js/subjects.js" defer></script>
     <!-- link style sheets -->
     <link rel="stylesheet" href="assets/css/content.css" />
     <link rel="stylesheet" href="assets/css/fonts.css" />
     <link rel="stylesheet" href="assets/css/table.css" />
+    <link rel="stylesheet" href="assets/css/buttons.css" />
+    <link rel="stylesheet" href="assets/css/others/toggle-switch.css" />
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
@@ -30,7 +33,20 @@
   </head>
   <body>
     <div class="content">
-      <nav>Department</nav>
+      <nav>
+        <h3>Department</h3>
+        <div class="form-box">
+          <div class="button-box">
+            <div id="btn"></div>
+            <button type="button" class="toggle-btn" onclick="shs()">
+              SHS
+            </button>
+            <button type="button" class="toggle-btn" onclick="college()">
+              College
+            </button>
+          </div>
+        </div>
+      </nav>
       <main>
         <!--SHS-->
         <div class="floating" id="shs-menu">
@@ -40,58 +56,47 @@
             </div>
           </header>
           <main>
-            <table>
-              <tbody>
-                <tr>
-                  <td style="text-align: left">View Subjects</td>
-                  <td style="text-align: left">
-                    <a href="SHS-View-Subjects.html"
-                      ><i class="bi bi-arrow-right-circle"></i
-                    ></a>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="text-align: left">View Strand Subjects</td>
-                  <td style="text-align: left">
-                    <a href="SHS-View-Strand-Subjects.html"
-                      ><i class="bi bi-arrow-right-circle"></i
-                    ></a>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            <div class="menu">
+              <div class="item">
+                <span>View Subjects</span>
+                <span
+                  ><a href="SHS-View-Subjects.html"
+                    ><i class="bi bi-arrow-right-circle"></i></a
+                ></span>
+              </div>
+              <div class="item">
+                <span>View Strand Subjects</span>
+                <span
+                  ><a href="SHS-View-Strand-Subjects.html"
+                    ><i class="bi bi-arrow-right-circle"></i></a
+                ></span>
+              </div>
+            </div>
           </main>
         </div>
-        <div class="floating">
+        <div class="floating" id="shs-options">
           <header>
             <div class="title">
               <h3>Options</h3>
             </div>
           </header>
           <main>
-            <table>
-              <tbody>
-                <tr>
-                  <td style="text-align: left">Automatic Subject Population</td>
-                  <td style="text-align: left">
-                    <i class="bi bi-info-circle"></i
-                    ><input
-                      type="checkbox"
-                      id="shs-auto-population"
-                      name="SHSAutoPopulation"
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td style="text-align: left">Manually Populate Sections</td>
-                  <td style="text-align: left">
-                    <button id="buttonSHS" class="populate">
-                      Populate now
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            <div class="menu">
+              <div class="item">
+                <span>Automatic Subject Population</span>
+                <span
+                  ><i class="bi bi-info-circle"></i
+                  ><input
+                    type="checkbox"
+                    name="SHSAutoPopulation"
+                    id="shs-autopopulation"
+                /></span>
+              </div>
+              <div class="item">
+                <span>Manually Populate Sections</span>
+                <span><button class="default">Populate now</button></span>
+              </div>
+            </div>
           </main>
         </div>
 
@@ -103,58 +108,47 @@
             </div>
           </header>
           <main>
-            <table>
-              <tbody>
-                <tr>
-                  <td style="text-align: left">View Subjects</td>
-                  <td style="text-align: left">
-                    <a href="College-View-Subjects.html"
-                      ><i class="bi bi-arrow-right-circle"></i
-                    ></a>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="text-align: left">View Course Subjects</td>
-                  <td style="text-align: left">
-                    <a href="College-View-Course-Subjects.html"
-                      ><i class="bi bi-arrow-right-circle"></i
-                    ></a>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            <div class="menu">
+              <div class="item">
+                <span>View Subjects</span>
+                <span
+                  ><a href="College-View-Subjects.html"
+                    ><i class="bi bi-arrow-right-circle"></i></a
+                ></span>
+              </div>
+              <div class="item">
+                <span>View Course Subjects</span>
+                <span
+                  ><a href="College-View-Course-Subjects.html"
+                    ><i class="bi bi-arrow-right-circle"></i></a
+                ></span>
+              </div>
+            </div>
           </main>
         </div>
-        <div class="floating">
+        <div class="floating" id="college-options">
           <header>
             <div class="title">
               <h3>Options</h3>
             </div>
           </header>
           <main>
-            <table>
-              <tbody>
-                <tr>
-                  <td style="text-align: left">Automatic Subject Population</td>
-                  <td style="text-align: left">
-                    <i class="bi bi-info-circle"></i
-                    ><input
-                      type="checkbox"
-                      id="shs-auto-population"
-                      name="SHSAutoPopulation"
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td style="text-align: left">Manually Populate Sections</td>
-                  <td style="text-align: left">
-                    <button id="buttonSHS" class="populate">
-                      Populate now
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            <div class="menu">
+              <div class="item">
+                <span>Automatic Subject Population</span>
+                <span
+                  ><i class="bi bi-info-circle"></i
+                  ><input
+                    type="checkbox"
+                    name="CollegeAutoPopulation"
+                    id="college-autopopulation"
+                /></span>
+              </div>
+              <div class="item">
+                <span>Manually Populate Sections</span>
+                <span><button class="default">Populate now</button></span>
+              </div>
+            </div>
           </main>
         </div>
       </main>
