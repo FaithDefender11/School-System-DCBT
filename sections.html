@@ -4,11 +4,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <script src="assets/js/sections.js" defer></script>
     <!-- link style sheets -->
     <link rel="stylesheet" href="assets/css/content.css" />
     <link rel="stylesheet" href="assets/css/fonts.css" />
     <link rel="stylesheet" href="assets/css/table.css" />
     <link rel="stylesheet" href="assets/css/buttons.css" />
+    <link rel="stylesheet" href="assets/css/others/toggle-switch.css" />
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
@@ -31,10 +33,23 @@
   </head>
   <body>
     <div class="content">
-      <nav>Department</nav>
+      <nav>
+        <h3>Department</h3>
+        <div class="form-box">
+          <div class="button-box">
+            <div id="btn"></div>
+            <button type="button" class="toggle-btn" onclick="shs()">
+              SHS
+            </button>
+            <button type="button" class="toggle-btn" onclick="college()">
+              College
+            </button>
+          </div>
+        </div>
+      </nav>
       <main>
         <!--SHS-SECTIONS-->
-        <div class="floating">
+        <div class="floating" id="shs-sections">
           <header>
             <div class="title">
               <h3>Strand Sections</h3>
@@ -57,7 +72,13 @@
                   <td></td>
                   <td></td>
                   <td>
-                    <button type="button" class="information">View</button>
+                    <button
+                      type="button"
+                      class="information"
+                      onclick="view('page1')"
+                    >
+                      View
+                    </button>
                   </td>
                 </tr>
               </tbody>
@@ -66,7 +87,7 @@
         </div>
 
         <!--COLLEGE-SECTIONS-->
-        <div class="floating">
+        <div class="floating" id="college-sections">
           <header>
             <div class="title">
               <h3>Course Sections</h3>
@@ -93,7 +114,13 @@
                   <td></td>
                   <td></td>
                   <td>
-                    <button type="button" class="information">View</button>
+                    <button
+                      type="button"
+                      class="information"
+                      onclick="view('page2')"
+                    >
+                      View
+                    </button>
                   </td>
                 </tr>
               </tbody>

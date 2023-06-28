@@ -3,10 +3,23 @@
 <?php include_once('../../includes/admin_header.php')?>
 
     <div class="content">
-      <nav>Department</nav>
+      <nav>
+        <h3>Department</h3>
+        <div class="form-box">
+          <div class="button-box">
+            <div id="btn"></div>
+            <button type="button" class="toggle-btn" onclick="shs()">
+              SHS
+            </button>
+            <button type="button" class="toggle-btn" onclick="college()">
+              College
+            </button>
+          </div>
+        </div>
+      </nav>
       <main>
         <!--SHS-SECTIONS-->
-        <div class="floating">
+        <div class="floating" id="shs-sections">
           <header>
             <div class="title">
               <h3>Strand Sections</h3>
@@ -29,7 +42,13 @@
                   <td></td>
                   <td></td>
                   <td>
-                    <button type="button" class="information">View</button>
+                    <button
+                      type="button"
+                      class="information"
+                      onclick="view('page1')"
+                    >
+                      View
+                    </button>
                   </td>
                 </tr>
               </tbody>
@@ -38,7 +57,7 @@
         </div>
 
         <!--COLLEGE-SECTIONS-->
-        <div class="floating">
+        <div class="floating" id="college-sections">
           <header>
             <div class="title">
               <h3>Course Sections</h3>
@@ -65,7 +84,13 @@
                   <td></td>
                   <td></td>
                   <td>
-                    <button type="button" class="information">View</button>
+                    <button
+                      type="button"
+                      class="information"
+                      onclick="view('page2')"
+                    >
+                      View
+                    </button>
                   </td>
                 </tr>
               </tbody>
@@ -74,3 +99,4 @@
         </div>
       </main>
     </div>
+    <script src="../../assets/js/sections.js"></script>

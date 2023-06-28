@@ -1,107 +1,116 @@
 :root {
-    --dark: 50%;
-    --clean: rgba(137, 220, 130);
-    --danger: rgb(232, 89, 89);
-    --default: rgb(77, 75, 165);
-    --information: rgb(98, 191, 220);
-    --warning: rgb(250, 191, 109);
-    --largeHeight: 30px;
-    --largeWidth: 150px;
+  --dark: 50%;
+  --clean: rgba(137, 220, 130);
+  --danger: rgb(232, 89, 89);
+  --default: rgb(77, 75, 165);
+  --information: rgb(98, 191, 220);
+  --warning: rgb(250, 191, 109);
+  --largeHeight: 30px;
+  --largeWidth: 150px;
 }
 
-.content button {
-    border: none;
-    color: white;
-    cursor: pointer;
-    font-size: 15px;
-    min-width: 100px;
-    padding: 5px 25px;
-    transition-duration: 0.4s;
+.content button.default,
+.content button.clean,
+.content button.information,
+.content button.warning,
+.content button.danger {
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 15px;
+  min-width: 100px;
+  padding: 5px 25px;
+  transition-duration: 0.4s;
+  text-align: center;
+}
+/* fixed class if you want fixed size buttons */
+.content button.fixed {
+  width: 120px;
+  padding-left: 0px;
+  padding-right: 0px;
 }
 
 /* overide for table buttons */
-.content td>button {
-    margin: 2px;
-    /* min-width: 70px; */
+.content td > button {
+  margin: 2px;
+  /* min-width: 70px; */
 }
 
 /* button design based on function */
 .content button.default {
-    background-color: var(--default);
+  background-color: var(--default);
 }
-
 .content button.default.large {
-    min-height: var(--largeHeight);
-    min-width: var(--largeWidth);
-    border-radius: 10px;
-    font-weight: bold;
-    padding: 10px 35px;
+  min-height: var(--largeHeight);
+  min-width: var(--largeWidth);
+  border-radius: 10px;
+  font-weight: bold;
+  padding: 10px 35px;
 }
-
 .content button.default:hover {
-    filter: brightness(var(--dark));
+  filter: brightness(var(--dark));
 }
 
 .content button.clean {
-    background-color: var(--clean);
+  background-color: var(--clean);
 }
-
 .content button.clean.large {
-    min-height: var(--largeHeight);
-    min-width: var(--largeWidth);
-    border-radius: 10px;
-    font-weight: bold;
-    padding: 10px 35px;
+  min-height: var(--largeHeight);
+  min-width: var(--largeWidth);
+  border-radius: 10px;
+  font-weight: bold;
+  padding: 10px 35px;
 }
-
 .content button.clean:hover {
-    filter: brightness(var(--dark));
+  filter: brightness(var(--dark));
 }
 
 .content button.information {
-    background-color: var(--information);
+  background-color: var(--information);
 }
-
 .content button.information.large {
-    min-height: var(--largeHeight);
-    min-width: var(--largeWidth);
-    border-radius: 10px;
-    font-weight: bold;
-    padding: 10px 35px;
+  min-height: var(--largeHeight);
+  min-width: var(--largeWidth);
+  border-radius: 10px;
+  font-weight: bold;
+  padding: 10px 35px;
 }
-
 .content button.information:hover {
-    filter: brightness(var(--dark));
+  filter: brightness(var(--dark));
 }
 
 .content button.warning {
-    background-color: var(--warning);
+  background-color: var(--warning);
 }
-
 .content button.warning.large {
-    min-height: var(--largeHeight);
-    min-width: var(--largeWidth);
-    border-radius: 10px;
-    font-weight: bold;
-    padding: 10px 35px;
+  min-height: var(--largeHeight);
+  min-width: var(--largeWidth);
+  border-radius: 10px;
+  font-weight: bold;
+  padding: 10px 35px;
 }
-
 .content button.warning:hover {
-    filter: brightness(var(--dark));
+  filter: brightness(var(--dark));
 }
 
 .content button.danger {
-    background-color: var(--danger);
+  background-color: var(--danger);
 }
-
 .content button.danger.large {
-    min-height: var(--largeHeight);
-    min-width: var(--largeWidth);
-    border-radius: 10px;
-    font-weight: bold;
-    padding: 10px 35px;
+  min-height: var(--largeHeight);
+  min-width: var(--largeWidth);
+  border-radius: 10px;
+  font-weight: bold;
+  padding: 10px 35px;
+}
+.content button.danger:hover {
+  filter: brightness(var(--dark));
 }
 
-.content button.danger:hover {
-    filter: brightness(var(--dark));
+.content button.icon {
+  padding: 0px;
+  cursor: pointer;
+  margin: 0px;
+  background-color: transparent;
+  border: none;
 }
