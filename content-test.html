@@ -34,7 +34,23 @@
   <body>
     <div class="content">
       <!-- nav has two class nav and switch -->
-      <nav class="switch">hakdog wala pa</nav>
+      <nav class="switch">
+        <div class="dashboard">
+          <h3>Department</h3>
+
+          <div class="form-box">
+            <div class="button-box">
+              <div id="btn"></div>
+              <button type="button" class="toggle-btn" onclick="shs()">
+                SHS
+              </button>
+              <button type="button" class="toggle-btn" onclick="college()">
+                College
+              </button>
+            </div>
+          </div>
+        </div>
+      </nav>
       <div class="content-header">
         <header>
           <div class="title">
@@ -89,38 +105,30 @@
         </div>
       </div>
       <div class="tabs">
-        <div class="tab">
+        <button class="tab">
           <i class="bi bi-file icon"></i>
           Tab1
-        </div>
-        <div class="tab">
+        </button>
+        <button class="tab">
           <i class="bi bi-file icon"></i>
           Tab1
-        </div>
-        <div class="tab">
+        </button>
+        <button class="tab">
           <i class="bi bi-file icon"></i>
           Tab1
-        </div>
-        <div class="tab">
+        </button>
+        <button class="tab">
           <i class="bi bi-file icon"></i>
           Tab1
-        </div>
-        <div class="tab">
+        </button>
+        <button class="tab">
           <i class="bi bi-file icon"></i>
           Tab1
-        </div>
-        <div class="tab">
+        </button>
+        <button class="tab">
           <i class="bi bi-file icon"></i>
           Tab1
-        </div>
-        <div class="tab">
-          <i class="bi bi-file icon"></i>
-          Tab1
-        </div>
-        <div class="tab">
-          <i class="bi bi-file icon"></i>
-          Tab2
-        </div>
+        </button>
       </div>
       <main>
         <div class="floating">
@@ -268,5 +276,16 @@
         </div>
       </main>
     </div>
+    <script src="/DCBT-2/sidebar.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct"
+      crossorigin="anonymous"
+    ></script>
   </body>
 </html>

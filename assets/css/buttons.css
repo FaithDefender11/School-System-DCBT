@@ -9,7 +9,11 @@
   --largeWidth: 150px;
 }
 
-.content button {
+.content button.default,
+.content button.clean,
+.content button.information,
+.content button.warning,
+.content button.danger {
   border: none;
   color: white;
   cursor: pointer;
