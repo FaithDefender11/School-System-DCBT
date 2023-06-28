@@ -4,7 +4,7 @@ var shsSY = document.getElementById("shs-sy");
 var collegeSY = document.getElementById("college-sy");
 
 function shs() {
-  deptBTN.style.left = "0";
+  deptBTN.style.left = "0px";
 
   shsSY.style.display = "flex";
   collegeSY.style.display = "none";
@@ -18,6 +18,5 @@ function college() {
 }
 
 function shs_calendar() {
-  window.location.href =
-    "/DCBT-2/school-year/calendar-view/Calendar-view.html";
+  window.location.href = "/DCBT-2/school-year/calendar-view/Calendar-view.html";
 }

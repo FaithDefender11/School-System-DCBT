@@ -1,5 +1,4 @@
 /* IMPORT FIRST
-
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css?family=Lato"
@@ -11,6 +10,16 @@
 
 * {
   font-family: "Lato";
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  padding: 0px;
+  margin: 0px;
 }
 
 /* override table fonts*/
@@ -31,7 +40,7 @@ tbody {
 }
 
 h1,
-h1>em {
+h1 > em {
   font-size: 40px;
 }
 
