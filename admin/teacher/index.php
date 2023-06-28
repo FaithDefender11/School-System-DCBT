@@ -1,38 +1,41 @@
 <?php include_once('../../includes/admin_header.php')?>
 
 
-<div class="content">
-      <nav>Department</nav>
+    <div class="content">
+      <nav>
+        <h3>Department</h3>
+        <div class="form-box">
+          <div class="button-box">
+            <div id="btn"></div>
+            <button
+              type="button"
+              class="toggle-btn"
+              id="shs-btn"
+              onclick="shs()"
+            >
+              SHS
+            </button>
+            <button
+              type="button"
+              class="toggle-btn"
+              id="college-btn"
+              onclick="college()"
+            >
+              College
+            </button>
+          </div>
+        </div>
+      </nav>
       <div class="content-header"></div>
       <div class="tabs">
-        <div class="tab" id="teachers-list">
-          <button
-            type="button"
-            class="selection-btn"
-            id="teachers-btn"
-            style="color: black"
-            onclick="teachers_list()"
-          >
-            <i class="bi bi-clipboard-check icon"></i>
-            Teachers List
-          </button>
-        </div>
-        <div
-          class="tab"
-          id="subjects-load"
-          style="background-color: rgb(3, 0, 29)"
-        >
-          <button
-            type="button"
-            class="selection-btn"
-            id="subjects-btn"
-            style="background-color: rgb(3, 0, 29)"
-            onclick="subject_load()"
-          >
-            <i class="bi bi-collection icon"></i>
-            Subjects Load
-          </button>
-        </div>
+        <button class="tab" id="teachers-list" onclick="teachers_list()">
+          <i class="bi bi-clipboard-check icon"></i>
+          Teachers List
+        </button>
+        <button class="tab" id="subjects-load" onclick="subject_load()">
+          <i class="bi bi-collection icon"></i>
+          Subjects Load
+        </button>
       </div>
 
       <!--SHS-TEACHERS-->
