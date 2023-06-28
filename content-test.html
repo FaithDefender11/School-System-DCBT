@@ -4,7 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <link rel="stylesheet" href="assets/css/others/toggle-switch.css" />
+    <script src="assets/css/others/toggle-switch.js"></script>
     <!-- link style sheets -->
+    <link rel="stylesheet" href="assets/css/buttons.css" />
     <link rel="stylesheet" href="assets/css/content.css" />
     <link rel="stylesheet" href="assets/css/fonts.css" />
     <link rel="stylesheet" href="assets/css/table.css" />
@@ -30,7 +33,8 @@
   </head>
   <body>
     <div class="content">
-      <nav>HAKDOG</nav>
+      <!-- nav has two class nav and switch -->
+      <nav class="switch">hakdog wala pa</nav>
       <div class="content-header">
         <header>
           <div class="title">
@@ -122,13 +126,22 @@
         <div class="floating">
           <header>
             <div class="title">
-              <h3>Title</h3>
+              <h3>Title1</h3>
               <small> comment </small>
             </div>
             <div class="action">
-              <i class="bi bi-file icon"></i>
+              <button class="default large">button1</button>
             </div>
           </header>
+          <main>hey</main>
+          <div class="action">
+            <button class="default large">default</button>
+            <button class="default">default</button>
+            <button class="clean large">go</button>
+            <button class="information">info</button>
+            <button class="warning">warning</button>
+            <button class="danger">danger</button>
+          </div>
         </div>
         <div class="floating">
           <header>
@@ -141,10 +154,7 @@
             </div>
           </header>
           <main>
-            <table
-              class="ws-table-all cw3-striped cw3-bordered"
-              style="margin: 0"
-            >
+            <table>
               <thead>
                 <tr>
                   <th>Subject code</th>
@@ -172,7 +182,14 @@
                   </td>
                   <td>Pending</td>
                   <td>9hrs</td>
-                  <td></td>
+                  <td>
+                    <button class="default">action</button>
+                    <button class="default">action</button>
+                    <button class="default">action</button>
+                    <button class="default">action</button>
+                    <button class="default">action</button>
+                    <button class="default">action</button>
+                  </td>
                 </tr>
                 <tr>
                   <td class="important">MMW</td>
@@ -231,6 +248,23 @@
               </tbody>
             </table>
           </main>
+        </div>
+        <div class="floating">
+          <header>
+            <div class="title">
+              <h3>Choose strand</h3>
+              <small> comment </small>
+            </div>
+            <div class="action">
+              <button class="default large">button1</button>
+            </div>
+          </header>
+          <main>
+            <div class="menu"></div>
+          </main>
+          <div class="action">
+            <button class="default large">button1</button>
+          </div>
         </div>
       </main>
     </div>

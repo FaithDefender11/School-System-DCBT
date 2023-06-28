@@ -19,10 +19,9 @@ table * {
 }
 
 /* Font sizes */
-/** {
-  font-size: 14px;
-}*/
-
+/* * {
+      font-size: 14px;
+    }*/
 thead {
   font-size: 16px;
 }
@@ -40,7 +39,8 @@ h2 {
   font-size: 36px;
 }
 
-h3 {
+h3,
+.selection-btn {
   font-size: 18px;
 }
 

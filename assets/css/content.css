@@ -105,6 +105,14 @@
   padding: 0px 5px 0px 5px;
 }
 
+.tab>.selection-btn {
+  border: none;
+  cursor: pointer;
+  width: 550px;
+  height: 40px;
+  color: #FFF;
+}
+
 .content>main {
   /*parent*/
   display: flex;
@@ -158,6 +166,16 @@
   display: flex;
   align-items: center;
   padding: 0px 20px;
+}
+
+.floating>header>.action>.add-btn {
+  width: 120px;
+  height: 32px;
+  border-radius: 10px;
+  background: #A4A7FC;
+  color: var(--mainContentBG);
+  cursor: pointer;
+  border: none;
 }
 
 .floating>main {
