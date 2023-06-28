@@ -23,6 +23,12 @@
   transition-duration: 0.4s;
   text-align: center;
 }
+/* fixed class if you want fixed size buttons */
+.content button.fixed {
+  width: 120px;
+  padding-left: 0px;
+  padding-right: 0px;
+}
 
 /* overide for table buttons */
 .content td > button {
@@ -99,12 +105,6 @@
 }
 .content button.danger:hover {
   filter: brightness(var(--dark));
-}
-
-.content button.fixed {
-  width: 120px;
-  padding-left: 0px;
-  padding-right: 0px;
 }
 
 .content button.icon {
