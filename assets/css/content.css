@@ -1,8 +1,6 @@
 :root {
   --theme: #02001c;
   --mainContentBG: #efefef;
-  --btnTheme: #4644BB;
-  --btnThemeHover: #1b1a57;
   --titleTheme: #070065;
 }
 
@@ -17,9 +15,19 @@
   align-items: stretch;
 }
 
-.content>nav {
-  height: 30px;
+.content > nav {
+  display: flex;
+  align-items: center;
+  column-gap: 10px;
   padding: 15px 50px;
+}
+
+.content > nav > a {
+  display: flex;
+  align-items: center;
+  column-gap: 10px;
+  text-decoration: none;
+  color: ;
 }
 
 .content-header {
@@ -32,47 +40,58 @@
   gap: 10px;
 }
 
-.content-header>header {
+.content-header > header {
   display: flex;
-  flex-direction: row;
 }
 
-.content-header>header>.title {
+.content-header > header > .title {
   display: flex;
   flex-direction: column;
   flex: 1;
   margin: 0px;
 }
 
-.content-header>header>.title>h1 {
+.content-header > header > .title > h1 {
   margin: 0px;
 }
 
-.content-header>header>.title>h1>em {
+.content-header > header > .title > h1 > em {
   font-weight: 100;
   font-style: normal;
 }
 
-.content-header>header>.title>small {
+.content-header > header > .title > small {
   display: block;
 }
 
-.content-header>header>.action {
+.content-header > header > .action {
   display: flex;
   align-items: center;
   padding: 0px 20px;
 }
 
-.content-header>.cards {
+.content-header > header > .action button {
+  padding: 0px;
+  cursor: pointer;
+  margin: 0px;
+  background-color: transparent;
+  border: none;
+}
+
+.content-header > header > .action button i {
+  color: white;
+  font-size: 25px;
+}
+
+.content-header > .cards {
   display: flex;
   justify-content: space-around;
-  flex-direction: row;
   gap: 10px;
   flex-wrap: wrap;
 }
 
-.cards>.card>sub,
-.cards>.card>sup {
+.cards > .card > sub,
+.cards > .card > sup {
   display: block;
   font-size: medium;
   text-align: center;
@@ -80,40 +99,42 @@
   color: gray;
 }
 
-.tabs {
+.content > .tabs {
   /* parent */
   display: flex;
   background-color: var(--theme);
   padding: 0px 50px;
   /* child */
-  flex-direction: row;
   flex-wrap: wrap;
 }
 
-.tab {
+.content > .tabs > .tab {
   /* parent */
   display: flex;
   flex: 1;
+  cursor: pointer;
   padding: 10px;
+  border: none;
   background-color: var(--mainContentBG);
   /* child */
+  column-gap: 5px;
   justify-content: center;
   font-weight: bold;
 }
 
-.tab i {
-  padding: 0px 5px 0px 5px;
+.content > .tabs > .tab:hover {
+  filter: brightness(90%);
 }
 
-.tab>.selection-btn {
+.tab > .selection-btn {
   border: none;
   cursor: pointer;
   width: 550px;
   height: 40px;
-  color: #FFF;
+  color: #fff;
 }
 
-.content>main {
+.content > main {
   /*parent*/
   display: flex;
   flex: 1;
@@ -141,55 +162,63 @@
   gap: 15px;
 }
 
-.floating>header {
+.floating > header {
   display: flex;
-  flex-direction: row;
 }
 
-.floating>header>.title {
+.floating > header > .title {
   display: flex;
   flex-direction: column;
   flex: 1;
   margin: 0px;
 }
 
-.floating>header>.title>h3 {
+.floating > header > .title > h3 > em {
+  font-weight: 100;
+  font-style: normal;
+}
+
+.floating > header > .title > h3 {
   margin: 0px;
   color: var(--titleTheme);
 }
 
-.floating>header>.title>small {
+.floating > header > .title > small {
   display: block;
 }
 
-.floating>header>.action {
+.floating > header > .action {
   display: flex;
   align-items: center;
-  padding: 0px 20px;
+  column-gap: 5px;
 }
 
-.floating>header>.action>.add-btn {
-  width: 120px;
-  height: 32px;
-  border-radius: 10px;
-  background: #A4A7FC;
-  color: var(--mainContentBG);
-  cursor: pointer;
+.floating > header > .action button {
+  background-color: transparent;
   border: none;
+  cursor: pointer;
+  margin: 0px 10px;
+  padding: 0px;
 }
 
-.floating>main {
+.floating > header > .action button i {
+  color: black;
+  font-size: 20px;
+}
+
+.floating > main {
   overflow-x: auto;
 }
 
-/* ACTION BUTTON */
-.redirect-btn {
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  color: var(--btnTheme);
+.floating > main > .menu {
+  display: flex;
+  flex-direction: column;
 }
 
-.redirect-btn:hover {
-  color: var(--btnThemeHover);
+.floating > .action {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: end;
+  gap: 5px;
 }
