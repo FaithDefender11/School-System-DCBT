@@ -17,14 +17,7 @@
                 <td style="font-weight: 700">2022-2023</td>
                 <td style="text-align: right">Current</td>
                 <td>
-                  <button
-                    type="button"
-                    class="redirect-btn"
-                    id="shs-calendar"
-                    onclick="shs_calendar()"
-                  >
-                    <i class="bi bi-arrow-right-circle"></i>
-                  </button>
+                  <a href="#"><i class="bi bi-arrow-right-circle"></i></a>
                 </td>
               </tr>
             </table>
