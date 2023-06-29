@@ -1,5 +1,7 @@
-var RmTab = document.getElementById("room");
-var SectTab = document.getElementById("section");
+var shsRoomTab = document.getElementById("shs-room");
+var shsSectionTab = document.getElementById("shs-section");
+var collegeRmTab = document.getElementById("college-room");
+var collegeSectTab = document.getElementById("college-section");
 
 var shsScheduler = document.getElementById("shs-scheduler");
 var shsOverview = document.getElementById("shs-schedule-overview");
@@ -30,21 +32,21 @@ function shs() {
     collegeScheduler.style.display = "none";
     collegeOverview.style.display = "none";
 
-    RmTab.addEventListener("click", shsRmTab);
-    SectTab.addEventListener("click", shsSectTab);
+    shsRoomTab.addEventListener("click", shsRmTab);
+    shsSectionTab.addEventListener("click", shsSectTab);
 
-    RmTab.removeEventListener("click", collegeRmTab);
-    SectTab.removeEventListener("click", collegeSectTab);
+    collegeRmTab.removeEventListener("click", collegeRoomTab);
+    collegeSectTab.removeEventListener("click", collegeSectionTab);
 
     shsRmTab();
 }
 //SHS Room listener
 function shsRmTab(){
-    RmTab.style.background = "var(--theme)";
-    RmTab.style.color = "white";
+    shsRoomTab.style.background = "var(--theme)";
+    shsRoomTab.style.color = "white";
 
-    SectTab.style.background = "var(--mainContentBG)";
-    SectTab.style.color = "black";
+    shsSectionTab.style.background = "var(--mainContentBG)";
+    shsSectionTab.style.color = "black";
 
     shsRmHeader.style.display = "flex";
     collegeRmHeader.style.display = "none";
@@ -60,11 +62,11 @@ function shsRmTab(){
 }
 //SHS Section listener
 function shsSectTab(){
-    RmTab.style.background = "var(--mainContentBG)";
-    RmTab.style.color = "black";
+    shsRoomTab.style.background = "var(--mainContentBG)";
+    shsRoomTab.style.color = "black";
 
-    SectTab.style.background = "var(--theme)";
-    SectTab.style.color = "white";
+    shsSectionTab.style.background = "var(--theme)";
+    shsSectionTab.style.color = "white";
 
     shsRmHeader.style.display = "none";
     collegeRmHeader.style.display = "none";
@@ -88,21 +90,21 @@ function college() {
     collegeScheduler.style.display = "flex";
     collegeOverview.style.display = "flex";
 
-    RmTab.addEventListener("click", collegeRmTab);
-    SectTab.addEventListener("click", collegeSectTab);
+    collegeRmTab.addEventListener("click", collegeRoomTab);
+    collegeSectTab.addEventListener("click", collegeSectionTab);
 
-    RmTab.removeEventListener("click", shsRmTab);
-    SectTab.removeEventListener("click", shsSectTab);
+    shsRoomTab.removeEventListener("click", shsRmTab);
+    shsSectionTab.removeEventListener("click", shsSectTab);
 
-    collegeRmTab();
+    collegeRoomTab();
 }
 //College Room listener
-function collegeRmTab(){
-    RmTab.style.background = "var(--theme)";
-    RmTab.style.color = "white";
+function collegeRoomTab(){
+    collegeRmTab.style.background = "var(--theme)";
+    collegeRmTab.style.color = "white";
 
-    SectTab.style.background = "var(--mainContentBG)";
-    SectTab.style.color = "black";
+    collegeSectTab.style.background = "var(--mainContentBG)";
+    collegeSectTab.style.color = "black";
 
     shsRmHeader.style.display = "none";
     collegeRmHeader.style.display = "flex";
@@ -117,12 +119,12 @@ function collegeRmTab(){
     collegeSectTable.style.display = "none";
 }
 //College Section listener
-function collegeSectTab(){
-    RmTab.style.background = "var(--mainContentBG)";
-    RmTab.style.color = "black";
+function collegeSectionTab(){
+    collegeRmTab.style.background = "var(--mainContentBG)";
+    collegeRmTab.style.color = "black";
 
-    SectTab.style.background = "var(--theme)";
-    SectTab.style.color = "white";
+    collegeSectTab.style.background = "var(--theme)";
+    collegeSectTab.style.color = "white";
 
     shsRmHeader.style.display = "none";
     collegeRmHeader.style.display = "none";
