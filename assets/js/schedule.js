@@ -63,7 +63,6 @@ function shsSectTab(){
     collegeSectHeader.style.display = "none";
 }
 
-
 function college() {
   deptBTN.style.left = "119.9px";
 
