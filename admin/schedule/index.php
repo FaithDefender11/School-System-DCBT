@@ -100,11 +100,11 @@
             </div>
           </header>
           <div class="tabs">
-            <button class="tab" id="room">
+            <button class="tab" id="shs-room">
               <i class="bi bi-clipboard-check"></i>
               Room
             </button>
-            <button class="tab" id="section">
+            <button class="tab" id="shs-section">
               <i class="bi bi-journal-arrow-down"></i>
               Section
             </button>
@@ -806,11 +806,11 @@
             </div>
           </header>
           <div class="tabs">
-            <button class="tab" id="room">
+            <button class="tab" id="college-room">
               <i class="bi bi-clipboard-check"></i>
               Room
             </button>
-            <button class="tab" id="section">
+            <button class="tab" id="college-section">
               <i class="bi bi-journal-arrow-down"></i>
               Section
             </button>
