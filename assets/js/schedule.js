@@ -1,5 +1,3 @@
-var deptBTN = document.getElementById("btn");
-
 var RmTab = document.getElementById("room");
 var SectTab = document.getElementById("section");
 
@@ -13,26 +11,28 @@ var collegeOverview = document.getElementById("college-schedule-overview");
 var collegeRmHeader = document.getElementById("college-room-tab");
 var collegeSectHeader = document.getElementById("college-section-tab");
 
+var deptBTN = document.getElementById("btn");
+
 //Add event listeners
 document.getElementById("shs-btn").addEventListener("click", shs);
 document.getElementById("college-btn").addEventListener("click", college);
 
 function shs() {
-  deptBTN.style.left = "0px";
+    deptBTN.style.left = "0px";
 
-  shsScheduler.style.display = "flex";
-  shsOverview.style.display = "flex";
+    shsScheduler.style.display = "flex";
+    shsOverview.style.display = "flex";
 
-  collegeScheduler.style.display = "none";
-  collegeOverview.style.display = "none";
+    collegeScheduler.style.display = "none";
+    collegeOverview.style.display = "none";
 
-  RmTab.addEventListener("click", shsRmTab);
-  SectTab.addEventListener("click", shsSectTab);
+    RmTab.addEventListener("click", shsRmTab);
+    SectTab.addEventListener("click", shsSectTab);
 
-  RmTab.removeEventListener("click", collegeRmTab);
-  SectTab.removeEventListener("click", collegeSectTab);
+    RmTab.removeEventListener("click", collegeRmTab);
+    SectTab.removeEventListener("click", collegeSectTab);
 
-  shsRmTab();
+    shsRmTab();
 }
 //SHS Room listener
 function shsRmTab(){
@@ -64,21 +64,21 @@ function shsSectTab(){
 }
 
 function college() {
-  deptBTN.style.left = "119.9px";
+    deptBTN.style.left = "119.9px";
 
-  shsScheduler.style.display = "none";
-  shsOverview.style.display = "none";
+    shsScheduler.style.display = "none";
+    shsOverview.style.display = "none";
 
-  collegeScheduler.style.display = "flex";
-  collegeOverview.style.display = "flex";
+    collegeScheduler.style.display = "flex";
+    collegeOverview.style.display = "flex";
 
-  RmTab.addEventListener("click", collegeRmTab);
-  SectTab.addEventListener("click", collegeSectTab);
+    RmTab.addEventListener("click", collegeRmTab);
+    SectTab.addEventListener("click", collegeSectTab);
 
-  RmTab.removeEventListener("click", shsRmTab);
-  SectTab.removeEventListener("click", shsSectTab);
+    RmTab.removeEventListener("click", shsRmTab);
+    SectTab.removeEventListener("click", shsSectTab);
 
-  collegeRmTab();
+    collegeRmTab();
 }
 //College Room listener
 function collegeRmTab(){
