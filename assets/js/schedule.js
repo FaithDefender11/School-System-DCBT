@@ -3,11 +3,15 @@ var SectTab = document.getElementById("section");
 
 var shsScheduler = document.getElementById("shs-scheduler");
 var shsOverview = document.getElementById("shs-schedule-overview");
+var shsRmTable = document.getElementById("shs-room-table");
+var shsSectTable = document.getElementById("shs-section-table");
 var shsRmHeader = document.getElementById("shs-room-tab");
 var shsSectHeader = document.getElementById("shs-section-tab");
 
 var collegeScheduler = document.getElementById("college-scheduler");
 var collegeOverview = document.getElementById("college-schedule-overview");
+var collegeRmTable = document.getElementById("college-room-table");
+var collegeSectTable = document.getElementById("college-section-table");
 var collegeRmHeader = document.getElementById("college-room-tab");
 var collegeSectHeader = document.getElementById("college-section-tab");
 
@@ -47,6 +51,12 @@ function shsRmTab(){
 
     shsSectHeader.style.display = "none";
     collegeSectHeader.style.display = "none";
+
+    shsRmTable.style.display = "flex";
+    shsSectTable.style.display = "none";
+
+    collegeRmTable.style.display = "none";
+    collegeSectTable.style.display = "none";
 }
 //SHS Section listener
 function shsSectTab(){
@@ -61,6 +71,12 @@ function shsSectTab(){
 
     shsSectHeader.style.display = "flex";
     collegeSectHeader.style.display = "none";
+
+    shsRmTable.style.display = "none";
+    shsSectTable.style.display = "flex";
+
+    collegeRmTable.style.display = "none";
+    collegeSectTable.style.display = "none";
 }
 
 function college() {
@@ -93,6 +109,12 @@ function collegeRmTab(){
 
     shsSectHeader.style.display = "none";
     collegeSectHeader.style.display = "none";
+
+    shsRmTable.style.display = "none";
+    shsSectTable.style.display = "none";
+
+    collegeRmTable.style.display = "flex";
+    collegeSectTable.style.display = "none";
 }
 //College Section listener
 function collegeSectTab(){
@@ -107,6 +129,12 @@ function collegeSectTab(){
 
     shsSectHeader.style.display = "none";
     collegeSectHeader.style.display = "flex";
+
+    shsRmTable.style.display = "none";
+    shsSectTable.style.display = "none";
+
+    collegeRmTable.style.display = "none";
+    collegeSectTable.style.display = "flex";
 }
 
 window.onload = shs;
