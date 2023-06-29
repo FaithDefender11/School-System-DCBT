@@ -119,6 +119,32 @@
   filter: brightness(90%);
 }
 
+/* ADDED MAIN & FLOATING WITH MODIFICATIONS */
+.content>main>.floating>.tabs {
+  /* parent */
+  display: flex;
+  padding: 0px 100px;
+  /* child */
+  flex-wrap: wrap;
+}
+
+.content>main>.floating>.tabs>.tab {
+  /* parent */
+  display: flex;
+  flex: 1;
+  cursor: pointer;
+  padding: 10px;
+  border: none;
+  background-color: var(--theme);
+  color: #FFF;
+  /* child */
+  column-gap: 5px;
+  justify-content: center;
+  font-weight: bold;
+}
+
+/* ADDED MAIN & FLOATING WITH MODIFICATIONS */
+
 .tab>.selection-btn {
   border: none;
   cursor: pointer;
@@ -181,6 +207,17 @@
   display: block;
 }
 
+/* ADDED ROOM-SELECTOR */
+.floating>header>.room-selector {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-left: 10px;
+  width: 100%;
+}
+
+/* ADDED ROOM-SELECTOR */
+
 .floating>header>.action {
   display: flex;
   align-items: center;
@@ -195,6 +232,13 @@
 .floating>main {
   overflow-x: auto;
 }
+
+/* ADDED TIMESTAMP */
+.floating>main>table>.timestamp>tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+/* ADDED TIMESTAMP */
 
 /* RECYCLED CSS FROM OLD FRONT END */
 .floating>main>.section-table {
