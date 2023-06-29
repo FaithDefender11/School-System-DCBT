@@ -4,13 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <link rel="stylesheet" href="assets/css/others/toggle-switch.css" />
-    <script src="assets/css/others/toggle-switch.js"></script>
+
+    <script src="assets/js/schedule.js" defer></script>
     <!-- link style sheets -->
     <link rel="stylesheet" href="assets/css/buttons.css" />
     <link rel="stylesheet" href="assets/css/content.css" />
     <link rel="stylesheet" href="assets/css/fonts.css" />
     <link rel="stylesheet" href="assets/css/table.css" />
+    <link rel="stylesheet" href="assets/css/others/toggle-switch.css" />
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
@@ -34,22 +35,82 @@
   <body>
     <div class="content">
       <nav>
-        HAKDOG
-        <div class="dashboard">
-          <div class="form-box">
-            hey
-            <div class="button-box"><div class="toggle-btn"></div></div>
+        <h3>Department</h3>
+        <div class="form-box">
+          <div class="button-box">
+            <div id="btn"></div>
+            <button type="button" class="toggle-btn" onclick="shs()">
+              SHS
+            </button>
+            <button type="button" class="toggle-btn" onclick="college()">
+              College
+            </button>
           </div>
         </div>
       </nav>
       <main>
-        <div class="floating">
+        <div class="floating" id="shs-scheduler">
           <header>
             <div class="title">
-              <h3>Scheduler <em>*insert school year*</em></h3>
+              <h3>Scheduler <em>SHS *insert school year*</em></h3>
             </div>
           </header>
-          <main></main>
+          <main>
+            <div class="section-table">
+              <div class="selector">
+                <select name="GAS" id="GAS">
+                  <option value="">*insert section*</option>
+                </select>
+                <select name="ICT" id="ICT">
+                  <option value="">*insert section*</option>
+                </select>
+                <select name="HUMSS" id="HUMSS">
+                  <option value="">*insert section*</option>
+                </select>
+                <select name="ABM" id="ABM">
+                  <option value="">*insert section*</option>
+                </select>
+                <select name="IA" id="IA">
+                  <option value="">*insert section*</option>
+                </select>
+                <select name="HE" id="HE">
+                  <option value="">*insert section*</option>
+                </select>
+              </div>
+              <div class="table-schedule">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Subject name</th>
+                      <th>Room</th>
+                      <th>Day</th>
+                      <th>End time</th>
+                      <th>Start time</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Subject 1</td>
+                      <td>
+                        <select name="room">
+                          <option value="r101">R101</option>
+                        </select>
+                      </td>
+                      <td>
+                        <select name="day">
+                          <option value="monday">Monday</option>
+                        </select>
+                      </td>
+                      <td></td>
+                      <td></td>
+                      <td><i class="bi bi-plus"></i></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </main>
         </div>
       </main>
     </div>
