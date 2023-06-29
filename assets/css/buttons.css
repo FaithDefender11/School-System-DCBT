@@ -19,6 +19,16 @@
   transition-duration: 0.4s;
 }
 
+.add-btn {
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 15px;
+  min-width: 100px;
+  padding: 5px 25px;
+  transition-duration: 0.4s;
+}
+
 /* overide for table buttons */
 .content td > button {
   margin: 2px;

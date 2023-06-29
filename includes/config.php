@@ -13,7 +13,6 @@
     try {
         
         // string that specifies the details of the database connection, including the database driver
-
         $data_source = "mysql:host=" . DB_HOST . ";port=" . DB_PORT . ";dbname=" . DB_DATABASE;
         $con = new PDO($data_source, DB_USERNAME, DB_PASSWORD);
         $con = new PDO('mysql:host=localhost;port=3307;dbname=dcbt', 'root', '');
@@ -37,8 +36,6 @@
 
         // Extract the directory path from the current URL
         $directoryPath = dirname($currentURL);
-
-        // echo $directoryPath;
 
         // FIX THE URL. WILL REDIRECT PROPERLY ESPECIALLY IN THE PRODUCTION
         if ($_SERVER['SERVER_NAME'] === 'localhost') {

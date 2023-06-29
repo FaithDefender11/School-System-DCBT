@@ -10,10 +10,9 @@ class Helper {
         return $inputText;
     }
 
-    public static function GetActiveClass($currentPage, $activePage) : string {
+    public static function GetActiveClass($currentPage, $activePage) {
         // echo $activePage;
-        // echo $activePage;
-        return $currentPage == $activePage ? "active" : "";
+        return $currentPage == $activePage ? "active" : null;
     }
 
     public static function createNavByIcon($text, $icon, $link, $active_class){
@@ -49,14 +48,13 @@ class Helper {
         $components = explode('/', $path);
         // var_dump($components);
         $page = $components[3];
-        // echo $page;
         return $page;
     }
     
     public static function DocumentTitlePage($page) : string{
 
         $parts = explode('_', $page);
-        $transformedString = '';
+        $transformedString = null;
 
         foreach ($parts as $part) {
             $transformedString .= ucfirst($part) . ' ';

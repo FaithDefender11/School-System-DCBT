@@ -5,6 +5,7 @@
     require_once('../../includes/classes/User.php');
     require_once('../../includes/classes/Helper.php');
     require_once('../../includes/classes/Constants.php');
+    require_once('../../includes/classes/Alert.php');
 
     $cashierLoggedIn = isset($_SESSION["cashierLoggedIn"]) 
         ? $_SESSION["cashierLoggedIn"] : "";
@@ -42,7 +43,7 @@
         <title><?php echo "Cashier " . $document_title; ?></title>
 
         <!-- Mododify the Logo of DCBT Here and Please apply some styling. -->
-        <link rel="icon" href="../../assets/images/icons/menu.png" type="image/png">
+        <link rel="icon" href="../../assets/images/icons/DCBT-Logo.jpg" type="image/png">
 
     </head>
 <body>

@@ -1,334 +1,160 @@
-<?php include_once('../../includes/admin_header.php')?>
+<?php 
 
+  include_once('../../includes/admin_header.php');
 
-    <h3>This is Teacher Index</h3>
+  ?>
+        <head>
+            <meta charset="UTF-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <link rel="stylesheet" href="../subject/subject.css">
+        </head>
+    <?php
+?>
+
     
+<div class="col-md-12 row">
 
-    <div class="content">
-        <nav>Department</nav>
+    <div class="content_subject">
+        <div class="dashboard">
 
-        <div class="content-header"></div>
-            <div class="tabs">
-                <div class="tab" id="teachers-list">
-                    <button
-                        type="button"
-                        class="selection-btn"
-                        id="teachers-btn"
-                        style="color: black"
-                        onclick="teachers_list()">
+            <h5>Department</h3>
 
-                        <i class="bi bi-clipboard-check icon"></i>
-                        Teachers List
-                    </button>
-                </div>
-                <div  class="tab"
-                id="subjects-load"
-                style="background-color: rgb(3, 0, 29)">
-                <button
-                    type="button"
-                    class="selection-btn"
-                    id="subjects-btn"
-                    style="background-color: rgb(3, 0, 29)"
-                    onclick="subject_load()"
-                >
-                    <i class="bi bi-collection icon"></i>
-                    Subjects Load
-                </button>
+            <div class="form-box">
+                <div class="button-box">
+                    <div id="btn"></div>
+                    <a href="shs_index.php">
+                        <button type="button" class="btn-active toggle-btn" >
+                            SHS
+                        </button>
+                    </a>
+
+                    <a href="tertiary_index.php">
+                        <button type="button" class="btn-inactive toggle-btn">
+                            Tertiary
+                        </button>
+                    </a>
                 </div>
             </div>
-
-            <!--SHS-TEACHERS-->
-             <main>
-                <div class="floating" id="shs-teachers">
-                <header>
-                    <div class="title">
-                    <h3>Teachers</h3>
-                    </div>
-                    <div class="action">
-                    <button type="button" class="add-btn">+ Add new</button>
-                    </div>
-                </header>
-                <main>
-                    <table
-                    class="ws-table-all cw3-striped cw3-bordered"
-                    style="margin: 0"
-                    >
-                    <thead>
-                        <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Subject load</th>
-                        <th>Hours per week</th>
-                        <th>Status</th>
-                        <th>Date added</th>
-                        <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                        <td>021</td>
-                        <td>Rhandyl Tapuroc</td>
-                        <td>4</td>
-                        <td>4</td>
-                        <td>Active</td>
-                        <td>04/27/2023</td>
-                        <td>
-                            <button
-                            type="button"
-                            class="action-btn"
-                            id="view"
-                            onclick="view()"
-                            >
-                            View
-                            </button>
-                        </td>
-                        </tr>
-                    </tbody>
-                    </table>
-                </main>
-                </div>
-
-                <!--COLLEGE-TEACHERS-->
-                <div class="floating" id="college-teachers">
-                <header>
-                    <div class="title">
-                    <h3>Teachers</h3>
-                    </div>
-                    <div class="action">
-                    <button type="button" class="add-btn">+ Add new</button>
-                    </div>
-                </header>
-                <main>
-                    <table
-                    class="ws-table-all cw3-striped cw3-bordered"
-                    style="margin: 0"
-                    >
-                    <thead>
-                        <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Subject load</th>
-                        <th>Hours per week</th>
-                        <th>Status</th>
-                        <th>Date added</th>
-                        <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                        <td>021</td>
-                        <td>Rhandyl Tapuroc</td>
-                        <td>4</td>
-                        <td>4</td>
-                        <td>Active</td>
-                        <td>04/27/2023</td>
-                        <td>
-                            <button
-                            type="button"
-                            class="action-btn"
-                            id="view"
-                            onclick="view()"
-                            >
-                            View
-                            </button>
-                        </td>
-                        </tr>
-                    </tbody>
-                    </table>
-                </main>
-                </div>
-
-                <!--SHS-SUBJECTS-LOAD-->
-                <div class="floating" id="shs-subject-load" style="display: none">
-                <header>
-                    <div class="title">
-                    <h3>Subject Loader</h3>
-                    <small>Find subject</small>
-                    </div>
-                </header>
-                <div class="filters">
-                    <table>
-                    <tr>
-                        <th
-                        rowspan="2"
-                        class="cell1"
-                        style="border-right: 2px solid black"
-                        >
-                        Filters
-                        </th>
-                        <th>School year</th>
-                        <td>
-                        <select name="school-year">
-                            <option value="2022-2023">2022-2023</option>
-                        </select>
-                        </td>
-                        <th>Semester</th>
-                        <td>
-                        <select name="semester">
-                            <option value="1">1</option>
-                        </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Strand</th>
-                        <td>
-                        <select name="strand">
-                            <option name="ICT">ICT</option>
-                        </select>
-                        </td>
-                        <th>Level</th>
-                        <td>
-                        <select name="level">
-                            <option name="1st year">1st year</option>
-                        </select>
-                        </td>
-                    </tr>
-                    </table>
-                </div>
-
-                <div class="action">
-                    <button type="button" class="search-btn">
-                    <i class="bi bi-search"></i>Search
-                    </button>
-                </div>
-
-                <table>
-                    <thead>
-                        <tr>
-                            <th>School year</th>
-                            <th>Subject ID</th>
-                            <th>Section</th>
-                            <th>Level</th>
-                            <th>Schedule</th>
-                            <th>Hrs/week</th>
-                            <th>Subject status</th>
-                            <th>Teacher</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>2022-2023</td>
-                            <td>021</td>
-                            <td>ICT-101</td>
-                            <td>11</td>
-                            <td>1:00am-2:00pm</td>
-                            <td>1hr</td>
-                            <td>Active</td>
-                            <td>Jeriko Coz</td>
-                            <td>
-                            <button
-                                type="button"
-                                class="action-btn"
-                                id="edit"
-                                onclick="edit()"
-                            >
-                                Edit
-                            </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                </div>
-
-                <!--COLLEGE-SUBJECTS-LOAD-->
-                <div class="floating" id="college-subject-load" style="display: none">
-
-                <header>
-                    <div class="title">
-                    <h3>Subject Loader</h3>
-                    <small>Find subject</small>
-                    </div>
-                </header>
-
-                <div class="filters">
-                    <table>
-                    <tr>
-                        <th
-                        rowspan="2"
-                        class="cell1"
-                        style="border-right: 2px solid black"
-                        >
-                        Filters
-                        </th>
-                        <th>School year</th>
-                        <td>
-                        <select name="school-year">
-                            <option value="2022-2023">2022-2023</option>
-                        </select>
-                        </td>
-                        <th>Semester</th>
-                        <td>
-                        <select name="semester">
-                            <option value="1">1</option>
-                        </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Strand</th>
-                        <td>
-                        <select name="strand">
-                            <option name="ICT">ICT</option>
-                        </select>
-                        </td>
-                        <th>Level</th>
-                        <td>
-                        <select name="level">
-                            <option name="1st year">1st year</option>
-                        </select>
-                        </td>
-                    </tr>
-                    </table>
-                </div>
-
-                <div class="action">
-                    <button type="button" class="search-btn">
-                    <i class="bi bi-search"></i>Search
-                    </button>
-                </div>
-
-                <table>
-                    <thead>
-                    <tr>
-                        <th>School year</th>
-                        <th>Subject ID</th>
-                        <th>Section</th>
-                        <th>Level</th>
-                        <th>Schedule</th>
-                        <th>Hrs/week</th>
-                        <th>Subject status</th>
-                        <th>Teacher</th>
-                        <th></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>2022-2023</td>
-                        <td>021</td>
-                        <td>ICT-101</td>
-                        <td>11</td>
-                        <td>1:00am-2:00pm</td>
-                        <td>1hr</td>
-                        <td>Active</td>
-                        <td>Jeriko Coz</td>
-                        <td>
-                        <button
-                            type="button"
-                            class="action-btn"
-                            id="edit"
-                            onclick="edit()"
-                        >
-                            Edit
-                        </button>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-                </div>
-            </main>
         </div>
     </div>
 
+    <div class="content">
+          <div class="content-header"></div>
 
-<script src="assets/js/teachers.js"></script>
+          <div class="tabs">
+            <div class="tab" id="teachers-list">
+              <button
+                type="button"
+                class="selection-btn"
+                id="teachers-btn"
+                style="color: black"
+                onclick="teachers_list()"
+              >
+                <i class="bi bi-clipboard-check icon"></i>
+                Teachers List
+              </button>
+            </div>
+            <div
+              class="tab"
+              id="subjects-load"
+              style="background-color: rgb(3, 0, 29)"
+            >
+              <button
+                type="button"
+                class="selection-btn"
+                id="subjects-btn"
+                style="background-color: rgb(3, 0, 29)"
+                onclick="subject_load()"
+              >
+                <i class="bi bi-collection icon"></i>
+                Subjects Load
+              </button>
+            </div>
+          </div>
+
+          <!--SHS-TEACHERS-->
+          <main>
+            <div class="floating" id="shs-teachers">
+              <header>
+                <div class="title">
+                  <h3>Teachers</h3>
+                </div>
+                <div class="action">
+                  <a href="create.php">
+                    <button type="button" class="btn btn-success">+ Add new</button>
+                  </a>
+
+                </div>
+              </header>
+              <main>
+                <table
+                  class="ws-table-all cw3-striped cw3-bordered"
+                  style="margin: 0"
+                >
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Name</th>
+                      <th>Subject load</th>
+                      <th>Hours per week</th>
+                      <th>Status</th>
+                      <th>Date added</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <?php
+                    
+                      $query = $con->prepare("SELECT * FROM teacher as t1
+                      
+                        -- INNER JOIN subject_schedule as t2 ON t1.teacher_id = t2.teacher_id
+                        -- LEFT JOIN subject as t3 ON t3.subject_id = t2.subject_id
+                        -- LEFT JOIN course as t4 ON t4.course_id = t3.course_id
+                        ");
+
+                      $query->execute();
+
+                      if($query->rowCount() > 0){
+
+                        while($row = $query->fetch(PDO::FETCH_ASSOC)){
+                          $teacher_id = $row['teacher_id'];
+                          $fullname = $row['firstname'] . " " . $row['lastname'];
+                          echo "
+                            <tr>
+                              <td>$teacher_id</td>
+                              <td>
+                              
+                                <a style='color: white;' href='edit.php?id=$teacher_id'>
+                                  $fullname
+                                </a>
+
+                              </td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td>
+                                <a href='info.php?details=show&id=$teacher_id'>
+                                  <button class='btn btn-primary'>View</button>
+                                </a>
+                              </td>
+                            </tr>
+                          
+                          ";
+                        }
+                      }
+
+                    ?>
+                  </tbody>
+                </table>
+              </main>
+            </div>
+          </main>
+    </div>
+</div>
+
+ 
+<?php include_once('../../includes/footer.php')?>
+
 
