@@ -196,6 +196,7 @@
   overflow-x: auto;
 }
 
+/* RECYCLED CSS FROM OLD FRONT END */
 .floating>main>.section-table {
   display: flex;
   flex-direction: row;
@@ -221,6 +222,8 @@
   align-items: flex-start;
   width: 100%;
 }
+
+/* RECYCLED CSS FROM OLD FRONT END */
 
 .floating>main>.menu {
   display: flex;
