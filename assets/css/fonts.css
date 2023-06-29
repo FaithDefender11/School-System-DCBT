@@ -27,6 +27,9 @@ table * {
   font-family: "Arimo";
 }
 
+.floating > main > .menu * {
+  font-family: "Arimo";
+}
 /* Font sizes */
 /* * {
   font-size: 14px;
