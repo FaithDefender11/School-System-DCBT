@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <script src="assets/js/payment.js" defer></script>
+    <script src="assets/js/payment-form.js" defer></script>
     <link rel="stylesheet" href="assets/css/others/toggle-switch.css" />
     <!-- link style sheets -->
     <link rel="stylesheet" href="assets/css/buttons.css" />
@@ -69,17 +69,17 @@
         </div>
       </div>
       <div class="tabs">
-        <button class="tab">
+        <button class="tab" id="student-details" onclick="details_tab()">
           <i class="bi bi-clipboard-check"></i>
           Student details
         </button>
-        <button class="tab">
+        <button class="tab" id="enrolled-subjects" onclick="subjects_tab()">
           <i class="bi bi-book"></i>
           Enrolled subjects
         </button>
       </div>
       <main>
-        <div class="floating">
+        <div class="floating" id="student-info">
           <header>
             <div class="title">
               <h3>Student information</h3>
@@ -160,7 +160,7 @@
           </main>
         </div>
 
-        <div class="floating">
+        <div class="floating" id="enrollment-details">
           <header>
             <div class="title">
               <h3>Enrollment details</h3>
@@ -212,7 +212,7 @@
           </main>
         </div>
 
-        <div class="floating">
+        <div class="floating" id="subject-items">
           <header>
             <div class="title">
               <h3>*insert* subjects</h3>
@@ -241,7 +241,7 @@
             </table>
           </main>
         </div>
-        <div class="action">
+        <div class="action" id="confirm-btn">
           <button class="default large">Mark as paid</button>
         </div>
       </main>
