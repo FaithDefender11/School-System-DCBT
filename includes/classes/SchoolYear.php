@@ -5,7 +5,7 @@
 
     private $con, $sqlData;
 
-    public function __construct($con, $input)
+    public function __construct($con, $input = null)
     {
         $this->con = $con;
         $this->sqlData = $input;
@@ -132,6 +132,7 @@
                     <td>$class_enddate_status</td>
                 </tr>
             ";
+
             $result .= "
                 <tr>
                     <td>Prelim Exam</td>
@@ -176,6 +177,8 @@
                     <td>$break_enddate_status</td>
                 </tr>
             ";
+
+            
         }
 
         return $result;

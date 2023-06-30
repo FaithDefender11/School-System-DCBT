@@ -4,7 +4,7 @@
 
         private $con, $teacher_id, $sqlData;
 
-        public function __construct($con, $teacher_id){
+        public function __construct($con, $teacher_id = null){
             $this->con = $con;
             $this->teacher_id = $teacher_id;
 
@@ -299,17 +299,104 @@
                     </div>
                 </div>
 
-                ";
+            ";
             
 
         }
+        public function createTeacherFormFunction(){
 
+            $firstname = $_POST['firstname'];
+            $middle_name = $_POST['middle_name'];
+            $lastname = $_POST['lastname'];
+            $suffix = $_POST['suffix'];
+            $department_id = $_POST['department_id'];
+            // $profilePic = $_POST['profilePic'];
+            $profilePic = "";
+            $gender = $_POST['gender'];
+            $email = $_POST['email'];
+            $contact_number = $_POST['contact_number'];
+            $address = $_POST['address'];
+            $citizenship = $_POST['citizenship'];
+            $birthplace = $_POST['birthplace'];
+            $birthday = $_POST['birthday'];
+            $religion = $_POST['religion'];
+            $status = "active";
+
+            $image = $_FILES['profilePic'] ?? null;
+            $imagePath = '';
+
+            if (!is_dir('../../assets')) {
+                mkdir('../../assets');
+            }
+
+            if (!is_dir('../../assets/images')) {
+                mkdir('../../assets/images');
+            }
+
+            if (!is_dir('../../assets/images/teacher_profiles')) {
+                mkdir('../../assets/images/teacher_profiles');
+            }
+
+            if ($image && $image['tmp_name']) {
+
+                $uploadDirectory = '../../assets/images/teacher_profiles/';
+                $originalFilename = $image['name'];
+
+                $uniqueFilename = uniqid() . '_' . time() . '_' . $originalFilename;
+                $targetPath = $uploadDirectory . $uniqueFilename;
+
+                move_uploaded_file($image['tmp_name'], $targetPath);
+
+                $imagePath = $targetPath;
+
+                // Remove Directory Path in the Database.
+                $imagePath = str_replace('../../', '', $imagePath);
+
+            }
+
+            // Prepare and execute the statement
+
+            $query = "INSERT INTO teacher (firstname, middle_name, lastname, suffix, department_id, profilePic, gender, email, contact_number,
+                    address, citizenship, birthplace, birthday, religion, teacher_status) 
+
+                VALUES (:firstname, :middle_name, :lastname, :suffix, :department_id, :profilePic, :gender, :email, :contact_number,
+                    :address, :citizenship, :birthplace, :birthday, :religion, :teacher_status)";
+
+            $statement = $this->con->prepare($query);
+
+            $statement->bindParam(':firstname', $firstname);
+            $statement->bindParam(':middle_name', $middle_name);
+            $statement->bindParam(':lastname', $lastname);
+            $statement->bindParam(':suffix', $suffix);
+            $statement->bindParam(':department_id', $department_id);
+            $statement->bindParam(':profilePic', $imagePath);
+            $statement->bindParam(':gender', $gender);
+            $statement->bindParam(':email', $email);
+            $statement->bindParam(':contact_number', $contact_number);
+            $statement->bindParam(':address', $address);
+            $statement->bindParam(':citizenship', $citizenship);
+            $statement->bindParam(':birthplace', $birthplace);
+            $statement->bindParam(':birthday', $birthday);
+            $statement->bindParam(':religion', $religion);
+            $statement->bindParam(':teacher_status', $status);
+
+            // Execute the statement
+            if ($statement->execute()) {
+
+                Alert::success("Successfully Created", "index.php");
+                exit();
+            } else {
+
+                Alert::error("Successfully Created", "index.php");
+                exit();
+            }
+        }
         public function editTeacherForm(
             $firstname,
             $middle_name,
             $lastname, $suffix,$department_id,$profilePic,
             $gender,$email, $contact_number, $address,$citizenship,
-            $birthplace,$birthday,$religion,$status){
+            $birthplace,$birthday,$religion,$status, $teacher_id){
 
             $department_selection = $this->CreateTeacherDepartmentSelection($department_id);
 
@@ -331,24 +418,23 @@
                 $birthday = $_POST['birthday'];
                 $religion = $_POST['religion'];
 
-                echo $status;
+                // echo $status;
 
                 $image = $_FILES['profilePic'] ?? null;
                 
                 $imagePath = '';
 
-                if (!is_dir('../../assets')) {
-                    mkdir('../../assets');
-                }
+                // if (!is_dir('../../assets')) {
+                //     mkdir('../../assets');
+                // }
 
-                if (!is_dir('../../assets/images')) {
-                    mkdir('../../assets/images');
-                }
+                // if (!is_dir('../../assets/images')) {
+                //     mkdir('../../assets/images');
+                // }
 
-                if (!is_dir('../../assets/images/teacher_profiles')) {
-                    mkdir('../../assets/images/teacher_profiles');
-                }
-
+                // if (!is_dir('../../assets/images/teacher_profiles')) {
+                //     mkdir('../../assets/images/teacher_profiles');
+                // }
 
                 $query = "UPDATE teacher SET 
                     firstname = :firstname,
@@ -366,81 +452,32 @@
                     birthday = :birthday,
                     religion = :religion,
                     teacher_status = :teacher_status
-                    
+
                 WHERE teacher_id = :teacher_id";
 
-                $statement = $this->con->prepare($query);
+                $update = $this->con->prepare($query);
 
-                $statement->bindParam(':firstname', $firstname);
-                $statement->bindParam(':middle_name', $middle_name);
-                $statement->bindParam(':lastname', $lastname);
-                $statement->bindParam(':suffix', $suffix);
-                $statement->bindParam(':department_id', $department_id);
-                $statement->bindParam(':profilePic', $imagePath);
-                $statement->bindParam(':gender', $gender);
-                $statement->bindParam(':email', $email);
-                $statement->bindParam(':contact_number', $contact_number);
-                $statement->bindParam(':address', $address);
-                $statement->bindParam(':citizenship', $citizenship);
-                $statement->bindParam(':birthplace', $birthplace);
-                $statement->bindParam(':birthday', $birthday);
-                $statement->bindParam(':religion', $religion);
-                $statement->bindParam(':teacher_status', $status);
-                $statement->bindParam(':teacher_id', $teacher_id);
+                $update->bindParam(':firstname', $firstname);
+                $update->bindParam(':middle_name', $middle_name);
+                $update->bindParam(':lastname', $lastname);
+                $update->bindParam(':suffix', $suffix);
+                $update->bindParam(':department_id', $department_id);
+                $update->bindParam(':profilePic', $imagePath);
+                $update->bindParam(':gender', $gender);
+                $update->bindParam(':email', $email);
+                $update->bindParam(':contact_number', $contact_number);
+                $update->bindParam(':address', $address);
+                $update->bindParam(':citizenship', $citizenship);
+                $update->bindParam(':birthplace', $birthplace);
+                $update->bindParam(':birthday', $birthday);
+                $update->bindParam(':religion', $religion);
+                $update->bindParam(':teacher_status', $status);
+                $update->bindParam(':teacher_id', $teacher_id);
 
-                // if ($image && $image['tmp_name']) {
+                if ($update->execute()) {
+                    Alert::success("Successfully Edited", "index.php");
+                }
 
-                //     $uploadDirectory = '../../assets/images/teacher_profiles/';
-                //     $originalFilename = $image['name'];
-
-                //     $uniqueFilename = uniqid() . '_' . time() . '_' . $originalFilename;
-                //     $targetPath = $uploadDirectory . $uniqueFilename;
-
-                //     move_uploaded_file($image['tmp_name'], $targetPath);
-
-                //     $imagePath = $targetPath;
-
-                //     // Remove Directory Path in the Database.
-                //     $imagePath = str_replace('../../', '', $imagePath);
-
-                // }
-
-                // Prepare and execute the statement
-
-                // $query = "INSERT INTO teacher (firstname, middle_name, lastname, suffix, department_id, profilePic, gender, email, contact_number,
-                //         address, citizenship, birthplace, birthday, religion, teacher_status) 
-
-                //     VALUES (:firstname, :middle_name, :lastname, :suffix, :department_id, :profilePic, :gender, :email, :contact_number,
-                //         :address, :citizenship, :birthplace, :birthday, :religion, :teacher_status)";
-
-                // $statement = $this->con->prepare($query);
-
-                // $statement->bindParam(':firstname', $firstname);
-                // $statement->bindParam(':middle_name', $middle_name);
-                // $statement->bindParam(':lastname', $lastname);
-                // $statement->bindParam(':suffix', $suffix);
-                // $statement->bindParam(':department_id', $department_id);
-                // $statement->bindParam(':profilePic', $imagePath);
-                // $statement->bindParam(':gender', $gender);
-                // $statement->bindParam(':email', $email);
-                // $statement->bindParam(':contact_number', $contact_number);
-                // $statement->bindParam(':address', $address);
-                // $statement->bindParam(':citizenship', $citizenship);
-                // $statement->bindParam(':birthplace', $birthplace);
-                // $statement->bindParam(':birthday', $birthday);
-                // $statement->bindParam(':religion', $religion);
-                // $statement->bindParam(':teacher_status', $status);
-
-                // // Execute the statement
-                // if ($statement->execute()) {
-
-                //     Alert::success("Successfully Created", "index.php");
-                //     exit();
-                // } else {
-
-                //     Alert::error("Successfully Created", "index.php");
-                //     exit();
-                // }
             }
 
             return "
@@ -534,7 +571,7 @@
                                         <input type='radio' name='status' value='active' " . ($status === 'Active' ? 'checked' : '') . "> Active
                                     </label>
                                     <label>
-                                        <input type='radio' name='status' value='non-active' " . ($status === 'Non-active' ? 'checked' : '') . "> Non-active
+                                        <input type='radio' name='status' value='non-active' " . ($status === 'Inactive' ? 'checked' : '') . "> Inctive
                                     </label>
                                 </div>
                             </div>
@@ -545,7 +582,7 @@
                     </div>
                 </div>
 
-                ";
+            ";
             
 
         }
@@ -586,6 +623,22 @@
                     </div>";
 
             return $html;
+        }
+
+        public function GetTeacherSubjectLoad($teacher_id){
+
+            $query = $this->con->prepare("SELECT * FROM teacher as t1
+
+                INNER JOIN subject_schedule as t2 ON t2.teacher_id = t1.teacher_id
+
+                WHERE t2.teacher_id = :teacher_id
+                ");
+
+            $query->bindParam(":teacher_id", $teacher_id);
+            $query->execute();
+
+            return $query->rowCount();
+
         }
 
     }

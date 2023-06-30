@@ -4,7 +4,7 @@
 
     private $con, $userLoggedIn, $subject_id, $sqlData;
 
-    public function __construct($con, $userLoggedIn, $subject_id)
+    public function __construct($con, $userLoggedIn, $subject_id = null)
     {
         $this->con = $con;
         $this->userLoggedIn = $userLoggedIn;

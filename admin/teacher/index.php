@@ -1,8 +1,9 @@
 <?php 
 
   include_once('../../includes/admin_header.php');
+  include_once('../../includes/classes/Teacher.php');
 
-  ?>
+    ?>
         <head>
             <meta charset="UTF-8">
             <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -10,8 +11,12 @@
             <link rel="stylesheet" href="../subject/subject.css">
         </head>
     <?php
-?>
 
+
+  $teacher = new Teacher($con, null);
+
+
+?>
     
 <div class="col-md-12 row">
 
@@ -44,32 +49,35 @@
 
           <div class="tabs">
             <div class="tab" id="teachers-list">
-              <button
-                type="button"
-                class="selection-btn"
-                id="teachers-btn"
-                style="color: black"
-                onclick="teachers_list()"
-              >
-                <i class="bi bi-clipboard-check icon"></i>
-                Teachers List
-              </button>
+              <a href="index.php">
+                    <button
+                        type="button"
+                        class="selection-btn"
+                        id="teachers-btn"
+                        style="color: black">
+                        <i class="bi bi-clipboard-check icon"></i>
+                        Teachers List
+                    </button>
+                </a>
             </div>
             <div
               class="tab"
               id="subjects-load"
-              style="background-color: rgb(3, 0, 29)"
-            >
-              <button
-                type="button"
-                class="selection-btn"
-                id="subjects-btn"
-                style="background-color: rgb(3, 0, 29)"
-                onclick="subject_load()"
-              >
-                <i class="bi bi-collection icon"></i>
-                Subjects Load
-              </button>
+              style="background-color: rgb(3, 0, 29)">
+              <a href="subject_load.php">
+                    <button
+                        type="button"
+                        class="selection-btn"
+                        id="teachers-btn"
+                        style="background-color: rgb(3, 0, 29)">
+
+                        <i class="bi bi-clipboard-check icon"></i>
+                        Subject Load
+                    </button>
+                </a>
+              
+              
+              
             </div>
           </div>
 
@@ -118,8 +126,17 @@
                       if($query->rowCount() > 0){
 
                         while($row = $query->fetch(PDO::FETCH_ASSOC)){
+
                           $teacher_id = $row['teacher_id'];
+                          $teacher_status = $row['teacher_status'];
+                          $date_creation = $row['date_creation'];
+
+                          $date_creation = $date_creation !== NULL ? date('Y-m-d', strtotime($date_creation)) : 'Not Set';
+
                           $fullname = $row['firstname'] . " " . $row['lastname'];
+
+                          $subject_load_count = $teacher->GetTeacherSubjectLoad($teacher_id);
+
                           echo "
                             <tr>
                               <td>$teacher_id</td>
@@ -130,10 +147,10 @@
                                 </a>
 
                               </td>
+                              <td>$subject_load_count</td>
                               <td></td>
-                              <td></td>
-                              <td></td>
-                              <td></td>
+                              <td>$teacher_status</td>
+                              <td>$date_creation</td>
                               <td>
                                 <a href='info.php?details=show&id=$teacher_id'>
                                   <button class='btn btn-primary'>View</button>

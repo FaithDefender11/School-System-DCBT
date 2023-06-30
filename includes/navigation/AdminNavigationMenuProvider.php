@@ -23,7 +23,7 @@
         // SHS Default -> More SHS Students than Tertiary.
         $subject_url = $base_url .  "/subject/shs_index.php";
 
-        $section_url = $base_url .  "/section/index.php";
+        $section_url = $base_url .  "/section/shs_index.php";
         $schedule_url = $base_url .  "/schedule/index.php";
         $account_url = $base_url .  "/account/index.php";
         $logout_url = 'http://localhost/school-system-dcbt/logout.php';
