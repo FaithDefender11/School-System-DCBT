@@ -71,22 +71,33 @@
               <nav>
                 <a class="dropdown blue" id="GAS">
                   <span>GAS</span>
-                  <button>Section1</button>
-                  <button>Section2</button>
+                  <input type="button" value="Section1" />
+                  <input type="button" value="Section2" />
                 </a>
-                <a class="dropdown coral" id="GAS">
-                  <span>GAS</span>
-                  <button>Section1</button>
-                  <button>Section2</button>
-                  <button>Section1</button>
-                  <button>Section2</button>
-                  <button>Section1</button>
-                  <button>Section2</button>
+                <a class="dropdown coral" id="ICT">
+                  <span>ICT</span>
+                  <input type="button" value="Section1" />
+                  <input type="button" value="Section2" />
                 </a>
-                <a class="dropdown green" id="GAS">
-                  <span>GAS</span>
-                  <button>Section1</button>
-                  <button>Section2</button>
+                <a class="dropdown green" id="HUMSS">
+                  <span>HUMSS</span>
+                  <input type="button" value="Section1" />
+                  <input type="button" value="Section2" />
+                </a>
+                <a class="dropdown blue" id="ABM">
+                  <span>ABM</span>
+                  <input type="button" value="Section1" />
+                  <input type="button" value="Section2" />
+                </a>
+                <a class="dropdown coral" id="IA">
+                  <span>IA</span>
+                  <input type="button" value="Section1" />
+                  <input type="button" value="Section2" />
+                </a>
+                <a class="dropdown green" id="HE">
+                  <span>HE</span>
+                  <input type="button" value="Section1" />
+                  <input type="button" value="Section2" />
                 </a>
               </nav>
               <div class="schedule-editor">
@@ -186,11 +197,6 @@
             <div class="title">
               <h3>Schedule Overview <em>SHS</em></h3>
             </div>
-            <div class="action">
-              <button class="icon">
-                <i class="bi bi-three-dots-vertical"></i>
-              </button>
-            </div>
           </header>
           <div class="tabs">
             <button class="tab" id="shs-room">
@@ -204,27 +210,9 @@
           </div>
 
           <div class="action" id="shs-room-tab">
-            <div class="input">
+            <div class="input" id="shs-room-select">
               <p>Room</p>
-              <select name="Room" id="">
-                <option value="">*insert room*</option>
-              </select>
-            </div>
-            <div class="input">
-              <p>Room</p>
-              <select name="Room" id="">
-                <option value="">*insert room*</option>
-              </select>
-            </div>
-            <div class="input">
-              <p>Room</p>
-              <select name="Room" id="">
-                <option value="">*insert room*</option>
-              </select>
-            </div>
-            <div class="input">
-              <p>Room</p>
-              <select name="Room" id="">
+              <select name="Room">
                 <option value="">*insert room*</option>
               </select>
             </div>
@@ -235,21 +223,19 @@
             </span>
           </div>
 
-          <header id="shs-section-tab">
-            <div class="title">
-              <small id="section-tab">Section</small>
-            </div>
-            <div class="room-selector">
-              <select name="Section" id="">
+          <div class="action" id="shs-section-tab">
+            <div class="input" id="shs-section-select">
+              <p>Section</p>
+              <select name="Room">
                 <option value="">*insert section*</option>
               </select>
             </div>
-            <div class="action">
+            <span>
               <button class="icon">
                 <i class="bi bi-three-dots-vertical"></i>
               </button>
-            </div>
-          </header>
+            </span>
+          </div>
 
           <main id="shs-room-table">
             <table>
@@ -858,36 +844,32 @@
               <nav>
                 <a class="dropdown blue" id="BCM">
                   <span>BCM</span>
-                  <button>Section1</button>
-                  <button>Section2</button>
+                  <input type="button" value="Section1" />
+                  <input type="button" value="Section2" />
                 </a>
                 <a class="dropdown coral" id="BPE">
                   <span>BPE</span>
-                  <button>Section1</button>
-                  <button>Section2</button>
-                  <button>Section1</button>
-                  <button>Section2</button>
-                  <button>Section1</button>
-                  <button>Section2</button>
+                  <input type="button" value="Section1" />
+                  <input type="button" value="Section2" />
                 </a>
                 <a class="dropdown green" id="BAE">
                   <span>BAE</span>
-                  <button>Section1</button>
-                  <button>Section2</button>
+                  <input type="button" value="Section1" />
+                  <input type="button" value="Section2" />
                 </a>
                 <a class="dropdown blue" id="BSE">
                   <span>BSE</span>
-                  <button>Section1</button>
-                  <button>Section2</button>
+                  <input type="button" value="Section1" />
+                  <input type="button" value="Section2" />
                 </a>
                 <a class="dropdown coral" id="BTTE">
                   <span>BTTE</span>
-                  <button>Section1</button>
-                  <button>Section2</button>
+                  <input type="button" value="Section1" />
+                  <input type="button" value="Section2" />
                 </a>
               </nav>
               <div class="schedule-editor">
-                <table>
+                <table class="a">
                   <thead>
                     <tr>
                       <th>Subject name</th>
@@ -995,37 +977,33 @@
             </button>
           </div>
 
-          <header id="college-room-tab">
-            <div class="title">
-              <small id="room-tab">Room</small>
-            </div>
-            <div class="room-selector">
-              <select name="Room" id="">
+          <div class="action" id="college-room-tab">
+            <div class="input" id="college-room-select">
+              <p>Room</p>
+              <select name="Room">
                 <option value="">*insert room*</option>
               </select>
             </div>
-            <div class="action">
+            <span>
               <button class="icon">
                 <i class="bi bi-three-dots-vertical"></i>
               </button>
-            </div>
-          </header>
+            </span>
+          </div>
 
-          <header id="college-section-tab">
-            <div class="title">
-              <small id="section-tab">Section</small>
-            </div>
-            <div class="room-selector">
-              <select name="Section" id="">
+          <div class="action" id="college-section-tab">
+            <div class="input" id="college-section-select">
+              <p>Section</p>
+              <select name="Room">
                 <option value="">*insert section*</option>
               </select>
             </div>
-            <div class="action">
+            <span>
               <button class="icon">
                 <i class="bi bi-three-dots-vertical"></i>
               </button>
-            </div>
-          </header>
+            </span>
+          </div>
 
           <main id="college-room-table">
             <table>

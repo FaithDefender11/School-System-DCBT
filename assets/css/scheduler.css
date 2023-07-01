@@ -8,43 +8,45 @@
 .dropdown.blue {
   background-color: var(--1);
 }
+
 .dropdown.coral {
   background-color: var(--2);
 }
+
 .dropdown.green {
   background-color: var(--3);
 }
 
 /* scheduler scheduler scheduler scheduler  */
 
-.floating > main > .scheduler {
+.floating>main>.scheduler {
   display: flex;
   align-items: flex-start;
 }
 
-.floating > main > .scheduler > nav {
+.floating>main>.scheduler>nav {
   display: flex;
   flex: 0 0 100px;
   flex-direction: column;
 }
 
-.floating > main > .scheduler > nav .dropdown {
+.floating>main>.scheduler>nav .dropdown {
   display: flex;
   text-align: center;
   flex-direction: column;
   cursor: pointer;
 }
 
-.floating > main > .scheduler > nav .dropdown span {
+.floating>main>.scheduler>nav .dropdown span {
   font-weight: bold;
   padding: 10px 5px;
 }
 
-.floating > main > .scheduler > nav .dropdown:hover button {
+.floating>main>.scheduler>nav .dropdown:hover input {
   display: block;
 }
 
-.floating > main > .scheduler > nav .dropdown > button {
+.floating>main>.scheduler>nav .dropdown>input {
   display: none;
   border: none;
   background-color: transparent;
@@ -53,11 +55,16 @@
   justify-content: center;
 }
 
-.floating > main > .scheduler > .schedule-editor {
+.floating>main>.scheduler>nav .dropdown>input:hover {
+  background-color: aqua;
+}
+
+.floating>main>.scheduler>.schedule-editor {
   display: flex;
   align-items: center;
   flex: 1;
 }
+
 /* ADDED ROOM-SELECTOR */
 /* .floating > header > .room-selector {
   display: flex;
