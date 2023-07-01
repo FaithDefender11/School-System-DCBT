@@ -120,30 +120,6 @@
 }
 
 /* ADDED MAIN & FLOATING WITH MODIFICATIONS */
-.content > main > .floating > .tabs {
-  /* parent */
-  display: flex;
-  padding: 0px 100px;
-  /* child */
-  flex-wrap: wrap;
-}
-
-.content > main > .floating > .tabs > .tab {
-  /* parent */
-  display: flex;
-  flex: 1;
-  cursor: pointer;
-  padding: 10px;
-  border: none;
-  background-color: var(--theme);
-  color: #fff;
-  /* child */
-  column-gap: 5px;
-  justify-content: center;
-  font-weight: bold;
-}
-
-/* ADDED MAIN & FLOATING WITH MODIFICATIONS */
 
 .tab > .selection-btn {
   border: none;
@@ -183,6 +159,7 @@
 
 .floating > header {
   display: flex;
+  flex-wrap: wrap;
 }
 
 .floating > header > .title {
@@ -211,6 +188,8 @@
   display: flex;
   align-items: center;
   column-gap: 5px;
+  flex-wrap: wrap;
+  row-gap: 5px;
 }
 
 .floating > header > .action button i {
@@ -218,23 +197,42 @@
   font-size: 20px;
 }
 
+/* ADDED MAIN & FLOATING WITH MODIFICATIONS */
+.floating > .tabs {
+  /* parent */
+  display: flex;
+  padding: 0px 100px;
+  /* child */
+  flex-wrap: wrap;
+}
+
+.floating > .tabs > .tab {
+  /* parent */
+  display: flex;
+  flex: 1;
+  cursor: pointer;
+  padding: 10px;
+  border: none;
+  background-color: var(--theme);
+  color: #fff;
+  /* child */
+  column-gap: 5px;
+  justify-content: center;
+  font-weight: bold;
+}
+
 .floating > main {
   overflow-x: auto;
 }
 
 /* ADDED TIMESTAMP */
-.floating > main > table > .timestamp > tr:nth-child(even) {
-  background-color: #f2f2f2;
-}
 
 /* ADDED TIMESTAMP */
-
-/* RECYCLED CSS FROM OLD FRONT END */
 
 .floating > main > .menu {
   display: flex;
   flex-direction: column;
-  row-gap: 3px;
+  row-gap: 30px;
 }
 
 .floating > main > .menu > .item {
@@ -255,7 +253,6 @@
   align-items: center;
   overflow-x: hidden;
   flex: 0 0 120px; /*set to fixed button width*/
-  background-color: wheat;
   justify-content: center;
 }
 
@@ -269,4 +266,37 @@
   align-items: center;
   justify-content: end;
   gap: 5px;
+}
+
+.floating > .action > .input {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: 5px;
+  flex: 1 0;
+  border: solid 1px black;
+  padding: 0px 20px;
+}
+
+.floating > .action > .input > p {
+  margin: 5px;
+}
+
+.floating > .action > .input > select {
+  display: flex;
+  flex-grow: 1;
+  text-align: center;
+  border: none;
+}
+
+.floating > .action span {
+  display: flex;
+  flex: 1 1;
+  margin: 0px;
+  justify-content: end;
+  font-size: 100px;
+}
+
+.floating > .action span i {
+  font-size: 20px;
 }

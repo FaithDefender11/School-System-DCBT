@@ -1,5 +1,6 @@
 :root {
   --th-color: rgb(230, 230, 230);
+  --alterColor: #eeeeee;
 }
 
 /* table scroll style */
@@ -28,17 +29,30 @@
 table {
   width: 100%;
   border-collapse: collapse;
-}
-thead {
-  background-color: var(--th-color);
-}
-tbody {
-}
-th,
-td {
-  padding: 5px 10px;
   text-align: center;
 }
+
+table.a thead {
+  background-color: var(--th-color);
+}
+table.a th,
+table.a td {
+  padding: 5px 10px;
+}
+
+table.a tr:nth-child(even) {
+  background-color: var(--alterColor);
+}
+
+table.b th,
+table.b td {
+  padding: 10px 20px;
+}
+
+table.b thead {
+  margin: 10px;
+}
+
 /* for tables with multiple height */
 td > p {
   margin: 0;
@@ -47,6 +61,7 @@ td > p {
 td > select {
   border: none;
   padding: 0px 5px;
+  background-color: transparent;
 }
 /*tables with important data*/
 td.important {
