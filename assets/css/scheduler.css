@@ -1,0 +1,70 @@
+:root {
+  --1: lightblue;
+  --2: lightcoral;
+  --3: lightgreen;
+}
+
+/* colors for nav */
+.dropdown.blue {
+  background-color: var(--1);
+}
+.dropdown.coral {
+  background-color: var(--2);
+}
+.dropdown.green {
+  background-color: var(--3);
+}
+
+/* scheduler scheduler scheduler scheduler  */
+
+.floating > main > .scheduler {
+  display: flex;
+  align-items: flex-start;
+}
+
+.floating > main > .scheduler > nav {
+  display: flex;
+  flex: 0 0 100px;
+  flex-direction: column;
+}
+
+.floating > main > .scheduler > nav .dropdown {
+  display: flex;
+  text-align: center;
+  flex-direction: column;
+  cursor: pointer;
+}
+
+.floating > main > .scheduler > nav .dropdown span {
+  font-weight: bold;
+  padding: 10px 5px;
+}
+
+.floating > main > .scheduler > nav .dropdown:hover button {
+  display: block;
+}
+
+.floating > main > .scheduler > nav .dropdown > button {
+  display: none;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  font-size: 15px;
+  justify-content: center;
+}
+
+.floating > main > .scheduler > .schedule-editor {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+/* ADDED ROOM-SELECTOR */
+/* .floating > header > .room-selector {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-left: 10px;
+  width: 100%;
+} */
+
+/* ADDED ROOM-SELECTOR */

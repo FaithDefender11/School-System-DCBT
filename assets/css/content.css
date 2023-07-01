@@ -92,6 +92,10 @@
   color: gray;
 }
 
+.content .tab:hover {
+  filter: brightness(90%);
+}
+
 .content > .tabs {
   /* parent */
   display: flex;
@@ -113,10 +117,6 @@
   column-gap: 5px;
   justify-content: center;
   font-weight: bold;
-}
-
-.content > .tabs > .tab:hover {
-  filter: brightness(90%);
 }
 
 /* ADDED MAIN & FLOATING WITH MODIFICATIONS */
@@ -207,17 +207,6 @@
   display: block;
 }
 
-/* ADDED ROOM-SELECTOR */
-.floating > header > .room-selector {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding-left: 10px;
-  width: 100%;
-}
-
-/* ADDED ROOM-SELECTOR */
-
 .floating > header > .action {
   display: flex;
   align-items: center;
@@ -239,33 +228,6 @@
 }
 
 /* ADDED TIMESTAMP */
-
-/* RECYCLED CSS FROM OLD FRONT END */
-.floating > main > .section-table {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  padding: 0px;
-  width: 100%;
-  height: auto;
-  flex: none;
-  order: 1;
-  align-self: stretch;
-  flex-grow: 0;
-}
-
-.floating > main > .section-table > .selector {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-.floating > main > .section-table > .table-schedule {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  width: 100%;
-}
 
 /* RECYCLED CSS FROM OLD FRONT END */
 
