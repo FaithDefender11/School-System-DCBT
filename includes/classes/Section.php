@@ -18,6 +18,32 @@
             $this->sqlData = $query->fetch(PDO::FETCH_ASSOC);
         }
 
+        public function GetSectionName() {
+            return isset($this->sqlData['program_section']) ? ucfirst($this->sqlData["program_section"]) : ""; 
+        }
+
+        public function GetSectionGradeLevel() {
+            return isset($this->sqlData['course_level']) ? $this->sqlData["course_level"] : ""; 
+        }
+        public function GetSectionSY() {
+            return isset($this->sqlData['school_year_term']) ? $this->sqlData["school_year_term"] : ""; 
+        }
+
+        public function GetSectionProgramId($course_id){
+
+            $sql = $this->con->prepare("SELECT program_id FROM course
+                WHERE course_id=:course_id");
+                
+            $sql->bindValue(":course_id", $course_id);
+            $sql->execute();
+
+            if($sql->rowCount() > 0)
+                return $sql->fetchColumn();
+            
+            return null;
+        }
+
+
         public function GetAcronymByProgramId($program_id){
 
             $sql = $this->con->prepare("SELECT acronym FROM program
@@ -77,14 +103,17 @@
                     $course_id = $row['course_id'];
 
                     // echo $course_id;
-
                     $students_enrolled = $enrollment->GetStudentEnrolled($course_id);
 
                     $output .= "
                     
                         <tr>
                             <td>$course_id</td>
-                            <td>$program_section</td>
+                            <td>
+                                <a style='color:white;' href='subject_list.php?id=$course_id'>
+                                    $program_section
+                                </a>
+                            </td>
                             <td>$students_enrolled</td>
                         </tr>
                     ";

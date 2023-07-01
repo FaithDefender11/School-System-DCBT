@@ -2,12 +2,12 @@
 
     class Subject{
 
-    private $con, $userLoggedIn, $subject_id, $sqlData;
+    private $con, $subject_id, $sqlData;
 
-    public function __construct($con, $userLoggedIn, $subject_id = null)
+    public function __construct($con, $subject_id = null)
     {
         $this->con = $con;
-        $this->userLoggedIn = $userLoggedIn;
+        // $this->userLoggedIn = $userLoggedIn;
         $this->subject_id = $subject_id;
 
         $query = $this->con->prepare("SELECT t1.*, t2.program_section 
@@ -23,6 +23,51 @@
         $query->execute();
 
         $this->sqlData = $query->fetch(PDO::FETCH_ASSOC);
+    }
+    
+    public function GetSubjectSection() {
+        return isset($this->sqlData['program_section']) ? $this->sqlData["program_section"] : ""; 
+    }
+
+    public function GetSubjectTitle() {
+        return isset($this->sqlData['subject_title']) ? $this->sqlData["subject_title"] : ""; 
+    }
+
+    public function GetPreRequisite() {
+        return isset($this->sqlData['pre_requisite']) ? $this->sqlData["pre_requisite"] : ""; 
+    }
+
+ 
+
+    public function GetUnit() {
+        return isset($this->sqlData['unit']) ? ucfirst($this->sqlData["unit"]) : ""; 
+    }
+
+    public function GetTitle() {
+        return isset($this->sqlData['subject_title']) ? ucfirst($this->sqlData["subject_title"]) : ""; 
+    }
+    public function GetDescription() {
+        return isset($this->sqlData['description']) ? ucfirst($this->sqlData["description"]) : ""; 
+    }
+
+    public function GetSemester() {
+        return isset($this->sqlData['semester']) ? ucfirst($this->sqlData["semester"]) : ""; 
+    }
+
+    public function GetSubjectCode() {
+        return isset($this->sqlData['subject_code']) ? ucfirst($this->sqlData["subject_code"]) : ""; 
+    }
+
+    public function GetSubjectType() {
+        return isset($this->sqlData['subject_type']) ? ucfirst($this->sqlData["subject_type"]) : ""; 
+    }
+
+        public function GetSubjectLevel() {
+        return isset($this->sqlData['course_level']) ? ucfirst($this->sqlData["course_level"]) : ""; 
+    }
+
+    public function GetCourseLevel() {
+        return isset($this->sqlData['course_level']) ? ucfirst($this->sqlData["course_level"]) : ""; 
     }
 
     public function createFormModified($type){

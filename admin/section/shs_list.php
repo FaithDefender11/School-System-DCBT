@@ -89,7 +89,6 @@ if (isset($_GET['id']) && $_GET['term']) {
                 </table>
             </main>
         </div>
-
             <!--  -->
         <hr>
         <div class="floating" id="college-teachers">

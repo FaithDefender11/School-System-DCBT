@@ -34,7 +34,7 @@
 
         $strand_name = $section->GetAcronymByProgramId($program_id);
 
-        $subject = new Subject($con, $adminLoggedIn, null);
+        $subject = new Subject($con, null);
 
         $selectSubjectTitle = $subject->SelectSubjectTitle();
 

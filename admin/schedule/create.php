@@ -147,7 +147,7 @@
                                     </div>
 
                                     <div class="mb-3">
-                                        <label for="">Select Teacher</label>
+                                        <label for="">Instructor</label>
                                         <select required class="form-control" name="teacher_id" id="teacher_id">
                                             <?php
                                                 $query = $con->prepare("SELECT * FROM teacher
@@ -160,7 +160,7 @@
                                                 if($query->rowCount() > 0){
                                                   
 
-                                                    // echo "<option value='Teach-Section' disabled selected>Select-Section</option>";
+                                                    echo "<option value='' disabled selected>Select Instructor</option>";
 
                                                     while($row = $query->fetch(PDO::FETCH_ASSOC)) {
 
@@ -240,7 +240,7 @@
                                                 // $query->bindValue(":active", "yes");
                                                 $query->execute();
 
-                                                echo "<option value='' disabled selected>Select-Section</option>";
+                                                echo "<option value='' disabled selected>Select Subject</option>";
 
                                                 while($row = $query->fetch(PDO::FETCH_ASSOC)) {
                                                     echo "<option value='" . $row['subject_id'] . "'> [". $row['subject_id']."]  (". $row['program_section'].") "  . $row['subject_title'] . "</option>";
@@ -251,7 +251,7 @@
                                     
                                 </div>
                                 <div class="modal-footer">
-                                    <button name="create_teacher_schedule" type="submit" class="btn btn-primary">Save Schedule</button>
+                                    <button name="create_teacher_schedule" type="submit" class="btn btn-success">Save Schedule</button>
                                 </div>
                         </form>
 

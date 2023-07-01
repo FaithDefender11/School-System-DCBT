@@ -4,7 +4,7 @@
     include_once('../../includes/classes/Subject.php');
     include_once('../../includes/classes/Template.php');
 
-    $subject = new Subject($con, $adminLoggedIn, null);
+    $subject = new Subject($con, null);
 
     if(isset($_GET['type']) && $_GET['type'] == "shs"){
         $type = $_GET['type'];

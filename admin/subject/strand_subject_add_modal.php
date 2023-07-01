@@ -1,6 +1,6 @@
 <?php 
 
-    // $subject = new Subject($con, $registrarLoggedIn);
+    // $subject = new Subject($con);
     // $form = $subject->createForm();
     // $selectSubjectTitle = $subject->SelectSubjectTitle();
 

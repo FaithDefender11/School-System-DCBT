@@ -220,7 +220,7 @@
     function removeSubjectLoadBtn(subject_schedule_id){
         Swal.fire({
                 icon: 'question',
-                title: `I agreed to removed Schedule ID: #${subject_schedule_id}.`,
+                title: `Do you want to remove Schedule ID: #${subject_schedule_id}`,
                 text: 'Please note that this action cannot be undone',
                 showCancelButton: true,
                 confirmButtonText: 'Yes',
