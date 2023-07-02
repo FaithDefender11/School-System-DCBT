@@ -62,15 +62,18 @@
         return isset($this->sqlData['subject_type']) ? ucfirst($this->sqlData["subject_type"]) : ""; 
     }
 
-        public function GetSubjectLevel() {
+    public function GetSubjectLevel() {
         return isset($this->sqlData['course_level']) ? ucfirst($this->sqlData["course_level"]) : ""; 
+    }
+    public function GetSubjectCourseId() {
+        return isset($this->sqlData['course_id']) ? ucfirst($this->sqlData["course_id"]) : ""; 
     }
 
     public function GetCourseLevel() {
         return isset($this->sqlData['course_level']) ? ucfirst($this->sqlData["course_level"]) : ""; 
     }
 
-    public function createFormModified($type){
+    public function createFormModified($type, $programDropdown){
 
         if(isset($_POST['create_subject_template'])){
 
@@ -113,10 +116,12 @@
 
         }
 
+        $department_type = strtoupper($type);
+
         return "
             <div class='card'>
                 <div class='card-header'>
-                    <h4 class='text-center mb-3'>Create Subject Program</h4>
+                    <h4 class='text-center mb-3'>Create Template Subject ($department_type)</h4>
                 </div>
                 <div class='card-body'>
                     <form method='POST'>
@@ -136,8 +141,6 @@
                             <label for=''>Description</label>
                             <textarea class='form-control' placeholder='Subject Description' name='description'></textarea>
                         </div>
-
-
                 
                         <div class='form-group mb-2'>
                             <label for=''>Pre-requisite</label>
@@ -154,6 +157,8 @@
                             </select>
                         </div>
 
+                        $programDropdown
+
                         <div class='form-group mb-2'>
                             <label for=''>Units</label>
                             <input class='form-control' value='3' type='text' placeholder='Unit' name='unit'>
@@ -164,38 +169,70 @@
                     </form>
                 </div>
             </div>
-
-            ";
-        
-
+        ";
     }
 
 
-    public function SelectSubjectTitle(){
-        $SHS_DEPARTMENT = 4;
-        $query = $this->con->prepare("SELECT * FROM subject_template
-            -- WHERE course_level=:course_level
-            -- WHERE semester=:semester
-        ");
-        // $query->bindValue(":course_level", 0);
-        // $query->bindValue(":semester", "");
-        $query->execute();
+    public function SelectTemplateSubjectTitle($department_name, $program_id){
 
-        if($query->rowCount() > 0){
+        if($department_name == "Senior High School"){
+            // 
+            $program_type = 0;
+            $subject_type = "Core";
 
-            $html = "<div class='form-group mb-2'>
-                <label   class='mb-2'>Template</label>
-                <select id='subject_template_id' class='form-control' name='subject_template_id'>";
+            $query = $this->con->prepare("SELECT * FROM subject_template
+                WHERE program_id=:program_id
+                OR (
+                    program_type=:program_type
+                    AND subject_type=:subject_type
+                )
+            ");
+            $query->bindValue(":program_id", $program_id);
+            $query->bindValue(":program_type", $program_type);
+            $query->bindValue(":subject_type", $subject_type);
+            $query->execute();
 
-            while($row = $query->fetch(PDO::FETCH_ASSOC)){
-                $html .= "
-                    <option value='".$row['subject_template_id']."'>".$row['subject_title']."</option>
-                ";
+            if($query->rowCount() > 0){
+
+                $html = "<div class='form-group mb-2'>
+                    <label   class='mb-2'>Template</label>
+                    <select id='subject_template_id' class='form-control' name='subject_template_id'>";
+
+                while($row = $query->fetch(PDO::FETCH_ASSOC)){
+                    $html .= "
+                        <option value='".$row['subject_template_id']."'>".$row['subject_title']."</option>
+                    ";
+                }
+                $html .= "</select>
+                        </div>";
+                return $html;
             }
-            $html .= "</select>
-                    </div>";
-            return $html;
         }
+        // $SHS_DEPARTMENT = 4;
+
+        // $query = $this->con->prepare("SELECT * FROM subject_template
+        //     -- WHERE course_level=:course_level
+        //     -- WHERE semester=:semester
+        // ");
+        // // $query->bindValue(":course_level", 0);
+        // // $query->bindValue(":semester", "");
+        // $query->execute();
+
+        // if($query->rowCount() > 0){
+
+        //     $html = "<div class='form-group mb-2'>
+        //         <label   class='mb-2'>Template</label>
+        //         <select id='subject_template_id' class='form-control' name='subject_template_id'>";
+
+        //     while($row = $query->fetch(PDO::FETCH_ASSOC)){
+        //         $html .= "
+        //             <option value='".$row['subject_template_id']."'>".$row['subject_title']."</option>
+        //         ";
+        //     }
+        //     $html .= "</select>
+        //             </div>";
+        //     return $html;
+        // }
  
        return null;
     }

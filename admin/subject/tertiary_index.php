@@ -14,7 +14,6 @@
     if(isset($_SESSION['department_type'])){
         unset($_SESSION['department_type']);
     }
-
     $_SESSION['department_type'] = "Tertiary";
 
 ?>
@@ -52,15 +51,15 @@
         <h3>Menu</h3>
         <div class="container-subjects">
             <div class="subject_container">
-                <p>View Subjects</p>
+                <p>View Template Subjects</p>
 
-                <a style="all: initial;" href="list.php">
+                <a style="all: initial;" href="template_list.php">
                     <i class="bi bi-arrow-right-circle"></i>
                 </a>
 
             </div>
             <div class="subject_container">
-                <p>View Course Subjects</p>
+                <p>View Courses</p>
 
                 <p> <?php echo $_SESSION['department_type']; ?></p>
 

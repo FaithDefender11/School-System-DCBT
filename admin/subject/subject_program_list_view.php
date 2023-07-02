@@ -15,6 +15,7 @@
         $department_type = "";
         $back_url = "";
 
+        // Session starts in the shs_index/tertiary_index.php
         if(isset($_SESSION['department_type'])){
 
             $department_type = $_SESSION['department_type'];
@@ -23,7 +24,7 @@
                 $department_name = "Senior High School";
                 $back_url = "strand.php";
 
-            }else{
+            }else if($department_type == "Tertiary"){
                 $department_name = "Tertiary";
                 $back_url = "strand.php";
 
@@ -36,12 +37,17 @@
 
         $subject = new Subject($con, null);
 
-        $selectSubjectTitle = $subject->SelectSubjectTitle();
+
+        $selectSubjectTitle = $subject->SelectTemplateSubjectTitle(
+            $department_name, $program_id);
 
         $selectSubjectEdit = $subject->SelectSubjectTitleEdit();
 
+        $dynamicCourseLevelDropdown = $section->CreateCourseLevelDropdownDepartmentBased($department_name);
+
         require_once('./strand_subject_add_modal.php');
         require_once('./strand_subject_edit_modal.php');
+
 
         ?>
             <div class="row col-md-12">
@@ -53,17 +59,21 @@
                             <i class="fas fa-arrow-left"></i>
                         </button>
                     </a> 
-                    <div class="row justify-content-end">
 
+                    <div class="row justify-content-end">
                         <button style="width: 150px; margin-bottom: 15px;" type="button" 
                             data-bs-target="#subjectAddModal" 
                             data-bs-toggle="modal"
                             data-program-id="<?php echo intval($program_id); ?>"
-                            class="btn btn-sm btn-success attach-subject-button">Attach Subject
+                            class="btn btn-sm btn-success attach-subject-button"
+                            >
+
+                            Attach Subject
                         </button>
                     </div>
                  
-                    <table id="strand_subject_view_table" class="table table-striped table-bordered table-hover "  style="font-size:13px" cellspacing="0"  > 
+                    <table id="strand_subject_view_table" class="table table-striped table-bordered table-hover "
+                         style="font-size:13px" cellspacing="0"  > 
                         <thead>
                             <tr class="text-center"> 
                                 <th rowspan="2">Subject</th>
@@ -96,7 +106,7 @@
                                         $subject_code = $row['subject_code'];
 
 
-                                        $removeTemplateBtn = "removeTemplateBtn($subject_program_id)";
+                                        $removeSubjectProgramBtn = "removeSubjectProgramBtn($subject_program_id)";
 
                                         echo "
                                             <tr class='text-center'>
@@ -110,7 +120,8 @@
 
                                                         <i class='fas fa-edit'></i>
                                                     </button>
-                                                    <button onclick='$removeTemplateBtn' type='button' value='$subject_program_id'
+                                                    <button onclick='$removeSubjectProgramBtn'
+                                                        type='button' value='$subject_program_id'
                                                         class='btn btn-danger btn-sm'>
                                                         <i class='fas fa-trash'></i>
                                                     </button>
@@ -127,11 +138,13 @@
         <?php
     }
 ?>
+
 <script>
-    function removeTemplateBtn(subject_program_id){
+    function removeSubjectProgramBtn(subject_program_id){
+
         Swal.fire({
                 icon: 'question',
-                title: `I agreed to removed ${subject_program_id}.`,
+                title: `I agreed to removed Subject Program ID: ${subject_program_id}`,
                 text: 'Please note that this action cannot be undone',
                 showCancelButton: true,
                 confirmButtonText: 'Yes',
@@ -184,6 +197,7 @@
         });
     }
 </script>
+
 <!-- <script>
     $(document).ready(function() {
         // Handler for the button click event

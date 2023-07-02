@@ -42,7 +42,8 @@ if (isset($_GET['id']) && $_GET['term']) {
                         <tr>
                             <th>Section ID</th>
                             <th>Section Name</th>
-                            <th>Students</th>
+                            <th>Students / Capacity</th>
+                            <th>Active</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -68,7 +69,8 @@ if (isset($_GET['id']) && $_GET['term']) {
                         <tr>
                             <th>Section ID</th>
                             <th>Section Name</th>
-                            <th>Students</th>
+                            <th>Students / Capacity</th>
+                            <th>Active</th>
                         </tr>
                     </thead>
                     <tbody>

@@ -19,16 +19,13 @@
             $course = "Strand";
             $department_name = "Senior High School";
             $back_url = "shs_index.php";
-
         }else{
-            $course = "Tertiary";
+            $course = "Courses";
             $department_name = "Tertiary";
             $back_url = "tertiary_index.php";
-
         }
     }
 ?>
-
 
 <div class="row col-md-12">
     <div class="col-md-10 offset-md-1">
@@ -91,7 +88,8 @@
                                 // if($acronym == "HUMMS" ||$acronym == "ABM" || $acronym == "STEM" )
                                 //     $track = "Academic";
                                 
-                                $strand_url = "strand_subject_view.php?id=$program_id";
+                                $strand_url = "subject_program_list_view.php?id=$program_id";
+
                                 echo "
                                     <tr class='text-center'>
                                         <td>$track</td>

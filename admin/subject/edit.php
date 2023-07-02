@@ -25,7 +25,8 @@
 
         $section = new Section($con);
 
-        //  GENERATE CODE.
+        
+        $subject_course_id = $subject->GetSubjectCourseId();
         $subject_code = $subject->GetSubjectCode();
         $sp_semester = $subject->GetSemester();
         $sp_description = $subject->GetDescription();
@@ -39,7 +40,7 @@
 
         if(isset($_POST['edit_section_subject_' . $subject_id])){
 
-            echo "yeye";
+            // echo "yeye";
             $subject_code = $_POST['subject_code'];
             $pre_requisite = $_POST['pre_requisite'];
             $subject_type = $_POST['subject_type'];
@@ -87,11 +88,12 @@
                 
                 <div class='card'>
                     <hr>
-                    <a href="subject_list.php?id=<?php echo "";?>">
+                    <a href="../section/subject_list.php?id=<?php echo $subject_course_id;?>">
                         <button class="btn  btn-primary">
                             <i class="fas fa-arrow-left"></i>
                         </button>
                     </a>
+
                     <div class='card-header'>
                         <h4 class='text-center mb-3'>Edit Subject</h4>
                     </div>

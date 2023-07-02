@@ -30,10 +30,19 @@ if (isset($_GET['id'])) {
     <div class="content">
         <div class="floating" id="college-teachers">
 
+            
             <header>
+                
                 <div class="title">
                     <h3><?php echo $sectionName;?> Subjects</h3>
                     <span><?php echo $current_school_year_term;?></span>
+                </div>
+                <div>
+                    <a href="shs_list.php?id=<?php echo $section_program_id;?>&term=<?php echo $current_school_year_term;?>">
+                        <button class="btn  btn-primary">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                    </a>
                 </div>
             </header>
 

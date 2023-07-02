@@ -17,6 +17,6 @@
 
     }
     else{
-        echo "not";
+        echo "Something went wrong on the subject_program_id";
     }
 ?>

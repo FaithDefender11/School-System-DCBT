@@ -31,8 +31,9 @@
                     <div class="modal-body">
 
                         <?php echo $selectSubjectTitle;?>
+
                         <div id="errorMessage" class="alert alert-warning d-none"></div>
-<!-- 
+                        <!-- 
                         <div class='form-group mb-2 '>
                             <label for="" class="mb-2">Code</label>
                             <input class='form-control' type='text'
@@ -40,7 +41,7 @@
                             name='subject_code'>
                         </div> -->
 
-                        <div class='form-group mb-2'>
+                        <!-- <div class='form-group mb-2'>
                             <label for="" class="mb-2">Grade Level</label>
                             <select class='form-control' id='course_level' name='course_level'>
                                 <option value='11'>Grade 11</option>
@@ -50,7 +51,9 @@
                                 <option value='3'>3rd Year</option>
                                 <option value='4'>4th Year</option>
                             </select>
-                        </div>
+                        </div> -->
+
+                        <?php echo $dynamicCourseLevelDropdown;?>
                         
                         <div class='form-group mb-2'>
                             <label for="" class="mb-2">Semester</label>
