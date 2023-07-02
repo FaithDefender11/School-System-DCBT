@@ -142,9 +142,3 @@ function collegeSectionTab(){
 window.onload = shs;
 
 
-var GAS = document.getElementById("GAS");
-var ICT = document.getElementById("ICT");
-var HUMSS = document.getElementById("HUMSS");
-var ABM = document.getElementById("ABM");
-var IA = document.getElementById("IA");
-var HE = document.getElementById("HE");
