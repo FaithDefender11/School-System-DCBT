@@ -125,8 +125,3 @@
   background-color: transparent;
   border: none;
 }
-
-/* ID SECTION BTN */
-#section-btn.active {
-  background-color: aqua;
-}

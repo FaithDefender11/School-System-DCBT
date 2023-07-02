@@ -17,10 +17,6 @@
   background-color: var(--3);
 }
 
-#GAS.active {
-  background-color: aquamarine;
-}
-
 /* scheduler scheduler scheduler scheduler  */
 
 .floating>main>.scheduler {
