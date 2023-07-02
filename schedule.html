@@ -10,8 +10,8 @@
     <link rel="stylesheet" href="assets/css/content.css" />
     <link rel="stylesheet" href="assets/css/fonts.css" />
     <link rel="stylesheet" href="assets/css/table.css" />
-    <link rel="stylesheet" href="assets/css/forms.css" />
     <link rel="stylesheet" href="assets/css/others/toggle-switch.css" />
+    <link rel="stylesheet" href="assets/css/scheduler.css" />
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
@@ -67,29 +67,41 @@
             </div>
           </header>
           <main>
-            <div class="section-table">
-              <div class="selector">
-                <select name="GAS" id="GAS">
-                  <option value="">*insert section*</option>
-                </select>
-                <select name="ICT" id="ICT">
-                  <option value="">*insert section*</option>
-                </select>
-                <select name="HUMSS" id="HUMSS">
-                  <option value="">*insert section*</option>
-                </select>
-                <select name="ABM" id="ABM">
-                  <option value="">*insert section*</option>
-                </select>
-                <select name="IA" id="IA">
-                  <option value="">*insert section*</option>
-                </select>
-                <select name="HE" id="HE">
-                  <option value="">*insert section*</option>
-                </select>
-              </div>
-              <div class="table-schedule">
-                <table>
+            <div class="scheduler">
+              <nav>
+                <a class="dropdown blue" id="GAS">
+                  <span>GAS</span>
+                  <input type="button" value="Section1" />
+                  <input type="button" value="Section2" />
+                </a>
+                <a class="dropdown coral" id="ICT">
+                  <span>ICT</span>
+                  <input type="button" value="Section1" />
+                  <input type="button" value="Section2" />
+                </a>
+                <a class="dropdown green" id="HUMSS">
+                  <span>HUMSS</span>
+                  <input type="button" value="Section1" />
+                  <input type="button" value="Section2" />
+                </a>
+                <a class="dropdown blue" id="ABM">
+                  <span>ABM</span>
+                  <input type="button" value="Section1" />
+                  <input type="button" value="Section2" />
+                </a>
+                <a class="dropdown coral" id="IA">
+                  <span>IA</span>
+                  <input type="button" value="Section1" />
+                  <input type="button" value="Section2" />
+                </a>
+                <a class="dropdown green" id="HE">
+                  <span>HE</span>
+                  <input type="button" value="Section1" />
+                  <input type="button" value="Section2" />
+                </a>
+              </nav>
+              <div class="schedule-editor">
+                <table class="a">
                   <thead>
                     <tr>
                       <th>Subject name</th>
@@ -102,7 +114,7 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>Subject 1</td>
+                      <td class="important">Subject 1</td>
                       <td>
                         <select name="room">
                           <option value="r101">R101</option>
@@ -115,7 +127,63 @@
                       </td>
                       <td></td>
                       <td></td>
-                      <td><i class="bi bi-plus"></i></td>
+                      <td>
+                        <button class="icon"><i class="bi bi-plus"></i></button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="important">Subject 1</td>
+                      <td>
+                        <select name="room">
+                          <option value="r101">R101</option>
+                        </select>
+                      </td>
+                      <td>
+                        <select name="day">
+                          <option value="monday">Monday</option>
+                        </select>
+                      </td>
+                      <td></td>
+                      <td></td>
+                      <td>
+                        <button class="icon"><i class="bi bi-plus"></i></button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="important">Subject 1</td>
+                      <td>
+                        <select name="room">
+                          <option value="r101">R101</option>
+                        </select>
+                      </td>
+                      <td>
+                        <select name="day">
+                          <option value="monday">Monday</option>
+                        </select>
+                      </td>
+                      <td></td>
+                      <td></td>
+                      <td>
+                        <button class="icon"><i class="bi bi-plus"></i></button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="important">Subject 1</td>
+                      <td>
+                        <select name="room">
+                          <option value="r101">R101</option>
+                        </select>
+                      </td>
+                      <td>
+                        <select name="day">
+                          <option value="monday">Monday</option>
+                        </select>
+                      </td>
+                      <td></td>
+                      <td></td>
+                      <td>
+                        <button class="icon"><i class="bi bi-plus"></i></button>
+                      </td>
                     </tr>
                   </tbody>
                 </table>
@@ -141,37 +209,33 @@
             </button>
           </div>
 
-          <header id="shs-room-tab">
-            <div class="title">
-              <small id="room-tab">Room</small>
-            </div>
-            <div class="room-selector">
-              <select name="Room" id="">
+          <div class="action" id="shs-room-tab">
+            <div class="input" id="shs-room-select">
+              <p>Room</p>
+              <select name="Room">
                 <option value="">*insert room*</option>
               </select>
             </div>
-            <div class="action">
+            <span>
               <button class="icon">
                 <i class="bi bi-three-dots-vertical"></i>
               </button>
-            </div>
-          </header>
+            </span>
+          </div>
 
-          <header id="shs-section-tab">
-            <div class="title">
-              <small id="section-tab">Section</small>
-            </div>
-            <div class="room-selector">
-              <select name="Section" id="">
+          <div class="action" id="shs-section-tab">
+            <div class="input" id="shs-section-select">
+              <p>Section</p>
+              <select name="Room">
                 <option value="">*insert section*</option>
               </select>
             </div>
-            <div class="action">
+            <span>
               <button class="icon">
                 <i class="bi bi-three-dots-vertical"></i>
               </button>
-            </div>
-          </header>
+            </span>
+          </div>
 
           <main id="shs-room-table">
             <table>
@@ -776,26 +840,36 @@
             </div>
           </header>
           <main>
-            <div class="section-table">
-              <div class="selector">
-                <select name="BCM" id="BCM">
-                  <option value="">*insert section*</option>
-                </select>
-                <select name="BPE" id="BPE">
-                  <option value="">*insert section*</option>
-                </select>
-                <select name="BAE" id="BAE">
-                  <option value="">*insert section*</option>
-                </select>
-                <select name="BSE" id="BSE">
-                  <option value="">*insert section*</option>
-                </select>
-                <select name="BTTE" id="BTTE">
-                  <option value="">*insert section*</option>
-                </select>
-              </div>
-              <div class="table-schedule">
-                <table>
+            <div class="scheduler">
+              <nav>
+                <a class="dropdown blue" id="BCM">
+                  <span>BCM</span>
+                  <input type="button" value="Section1" />
+                  <input type="button" value="Section2" />
+                </a>
+                <a class="dropdown coral" id="BPE">
+                  <span>BPE</span>
+                  <input type="button" value="Section1" />
+                  <input type="button" value="Section2" />
+                </a>
+                <a class="dropdown green" id="BAE">
+                  <span>BAE</span>
+                  <input type="button" value="Section1" />
+                  <input type="button" value="Section2" />
+                </a>
+                <a class="dropdown blue" id="BSE">
+                  <span>BSE</span>
+                  <input type="button" value="Section1" />
+                  <input type="button" value="Section2" />
+                </a>
+                <a class="dropdown coral" id="BTTE">
+                  <span>BTTE</span>
+                  <input type="button" value="Section1" />
+                  <input type="button" value="Section2" />
+                </a>
+              </nav>
+              <div class="schedule-editor">
+                <table class="a">
                   <thead>
                     <tr>
                       <th>Subject name</th>
@@ -808,7 +882,7 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>Subject 1</td>
+                      <td class="important">Subject 1</td>
                       <td>
                         <select name="room">
                           <option value="r101">R101</option>
@@ -821,7 +895,63 @@
                       </td>
                       <td></td>
                       <td></td>
-                      <td><i class="bi bi-plus"></i></td>
+                      <td>
+                        <button class="icon"><i class="bi bi-plus"></i></button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="important">Subject 1</td>
+                      <td>
+                        <select name="room">
+                          <option value="r101">R101</option>
+                        </select>
+                      </td>
+                      <td>
+                        <select name="day">
+                          <option value="monday">Monday</option>
+                        </select>
+                      </td>
+                      <td></td>
+                      <td></td>
+                      <td>
+                        <button class="icon"><i class="bi bi-plus"></i></button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="important">Subject 1</td>
+                      <td>
+                        <select name="room">
+                          <option value="r101">R101</option>
+                        </select>
+                      </td>
+                      <td>
+                        <select name="day">
+                          <option value="monday">Monday</option>
+                        </select>
+                      </td>
+                      <td></td>
+                      <td></td>
+                      <td>
+                        <button class="icon"><i class="bi bi-plus"></i></button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="important">Subject 1</td>
+                      <td>
+                        <select name="room">
+                          <option value="r101">R101</option>
+                        </select>
+                      </td>
+                      <td>
+                        <select name="day">
+                          <option value="monday">Monday</option>
+                        </select>
+                      </td>
+                      <td></td>
+                      <td></td>
+                      <td>
+                        <button class="icon"><i class="bi bi-plus"></i></button>
+                      </td>
                     </tr>
                   </tbody>
                 </table>
@@ -847,37 +977,33 @@
             </button>
           </div>
 
-          <header id="college-room-tab">
-            <div class="title">
-              <small id="room-tab">Room</small>
-            </div>
-            <div class="room-selector">
-              <select name="Room" id="">
+          <div class="action" id="college-room-tab">
+            <div class="input" id="college-room-select">
+              <p>Room</p>
+              <select name="Room">
                 <option value="">*insert room*</option>
               </select>
             </div>
-            <div class="action">
+            <span>
               <button class="icon">
                 <i class="bi bi-three-dots-vertical"></i>
               </button>
-            </div>
-          </header>
+            </span>
+          </div>
 
-          <header id="college-section-tab">
-            <div class="title">
-              <small id="section-tab">Section</small>
-            </div>
-            <div class="room-selector">
-              <select name="Section" id="">
+          <div class="action" id="college-section-tab">
+            <div class="input" id="college-section-select">
+              <p>Section</p>
+              <select name="Room">
                 <option value="">*insert section*</option>
               </select>
             </div>
-            <div class="action">
+            <span>
               <button class="icon">
                 <i class="bi bi-three-dots-vertical"></i>
               </button>
-            </div>
-          </header>
+            </span>
+          </div>
 
           <main id="college-room-table">
             <table>
