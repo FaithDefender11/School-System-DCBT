@@ -27,15 +27,18 @@ table * {
   font-family: "Arimo";
 }
 
+.floating > main > .menu * {
+  font-family: "Arimo";
+}
 /* Font sizes */
 /* * {
   font-size: 14px;
 }*/
-thead {
+table.a thead {
   font-size: 16px;
 }
 
-tbody {
+table.a tbody {
   font-size: 14px;
 }
 
