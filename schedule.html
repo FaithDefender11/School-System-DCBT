@@ -69,124 +69,387 @@
           <main>
             <div class="scheduler">
               <nav>
-                <a class="dropdown blue" id="GAS">
-                  <span>GAS</span>
-                  <input type="button" value="Section1" />
-                  <input type="button" value="Section2" />
+                <a class="dropdown gas" id="GAS">
+                  <span class="span-toggle" id="gas-span">GAS</span>
+                  <input
+                    type="button"
+                    id="section-gas-1"
+                    value="Section1"
+                    onclick="toggleTable('table-gas-1','section-gas-1', 'gas-span')"
+                  />
+                  <input
+                    type="button"
+                    id="section-gas-2"
+                    value="Section2"
+                    onclick="toggleTable('table-gas-2','section-gas-2', 'gas-span')"
+                  />
                 </a>
-                <a class="dropdown coral" id="ICT">
-                  <span>ICT</span>
-                  <input type="button" value="Section1" />
-                  <input type="button" value="Section2" />
+                <a class="dropdown ict" id="ICT">
+                  <span class="span-toggle" id="ict-span">ICT</span>
+                  <input
+                    type="button"
+                    id="section-ict-1"
+                    value="Section1"
+                    onclick="toggleTable('table-ict-1','section-ict-1', 'ict-span')"
+                  />
+                  <input
+                    type="button"
+                    id="section-ict-2"
+                    value="Section2"
+                    onclick="toggleTable('table-ict-2','section-ict-2', 'ict-span')"
+                  />
                 </a>
-                <a class="dropdown green" id="HUMSS">
-                  <span>HUMSS</span>
-                  <input type="button" value="Section1" />
-                  <input type="button" value="Section2" />
+                <a class="dropdown humss" id="HUMSS">
+                  <span class="span-toggle" id="humss-span">HUMSS</span>
+                  <input
+                    type="button"
+                    id="section-humss-1"
+                    value="Section1"
+                    onclick="toggleTable('table-humss-1','section-humss-1', 'humss-span')"
+                  />
+                  <input
+                    type="button"
+                    id="section-humss-2"
+                    value="Section2"
+                    onclick="toggleTable('table-humss-2','section-humss-2', 'humss-span')"
+                  />
                 </a>
-                <a class="dropdown blue" id="ABM">
-                  <span>ABM</span>
-                  <input type="button" value="Section1" />
-                  <input type="button" value="Section2" />
+                <a class="dropdown abm" id="ABM">
+                  <span class="span-toggle" id="abm-span">ABM</span>
+                  <input
+                    type="button"
+                    id="section-abm-1"
+                    value="Section1"
+                    onclick="toggleTable('table-abm-1','section-abm-1', 'abm-span')"
+                  />
+                  <input
+                    type="button"
+                    id="section-abm-2"
+                    value="Section2"
+                    onclick="toggleTable('table-abm-2','section-abm-2', 'abm-span')"
+                  />
                 </a>
-                <a class="dropdown coral" id="IA">
-                  <span>IA</span>
-                  <input type="button" value="Section1" />
-                  <input type="button" value="Section2" />
+                <a class="dropdown ia" id="IA">
+                  <span class="span-toggle" id="ia-span">IA</span>
+                  <input
+                    type="button"
+                    id="section-ia-1"
+                    value="Section1"
+                    onclick="toggleTable('table-ia-1','section-ia-1', 'ia-span')"
+                  />
+                  <input
+                    type="button"
+                    id="section-ia-2"
+                    value="Section2"
+                    onclick="toggleTable('table-ia-2','section-ia-2', 'ia-span')"
+                  />
                 </a>
-                <a class="dropdown green" id="HE">
-                  <span>HE</span>
-                  <input type="button" value="Section1" />
-                  <input type="button" value="Section2" />
+                <a class="dropdown he" id="HE">
+                  <span class="span-toggle" id="he-span">HE</span>
+                  <input
+                    type="button"
+                    id="section-he-1"
+                    value="Section1"
+                    onclick="toggleTable('table-he-1','section-he-1', 'he-span')"
+                  />
+                  <input
+                    type="button"
+                    id="section-he-2"
+                    value="Section2"
+                    onclick="toggleTable('table-he-2','section-he-2', 'he-span')"
+                  />
                 </a>
               </nav>
               <div class="schedule-editor">
-                <table class="a">
-                  <thead>
-                    <tr>
-                      <th>Subject name</th>
-                      <th>Room</th>
-                      <th>Day</th>
-                      <th>End time</th>
-                      <th>Start time</th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td class="important">Subject 1</td>
-                      <td>
-                        <select name="room">
-                          <option value="r101">R101</option>
-                        </select>
-                      </td>
-                      <td>
-                        <select name="day">
-                          <option value="monday">Monday</option>
-                        </select>
-                      </td>
-                      <td></td>
-                      <td></td>
-                      <td>
-                        <button class="icon"><i class="bi bi-plus"></i></button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td class="important">Subject 1</td>
-                      <td>
-                        <select name="room">
-                          <option value="r101">R101</option>
-                        </select>
-                      </td>
-                      <td>
-                        <select name="day">
-                          <option value="monday">Monday</option>
-                        </select>
-                      </td>
-                      <td></td>
-                      <td></td>
-                      <td>
-                        <button class="icon"><i class="bi bi-plus"></i></button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td class="important">Subject 1</td>
-                      <td>
-                        <select name="room">
-                          <option value="r101">R101</option>
-                        </select>
-                      </td>
-                      <td>
-                        <select name="day">
-                          <option value="monday">Monday</option>
-                        </select>
-                      </td>
-                      <td></td>
-                      <td></td>
-                      <td>
-                        <button class="icon"><i class="bi bi-plus"></i></button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td class="important">Subject 1</td>
-                      <td>
-                        <select name="room">
-                          <option value="r101">R101</option>
-                        </select>
-                      </td>
-                      <td>
-                        <select name="day">
-                          <option value="monday">Monday</option>
-                        </select>
-                      </td>
-                      <td></td>
-                      <td></td>
-                      <td>
-                        <button class="icon"><i class="bi bi-plus"></i></button>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+                <div class="schedule-table" id="table-gas-1">
+                  <table class="a">
+                    <thead>
+                      <tr>
+                        <th>Subject name</th>
+                        <th>Room</th>
+                        <th>Day</th>
+                        <th>End time</th>
+                        <th>Start time</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="important">Subject 1</td>
+                        <td>
+                          <select name="room">
+                            <option value="r101">R101</option>
+                          </select>
+                        </td>
+                        <td>
+                          <select name="day">
+                            <option value="monday">Monday</option>
+                          </select>
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td>
+                          <button class="icon">
+                            <i class="bi bi-plus"></i>
+                          </button>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="important">Subject 1</td>
+                        <td>
+                          <select name="room">
+                            <option value="r101">R101</option>
+                          </select>
+                        </td>
+                        <td>
+                          <select name="day">
+                            <option value="monday">Monday</option>
+                          </select>
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td>
+                          <button class="icon">
+                            <i class="bi bi-plus"></i>
+                          </button>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="important">Subject 1</td>
+                        <td>
+                          <select name="room">
+                            <option value="r101">R101</option>
+                          </select>
+                        </td>
+                        <td>
+                          <select name="day">
+                            <option value="monday">Monday</option>
+                          </select>
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td>
+                          <button class="icon">
+                            <i class="bi bi-plus"></i>
+                          </button>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="important">Subject 1</td>
+                        <td>
+                          <select name="room">
+                            <option value="r101">R101</option>
+                          </select>
+                        </td>
+                        <td>
+                          <select name="day">
+                            <option value="monday">Monday</option>
+                          </select>
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td>
+                          <button class="icon">
+                            <i class="bi bi-plus"></i>
+                          </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="schedule-table" id="table-gas-2">
+                  <table class="a">
+                    <thead>
+                      <tr>
+                        <th>Subject name</th>
+                        <th>Room</th>
+                        <th>Day</th>
+                        <th>End time</th>
+                        <th>Start time</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!--ADD TABLE ROW-->
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="schedule-table" id="table-ict-1">
+                  <table class="a">
+                    <thead>
+                      <tr>
+                        <th>Subject name</th>
+                        <th>Room</th>
+                        <th>Day</th>
+                        <th>End time</th>
+                        <th>Start time</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!--ADD TABLE ROW-->
+                    </tbody>
+                  </table>
+                </div>
+                <div class="schedule-table" id="table-ict-2">
+                  <table class="a">
+                    <thead>
+                      <tr>
+                        <th>Subject name</th>
+                        <th>Room</th>
+                        <th>Day</th>
+                        <th>End time</th>
+                        <th>Start time</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!--ADD TABLE ROW-->
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="schedule-table" id="table-humss-1">
+                  <table class="a">
+                    <thead>
+                      <tr>
+                        <th>Subject name</th>
+                        <th>Room</th>
+                        <th>Day</th>
+                        <th>End time</th>
+                        <th>Start time</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!--ADD TABLE ROW-->
+                    </tbody>
+                  </table>
+                </div>
+                <div class="schedule-table" id="table-humss-2">
+                  <table class="a">
+                    <thead>
+                      <tr>
+                        <th>Subject name</th>
+                        <th>Room</th>
+                        <th>Day</th>
+                        <th>End time</th>
+                        <th>Start time</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!--ADD TABLE ROW-->
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="schedule-table" id="table-abm-1">
+                  <table class="a">
+                    <thead>
+                      <tr>
+                        <th>Subject name</th>
+                        <th>Room</th>
+                        <th>Day</th>
+                        <th>End time</th>
+                        <th>Start time</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!--ADD TABLE ROW-->
+                    </tbody>
+                  </table>
+                </div>
+                <div class="schedule-table" id="table-abm-2">
+                  <table class="a">
+                    <thead>
+                      <tr>
+                        <th>Subject name</th>
+                        <th>Room</th>
+                        <th>Day</th>
+                        <th>End time</th>
+                        <th>Start time</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!--ADD TABLE ROW-->
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="schedule-table" id="table-ia-1">
+                  <table class="a">
+                    <thead>
+                      <tr>
+                        <th>Subject name</th>
+                        <th>Room</th>
+                        <th>Day</th>
+                        <th>End time</th>
+                        <th>Start time</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!--ADD TABLE ROW-->
+                    </tbody>
+                  </table>
+                </div>
+                <div class="schedule-table" id="table-ia-2">
+                  <table class="a">
+                    <thead>
+                      <tr>
+                        <th>Subject name</th>
+                        <th>Room</th>
+                        <th>Day</th>
+                        <th>End time</th>
+                        <th>Start time</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!--ADD TABLE ROW-->
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="schedule-table" id="table-he-1">
+                  <table class="a">
+                    <thead>
+                      <tr>
+                        <th>Subject name</th>
+                        <th>Room</th>
+                        <th>Day</th>
+                        <th>End time</th>
+                        <th>Start time</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!--ADD TABLE ROW-->
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="schedule-table" id="table-he-2">
+                  <table class="a">
+                    <thead>
+                      <tr>
+                        <th>Subject name</th>
+                        <th>Room</th>
+                        <th>Day</th>
+                        <th>End time</th>
+                        <th>Start time</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!--ADD TABLE ROW-->
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           </main>
@@ -842,119 +1105,336 @@
           <main>
             <div class="scheduler">
               <nav>
-                <a class="dropdown blue" id="BCM">
-                  <span>BCM</span>
-                  <input type="button" value="Section1" />
-                  <input type="button" value="Section2" />
+                <a class="dropdown bcm" id="BCM">
+                  <span class="span-toggle" id="bcm-span">BCM</span>
+                  <input
+                    type="button"
+                    id="section-bcm-1"
+                    value="Section1"
+                    onclick="toggleTable('table-bcm-1', 'section-bcm-1', 'bcm-span')"
+                  />
+                  <input
+                    type="button"
+                    id="section-bcm-2"
+                    value="Section2"
+                    onclick="toggleTable('table-bcm-2', 'section-bcm-2', 'bcm-span')"
+                  />
                 </a>
-                <a class="dropdown coral" id="BPE">
-                  <span>BPE</span>
-                  <input type="button" value="Section1" />
-                  <input type="button" value="Section2" />
+                <a class="dropdown bpe" id="BPE">
+                  <span class="span-toggle" id="bpe-span">BPE</span>
+                  <input
+                    type="button"
+                    id="section-bpe-1"
+                    value="Section1"
+                    onclick="toggleTable('table-bpe-1', 'section-bpe-1', 'bpe-span')"
+                  />
+                  <input
+                    type="button"
+                    id="section-bpe-2"
+                    value="Section2"
+                    onclick="toggleTable('table-bpe-2', 'section-bpe-2', 'bpe-span')"
+                  />
                 </a>
-                <a class="dropdown green" id="BAE">
-                  <span>BAE</span>
-                  <input type="button" value="Section1" />
-                  <input type="button" value="Section2" />
+                <a class="dropdown bae" id="BAE">
+                  <span class="span-toggle" id="bae-span">BAE</span>
+                  <input
+                    type="button"
+                    id="section-bae-1"
+                    value="Section1"
+                    onclick="toggleTable('table-bae-1', 'section-bae-1', 'bae-span')"
+                  />
+                  <input
+                    type="button"
+                    id="section-bae-2"
+                    value="Section2"
+                    onclick="toggleTable('table-bae-2', 'section-bae-2', 'bae-span')"
+                  />
                 </a>
-                <a class="dropdown blue" id="BSE">
-                  <span>BSE</span>
-                  <input type="button" value="Section1" />
-                  <input type="button" value="Section2" />
+                <a class="dropdown bse" id="BSE">
+                  <span class="span-toggle" id="bse-span">BSE</span>
+                  <input
+                    type="button"
+                    id="section-bse-1"
+                    value="Section1"
+                    onclick="toggleTable('table-bse-1', 'section-bse-1', 'bse-span')"
+                  />
+                  <input
+                    type="button"
+                    id="section-bse-2"
+                    value="Section2"
+                    onclick="toggleTable('table-bse-2', 'section-bse-2', 'bse-span')"
+                  />
                 </a>
-                <a class="dropdown coral" id="BTTE">
-                  <span>BTTE</span>
-                  <input type="button" value="Section1" />
-                  <input type="button" value="Section2" />
+                <a class="dropdown btte" id="BTTE">
+                  <span class="span-toggle" id="btte-span">BTTE</span>
+                  <input
+                    type="button"
+                    id="section-btte-1"
+                    value="Section1"
+                    onclick="toggleTable('table-btte-1', 'section-btte-1', 'btte-span')"
+                  />
+                  <input
+                    type="button"
+                    id="section-btte-2"
+                    value="Section2"
+                    onclick="toggleTable('table-btte-2', 'section-btte-2', 'btte-span')"
+                  />
                 </a>
               </nav>
               <div class="schedule-editor">
-                <table class="a">
-                  <thead>
-                    <tr>
-                      <th>Subject name</th>
-                      <th>Room</th>
-                      <th>Day</th>
-                      <th>End time</th>
-                      <th>Start time</th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td class="important">Subject 1</td>
-                      <td>
-                        <select name="room">
-                          <option value="r101">R101</option>
-                        </select>
-                      </td>
-                      <td>
-                        <select name="day">
-                          <option value="monday">Monday</option>
-                        </select>
-                      </td>
-                      <td></td>
-                      <td></td>
-                      <td>
-                        <button class="icon"><i class="bi bi-plus"></i></button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td class="important">Subject 1</td>
-                      <td>
-                        <select name="room">
-                          <option value="r101">R101</option>
-                        </select>
-                      </td>
-                      <td>
-                        <select name="day">
-                          <option value="monday">Monday</option>
-                        </select>
-                      </td>
-                      <td></td>
-                      <td></td>
-                      <td>
-                        <button class="icon"><i class="bi bi-plus"></i></button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td class="important">Subject 1</td>
-                      <td>
-                        <select name="room">
-                          <option value="r101">R101</option>
-                        </select>
-                      </td>
-                      <td>
-                        <select name="day">
-                          <option value="monday">Monday</option>
-                        </select>
-                      </td>
-                      <td></td>
-                      <td></td>
-                      <td>
-                        <button class="icon"><i class="bi bi-plus"></i></button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td class="important">Subject 1</td>
-                      <td>
-                        <select name="room">
-                          <option value="r101">R101</option>
-                        </select>
-                      </td>
-                      <td>
-                        <select name="day">
-                          <option value="monday">Monday</option>
-                        </select>
-                      </td>
-                      <td></td>
-                      <td></td>
-                      <td>
-                        <button class="icon"><i class="bi bi-plus"></i></button>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+                <div class="schedule-table" id="table-bcm-1">
+                  <table class="a">
+                    <thead>
+                      <tr>
+                        <th>Subject name</th>
+                        <th>Room</th>
+                        <th>Day</th>
+                        <th>End time</th>
+                        <th>Start time</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="important">Subject 1</td>
+                        <td>
+                          <select name="room">
+                            <option value="r101">R101</option>
+                          </select>
+                        </td>
+                        <td>
+                          <select name="day">
+                            <option value="monday">Monday</option>
+                          </select>
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td>
+                          <button class="icon">
+                            <i class="bi bi-plus"></i>
+                          </button>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="important">Subject 1</td>
+                        <td>
+                          <select name="room">
+                            <option value="r101">R101</option>
+                          </select>
+                        </td>
+                        <td>
+                          <select name="day">
+                            <option value="monday">Monday</option>
+                          </select>
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td>
+                          <button class="icon">
+                            <i class="bi bi-plus"></i>
+                          </button>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="important">Subject 1</td>
+                        <td>
+                          <select name="room">
+                            <option value="r101">R101</option>
+                          </select>
+                        </td>
+                        <td>
+                          <select name="day">
+                            <option value="monday">Monday</option>
+                          </select>
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td>
+                          <button class="icon">
+                            <i class="bi bi-plus"></i>
+                          </button>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="important">Subject 1</td>
+                        <td>
+                          <select name="room">
+                            <option value="r101">R101</option>
+                          </select>
+                        </td>
+                        <td>
+                          <select name="day">
+                            <option value="monday">Monday</option>
+                          </select>
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td>
+                          <button class="icon">
+                            <i class="bi bi-plus"></i>
+                          </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="schedule-table" id="table-bcm-2">
+                  <table class="a">
+                    <thead>
+                      <tr>
+                        <th>Subject name</th>
+                        <th>Room</th>
+                        <th>Day</th>
+                        <th>End time</th>
+                        <th>Start time</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!--ADD TABLE ROW-->
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="schedule-table" id="table-bpe-1">
+                  <table class="a">
+                    <thead>
+                      <tr>
+                        <th>Subject name</th>
+                        <th>Room</th>
+                        <th>Day</th>
+                        <th>End time</th>
+                        <th>Start time</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!--ADD TABLE ROW-->
+                    </tbody>
+                  </table>
+                </div>
+                <div class="schedule-table" id="table-bpe-2">
+                  <table class="a">
+                    <thead>
+                      <tr>
+                        <th>Subject name</th>
+                        <th>Room</th>
+                        <th>Day</th>
+                        <th>End time</th>
+                        <th>Start time</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!--ADD TABLE ROW-->
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="schedule-table" id="table-bae-1">
+                  <table class="a">
+                    <thead>
+                      <tr>
+                        <th>Subject name</th>
+                        <th>Room</th>
+                        <th>Day</th>
+                        <th>End time</th>
+                        <th>Start time</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!--ADD TABLE ROW-->
+                    </tbody>
+                  </table>
+                </div>
+                <div class="schedule-table" id="table-bae-2">
+                  <table class="a">
+                    <thead>
+                      <tr>
+                        <th>Subject name</th>
+                        <th>Room</th>
+                        <th>Day</th>
+                        <th>End time</th>
+                        <th>Start time</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!--ADD TABLE ROW-->
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="schedule-table" id="table-bse-1">
+                  <table class="a">
+                    <thead>
+                      <tr>
+                        <th>Subject name</th>
+                        <th>Room</th>
+                        <th>Day</th>
+                        <th>End time</th>
+                        <th>Start time</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!--ADD TABLE ROW-->
+                    </tbody>
+                  </table>
+                </div>
+                <div class="schedule-table" id="table-bse-2">
+                  <table class="a">
+                    <thead>
+                      <tr>
+                        <th>Subject name</th>
+                        <th>Room</th>
+                        <th>Day</th>
+                        <th>End time</th>
+                        <th>Start time</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!--ADD TABLE ROW-->
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="schedule-table" id="table-btte-1">
+                  <table class="a">
+                    <thead>
+                      <tr>
+                        <th>Subject name</th>
+                        <th>Room</th>
+                        <th>Day</th>
+                        <th>End time</th>
+                        <th>Start time</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!--ADD TABLE ROW-->
+                    </tbody>
+                  </table>
+                </div>
+                <div class="schedule-table" id="table-btte-2">
+                  <table class="a">
+                    <thead>
+                      <tr>
+                        <th>Subject name</th>
+                        <th>Room</th>
+                        <th>Day</th>
+                        <th>End time</th>
+                        <th>Start time</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!--ADD TABLE ROW-->
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           </main>
