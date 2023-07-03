@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <script src="assets/js/dropdownMenu.js" defer></script>
     <script src="assets/css/others/toggle-switch.js" defer></script>
     <link rel="stylesheet" href="assets/css/others/toggle-switch.css" />
     <!-- link style sheets -->
@@ -61,9 +62,19 @@
             <small> comment </small>
           </div>
           <div class="action">
-            <button class="icon">
-              <i class="bi bi-three-dots-vertical"></i>
-            </button>
+            <div class="dropdown">
+              <button class="icon" id="dropdownMenuButton">
+                <i class="bi bi-three-dots-vertical"></i>
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a href="#" class="dropdown-item"
+                  ><i class="bi bi-calendar"></i>Edit Calendar</a
+                >
+                <a href="#" class="dropdown-item"
+                  ><i class="bi bi-printer"></i>Print Calendar</a
+                >
+              </div>
+            </div>
           </div>
         </header>
         <div class="cards">
