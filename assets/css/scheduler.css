@@ -66,12 +66,26 @@
   display: block;
 }
 
+.floating>main>.scheduler>nav .dropdown:hover label {
+  display: block;
+}
+
 .floating>main>.scheduler>nav .dropdown>input {
   display: none;
   border: none;
   background-color: white;
   cursor: pointer;
   font-size: 15px;
+  justify-content: center;
+}
+
+.floating>main>.scheduler>nav .dropdown>label {
+  display: none;
+  border: none;
+  background-color: rgb(226, 226, 226);
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: bold;
   justify-content: center;
 }
 
