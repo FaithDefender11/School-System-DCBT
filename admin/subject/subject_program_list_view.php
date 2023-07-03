@@ -3,6 +3,7 @@
     include_once('../../includes/admin_header.php');
     include_once('../../includes/classes/Subject.php');
     include_once('../../includes/classes/Section.php');
+    include_once('../../includes/classes/SubjectProgram.php');
 
 
     $templateUrl = directoryPath . "template.php";
@@ -29,6 +30,8 @@
                 $back_url = "strand.php";
 
             }
+        }else{
+            header("Location: shs_index.php");
         }
 
         $section = new Section($con, null);
@@ -36,18 +39,20 @@
         $strand_name = $section->GetAcronymByProgramId($program_id);
 
         $subject = new Subject($con, null);
+        $subject_program = new SubjectProgram($con);
 
+        
 
         $selectSubjectTitle = $subject->SelectTemplateSubjectTitle(
             $department_name, $program_id);
 
-        $selectSubjectEdit = $subject->SelectSubjectTitleEdit();
+        $selectSubjectEdit = $subject->SelectSubjectTitleEdit(
+            $department_name, $program_id);
 
         $dynamicCourseLevelDropdown = $section->CreateCourseLevelDropdownDepartmentBased($department_name);
 
         require_once('./strand_subject_add_modal.php');
         require_once('./strand_subject_edit_modal.php');
-
 
         ?>
             <div class="row col-md-12">
@@ -76,6 +81,7 @@
                          style="font-size:13px" cellspacing="0"  > 
                         <thead>
                             <tr class="text-center"> 
+                                <th rowspan="2">Template ID</th>
                                 <th rowspan="2">Subject</th>
                                 <th rowspan="2">Code</th>
                                 <th rowspan="2">Grade Level</th>
@@ -92,7 +98,7 @@
                                     ORDER BY course_level,
                                     semester");
 
-                                $query->bindValue("program_id", $program_id);
+                                $query->bindParam("program_id", $program_id);
                                 $query->execute();
 
                                 if($query->rowCount() > 0){
@@ -104,12 +110,14 @@
                                         $course_level = $row['course_level'];
                                         $semester = $row['semester'];
                                         $subject_code = $row['subject_code'];
+                                        $subject_template_id = $row['subject_template_id'];
 
 
                                         $removeSubjectProgramBtn = "removeSubjectProgramBtn($subject_program_id)";
 
                                         echo "
                                             <tr class='text-center'>
+                                                <td>$subject_template_id</td>
                                                 <td>$subject_title</td>
                                                 <td>$subject_code</td>
                                                 <td>$course_level</td>

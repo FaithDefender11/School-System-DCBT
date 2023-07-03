@@ -83,7 +83,6 @@
                         $program_id = $row['program_id'];
                         $subject_type = $row['subject_type'];
 
-
                         $program = new Program($con, $program_id);
 
                         $program_name = $program->GetProgramSectionName();

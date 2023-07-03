@@ -53,6 +53,8 @@
 
         var subject_program_id = $(this).val();
         
+        // console.log(subject_program_id)
+
         $("#edit_course_level").val("");
         $("#edit_semester").val("");
         $("#edit_subject_template_id").val("");
@@ -111,18 +113,32 @@
             success: function (response) {
                 response = response.trim();
 
-                // console.log(response)
+                console.log(response)
+
                 if(response == "success"){
 
-                    $('#strand_subject_view_table').load(location.href + " #strand_subject_view_table");
+                    $('#strand_subject_view_table').load(
+                        location.href + " #strand_subject_view_table");
+
                     $('#subjectStrandEditModal').modal('hide');
                     $('#editSubjectStrand')[0].reset();
+
                     Swal.fire({
                         icon: 'success',
                         title: 'Success',
                         text: `Successfully edited successfully!`,
                     });
                 }
+
+                if(response == "already_registered"){
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oh no!',
+                        text: `Already Registered!`,
+                    });
+                }
+
             }
         });
 

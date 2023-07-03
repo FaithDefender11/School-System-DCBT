@@ -17,7 +17,6 @@
         // echo $subject_type;
         // echo $department_type;
 
-        if($department_type == "Senior High School"){
 
             $query = $con->prepare("SELECT t1.* 
             
@@ -26,7 +25,7 @@
                 WHERE t2.department_name=:department_name
             ");
 
-            $query->bindValue(":department_name", $department_type);
+            $query->bindParam(":department_name", $department_type);
 
             $query->execute();
             
@@ -47,7 +46,37 @@
                 
             } 
 
-        }
+        // if($department_type == "Tertiary"){
+
+        //     $query = $con->prepare("SELECT t1.* 
+            
+        //         FROM program as t1
+        //         INNER JOIN department as t2 ON t2.department_id=t1.department_id
+        //         WHERE t2.department_name=:department_name
+        //     ");
+
+        //     $query->bindParam(":department_name", $department_type);
+
+        //     $query->execute();
+            
+        //     if($query->rowCount() > 0){
+
+        //         while($row = $query->fetch(PDO::FETCH_ASSOC)){
+
+        //             $selected = "";
+
+        //             $program_name = $row['program_name'];
+        //             $program_id = $row['program_id'];
+
+        //             $data[] = array(
+        //                 'program_id' => $program_id,
+        //                 'program_name' => $program_name
+        //             );
+        //         }
+                
+        //     } 
+
+        // }
         
         if(empty($data)){
             echo json_encode([]);

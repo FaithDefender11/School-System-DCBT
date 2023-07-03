@@ -1,11 +1,14 @@
 <?php 
 
     require_once("../../includes/config.php");
+    require_once("../../includes/classes/SubjectProgram.php");
     
     if (isset($_POST['subject_template_id']) 
             && isset($_POST['course_level']) 
             && isset($_POST['program_id'])
             && isset($_POST['semester'])) {
+
+        $subject_program = new SubjectProgram($con);
 
         $program_id = $_POST['program_id'];
         $subject_template_id = $_POST['subject_template_id'];
@@ -36,29 +39,37 @@
             $subject_type = $row['subject_type'];
             $pre_requisite_title = $row['pre_requisite_title'];
 
-            $create = $con->prepare("INSERT INTO subject_program
-                    (program_id, subject_code, pre_req_subject_title, 
-                        subject_title, unit, description, 
-                        course_level, semester, subject_type, subject_template_id)
 
-                    VALUES(:program_id, :subject_code, :pre_req_subject_title,
-                        :subject_title, :unit, :description,
-                        :course_level, :semester, :subject_type, :subject_template_id)");
-                                        
-            $create->bindParam(':program_id', $program_id);
-            $create->bindParam(':subject_code', $subject_code);
-            $create->bindParam(':pre_req_subject_title', $pre_requisite_title);
-            $create->bindParam(':subject_title', $subject_title);
-            $create->bindParam(':unit', $unit);
-            $create->bindParam(':description', $description);
-            $create->bindParam(':course_level', $course_level);
-            $create->bindParam(':semester', $semester);
-            $create->bindParam(':subject_type', $subject_type);
-            $create->bindParam(':subject_template_id', $subject_template_id);
+            if($subject_program->CheckIfSubjectProgramExists($subject_title) == true){
+                echo "already_registered";
 
-            if($create->execute()){
-                echo "success";
+            }else if($subject_program->CheckIfSubjectProgramExists($subject_title) == false){
+                $create = $con->prepare("INSERT INTO subject_program
+                        (program_id, subject_code, pre_req_subject_title, 
+                            subject_title, unit, description, 
+                            course_level, semester, subject_type, subject_template_id)
+
+                        VALUES(:program_id, :subject_code, :pre_req_subject_title,
+                            :subject_title, :unit, :description,
+                            :course_level, :semester, :subject_type, :subject_template_id)");
+                                            
+                $create->bindParam(':program_id', $program_id);
+                $create->bindParam(':subject_code', $subject_code);
+                $create->bindParam(':pre_req_subject_title', $pre_requisite_title);
+                $create->bindParam(':subject_title', $subject_title);
+                $create->bindParam(':unit', $unit);
+                $create->bindParam(':description', $description);
+                $create->bindParam(':course_level', $course_level);
+                $create->bindParam(':semester', $semester);
+                $create->bindParam(':subject_type', $subject_type);
+                $create->bindParam(':subject_template_id', $subject_template_id);
+
+                if($create->execute()){
+                    echo "success";
+                }
             }
+
+
         }
 
     }

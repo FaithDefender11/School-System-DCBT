@@ -57,5 +57,34 @@ class SubjectProgram{
         return isset($this->sqlData['subject_template_id']) ? ucfirst($this->sqlData["subject_template_id"]) : ""; 
     }
 
+    public function CheckIfSubjectProgramExists($subject_title) {
+
+
+        $query = $this->con->prepare("SELECT * FROM subject_program
+                WHERE subject_title=:subject_title
+            ");
+        $query->bindParam(":subject_title", $subject_title);
+        $query->execute();
+
+        if($query->rowCount() > 0){
+            return true;
+        }
+        return false;
+    }
+
+    public function CheckIfSubjectProgramEditExists($subject_title) {
+
+        $query = $this->con->prepare("SELECT * FROM subject_program
+                WHERE subject_title=:subject_title
+            ");
+        $query->bindParam(":subject_title", $subject_title);
+        $query->execute();
+
+        if($query->rowCount() > 0){
+            return true;
+        }
+        return false;
+    }
+
 }
 ?>

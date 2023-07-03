@@ -12,11 +12,52 @@ class Program{
         $query = $this->con->prepare("SELECT * FROM program
                 WHERE program_id=:program_id");
 
-        $query->bindValue(":program_id", $program_id);
+        $query->bindParam(":program_id", $program_id);
         $query->execute();
 
         $this->sqlData = $query->fetch(PDO::FETCH_ASSOC);
     }
+
+
+    public function CheckIdExists($program_id) {
+
+        $query = $this->con->prepare("SELECT * FROM program
+                WHERE program_id=:program_id");
+
+        $query->bindParam(":program_id", $program_id);
+        $query->execute();
+
+        if($query->rowCount() == 0){
+            echo "
+                <div class='col-md-12'>
+                    <h4 class='text-center text-warning'>ID Doesnt Exists.</h4>
+                </div>
+            ";
+            exit();
+        }
+    }
+
+    public function GetProgramName() {
+        return isset($this->sqlData['program_name']) ? ucfirst($this->sqlData["program_name"]) : ""; 
+    }
+
+    public function GetProgramDean() {
+        return isset($this->sqlData['dean']) ? ucfirst($this->sqlData["dean"]) : ""; 
+    }
+
+    public function GetProgramTrack() {
+        return isset($this->sqlData['track']) ? ucfirst($this->sqlData["track"]) : ""; 
+    }
+
+    public function GetProgramAcronym() {
+        return isset($this->sqlData['acronym']) ? ucfirst($this->sqlData["acronym"]) : ""; 
+    }
+
+    public function GetProgramDepartmentId() {
+        return isset($this->sqlData['department_id']) ? $this->sqlData["department_id"] : 0; 
+    }
+
+
 
     public function GetProgramSectionName() {
         return isset($this->sqlData['acronym']) ? ucfirst($this->sqlData["acronym"]) : ""; 

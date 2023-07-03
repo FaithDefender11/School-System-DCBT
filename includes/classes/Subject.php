@@ -19,7 +19,7 @@
 
                 ");
 
-        $query->bindValue(":subject_id", $subject_id);
+        $query->bindParam(":subject_id", $subject_id);
         $query->execute();
 
         $this->sqlData = $query->fetch(PDO::FETCH_ASSOC);
@@ -173,7 +173,8 @@
     }
 
 
-    public function SelectTemplateSubjectTitle($department_name, $program_id){
+    public function SelectTemplateSubjectTitle($department_name,
+        $program_id){
 
         if($department_name == "Senior High School"){
             // 
@@ -208,63 +209,128 @@
                 return $html;
             }
         }
-        // $SHS_DEPARTMENT = 4;
 
-        // $query = $this->con->prepare("SELECT * FROM subject_template
-        //     -- WHERE course_level=:course_level
-        //     -- WHERE semester=:semester
-        // ");
-        // // $query->bindValue(":course_level", 0);
-        // // $query->bindValue(":semester", "");
-        // $query->execute();
+        else if($department_name == "Tertiary"){
+            // 
+            $program_type = 1;
+            $subject_type = "Core";
 
-        // if($query->rowCount() > 0){
+            $query = $this->con->prepare("SELECT * FROM subject_template
+                WHERE program_id=:program_id
+                OR (
+                    program_type=:program_type
+                    AND subject_type=:subject_type
+                )
+            ");
+            $query->bindParam(":program_id", $program_id);
+            $query->bindParam(":program_type", $program_type);
+            $query->bindParam(":subject_type", $subject_type);
+            $query->execute();
 
-        //     $html = "<div class='form-group mb-2'>
-        //         <label   class='mb-2'>Template</label>
-        //         <select id='subject_template_id' class='form-control' name='subject_template_id'>";
+            if($query->rowCount() > 0){
 
-        //     while($row = $query->fetch(PDO::FETCH_ASSOC)){
-        //         $html .= "
-        //             <option value='".$row['subject_template_id']."'>".$row['subject_title']."</option>
-        //         ";
-        //     }
-        //     $html .= "</select>
-        //             </div>";
-        //     return $html;
-        // }
- 
-       return null;
+                $html = "<div class='form-group mb-2'>
+                    <label   class='mb-2'>Template</label>
+                    <select id='subject_template_id' class='form-control' name='subject_template_id'>";
+
+                while($row = $query->fetch(PDO::FETCH_ASSOC)){
+                    $html .= "
+                        <option value='".$row['subject_template_id']."'>".$row['subject_title']."</option>
+                    ";
+                }
+                $html .= "</select>
+                        </div>";
+                return $html;
+            }
+        }
+
+        return null;
     }
 
-    public function SelectSubjectTitleEdit(){
-        $SHS_DEPARTMENT = 4;
-        $query = $this->con->prepare("SELECT * FROM subject_template
-            -- WHERE course_level=:course_level
-            -- AND semester=:semester
-        ");
-        // $query->bindValue(":course_level", 0);
-        // $query->bindValue(":semester", "");
-        $query->execute();
+    public function SelectSubjectTitleEdit($department_name,
+        $program_id){
 
-        if($query->rowCount() > 0){
+        // echo $program_id;
 
-            $html = "<div class='form-group mb-2'>
-                <label   class='mb-2'>Template</label>
-                <select id='edit_subject_template_id' class='form-control'
-                    name='edit_subject_template_id'>";
+        $html = "";
 
-            while($row = $query->fetch(PDO::FETCH_ASSOC)){
-                $html .= "
-                    <option value='".$row['subject_template_id']."'>".$row['subject_title']."</option>
-                ";
+        $subject_type = "Core";
+
+        if($department_name == "Senior High School"){
+
+            $shs_program_type = 0;
+
+            $query = $this->con->prepare("SELECT * FROM subject_template
+                    WHERE program_id=:program_id
+                    OR (
+                        program_type=:program_type
+                        AND subject_type=:subject_type
+                    )
+                ");
+
+            $query->bindParam(":program_id", $program_id);
+            $query->bindParam(":program_type", $shs_program_type);
+            $query->bindParam(":subject_type", $subject_type);
+            $query->execute();
+
+            if($query->rowCount() > 0){
+
+                $html = "<div class='form-group mb-2'>
+                    <label   class='mb-2'>Template</label>
+                    <select id='edit_subject_template_id' class='form-control'
+                        name='edit_subject_template_id'>";
+
+                while($row = $query->fetch(PDO::FETCH_ASSOC)){
+                    $html .= "
+                        <option value='".$row['subject_template_id']."'>".$row['subject_title']."</option>
+                    ";
+                }
+                $html .= "</select>
+                        </div>";
+                return $html;
             }
-            $html .= "</select>
-                    </div>";
-            return $html;
         }
+
+
+        // echo $department_name;
+        if($department_name == "Tertiary"){
+
+            $tertiary_program_type = 1;
+
+            $tertiary_query = $this->con->prepare("SELECT * FROM subject_template
+                    WHERE program_id=:program_id
+                    OR (
+                        program_type=:program_type
+                        AND subject_type=:subject_type
+                    )
+                ");
+
+            $tertiary_query->bindParam(":program_id", $program_id);
+            $tertiary_query->bindParam(":program_type", $tertiary_program_type);
+            $tertiary_query->bindParam(":subject_type", $subject_type);
+
+            $tertiary_query->execute();
+
+            if($tertiary_query->rowCount() > 0){
+
+                $html = "<div class='form-group mb-2'>
+                    <label   class='mb-2'>Template</label>
+                    <select id='edit_subject_template_id' class='form-control'
+                        name='edit_subject_template_id'>";
+
+                while($row = $tertiary_query->fetch(PDO::FETCH_ASSOC)){
+                    $html .= "
+                        <option value='".$row['subject_template_id']."'>".$row['subject_title']."</option>
+                    ";
+                }
+                $html .= "</select>
+                        </div>";
+                return $html;
+            }
+        }
+        
  
-       return null;
+       return $html;
     }
 
 

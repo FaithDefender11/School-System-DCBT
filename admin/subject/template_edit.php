@@ -59,8 +59,13 @@
 
             $program = new Program($con, $template_program_id);
 
+            $db_program_name = $program->GetProgramName();
+
+            // echo $db_program_name;
+
             // $programDropdown = "";
-            $programDropdown = $program->CreateProgramDropdown($template_program_id, $template_program_department_id);
+            $programDropdown = $program->CreateProgramDropdown($template_program_id,
+                $template_program_department_id);
             
             // TODO. 1. FIX the Universal Edit, it did not work.
             // 2. Remove Functionality.
@@ -79,7 +84,22 @@
                 $subject_type = $_POST['subject_type'];
                 $edit_program_id = $_POST['program_id'] ?? 0;
 
-                 
+                // echo $edit_program_id;
+
+                if($subject_type !== "Core" && $edit_program_id == NULL){
+
+                    // Alert::error("If Subject Type is not 'Core', You should select a Program..",
+                    //     "template_edit.php?id=$subject_template_id");
+
+                    // exit();
+                    echo "If Subject Type is not 'Core', You should select a Program..";
+                    echo "
+                        <a href='template_edit.php?id=$subject_template_id'>
+                            <button class='btn btn-primary'>Go Back</button>
+                        </a>
+                    ";
+                    return;
+                }
 
                 // Update the record in the database
                 $query = $con->prepare("UPDATE subject_template 
@@ -109,11 +129,17 @@
                 }
             }
 
+
             ?>
 
             <div class='col-md-12 row'>
                 <div class='card'>
                     <div class='card-header'>
+                        <a href="template_list.php">
+                            <button class="btn btn-primary">
+                                <i class="fas fa-arrow-left"></i>
+                            </button>
+                        </a>
                         <h4 class='text-center mb-3'>Edit Subject Program</h4>
                     </div>
                     <div class='card-body'>
@@ -130,10 +156,12 @@
                                 <label for=''>Description</label>
                                 <textarea class='form-control' placeholder='Subject Description' name='description'><?php echo $description ?></textarea>
                             </div>
+
                             <div class='form-group mb-2'>
                                 <label for=''>Pre-Requisite</label>
                                 <input class='form-control' value='<?php echo $pre_requisite_title ?>' type='text' placeholder='Pre-Requisite' name='pre_requisite_title'>
                             </div>
+
                             <div class='form-group mb-2'>
                                 <label for=''>Choose Subject Type</label>
                                 <select class='form-control' name='subject_type' id="subject_type">
@@ -163,8 +191,11 @@
 
                         var subject_type = $(this).val();
                         var department_type = $("#department_type").val();
+                        var program_id = $("#program_id").val();
+                        var programName = "";
                         
-                        console.log(department_type)
+                        // console.log(subject_type)
+                        // console.log(program_id)
 
                         // $programDropdown = $program->
                         // CreateProgramDropdownDepartmentBased($department_type);
@@ -188,14 +219,16 @@
                                     $('#program_id').html(options);
 
                                     // console.log('length!!')
-                                
-
 
                                 }
                             });
                         }
 
+                        // console.log(department_type)
+
                         if(subject_type !== "Core"){
+
+                            var programName = "<?php echo $db_program_name; ?>";
 
                             $.ajax({
                                 url: '../../ajax/section/get_program.php',
@@ -208,28 +241,31 @@
                                 dataType: 'json',
 
                                 success: function(response) {
-                                    console.log(response);
 
                                     if(response.length > 0){
-                                        console.log(response);
+                                        // console.log(response);
 
-                                        var options = '<option value="">Choose Program</option>';
+                                        var options = '<option disabled value="">Choose Program</option>';
                                         
                                         $.each(response, function(index, value) {
 
-                                            options += '<option value="' + value.program_id + '"> ' + value.program_name +'</option>';
+                                            var selected = "";
+
+                                            if(programName == value.program_name && subject_type !== "Core"){
+                                                selected = "selected";
+                                            }
+
+                                            // options += '<option value="' + value.program_id + '"> ' + value.program_name +'</option>';
+                                            options += `<option ${selected} value="${value.program_id}">${value.program_name}</option>`;
 
                                         });
 
                                         $('#program_id').html(options);
+
                                     }else{
                                         // $('#program_id').html("");
-
-                                        console.log('length!!')
+                                        console.log('length was zero.')
                                     }
-                                    // response = response.trim();
-
-
                                 }
                             });
                         }

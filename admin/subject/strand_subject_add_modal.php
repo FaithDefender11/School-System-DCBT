@@ -33,25 +33,6 @@
                         <?php echo $selectSubjectTitle;?>
 
                         <div id="errorMessage" class="alert alert-warning d-none"></div>
-                        <!-- 
-                        <div class='form-group mb-2 '>
-                            <label for="" class="mb-2">Code</label>
-                            <input class='form-control' type='text'
-                            placeholder='Subject Code' id="subject_code"
-                            name='subject_code'>
-                        </div> -->
-
-                        <!-- <div class='form-group mb-2'>
-                            <label for="" class="mb-2">Grade Level</label>
-                            <select class='form-control' id='course_level' name='course_level'>
-                                <option value='11'>Grade 11</option>
-                                <option value='12'>Grade 12</option>
-                                <option value='1'>1st Year</option>
-                                <option value='2'>2nd Year</option>
-                                <option value='3'>3rd Year</option>
-                                <option value='4'>4th Year</option>
-                            </select>
-                        </div> -->
 
                         <?php echo $dynamicCourseLevelDropdown;?>
                         
@@ -126,6 +107,15 @@
                         icon: 'success',
                         title: 'Success',
                         text: 'Subject added successfully!',
+                    });
+                }
+
+                if(output == "already_registered"){
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oh no!',
+                        text: `Already Registered!`,
                     });
                 }
             }

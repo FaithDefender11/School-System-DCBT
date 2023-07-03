@@ -22,5 +22,6 @@
         return isset($this->sqlData['subject_title']) ? $this->sqlData["subject_title"] : "N/A"; 
     }
 
+    
 }
 ?>
