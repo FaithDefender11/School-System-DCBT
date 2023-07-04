@@ -46,7 +46,13 @@
               <h3>Teachers</h3>
             </div>
             <div class="action">
-              <button type="button" class="default large">+ Add new</button>
+              <button
+                type="button"
+                class="default large"
+                onclick="addTeacher('shs')"
+              >
+                + Add new
+              </button>
             </div>
           </header>
           <main>
@@ -96,7 +102,13 @@
               <h3>Teachers</h3>
             </div>
             <div class="action">
-              <button type="button" class="default large">+ Add new</button>
+              <button
+                type="button"
+                class="default large"
+                onclick="addTeacher('college')"
+              >
+                + Add new
+              </button>
             </div>
           </header>
           <main>
