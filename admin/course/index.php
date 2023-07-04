@@ -29,7 +29,9 @@
               </small>
             </div>
             <div class="action">
-              <button type="button" class="default large">+ Add New</button>
+              <button type="button" class="default large" onclick="add('shs')">
+                + Add New
+              </button>
             </div>
           </header>
           <main>
@@ -71,7 +73,13 @@
               </small>
             </div>
             <div class="action">
-              <button type="button" class="default large">+ Add New</button>
+              <button
+                type="button"
+                class="default large"
+                onclick="add('college')"
+              >
+                + Add New
+              </button>
             </div>
           </header>
           <main>
