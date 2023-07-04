@@ -18,3 +18,12 @@ function college() {
 }
 
 window.onload = shs;
+
+
+function add(add) {
+  if (add === 'shs') {
+    window.location.href = "add-strand-template.html";
+  } else if (add === 'college') {
+    window.location.href = "add-course-template.html";
+  }
+}
