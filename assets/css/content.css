@@ -71,44 +71,6 @@
   padding: 0px 20px;
 }
 
-/* ADDED DROPDOWN */
-.content-header>header>.action>.dropdown {
-  position: relative;
-}
-
-.content-header>header>.action>.dropdown>.dropdown-menu {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  display: none;
-  background-color: #f9f9f9;
-  min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-  padding: 10px;
-}
-
-.content-header>header>.action>.dropdown>.dropdown-menu.show {
-  display: block;
-}
-
-.content-header>header>.action>.dropdown>.dropdown-menu>.dropdown-item {
-  display: block;
-  padding: 5px 0;
-  text-decoration: none;
-  color: #A4A7FC;
-}
-
-.content-header>header>.action>.dropdown>.dropdown-menu>.dropdown-item>i {
-  padding-right: 5px;
-  padding-left: 5px;
-}
-
-.content-header>header>.action>.dropdown>.dropdown-menu>.dropdown-item:hover {
-  background-color: #ddd;
-}
-
-/* ADDED DROPDOWN */
-
 .content-header>header>.action button i {
   color: white;
   font-size: 25px;
@@ -128,6 +90,10 @@
   text-align: center;
   font-weight: normal;
   color: gray;
+}
+
+.content .tab:hover {
+  filter: brightness(90%);
 }
 
 .content>.tabs {
@@ -153,9 +119,9 @@
   font-weight: bold;
 }
 
-.content>.tabs>.tab:hover {
-  filter: brightness(90%);
-}
+
+
+/* ADDED MAIN & FLOATING WITH MODIFICATIONS */
 
 .tab>.selection-btn {
   border: none;
@@ -195,6 +161,7 @@
 
 .floating>header {
   display: flex;
+  flex-wrap: wrap;
 }
 
 .floating>header>.title {
@@ -223,6 +190,8 @@
   display: flex;
   align-items: center;
   column-gap: 5px;
+  flex-wrap: wrap;
+  row-gap: 5px;
 }
 
 .floating>header>.action button i {
@@ -230,33 +199,68 @@
   font-size: 20px;
 }
 
+/* ADDED MAIN & FLOATING WITH MODIFICATIONS */
+.floating>.tabs {
+  /* parent */
+  display: flex;
+  padding: 0px 100px;
+  /* child */
+  flex-wrap: wrap;
+}
+
+.floating>.tabs>.tab {
+  /* parent */
+  display: flex;
+  flex: 1;
+  cursor: pointer;
+  padding: 10px;
+  border: none;
+  background-color: var(--theme);
+  color: #fff;
+  /* child */
+  column-gap: 5px;
+  justify-content: center;
+  font-weight: bold;
+}
+
 .floating>main {
   overflow-x: auto;
 }
 
+/* ADDED TIMESTAMP */
+
+/* ADDED TIMESTAMP */
+
 .floating>main>.menu {
   display: flex;
   flex-direction: column;
+  row-gap: 30px;
 }
 
 .floating>main>.menu>.item {
   display: flex;
-  padding: 10px 100px;
-  column-gap: 30px;
-  font-weight: 100;
+  padding: 0px 10%;
+  column-gap: 10px;
 }
 
 .floating>main>.menu>.item span:first-child {
   display: flex;
-  flex: 1;
+  flex: 1 0 300px;
   justify-content: left;
+  font-weight: bold;
 }
 
 .floating>main>.menu>.item>span {
   display: flex;
   align-items: center;
-  min-width: 150px;
+  overflow-x: hidden;
+  flex: 0 0 120px;
+  /*set to fixed button width*/
   justify-content: center;
+}
+
+.floating>main>.menu>.item>span.status {
+  color: var(--titleEm);
 }
 
 .floating>.action {
@@ -266,3 +270,83 @@
   justify-content: end;
   gap: 5px;
 }
+
+.floating>.action>.input {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: 5px;
+  flex: 1 0;
+  border: solid 1px black;
+  padding: 0px 20px;
+}
+
+.floating>.action>.input>p {
+  margin: 5px;
+}
+
+.floating>.action>.input>select {
+  display: flex;
+  flex-grow: 1;
+  text-align: center;
+  border: none;
+}
+
+.floating>.action span {
+  display: flex;
+  flex: 1 1;
+  margin: 0px;
+  justify-content: end;
+  font-size: 100px;
+}
+
+.floating>.action span i {
+  font-size: 20px;
+}
+
+/* MODIFIED CSS SECTION */
+/* ADDED DROPDOWN */
+.content-header>header>.action>.dropdown {
+  position: relative;
+}
+
+.content-header>header>.action>.dropdown>.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  display: none;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  padding: 10px;
+}
+
+.content-header>header>.action>.dropdown>.dropdown-menu.show {
+  display: block;
+}
+
+.content-header>header>.action>.dropdown>.dropdown-menu>.dropdown-item {
+  display: block;
+  padding: 5px 0;
+  text-decoration: none;
+  color: #A4A7FC;
+}
+
+.content-header>header>.action>.dropdown>.dropdown-menu>.dropdown-item>i {
+  padding-right: 5px;
+  padding-left: 5px;
+}
+
+.content-header>header>.action>.dropdown>.dropdown-menu>.dropdown-item:hover {
+  background-color: #ddd;
+}
+
+/* ADDED DROPDOWN */
+
+/* ADDED CONTENT TO ACTION */
+.content>main>.action {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* ADDED CONTENT TO ACTION */
