@@ -170,3 +170,38 @@ function toggleTable(tableId, buttonId, spanId) {
     button.classList.add("active-button");
     span.classList.add("active-span");
   }
+
+
+  document.addEventListener("DOMContentLoaded", function() {
+    var shsDropdownToggle = document.getElementById("SHSdropdownMenuButton");
+    var collegeDropdownToggle = document.getElementById("CollegedropdownMenuButton");
+  
+    var shsDropdownMenu = document.querySelector(".SHS-dropdown-menu");
+    var collegeDropdownMenu = document.querySelector(".College-dropdown-menu");
+  
+    shsDropdownToggle.addEventListener("click", function() {
+      shsDropdownMenu.classList.toggle("show");
+    });
+  
+    collegeDropdownToggle.addEventListener("click", function() {
+      collegeDropdownMenu.classList.toggle("show");
+    });
+  
+    document.addEventListener("click", function(event) {
+      if (
+        !shsDropdownToggle.contains(event.target) &&
+        !shsDropdownMenu.contains(event.target)
+      ) {
+        shsDropdownMenu.classList.remove("show");
+      }
+      
+      if (
+        !collegeDropdownToggle.contains(event.target) &&
+        !collegeDropdownMenu.contains(event.target)
+      ) {
+        collegeDropdownMenu.classList.remove("show");
+      }
+    });
+  });
+  
+  
