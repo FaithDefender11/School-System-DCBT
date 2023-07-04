@@ -32,3 +32,21 @@ function view(page){
         window.location.href = "college-subject-item-template.html";
     }
 }
+
+
+function create(subject) {
+  if (subject === 'shs') {
+    window.location.href = "SHS-create-subject-template.html";
+  } else if (subject === 'college') {
+    window.location.href = "College-create-subject-template.html";
+  }
+  
+}
+
+function add(add) {
+  if (add === 'shs') {
+    window.location.href = "SHS-add-subject-template.html"
+  } else if (add === 'college') {
+    window.location.href = "College-add-subject-template.html"
+  }
+}
