@@ -1,14 +1,14 @@
-document.addEventListener("DOMContentLoaded", function() {
-    var dropdownToggle = document.querySelector(".icon");
-    var dropdownMenu = document.querySelector(".dropdown-menu");
+var dropBtns = document.querySelectorAll(".icon");
 
-    dropdownToggle.addEventListener("click", function() {
-        dropdownMenu.classList.toggle("show");
-    });
+dropBtns.forEach(btn => {
+    btn.addEventListener("click", (e) => {
+        const dropMenu = e.currentTarget.nextElementSibling;
 
-    document.addEventListener("click", function(event) {
-        if (!dropdownToggle.contains(event.target) && !dropdownMenu.contains(event.target)) {
-            dropdownMenu.classList.remove("show");
+        if (dropMenu.classList.contains("show")) {
+            dropMenu.classList.toggle("show");
+        } else {
+            document.querySelectorAll(".dropdown-menu").forEach(item => item.classList.remove("show"));
+            dropMenu.classList.add("show");
         }
     });
 });

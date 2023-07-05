@@ -323,6 +323,7 @@
 
 .content-header>header>.action>.dropdown>.dropdown-menu.show {
   display: block;
+  z-index: 2;
 }
 
 .content-header>header>.action>.dropdown>.dropdown-menu>.dropdown-item {
@@ -338,6 +339,42 @@
 }
 
 .content-header>header>.action>.dropdown>.dropdown-menu>.dropdown-item:hover {
+  background-color: #ddd;
+}
+
+.floating>header>.action>.dropdown {
+  position: relative;
+}
+
+.floating>header>.action>.dropdown>.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  display: none;
+  background-color: #f9f9f9;
+  min-width: 210px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  padding: 10px;
+}
+
+.floating>header>.action>.dropdown>.dropdown-menu.show {
+  display: block;
+  z-index: 2;
+}
+
+.floating>header>.action>.dropdown>.dropdown-menu>.dropdown-item {
+  display: block;
+  padding: 5px 0;
+  text-decoration: none;
+  color: #A4A7FC;
+}
+
+.floating>header>.action>.dropdown>.dropdown-menu>.dropdown-item>i {
+  padding-right: 5px;
+  padding-left: 5px;
+}
+
+.floating>header>.action>.dropdown>.dropdown-menu>.dropdown-item:hover {
   background-color: #ddd;
 }
 
