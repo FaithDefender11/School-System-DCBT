@@ -9,22 +9,22 @@
 
 /* colors for nav */
 .drop.gas,
-.dropdown.bcm {
+.drop.bcm {
   background-color: var(--1);
 }
 
 .drop.ict,
-.dropdown.bpe {
+.drop.bpe {
   background-color: var(--2);
 }
 
 .drop.humss,
-.dropdown.bae {
+.drop.bae {
   background-color: var(--3);
 }
 
 .drop.abm,
-.dropdown.bse {
+.drop.bse {
   background-color: var(--4);
 }
 
@@ -33,7 +33,7 @@
   background-color: var(--5);
 }
 
-.dropdown.he {
+.drop.he {
   background-color: var(--6);
 }
 
