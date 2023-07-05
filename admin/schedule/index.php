@@ -38,7 +38,7 @@
           <main>
             <div class="scheduler">
               <nav>
-                <a class="dropdown gas" id="GAS">
+                <a class="drop gas" id="GAS">
                   <span class="span-toggle" id="gas-span">GAS</span>
                   <label for="Grade 11">Grade 11</label>
                   <input
@@ -67,7 +67,7 @@
                     onclick="toggleTable('table-gas-4','section-gas-4', 'gas-span')"
                   />
                 </a>
-                <a class="dropdown ict" id="ICT">
+                <a class="drop ict" id="ICT">
                   <span class="span-toggle" id="ict-span">ICT</span>
                   <label for="Grade 11">Grade 11</label>
                   <input
@@ -96,7 +96,7 @@
                     onclick="toggleTable('table-ict-4','section-ict-4', 'ict-span')"
                   />
                 </a>
-                <a class="dropdown humss" id="HUMSS">
+                <a class="drop humss" id="HUMSS">
                   <span class="span-toggle" id="humss-span">HUMSS</span>
                   <label for="Grade 11">Grade 11</label>
                   <input
@@ -125,7 +125,7 @@
                     onclick="toggleTable('table-humss-4','section-humss-4', 'humss-span')"
                   />
                 </a>
-                <a class="dropdown abm" id="ABM">
+                <a class="drop abm" id="ABM">
                   <span class="span-toggle" id="abm-span">ABM</span>
                   <label for="Grade 11">Grade 11</label>
                   <input
@@ -154,7 +154,7 @@
                     onclick="toggleTable('table-abm-4','section-abm-4', 'abm-span')"
                   />
                 </a>
-                <a class="dropdown ia" id="IA">
+                <a class="drop ia" id="IA">
                   <span class="span-toggle" id="ia-span">IA</span>
                   <label for="Grade 11">Grade 11</label>
                   <input
@@ -183,7 +183,7 @@
                     onclick="toggleTable('table-ia-4','section-ia-4', 'ia-span')"
                   />
                 </a>
-                <a class="dropdown he" id="HE">
+                <a class="drop he" id="HE">
                   <span class="span-toggle" id="he-span">HE</span>
                   <label for="Grade 11">Grade 11</label>
                   <input
@@ -717,6 +717,18 @@
             <div class="title">
               <h3>Schedule Overview <em>SHS</em></h3>
             </div>
+            <div class="action">
+              <div class="dropdown">
+                <button class="icon">
+                  <i class="bi bi-three-dots-vertical"></i>
+                </button>
+                <div class="dropdown-menu">
+                  <a href="#" class="dropdown-item"
+                    ><i class="bi bi-printer"></i>Print Schedule</a
+                  >
+                </div>
+              </div>
+            </div>
           </header>
           <div class="tabs">
             <button class="tab" id="shs-room">
@@ -736,11 +748,6 @@
                 <option value="">*insert room*</option>
               </select>
             </div>
-            <span>
-              <button class="icon">
-                <i class="bi bi-three-dots-vertical"></i>
-              </button>
-            </span>
           </div>
 
           <div class="action" id="shs-section-tab">
@@ -750,11 +757,6 @@
                 <option value="">*insert section*</option>
               </select>
             </div>
-            <span>
-              <button class="icon">
-                <i class="bi bi-three-dots-vertical"></i>
-              </button>
-            </span>
           </div>
 
           <main id="shs-room-table">
@@ -1362,7 +1364,7 @@
           <main>
             <div class="scheduler">
               <nav>
-                <a class="dropdown bcm" id="BCM">
+                <a class="drop bcm" id="BCM">
                   <span class="span-toggle" id="bcm-span">BCM</span>
                   <label for="1st Year">1st Year</label>
                   <input
@@ -1417,7 +1419,7 @@
                     onclick="toggleTable('table-bcm-8', 'section-bcm-8', 'bcm-span')"
                   />
                 </a>
-                <a class="dropdown bpe" id="BPE">
+                <a class="drop bpe" id="BPE">
                   <span class="span-toggle" id="bpe-span">BPE</span>
                   <label for="1st Year">1st Year</label>
                   <input
@@ -1472,7 +1474,7 @@
                     onclick="toggleTable('table-bpe-8', 'section-bpe-8', 'bpe-span')"
                   />
                 </a>
-                <a class="dropdown bae" id="BAE">
+                <a class="drop bae" id="BAE">
                   <span class="span-toggle" id="bae-span">BAE</span>
                   <label for="1st Year">1st Year</label>
                   <input
@@ -1527,7 +1529,7 @@
                     onclick="toggleTable('table-bae-8', 'section-bae-8', 'bae-span')"
                   />
                 </a>
-                <a class="dropdown bse" id="BSE">
+                <a class="drop bse" id="BSE">
                   <span class="span-toggle" id="bse-span">BSE</span>
                   <label for="1st Year">1st Year</label>
                   <input
@@ -1582,7 +1584,7 @@
                     onclick="toggleTable('table-bse-8', 'section-bse-8', 'bse-span')"
                   />
                 </a>
-                <a class="dropdown btte" id="BTTE">
+                <a class="drop btte" id="BTTE">
                   <span class="span-toggle" id="btte-span">BTTE</span>
                   <label for="1st Year">1st Year</label>
                   <input
@@ -2412,6 +2414,18 @@
             <div class="title">
               <h3>Schedule Overview <em>College</em></h3>
             </div>
+            <div class="action">
+              <div class="dropdown">
+                <button class="icon">
+                  <i class="bi bi-three-dots-vertical"></i>
+                </button>
+                <div class="dropdown-menu">
+                  <a href="#" class="dropdown-item"
+                    ><i class="bi bi-printer"></i>Print Schedule</a
+                  >
+                </div>
+              </div>
+            </div>
           </header>
           <div class="tabs">
             <button class="tab" id="college-room">
@@ -2431,11 +2445,6 @@
                 <option value="">*insert room*</option>
               </select>
             </div>
-            <span>
-              <button class="icon">
-                <i class="bi bi-three-dots-vertical"></i>
-              </button>
-            </span>
           </div>
 
           <div class="action" id="college-section-tab">
@@ -2445,11 +2454,6 @@
                 <option value="">*insert section*</option>
               </select>
             </div>
-            <span>
-              <button class="icon">
-                <i class="bi bi-three-dots-vertical"></i>
-              </button>
-            </span>
           </div>
 
           <main id="college-room-table">

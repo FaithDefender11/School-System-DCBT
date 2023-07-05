@@ -1,28 +1,14 @@
-  document.addEventListener("DOMContentLoaded", function() {
-    var dropdownToggles = document.querySelectorAll(".icon");
-    var dropdownMenus = document.querySelectorAll(".dropdown-menu");
+var dropBtns = document.querySelectorAll(".icon");
 
-    for (var i = 0; i < dropdownToggles.length; i++) {
-        var dropdownToggle = dropdownToggles[i];
-        var dropdownMenu = dropdownMenus[i];
+dropBtns.forEach(btn => {
+    btn.addEventListener("click", (e) => {
+        const dropMenu = e.currentTarget.nextElementSibling;
 
-        dropdownToggle.addEventListener("click", createToggleHandler(dropdownMenu));
-    }
-
-    function createToggleHandler(menu) {
-        return function() {
-            menu.classList.toggle("show");
-        };
-    }
-
-    document.addEventListener("click", function(event) {
-        for (var i = 0; i < dropdownToggles.length; i++) {
-            var dropdownToggle = dropdownToggles[i];
-            var dropdownMenu = dropdownMenus[i];
-
-            if (!dropdownToggle.contains(event.target) && !dropdownMenu.contains(event.target)) {
-                dropdownMenu.classList.remove("show");
-            }
+        if (dropMenu.classList.contains("show")) {
+            dropMenu.classList.toggle("show");
+        } else {
+            document.querySelectorAll(".dropdown-menu").forEach(item => item.classList.remove("show"));
+            dropMenu.classList.add("show");
         }
     });
 });
