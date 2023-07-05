@@ -107,3 +107,17 @@ function collegeSubjectsLoad(){
 }
 
 window.onload = shs;
+
+
+function addTeacher(teacher) {
+  if (teacher === 'shs') {
+    window.location.href = "add-teacher-template.html";
+  } else if (teacher === 'college') {
+    window.location.href = "add-teacher-template.html";
+  }
+}
+
+
+function view() {
+  window.location.href = "view-teacher-template.html";
+}

@@ -140,3 +140,33 @@ function collegeSectionTab(){
 }
 
 window.onload = shs;
+
+
+function toggleTable(tableId, buttonId, spanId) {
+    var table = document.getElementById(tableId);
+    var button = document.getElementById(buttonId);
+    var span = document.getElementById(spanId);
+
+    // Hide all tables
+    var tables = document.getElementsByClassName("schedule-table");
+    for (var i = 0; i < tables.length; i++) {
+      tables[i].classList.remove("show-table");
+    }
+
+    // Deactivate all buttons
+    var buttons = document.querySelectorAll("input[type='button']");
+    for (var j = 0; j < buttons.length; j++) {
+      buttons[j].classList.remove("active-button");
+    }
+
+    // Deactivate span
+    var spans = document.querySelectorAll(".span-toggle");
+    for (var n = 0; n < spans.length; n++) {
+        spans[n].classList.remove("active-span");
+    }
+
+    // Show the selected table and activate the button
+    table.classList.add("show-table");
+    button.classList.add("active-button");
+    span.classList.add("active-span");
+  }

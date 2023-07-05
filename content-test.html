@@ -5,12 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <script src="assets/css/others/toggle-switch.js" defer></script>
+    <script src="assets/js/dropdownMenu.js" defer></script>
     <link rel="stylesheet" href="assets/css/others/toggle-switch.css" />
     <!-- link style sheets -->
     <link rel="stylesheet" href="assets/css/buttons.css" />
     <link rel="stylesheet" href="assets/css/content.css" />
     <link rel="stylesheet" href="assets/css/fonts.css" />
     <link rel="stylesheet" href="assets/css/table.css" />
+    <link rel="stylesheet" href="assets/css/forms.css" />
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
@@ -61,9 +63,19 @@
             <small> comment </small>
           </div>
           <div class="action">
-            <button class="icon">
-              <i class="bi bi-three-dots-vertical"></i>
-            </button>
+            <div class="dropdown">
+              <button class="icon">
+                <i class="bi bi-three-dots-vertical"></i>
+              </button>
+              <div class="dropdown-menu">
+                <a href="#" class="dropdown-item"
+                  ><i class="bi bi-calendar"></i>Edit Calendar</a
+                >
+                <a href="#" class="dropdown-item"
+                  ><i class="bi bi-printer"></i>Print Calendar</a
+                >
+              </div>
+            </div>
           </div>
         </header>
         <div class="cards">
@@ -119,14 +131,146 @@
         <div class="floating">
           <header>
             <div class="title">
+              <h1>Title <em>Student</em></h1>
+              <small> comment </small>
+            </div>
+            <div class="action">
+              <div class="dropdown">
+                <button class="icon">
+                  <i class="bi bi-three-dots-vertical"></i>
+                </button>
+                <div class="dropdown-menu">
+                  <a href="#" class="dropdown-item"
+                    ><i class="bi bi-calendar"></i>Edit Calendar</a
+                  >
+                  <a href="#" class="dropdown-item"
+                    ><i class="bi bi-printer"></i>Print Calendar</a
+                  >
+                </div>
+              </div>
+            </div>
+          </header>
+          <main>
+            <form action="">
+              <div class="row">
+                <span>
+                  <label for="fname">Name</label>
+                  <div>
+                    <input
+                      type="text"
+                      name="firstname"
+                      placeholder="Your name.."
+                    />
+                    <small>Last name</small>
+                  </div>
+
+                  <div>
+                    <input
+                      type="text"
+                      name="firstname"
+                      placeholder="Your name.."
+                    />
+                    <small>Last name</small>
+                  </div>
+
+                  <div>
+                    <input
+                      type="text"
+                      name="firstname"
+                      placeholder="Your name.."
+                    />
+                    <small>Last name</small>
+                  </div>
+                </span>
+              </div>
+              <div class="row">
+                <span class="normal">
+                  <label for="fname">Name</label>
+                  <div>
+                    <input
+                      type="text"
+                      name="firstname"
+                      placeholder="Your name.."
+                    />
+                    <small>Last name</small>
+                  </div>
+                </span>
+
+                <span>
+                  <label for="fname">Name</label>
+                  <div>
+                    <input
+                      type="text"
+                      name="firstname"
+                      placeholder="Your name.."
+                    />
+                    <small>Last name</small>
+                  </div>
+                </span>
+              </div>
+              <div class="row">
+                <span class="small">
+                  <label for="fname">Name</label>
+                  <div>
+                    <input
+                      type="text"
+                      name="firstname"
+                      placeholder="Your name.."
+                    />
+                    <small>Last name</small>
+                  </div>
+                </span>
+                <span class="x-small">
+                  <label for="fname">Name</label>
+                  <div>
+                    <input
+                      type="text"
+                      name="firstname"
+                      placeholder="Your name.."
+                    />
+                    <small>Last name</small>
+                  </div>
+                </span>
+
+                <span>
+                  <label for="fname">Name</label>
+                  <div>
+                    <input
+                      type="text"
+                      name="firstname"
+                      placeholder="Your name.."
+                    />
+                    <small>Last name</small>
+                  </div>
+                </span>
+              </div>
+
+              <input type="submit" value="Submit" />
+            </form>
+          </main>
+        </div>
+        <div class="floating">
+          <header>
+            <div class="title">
               <h3>Title1 <em>Titlee</em></h3>
               <small> comment </small>
             </div>
             <div class="action">
-              <button class="default large">button1</button>
-              <button class="default">button1</button>
+              <button class="icon">
+                <i class="bi bi-clipboard-check"></i>
+              </button>
             </div>
           </header>
+          <div class="tabs">
+            <button class="tab" id="shs-room">
+              <i class="bi bi-clipboard-check"></i>
+              Room
+            </button>
+            <button class="tab" id="shs-section">
+              <i class="bi bi-journal-arrow-down"></i>
+              Section
+            </button>
+          </div>
           <main>hey</main>
           <div class="action">
             <button class="default large">default</button>
@@ -150,7 +294,124 @@
             </div>
           </header>
           <main>
-            <table>
+            <table class="a">
+              <thead>
+                <tr>
+                  <th>Subject code</th>
+                  <th>Subject name</th>
+                  <th>Section subject code</th>
+                  <th>Section</th>
+                  <th>Schedule</th>
+                  <th>Status</th>
+                  <th>Hrs/week</th>
+                  <th>Action</th>
+                  <th>Action</th>
+                  <th>Action</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="important">MMW</td>
+                  <td>Math in Modern World</td>
+                  <td>MMW211</td>
+                  <td>ICT-211</td>
+                  <td>
+                    <p>M 8:00am-10:00am</p>
+                    <p>M 12:00pm - 5:00pm</p>
+                  </td>
+                  <td>Pending</td>
+                  <td>9hrs</td>
+                  <td>
+                    <button class="default">action</button>
+                    <button class="default">action</button>
+                    <button class="default">action</button>
+                    <button class="default">action</button>
+                    <button class="default">action</button>
+                    <button class="default">action</button>
+                  </td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td class="important">MMW</td>
+                  <td>Math in Modern World</td>
+                  <td>MMW211</td>
+                  <td>ICT-211</td>
+                  <td>
+                    <p>M 8:00am-10:00am</p>
+                  </td>
+                  <td>Pending</td>
+                  <td>9hrs</td>
+                  <td></td>
+
+                  <td></td>
+
+                  <td></td>
+
+                  <td></td>
+                </tr>
+                <tr>
+                  <td class="important">MMW</td>
+                  <td>Math in Modern World</td>
+                  <td>MMW211</td>
+                  <td>ICT-211</td>
+                  <td>
+                    <p>M 8:00am-10:00am</p>
+                    <p>M 12:00pm - 5:00pm</p>
+                    <p>Th 8:00am-10:00am</p>
+                  </td>
+                  <td>Pending</td>
+                  <td>9hrs</td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td class="important">MMW</td>
+                  <td>Math in Modern World</td>
+                  <td>MMW211</td>
+                  <td>ICT-211</td>
+                  <td>
+                    <p>M 8:00am-10:00am</p>
+                    <p>M 12:00pm - 5:00pm</p>
+                    <p>Th 8:00am-10:00am</p>
+                  </td>
+                  <td>Pending</td>
+                  <td>9hrs</td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td class="important">MMW</td>
+                  <td>Math in Modern World</td>
+                  <td>MMW211</td>
+                  <td>ICT-211</td>
+                  <td>
+                    <p>M 8:00am-10:00am</p>
+                    <p>M 12:00pm - 5:00pm</p>
+                    <p>Th 8:00am-10:00am</p>
+                  </td>
+                  <td>Pending</td>
+                  <td>9hrs</td>
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>
+          </main>
+        </div>
+        <div class="floating">
+          <header>
+            <div class="title">
+              <h3>Title</h3>
+              <small> comment </small>
+            </div>
+            <div class="action">
+              <button class="icon">
+                <i class="bi bi-three-dots-vertical"></i>
+              </button>
+            </div>
+          </header>
+          <main>
+            <table class="b">
               <thead>
                 <tr>
                   <th>Subject code</th>
@@ -286,19 +547,10 @@
             <button class="default large">button1</button>
           </div>
         </div>
+        <div class="action">
+          <button class="default large">button1</button>
+        </div>
       </main>
     </div>
-
-    <script src="/DCBT-2/sidebar.js"></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
-      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct"
-      crossorigin="anonymous"
-    ></script>
   </body>
 </html>

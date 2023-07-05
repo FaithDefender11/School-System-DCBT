@@ -16,14 +16,14 @@
   align-items: stretch;
 }
 
-.content > nav {
+.content>nav {
   display: flex;
   align-items: center;
   column-gap: 10px;
   padding: 15px 50px;
 }
 
-.content > nav > a {
+.content>nav>a {
   display: flex;
   align-items: center;
   column-gap: 10px;
@@ -40,51 +40,51 @@
   gap: 10px;
 }
 
-.content-header > header {
+.content-header>header {
   display: flex;
 }
 
-.content-header > header > .title {
+.content-header>header>.title {
   display: flex;
   flex-direction: column;
   flex: 1;
   margin: 0px;
 }
 
-.content-header > header > .title > h1 {
+.content-header>header>.title>h1 {
   margin: 0px;
 }
 
-.content-header > header > .title > h1 > em {
+.content-header>header>.title>h1>em {
   font-weight: 100;
   font-style: normal;
   color: var(--titleEm);
 }
 
-.content-header > header > .title > small {
+.content-header>header>.title>small {
   display: block;
 }
 
-.content-header > header > .action {
+.content-header>header>.action {
   display: flex;
   align-items: center;
   padding: 0px 20px;
 }
 
-.content-header > header > .action button i {
+.content-header>header>.action button i {
   color: white;
   font-size: 25px;
 }
 
-.content-header > .cards {
+.content-header>.cards {
   display: flex;
   justify-content: space-around;
   gap: 10px;
   flex-wrap: wrap;
 }
 
-.cards > .card > sub,
-.cards > .card > sup {
+.cards>.card>sub,
+.cards>.card>sup {
   display: block;
   font-size: medium;
   text-align: center;
@@ -92,7 +92,11 @@
   color: gray;
 }
 
-.content > .tabs {
+.content .tab:hover {
+  filter: brightness(90%);
+}
+
+.content>.tabs {
   /* parent */
   display: flex;
   background-color: var(--theme);
@@ -101,7 +105,7 @@
   flex-wrap: wrap;
 }
 
-.content > .tabs > .tab {
+.content>.tabs>.tab {
   /* parent */
   display: flex;
   flex: 1;
@@ -115,37 +119,11 @@
   font-weight: bold;
 }
 
-.content > .tabs > .tab:hover {
-  filter: brightness(90%);
-}
 
-/* ADDED MAIN & FLOATING WITH MODIFICATIONS */
-.content > main > .floating > .tabs {
-  /* parent */
-  display: flex;
-  padding: 0px 100px;
-  /* child */
-  flex-wrap: wrap;
-}
-
-.content > main > .floating > .tabs > .tab {
-  /* parent */
-  display: flex;
-  flex: 1;
-  cursor: pointer;
-  padding: 10px;
-  border: none;
-  background-color: var(--theme);
-  color: #fff;
-  /* child */
-  column-gap: 5px;
-  justify-content: center;
-  font-weight: bold;
-}
 
 /* ADDED MAIN & FLOATING WITH MODIFICATIONS */
 
-.tab > .selection-btn {
+.tab>.selection-btn {
   border: none;
   cursor: pointer;
   width: 550px;
@@ -153,7 +131,7 @@
   color: #fff;
 }
 
-.content > main {
+.content>main {
   /*parent*/
   display: flex;
   flex: 1;
@@ -181,130 +159,231 @@
   gap: 15px;
 }
 
-.floating > header {
+.floating>header {
   display: flex;
+  flex-wrap: wrap;
 }
 
-.floating > header > .title {
+.floating>header>.title {
   display: flex;
   flex-direction: column;
   flex: 1;
   margin: 0px;
 }
 
-.floating > header > .title > h3 > em {
+.floating>header>.title>h3>em {
   font-weight: normal;
   font-style: normal;
   color: var(--titleEm);
 }
 
-.floating > header > .title > h3 {
+.floating>header>.title>h3 {
   margin: 0px;
   color: var(--titleTheme);
 }
 
-.floating > header > .title > small {
+.floating>header>.title>small {
   display: block;
 }
 
-/* ADDED ROOM-SELECTOR */
-.floating > header > .room-selector {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding-left: 10px;
-  width: 100%;
-}
-
-/* ADDED ROOM-SELECTOR */
-
-.floating > header > .action {
+.floating>header>.action {
   display: flex;
   align-items: center;
   column-gap: 5px;
+  flex-wrap: wrap;
+  row-gap: 5px;
 }
 
-.floating > header > .action button i {
+.floating>header>.action button i {
   color: black;
   font-size: 20px;
 }
 
-.floating > main {
+/* ADDED MAIN & FLOATING WITH MODIFICATIONS */
+.floating>.tabs {
+  /* parent */
+  display: flex;
+  padding: 0px 100px;
+  /* child */
+  flex-wrap: wrap;
+}
+
+.floating>.tabs>.tab {
+  /* parent */
+  display: flex;
+  flex: 1;
+  cursor: pointer;
+  padding: 10px;
+  border: none;
+  background-color: var(--theme);
+  color: #fff;
+  /* child */
+  column-gap: 5px;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.floating>main {
   overflow-x: auto;
 }
 
 /* ADDED TIMESTAMP */
-.floating > main > table > .timestamp > tr:nth-child(even) {
-  background-color: #f2f2f2;
-}
 
 /* ADDED TIMESTAMP */
 
-/* RECYCLED CSS FROM OLD FRONT END */
-.floating > main > .section-table {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  padding: 0px;
-  width: 100%;
-  height: auto;
-  flex: none;
-  order: 1;
-  align-self: stretch;
-  flex-grow: 0;
-}
-
-.floating > main > .section-table > .selector {
+.floating>main>.menu {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  row-gap: 30px;
 }
 
-.floating > main > .section-table > .table-schedule {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  width: 100%;
-}
-
-/* RECYCLED CSS FROM OLD FRONT END */
-
-.floating > main > .menu {
-  display: flex;
-  flex-direction: column;
-  row-gap: 3px;
-}
-
-.floating > main > .menu > .item {
+.floating>main>.menu>.item {
   display: flex;
   padding: 0px 10%;
   column-gap: 10px;
 }
 
-.floating > main > .menu > .item span:first-child {
+.floating>main>.menu>.item span:first-child {
   display: flex;
   flex: 1 0 300px;
   justify-content: left;
   font-weight: bold;
 }
 
-.floating > main > .menu > .item > span {
+.floating>main>.menu>.item>span {
   display: flex;
   align-items: center;
   overflow-x: hidden;
-  flex: 0 0 120px; /*set to fixed button width*/
-  background-color: wheat;
+  flex: 0 0 120px;
+  /*set to fixed button width*/
   justify-content: center;
 }
 
-.floating > main > .menu > .item > span.status {
+.floating>main>.menu>.item>span.status {
   color: var(--titleEm);
 }
 
-.floating > .action {
+.floating>.action {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: end;
   gap: 5px;
 }
+
+.floating>.action>.input {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: 5px;
+  flex: 1 0;
+  border: solid 1px black;
+  padding: 0px 20px;
+}
+
+.floating>.action>.input>p {
+  margin: 5px;
+}
+
+.floating>.action>.input>select {
+  display: flex;
+  flex-grow: 1;
+  text-align: center;
+  border: none;
+}
+
+.floating>.action span {
+  display: flex;
+  flex: 1 1;
+  margin: 0px;
+  justify-content: end;
+  font-size: 100px;
+}
+
+.floating>.action span i {
+  font-size: 20px;
+}
+
+/* MODIFIED CSS SECTION */
+/* ADDED DROPDOWN */
+.content-header>header>.action>.dropdown {
+  position: relative;
+}
+
+.content-header>header>.action>.dropdown>.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  display: none;
+  background-color: #f9f9f9;
+  min-width: 210px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  padding: 10px;
+}
+
+.content-header>header>.action>.dropdown>.dropdown-menu.show {
+  display: block;
+  z-index: 2;
+}
+
+.content-header>header>.action>.dropdown>.dropdown-menu>.dropdown-item {
+  display: block;
+  padding: 5px 0;
+  text-decoration: none;
+  color: #A4A7FC;
+}
+
+.content-header>header>.action>.dropdown>.dropdown-menu>.dropdown-item>i {
+  padding-right: 5px;
+  padding-left: 5px;
+}
+
+.content-header>header>.action>.dropdown>.dropdown-menu>.dropdown-item:hover {
+  background-color: #ddd;
+}
+
+.floating>header>.action>.dropdown {
+  position: relative;
+}
+
+.floating>header>.action>.dropdown>.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  display: none;
+  background-color: #f9f9f9;
+  min-width: 210px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  padding: 10px;
+}
+
+.floating>header>.action>.dropdown>.dropdown-menu.show {
+  display: block;
+  z-index: 2;
+}
+
+.floating>header>.action>.dropdown>.dropdown-menu>.dropdown-item {
+  display: block;
+  padding: 5px 0;
+  text-decoration: none;
+  color: #A4A7FC;
+}
+
+.floating>header>.action>.dropdown>.dropdown-menu>.dropdown-item>i {
+  padding-right: 5px;
+  padding-left: 5px;
+}
+
+.floating>header>.action>.dropdown>.dropdown-menu>.dropdown-item:hover {
+  background-color: #ddd;
+}
+
+/* ADDED DROPDOWN */
+
+/* ADDED CONTENT TO ACTION */
+.content>main>.action {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* ADDED CONTENT TO ACTION */

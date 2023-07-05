@@ -34,11 +34,11 @@ table * {
 /* * {
   font-size: 14px;
 }*/
-thead {
+table.a thead {
   font-size: 16px;
 }
 
-tbody {
+table.a tbody {
   font-size: 14px;
 }
 
