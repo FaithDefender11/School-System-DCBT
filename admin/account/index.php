@@ -36,7 +36,7 @@
             </div>
           </header>
           <main>
-            <table>
+            <table class="a">
               <thead>
                 <tr>
                   <th>Account type</th>
@@ -52,7 +52,14 @@
                   <td></td>
                   <td></td>
                   <td></td>
-                  <td><button class="danger">Reset Password</button></td>
+                  <td>
+                    <button
+                      class="danger"
+                      onclick="window.location.href = 'reset-password-template.html'"
+                    >
+                      Reset Password
+                    </button>
+                  </td>
                 </tr>
               </tbody>
             </table>
