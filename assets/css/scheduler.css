@@ -50,27 +50,27 @@
   flex-direction: column;
 }
 
-.floating>main>.scheduler>nav .drop {
+.floating>main>.scheduler>nav>.drop {
   display: flex;
   text-align: center;
   flex-direction: column;
   cursor: pointer;
 }
 
-.floating>main>.scheduler>nav .drop span {
+.floating>main>.scheduler>nav>.drop span {
   font-weight: bold;
   padding: 10px 5px;
 }
 
-.floating>main>.scheduler>nav .drop:hover input {
+.floating>main>.scheduler>nav>.drop:hover input {
   display: block;
 }
 
-.floating>main>.scheduler>nav .drop:hover label {
+.floating>main>.scheduler>nav>.drop:hover label {
   display: block;
 }
 
-.floating>main>.scheduler>nav .drop>input {
+.floating>main>.scheduler>nav>.drop>input {
   display: none;
   border: none;
   background-color: white;
@@ -79,7 +79,7 @@
   justify-content: center;
 }
 
-.floating>main>.scheduler>nav .drop>label {
+.floating>main>.scheduler>nav>.drop>label {
   display: none;
   border: none;
   background-color: rgb(226, 226, 226);
@@ -89,7 +89,7 @@
   justify-content: center;
 }
 
-.floating>main>.scheduler>nav .drop>input:hover {
+.floating>main>.scheduler>nav>.drop>input:hover {
   background-color: rgb(172, 172, 172);
 }
 
@@ -100,37 +100,37 @@
 }
 
 /* TABLE */
-.floating>main>.scheduler>nav .drop.gas>input.active-button,
-.floating>main>.scheduler>nav .drop.bcm>input.active-button {
+.floating>main>.scheduler>nav>.drop.gas>input.active-button,
+.floating>main>.scheduler>nav>.drop.bcm>input.active-button {
   background-color: darkblue;
   color: white;
 }
 
-.floating>main>.scheduler>nav .drop.ict>input.active-button,
-.floating>main>.scheduler>nav .drop.bpe>input.active-button {
+.floating>main>.scheduler>nav>.drop.ict>input.active-button,
+.floating>main>.scheduler>nav>.drop.bpe>input.active-button {
   background-color: darkred;
   color: white;
 }
 
-.floating>main>.scheduler>nav .drop.humss>input.active-button,
-.floating>main>.scheduler>nav .drop.bae>input.active-button {
+.floating>main>.scheduler>nav>.drop.humss>input.active-button,
+.floating>main>.scheduler>nav>.drop.bae>input.active-button {
   background-color: darkgreen;
   color: white;
 }
 
-.floating>main>.scheduler>nav .drop.abm>input.active-button,
-.floating>main>.scheduler>nav .drop.bse>input.active-button {
+.floating>main>.scheduler>nav>.drop.abm>input.active-button,
+.floating>main>.scheduler>nav>.drop.bse>input.active-button {
   background-color: rgb(30, 122, 115);
   color: white
 }
 
-.floating>main>.scheduler>nav .drop.ia>input.active-button,
-.floating>main>.scheduler>nav .drop.btte>input.active-button {
+.floating>main>.scheduler>nav>.drop.ia>input.active-button,
+.floating>main>.scheduler>nav>.drop.btte>input.active-button {
   background-color: rgb(167, 53, 119);
   color: white
 }
 
-.floating>main>.scheduler>nav .drop.he>input.active-button {
+.floating>main>.scheduler>nav>.drop.he>input.active-button {
   background-color: rgb(26, 134, 102);
   color: white
 }
