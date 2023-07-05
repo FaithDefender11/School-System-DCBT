@@ -3053,3 +3053,4 @@
       </main>
     </div>
     <script src="../../assets/js/schedule.js"></script>
+    <script src="../../assets/js/dropdownMenu.js"></script>
