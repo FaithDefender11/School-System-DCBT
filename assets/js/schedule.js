@@ -170,22 +170,3 @@ function toggleTable(tableId, buttonId, spanId) {
     button.classList.add("active-button");
     span.classList.add("active-span");
   }
-
-
-  document.addEventListener("DOMContentLoaded", function () {
-    var shsDropdownToggle = document.getElementById("SHSdropdownMenuButton");
-    var shsDropdownMenu = document.querySelector(".SHS-dropdown-menu");
-  
-    shsDropdownToggle.addEventListener("click", function () {
-      shsDropdownMenu.classList.toggle("show");
-    });
-  });
-  
-  document.addEventListener("DOMContentLoaded", function () {
-    var collegeDropdownToggle = document.getElementById("CollegedropdownMenuButton");
-    var collegeDropdownMenu = document.querySelector(".College-dropdown-menu");
-  
-    collegeDropdownToggle.addEventListener("click", function () {
-      collegeDropdownMenu.classList.toggle("show");
-    });
-  });
