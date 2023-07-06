@@ -101,6 +101,7 @@
           </div>
         </div>
       </div>
+
       <div class="tabs">
         <button class="tab">
           <i class="bi bi-file icon"></i>
@@ -128,10 +129,10 @@
         </button>
       </div>
       <main>
-        <div class="floating">
+        <div class="floating noBorder">
           <header>
             <div class="title">
-              <h1>Title <em>Student</em></h1>
+              <h3>Title <em>Student</em></h3>
               <small> comment </small>
             </div>
             <div class="action">
@@ -150,6 +151,17 @@
               </div>
             </div>
           </header>
+          <div class="progress">
+            <span class="dot active"><p>aa</p></span>
+            <span class="line active"></span>
+            <span class="dot active"
+              ><p><i class="bi bi-file icon"></i>aaa</p></span
+            >
+            <span class="line inactive"></span>
+            <span class="dot inactive"> <p>aaaaaaaa</p></span>
+            <span class="line"></span>
+            <span class="dot inactive"><p>aaaaaaaaaaaa</p> </span>
+          </div>
           <main>
             <form action="">
               <div class="row">
@@ -244,8 +256,9 @@
                   </div>
                 </span>
               </div>
-
-              <input type="submit" value="Submit" />
+              <div class="action">
+                <input class="danger large" type="submit" value="Submit" />
+              </div>
             </form>
           </main>
         </div>
