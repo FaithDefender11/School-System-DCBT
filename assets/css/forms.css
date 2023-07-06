@@ -1,18 +1,8 @@
 :root {
   --base: 600px;
+  --activeProgress: #8fafff;
+  --inactiveProgress: #e4e4e4;
 }
-
-/* @media only screen and (max-width: 600px) {
-  form .row {
-    flex-direction: column;
-  }
-  form .row > span {
-    flex-direction: column;
-  }
-  form .row > span div {
-    padding: 0px 10px;
-  }
-} */
 @media only screen and (max-width: 800px) {
   form > .row > span > label {
     display: block;
@@ -67,4 +57,43 @@ form .row > span > div > input {
   display: flex;
   justify-content: end;
   align-items: center;
+}
+
+.content .progress {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0px 10% 30px 10%;
+}
+
+.content .progress > .line {
+  background-color: var(--inactiveProgress);
+  height: 3px;
+  flex: 1;
+}
+
+.content .progress > .dot {
+  height: 25px;
+  width: 25px;
+  display: flex;
+  justify-content: center;
+  position: relative;
+  border-radius: 50%;
+}
+
+.content .progress > .inactive {
+  background-color: var(--inactiveProgress);
+}
+
+.content .progress > .active {
+  background-color: var(--activeProgress);
+}
+
+.content .progress > .dot p {
+  display: flex;
+  column-gap: 5px;
+  align-items: center;
+  font-weight: bold;
+  position: relative;
+  top: 30px;
 }
