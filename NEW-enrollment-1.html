@@ -83,6 +83,13 @@
         </div>
       </div>
       <main>
+        <div class="progress">
+          <span class="dot active"><p>Check form details</p></span>
+          <span class="line inactive"></span>
+          <span class="dot inactive"><p>Find section</p></span>
+          <span class="line inactive"></span>
+          <span class="dot inactive"><p>Subject confirmation</p></span>
+        </div>
         <div class="floating noBorder">
           <header>
             <div class="title">
@@ -91,6 +98,284 @@
                 >Assure every student information in this section. This will be
                 the student data.</small
               >
+            </div>
+          </header>
+          <header>
+            <div class="title">
+              <h3>Student Information</h3>
+            </div>
+          </header>
+          <main>
+            <form action="">
+              <div class="row">
+                <span>
+                  <label for="name">Name</label>
+                  <div>
+                    <input type="text" name="lastName" id="lastName" value="" />
+                    <small>Last name</small>
+                  </div>
+                  <div>
+                    <input
+                      type="text"
+                      name="firstName"
+                      id="firstName"
+                      value=""
+                    />
+                    <small>First name</small>
+                  </div>
+                  <div>
+                    <input
+                      type="text"
+                      name="middleName"
+                      id="middleName"
+                      value=""
+                    />
+                    <small>Middle name</small>
+                  </div>
+                  <div>
+                    <input
+                      type="text"
+                      name="suffixName"
+                      id="suffixName"
+                      value=""
+                    />
+                    <small>Suffix name</small>
+                  </div>
+                </span>
+              </div>
+              <div class="row">
+                <span>
+                  <label for="status">Status</label>
+                  <div>
+                    <select name="status" id="status">
+                      <option value="">Single</option>
+                      <option value="">Married</option>
+                      <option value="">Divorced</option>
+                      <option value="">Widow</option>
+                    </select>
+                  </div>
+                </span>
+
+                <span>
+                  <label for="citizenship">Citizenship</label>
+                  <div>
+                    <input
+                      type="text"
+                      name="citizenship"
+                      id="citizenship"
+                      value=""
+                    />
+                  </div>
+                </span>
+                <span>
+                  <label for="gender">Gender</label>
+                  <div>
+                    <select name="gender" id="gender">
+                      <option value="">Male</option>
+                      <option value="">Female</option>
+                    </select>
+                  </div>
+                </span>
+              </div>
+              <div class="row">
+                <span>
+                  <label for="birthdate">Birthdate</label>
+                  <div>
+                    <input
+                      type="date"
+                      name="birthdate"
+                      id="birthdate"
+                      value=""
+                    />
+                  </div>
+                </span>
+                <span>
+                  <label for="birthplace">Birthplace</label>
+                  <div>
+                    <input
+                      type="text"
+                      name="birthplace"
+                      id="birthplace"
+                      value=""
+                    />
+                  </div>
+                </span>
+                <span>
+                  <label for="religion">Religion</label>
+                  <div>
+                    <input type="text" name="religion" id="religion" value="" />
+                  </div>
+                </span>
+              </div>
+              <div class="row">
+                <span>
+                  <label for="address">Address</label>
+                  <div>
+                    <input type="text" name="address" id="address" value="" />
+                  </div>
+                </span>
+              </div>
+              <div class="row">
+                <span>
+                  <label for="phoneNo">Phone no.</label>
+                  <div>
+                    <input type="text" name="phone" id="phone" value="" />
+                  </div>
+                </span>
+                <span>
+                  <label for="email">Email</label>
+                  <div>
+                    <input type="email" name="email" id="email" value="" />
+                  </div>
+                </span>
+              </div>
+            </form>
+          </main>
+          <header>
+            <div class="title">
+              <h3>Current/Last School Attended</h3>
+            </div>
+          </header>
+          <main>
+            <form action="">
+              <div class="row">
+                <span>
+                  <label for="schoolType">School type</label>
+                  <div>
+                    <select name="schoolType" id="schoolType">
+                      <option value="">SHS</option>
+                      <option value="">College</option>
+                    </select>
+                  </div>
+                </span>
+                <span>
+                  <label for="schoolName">School name</label>
+                  <div>
+                    <input
+                      type="text"
+                      name="schoolName"
+                      id="schoolName"
+                      value=""
+                    />
+                  </div>
+                </span>
+              </div>
+              <div class="row">
+                <span>
+                  <label for="graduationDate">Graduation date</label>
+                  <div>
+                    <input
+                      type="date"
+                      name="graduationDate"
+                      id="graduationDate"
+                      value=""
+                    />
+                  </div>
+                </span>
+                <span>
+                  <label for="schoolYear">School year</label>
+                  <div>
+                    <input
+                      type="text"
+                      name="schoolYear"
+                      id="schoolYear"
+                      placeholder="2022-2023"
+                      value=""
+                    />
+                  </div>
+                </span>
+                <span>
+                  <label for="term">Term</label>
+                  <div>
+                    <select name="term" id="term">
+                      <option value="">First term</option>
+                      <option value="">Second term</option>
+                    </select>
+                  </div>
+                </span>
+              </div>
+              <div class="row">
+                <span>
+                  <label for="schoolAddress">School address</label>
+                  <div>
+                    <input
+                      type="text"
+                      name="schoolAddress"
+                      id="schoolAddress"
+                      value=""
+                    />
+                  </div>
+                </span>
+              </div>
+            </form>
+          </main>
+          <header>
+            <div class="title">
+              <h3>Parent/Guardian's Information</h3>
+              <h4>Father's Information</h4>
+            </div>
+          </header>
+          <main>
+            <form action="">
+              <div class="row">
+                <span>
+                  <label for="name">Name</label>
+                  <div>
+                    <input type="text" name="fatherLN" id="fatherLN" value="" />
+                    <small>Last name</small>
+                  </div>
+                  <div>
+                    <input type="text" name="fatherFN" id="fatherFN" value="" />
+                    <small>First name</small>
+                  </div>
+                  <div>
+                    <input type="text" name="fatherMN" id="fatherMN" value="" />
+                    <small>Middle name</small>
+                  </div>
+                  <div>
+                    <input type="text" name="fatherSN" id="fatherSN" value="" />
+                    <small>Suffix name</small>
+                  </div>
+                </span>
+              </div>
+              <div class="row">
+                <span>
+                  <label for="phoneNo">Phone no.</label>
+                  <div>
+                    <input
+                      type="text"
+                      name="fatherPhone"
+                      id="fatherPhone"
+                      value=""
+                    />
+                  </div>
+                </span>
+                <span>
+                  <label for="email">Email</label>
+                  <div>
+                    <input
+                      type="email"
+                      name="fatherEmail"
+                      id="fatherEmal"
+                      value=""
+                    />
+                  </div>
+                </span>
+                <span>
+                  <label for="occupation">Occupation</label>
+                  <input
+                    type="text"
+                    name="fatherOccupation"
+                    id="fatherOccupation"
+                    value=""
+                  />
+                </span>
+              </div>
+            </form>
+          </main>
+          <header>
+            <div class="title">
+              <h3></h3>
             </div>
           </header>
         </div>
