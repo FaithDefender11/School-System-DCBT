@@ -4,7 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <script src="assets/js/registrar_admission.js" defer></script>
     <script src="assets/js/dropdownMenu.js" defer></script>
     <link rel="stylesheet" href="assets/css/others/toggle-switch.css" />
     <!-- link style sheets -->
@@ -53,22 +52,37 @@
         </header>
       </div>
       <div class="tabs">
-        <button class="tab" id="shsEvaluation" onclick="shsEval()">
+        <button
+          class="tab"
+          id="shsEvaluation"
+          onclick="window.location.href = 'SHS-find-form-evaluaton.html';"
+        >
           Evaluation
         </button>
-        <button class="tab" id="shsPayment" onclick="shsPay()">
+        <button
+          class="tab"
+          id="shsPayment"
+          onclick="window.location.href = 'SHS-find-form-waiting-payment.html';"
+        >
           Waiting payment
         </button>
-        <button class="tab" id="shsApproval" onclick="shsApprove()">
+        <button
+          class="tab"
+          id="shsApproval"
+          onclick="window.location.href = 'SHS-find-form-waiting-approval.html';"
+        >
           Waiting approval
         </button>
-        <button class="tab" id="shsEnrolled" onclick="shsEnroll()">
+        <button
+          class="tab"
+          id="shsEnrolled"
+          onclick="window.location.href = 'SHS-find-form-enrolled.html';"
+        >
           Enrolled
         </button>
       </div>
       <main>
-        <!--EVALUATION-->
-        <div class="floating">
+        <div class="floating" id="shs-approval">
           <header>
             <div class="title">
               <h3>Form details</h3>
