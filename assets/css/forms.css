@@ -62,3 +62,9 @@ form .row > span > div {
 form .row > span > div > input {
   width: 99%;
 }
+
+.content form > .action {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+}
