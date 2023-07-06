@@ -157,6 +157,11 @@
   gap: 15px;
 }
 
+.floating.noBorder {
+  box-shadow: none;
+  background-color: var(--mainContentBG);
+}
+
 .floating > header {
   display: flex;
   flex-wrap: wrap;
@@ -356,11 +361,11 @@
   background-color: #ddd;
 }
 
-.floating>header>.action>.dropdown {
+.floating > header > .action > .dropdown {
   position: relative;
 }
 
-.floating>header>.action>.dropdown>.dropdown-menu {
+.floating > header > .action > .dropdown > .dropdown-menu {
   position: absolute;
   top: 100%;
   right: 0;
@@ -371,24 +376,29 @@
   padding: 10px;
 }
 
-.floating>header>.action>.dropdown>.dropdown-menu.show {
+.floating > header > .action > .dropdown > .dropdown-menu.show {
   display: block;
   z-index: 2;
 }
 
-.floating>header>.action>.dropdown>.dropdown-menu>.dropdown-item {
+.floating > header > .action > .dropdown > .dropdown-menu > .dropdown-item {
   display: block;
   padding: 5px 0;
   text-decoration: none;
-  color: #A4A7FC;
+  color: #a4a7fc;
 }
 
-.floating>header>.action>.dropdown>.dropdown-menu>.dropdown-item>i {
+.floating > header > .action > .dropdown > .dropdown-menu > .dropdown-item > i {
   padding-right: 5px;
   padding-left: 5px;
 }
 
-.floating>header>.action>.dropdown>.dropdown-menu>.dropdown-item:hover {
+.floating
+  > header
+  > .action
+  > .dropdown
+  > .dropdown-menu
+  > .dropdown-item:hover {
   background-color: #ddd;
 }
 
