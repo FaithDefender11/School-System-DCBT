@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="assets/js/dropdownMenu.js" defer></script>
+    <!-- link style sheets -->
+    <link rel="stylesheet" href="assets/css/buttons.css" />
+    <link rel="stylesheet" href="assets/css/content.css" />
+    <link rel="stylesheet" href="assets/css/fonts.css" />
+    <link rel="stylesheet" href="assets/css/table.css" />
+    <link rel="stylesheet" href="assets/css/forms.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+    />
+    <!-- link fonts -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Lato"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Arimo"
+    />
+    <style>
+      body {
+        background-color: white;
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="content">
+      <nav>
+        <a href="SHS-find-form-evaluation.html"
+          ><i class="bi bi-arrow-return-left fa-10x"></i>
+          <h3>Back</h3>
+        </a>
+      </nav>
+      <div class="content-header">
+        <header>
+          <div class="title">
+            <h1>Enrollment form</h1>
+          </div>
+          <div class="action">
+            <div class="dropdown">
+              <button class="icon">
+                <i class="bi bi-three-dots-vertical"></i>
+              </button>
+              <div class="dropdown-menu">
+                <a href="#" class="dropdown-item" style="color: red"
+                  ><i class="bi bi-file-earmark-x"></i>Delete form</a
+                >
+              </div>
+            </div>
+          </div>
+        </header>
+        <div class="cards">
+          <div class="card">
+            <sup>Form ID</sup>
+            <sup>*insert*</sup>
+          </div>
+          <div class="card">
+            <sup>Admission type</sup>
+            <sup>*insert*</sup>
+          </div>
+          <div class="card">
+            <sup>Student no.</sup>
+            <sup>*insert*</sup>
+          </div>
+          <div class="card">
+            <sup>Status</sup>
+            <sup>*insert*</sup>
+          </div>
+          <div class="card">
+            <sup>Submitted on</sup>
+            <sup>*insert*</sup>
+          </div>
+        </div>
+      </div>
+      <main>
+        <div class="progress">
+          <span class="dot active"><p>Check form details</p></span>
+          <span class="line active"></span>
+          <span class="dot active"><p>Find section</p></span>
+          <span class="line active"></span>
+          <span class="dot active"><p>Subject confirmation</p></span>
+        </div>
+        <div class="floating">
+          <header>
+            <div class="title">
+              <h3>*insert* subjects</h3>
+            </div>
+          </header>
+          <main>
+            <table class="a">
+              <thead>
+                <tr>
+                  <th>Subject ID</th>
+                  <th>Subject code</th>
+                  <th>Prerequisite</th>
+                  <th>Type</th>
+                  <th>Total units</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td><input type="checkbox" name="check" id="check" /></td>
+                </tr>
+              </tbody>
+            </table>
+          </main>
+        </div>
+
+        <div class="floating">
+          <header>
+            <div class="title">
+              <h3>Added subjects</h3>
+              <small>Add subject(s) from another section or strand</small>
+            </div>
+            <div class="action">
+              <button class="default large">+ Add subject</button>
+            </div>
+          </header>
+          <main>
+            <table class="a">
+              <thead>
+                <tr>
+                  <th>Section</th>
+                  <th>Subject ID</th>
+                  <th>Subject code</th>
+                  <th>Prerequisite</th>
+                  <th>Type</th>
+                  <th>Total units</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td>
+                    <button class="icon" style="color: red">
+                      <i class="bi bi-x-circle"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </main>
+        </div>
+        <div class="action">
+          <button
+            class="default large"
+            onclick="window.location.href ='OLD-RETURNEE-CONFLICT-enrollment-2.html';"
+          >
+            Return
+          </button>
+          <button class="clean large">Confirm</button>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>
