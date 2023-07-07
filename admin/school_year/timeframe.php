@@ -23,7 +23,7 @@
 
     ?>
         <div class="col-md-12 row">
-            <div class="content">
+            <div style="width: 100%;" class="content">
                 <div class="floating" id="college-teachers">
                     <header>
                         <div class="title">

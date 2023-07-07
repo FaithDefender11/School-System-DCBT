@@ -23,64 +23,43 @@
     $current_school_year_term = $school_year_obj['term'];
     $current_school_year_period = $school_year_obj['period'];
     
+    if(isset($_SESSION['department_type_section'])){
+        unset($_SESSION['department_type_section']);
+    }
+
+    $_SESSION['department_type_section'] = "Tertiary";
+
+    echo $_SESSION['department_type_section'];
 ?>
 
 
 
-<div class="col-md-12 row">
+<div class="content">
 
-    <div class="content_subject">
-        <div class="dashboard">
+    <?php echo Helper::CreateTopDepartmentTab(true);?>
+ 
+    <main>
+        <div class="floating" id="shs-sy">
+            <header>
 
-            <h5>Department</h3>
-            <div class="form-box">
-                <div class="button-box">
-                    <div id="btn"></div>
-                    <a href="shs_index.php">
-                        <button type="button" class="btn-inactive toggle-btn" >
-                            SHS
-                        </button>
-                    </a>
-
-                    <a href="tertiary_index.php">
-                        <button type="button" class="btn-active toggle-btn">
-                            Tertiary
-                        </button>
-                    </a>
+                <div class="title">
+                    <h3 style="font-weight: bold;">Course Section</h3>
                 </div>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="content">
-        <div class="content-header"></div>
-
-
-        <!--SHS-TEACHERS-->
-        <main>
-            <div class="floating" id="shs-teachers">
-                <header>
-                    <div class="title">
-                        <h3>Course Sections</h3>
-                        <span><?php echo $current_school_year_term;?></span>
-                    </div>
-                </header>
-                <main>
-                    <table
-                        class="ws-table-all cw3-striped cw3-bordered" style="margin: 0">
-                        <thead>
-                            <tr>
-                                <th>Program ID</th>
-                                <th>Course</th>
-                                <th>1st Year</th>
-                                <th>2nd Year</th>
-                                <th>3rd Year</th>
-                                <th>4th Year</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-
+            </header>
+            <main>
+                <table id="shs_program_table"
+                    class="ws-table-all cw3-striped cw3-bordered" style="margin: 0">
+                    <thead>
+                        <tr>
+                            <th>Program ID</th>
+                            <th>Course</th>
+                            <th>1st Year</th>
+                            <th>2nd Year</th>
+                            <th>3rd Year</th>
+                            <th>4th Year</th>
+                            <th></th>
+                        </tr>
+                    </thead>
                         <tbody>
                             <?php
 
@@ -123,6 +102,8 @@
                                         // $grade_12_sections = $section->GetCreatedStrandSectionPerTerm($program_id,
                                         //     $current_school_year_term, $GRADE_TWELVE);
 
+                                        $removeProgramBtn = "removeProgramBtn($program_id)";
+
                                         echo "
                                             <tr>
                                                 <td>$program_id</td>
@@ -137,6 +118,9 @@
                                                             <i class='fas fa-eye'></i>
                                                         </button>
                                                     </a>
+                                                    <button onclick='$removeProgramBtn' class='btn btn-danger'>
+                                                        <i class='fas fa-trash'></i>
+                                                    </button>
                                                 </td>
                                             </tr>
                                         
@@ -146,13 +130,69 @@
 
                             ?>
                         </tbody>
-
-                    </table>
-                </main>
-            </div>
-        </main>
-    </div>
-
+                </table>
+            </main>
+        </div>
+    </main>
 </div>
+
+<script>
+    function removeProgramBtn(program_id){
+        Swal.fire({
+
+                icon: 'question',
+                title: `I agreed to removed Program ID: ${program_id}`,
+                text: 'Please note that this action cannot be undone',
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'Cancel'
+
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    $.ajax({
+                        url: "../../ajax/program/remove_program.php",
+                        type: 'POST',
+                        data: {
+                            program_id
+                        },
+                        success: function(response) {
+                            response = response.trim();
+
+                            // console.log(response);
+                            if(response == "success_delete"){
+                                Swal.fire({
+                                icon: 'success',
+                                title: `Successfully Removed`,
+                                showConfirmButton: false,
+                                timer: 1000, // Adjust the duration of the toast message in milliseconds (e.g., 3000 = 3 seconds)
+                                toast: true,
+                                position: 'top-end',
+                                showClass: {
+                                popup: 'swal2-noanimation',
+                                backdrop: 'swal2-noanimation'
+                                },
+                                hideClass: {
+                                popup: '',
+                                backdrop: ''
+                                }
+                            }).then((result) => {
+
+                                $('#shs_program_table').load(
+                                    location.href + ' #shs_program_table'
+                                );
+                            });
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            // handle any errors here
+                        }
+                    });
+                } else {
+                    // User clicked "No," perform alternative action or do nothing
+                }
+        });
+    }
+</script>
 
 

@@ -103,160 +103,169 @@
         
         ?>
 
-            <div class='col-md-10 row offset-md-1'>
+            <div class='col-md-12 row'>
+                <div class='col-md-10 offset-md-1'>
+                    <div class="card">
+                        <hr>
+                        <a href="../teacher/subject_load.php">
+                            <button class="btn   btn-primary">
+                                <i class="fas fa-arrow-left"></i>
+                            </button>
+                        </a>
+                        <div class="card-header">
+                            <h3 class='mb-3'>Create Schedule</h3>
+                            <h5 class="text-muted text-center">S.Y (<?php echo $current_school_year_term;?>) <?php echo $current_school_year_period;?> Semester</h5>
+                        </div>
 
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class='mb-3'>Create Schedule</h3>
-                        <h5 class="text-muted text-center">S.Y (<?php echo $current_school_year_term;?>) <?php echo $current_school_year_period;?> Semester</h5>
-                    </div>
+                        <div class="card-body">
 
-                    <div class="card-body">
+                            <form method='POST'>
+                                    <div class="modal-body">
+                                        <div class="mb-3">
+                                            <label for="">Room number</label>
+                                            <input value='55' required type="text" placeholder="Input Room" name="room" id="room" class="form-control" />
+                                        </div>
 
-                        <form method='POST'>
-                                <div class="modal-body">
-                                    <div class="mb-3">
-                                        <label for="">Room number</label>
-                                        <input value='55' required type="text" placeholder="Input Room" name="room" id="room" class="form-control" />
-                                    </div>
+                                        <div class="mb-3">
+                                            <label for="">Time From</label>
+                                            <input type="text" required value="8:00" placeholder="(7:00)" name="time_from" id="time_from" class="form-control" />
+                                        </div>
 
-                                    <div class="mb-3">
-                                        <label for="">Time From</label>
-                                        <input type="text" required value="8:00" placeholder="(7:00)" name="time_from" id="time_from" class="form-control" />
-                                    </div>
+                                        <div class="mb-3">
+                                            <label for="">Time From AM/PM</label>
+                                            <select required name="time_from_am_pm" id="time_from_am_pm" class="form-control">
+                                                <option value="AM">AM</option>
+                                                <option value="PM">PM</option>
+                                            </select>
+                                        </div>
 
-                                    <div class="mb-3">
-                                        <label for="">Time From AM/PM</label>
-                                        <select required name="time_from_am_pm" id="time_from_am_pm" class="form-control">
-                                            <option value="AM">AM</option>
-                                            <option value="PM">PM</option>
-                                        </select>
-                                    </div>
+                                        <div class="mb-3">
+                                            <label for="">Time to</label>
+                                            <input required type="text" value="9:30" placeholder="(7:00)" name="time_to" id="time_to" class="form-control" />
+                                        </div>
 
-                                    <div class="mb-3">
-                                        <label for="">Time to</label>
-                                        <input required type="text" value="9:30" placeholder="(7:00)" name="time_to" id="time_to" class="form-control" />
-                                    </div>
+                                        <div class="mb-3">
+                                            <label for="">Time to AM/PM</label>
+                                            <select required name="time_to_am_pm" id="time_to_am_pm" class="form-control">
+                                                <option value="AM">AM</option>
+                                                <option selected value="PM">PM</option>
+                                            </select>
+                                        </div>
 
-                                    <div class="mb-3">
-                                        <label for="">Time to AM/PM</label>
-                                        <select required name="time_to_am_pm" id="time_to_am_pm" class="form-control">
-                                            <option value="AM">AM</option>
-                                            <option selected value="PM">PM</option>
-                                        </select>
-                                    </div>
+                                        <div class="mb-3">
+                                            <label for="">Instructor</label>
+                                            <select required class="form-control" name="teacher_id" id="teacher_id">
+                                                <?php
+                                                    $query = $con->prepare("SELECT * FROM teacher
+                                                        WHERE teacher_status = :teacher_status
+                                                        -- AND active=:active
+                                                    ");
+                                                    $query->bindValue(":teacher_status", "Active");
+                                                    $query->execute();
 
-                                    <div class="mb-3">
-                                        <label for="">Instructor</label>
-                                        <select required class="form-control" name="teacher_id" id="teacher_id">
-                                            <?php
-                                                $query = $con->prepare("SELECT * FROM teacher
-                                                    WHERE teacher_status = :teacher_status
-                                                    -- AND active=:active
-                                                ");
-                                                $query->bindValue(":teacher_status", "Active");
-                                                $query->execute();
+                                                    if($query->rowCount() > 0){
+                                                    
 
-                                                if($query->rowCount() > 0){
-                                                  
+                                                        echo "<option value='' disabled selected>Select Instructor</option>";
 
-                                                    echo "<option value='' disabled selected>Select Instructor</option>";
+                                                        while($row = $query->fetch(PDO::FETCH_ASSOC)) {
+
+                                                            $teacher_id = $row['teacher_id'];
+
+                                                            $teacher = new Teacher($con, $teacher_id);
+
+                                                            $fullname = $teacher->GetTeacherFullName();
+
+                                                            echo "<option value='$teacher_id'>$fullname</option>";
+                                                        }
+                                                    }else{
+                                                        echo "<option value=''>No Available Teacher. Please Contact the Admin.</option>";
+                                                    }
+
+                                                    
+                                                ?>
+                                            </select>
+                                        </div>
+
+                                        
+                
+                                        <div class="mb-3">
+                                            <label for="schedule_day">Day</label>
+                                            <select required name="schedule_day" id="schedule_day" class="form-control">
+                                                <option value="">-- Select Day --</option>
+                                                <option value="M">Monday</option>
+                                                <option value="T">Tuesday</option>
+                                                <option value="W">Wednesday</option>
+                                                <option value="Th">Thursday</option>
+                                                <option value="F">Friday</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="">Strand Section</label>
+                                            <!-- <input type="text" placeholder="Section" name="section" id="section" class="form-control" /> -->
+                                            <select required class="form-control" name="course_id" id="course_id">
+                                                <?php
+                                                    $query = $con->prepare("SELECT * FROM course
+                                                        WHERE course_level > :course_level
+                                                        AND active=:active
+                                                    ");
+                                                    $query->bindValue(":course_level", 10);
+                                                    $query->bindValue(":active", "yes");
+                                                    $query->execute();
+
+                                                    echo "<option value='' disabled selected>Select-Section</option>";
 
                                                     while($row = $query->fetch(PDO::FETCH_ASSOC)) {
-
-                                                        $teacher_id = $row['teacher_id'];
-
-                                                        $teacher = new Teacher($con, $teacher_id);
-
-                                                        $fullname = $teacher->GetTeacherFullName();
-
-                                                        echo "<option value='$teacher_id'>$fullname</option>";
+                                                        echo "<option value='" . $row['course_id'] . "'>" . $row['program_section'] . "</option>";
                                                     }
-                                                }else{
-                                                    echo "<option value=''>No Available Teacher. Please Contact the Admin.</option>";
-                                                }
+                                                ?>
+                                            </select>
+                                        </div>
 
-                                                
-                                            ?>
-                                        </select>
+                                        <div class="mb-3">
+                                            <label for="">Semester</label>
+                                            <input required type="text" readonly value="<?php echo $current_school_year_period?>" placeholder="Semester Period" name="semester" id="semester" class="form-control" />
+                                        </div>
+
+                                        <div class="form-group mb-4">
+                                            <label for="subject_id">Subject:</label>
+
+                                            <!-- <select class="form-control" name="subject_id" id="subject_id">
+                                                <option value="">Pick Subject</option>
+                                            </select> -->
+
+                                            <select  required class="form-control" name="subject_id" id="subject_id">
+                                                <?php
+                                                    $query = $con->prepare("SELECT * FROM subject as t1
+                                                        INNER JOIN course as t2 ON t2.course_id = t1.course_id
+                                                        WHERE t1.semester = :semester
+                                                        -- AND active=:active
+                                                    ");
+                                                    $query->bindValue(":semester", $current_school_year_period);
+                                                    // $query->bindValue(":active", "yes");
+                                                    $query->execute();
+
+                                                    echo "<option value='' disabled selected>Select Subject</option>";
+
+                                                    while($row = $query->fetch(PDO::FETCH_ASSOC)) {
+                                                        echo "<option value='" . $row['subject_id'] . "'> [". $row['subject_id']."]  (". $row['program_section'].") "  . $row['subject_title'] . "</option>";
+                                                    }
+                                                ?>
+                                            </select>
+                                        </div>
+                                        
                                     </div>
-
-                                    
-            
-                                    <div class="mb-3">
-                                        <label for="schedule_day">Day</label>
-                                        <select required name="schedule_day" id="schedule_day" class="form-control">
-                                            <option value="">-- Select Day --</option>
-                                            <option value="M">Monday</option>
-                                            <option value="T">Tuesday</option>
-                                            <option value="W">Wednesday</option>
-                                            <option value="Th">Thursday</option>
-                                            <option value="F">Friday</option>
-                                        </select>
+                                    <div class="modal-footer">
+                                        <button name="create_teacher_schedule" type="submit" class="btn btn-success">Save Schedule</button>
                                     </div>
+                            </form>
 
-                                    <div class="mb-3">
-                                        <label for="">Strand Section</label>
-                                        <!-- <input type="text" placeholder="Section" name="section" id="section" class="form-control" /> -->
-                                        <select required class="form-control" name="course_id" id="course_id">
-                                            <?php
-                                                $query = $con->prepare("SELECT * FROM course
-                                                    WHERE course_level > :course_level
-                                                    AND active=:active
-                                                ");
-                                                $query->bindValue(":course_level", 10);
-                                                $query->bindValue(":active", "yes");
-                                                $query->execute();
-
-                                                echo "<option value='' disabled selected>Select-Section</option>";
-
-                                                while($row = $query->fetch(PDO::FETCH_ASSOC)) {
-                                                    echo "<option value='" . $row['course_id'] . "'>" . $row['program_section'] . "</option>";
-                                                }
-                                            ?>
-                                        </select>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label for="">Semester</label>
-                                        <input required type="text" readonly value="<?php echo $current_school_year_period?>" placeholder="Semester Period" name="semester" id="semester" class="form-control" />
-                                    </div>
-
-                                    <div class="form-group mb-4">
-                                        <label for="subject_id">Subject:</label>
-
-                                        <!-- <select class="form-control" name="subject_id" id="subject_id">
-                                            <option value="">Pick Subject</option>
-                                        </select> -->
-
-                                        <select  required class="form-control" name="subject_id" id="subject_id">
-                                            <?php
-                                                $query = $con->prepare("SELECT * FROM subject as t1
-                                                    INNER JOIN course as t2 ON t2.course_id = t1.course_id
-                                                    WHERE t1.semester = :semester
-                                                    -- AND active=:active
-                                                ");
-                                                $query->bindValue(":semester", $current_school_year_period);
-                                                // $query->bindValue(":active", "yes");
-                                                $query->execute();
-
-                                                echo "<option value='' disabled selected>Select Subject</option>";
-
-                                                while($row = $query->fetch(PDO::FETCH_ASSOC)) {
-                                                    echo "<option value='" . $row['subject_id'] . "'> [". $row['subject_id']."]  (". $row['program_section'].") "  . $row['subject_title'] . "</option>";
-                                                }
-                                            ?>
-                                        </select>
-                                    </div>
-                                    
-                                </div>
-                                <div class="modal-footer">
-                                    <button name="create_teacher_schedule" type="submit" class="btn btn-success">Save Schedule</button>
-                                </div>
-                        </form>
-
+                        </div>
                     </div>
                 </div>
+
+
 
 
             </div>

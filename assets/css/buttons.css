@@ -9,17 +9,17 @@
   --largeWidth: 150px;
 }
 
-.content button {
+button {
   border: none;
-  color: white;
-  cursor: pointer;
-  font-size: 15px;
-  min-width: 100px;
-  padding: 5px 25px;
-  transition-duration: 0.4s;
+  font-weight: bold;
+  outline: 0;
 }
 
-.add-btn {
+.content button.default,
+.content button.clean,
+.content button.information,
+.content button.warning,
+.content button.danger {
   border: none;
   color: white;
   cursor: pointer;
@@ -27,6 +27,34 @@
   min-width: 100px;
   padding: 5px 25px;
   transition-duration: 0.4s;
+  text-align: center;
+}
+
+.content button.success {
+  background-image: linear-gradient(-180deg, #00d775, #00bd68);
+}
+.content button.success:hover {
+  background: #00bd68;
+}
+
+.content button.default.large-s {
+  min-height: var(--largeHeight);
+  min-width: var(--largeWidth);
+  border-radius: 10px;
+  font-weight: bold;
+  padding: 10px 35px;
+}
+
+.content button.default.large-s:hover {
+  background: #00bd68;
+ 
+}
+
+/* fixed class if you want fixed size buttons */
+.content button.fixed {
+  width: 120px;
+  padding-left: 0px;
+  padding-right: 0px;
 }
 
 /* overide for table buttons */
@@ -104,4 +132,12 @@
 }
 .content button.danger:hover {
   filter: brightness(var(--dark));
+}
+
+.content button.icon {
+  padding: 0px;
+  cursor: pointer;
+  margin: 0px;
+  background-color: transparent;
+  border: none;
 }

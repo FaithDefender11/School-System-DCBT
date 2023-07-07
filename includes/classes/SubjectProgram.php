@@ -21,7 +21,10 @@ class SubjectProgram{
     public function GetSubjectProgramRawCode() {
         return isset($this->sqlData['subject_code']) ? ucfirst($this->sqlData["subject_code"]) : ""; 
     }
-
+    
+    public function GetSubjectProgramId() {
+        return isset($this->sqlData['subject_program_id']) ? $this->sqlData["subject_program_id"] : ""; 
+    }
     public function GetProgramId() {
         return isset($this->sqlData['program_id']) ? $this->sqlData["program_id"] : ""; 
     }

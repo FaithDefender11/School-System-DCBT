@@ -9,9 +9,11 @@ body {
   padding: 0;
   margin: 0;
 }
+
 a {
   text-decoration: none;
 }
+
 .buttons {
   display: flex;
   margin-left: 210px;
@@ -30,16 +32,18 @@ a {
 .mainSectionContainer {
   /* padding-top: 56px; */
   /* background-color: rgb(10, 10, 66); */
-  padding-top: 35px;
+
+  /* 1* */
+  /* padding-top: 35px; */
   display: flex;
   padding-left: 210px;
 }
 
 .mainContentContainer {
-  display: flex;
+
+  /* display: flex; */
   flex: 1;
-  padding: 10px 30px;
-  /* background-color: solid orange; */
+  padding: 10px 15px;
 }
 
 .sidebar-nav h3 {
@@ -65,7 +69,7 @@ a {
 
 /* WebKit-based browsers (Chrome, Safari) */
 .sidebar-nav::-webkit-scrollbar {
-  width: 10px; /* Width of the scrollbar */
+  width: 0.8px; /* Width of the scrollbar */
 }
 
 .sidebar-nav::-webkit-scrollbar-track {

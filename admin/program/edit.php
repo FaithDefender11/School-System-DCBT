@@ -81,8 +81,8 @@
         }
         
         ?>
-            <div class='col-md-10 row offset-md-1'>
-                
+            <div class='col-md-12 row'>
+                <div class='col-md-10 offset-md-1'>
                 <div class='card'>
                     <hr>
                     <a href="<?php echo $back_url;?>">
@@ -124,6 +124,8 @@
                         </form>
                     </div>
                 </div>
+                </div> 
+
             </div>
         <?php
 

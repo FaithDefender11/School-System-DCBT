@@ -5,6 +5,11 @@
     include_once('../../includes/classes/SchoolYear.php');
     include_once('../../includes/classes/Program.php');
 
+    ?>
+        <head>
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        </head>
+    <?php
     if(isset($_GET['id'])){
 
         $subject_template_id = $_GET['id'];
@@ -181,7 +186,10 @@
                                 <label for=''>Units</label>
                                 <input value='<?php echo $unit ?>' class='form-control' type='text' placeholder='Unit' name='unit'>
                             </div>
-                            <button type='submit' class='btn btn-primary' name='edit_subject_template'>Save</button>
+                            <div class="modal-footer">
+                                <button type='submit' class='btn btn-success' name='edit_subject_template'>Save</button>
+                            </div>
+
                         </form>
                     </div>
                 </div>

@@ -19,105 +19,121 @@
     // echo $_SESSION['department_type'];
 ?>
 
-<div class="col-md-12 row">
-    <div class="content_subject">
-        <div class="dashboard">
-
-            <h5>Department</h3>
-
-            <div class="form-box">
-                <div class="button-box">
-                    <div id="btn"></div>
-                    <a href="shs_index.php">
-                        <button type="button" class="btn-active toggle-btn" >
+<div class="content">
+    <!-- <nav>
+        <h3>Department</h3>
+        <div class="form-box">
+            <div class="button-box">
+                <div id="btn"></div>
+                    <a style="color: white;" href="shs_index.php">
+                        <button type="button" class="toggle-btn">
                             SHS
                         </button>
                     </a>
-
-                    <a href="tertiary_index.php">
-                        <button type="button" class="btn-inactive toggle-btn">
-                            Tertiary
-                        </button>
-                    </a>
-                </div>
+                <a style="color: white;" href="tertiary_index.php">
+                    <button type="button" class="toggle-btn">
+                        Tertiary
+                    </button>
+                </a>
+                
             </div>
         </div>
-    </div>
-    <div class="content_subject">
-        <header>
-            <div class="title">
-                <h3>SHS Programs</h3>
-            </div>
-            <div class="action">
-                <a href="create.php">
-                    <button type="button" class="btn btn-success">+ Add new</button>
-                </a>
-            </div>
-        </header>
-        <main>
-            <table id="shs_program_table"
-                class="ws-table-all cw3-striped cw3-bordered"
-                style="margin: 0"
-            >
-                <thead>
-                <tr>
-                    <th>Program ID</th>
-                    <th>Program Name</th>
-                    <th>Track</th>
-                    <th>Action</th>
-                </tr>
-                </thead>
-                <tbody>
-                <?php
-                
-                    $department_name = "Senior High School";
+    </nav> -->
 
-                    $query = $con->prepare("SELECT t1.*, t2.department_name FROM program as t1
-                        INNER JOIN department as t2 ON t2.department_id = t1.department_id
-                        WHERE department_name = :department_name
-                    ");
+    <?php echo Helper::CreateTopDepartmentTab(false);?>
 
-                    $query->bindParam(":department_name", $department_name);
-                    $query->execute();
+    <main>
+        <div class="floating" id="shs-sy">
+            <header>
 
-                    if($query->rowCount() > 0){
+                <div class="title">
+                    <h3>Senior High School Programs</h3>
+                </div>
 
-                    while($row = $query->fetch(PDO::FETCH_ASSOC)){
+                <div class="action">
+                    <a href="create.php">
+                        <button type="button" class="clean large success">+ Add new</button>
+                    </a>
+                </div>
 
-                        $program_id = $row['program_id'];
-                        $program_name = $row['program_name'];
-                        $department_name = $row['department_name'];
-                        $track = $row['track'];
-
-                        $removeProgramBtn = "removeProgramBtn($program_id)";
-
-                        echo "
+            </header>
+            <main>
+                <table id="shs_program_table" class="ws-table-all cw3-striped cw3-bordered" style="margin: 0">
+                    <thead>
                         <tr>
-                            <td>$program_id</td>
-                            <td>$program_name</td>
-                            <td>$track</td>
-                            <td>
-                                <a href='edit.php?id=$program_id'>
-                                    <button class='btn btn-primary'>
-                                        <i class='fas fa-pen'></i>
-                                    </button>
-                                </a>
-                                <button onclick='$removeProgramBtn' class='btn btn-danger'>
-                                    <i class='fas fa-trash'></i>
-                                </button>
-                            </td>
+                            <th>Program ID</th>
+                            <th>Program Name</th>
+                            <th>Track</th>
+                            <th></th>
                         </tr>
-                        ";
-                    }
-                    }
+                    </thead>
+                    <tbody>
+                        <?php
+                        
+                            $department_name = "Senior High School";
 
-                ?>
-                </tbody>
-            </table>
-        </main>
-    </div>
+                            $query = $con->prepare("SELECT t1.*, t2.department_name FROM program as t1
+                                INNER JOIN department as t2 ON t2.department_id = t1.department_id
+                                WHERE department_name = :department_name
+                            ");
+
+                            $query->bindParam(":department_name", $department_name);
+                            $query->execute();
+
+                            if($query->rowCount() > 0){
+
+                            while($row = $query->fetch(PDO::FETCH_ASSOC)){
+
+                                $program_id = $row['program_id'];
+                                $program_name = $row['program_name'];
+                                $department_name = $row['department_name'];
+                                $track = $row['track'];
+
+                                $removeProgramBtn = "removeProgramBtn($program_id)";
+
+                                echo "
+                                    <tr>
+                                        <td>$program_id</td>
+                                        <td>$program_name</td>
+                                        <td>$track</td>
+
+                                        <td>
+                                            <div class='btn-group dropright'>
+
+                                                <button class='btn btn-primary dropdown-toggle' type='button' id='dropdownMenuButton' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
+                                                    Actions
+                                                </button>
+
+                                                <div class='dropdown-menu'>
+                                                    <a class='dropdown-item' href='edit.php?id=$program_id'>
+                                                        <button class='btn btn-primary' style='width: 100%;'>
+                                                            Edit
+                                                        </button>
+                                                    </a>
+                                                    <a class='dropdown-item' href='#'>
+                                                        <button onclick='$removeProgramBtn' class='btn btn-danger' style='width: 100%;'>
+                                                            Remove
+                                                        </button>
+                                                    </a>
+                                                    
+                                                </div>
+
+                                            </div>
+                                        </td>
+
+                                    </tr>
+                                ";
+                            }
+                            }
+
+                        ?>
+                    </tbody>
+                </table>
+            </main>
+        </div>
+    </main>
+
 </div>
-
 
 <script>
     function removeProgramBtn(program_id){

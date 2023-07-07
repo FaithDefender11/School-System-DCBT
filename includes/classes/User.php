@@ -24,6 +24,16 @@ class User {
         return isset($_SESSION['registrarLoggedIn']);
     }
 
+    public static function IsStudentEnrolledAuthenticated(){
+        return isset($_SESSION['studentLoggedIn'])
+            && isset($_SESSION['status']) && $_SESSION['status'] == "enrolled";;
+    }
+
+    public static function IsStudentPendingAuthenticated(){
+        return isset($_SESSION['studentLoggedIn']) 
+            && isset($_SESSION['status']) && $_SESSION['status'] == "pending";
+    }
+
     public static function isAdminLoggedIn(){
         return isset($_SESSION['adminLoggedIn']);
     }

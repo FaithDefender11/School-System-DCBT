@@ -55,93 +55,102 @@
         require_once('./strand_subject_edit_modal.php');
 
         ?>
-            <div class="row col-md-12">
-                <div>
-                    <h3 class="text-center"><?php echo $strand_name;?> Subjects</h3>
+            <div class="content">
+                <main>
+                    <div class="floating" id="shs-sy">
+                        <div>
+                            <a href='shs_index.php'>
+                                <button class="text-left btn btn-primary">
+                                    <i class="fas fa-arrow-left"></i>
+                                </button>
+                            </a>
+                        </div>
+                        <header>
+                            <div class="title">
+                                <h3><?php echo $strand_name;?> Subjects</h3>
+                            </div>
 
-                    <a class="mb-2" href="<?php echo $back_url;?>">
-                        <button class="btn btn btn-primary">
-                            <i class="fas fa-arrow-left"></i>
-                        </button>
-                    </a> 
+                            <div class="action">
+                                <!-- <a href="<?php echo $templateUrl;?>">
+                                    <button type="button" class="clean large success">+ Add new</button>
+                                </a> -->
+                                <button type="button" 
+                                    data-bs-target="#subjectAddModal" 
+                                    data-bs-toggle="modal"
+                                    data-program-id="<?php echo intval($program_id); ?>"
+                                    class="clean large success"
+                                    >
+                                    Attach Subject
+                                </button>
+                            </div>
+                        </header>
+                        <main>
+                            <table id="strand_subject_view_table" class="ws-table-all cw3-striped cw3-bordered" style="margin: 0"> 
+                                <thead>
+                                    <tr class="text-center"> 
+                                        <th rowspan="2">Template ID</th>
+                                        <th rowspan="2">Subject</th>
+                                        <th rowspan="2">Code</th>
+                                        <th rowspan="2">Grade Level</th>
+                                        <th rowspan="2">Semester</th>
+                                        <th rowspan="2">Action</th>
+                                    </tr>	
+                                </thead> 	
+                                <tbody>
+                                    <?php 
 
-                    <div class="row justify-content-end">
-                        <button style="width: 150px; margin-bottom: 15px;" type="button" 
-                            data-bs-target="#subjectAddModal" 
-                            data-bs-toggle="modal"
-                            data-program-id="<?php echo intval($program_id); ?>"
-                            class="btn btn-sm btn-success attach-subject-button"
-                            >
+                                        $query = $con->prepare("SELECT * FROM subject_program
 
-                            Attach Subject
-                        </button>
+                                            WHERE program_id=:program_id
+                                            ORDER BY course_level,
+                                            semester");
+
+                                        $query->bindParam("program_id", $program_id);
+                                        $query->execute();
+
+                                        if($query->rowCount() > 0){
+                                        
+                                            while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+
+                                                $subject_program_id = $row['subject_program_id'];
+                                                $subject_title = $row['subject_title'];
+                                                $course_level = $row['course_level'];
+                                                $semester = $row['semester'];
+                                                $subject_code = $row['subject_code'];
+                                                $subject_template_id = $row['subject_template_id'];
+
+
+                                                $removeSubjectProgramBtn = "removeSubjectProgramBtn($subject_program_id)";
+
+                                                echo "
+                                                    <tr class='text-center'>
+                                                        <td>$subject_template_id</td>
+                                                        <td>$subject_title</td>
+                                                        <td>$subject_code</td>
+                                                        <td>$course_level</td>
+                                                        <td>$semester</td>
+                                                        <td>
+                                                            <button type='button' value='$subject_program_id'
+                                                                class='editSubjectStrandBtn btn btn-primary btn-sm'>
+
+                                                                <i class='fas fa-edit'></i>
+                                                            </button>
+                                                            <button onclick='$removeSubjectProgramBtn'
+                                                                type='button' value='$subject_program_id'
+                                                                class='btn btn-danger btn-sm'>
+                                                                <i class='fas fa-trash'></i>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                ";
+                                            }
+                                        }
+                                    ?>
+                                </tbody>
+                            </table>
+                        </main>
                     </div>
-                 
-                    <table id="strand_subject_view_table" class="table table-striped table-bordered table-hover "
-                         style="font-size:13px" cellspacing="0"  > 
-                        <thead>
-                            <tr class="text-center"> 
-                                <th rowspan="2">Template ID</th>
-                                <th rowspan="2">Subject</th>
-                                <th rowspan="2">Code</th>
-                                <th rowspan="2">Grade Level</th>
-                                <th rowspan="2">Semester</th>
-                                <th rowspan="2">Action</th>
-                            </tr>	
-                        </thead> 	
-                        <tbody>
-                            <?php 
-
-                                $query = $con->prepare("SELECT * FROM subject_program
-
-                                    WHERE program_id=:program_id
-                                    ORDER BY course_level,
-                                    semester");
-
-                                $query->bindParam("program_id", $program_id);
-                                $query->execute();
-
-                                if($query->rowCount() > 0){
-                                
-                                    while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
-
-                                        $subject_program_id = $row['subject_program_id'];
-                                        $subject_title = $row['subject_title'];
-                                        $course_level = $row['course_level'];
-                                        $semester = $row['semester'];
-                                        $subject_code = $row['subject_code'];
-                                        $subject_template_id = $row['subject_template_id'];
-
-
-                                        $removeSubjectProgramBtn = "removeSubjectProgramBtn($subject_program_id)";
-
-                                        echo "
-                                            <tr class='text-center'>
-                                                <td>$subject_template_id</td>
-                                                <td>$subject_title</td>
-                                                <td>$subject_code</td>
-                                                <td>$course_level</td>
-                                                <td>$semester</td>
-                                                <td>
-                                                    <button type='button' value='$subject_program_id'
-                                                        class='editSubjectStrandBtn btn btn-primary btn-sm'>
-
-                                                        <i class='fas fa-edit'></i>
-                                                    </button>
-                                                    <button onclick='$removeSubjectProgramBtn'
-                                                        type='button' value='$subject_program_id'
-                                                        class='btn btn-danger btn-sm'>
-                                                        <i class='fas fa-trash'></i>
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        ";
-                                    }
-                                }
-                            ?>
-                        </tbody>
-                    </table>
-                </div>
+                </main>
             </div>
         <?php
     }

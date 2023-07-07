@@ -19,34 +19,63 @@
 
 ?>
 
-<!-- Your STYLE GOES HERE -->
+ 
+<div class="content">
 
-<div class="row col-md-12">
-    <div class="content_subject">
-        <div class="dashboard">
-
-            <h5>Department</h3>
-
-            <div class="form-box">
-                <div class="button-box">
-                    <div id="btn"></div>
-                    <a href="shs_index.php">
-                        <button type="button" class="btn-active toggle-btn" >
+    <!-- <nav>
+        <h3>Department</h3>
+        <div class="form-box">
+            <div class="button-box">
+                <div id="btn"></div>
+                    <a style="color: white;" href="shs_index.php">
+                        <button type="button" class="toggle-btn">
                             SHS
                         </button>
                     </a>
-
-                    <a href="tertiary_index.php">
-                        <button type="button" class="btn-inactive toggle-btn">
+                    <a style="color: white;" href="tertiary_index.php">
+                        <button type="button" class="toggle-btn">
                             Tertiary
                         </button>
                     </a>
-                </div>
             </div>
         </div>
-    </div>
+    </nav> -->
 
-    <div class="container">
+    <?php echo Helper::CreateTopDepartmentTab(false);?>
+
+    <main>
+        <div class="floating" id="tertiary-sy">
+            <header>
+                <div class="title">
+                    <h4 style="font-weight: bold;">Menu</h4>
+                </div>
+            </header>
+
+            <main>
+                <div class="menu">
+                <div class="item">
+                    <span>View Template Subjects</span>
+                    <span>
+                        <a href="template_list.php">
+                            <i class="bi bi-arrow-right-circle"></i>
+                        </a>
+                    </span>
+                </div>
+                <div class="item">
+                    <span>View Strand</span>
+                    <span>
+                        <a  href="strand.php">
+                            <i class="bi bi-arrow-right-circle"></i>
+                        </a>
+                    </span>
+                </div>
+                </div>
+            </main>
+
+        </div>
+    </main>
+
+    <!-- <div class="container">
         <h3>Menu</h3>
         <div class="container-subjects">
 
@@ -67,7 +96,7 @@
                 </a>
             </div>
         </div>
-    </div>
+    </div> -->
 
 </div>
 

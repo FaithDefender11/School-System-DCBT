@@ -6,7 +6,7 @@
 
     $teacher = new Teacher($con);
 
-    $form = $teacher->createTeacherForm();
+    // $form = $teacher->createTeacherForm();
     $department_selection = $teacher->CreateTeacherDepartmentSelection();
 
     if(isset($_POST['create_teacher_btn'])){
@@ -16,8 +16,6 @@
         $lastname = $_POST['lastname'];
         $suffix = $_POST['suffix'];
         $department_id = $_POST['department_id'];
-        // $profilePic = $_POST['profilePic'];
-        $profilePic = "";
         $gender = $_POST['gender'];
         $email = $_POST['email'];
         $contact_number = $_POST['contact_number'];
@@ -26,7 +24,13 @@
         $birthplace = $_POST['birthplace'];
         $birthday = $_POST['birthday'];
         $religion = $_POST['religion'];
+
+        $password = "123456";
+
         $status = "active";
+
+        $hash_password = password_hash($password, PASSWORD_BCRYPT);
+
 
         $image = $_FILES['profilePic'] ?? null;
         $imagePath = '';
@@ -60,48 +64,44 @@
 
         }
 
-        $query = "INSERT INTO teacher (firstname, middle_name, lastname, suffix, department_id, profilePic, gender, email, contact_number,
+        $query = "INSERT INTO teacher (password, firstname, middle_name, lastname, suffix, department_id, profilePic, gender, email, contact_number,
                 address, citizenship, birthplace, birthday, religion, teacher_status) 
 
-            VALUES (:firstname, :middle_name, :lastname, :suffix, :department_id, :profilePic, :gender, :email, :contact_number,
+            VALUES (:password, :firstname, :middle_name, :lastname, :suffix, :department_id, :profilePic, :gender, :email, :contact_number,
                 :address, :citizenship, :birthplace, :birthday, :religion, :teacher_status)";
 
-        $statement = $this->con->prepare($query);
+        $statement = $con->prepare($query);
 
-        $parameters = array(
-            ':firstname' => $firstname,
-            ':middle_name' => $middle_name,
-            ':lastname' => $lastname,
-            ':suffix' => $suffix,
-            ':department_id' => $department_id,
-            ':profilePic' => $imagePath,
-            ':gender' => $gender,
-            ':email' => $email,
-            ':contact_number' => $contact_number,
-            ':address' => $address,
-            ':citizenship' => $citizenship,
-            ':birthplace' => $birthplace,
-            ':birthday' => $birthday,
-            ':religion' => $religion,
-            ':teacher_status' => $status
-        );
-
-        foreach ($parameters as $param => $value) {
-            $statement->bindParam($param, $value);
-        }
+        $statement->bindParam(':password', $hash_password);
+        $statement->bindParam(':firstname', $firstname);
+        $statement->bindParam(':middle_name', $middle_name);
+        $statement->bindParam(':lastname', $lastname);
+        $statement->bindParam(':suffix', $suffix);
+        $statement->bindParam(':department_id', $department_id);
+        $statement->bindParam(':profilePic', $imagePath);
+        $statement->bindParam(':gender', $gender);
+        $statement->bindParam(':email', $email);
+        $statement->bindParam(':contact_number', $contact_number);
+        $statement->bindParam(':address', $address);
+        $statement->bindParam(':citizenship', $citizenship);
+        $statement->bindParam(':birthplace', $birthplace);
+        $statement->bindParam(':birthday', $birthday);
+        $statement->bindParam(':religion', $religion);
+        $statement->bindParam(':teacher_status', $status);
 
         if ($statement->execute()) {
             Alert::success("Successfully Created", "index.php");
             exit();
-        } else {
-            Alert::error("Error Occured", "index.php");
-            exit();
         }
+        //  else {
+        //     Alert::error("Error Occured", "index.php");
+        //     exit();
+        // }
     }
     
     ?>
-        <div class='col-md-10 row offset-md-1'>
-            
+        <div class='col-md-12 row'>
+            <div class="col-md-10 offset-md-1">
             <div class='card'>
                 <hr>
                 <a href="index.php">
@@ -135,7 +135,7 @@
                         </div>
                         <div class='form-group mb-2'>
                             <label for=''>Profile Pic</label>
-                            <input class='form-control' type='file' placeholder='' name='profilePic'>
+                            <input required class='form-control' type='file' placeholder='' name='profilePic'>
                         </div>
                         <div class='form-group mb-2'>
                             <label for=''>Gender</label>
@@ -176,6 +176,8 @@
                     </form>
                 </div>
             </div>
+            </div>
+
         </div>
     <?php
 ?>

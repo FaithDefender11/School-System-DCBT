@@ -63,5 +63,72 @@ class Helper {
         return $transformedString;
 
     }
+
+    public static function CreateTopDepartmentTab($isTertiary,
+        $shs_url = null, $tertiary_url = null){
+
+        $buttonTop = "
+            <div id='btn' style='left: 0px'></div>
+        ";
+        if($isTertiary == true){
+            $buttonTop = "
+                <div id='btn' style='left: 129px'></div>
+            ";
+        }
+
+        $shs_department_url = "";
+        $tertiary_department_url = "";
+
+        if($shs_url != null){
+            $shs_department_url = $shs_url;
+        }else{
+            $shs_department_url = "shs_index.php";
+        }
+
+        $button_default_style = " style='border:none; outline:0;'";
+        return "
+            <nav>
+                <h3>Department</h3>
+                <div class='form-box'>
+                    <div class='button-box'>
+                        $buttonTop
+                        <a style='color: white;' href='$shs_department_url'>
+                            <button $button_default_style type='button' class='toggle-btn'>
+                                SHS
+                            </button>
+                        </a>
+                        <a style='color: white;' href='tertiary_index.php'>
+                            <button $button_default_style type='button' class='toggle-btn'>
+                                Tertiary
+                            </button>
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        ";
+    }
+
+    public static function CreateTwoTabs($first_url,$first_tab_name,
+        $second_url, $second_tab_name){
+
+
+
+        return "
+            <div class='tabs'>
+                <a style='background-color: #d6cdcd;' class='tab' href='$first_url'>
+                    <button style='background-color: #d6cdcd; font-weight: bold;' id='teachers-list'>
+                        <i class='bi bi-clipboard-check icon'></i>
+                        $first_tab_name
+                    </button>
+                </a>
+                <a class='tab' href='$second_url'>
+                    <button id='teachers-list'>
+                        <i class='bi bi-collection icon'></i>
+                        $second_tab_name
+                    </button>
+                </a>
+            </div>
+        ";
+    }
 }
 ?>

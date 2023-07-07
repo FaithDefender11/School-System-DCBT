@@ -26,16 +26,15 @@
         
         define ('web_root' , $web_root);
 
-        // $base_url = (isset($_SERVER['HTTPS']) 
-        //                 && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']);
-
-        // define ('base_url' , $base_url);
-
         $currentURL = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https://" : "http://";
         $currentURL .= $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 
         // Extract the directory path from the current URL
         $directoryPath = dirname($currentURL);
+
+        $domainName = dirname($currentURL);
+        define('domainName', $domainName . '/');
+
 
         // FIX THE URL. WILL REDIRECT PROPERLY ESPECIALLY IN THE PRODUCTION
         if ($_SERVER['SERVER_NAME'] === 'localhost') {

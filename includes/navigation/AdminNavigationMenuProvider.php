@@ -22,6 +22,7 @@
         $teacher_url = $base_url .  "/teacher/index.php";
         $course_url = $base_url .  "/course/index.php";
         $user_log_url = $base_url .  "/log/index.php";
+        $admin_users_url = $base_url .  "/admin_users/index.php";
 
         // SHS Default -> More SHS Students than Tertiary.
         $subject_url = $base_url .  "/subject/shs_index.php";
@@ -65,6 +66,9 @@
 
         $sideBarNavigationItem .= Helper::createNavByIcon("User Log", 
             "bi bi-person", $user_log_url, Constants::$navigationClass . Helper::GetActiveClass($page, "log"));
+
+        $sideBarNavigationItem .= Helper::createNavByIcon("Admin Users", 
+            "bi bi-lock", $admin_users_url, Constants::$navigationClass . Helper::GetActiveClass($page, "admin_users"));
 
         if(User::isAdminLoggedIn()) {
             $sideBarNavigationItem .= Helper::createNavByIcon("Log Out", 

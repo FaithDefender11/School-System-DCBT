@@ -22,104 +22,119 @@
 ?>
 
 
-<div class="col-md-12 row">
-    <div class="content_subject">
-        <div class="dashboard">
+<div class="content">
 
-            <h5>Department</h3>
-
-            <div class="form-box">
-                <div class="button-box">
-                    <div id="btn"></div>
-                    <a href="shs_index.php">
-                        <button type="button" class="btn-inactive toggle-btn" >
+    <!-- <nav>
+        <h3>Department</h3>
+        <div class="form-box">
+            <div class="button-box">
+                <div id="btn" style="left: 129px"></div>
+                    <a style="color: white;" href="shs_index.php">
+                        <button type="button" class="toggle-btn">
                             SHS
                         </button>
                     </a>
-
-                    <a href="tertiary_index.php">
-                        <button type="button" class="btn-active toggle-btn">
-                            Tertiary
-                        </button>
-                    </a>
-                </div>
+                <a style="color: white;" href="tertiary_index.php">
+                    <button type="button" class="toggle-btn">
+                        Tertiary
+                    </button>
+                </a>
             </div>
         </div>
-    </div>
-    <div class="content_subject">
+    </nav> -->
+    
+    <?php echo Helper::CreateTopDepartmentTab(true);?>
+    
+
+    <main>
+        <div class="floating" id="tertiary-sy">
+
         <header>
             <div class="title">
                 <h3>Tertiary Programs</h3>
             </div>
             <div class="action">
                 <a href="create.php">
-                    <button type="button" class="btn btn-success">+ Add new</button>
+                    <button type="button" class="clean large success">+ Add new</button>
                 </a>
             </div>
         </header>
-        
-        <main>
-            <table id="tertiary_program_table"
-                class="ws-table-all cw3-striped cw3-bordered"
-                style="margin: 0"
-            >
-                <thead>
-                <tr>
-                    <th>Program ID</th>
-                    <th>Program Name</th>
-                    <th>Track</th>
-                    <th>Action</th>
-                </tr>
-                </thead>
-                <tbody>
-                <?php
-                
-                    $department_name = "Senior High School";
+            <main>
+                <table id="tertiary_program_table"
+                    class="ws-table-all cw3-striped cw3-bordered"
+                    style="margin: 0"
+                >
+                    <thead>
+                    <tr>
+                        <th>Program ID</th>
+                        <th>Program Name</th>
+                        <th>Track</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php
+                    
+                        $query = $con->prepare("SELECT t1.*, t2.department_name FROM program as t1
+                            INNER JOIN department as t2 ON t2.department_id = t1.department_id
+                            WHERE department_name = :department_name
+                        ");
 
-                    $query = $con->prepare("SELECT t1.*, t2.department_name FROM program as t1
-                        INNER JOIN department as t2 ON t2.department_id = t1.department_id
-                        WHERE department_name = :department_name
-                    ");
+                        $query->bindParam(":department_name", $_SESSION['department_type_program']);
+                        $query->execute();
 
-                    $query->bindParam(":department_name", $_SESSION['department_type']);
-                    $query->execute();
+                        if($query->rowCount() > 0){
 
-                    if($query->rowCount() > 0){
+                        while($row = $query->fetch(PDO::FETCH_ASSOC)){
 
-                    while($row = $query->fetch(PDO::FETCH_ASSOC)){
+                            $program_id = $row['program_id'];
+                            $program_name = $row['program_name'];
+                            $department_name = $row['department_name'];
+                            $track = $row['track'];
 
-                        $program_id = $row['program_id'];
-                        $program_name = $row['program_name'];
-                        $department_name = $row['department_name'];
-                        $track = $row['track'];
+                            $removeProgramBtn = "removeProgramBtn($program_id)";
 
-                        $removeProgramBtn = "removeProgramBtn($program_id)";
+                            echo "
+                            <tr>
+                                <td>$program_id</td>
+                                <td>$program_name</td>
+                                <td>$track</td>
 
-                        echo "
-                        <tr>
-                            <td>$program_id</td>
-                            <td>$program_name</td>
-                            <td>$track</td>
-                            <td>
-                                <a href='edit.php?id=$program_id'>
-                                    <button class='btn btn-primary'>
-                                        <i class='fas fa-pen'></i>
-                                    </button>
-                                </a>
-                                <button onclick='$removeProgramBtn' class='btn btn-danger'>
-                                    <i class='fas fa-trash'></i>
-                                </button>
-                            </td>
-                        </tr>
-                        ";
-                    }
-                    }
+                                <td>
+                                    <div class='dropdown'>
+                                        <button class='btn btn-primary dropdown-toggle' type='button' id='dropdownMenuButton' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
+                                            Actions
+                                        </button>
 
-                ?>
-                </tbody>
-            </table>
-        </main>
-    </div>
+                                        <div class='dropdown-menu' aria-labelledby='dropdownMenuButton'>
+                                            <a class='dropdown-item' href='edit.php?id=$program_id'>
+                                                <button style='width: 100%' class='btn btn btn-primary'>
+                                                    Edit
+                                                </button>
+                                            </a>
+
+                                            <a class='dropdown-item' href='#'>
+                                                <button style='width: 100%' onclick='$removeProgramBtn' class='btn btn-danger'>
+                                                    Remove
+                                                </button>
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                </td>
+
+                            </tr>
+                            ";
+                        }
+                        }
+
+                    ?>
+                    </tbody>
+                </table>
+            </main>
+
+        </div>
+    </main>
 </div>
 
 <script>

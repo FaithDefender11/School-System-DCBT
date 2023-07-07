@@ -1,5 +1,4 @@
 /* IMPORT FIRST
-
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css?family=Lato"
@@ -13,7 +12,50 @@
   font-family: "Lato";
 }
 
+.content h1,
+.content h2,
+.content h3,
+.content h4,
+.content h5,
+.content h6 {
+  padding: 0px;
+  margin: 0px;
+}
+
 /* override table fonts*/
 table * {
   font-family: "Arimo";
+}
+
+.floating > main > .menu * {
+  font-family: "Arimo";
+}
+/* Font sizes */
+/* * {
+  font-size: 14px;
+}*/
+table.a thead {
+  font-size: 16px;
+}
+
+table.a tbody {
+  font-size: 14px;
+}
+
+h1,
+h1 > em {
+  font-size: 40px;
+}
+
+h2 {
+  font-size: 36px;
+}
+
+h3,
+.selection-btn {
+  font-size: 18px;
+}
+
+small {
+  font-size: 14px;
 }

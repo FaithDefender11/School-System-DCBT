@@ -1,0 +1,167 @@
+:root {
+  --1: lightblue;
+  --2: lightcoral;
+  --3: lightgreen;
+  --4: rgb(57, 197, 185);
+  --5: rgb(219, 88, 165);
+  --6: rgb(50, 216, 166);
+}
+
+/* colors for nav */
+.dropdown.gas,
+.dropdown.bcm {
+  background-color: var(--1);
+}
+
+.dropdown.ict,
+.dropdown.bpe {
+  background-color: var(--2);
+}
+
+.dropdown.humss,
+.dropdown.bae {
+  background-color: var(--3);
+}
+
+.dropdown.abm,
+.dropdown.bse {
+  background-color: var(--4);
+}
+
+.dropdown.ia,
+.dropdown.btte {
+  background-color: var(--5);
+}
+
+.dropdown.he {
+  background-color: var(--6);
+}
+
+/* scheduler scheduler scheduler scheduler  */
+
+.floating>main>.scheduler {
+  display: flex;
+  align-items: flex-start;
+}
+
+.floating>main>.scheduler>nav {
+  display: flex;
+  flex: 0 0 100px;
+  flex-direction: column;
+}
+
+.floating>main>.scheduler>nav .dropdown {
+  display: flex;
+  text-align: center;
+  flex-direction: column;
+  cursor: pointer;
+}
+
+.floating>main>.scheduler>nav .dropdown span {
+  font-weight: bold;
+  padding: 10px 5px;
+}
+
+.floating>main>.scheduler>nav .dropdown:hover input {
+  display: block;
+}
+
+.floating>main>.scheduler>nav .dropdown>input {
+  display: none;
+  border: none;
+  background-color: white;
+  cursor: pointer;
+  font-size: 15px;
+  justify-content: center;
+}
+
+.floating>main>.scheduler>nav .dropdown>input:hover {
+  background-color: rgb(172, 172, 172);
+}
+
+.floating>main>.scheduler>.schedule-editor {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+/* TABLE */
+.floating>main>.scheduler>nav .dropdown.gas>input.active-button,
+.floating>main>.scheduler>nav .dropdown.bcm>input.active-button {
+  background-color: darkblue;
+  color: white;
+}
+
+.floating>main>.scheduler>nav .dropdown.ict>input.active-button,
+.floating>main>.scheduler>nav .dropdown.bpe>input.active-button {
+  background-color: darkred;
+  color: white;
+}
+
+.floating>main>.scheduler>nav .dropdown.humss>input.active-button,
+.floating>main>.scheduler>nav .dropdown.bae>input.active-button {
+  background-color: darkgreen;
+  color: white;
+}
+
+.floating>main>.scheduler>nav .dropdown.abm>input.active-button,
+.floating>main>.scheduler>nav .dropdown.bse>input.active-button {
+  background-color: rgb(30, 122, 115);
+  color: white
+}
+
+.floating>main>.scheduler>nav .dropdown.ia>input.active-button,
+.floating>main>.scheduler>nav .dropdown.btte>input.active-button {
+  background-color: rgb(167, 53, 119);
+  color: white
+}
+
+.floating>main>.scheduler>nav .dropdown.he>input.active-button {
+  background-color: rgb(26, 134, 102);
+  color: white
+}
+
+.floating>main>.scheduler>.schedule-editor>.schedule-table {
+  display: none;
+}
+
+.floating>main>.scheduler>.schedule-editor>.schedule-table.show-table {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.floating>main>.scheduler>nav .dropdown.gas>.span-toggle.active-span,
+.floating>main>.scheduler>nav .dropdown.bcm>.span-toggle.active-span {
+  background-color: darkblue;
+  color: white;
+}
+
+.floating>main>.scheduler>nav .dropdown.ict>.span-toggle.active-span,
+.floating>main>.scheduler>nav .dropdown.bpe>.span-toggle.active-span {
+  background-color: darkred;
+  color: white;
+}
+
+.floating>main>.scheduler>nav .dropdown.humss>.span-toggle.active-span,
+.floating>main>.scheduler>nav .dropdown.bae>.span-toggle.active-span {
+  background-color: darkgreen;
+  color: white;
+}
+
+.floating>main>.scheduler>nav .dropdown.abm>.span-toggle.active-span,
+.floating>main>.scheduler>nav .dropdown.bse>.span-toggle.active-span {
+  background-color: rgb(30, 122, 115);
+  color: white;
+}
+
+.floating>main>.scheduler>nav .dropdown.ia>.span-toggle.active-span,
+.floating>main>.scheduler>nav .dropdown.btte>.span-toggle.active-span {
+  background-color: rgb(167, 53, 119);
+  color: white
+}
+
+.floating>main>.scheduler>nav .dropdown.he>.span-toggle.active-span {
+  background-color: rgb(26, 134, 102);
+  color: white
+}

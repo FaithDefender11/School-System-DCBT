@@ -18,200 +18,193 @@
 
 ?>
     
-<div class="col-md-12 row">
-
-    <div class="content_subject">
-        <div class="dashboard">
-
-            <h5>Department</h3>
-
-            <div class="form-box">
-                <div class="button-box">
-                    <div id="btn"></div>
-                    <a href="shs_index.php">
-                        <button type="button" class="btn-active toggle-btn" >
-                            SHS
-                        </button>
-                    </a>
-
-                    <a href="tertiary_index.php">
-                        <button type="button" class="btn-inactive toggle-btn">
-                            Tertiary
-                        </button>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-
+ 
     <div class="content">
-          <div class="content-header"></div>
-
-          <div class="tabs">
-            <div class="tab" id="teacher-list" style="background-color: rgb(3, 0, 29)">
-
-              <a href="index.php">
-                    <button
-                        type="button"
-                        class="selection-btn"
-                        id="teachers-btn"
-                        style="color: black">
-                        <i class="bi bi-clipboard-check icon"></i>
-                        Teachers List
-                    </button>
-                </a>
-            </div>
-            <div class="tab" id="subject-load">
-
-              <a href="subject_load.php">
-                    <button
-                        type="button"
-                        class="selection-btn"
-                        id="teachers-btn"
-                        style="background-color: rgb(3, 0, 29)">
-                        <i class="bi bi-clipboard-check icon"></i>
-                        Subject Load
-                    </button>
-                </a>
-              
-            </div>
+      <nav>
+        <h3>Department</h3>
+        <div class="form-box">
+          <div class="button-box">
+            <div id="btn"></div>
+            <button
+              type="button"
+              class="toggle-btn"
+              id="shs-btn"
+              onclick="shs()"
+            >
+              SHS
+            </button>
+            <button
+              type="button"
+              class="toggle-btn"
+              id="college-btn"
+              onclick="college()"
+            >
+              Tertiary
+            </button>
           </div>
+        </div>
+      </nav>
 
+      <div class="content-header"></div>
+      
+      <div class="tabs">
+
+          <a class="tab" href="index.php">
+            <button id="teachers-list">
+                <i class="bi bi-clipboard-check icon"></i>
+                  Teachers List
+            </button>
+          </a>
+          <a style="background-color: #d6cdcd;" class="tab" href="subject_load.php">
+            <button style="background-color: #d6cdcd;" id="teachers-list">
+                <i class="bi bi-collection icon"></i>
+                  Subjects Load
+            </button>
+          </a>
+      </div>
+
+      <main>
+        <div class="floating" id="shs-teachers">
+          <header>
+            <div class="title">
+              <h3>Subject Loader</h3>
+            </div>
+            <div class="action">
+              <a href="../schedule/create.php">
+                <button type="button" class="default large">
+                  <i style="color: white;" class="fas fa-plus-circle"></i> Schedule</button>
+              </a>
+            </div>
+          </header>
           <main>
-            <div class="floating" id="shs-teachers">
-              <header>
-                <div class="title">
-                  <h3>Subject Loader</h3>
-                </div>
-                <div class="action">
-                  <a href="../schedule/create.php">
-                    <button type="button" class="btn btn-success">
-                        <i class="fas fa-plus-circle"></i> Schedule</button>
-                  </a>
-                </div>
-              </header>
-              <main>
-                <table
-                  id="subject_loader_view_table"
-                  class="ws-table-all cw3-striped cw3-bordered"
-                  style="margin: 0"
-                >
-                  <thead>
-                    <tr>
-                      <th>Name</th>
-                      <th>Subject ID</th>
-                      <th>Subject Title</th>
-                      <th>Section</th>
-                      <th>S.Y - Semester</th>
-                      <th>Schedule</th>
-                      <th>Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <?php
-                    
-                      $query = $con->prepare("SELECT 
-                        t1.*, t2.*, 
-                        t3.subject_title, t3.subject_id AS subjectId,
+            <table
+              id="subject_loader_view_table"
+              class="ws-table-all cw3-striped cw3-bordered"
+              style="margin: 0"
+            >
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Subject ID</th>
+                  <th>Subject Title</th>
+                  <th>Section</th>
+                  <th>S.Y - Semester</th>
+                  <th>Schedule</th>
+                  <th style="width: 115px">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <?php
+                
+                  $query = $con->prepare("SELECT 
+                    t1.*, t2.*, 
+                    t3.subject_title, t3.subject_id AS subjectId,
 
-                        t3.course_id,
+                    t3.course_id,
 
-                        t4.program_section,
-                        t4.course_level,
-                        t5.term,
-                        t5.period
+                    t4.program_section,
+                    t4.course_level,
+                    t5.term,
+                    t5.period
 
 
-                        FROM teacher AS t1
-                      
-                        INNER JOIN subject_schedule AS t2 ON t1.teacher_id = t2.teacher_id
+                    FROM teacher AS t1
+                  
+                    INNER JOIN subject_schedule AS t2 ON t1.teacher_id = t2.teacher_id
 
-                        INNER JOIN subject AS t3 ON t3.subject_id = t2.subject_id
-                        INNER JOIN course AS t4 ON t4.course_id = t3.course_id
-                        INNER JOIN school_year AS t5 ON t5.school_year_id = t2.school_year_id
+                    INNER JOIN subject AS t3 ON t3.subject_id = t2.subject_id
+                    INNER JOIN course AS t4 ON t4.course_id = t3.course_id
+                    INNER JOIN school_year AS t5 ON t5.school_year_id = t2.school_year_id
 
-                        ");
+                    ");
 
-                      $query->execute();
+                  $query->execute();
 
-                      if($query->rowCount() > 0){
+                  if($query->rowCount() > 0){
 
-                        while($row = $query->fetch(PDO::FETCH_ASSOC)){
+                    while($row = $query->fetch(PDO::FETCH_ASSOC)){
 
-                          $teacher_id = $row['teacher_id'];
-                          $subject_schedule_id = $row['subject_schedule_id'];
+                      $teacher_id = $row['teacher_id'];
+                      $subject_schedule_id = $row['subject_schedule_id'];
 
-                          $fullname = $row['firstname'] . " " . $row['lastname'];
-                          $teacher_status = $row['teacher_status'];
-                          $date_creation = $row['date_creation'];
+                      $fullname = $row['firstname'] . " " . $row['lastname'];
+                      $teacher_status = $row['teacher_status'];
+                      $date_creation = $row['date_creation'];
 
-                          $schedule_time = $row['schedule_time'];
-                          $subject_title = $row['subject_title'];
-                          $subjectId = $row['subjectId'];
-                          $program_section = $row['program_section'];
-                          $course_level = $row['course_level'];
-                          $course_id = $row['course_id'];
-                          $term = $row['term'];
-                          $period = $row['period'];
+                      $schedule_time = $row['schedule_time'];
+                      $subject_title = $row['subject_title'];
+                      $subjectId = $row['subjectId'];
+                      $program_section = $row['program_section'];
+                      $course_level = $row['course_level'];
+                      $course_id = $row['course_id'];
+                      $term = $row['term'];
+                      $period = $row['period'];
 
-                        //   $program_section = "";
-                        //   $course_level = "";
-
-
-                          $date_creation = $date_creation !== NULL ? date('Y-m-d', strtotime($date_creation)) : 'Not Set';
-
-                          $fullname = $row['firstname'] . " " . $row['lastname'];
+                    //   $program_section = "";
+                    //   $course_level = "";
 
 
-                          $subject_load_count = $teacher->GetTeacherSubjectLoad($teacher_id);
+                      $date_creation = $date_creation !== NULL ? date('Y-m-d', strtotime($date_creation)) : 'Not Set';
 
-                          $teacher_schedule_url = "../schedule/assign.php?id=$teacher_id";
+                      $fullname = $row['firstname'] . " " . $row['lastname'];
 
-                          $removeSubjectLoadBtn = "removeSubjectLoadBtn($subject_schedule_id)";
+                      $subject_load_count = $teacher->GetTeacherSubjectLoad($teacher_id);
 
-                          echo "
-                            <tr>
-                              <td>$fullname</td>
-                              <td>$subjectId</td>
-                              <td>$subject_title</td>
-                              <td>$program_section</td>
-                              <td>$term - $period</td>
-                              <td>$schedule_time</td>
-                              <td>
-                                <a href='info.php?details=show&id=$teacher_id'>
-                                  <button class='btn btn-sm btn-primary'>View</button>
+                      $teacher_schedule_url = "../schedule/assign.php?id=$teacher_id";
+
+                      $removeSubjectLoadBtn = "removeSubjectLoadBtn($subject_schedule_id)";
+
+                      echo "
+                        <tr>
+                          <td>$fullname</td>
+                          <td>$subjectId</td>
+                          <td>$subject_title</td>
+                          <td>$program_section</td>
+                          <td>$term - $period</td>
+                          <td>$schedule_time</td>
+                          <td>
+                            <div class='dropdown'>
+                              <button class='btn btn-info dropdown-toggle' type='button' id='dropdownMenuButton' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
+                                Actions
+                              </button>
+
+                              <div class='dropdown-menu' aria-labelledby='dropdownMenuButton'>
+                                <a class='dropdown-item' href='info.php?details=show&id=$teacher_id'>
+                                  <button style='width: 100%' class='btn btn btn-primary'>
+                                    View
+                                  </button>
+
                                 </a>
-
-                                <a href='$teacher_schedule_url'>
-                                  <button class='btn btn-sm btn-success'>
-                                    <i class='fas fa-plus-circle'></i> Schedule
+                                <a class='dropdown-item' href='$teacher_schedule_url'>
+                                  <button style='width: 100%'  class='btn btn btn-success'>
+                                    Add Schedule
                                   </button>
                                 </a>
+                                <a class='dropdown-item' href='#'>
+                                   <button style='width: 100%' onclick='$removeSubjectLoadBtn'
+                                      type='button'
+                                        class='btn btn-danger btn'>
+                                        Remove
+                                    </button>
+                                </a>
+                              </div>
 
-                                <button onclick='$removeSubjectLoadBtn'
-                                  type='button'
-                                    class='btn btn-danger btn-sm'>
-                                    <i class='fas fa-trash'></i>
-                                </button>
+                            </div>
+                          </td>
+                        </tr>
+                      
+                      ";
+                    }
+                  }
 
-                                
-
-                              </td>
-                            </tr>
-                          
-                          ";
-                        }
-                      }
-
-                    ?>
-                  </tbody>
-                </table>
-              </main>
-            </div>
+                ?>
+              </tbody>
+            </table>
           </main>
-    </div>
-</div>
+        </div>
+      </main>
 
+    </div>
  
 <?php include_once('../../includes/footer.php')?>
 

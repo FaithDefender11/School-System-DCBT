@@ -5,6 +5,12 @@
     include_once('../../includes/classes/Template.php');
     include_once('../../includes/classes/Program.php');
 
+    ?>
+        <head>
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+        </head>
+    <?php
     $subject = new Subject($con, null);
     $program = new Program($con, null);
 
@@ -68,6 +74,11 @@
     
                 <div class='card'>
                     <div class='card-header'>
+                        <a href="template_list.php">
+                            <button class="btn btn-primary">
+                                <i class="fas fa-arrow-left"></i>
+                            </button>
+                        </a>
                         <h4 class='text-center mb-3'>Create Template Subject (<?php echo $department_type;?>)</h4>
                     </div>
                     <div class='card-body'>
@@ -121,8 +132,13 @@
                                     placeholder='Unit' name='unit'>
                             </div>
 
-                            <button type='submit' class='btn btn-primary'
-                                name='create_subject_template'>Save</button>
+                            <div class="modal-footer">
+                                <button type='submit' 
+                                    class='btn btn-success' name='create_subject_template'>
+                                    Save
+                                </button>
+                            </div>
+                            
                         </form>
                     </div>
                 </div>

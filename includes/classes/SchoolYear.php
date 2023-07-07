@@ -196,5 +196,28 @@
 
         return "Ongoing";
     }
+
+    public function GetSchoolYearIdBySyID($period, $term){
+
+        $db_school_year_id = null;
+
+        $query = $this->con->prepare("SELECT school_year_id FROM school_year
+
+            WHERE period=:period
+            AND term=:term
+            LIMIT 1
+        ");
+
+        $query->bindParam(":period", $period);
+        $query->bindParam(":term", $term);
+        $query->execute();
+
+        if($query->rowCount() > 0){
+            $get_row = $query->fetch(PDO::FETCH_ASSOC);
+            $db_school_year_id = $get_row['school_year_id'];
+        }
+
+        return $db_school_year_id;
+    }
 }
 ?>

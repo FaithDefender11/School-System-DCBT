@@ -56,6 +56,35 @@ class Account {
 
         return $array;
     }
+
+     public function studentLogIn($username, $password){
+
+        $array = [];
+
+        $query = $this->con->prepare("SELECT * FROM student
+            WHERE username=:username AND password=:password
+            LIMIT 1");
+
+        $query->bindValue(":username", $username);
+        $query->bindValue(":password", $password);
+
+        $query->execute();
+
+        if($query->rowCount() > 0){
+            $row = $query->fetch(PDO::FETCH_ASSOC);
+
+            $role = "student";
+
+            array_push($array, true);
+            array_push($array, $role);
+
+            // return true;
+        }else{
+            array_push($this->errorArray, Constants::$loginFailed);
+        }
+
+        return $array;
+    }
     
     public function register($fn, $ln, $un, $em, $em2, $pw, $pw2) {
 

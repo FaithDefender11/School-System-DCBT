@@ -29,31 +29,34 @@
     }
     
     ?>
-        <div class='col-md-10 row offset-md-1'>
-            
-            <div class='card'>
-                <hr>
-                <a href="index.php">
-                    <button class="btn   btn-primary">
-                        <i class="fas fa-arrow-left"></i>
-                    </button>
-                </a>
-                <div class='card-header'>
-                    <h4 class='text-center mb-3'>Create Department</h4>
-                </div>
-                <div class='card-body'>
-                    <form method='POST' enctype='multipart/form-data'>
-                        <div class='form-group mb-2'>
-                            <label for=''>Department Name</label>
-                            <input class='form-control' type='text' placeholder='' name='department_name'>
-                        </div>
+        <div class='col-md-12 row '>
+            <div class='col-md-10 offset-md-1'>
+                <div class='card'>
+                    <hr>
+                    <a href="index.php">
+                        <button class="btn   btn-primary">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                    </a>
+                    <div class='card-header'>
+                        <h4 class='text-center mb-3'>Create Department</h4>
+                    </div>
+                    <div class='card-body'>
+                        <form method='POST' enctype='multipart/form-data'>
+                            <div class='form-group mb-2'>
+                                <label for=''>Department Name</label>
+                                <input class='form-control' type='text' placeholder='' name='department_name'>
+                            </div>
 
-                        <div class="modal-footer">
-                            <button type='submit' class='btn btn-success' name='create_department_btn'>Save</button>
-                        </div>
-                    </form>
+                            <div class="modal-footer">
+                                <button type='submit' class='btn btn-success' name='create_department_btn'>Save</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
+            
+
         </div>
     <?php
 ?>

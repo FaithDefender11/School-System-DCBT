@@ -115,7 +115,7 @@
                     Swal.fire({
                         icon: 'error',
                         title: 'Oh no!',
-                        text: `Already Registered!`,
+                        text: `Selected Template has already registered!`,
                     });
                 }
             }
