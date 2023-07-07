@@ -90,6 +90,7 @@ form .row > span > div > input {
 }
 
 .content .progress > .dot p {
+  white-space: nowrap;
   display: flex;
   column-gap: 5px;
   align-items: center;

@@ -4,9 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <script src="assets/css/others/toggle-switch.js" defer></script>
     <script src="assets/js/dropdownMenu.js" defer></script>
-    <link rel="stylesheet" href="assets/css/others/toggle-switch.css" />
     <!-- link style sheets -->
     <link rel="stylesheet" href="assets/css/buttons.css" />
     <link rel="stylesheet" href="assets/css/content.css" />
@@ -90,7 +88,7 @@
           <span class="line inactive"></span>
           <span class="dot inactive"><p>Subject confirmation</p></span>
         </div>
-        <div class="floating noBorder">
+        <div class="floating">
           <header>
             <div class="title">
               <h3>Student form details</h3>
@@ -363,21 +361,189 @@
                 </span>
                 <span>
                   <label for="occupation">Occupation</label>
-                  <input
-                    type="text"
-                    name="fatherOccupation"
-                    id="fatherOccupation"
-                    value=""
-                  />
+                  <div>
+                    <input
+                      type="text"
+                      name="fatherOccupation"
+                      id="fatherOccupation"
+                      value=""
+                    />
+                  </div>
                 </span>
               </div>
             </form>
           </main>
           <header>
             <div class="title">
-              <h3></h3>
+              <h4>Mother's Information</h4>
             </div>
           </header>
+          <main>
+            <form action="">
+              <div class="row">
+                <span>
+                  <label for="name">Name</label>
+                  <div>
+                    <input type="text" name="motherLN" id="motherLN" value="" />
+                    <small>Last name</small>
+                  </div>
+                  <div>
+                    <input type="text" name="motherFN" id="motherFN" value="" />
+                    <small>First name</small>
+                  </div>
+                  <div>
+                    <input type="text" name="motherMN" id="motherMN" value="" />
+                    <small>Middle name</small>
+                  </div>
+                  <div>
+                    <input type="text" name="motherSN" id="motherSN" value="" />
+                    <small>Suffix name</small>
+                  </div>
+                </span>
+              </div>
+              <div class="row">
+                <span>
+                  <label for="phoneNo">Phone no.</label>
+                  <div>
+                    <input
+                      type="text"
+                      name="motherPhone"
+                      id="motherPhone"
+                      value=""
+                    />
+                  </div>
+                </span>
+                <span>
+                  <label for="email">Email</label>
+                  <div>
+                    <input
+                      type="email"
+                      name="motherEmail"
+                      id="motherEmal"
+                      value=""
+                    />
+                  </div>
+                </span>
+                <span>
+                  <label for="occupation">Occupation</label>
+                  <div>
+                    <input
+                      type="text"
+                      name="motherOccupation"
+                      id="motherOccupation"
+                      value=""
+                    />
+                  </div>
+                </span>
+              </div>
+            </form>
+          </main>
+          <header>
+            <div class="title">
+              <h4>Guardian's Information</h4>
+            </div>
+          </header>
+          <main>
+            <form action="">
+              <div class="row">
+                <span>
+                  <label for="name">Name</label>
+                  <div>
+                    <input
+                      type="text"
+                      name="guardianLN"
+                      id="guardianLN"
+                      value=""
+                    />
+                    <small>Last name</small>
+                  </div>
+                  <div>
+                    <input
+                      type="text"
+                      name="guardianFN"
+                      id="guardianFN"
+                      value=""
+                    />
+                    <small>First name</small>
+                  </div>
+                  <div>
+                    <input
+                      type="text"
+                      name="guardianMN"
+                      id="guardianMN"
+                      value=""
+                    />
+                    <small>Middle name</small>
+                  </div>
+                  <div>
+                    <input
+                      type="text"
+                      name="guardianSN"
+                      id="guardianSN"
+                      value=""
+                    />
+                    <small>Suffix name</small>
+                  </div>
+                </span>
+              </div>
+              <div class="row">
+                <span>
+                  <label for="phoneNo">Phone no.</label>
+                  <div>
+                    <input
+                      type="text"
+                      name="guardianPhone"
+                      id="guardianPhone"
+                      value=""
+                    />
+                  </div>
+                </span>
+                <span>
+                  <label for="email">Email</label>
+                  <div>
+                    <input
+                      type="email"
+                      name="guardianEmail"
+                      id="guardianEmal"
+                      value=""
+                    />
+                  </div>
+                </span>
+              </div>
+              <div class="row">
+                <span>
+                  <label for="relationship">Relationship</label>
+                  <div>
+                    <input
+                      type="text"
+                      name="guardianRelation"
+                      id="guardianRelation"
+                      value=""
+                    />
+                  </div>
+                </span>
+                <span>
+                  <label for="occupation">Occupation</label>
+                  <div>
+                    <input
+                      type="text"
+                      name="guardianOccupation"
+                      id="guardianOccupation"
+                      value=""
+                    />
+                  </div>
+                </span>
+              </div>
+            </form>
+          </main>
+        </div>
+        <div class="action">
+          <button
+            class="default large"
+            onclick="window.location.href = 'NEW-TRANSFEREE-enrollment-2.html';"
+          >
+            Proceed
+          </button>
         </div>
       </main>
     </div>

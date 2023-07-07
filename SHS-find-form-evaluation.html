@@ -55,13 +55,15 @@
         <button
           class="tab"
           id="shsEvaluation"
-          onclick="window.location.href = 'SHS-find-form-evaluaton.html';"
+          style="background-color: var(--mainContentBG)"
+          onclick="window.location.href = 'SHS-find-form-evaluation.html';"
         >
           Evaluation
         </button>
         <button
           class="tab"
           id="shsPayment"
+          style="background-color: var(--them); color: white"
           onclick="window.location.href = 'SHS-find-form-waiting-payment.html';"
         >
           Waiting payment
@@ -69,6 +71,7 @@
         <button
           class="tab"
           id="shsApproval"
+          style="background-color: var(--them); color: white"
           onclick="window.location.href = 'SHS-find-form-waiting-approval.html';"
         >
           Waiting approval
@@ -76,6 +79,7 @@
         <button
           class="tab"
           id="shsEnrolled"
+          style="background-color: var(--them); color: white"
           onclick="window.location.href = 'SHS-find-form-enrolled.html';"
         >
           Enrolled
@@ -129,9 +133,76 @@
                 <tr>
                   <td></td>
                   <td></td>
+                  <td>New</td>
+                  <td></td>
+                  <td>
+                    <button
+                      class="information"
+                      onclick="window.location.href = 'NEW-TRANSFEREE-enrollment-1.html';"
+                    >
+                      View
+                    </button>
+                  </td>
+                  <td><input type="checkbox" name="check" id="check" /></td>
+                </tr>
+                <tr>
                   <td></td>
                   <td></td>
-                  <td><button class="information">View</button></td>
+                  <td>Old</td>
+                  <td></td>
+                  <td>
+                    <button
+                      class="information"
+                      onclick="window.location.href = 'OLD-RETURNEE-CONFLICT-enrollment-1.html';"
+                    >
+                      View
+                    </button>
+                  </td>
+                  <td><input type="checkbox" name="check" id="check" /></td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td>Transferee</td>
+                  <td></td>
+                  <td>
+                    <button
+                      class="information"
+                      onclick="window.location.href = 'NEW-TRANSFEREE-enrollment-1.html';"
+                    >
+                      View
+                    </button>
+                  </td>
+                  <td><input type="checkbox" name="check" id="check" /></td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td>Returnee</td>
+                  <td></td>
+                  <td>
+                    <button
+                      class="information"
+                      onclick="window.location.href = 'OLD-RETURNEE-CONFLICT-enrollment-1.html';"
+                    >
+                      View
+                    </button>
+                  </td>
+                  <td><input type="checkbox" name="check" id="check" /></td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td>Conflict</td>
+                  <td></td>
+                  <td>
+                    <button
+                      class="information"
+                      onclick="window.location.href = 'OLD-RETURNEE-CONFLICT-enrollment-1.html';"
+                    >
+                      View
+                    </button>
+                  </td>
                   <td><input type="checkbox" name="check" id="check" /></td>
                 </tr>
               </tbody>
