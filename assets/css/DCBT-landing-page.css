@@ -158,44 +158,108 @@ nav>ul>li>a:hover {
     height: calc(100vh - 150px);
 }
 
-.content>main>.slide {
+.slide-1 {
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: center;
     flex-grow: 1;
     background-color: var(--theme1);
+    padding: 10px;
 }
 
-.content>main>.slide>.title-content {
+.slide-2 {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    flex-wrap: nowrap;
-    flex-grow: 1;
+    background-color: var(--theme2);
+    margin-block: 0px;
+    flex: 1;
 }
 
-.content>main>.slide>title.content>.title {}
+.slide-1>header,
+.slide-2>header {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: stretch;
+    padding: 0;
+    flex: 1;
+    width: 100%;
+}
 
-.content>main>.slide>.carousel {
+.slide-1>header>.title,
+.slide-2>header>.title {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    align-self: stretch;
+    width: 100%;
+}
+
+.slide-1>header>.title>h2,
+.slide-2>header>.title>h2 {
+    font-weight: 300;
+    font-style: normal;
+}
+
+.slide-1>main,
+.slide-2>main {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: stretch;
+    padding-bottom: 30px;
+    flex: 1;
+    width: 100%;
+}
+
+.slide-2>main>.item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+}
+
+.slide-2>main>.item>.fb-post {
+    max-width: 60%;
+}
+
+.slide-2>main>.item>h3 {
+    padding: 5px;
+}
+
+.slide-2>main>.item>div {
+    padding: 5px;
+}
+
+.slide-2>main>.item>div>p {
+    padding: 5px;
+}
+
+.slide-1>.carousel {
     padding: 30px;
-    flex-grow: 1;
+    flex-grow: 2;
 }
 
-.content>main>.slide>.carousel>img {
+.slide-1>.carousel>img {
     width: 600px;
     height: 350px;
 }
 
-.content>main>.slide>.carousel>h2 {
+.slide-1>.carousel>h2 {
     font-weight: 300;
 }
 
-.content>main>.slide>.carousel>.action {
+.slide-1>.carousel>.action {
     padding-top: 5px;
 }
 
-.content>main>.slide>.carousel>.action>.enroll {
+.slide-1>.carousel>.action>.enroll {
     text-align: center;
     background-color: #BB4444;
     color: #fff;
@@ -207,9 +271,87 @@ nav>ul>li>a:hover {
     box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.25);
 }
 
-.content>main>.slide>.carousel>.action>.enroll:hover {
+.slide-1>.carousel>.action>.enroll:hover {
     background-color: #692020;
     transition-duration: .3s;
+}
+
+.slide-2>main>.slideshow-container {
+    display: flex;
+    flex-direction: column;
+    max-width: 80%;
+    position: relative;
+    margin: auto;
+}
+
+.slide-2>main>.slideshow-container>.slide {
+    display: none;
+}
+
+.slide-2>main>.slideshow-container>.slide.fade {
+    animation-name: fade;
+    animation-duration: 1.5s;
+}
+
+@keyframes fade {
+    from {
+        opacity: .4
+    }
+
+    to {
+        opacity: 1
+    }
+}
+
+.slide-2>main>div>.dot {
+    cursor: pointer;
+    position: relative;
+    height: 15px;
+    width: 15px;
+    margin: 0 2px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+    transition: background-color 0.6s ease;
+}
+
+.slide-2>main>div>.dot.active,
+.slide-2>main>div>.dot:hover {
+    background-color: #717171;
+}
+
+.slide-2>main>.slideshow-container>.number {
+    color: #f2f2f2;
+    font-size: 12px;
+    padding: 8px 12px;
+    position: absolute;
+    top: 0;
+}
+
+.slide-2>main>.slideshow-container>.prev,
+.slide-2>main>.slideshow-container>.next {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    width: auto;
+    margin-top: -22px;
+    padding: 16px;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+    transition: 0.6s ease;
+    border-radius: 0 3px 3px 0;
+    user-select: none;
+}
+
+.slide-2>main>.slideshow-container>.prev:hover,
+.slide-2>main>.slideshow-container>.next:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.slide-2>main>.slideshow-container>.next {
+    right: 0;
+    border-radius: 3px 0 0 3px;
 }
 
 /* RESPONSIVE CONTENT */
