@@ -1,0 +1,242 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Lato', sans-serif;
+    text-decoration: none;
+    list-style: none;
+}
+
+:root {
+    --mainTheme: #440203;
+    --itemBG: #1f0404;
+    --theme1: rgb(221, 221, 221);
+    --theme2: #fff;
+}
+
+/* NAVBAR */
+nav {
+    background-color: var(--mainTheme);
+    height: 80px;
+    width: 100%;
+}
+
+#check {
+    display: none;
+}
+
+nav>.check-btn {
+    display: none;
+    font-size: 30px;
+    color: #fff;
+    float: right;
+    line-height: 80px;
+    margin-right: 40px;
+    cursor: pointer;
+}
+
+nav>.logo {
+    line-height: 30px;
+    padding: 0 80px;
+}
+
+nav>.logo>a>img {
+    width: 60px;
+    height: 60px;
+    margin-top: 10px;
+    border-radius: 30px;
+}
+
+nav>ul {
+    float: right;
+    margin-right: 30px;
+}
+
+nav>ul>li {
+    display: inline-block;
+    line-height: 80px;
+    margin: 0 10px;
+}
+
+nav>ul>li>a {
+    color: white;
+    font-size: 16px;
+}
+
+nav>ul>li>a:hover {
+    color: #cccccc;
+    transition: .5s;
+}
+
+/* RESPONSIVE NAVBAR */
+@media (max-width: 952px) {
+    nav>.logo {
+        padding-left: 50px;
+    }
+}
+
+@media (max-width: 858px) {
+    nav>.check-btn {
+        display: block;
+    }
+
+    nav>ul {
+        position: fixed;
+        width: 100%;
+        height: 100vh;
+        background-color: var(--itemBG);
+        top: 80px;
+        left: -100%;
+        text-align: center;
+        transition: all .5s;
+    }
+
+    nav>ul>li {
+        display: block;
+        margin: 50px 0;
+    }
+
+    nav>ul>li:hover {
+        background-color: #640405;
+    }
+
+    nav>ul>li>a {
+        font-size: 18px;
+    }
+
+    #check:checked~ul {
+        left: 0;
+    }
+}
+
+/* CONTENT */
+.content {
+    height: 100vh;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.content-header {
+    background: url(others/DCBT-Building.jpg) no-repeat;
+    background-size: cover;
+    height: calc(100vh - 120px);
+}
+
+.content-header>.logo-title {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding-top: 150px;
+}
+
+.content-header>.logo-title>img {
+    margin: 0;
+    width: 125px;
+    height: 125px;
+    border-radius: 60px;
+}
+
+.content-header>.title {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+}
+
+.content-header>.title>h2 {
+    font-family: 'IM Fell Double Pica', serif;
+    color: #fff;
+    font-weight: 400;
+}
+
+.content>main {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    height: calc(100vh - 150px);
+}
+
+.content>main>.slide {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    flex-grow: 1;
+    background-color: var(--theme1);
+}
+
+.content>main>.slide>.title-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: nowrap;
+    flex-grow: 1;
+}
+
+.content>main>.slide>title.content>.title {}
+
+.content>main>.slide>.carousel {
+    padding: 30px;
+    flex-grow: 1;
+}
+
+.content>main>.slide>.carousel>img {
+    width: 600px;
+    height: 350px;
+}
+
+.content>main>.slide>.carousel>h2 {
+    font-weight: 300;
+}
+
+.content>main>.slide>.carousel>.action {
+    padding-top: 5px;
+}
+
+.content>main>.slide>.carousel>.action>.enroll {
+    text-align: center;
+    background-color: #BB4444;
+    color: #fff;
+    min-width: 100px;
+    min-height: 30px;
+    border: none;
+    font-size: 15px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.25);
+}
+
+.content>main>.slide>.carousel>.action>.enroll:hover {
+    background-color: #692020;
+    transition-duration: .3s;
+}
+
+/* RESPONSIVE CONTENT */
+@media (max-width: 1080px) {
+    .content-header {
+        flex-direction: row;
+        height: calc(100vh - 220px);
+    }
+
+    .content-header>.logo-title {
+        padding-top: 160px;
+    }
+
+    .content-header>.logo-title>img {
+        width: 100px;
+        height: 100px;
+    }
+
+    .content-header>.title>h2 {
+        font-size: 20px;
+        text-align: center;
+    }
+}
+
+@media (max-width: 400px) {
+    .content-header {
+        flex-direction: row;
+        height: calc(100vh - 200px);
+    }
+}
