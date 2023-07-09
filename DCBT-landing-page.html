@@ -4,7 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, inital-scale=1" />
     <title>Daehan College of Business & Technology</title>
-    <script src="assets/js/slideshow.js" defer></script>
     <!--Link stylesheets-->
     <link rel="stylesheet" href="assets/css/DCBT-landing-page.css" />
     <link rel="stylesheet" href="assets/css/fonts.css" />
@@ -39,7 +38,7 @@
         <li><a href="#">ADMISSIONS</a></li>
         <li><a href="#">ACADEMICS</a></li>
         <li><a href="#">ABOUT</a></li>
-        <li><a href="#">LOGIN</a></li>
+        <li><a href="login.html">LOGIN</a></li>
       </ul>
     </nav>
 
@@ -202,7 +201,7 @@
           </main>
         </div>
 
-        <div class="slide-2">
+        <div class="slide-2" style="background-color: var(--theme1)">
           <header>
             <div class="title">
               <h2>Facilities</h2>
@@ -210,43 +209,65 @@
           </header>
           <main>
             <div class="slideshow-container">
-              <div class="slide fade">
-                <div class="number">1 / 6</div>
-                <img src="assets/images/slide-1.jpg" style="width: 100%" />
+              <s id="s1"></s>
+              <s id="s2"></s>
+              <s id="s3"></s>
+              <s id="s4"></s>
+              <s id="s5"></s>
+              <s id="s6"></s>
+
+              <div class="slider">
+                <div>
+                  <img src="assets/images/slide-1.jpg" alt="" />
+                </div>
+                <div>
+                  <img src="assets/images/slide-2.jpg" alt="" />
+                </div>
+                <div>
+                  <img src="assets/images/slide-3.jpg" alt="" />
+                </div>
+                <div>
+                  <img src="assets/images/slide-4.jpg" alt="" />
+                </div>
+                <div>
+                  <img src="assets/images/slide-5.jpg" alt="" />
+                </div>
+                <div>
+                  <img src="assets/images/slide-6.jpg" alt="" />
+                </div>
               </div>
-              <div class="slide fade">
-                <div class="number">2 / 6</div>
-                <img src="assets/images/slide-2.jpg" style="width: 100%" />
+
+              <div class="prevNext">
+                <div><a href="#s6"></a><a href="#s4"></a></div>
+                <div><a href="#s1"></a><a href="#s3"></a></div>
+                <div><a href="#s2"></a><a href="#s4"></a></div>
+                <div><a href="#s1"></a><a href="#s1"></a></div>
+                <div><a href="#s3"></a><a href="#s5"></a></div>
               </div>
-              <div class="slide fade">
-                <div class="number">3 / 6</div>
-                <img src="assets/images/slide-3.jpg" style="width: 100%" />
+
+              <div class="bullets">
+                <a href="#s1">1</a>
+                <a href="#s2">2</a>
+                <a href="#s3">3</a>
+                <a href="#s4">4</a>
+                <a href="#s5">5</a>
+                <a href="#s6">6</a>
               </div>
-              <div class="slide fade">
-                <div class="number">4 / 6</div>
-                <img src="assets/images/slide-4.jpg" style="width: 100%" />
-              </div>
-              <div class="slide fade">
-                <div class="number">5 / 6</div>
-                <img src="assets/images/slide-5.jpg" style="width: 100%" />
-              </div>
-              <div class="slide fade">
-                <div class="number">6 / 6</div>
-                <img src="assets/images/slide-6.jpg" style="width: 100%" />
-              </div>
-              <a class="prev" onclick="plusSlides(-1)"></a>
-              <a class="next" onclick="plusSlides(1)"></a>
-            </div>
-            <br />
-            <div style="text-align: center">
-              <span class="dot" onclick="currentSlide(1)"></span>
-              <span class="dot" onclick="currentSlide(2)"></span>
-              <span class="dot" onclick="currentSlide(3)"></span>
-              <span class="dot" onclick="currentSlide(4)"></span>
-              <span class="dot" onclick="currentSlide(5)"></span>
-              <span class="dot" onclick="currentSlide(6)"></span>
             </div>
           </main>
+        </div>
+        <div class="footer">
+          <div class="contact">
+            <h4>DAEHAN COLLEGE OF BUSINESS AND TECHNOLOGY</h4>
+            <p>
+              Nicanor Reyes Street, Sampaloc, Manila Tel No: +63 (2)-87777-338
+              (trunkline)
+            </p>
+            <p>Terms and condition | Privacy Policy</p>
+          </div>
+          <div class="copyright">
+            <h4>Copyright © 2019. All Rights Reserved</h4>
+          </div>
         </div>
       </main>
     </div>
