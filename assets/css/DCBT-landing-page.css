@@ -12,6 +12,7 @@
     --itemBG: #1f0404;
     --theme1: rgb(221, 221, 221);
     --theme2: #fff;
+    --theme3: #efefef;
 }
 
 /* NAVBAR */
@@ -180,14 +181,29 @@ nav>ul>li>a:hover {
     flex: 1;
 }
 
+.slide-3 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: var(--theme3);
+}
+
+.slide-3>header {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
 .slide-1>header,
 .slide-2>header {
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: stretch;
+    height: calc(100vh - 120px);
     padding: 0;
-    flex: 1;
     width: 100%;
 }
 
