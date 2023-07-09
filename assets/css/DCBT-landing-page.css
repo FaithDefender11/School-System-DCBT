@@ -9,10 +9,13 @@
 
 :root {
     --mainTheme: #440203;
+    --colorTheme: #BB4444;
     --itemBG: #1f0404;
     --theme1: rgb(221, 221, 221);
     --theme2: #fff;
     --theme3: #efefef;
+    --activeProgress: #8fafff;
+    --inactiveProgress: #e4e4e4;
 }
 
 /* NAVBAR */
@@ -114,7 +117,7 @@ nav>ul>li>a:hover {
 
 /* CONTENT */
 .content {
-    height: 100vh;
+    height: auto;
     flex-direction: column;
     align-items: stretch;
 }
@@ -158,7 +161,6 @@ nav>ul>li>a:hover {
     display: flex;
     flex-direction: column;
     flex: 1;
-    height: calc(100vh - 150px);
 }
 
 .slide-1 {
@@ -183,11 +185,11 @@ nav>ul>li>a:hover {
 
 .slide-3 {
     display: flex;
+    padding: 100px 60px;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    background-color: var(--theme3);
+    align-items: flex-start;
+    gap: 20px;
+    align-self: stretch;
 }
 
 .slide-3>header {
@@ -196,13 +198,55 @@ nav>ul>li>a:hover {
     align-items: center;
 }
 
+.slide-3>header.title {
+    flex-wrap: wrap;
+}
+
+.slide-3>header>.title>h2 {
+    color: var(--colorTheme);
+}
+
+.slide-3>header>.title>h3 {
+    color: var(--colorTheme);
+    font-size: 22px;
+}
+
+.slide-3>main {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 20px;
+    width: 100%;
+}
+
+.slide-3>main>.action {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 5px;
+    border-radius: 10px;
+    background-color: #fff;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+.slide-3>main>.action:hover {
+    background-color: #cacaca;
+    transition: .5s;
+}
+
+.slide-3>main>.action>a {
+    font-size: 20px;
+    font-weight: 800;
+    padding: 10px;
+    color: #000000;
+}
+
 .slide-1>header,
 .slide-2>header {
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
     align-items: stretch;
-    height: calc(100vh - 120px);
     padding: 0;
     width: 100%;
 }
@@ -284,14 +328,17 @@ nav>ul>li>a:hover {
 
 .slide-1>.carousel>.action>.enroll {
     text-align: center;
-    background-color: #BB4444;
+    background-color: var(--colorTheme);
     color: #fff;
-    min-width: 100px;
-    min-height: 30px;
+    width: 120px;
+    height: 40px;
     border: none;
     font-size: 15px;
     border-radius: 10px;
     box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: 300;
 }
 
 .slide-1>.carousel>.action>.enroll:hover {
@@ -584,6 +631,22 @@ nav>ul>li>a:hover {
     .content>main>.footer>.copyright>h4 {
         font-size: 14px;
     }
+
+    .slide-3>header>.title>h2 {
+        font-size: 26px;
+    }
+
+    .slide-3>header>.title>small {
+        font-size: 12px;
+    }
+
+    .slide-3>header>.title>h3 {
+        font-size: 20px;
+    }
+
+    .slide-3>main>.action>a {
+        font-size: 16px;
+    }
 }
 
 @media (max-width: 400px) {
@@ -615,7 +678,7 @@ nav>ul>li>a:hover {
     display: flex;
     padding: 42px 65px;
     width: 100%;
-    height: 100vh;
+    height: auto;
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
