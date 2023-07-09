@@ -76,7 +76,8 @@
   font-size: 25px;
 }
 
-.content-header>.cards {
+.content-header>.cards,
+.floating>main>.cards {
   display: flex;
   justify-content: space-around;
   gap: 10px;
