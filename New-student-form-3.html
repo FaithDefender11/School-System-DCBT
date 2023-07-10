@@ -51,13 +51,94 @@
             <span class="dot active"><p>Preferred Course/Strand</p></span>
             <span class="line active"></span>
             <span class="dot active"> <p>Personal Information</p></span>
-            <span class="line inactive"></span>
-            <span class="dot inactive"> <p>Validate Details</p></span>
+            <span class="line active"></span>
+            <span class="dot active"> <p>Validate Details</p></span>
             <span class="line inactive"></span>
             <span class="dot inactive"> <p>Finished</p></span>
           </div>
           <main>
             <form action="">
+              <header>
+                <div class="title">
+                  <h3>Enrollment Details</h3>
+                </div>
+              </header>
+              <div class="row">
+                <span>
+                  <label for="gradeLevel">Grade level</label>
+                  <div>
+                    <input
+                      type="text"
+                      name="gradeLevel"
+                      id="gradeLevel"
+                      value=""
+                      disabled
+                    />
+                  </div>
+                </span>
+                <span>
+                  <label for="admissionType">Admission type</label>
+                  <div>
+                    <input
+                      type="text"
+                      name="admissionType"
+                      id="admissionType"
+                      value=""
+                      disabled
+                    />
+                  </div>
+                </span>
+                <span>
+                  <label for="strand">Strand</label>
+                  <div>
+                    <input
+                      type="text"
+                      name="strand"
+                      id="strand"
+                      value=""
+                      disabled
+                    />
+                  </div>
+                </span>
+              </div>
+              <div class="row">
+                <span>
+                  <label for="schoolYear">School year</label>
+                  <div>
+                    <input
+                      type="text"
+                      name="schoolYear"
+                      id="schoolYear"
+                      value=""
+                      disabled
+                    />
+                  </div>
+                </span>
+                <span>
+                  <label for="yearLevel">Year level</label>
+                  <div>
+                    <input
+                      type="text"
+                      name="yearLevel"
+                      id="yearLevel"
+                      value=""
+                      disabled
+                    />
+                  </div>
+                </span>
+                <span>
+                  <label for="semester">Semester</label>
+                  <div>
+                    <input
+                      type="text"
+                      name="semester"
+                      id="semester"
+                      value=""
+                      disabled
+                    />
+                  </div>
+                </span>
+              </div>
               <header>
                 <div class="title">
                   <h3>Student Information</h3>
@@ -72,7 +153,7 @@
                       name="lastName"
                       id="lastName"
                       value=""
-                      required
+                      disabled
                     />
                     <small>Last name</small>
                   </div>
@@ -82,7 +163,7 @@
                       name="firstName"
                       id="firstName"
                       value=""
-                      required
+                      disabled
                     />
                     <small>First name</small>
                   </div>
@@ -92,7 +173,7 @@
                       name="middleName"
                       id="middleName"
                       value=""
-                      required
+                      disabled
                     />
                     <small>Middle name</small>
                   </div>
@@ -102,6 +183,7 @@
                       name="suffixName"
                       id="suffixName"
                       value=""
+                      disabled
                     />
                     <small>Suffix name</small>
                   </div>
@@ -111,7 +193,7 @@
                 <span>
                   <label for="status">Status</label>
                   <div>
-                    <select name="status" id="status" required>
+                    <select name="status" id="status" disabled>
                       <option value="Single">Single</option>
                       <option value="Married">Married</option>
                       <option value="Divorced">Divorced</option>
@@ -127,14 +209,14 @@
                       name="citizenship"
                       id="citizenship"
                       value=""
-                      required
+                      disabled
                     />
                   </div>
                 </span>
                 <span>
                   <label for="gender">Gender</label>
                   <div>
-                    <select name="gender" id="gender" required>
+                    <select name="gender" id="gender" disabled>
                       <option value="Male">Male</option>
                       <option value="Female">Female</option>
                     </select>
@@ -150,7 +232,7 @@
                       name="birthdate"
                       id="birthdate"
                       value=""
-                      required
+                      disabled
                     />
                   </div>
                 </span>
@@ -162,7 +244,7 @@
                       name="religion"
                       id="religion"
                       value=""
-                      required
+                      disabled
                     />
                   </div>
                 </span>
@@ -174,7 +256,7 @@
                       name="birthplace"
                       id="birthplace"
                       value=""
-                      required
+                      disabled
                     />
                   </div>
                 </span>
@@ -188,7 +270,7 @@
                       name="address"
                       id="address"
                       value=""
-                      required
+                      disabled
                     />
                   </div>
                 </span>
@@ -202,7 +284,7 @@
                       name="phone"
                       id="phone"
                       value=""
-                      required
+                      disabled
                     />
                   </div>
                 </span>
@@ -214,7 +296,7 @@
                       name="email"
                       id="email"
                       value=""
-                      required
+                      disabled
                     />
                   </div>
                 </span>
@@ -228,7 +310,7 @@
                 <span>
                   <label for="schoolType">School type</label>
                   <div>
-                    <select name="schoolType" id="schoolType" required>
+                    <select name="schoolType" id="schoolType" disabled>
                       <option value="SHS">SHS</option>
                       <option value="College">College</option>
                     </select>
@@ -242,7 +324,7 @@
                       name="schoolName"
                       id="schoolName"
                       value=""
-                      required
+                      disabled
                     />
                   </div>
                 </span>
@@ -256,7 +338,7 @@
                       name="gradDate"
                       id="gradDate"
                       value=""
-                      required
+                      disabled
                     />
                   </div>
                 </span>
@@ -268,8 +350,7 @@
                       name="schoolYear"
                       id="schoolYear"
                       value=""
-                      placeholder="Ex. 2022-2023"
-                      required
+                      disabled
                     />
                   </div>
                 </span>
@@ -281,8 +362,7 @@
                       name="term"
                       id="term"
                       value=""
-                      placeholder="Ex. First Term"
-                      required
+                      disabled
                     />
                   </div>
                 </span>
@@ -296,7 +376,7 @@
                       name="schoolAddress"
                       id="schoolAddress"
                       value=""
-                      required
+                      disabled
                     />
                   </div>
                 </span>
@@ -315,19 +395,43 @@
                 <span>
                   <label for="name">Name</label>
                   <div>
-                    <input type="text" name="fatherLN" id="fatherLN" value="" />
+                    <input
+                      type="text"
+                      name="fatherLN"
+                      id="fatherLN"
+                      value=""
+                      disabled
+                    />
                     <small>Last name</small>
                   </div>
                   <div>
-                    <input type="text" name="fatherFN" id="fatherFN" value="" />
+                    <input
+                      type="text"
+                      name="fatherFN"
+                      id="fatherFN"
+                      value=""
+                      disabled
+                    />
                     <small>First name</small>
                   </div>
                   <div>
-                    <input type="text" name="fatherMN" id="fatherMN" value="" />
+                    <input
+                      type="text"
+                      name="fatherMN"
+                      id="fatherMN"
+                      value=""
+                      disabled
+                    />
                     <small>Middle name</small>
                   </div>
                   <div>
-                    <input type="text" name="fatherSN" id="fatherSN" value="" />
+                    <input
+                      type="text"
+                      name="fatherSN"
+                      id="fatherSN"
+                      value=""
+                      disabled
+                    />
                     <small>Suffix name</small>
                   </div>
                 </span>
@@ -341,6 +445,7 @@
                       name="fatherPhone"
                       id="fatherPhone"
                       value=""
+                      disabled
                     />
                   </div>
                 </span>
@@ -352,6 +457,7 @@
                       name="fatherEmail"
                       id="fatherEmail"
                       value=""
+                      disabled
                     />
                   </div>
                 </span>
@@ -363,6 +469,7 @@
                       name="fatherOccup"
                       id="fatherOccup"
                       value=""
+                      disabled
                     />
                   </div>
                 </span>
@@ -376,19 +483,43 @@
                 <span>
                   <label for="name">Name</label>
                   <div>
-                    <input type="text" name="motherLN" id="motherLN" value="" />
+                    <input
+                      type="text"
+                      name="motherLN"
+                      id="motherLN"
+                      value=""
+                      disabled
+                    />
                     <small>Last name</small>
                   </div>
                   <div>
-                    <input type="text" name="motherFN" id="motherFN" value="" />
+                    <input
+                      type="text"
+                      name="motherFN"
+                      id="motherFN"
+                      value=""
+                      disabled
+                    />
                     <small>First name</small>
                   </div>
                   <div>
-                    <input type="text" name="motherMN" id="motherMN" value="" />
+                    <input
+                      type="text"
+                      name="motherMN"
+                      id="motherMN"
+                      value=""
+                      disabled
+                    />
                     <small>Middle name</small>
                   </div>
                   <div>
-                    <input type="text" name="motherSN" id="motherSN" value="" />
+                    <input
+                      type="text"
+                      name="motherSN"
+                      id="motherSN"
+                      value=""
+                      disabled
+                    />
                     <small>Suffix name</small>
                   </div>
                 </span>
@@ -402,6 +533,7 @@
                       name="motherPhone"
                       id="motherPhone"
                       value=""
+                      disabled
                     />
                   </div>
                 </span>
@@ -413,6 +545,7 @@
                       name="motherEmail"
                       id="motherEmail"
                       value=""
+                      disabled
                     />
                   </div>
                 </span>
@@ -424,6 +557,7 @@
                       name="motherOccup"
                       id="motherOccup"
                       value=""
+                      disabled
                     />
                   </div>
                 </span>
@@ -442,6 +576,7 @@
                       name="guardianLN"
                       id="guardianLN"
                       value=""
+                      disabled
                     />
                     <small>Last name</small>
                   </div>
@@ -451,6 +586,7 @@
                       name="guardianFN"
                       id="guardianFN"
                       value=""
+                      disabled
                     />
                     <small>First name</small>
                   </div>
@@ -460,6 +596,7 @@
                       name="guardianMN"
                       id="guardianMN"
                       value=""
+                      disabled
                     />
                     <small>Middle name</small>
                   </div>
@@ -469,6 +606,7 @@
                       name="guardianSN"
                       id="guardianSN"
                       value=""
+                      disabled
                     />
                     <small>Suffix name</small>
                   </div>
@@ -483,6 +621,7 @@
                       name="guardianPhone"
                       id="guardianPhone"
                       value=""
+                      disabled
                     />
                   </div>
                 </span>
@@ -494,6 +633,7 @@
                       name="guardianEmail"
                       id="guardianEmail"
                       value=""
+                      disabled
                     />
                   </div>
                 </span>
@@ -505,6 +645,7 @@
                       name="guardianOccup"
                       id="guardianOccup"
                       value=""
+                      disabled
                     />
                   </div>
                 </span>
@@ -516,6 +657,7 @@
                       name="guardianRelation"
                       id="guardianRelation"
                       value=""
+                      disabled
                     />
                   </div>
                 </span>
@@ -525,15 +667,15 @@
           <div class="action">
             <button
               class="default large"
-              onclick="window.location.href = 'New-student-form-1.html';"
+              onclick="window.location.href = 'New-student-form-2.html';"
             >
               Return
             </button>
             <button
-              class="default large"
-              onclick="window.location.href = 'New-student-form-3.html';"
+              class="clean large"
+              onclick="window.location.href = 'New-student-form-4.html';"
             >
-              Proceed
+              Confirm
             </button>
           </div>
         </div>
