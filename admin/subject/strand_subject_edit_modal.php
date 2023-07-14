@@ -15,17 +15,33 @@
                     <div id="errorMessageUpdate" class="alert alert-warning d-none"></div>
 
                     <?php echo $selectSubjectEdit; ?>
-                    <div class='form-group mb-2'>
+
+                     <div class='form-group mb-2'>
                         <label for="" class="mb-2">Grade Level</label>
                         <select class='form-control' id='edit_course_level' name='edit_course_level'>
-                            <option value='11'>Grade 11</option>
-                            <option value='12'>Grade 12</option>
-                            <option value='1'>1st Year</option>
-                            <option value='2'>2nd Year</option>
-                            <option value='3'>3rd Year</option>
-                            <option value='4'>4th Year</option>
+
+                            <?php
+                                if($department_name == "Senior High School"){
+                                    ?>
+                                        <option value='11'>Grade 11</option>
+                                        <option value='12'>Grade 12</option>
+                                    <?php
+                                }
+                                else if($department_name == "Tertiary"){
+                                    ?>
+                                        <option value='1'>1st Year</option>
+                                        <option value='2'>2nd Year</option>
+                                        <option value='3'>3rd Year</option>
+                                        <option value='4'>4th Year</option>
+                                    <?php
+                                }
+                            ?>
+                            
+
                         </select>
                     </div>
+
+
 
                     <div class='form-group mb-2'>
                         <label for="" class="mb-2">Semester</label>

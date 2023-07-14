@@ -124,7 +124,7 @@
                     </a>
 
                     <div style="display: flex;
-    justify-content: center;" class="text-center mb-3">
+                            justify-content: center;" class="text-center mb-3">
                         <form method="GET" class="form-inline" action="<?php echo $_SERVER['REQUEST_URI']; ?>">
                             <!-- Hidden input field to preserve the 'id' parameter -->
                             <input type="hidden" name="id" value="<?php echo $_GET['id']; ?>">
@@ -204,7 +204,7 @@
                                     <tr>
                                         <th>Code</th>
                                         <th>Subject</th>
-                                        <th>Grade Level</th>
+                                        <th>Level</th>
                                         <th>Semester</th>
                                         <th>Pre-Requisite</th>
                                         <th>Type</th>
@@ -305,12 +305,13 @@
                                                     ";
                                                 }
 
+                                                $type_level = $department_type_section == "Tertiary" ? "Year" : ($department_type_section == "Senior High School" ? "Grade" : "");
                                                 
                                                 echo "
                                                     <tr class='text-center'>
                                                         <td>$t2_subject_code</td>
                                                         <td>$subject_title</td>
-                                                        <td>Grade $course_level</td>
+                                                        <td>$type_level $course_level</td>
                                                         <td>$semester</td>
                                                         <td>$pre_requisite</td>
                                                         <td>$subject_type</td>
@@ -325,10 +326,174 @@
                             </table>
 
                         </main>
+
+                        <hr>
+                        <hr>
+                        <main>
+
+                            <table id="department_table" class="ws-table-all cw3-striped cw3-bordered" style="margin: 0">
+                                <thead>
+                                    <tr>
+                                        <th>Subject</th>
+                                        <th>Unit</th>
+                                        <th>Code</th>
+                                        <th>Days</th>
+                                        <th>Time</th>
+                                        <th>Room</th>
+                                        <th>Instructor</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php 
+
+                                        
+
+                                        $sql = $con->prepare("SELECT 
+                                        
+                                            t1.*, t2.program_section,
+                                            -- t3.subject_code AS student_subject_code,
+
+                                            t4.subject_code AS schedule_code,
+
+                                            t4.time_to,
+                                            t4.time_from,
+                                            t4.schedule_time,
+                                            t4.schedule_day,
+                                            t4.room
+
+                                            FROM subject_program as t1
+                                            
+                                            INNER JOIN course as t2 ON t2.program_id = t1.program_id
+
+                                            -- LEFT JOIN student_subject as t3 ON t3.course_id = t2.course_id
+                                            -- AND t3.subject_program_id = t1.subject_program_id
+
+
+
+                                            LEFT JOIN subject_schedule as t4 ON t4.course_id = t2.course_id
+                                            AND t4.subject_program_id = t1.subject_program_id
+
+                                            WHERE t2.course_id=:course_id
+                                            AND t1.semester=:semester
+                                            AND t1.program_id=:program_id
+                                            AND t1.course_level=:course_level
+
+                                            ORDER BY t1.course_level DESC,
+                                            t1.semester
+                                            
+                                        ");
+                                        
+                                        // $sql->bindValue(":course_id", $course_id);
+                                        $sql->bindParam(":program_id", $section_program_id);
+                                        $sql->bindParam(":course_level", $section_level);
+                                        $sql->bindParam(":semester", $selectedSemester);
+                                        $sql->bindParam(":course_id", $course_id);
+                                        // $sql->bindValue(":semester", $current_school_year_period);
+                                        
+                                        $sql->execute();
+
+                                        if($sql->rowCount() > 0){
+
+                                            $_SESSION['session_course_id'] = $course_id;
+
+                                            while($row = $sql->fetch(PDO::FETCH_ASSOC)){
+                                                
+                                                $subject_program_id = $row['subject_program_id'];
+                                                $subject_code = $row['subject_code'];
+                                                $subject_title = $row['subject_title'];
+                                                $course_level = $row['course_level'];
+                                                $semester = $row['semester'];
+                                                $unit = $row['unit'];
+                                                // $pre_requisite = $row['pre_requisite'];
+                                                $pre_requisite = $row['pre_req_subject_title'];
+                                                $subject_type = $row['subject_type'];
+                                                $subject_program_id = $row['subject_program_id'];
+
+
+                                               
+
+
+                                                $time_to = $row['time_to'];
+                                                $time_from = $row['time_from'];
+                                                $schedule_day = $row['schedule_day'];
+                                                $schedule_time = $row['schedule_time'];
+                                                $room = $row['room'];
+
+                                                $haveSchedule = "";
+
+                                                // echo $schedule_code;
+                                                // echo "<br>";
+                                                // echo $student_subject_code;
+                                                
+                                                $program_section = $row['program_section'];
+
+                                    
+
+                                                $t1_subject_code = $program_section . "-" . $subject_code;
+
+                                                $statuss = "N/A";
+
+                                                $type_level = $department_type_section == "Tertiary" ? "Year" : ($department_type_section == "Senior High School" ? "Grade" : "");
+
+                                                $add_schedule_url=  "";
+
+                                                $add_schedule_url = "../schedule/subject_creation.php?id=$subject_program_id";
+
+
+                                                $haveSchedule = "
+                                                    <a href='$add_schedule_url'>
+                                                        <button class='btn  btn-primary'>
+                                                            <i class='bi bi-calendar'></i>
+                                                        </button>
+                                                    </a>
+                                                "; 
+
+
+                                                // $student_subject_code = $row['student_subject_code'];
+
+                                                $schedule_code = $row['schedule_code'];
+
+                                                if($schedule_code !== NULL || $schedule_code !== ""){
+
+                                                    $edit_schedule_url = "../schedule/subject_modification.php?c=$schedule_code";
+
+                                                    $haveSchedule = "
+                                                            <button class='btn  btn-primary'
+                                                                onclick=\"window.location.href = '$edit_schedule_url';\">
+                                                                <i class='bi bi-pencil'></i>
+                                                            </button>
+                                                    "; 
+                                                }else{
+                                                   
+                                                    $haveSchedule = "
+                                                        <button class='btn  btn-primary'
+                                                            onclick=\"window.location.href = '$add_schedule_url';\">
+                                                                <i class='bi bi-calendar'></i>
+                                                        </button>
+                                                    "; 
+                                                }
+
+                                                echo "
+                                                    <tr class='text-center'>
+                                                        <td>$subject_title</td>
+                                                        <td>$unit</td>
+                                                        <td>$t1_subject_code</td>
+                                                        <td>$schedule_day</td>
+                                                        <td>$schedule_time</td>
+                                                        <td>$room</td>
+                                                        <td>$haveSchedule</td>
+                                                    </tr>
+                                                ";
+
+                                            }
+                                        }
+                                    ?>
+                                </tbody>
+                            </table>
+                        </main>
                     </div>
                 </main>
             </div>
-            
         <?php
 
     }

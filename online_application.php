@@ -82,7 +82,7 @@
                     New student
                 </button>
          
-          <button type="button" class="type-btn">Old student</button>
+          <button type="button" onclick="oldStudentURL()" class="type-btn">Old student</button>
         </div>
       </div>
 
@@ -169,6 +169,7 @@
 </html>
 
 <script>
+
     function newStudentURL(){
 
         var root = `<?php
@@ -177,4 +178,14 @@
 
         window.location.href = `${root}/pre_enrollment_register.php`
     }
+
+    function oldStudentURL(){
+
+        var root = `<?php
+                echo domainName;
+            ?>`;
+
+        window.location.href = `${root}/old_enrollment_verification.php`
+    }
+    
 </script>

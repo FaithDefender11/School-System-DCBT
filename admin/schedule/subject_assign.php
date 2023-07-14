@@ -128,10 +128,6 @@
                         <form method='POST'>
                             <div class="modal-body">
 
-                                
-
-                                
-
                                 <div class="mb-3">
                                     <label for="">Room number</label>
                                     <input value='55' type="text" placeholder="(Room: 501)" name="room" id="room" class="form-control" />

@@ -26,7 +26,11 @@ class User {
 
     public static function IsStudentEnrolledAuthenticated(){
         return isset($_SESSION['studentLoggedIn'])
-            && isset($_SESSION['status']) && $_SESSION['status'] == "enrolled";;
+            && isset($_SESSION['status']) 
+            && $_SESSION['status'] == "enrolled"
+            
+            && isset($_SESSION['applicaton_status']) 
+            && $_SESSION['applicaton_status'] == "ongoing";
     }
 
     public static function IsStudentPendingAuthenticated(){

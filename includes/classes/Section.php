@@ -31,8 +31,28 @@
         public function GetSectionAdviseryId() {
             return isset($this->sqlData['adviser_teacher_id']) ? $this->sqlData["adviser_teacher_id"] : 0; 
         }
-        public function GetSectionGradeLevel() {
-            return isset($this->sqlData['course_level']) ? $this->sqlData["course_level"] : ""; 
+        public function GetSectionGradeLevel($course_id = null) {
+
+            $value = 0;
+
+            if($course_id == null){
+                return isset($this->sqlData['course_level']) ? $this->sqlData["course_level"] : ""; 
+            }
+
+            else{
+
+                $query = $this->con->prepare("SELECT course_level FROM course
+                    WHERE course_id=:course_id");
+
+                $query->bindParam(":course_id", $course_id);
+                $query->execute();
+
+                if($query->rowCount() > 0){
+                    $value = $query->fetchColumn();
+                }
+            }
+
+            return $value;
         }
         public function GetSectionSY() {
             return isset($this->sqlData['school_year_term']) ? $this->sqlData["school_year_term"] : ""; 
@@ -67,7 +87,17 @@
             return "N/A";
         }
 
+        public function CheckSectionIsFull($course_id){
 
+            $sql = $this->con->prepare("SELECT is_full FROM course
+                WHERE course_id=:course_id
+                AND is_full='yes'");
+                
+            $sql->bindParam(":course_id", $course_id);
+            $sql->execute();
+
+            return $sql->rowCount() > 0;
+        }
         public function GetCreatedStrandSectionPerTerm( 
                 $program_id, $school_year_term, $course_level){
 
@@ -105,13 +135,45 @@
                     AND t1.enrollment_status=:enrollment_status
             ");
 
-            $sql->bindValue(":course_id", $course_id);
-            $sql->bindValue(":school_year_id", $current_school_year_id);
+            $sql->bindParam(":course_id", $course_id);
+            $sql->bindParam(":school_year_id", $current_school_year_id);
             $sql->bindValue(":enrollment_status", "enrolled");
+            
             $sql->execute();
+
             return $sql->rowCount();
 
         }
+
+        public function GetStudentEnrolledInSectionSubject($course_id,
+            $subject_program_id,  $current_school_year_id){
+
+            $sql = $this->con->prepare("SELECT 
+                            
+                    t3.program_id, t2.student_id,
+                    t2.student_status,t2.firstname, t2.lastname 
+                    
+                    FROM enrollment as t1
+            
+                    LEFT JOIN student as t2 ON t2.student_id=t1.student_id
+                    LEFT JOIN course as t3 ON t3.course_id=t1.course_id
+
+
+                    WHERE t1.course_id=:course_id
+                    AND t1.school_year_id=:school_year_id
+                    AND t1.enrollment_status=:enrollment_status
+            ");
+
+            $sql->bindParam(":course_id", $course_id);
+            $sql->bindParam(":school_year_id", $current_school_year_id);
+            $sql->bindValue(":enrollment_status", "enrolled");
+            
+            $sql->execute();
+
+            return $sql->rowCount();
+
+        }
+
         public function CreateSectionLevelContent($program_id, $term,
             $course_level, $enrollment){
 
@@ -255,7 +317,7 @@
         }
 
         public function CreateCourseLevelDropdownDepartmentBased(
-                $department_name = null, $course_level = null){
+            $department_name = null, $course_level = null){
 
             $html = "";
             if($department_name == "Senior High School"){
@@ -276,7 +338,8 @@
 
                 return $html;
 
-            }else if($department_name == "Tertiary"){
+            }
+            else if($department_name == "Tertiary"){
                 $html = "<div class='form-group mb-2'>
                     <label class='mb-2'>Course Level</label>
 
@@ -296,6 +359,126 @@
  
             return $html;
         }
+
+        public function CreateSectionDropdownProgramBased(
+            $program_id, $course_id, $text,
+            $current_school_year_id, $section = null){
+
+            $html = "";
+
+             $query = $this->con->prepare("SELECT * FROM course
+                WHERE program_id=:program_id
+                AND course_id != :course_id
+            ");
+
+            $query->bindParam(":program_id", $program_id);
+            $query->bindParam(":course_id", $course_id);
+            $query->execute();
+            
+            if($query->rowCount() > 0){
+
+                $html = "<div class='form-group mb-2'>
+                    <label class='mb-2'>$text</label>
+
+                    <select id='course_id' class='form-control' name='course_id'>";
+
+                $html .= "<option value='' disabled selected>Select-Section</option>";
+
+                while($row = $query->fetch(PDO::FETCH_ASSOC)){
+
+                    $updatedTotalStudent =  $section->GetTotalNumberOfStudentInSection($row['course_id'],
+                        $current_school_year_id);
+
+                    $capacity = $row['capacity'];
+                    $selected = "";
+
+                    if($row['course_id'] == $course_id){
+                        $selected = "selected";
+                    }
+
+                    $html .= "
+                        <option value='".$row['course_id']."' $selected>".$row['program_section']." Status: ( $updatedTotalStudent / $capacity )</option>
+                    ";
+                }
+
+                $html .= "</select>
+                        </div>";
+                return $html;
+            }
+ 
+            return $html;
+        }
+
+        public function CreateSectionSubjectDropdownProgramBased(
+            $program_id, $course_id, $text,
+            $current_school_year_id, $section = null,
+            $current_school_year_period, $student_subject_program_id,){
+
+            $html = "";
+
+            $query = $this->con->prepare("SELECT 
+                t1.*, t2.* 
+                
+                FROM course AS t1
+
+                INNER JOIN subject_program AS t2 ON t2.program_id = t1.program_id
+                AND t1.course_level = t2.course_level
+
+                WHERE t1.program_id=:program_id
+                AND t1.course_id != :course_id
+                AND t2.semester = :semester
+                AND t2.subject_program_id = :subject_program_id
+
+            ");
+
+            $query->bindParam(":program_id", $program_id);
+            $query->bindParam(":course_id", $course_id);
+            $query->bindParam(":semester", $current_school_year_period);
+            $query->bindParam(":subject_program_id", $student_subject_program_id);
+            $query->execute();
+            
+            if($query->rowCount() > 0){
+
+                $html = "<div class='form-group mb-2'>
+                    <label class='mb-2'>$text</label>
+
+                    <select id='course_id' class='form-control' name='course_id'>";
+
+                $html .= "<option value='' disabled selected>Select Subject-Code</option>";
+
+                while($row = $query->fetch(PDO::FETCH_ASSOC)){
+
+                    // $updatedTotalStudent =  $section->GetTotalNumberOfStudentInSection($row['course_id'],
+                    //     $current_school_year_id);
+
+                    $enrolled_student_count =  0;
+
+                    $capacity = $row['capacity'];
+                    $program_section = $row['program_section'];
+                    $subject_code = $row['subject_code'];
+
+                    $selected = "";
+
+                    if($row['course_id'] == $course_id){
+                        $selected = "selected";
+                    }
+
+                    $section_subject_code = $section->CreateSectionSubjectCode($program_section,
+                        $subject_code);
+
+
+                    $html .= "<option value='".$row['course_id']."' $selected>".$section_subject_code." &nbsp &nbsp &nbsp &nbsp(Enrolled Student: ". $enrolled_student_count . " / " . $capacity . ")</option>";
+
+                }
+
+                $html .= "</select>
+                        </div>";
+                return $html;
+            }
+ 
+            return $html;
+        }
+
 
         public function CheckSetionExistsWithinCurrentSY($program_section, $school_year_term){
 
@@ -355,6 +538,128 @@
                 return $sql->fetchColumn();
             
             return "N/A";
+        }
+
+        public function GetStudentSubjectsByCourseId($course_id,
+            $current_school_year_term){
+
+            $sql = $this->con->prepare("SELECT t2.* FROM course as t1
+
+                INNER JOIN subject as t2 ON t2.course_id = t1.course_id
+
+                WHERE t2.course_id = :course_id
+                AND t2.semester = :semester
+                ");
+                
+            $sql->bindParam(":course_id", $course_id);
+            $sql->bindParam(":semester", $current_school_year_term);
+            $sql->execute();
+
+            if($sql->rowCount() > 0)
+                return $sql->fetchAll(PDO::FETCH_ASSOC);
+            
+            return [];
+        }
+
+        public function GetStudentSubjectsByCourseIdCurriculumBased($course_id,
+            $period, $student_course_level){
+
+            $sql = $this->con->prepare("SELECT 
+
+                t2.*, t1.program_section, t1.course_id
+                
+                FROM course as t1
+
+                INNER JOIN subject_program as t2 ON t2.program_id = t1.program_id
+
+                WHERE t2.semester = :semester
+                AND t1.course_id = :course_id
+                AND t2.course_level = :course_level
+                ");
+                
+            $sql->bindParam(":semester", $period);
+            $sql->bindParam(":course_id", $course_id);
+            $sql->bindParam(":course_level", $student_course_level);
+            $sql->execute();
+
+            if($sql->rowCount() > 0)
+                return $sql->fetchAll(PDO::FETCH_ASSOC);
+            
+            return [];
+        }
+
+
+        public function SetSectionIsFull($course_id){
+
+            $is_full = "yes";
+            
+            $update = $this->con->prepare("UPDATE course
+                SET is_full=:is_full
+                WHERE course_id=:course_id");
+            
+            $update->bindValue(":is_full", $is_full);
+            $update->bindValue(":course_id", $course_id);
+
+            return $update->execute();
+
+        }
+
+        public function AutoCreateAnotherSection($program_section){
+
+            // STEM11-A -> STEM11-B
+            // STEM11-C -> STEM11-D
+
+            // $program_section = $row['program_section'];
+            
+            if($program_section != ""){
+                $last_letter = substr($program_section, -1);
+
+                $next_letter = chr(ord($last_letter) + 1);
+
+                // echo $next_letter;
+                // echo "<br>";
+                $prefix = substr($program_section, 0, -1);
+                // echo $prefix;
+                // echo $prefix . $next_letter;
+                return $prefix . $next_letter;
+            }
+        }
+
+        public function CreateNewSection($new_section_name, 
+            $program_id, $course_level, $current_school_year_term){
+            
+            // $sql = $this->con->prepare("INSERT INTO course
+            //     (program_section, program_id, creationDate)
+            //     WHERE program_id=:program_id");
+
+            $active = "yes";
+            $is_full = "no";
+
+
+            $defaultGrade11StemStrand = $this->con->prepare("INSERT INTO course
+
+                (program_section, program_id, course_level, capacity,
+                    school_year_term, active, is_full)
+
+                VALUES(:program_section, :program_id, :course_level, :capacity,
+                    :school_year_term, :active, :is_full)");
+
+            $defaultGrade11StemStrand->bindValue(":program_section", $new_section_name);
+
+            $defaultGrade11StemStrand->bindValue(":program_id", $program_id, PDO::PARAM_INT);
+            $defaultGrade11StemStrand->bindValue(":course_level", $course_level, PDO::PARAM_INT);
+            $defaultGrade11StemStrand->bindValue(":capacity", 2);
+            $defaultGrade11StemStrand->bindValue(":school_year_term", $current_school_year_term);
+            $defaultGrade11StemStrand->bindValue(":active", $active);
+            $defaultGrade11StemStrand->bindValue(":is_full", $is_full);
+
+            return $defaultGrade11StemStrand->execute();
+
+        }
+
+        public function CreateSectionSubjectCode($section_name, $subject_code){
+
+            return $section_name . "-" . $subject_code;
         }
 
     }

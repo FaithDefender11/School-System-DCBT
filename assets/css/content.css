@@ -83,6 +83,10 @@
   flex-wrap: wrap;
 }
 
+.content-header .card{
+  background-color: transparent;
+}
+
 .cards > .card > sub,
 .cards > .card > sup {
   display: block;

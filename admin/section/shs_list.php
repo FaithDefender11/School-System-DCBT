@@ -47,6 +47,11 @@
             unset($_SESSION['section_term']);
         }
         
+        # Set in section/show.php
+        if(isset($_SESSION['session_course_id'])){
+           $session_course_id = $_SESSION['session_course_id'];
+        }
+        
         $_SESSION['section_term'] = $term;
     }
 ?>

@@ -70,6 +70,7 @@ class Helper {
         $buttonTop = "
             <div id='btn' style='left: 0px'></div>
         ";
+
         if($isTertiary == true){
             $buttonTop = "
                 <div id='btn' style='left: 129px'></div>
@@ -86,6 +87,7 @@ class Helper {
         }
 
         $button_default_style = " style='border:none; outline:0;'";
+        
         return "
             <nav>
                 <h3>Department</h3>
@@ -127,6 +129,181 @@ class Helper {
                         $second_tab_name
                     </button>
                 </a>
+            </div>
+        ";
+    }
+
+    public static function RevealStudentTypePending($type){
+
+        $output = "";
+
+        if($type == 'SHS' || $type == 'Senior High School'){
+            $output = "Senior High School";
+        }
+        else if($type == 'Tertiary'){
+            $output = "Tertiary";
+        }
+
+        return "
+            <span class='text-muted' style='font-size: 15px;'>
+               <em>$output</em> 
+            </span>
+        ";
+    }
+
+    public static function RevealStudentTypeStudent($is_tertiary){
+
+        $output = "";
+
+        if($is_tertiary == 0){
+            $output = "Senior High School";
+        }
+        else if($is_tertiary == 1){
+            $output = "Tertiary";
+        }
+
+        return "
+            <span class='text-muted' style='font-size: 15px;'>
+               <em>$output</em> 
+            </span>
+        ";
+    }
+
+    public static function CreateStudentTabs($student_unique_id,
+        $student_level, $type, $section_acronym, $payment_status, $enrollment_date){
+
+        $formattedDate = "";
+
+        $date = new DateTime($enrollment_date);
+        $formattedDate = $date->format('m/d/Y');
+        // echo $formattedDate;
+
+        $type == 'Tertiary' ? 'Course' : ($type == 'Senior High School' ? 'Strand' : '');
+
+        return "
+            <div class='cards'>
+                <div class='card'>
+                    <p class='text-center mb-0'>Student No.</p>
+                    <p class='text-center'>$student_unique_id</p>
+                </div>
+                <div class='card'>
+                    <p class='text-center mb-0'>Level</p>
+                    <p class='text-center'>$student_level</p>
+                </div>
+                <div class='card'>
+                    <p class='text-center mb-0'>$type</p>
+                    <p class='text-center'>$section_acronym</p>
+                </div>
+                <div class='card'>
+                    <p class='text-center mb-0'>Status</p>
+                    <p class='text-center'>$payment_status</p>
+                </div>
+                <div class='card'>
+                    <p class='text-center mb-0'>Added on</p>
+                    <p class='text-center'>
+                        $formattedDate
+                    </p>
+                </div>
+            </div>
+        ";
+    }
+
+
+    public static function ProcessPendingCards($enrollment_form_id,
+        $date_creation, $admission_status){
+
+
+        $date = new DateTime($date_creation);
+        $formattedDate = $date->format('m/d/Y H:i');
+
+        $admission_status = $admission_status == "Standard" ? "New" : ($admission_status == "Transferee" ? "Transferee" : "");
+
+        return "
+            <div class='cards'>
+                <div class='card'>
+                    <p class='text-center mb-0'>Form ID</p>
+                    <p class='text-center'>$enrollment_form_id</p>
+                </div>
+                <div class='card'>
+                    <p class='text-center mb-0'>Admission type</p>
+                    <p class='text-center'>$admission_status</p>
+                </div>
+                <div class='card'>
+                    <p class='text-center mb-0'>Student no.</p>
+                    <p class='text-center'>N/A</p>
+                </div>
+                <div class='card'>
+                    <p class='text-center mb-0'>Status</p>
+                    <p class='text-center'>Evaluation</p>
+                </div>
+                <div class='card'>
+                    <p class='text-center mb-0'>Submitted on</p>
+                    <p class='text-center'>
+                        $formattedDate
+                    </p>
+                </div>
+            </div>
+        ";
+    }
+
+    public static function ProcessStudentCards($enrollment_form_id, $student_unique_id,
+        $date_creation, $new_enrollee,
+        $enrollment_is_new_enrollee, $enrollment_is_transferee){
+
+
+        $date = new DateTime($date_creation);
+        $formattedDate = $date->format('m/d/Y');
+
+        // $admission_status = $new_enrollee == 1 ? "New" : ($new_enrollee == 0 ? "Old" : "");
+
+        $updated_type = "";
+
+        if($new_enrollee == 1 
+            && $enrollment_is_new_enrollee == 1 
+            && $enrollment_is_transferee == 1){
+
+            $updated_type = "New Transferee";
+
+        }
+        else if($new_enrollee == 1 
+            && $enrollment_is_new_enrollee == 1 
+            && $enrollment_is_transferee == 0){
+
+            $updated_type = "New";
+
+        }
+        else if($new_enrollee == 0 
+            && $enrollment_is_new_enrollee == 0 
+            && $enrollment_is_transferee == 0){
+
+            $updated_type = "Old";
+
+        }
+
+        return "
+            <div class='cards'>
+                <div class='card'>
+                    <p class='text-center mb-0'>Form ID</p>
+                    <p class='text-center'>$enrollment_form_id</p>
+                </div>
+                <div class='card'>
+                    <p class='text-center mb-0'>Admission type</p>
+                    <p class='text-center'>$updated_type</p>
+                </div>
+                <div class='card'>
+                    <p class='text-center mb-0'>Student no.</p>
+                    <p class='text-center'>$student_unique_id</p>
+                </div>
+                <div class='card'>
+                    <p class='text-center mb-0'>Status</p>
+                    <p class='text-center'>Evaluation</p>
+                </div>
+                <div class='card'>
+                    <p class='text-center mb-0'>Submitted on</p>
+                    <p class='text-center'>
+                        $formattedDate
+                    </p>
+                </div>
             </div>
         ";
     }

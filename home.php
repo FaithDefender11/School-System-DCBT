@@ -378,7 +378,6 @@
 
     <script>
       function enroll(){
-
         var root = `<?php
                 echo $baseURL;
             ?>`;

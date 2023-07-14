@@ -16,10 +16,10 @@
         $logout_url = 'http://localhost/school-system-dcbt/logout.php';
 
         $dashboard_url = $base_url .  "dashboard/index.php";
-        $admission_url = $base_url .  "admission/index.php";
+        $admission_url = $base_url .  "admission/evaluation.php";
         $students_url = $base_url .  "student/index.php";
         $section_url = $base_url .  "section/index.php";
-        $enrollment_url = $base_url .  "enrollment_history/index.php";
+        $enrollment_url = $base_url .  "enrollment/index.php";
 
         // $class = "navigationItem ";
         
@@ -35,8 +35,8 @@
         $sideBarNavigationItem .= Helper::createNavByIcon("Section", 
             "bi bi-book icon", $section_url, Constants::$navigationClass . Helper::GetActiveClass($page, "section"));
 
-        $sideBarNavigationItem .= Helper::createNavByIcon("Enrollment History", 
-            "bi bi-clock-history icon", $enrollment_url, Constants::$navigationClass . Helper::GetActiveClass($page, "enrollment_history"));
+        $sideBarNavigationItem .= Helper::createNavByIcon("Enrollment", 
+            "bi bi-clock-history icon", $enrollment_url, Constants::$navigationClass . Helper::GetActiveClass($page, "enrollment"));
 
         if(User::isRegistrarLoggedIn()) {
             // $sideBarNavigationItem .= Helper::createNavItem("Settings", "assets/images/icons/settings.png", "settings.php");

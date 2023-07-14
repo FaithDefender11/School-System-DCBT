@@ -18,6 +18,24 @@ class SubjectProgram{
         $this->sqlData = $query->fetch(PDO::FETCH_ASSOC);
     }
 
+    public function CheckIdExists($subject_program_id) {
+
+        $query = $this->con->prepare("SELECT * FROM subject_program
+                WHERE subject_program_id=:subject_program_id");
+
+        $query->bindParam(":subject_program_id", $subject_program_id);
+        $query->execute();
+
+        if($query->rowCount() == 0){
+            echo "
+                <div class='col-md-12'>
+                    <h4 class='text-center text-warning'>ID Doesnt Exists.</h4>
+                </div>
+            ";
+            exit();
+        }
+    }
+
     public function GetSubjectProgramRawCode() {
         return isset($this->sqlData['subject_code']) ? ucfirst($this->sqlData["subject_code"]) : ""; 
     }
@@ -87,6 +105,141 @@ class SubjectProgram{
             return true;
         }
         return false;
+    }
+
+
+    public function GetStudentCurriculumBasedOnSemesterSubject($program_id,
+        $student_id, $GRADE_ELEVEN, $SELECTED_SEMESTER){
+
+        // Enrollment student course_id
+        $subject_query = $this->con->prepare("SELECT 
+
+            t3.subject_code as t3_subject_code,
+            t3.subject_id, t3.course_id,
+        
+            t1.*,
+
+            t4.first,
+            t4.second,
+            t4.third,
+            t4.fourth,
+            t4.remarks as grade_remarks,
+
+
+            t5.time_from,
+            t5.time_to,
+            t5.schedule_day,
+            t5.schedule_time
+
+            FROM subject_program as t1
+
+            LEFT JOIN student_subject as t2 ON t2.subject_program_id = t1.subject_program_id
+            AND t2.student_id=:student_id
+            
+            LEFT JOIN subject as t3 ON t3.subject_id = t2.subject_id
+            LEFT JOIN student_subject_grade as t4 ON t4.student_subject_id = t2.student_subject_id
+            LEFT JOIN subject_schedule as t5 ON t5.subject_id = t2.subject_id
+
+            WHERE t1.semester=:semester
+            AND t1.program_id=:program_id
+            AND t1.course_level=:course_level
+
+            ");
+         
+
+        $subject_query->bindValue(":semester", $SELECTED_SEMESTER); 
+        $subject_query->bindValue(":program_id", $program_id); 
+        $subject_query->bindValue(":course_level", $GRADE_ELEVEN); 
+        $subject_query->bindValue(":student_id", $student_id); 
+        $subject_query->execute();
+
+        if($subject_query->rowCount() > 0){
+
+            $row_sub = $subject_query->fetchAll(PDO::FETCH_ASSOC);
+            // print_r($row_sub);
+            return $row_sub;
+        }
+        
+        return [];
+
+    }
+
+
+    public function GetStudentEnrolledSubject($program_id,
+        $student_id, $GRADE_ELEVEN, $SELECTED_SEMESTER){
+
+        // Enrollment student course_id
+        $subject_query = $this->con->prepare("SELECT 
+
+            -- t3.subject_code as t3_subject_code,
+            -- t3.subject_id, t3.course_id,
+        
+            t1.*,
+
+            t2.subject_code AS student_subject_code,
+            t2.student_subject_id, t2.enrollment_id, t2.is_transferee, 
+            t3.course_id, t3.program_section,
+            t4.student_subject_grade_id,
+            t4.student_subject_id AS graded_student_subject_id,
+
+
+            -- t4.first,
+            -- t4.second,
+            -- t4.third,
+            -- t4.fourth,
+            -- t4.remarks as grade_remarks,
+
+
+            t5.time_from,
+            t5.time_to,
+            t5.schedule_day,
+            t5.schedule_time,
+            t5.room,
+
+            t6.firstname,
+            t6.lastname
+
+            FROM subject_program as t1
+
+            LEFT JOIN student_subject as t2 ON t2.subject_program_id = t1.subject_program_id
+            AND t2.student_id=:student_id
+            
+            LEFT JOIN course as t3 ON t3.course_id = t2.course_id
+
+            LEFT JOIN student_subject_grade as t4 ON t4.student_subject_id = t2.student_subject_id
+
+            LEFT JOIN subject_schedule as t5 ON t5.subject_code = t2.subject_code
+            AND t5.course_id = t2.course_id
+
+            LEFT JOIN teacher as t6 ON t6.teacher_id = t5.teacher_id
+
+
+            -- LEFT JOIN subject as t3 ON t3.subject_id = t2.subject_id
+            -- LEFT JOIN student_subject_grade as t4 ON t4.student_subject_id = t2.student_subject_id
+            -- LEFT JOIN subject_schedule as t5 ON t5.subject_id = t2.subject_id
+
+            WHERE t1.semester=:semester
+            AND t1.program_id=:program_id
+            AND t1.course_level=:course_level
+
+            ");
+         
+
+        $subject_query->bindParam(":semester", $SELECTED_SEMESTER); 
+        $subject_query->bindParam(":program_id", $program_id); 
+        $subject_query->bindParam(":course_level", $GRADE_ELEVEN); 
+        $subject_query->bindParam(":student_id", $student_id); 
+        $subject_query->execute();
+
+        if($subject_query->rowCount() > 0){
+
+            $row_sub = $subject_query->fetchAll(PDO::FETCH_ASSOC);
+            // print_r($row_sub);
+            return $row_sub;
+        }
+        
+        return [];
+
     }
 
 }

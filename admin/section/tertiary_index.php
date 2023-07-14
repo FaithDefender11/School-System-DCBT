@@ -26,10 +26,13 @@
     if(isset($_SESSION['department_type_section'])){
         unset($_SESSION['department_type_section']);
     }
-
+    # Set in section/show.php
+    if(isset($_SESSION['session_course_id'])){
+        $session_course_id = $_SESSION['session_course_id'];
+    }
     $_SESSION['department_type_section'] = "Tertiary";
 
-    echo $_SESSION['department_type_section'];
+    // echo $_SESSION['department_type_section'];
 ?>
 
 

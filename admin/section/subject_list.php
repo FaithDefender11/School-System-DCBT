@@ -46,7 +46,6 @@ if (isset($_GET['id'])) {
     }else if($department_type_section === "Tertiary"){
         $back_url = "tertiary_list.php?id=$section_program_id&term=$section_term";
     }
-
 }
 ?>
 
@@ -500,6 +499,110 @@ if (isset($_GET['id'])) {
                                                     $t1_subject_id
                                                 </a>
                                             </td>
+                                            <td>$subject_title</td>
+                                            <td>$t1_subject_code</td>
+                                            <td>$subject_type</td>
+                                            <td>$semester</td>
+                                            <td>$statuss</td>
+                                            <td>$schedule</td>
+                                            <td>$schedule_day</td>
+                                            <td>
+                                                $haveSchedule
+                                            </td>
+                                        </tr>
+                                    ";
+
+                                }
+                            }
+                        ?>
+                    </tbody>
+                </table>
+            </main>
+        </div>
+    </main>
+
+        <main>
+        <div class="floating" id="shs-sy">
+            <div>
+                <a href='<?php echo $back_url;?>'>
+                    <button class="text-left btn btn-primary">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                </a>
+            </div>
+            <header>
+                <div class="title">
+                    <h3><?php echo $sectionName;?> Subjects</h3>
+
+                </div>
+
+                <div class="action">
+                    <!-- <a href="create.php">
+                        <button type="button" class="clean large success">+ Add new</button>
+                    </a> -->
+                    <span>S.Y <?php echo $current_school_year_term;?></span>
+
+                </div>
+            </header>
+            <main>
+                <table class="ws-table-all cw3-striped cw3-bordered" style="margin: 0">
+                    <thead>
+                        <tr>
+                            <th>Subject ID</th>
+                            <th>Title</th>
+                            <th>Code</th>
+                            <th>Type</th>
+                            <th>Semester</th>
+                            <th>Status</th>
+                            <th>Day</th>
+                            <th>Time</th>
+                            <th>Instructor</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php 
+
+                            $sql = $con->prepare("SELECT 
+                            
+                                t1.*, t2.program_section
+
+                                FROM subject_program as t1
+                                
+                                INNER JOIN course as t2 ON t2.program_id = t1.program_id
+
+                                WHERE t2.course_id=:course_id
+                                ORDER BY t1.course_level DESC,
+                                t1.semester
+                                
+                                ");
+                            
+                            $sql->bindValue(":course_id", $course_id);
+                            // $sql->bindValue(":semester", $current_school_year_period);
+                            
+                            $sql->execute();
+
+                            if($sql->rowCount() > 0){
+
+                                while($row = $sql->fetch(PDO::FETCH_ASSOC)){
+
+                                    $subject_program_id = $row['subject_program_id'];
+                                    $subject_code = $row['subject_code'];
+                                    $subject_title = $row['subject_title'];
+                                    $course_level = $row['course_level'];
+                                    $semester = $row['semester'];
+                                    // $pre_requisite = $row['pre_requisite'];
+                                    $pre_requisite = $row['pre_req_subject_title'];
+                                    $subject_type = $row['subject_type'];
+                                    $program_section = $row['program_section'];
+                                    
+
+                                    $t1_subject_code = $program_section . "-" . $subject_code;
+                                    $schedule = "";
+                                    $schedule_day = "";
+                                    $haveSchedule = "";
+                                    echo "
+                                        <tr class='text-center'>
+                                            <td>$subject_program_id</td>
                                             <td>$subject_title</td>
                                             <td>$t1_subject_code</td>
                                             <td>$subject_type</td>

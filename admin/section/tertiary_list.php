@@ -61,7 +61,7 @@ if (isset($_GET['id']) && $_GET['term']) {
                     </div>
                 </header>
                 <main>
-                    <table id="department_table" class="ws-table-all cw3-striped cw3-bordered" style="margin: 0">
+                    <table id="section_table_1" class="ws-table-all cw3-striped cw3-bordered" style="margin: 0">
                         <thead>
                             <tr>
                                 <th>Section ID</th>
@@ -97,7 +97,7 @@ if (isset($_GET['id']) && $_GET['term']) {
                 </header>
 
                 <main>
-                    <table id="department_table" class="ws-table-all cw3-striped cw3-bordered" style="margin: 0">
+                    <table id="section_table_2" class="ws-table-all cw3-striped cw3-bordered" style="margin: 0">
                         <thead>
                             <tr>
                                 <th>Section ID</th>
@@ -133,7 +133,7 @@ if (isset($_GET['id']) && $_GET['term']) {
                 </header>
 
                 <main>
-                    <table id="department_table" class="ws-table-all cw3-striped cw3-bordered" style="margin: 0">
+                    <table id="section_table_3" class="ws-table-all cw3-striped cw3-bordered" style="margin: 0">
                         <thead>
                             <tr>
                                 <th>Section ID</th>
@@ -169,7 +169,7 @@ if (isset($_GET['id']) && $_GET['term']) {
                 </header>
 
                 <main>
-                    <table id="department_table" class="ws-table-all cw3-striped cw3-bordered" style="margin: 0">
+                    <table id="section_table_4" class="ws-table-all cw3-striped cw3-bordered" style="margin: 0">
                         <thead>
                             <tr>
                                 <th>Section ID</th>
@@ -194,4 +194,61 @@ if (isset($_GET['id']) && $_GET['term']) {
         </main>
 </div>
 
- 
+ <script>
+    function removeSection(course_id, course_level){
+        Swal.fire({
+                icon: 'question',
+                title: `I agreed to removed Section ID: ${course_id}`,
+                text: 'Please note that this action cannot be undone',
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'Cancel'
+
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    $.ajax({
+                        url: "../../ajax/section/remove_section.php",
+                        type: 'POST',
+                        data: {
+                            course_id
+                        },
+                        success: function(response) {
+                            response = response.trim();
+
+                            // console.log(response);
+                            if(response == "success_delete"){
+                                Swal.fire({
+                                icon: 'success',
+                                title: `Successfully Removed`,
+                                showConfirmButton: false,
+                                timer: 1000, // Adjust the duration of the toast message in milliseconds (e.g., 3000 = 3 seconds)
+                                toast: true,
+                                position: 'top-end',
+                                showClass: {
+                                popup: 'swal2-noanimation',
+                                backdrop: 'swal2-noanimation'
+                                },
+                                hideClass: {
+                                popup: '',
+                                backdrop: ''
+                                }
+                            }).then((result) => {
+
+                                $(`#section_table_${course_level}`).load(
+                                    location.href + ` #section_table_${course_level}`
+                                );
+                            });
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            // handle any errors here
+                        }
+                    });
+                } else {
+                    // User clicked "No," perform alternative action or do nothing
+                }
+        });
+    }
+</script>
+

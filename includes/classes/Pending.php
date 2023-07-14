@@ -331,7 +331,7 @@
             AND lastname != '' 
             AND contact_number != '' 
             ");
-        $sql_parent->bindValue(":pending_enrollees_id", $pending_enrollees_id);
+        $sql_parent->bindParam(":pending_enrollees_id", $pending_enrollees_id);
         $sql_parent->execute();
 
 
@@ -422,22 +422,54 @@
     }
 
     public function CreateParentDatav2($pending_enrollees_id, $fname,
-            $mi, $lname, $contact_number, $parent_email, $parent_occupation, $parent_suffix){
+            $mi, $lname, $contact_number, $parent_email, $parent_occupation, $parent_suffix, $relationship,
+            
+            $father_firstname, $father_lastname, $father_middle, $father_contact_number, $father_email,
+                $father_occupation, $father_suffix,
+                
+                
+            $mother_firstname, $mother_lastname, $mother_middle, $mother_contact_number, $mother_email,
+                $mother_occupation, $mother_suffix){
 
         if($this->CheckParentExists($pending_enrollees_id) == false){
 
             $query = $this->con->prepare("INSERT INTO parent 
-                (pending_enrollees_id, firstname, lastname, middle_name, contact_number, email, suffix, occupation) 
-                VALUES (:pending_enrollees_id, :firstname, :lastname, :middle_name, :contact_number, :email, :suffix, :occupation)");
+                (pending_enrollees_id, firstname, lastname, middle_name, contact_number, email, suffix, occupation,
+                father_firstname, father_lastname, father_middle, father_contact_number, father_email,
+                father_occupation, father_suffix,
+                mother_firstname, mother_lastname, mother_middle, mother_contact_number, mother_email,
+                mother_occupation, mother_suffix, relationship) 
+                VALUES (:pending_enrollees_id, :firstname, :lastname, :middle_name, :contact_number, :email, :suffix, :occupation,
+                :father_firstname, :father_lastname, :father_middle, :father_contact_number, :father_email,
+                :father_occupation, :father_suffix,
+                :mother_firstname, :mother_lastname, :mother_middle, :mother_contact_number, :mother_email,
+                :mother_occupation, :mother_suffix, :relationship)");
             
-            $query->bindValue(":pending_enrollees_id", $pending_enrollees_id);
-            $query->bindValue(":firstname", $fname);
-            $query->bindValue(":middle_name", $mi);
-            $query->bindValue(":lastname", $lname);
-            $query->bindValue(":contact_number", $contact_number);
-            $query->bindValue(":email", $parent_email);
-            $query->bindValue(":occupation", $parent_occupation);
-            $query->bindValue(":suffix", $parent_suffix);
+            $query->bindParam(":pending_enrollees_id", $pending_enrollees_id);
+            $query->bindParam(":firstname", $fname);
+            $query->bindParam(":middle_name", $mi);
+            $query->bindParam(":lastname", $lname);
+            $query->bindParam(":contact_number", $contact_number);
+            $query->bindParam(":email", $parent_email);
+            $query->bindParam(":occupation", $parent_occupation);
+            $query->bindParam(":suffix", $parent_suffix);
+            $query->bindParam(":relationship", $relationship);
+
+            $query->bindParam(":father_firstname", $father_firstname);
+            $query->bindParam(":father_lastname", $father_lastname);
+            $query->bindParam(":father_middle", $father_middle);
+            $query->bindParam(":father_contact_number", $father_contact_number);
+            $query->bindParam(":father_occupation", $father_occupation);
+            $query->bindParam(":father_email", $father_email);
+            $query->bindParam(":father_suffix", $father_suffix);
+
+            $query->bindParam(":mother_firstname", $mother_firstname);
+            $query->bindParam(":mother_lastname", $mother_lastname);
+            $query->bindParam(":mother_middle", $mother_middle);
+            $query->bindParam(":mother_contact_number", $mother_contact_number);
+            $query->bindParam(":mother_occupation", $mother_occupation);
+            $query->bindParam(":mother_email", $mother_email);
+            $query->bindParam(":mother_suffix", $mother_suffix);
 
             return $query->execute();
         }
@@ -446,24 +478,134 @@
             # pending_enrollees_id in the db should be UNIQUE.
             # UPDATE
 
-            $query = $this->con->prepare("UPDATE parent 
-                SET firstname=:firstname,
-                    lastname=:lastname,
-                    middle_name=:middle_name,
-                    contact_number=:contact_number,
-                    email=:email,
-                    suffix=:suffix,
-                    occupation=:occupation
-                WHERE pending_enrollees_id=:pending_enrollees_id");
+            $query = $this->con->prepare("UPDATE parent SET
+                firstname = :firstname,
+                lastname = :lastname,
+                middle_name = :middle_name,
+                contact_number = :contact_number,
+                email = :email,
+                suffix = :suffix,
+                occupation = :occupation,
+                relationship = :relationship,
+                father_firstname = :father_firstname,
+                father_lastname = :father_lastname,
+                father_middle = :father_middle,
+                father_contact_number = :father_contact_number,
+                father_email = :father_email,
+                father_occupation = :father_occupation,
+                father_suffix = :father_suffix,
+                mother_firstname = :mother_firstname,
+                mother_lastname = :mother_lastname,
+                mother_middle = :mother_middle,
+                mother_contact_number = :mother_contact_number,
+                mother_email = :mother_email,
+                mother_occupation = :mother_occupation,
+                mother_suffix = :mother_suffix
+                WHERE pending_enrollees_id = :pending_enrollees_id");
 
-            $query->bindParam(":pending_enrollees_id", $pending_enrollees_id);
             $query->bindParam(":firstname", $fname);
-            $query->bindParam(":middle_name", $mi);
             $query->bindParam(":lastname", $lname);
+            $query->bindParam(":middle_name", $mi);
             $query->bindParam(":contact_number", $contact_number);
             $query->bindParam(":email", $parent_email);
             $query->bindParam(":suffix", $parent_suffix);
             $query->bindParam(":occupation", $parent_occupation);
+            $query->bindParam(":relationship", $relationship);
+            $query->bindParam(":father_firstname", $father_firstname);
+            $query->bindParam(":father_lastname", $father_lastname);
+            $query->bindParam(":father_middle", $father_middle);
+            $query->bindParam(":father_contact_number", $father_contact_number);
+            $query->bindParam(":father_email", $father_email);
+            $query->bindParam(":father_occupation", $father_occupation);
+            $query->bindParam(":father_suffix", $father_suffix);
+            $query->bindParam(":mother_firstname", $mother_firstname);
+            $query->bindParam(":mother_lastname", $mother_lastname);
+            $query->bindParam(":mother_middle", $mother_middle);
+            $query->bindParam(":mother_contact_number", $mother_contact_number);
+            $query->bindParam(":mother_email", $mother_email);
+            $query->bindParam(":mother_occupation", $mother_occupation);
+            $query->bindParam(":mother_suffix", $mother_suffix);
+            $query->bindParam(":pending_enrollees_id", $pending_enrollees_id);
+
+            return $query->execute();
+        }
+        
+        
+
+    }
+
+    public function ValidateDetailsUpdate($pending_enrollees_id, $fname,
+            $mi, $lname, $contact_number, $parent_email, $parent_occupation, $parent_suffix, $relationship,
+            
+            $father_firstname, $father_lastname, $father_middle, $father_contact_number, $father_email,
+                $father_occupation, $father_suffix,
+                
+                
+            $mother_firstname, $mother_lastname, $mother_middle, $mother_contact_number, $mother_email,
+                $mother_occupation, $mother_suffix){
+
+        
+
+        if($this->CheckParentExists($pending_enrollees_id) === true){
+
+            # pending_enrollees_id in the db should be UNIQUE.
+            # UPDATE
+
+            $is_finished = 1;
+
+
+
+            $query = $this->con->prepare("UPDATE parent SET
+                firstname = :firstname,
+                lastname = :lastname,
+                middle_name = :middle_name,
+                contact_number = :contact_number,
+                email = :email,
+                suffix = :suffix,
+                occupation = :occupation,
+                relationship = :relationship,
+                father_firstname = :father_firstname,
+                father_lastname = :father_lastname,
+                father_middle = :father_middle,
+                father_contact_number = :father_contact_number,
+                father_email = :father_email,
+                father_occupation = :father_occupation,
+                father_suffix = :father_suffix,
+                mother_firstname = :mother_firstname,
+                mother_lastname = :mother_lastname,
+                mother_middle = :mother_middle,
+                mother_contact_number = :mother_contact_number,
+                mother_email = :mother_email,
+                mother_occupation = :mother_occupation,
+                mother_suffix = :mother_suffix
+                -- is_finished = :is_finished
+                
+                WHERE pending_enrollees_id = :pending_enrollees_id");
+
+            $query->bindParam(":firstname", $fname);
+            $query->bindParam(":lastname", $lname);
+            $query->bindParam(":middle_name", $mi);
+            $query->bindParam(":contact_number", $contact_number);
+            $query->bindParam(":email", $parent_email);
+            $query->bindParam(":suffix", $parent_suffix);
+            $query->bindParam(":occupation", $parent_occupation);
+            $query->bindParam(":relationship", $relationship);
+            $query->bindParam(":father_firstname", $father_firstname);
+            $query->bindParam(":father_lastname", $father_lastname);
+            $query->bindParam(":father_middle", $father_middle);
+            $query->bindParam(":father_contact_number", $father_contact_number);
+            $query->bindParam(":father_email", $father_email);
+            $query->bindParam(":father_occupation", $father_occupation);
+            $query->bindParam(":father_suffix", $father_suffix);
+            $query->bindParam(":mother_firstname", $mother_firstname);
+            $query->bindParam(":mother_lastname", $mother_lastname);
+            $query->bindParam(":mother_middle", $mother_middle);
+            $query->bindParam(":mother_contact_number", $mother_contact_number);
+            $query->bindParam(":mother_email", $mother_email);
+            $query->bindParam(":mother_occupation", $mother_occupation);
+            $query->bindParam(":mother_suffix", $mother_suffix);
+            // $query->bindParam(":is_finished", $is_finished);
+            $query->bindParam(":pending_enrollees_id", $pending_enrollees_id);
 
             return $query->execute();
         }
@@ -538,6 +680,55 @@
         }
         return false;
     }
+
+    public function GetParentMatchPendingStudentId($pending_enrollees_id, $student_id){
+
+        $query = $this->con->prepare("SELECT parent_id 
+        
+            FROM parent
+            WHERE pending_enrollees_id=:pending_enrollees_id");
+
+        $query->bindValue(":pending_enrollees_id", $pending_enrollees_id);
+        $query->execute();
+
+        if($query->rowCount() > 0){
+
+            $row = $query->fetch(PDO::FETCH_ASSOC);
+
+            $parent_id = $row['parent_id'];
+
+            $update = $this->con->prepare("UPDATE parent
+                SET student_id=:update_student_id
+                WHERE parent_id=:parent_id
+                -- AND student_id=0
+                -- AND pending_enrollees_id=$pending_enrollees_id
+                ");
+            
+            $update->bindValue(":update_student_id", $student_id);
+            $update->bindValue(":parent_id", $parent_id);
+            
+            // $update->bindValue(":pending_enrollees_id", $pending_enrollees_id);
+            return $update->execute();
+        }
+        return false;
+    }
+
+
+    public function SetPendingApprove($pending_enrollees_id) {
+
+        $query = $this->con->prepare("UPDATE pending_enrollees
+        
+            SET student_status = :student_status
+            WHERE pending_enrollees_id = :pending_enrollees_id");
+
+        $query->bindValue(":pending_enrollees_id", $pending_enrollees_id);
+        $query->bindValue(":student_status", "APPROVED");
+
+        return $query->execute();
+    }
+
+    
+
 }
 
 ?>

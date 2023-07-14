@@ -47,6 +47,7 @@
         <!-- Custom CSS -->
         <link rel="stylesheet" type="text/css" href="../../assets/css/main_style.css">
         <link rel="stylesheet" type="text/css" href="../../assets/css/content.css">
+        <link rel="stylesheet" type="text/css" href="../../assets/css/forms.css">
         <link rel="stylesheet" type="text/css" href="../../assets/css/buttons.css">
         <link rel="stylesheet" type="text/css" href="../../assets/css/fonts.css">
         <link rel="stylesheet" type="text/css" href="../../assets/css/table.css">

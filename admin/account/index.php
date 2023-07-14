@@ -41,11 +41,7 @@
     }
 
 
-    if(isset($_POST['samp'])){
-
-
-        Alert::success("qweqwe", "");
-    }
+  
 ?>
   
 
@@ -70,10 +66,7 @@
                 <th><button>Name</button></th>
               </tr>
 
-              <form method="POST">
-
-                <button type="submit" name="samp">Click</button>
-              </form>
+              
             </table>
           </div>
           <main>

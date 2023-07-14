@@ -58,8 +58,9 @@
             isset($_POST['program_id']) &&
             isset($_POST['capacity']) &&
             isset($_POST['adviser_teacher_id']) &&
-            isset($_POST['room']) &&
-            isset($_POST['course_level'])
+            isset($_POST['room'])
+            // isset($_POST['course_level'])
+
         ){
 
             $is_tertiary = 1;
@@ -69,7 +70,8 @@
             $capacity = $_POST['capacity'];
             $adviser_teacher_id = $_POST['adviser_teacher_id'];
             $room = $_POST['room'];
-            $course_level = (int) $_POST['course_level'];
+
+            // $course_level = (int) $_POST['course_level'];
 
             $is_active = "yes";
             $not_full = "no";
@@ -165,16 +167,16 @@
                             // $program_subject_code = $row['subject_code']; 
 
                             $insert_section_subject->bindValue(":subject_title", $program_subject_title);
-                            $insert_section_subject->bindValue(":description", $program_subject_description);
-                            $insert_section_subject->bindValue(":subject_program_id", $program_program_id);
-                            $insert_section_subject->bindValue(":unit", $program_subject_unit);
-                            $insert_section_subject->bindValue(":semester", $program_semester);
-                            $insert_section_subject->bindValue(":program_id", $program_id);
-                            $insert_section_subject->bindValue(":course_level", $program_course_level);
-                            $insert_section_subject->bindValue(":course_id", $recently_created_course_id);
-                            $insert_section_subject->bindValue(":subject_type", $program_subject_type);
-                            $insert_section_subject->bindValue(":subject_code", $program_subject_code);
-                            $insert_section_subject->bindValue(":pre_requisite", $program_subject_pre_requisite);
+                            $insert_section_subject->bindParam(":description", $program_subject_description);
+                            $insert_section_subject->bindParam(":subject_program_id", $program_program_id);
+                            $insert_section_subject->bindParam(":unit", $program_subject_unit);
+                            $insert_section_subject->bindParam(":semester", $program_semester);
+                            $insert_section_subject->bindParam(":program_id", $program_id);
+                            $insert_section_subject->bindParam(":course_level", $program_course_level);
+                            $insert_section_subject->bindParam(":course_id", $recently_created_course_id);
+                            $insert_section_subject->bindParam(":subject_type", $program_subject_type);
+                            $insert_section_subject->bindParam(":subject_code", $program_subject_code);
+                            $insert_section_subject->bindParam(":pre_requisite", $program_subject_pre_requisite);
 
                             // $insert_section_subject->execute();
                             if($insert_section_subject->execute()){
@@ -303,7 +305,7 @@
                                         value="<?php echo $program->GetProgramSectionName();?><?php echo $course_level;?>-" placeholder='e.g: STEM11-A, ABM11-A' name='program_section'>
                                 </div>
     
-                                <?php echo $courseLevelDropdown;?>
+                                <!-- <?php echo $courseLevelDropdown;?> -->
 
                                 <div class='form-group mb-2'>
                                     <label class='mb-2'>Capacity</label>

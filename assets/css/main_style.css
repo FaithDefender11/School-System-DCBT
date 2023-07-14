@@ -123,6 +123,8 @@ a {
   display: flex;
 }
 
+ 
+
 .sidebar-nav .navigationItem img {
   height: 18px;
   margin-right: 15px;
@@ -137,6 +139,7 @@ a {
   flex: 1;
   color: white;
   font-size: 15px;
+  margin-top: 5px;
 }
 
 .sidebar-nav .navigationItem .notification_count {

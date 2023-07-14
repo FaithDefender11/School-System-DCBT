@@ -20,6 +20,22 @@
         }
     }
 
+    public function GetSchoolYearPeriod() {
+        return isset($this->sqlData['period']) ? $this->sqlData["period"] : 0; 
+    }
+
+    public function GetSYEnrollmentStatus() {
+        return isset($this->sqlData['enrollment_status']) 
+            ? $this->sqlData["enrollment_status"] : null; 
+    }
+
+    public function GetStartEnrollment() {
+        return isset($this->sqlData['start_enrollment_date']) 
+            ? $this->sqlData["start_enrollment_date"] : null; 
+    }
+
+
+
     public function GetActiveSchoolYearAndSemester(){
 
         $query = $this->con->prepare("SELECT school_year_id,

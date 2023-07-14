@@ -36,12 +36,25 @@
             href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
         />
 
+        <!-- Custom CSS -->
         <link rel="stylesheet" type="text/css" href="../../assets/css/main_style.css">
+        <link rel="stylesheet" type="text/css" href="../../assets/css/content.css">
+        <link rel="stylesheet" type="text/css" href="../../assets/css/forms.css">
+        <link rel="stylesheet" type="text/css" href="../../assets/css/buttons.css">
+        <link rel="stylesheet" type="text/css" href="../../assets/css/fonts.css">
+        <link rel="stylesheet" type="text/css" href="../../assets/css/table.css">
+        <link rel="stylesheet" type="text/css" href="../../assets/css/scheduler.css">
+        <link rel="stylesheet" href="../../assets/css/others/toggle-switch.css">
+
+        <!-- Google Fonts -->
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Arimo">
+
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> 
+        <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>  -->
         <title><?php echo "Student " . $document_title; ?></title>
 
         <!-- Mododify the Logo of DCBT Here and Please apply some styling. -->
@@ -66,12 +79,18 @@
 
                 $pendingNav = new PendingStudentNavigationMenu($con, $studentLoggedIn);
 
+                // Pending Application Procedure
                 if(isset($_SESSION['status']) 
                     && $_SESSION['status'] == "pending"){
 
                     echo $pendingNav->create($page);
 
-                }else{
+                }
+                // Ongoing Application Procedure
+                else if(isset($_SESSION['status']) 
+                    && $_SESSION['status'] == "enrolled"
+                    && $_SESSION['applicaton_status'] == "ongoing"
+                    ){
                     echo $nav->create($page);
                 }
 
