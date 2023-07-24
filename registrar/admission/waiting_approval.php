@@ -146,214 +146,366 @@
                 </thead>
                 <tbody>
                     <?php
-                        foreach ($waitingApprovalEnrollment as $key => $row) {
+                        // foreach ($waitingApprovalEnrollment as $key => $row) {
 
-                            $enrollement_student_id = $row['student_id'];
-                            $fullname = $row['firstname'] . " " . $row['lastname'];
-                            $standing = $row['course_level'];
-                            $student_unique_id = $row['student_unique_id'];
+                        //     $enrollement_student_id = $row['student_id'];
+                        //     $fullname = $row['firstname'] . " " . $row['lastname'];
+                        //     $standing = $row['course_level'];
+                        //     $student_unique_id = $row['student_unique_id'];
                             
-                            $course_id = $row['course_id'];
-                            $username = $row['username'];
-                            $student_id = $row['t2_student_id'];
-                            $program_section = $row['program_section'];
-                            $cashier_evaluated = $row['cashier_evaluated'];
-                            $registrar_evaluated = $row['registrar_evaluated'];
-                            $course_level = $row['course_level'];
-                            $student_status = $row['student_status'];
-                            $new_enrollee = $row['new_enrollee'];
-                            $is_tertiary = $row['is_tertiary'];
-                            $is_transferee = $row['is_transferee'];
-                            $enrollment_approve = $row['enrollment_approve'];
+                        //     $course_id = $row['course_id'];
+                        //     $username = $row['username'];
+                        //     $student_id = $row['t2_student_id'];
+                        //     $program_section = $row['program_section'];
+                        //     $cashier_evaluated = $row['cashier_evaluated'];
+                        //     $registrar_evaluated = $row['registrar_evaluated'];
+                        //     $course_level = $row['course_level'];
+                        //     $student_status = $row['student_status'];
+                        //     $new_enrollee = $row['new_enrollee'];
+                        //     $is_tertiary = $row['is_tertiary'];
+                        //     $is_transferee = $row['is_transferee'];
+                        //     $enrollment_approve = $row['enrollment_approve'];
                             
-                            $admission_status = $row['admission_status'];
-                            $student_statusv2 = $row['student_statusv2'];
-                            $enrollment_is_new_enrollee = $row['enrollment_is_new_enrollee'];
-                            $enrollment_is_transferee = $row['enrollment_is_transferee'];
-                            $enrollment_student_status = $row['enrollment_student_status'];
+                        //     $admission_status = $row['admission_status'];
+                        //     $student_statusv2 = $row['student_statusv2'];
+                        //     $enrollment_is_new_enrollee = $row['enrollment_is_new_enrollee'];
+                        //     $enrollment_is_transferee = $row['enrollment_is_transferee'];
+                        //     $enrollment_student_status = $row['enrollment_student_status'];
 
-                            // $program_section_default = "";
-                            if($program_section === ""){
-                                $program_section = "NO SECTION";
-                            }
+                        //     // $program_section_default = "";
+                        //     if($program_section === ""){
+                        //         $program_section = "NO SECTION";
+                        //     }
 
-                            // $course_level_default = "";
-                            if($course_level == ""){
-                                $course_level = "NO SECTION";
-                            }else{
-                                $course_level = "Grade $course_level";
-                            }
+                        //     // $course_level_default = "";
+                        //     if($course_level == ""){
+                        //         $course_level = "NO SECTION";
+                        //     }else{
+                        //         $course_level = "Grade $course_level";
+                        //     }
                             
-                            $createUrl = "http://localhost/dcbt/admin/student/edit.php?id=$student_id";
+                        //     $createUrl = "http://localhost/dcbt/admin/student/edit.php?id=$student_id";
 
-                            $transferee_insertion_url = "../student/transferee_insertion.php?enrolled_subjects=true&id=$student_id";
+                        //     $transferee_insertion_url = "../student/transferee_insertion.php?enrolled_subjects=true&id=$student_id";
 
-                            // $regular_insertion_url = "../enrollees/subject_insertion.php?enrolled_subjects=true&id=$student_id";
+                        //     // $regular_insertion_url = "../enrollees/subject_insertion.php?enrolled_subjects=true&id=$student_id";
 
-                            $regular_insertion_url = "./subject_insertion_summary.php?id=$student_id&enrolled_subject=show";
+                        //     $regular_insertion_url = "./subject_insertion_summary.php?id=$student_id&enrolled_subject=show";
                             
-                            $confirmButton  = "
-                                    <button onclick='confirmValidation(" . $course_id . ", " . $enrollement_student_id . ")' name='confirm_validation_btn' class='btn btn-primary btn-sm'>Confirm</button>
-                            ";
+                        //     $confirmButton  = "
+                        //             <button onclick='confirmValidation(" . $course_id . ", " . $enrollement_student_id . ")' name='confirm_validation_btn' class='btn btn-primary btn-sm'>Confirm</button>
+                        //     ";
 
-                            $evaluateBtn = "";
+                        //     $evaluateBtn = "";
 
-                            $student_type_status = "";
+                        //     $student_type_status = "";
                             
-                            if($cashier_evaluated == "yes"
-                                && $registrar_evaluated == "yes"){
+                        //     if($cashier_evaluated == "yes"
+                        //         && $registrar_evaluated == "yes"){
 
-                              // if($student_statusv2 == "Regular"){
-                              //     $evaluateBtn = "
-                              //         <a href='$regular_insertion_url'>
-                              //             <button class='button-style-success success'>
-                              //                 Approve
-                              //             </button>
-                              //         </a>
-                              //     ";
+                        //       // if($student_statusv2 == "Regular"){
+                        //       //     $evaluateBtn = "
+                        //       //         <a href='$regular_insertion_url'>
+                        //       //             <button class='button-style-success success'>
+                        //       //                 Approve
+                        //       //             </button>
+                        //       //         </a>
+                        //       //     ";
 
-                              //     if($new_enrollee == 1 && $is_tertiary == 0){
-                              //         $student_type_status = "New Regular (SHS)";
+                        //       //     if($new_enrollee == 1 && $is_tertiary == 0){
+                        //       //         $student_type_status = "New Regular (SHS)";
 
-                              //     }else if($new_enrollee == 0 && $is_tertiary == 0){
-                              //         $student_type_status = "On Going SHS";
+                        //       //     }else if($new_enrollee == 0 && $is_tertiary == 0){
+                        //       //         $student_type_status = "On Going SHS";
 
-                              //     }
-                              //     else if($new_enrollee == 0 && $is_tertiary == 1){
-                              //         $student_type_status = "O.S Tertiary (Regular)";
-                              //     }
+                        //       //     }
+                        //       //     else if($new_enrollee == 0 && $is_tertiary == 1){
+                        //       //         $student_type_status = "O.S Tertiary (Regular)";
+                        //       //     }
                                   
-                              // }else if($student_statusv2 == "Irregular"){
+                        //       // }else if($student_statusv2 == "Irregular"){
 
-                              // if($new_enrollee == 1 && $is_tertiary == 1){
-                              //     $student_type_status = "New Tertiary (Irregular)";
-                              // }
-                              // else if($new_enrollee == 0 && $is_tertiary == 1){
-                              //     $student_type_status = "O.S Tertiary (Irregular)";
-                              // }
+                        //       // if($new_enrollee == 1 && $is_tertiary == 1){
+                        //       //     $student_type_status = "New Tertiary (Irregular)";
+                        //       // }
+                        //       // else if($new_enrollee == 0 && $is_tertiary == 1){
+                        //       //     $student_type_status = "O.S Tertiary (Irregular)";
+                        //       // }
 
-                              $evaluateBtn = "
-                                  <a href='$regular_insertion_url'>
-                                      <button class='button-style-success success'>
-                                          Evaluate
-                                      </button>
-                                  </a>
-                              ";
+                        //       $evaluateBtn = "
+                        //           <a href='$regular_insertion_url'>
+                        //               <button class='button-style-success success'>
+                        //                   Evaluate
+                        //               </button>
+                        //           </a>
+                        //       ";
 
 
 
-                              if($new_enrollee == 0
-                                  && $enrollment_is_new_enrollee == 0 
-                                  && $enrollment_is_transferee == 0
-                                  && $student_statusv2 == "Irregular"
-                                  && $enrollment_student_status == "Irregular"
-                                  ){
+                        //       if($new_enrollee == 0
+                        //           && $enrollment_is_new_enrollee == 0 
+                        //           && $enrollment_is_transferee == 0
+                        //           && $student_statusv2 == "Irregular"
+                        //           && $enrollment_student_status == "Irregular"
+                        //           ){
 
-                                  $updated_type = "Old Irregular";
+                        //           $updated_type = "Old Irregular";
 
-                                  $button_url = "
-                                      <button class='default'
-                                          onclick=\"window.location.href = '" . $regular_insertion_url . "'\">
-                                          Evaluate
-                                      </button>
-                                  ";
-                              }
+                        //           $button_url = "
+                        //               <button class='default'
+                        //                   onclick=\"window.location.href = '" . $regular_insertion_url . "'\">
+                        //                   Evaluate
+                        //               </button>
+                        //           ";
+                        //       }
 
-                              else if($new_enrollee == 0
-                                  && $enrollment_is_new_enrollee == 0 
-                                  && $enrollment_is_transferee == 0
-                                  && $student_statusv2 == "Regular"
-                                  && $enrollment_student_status == "Regular"
-                                  ){
+                        //       else if($new_enrollee == 0
+                        //           && $enrollment_is_new_enrollee == 0 
+                        //           && $enrollment_is_transferee == 0
+                        //           && $student_statusv2 == "Regular"
+                        //           && $enrollment_student_status == "Regular"
+                        //           ){
 
-                                  $updated_type = "Evaluate";
+                        //           $updated_type = "Evaluate";
 
-                                  $button_url = "
-                                      <button class='default success'
-                                        onclick=\"window.location.href = '" . $regular_insertion_url . "'\">
-                                          Modified
-                                      </button>
-                                  ";
-                              }
+                        //           $button_url = "
+                        //               <button class='default success'
+                        //                 onclick=\"window.location.href = '" . $regular_insertion_url . "'\">
+                        //                   Modified
+                        //               </button>
+                        //           ";
+                        //       }
 
-                              else if($new_enrollee == 1
-                                  && $enrollment_is_new_enrollee == 1 
-                                  && $enrollment_is_transferee == 0
-                                  && $student_statusv2 == "Regular"
-                                  && $enrollment_student_status == "Regular"
-                                  ){
+                        //       else if($new_enrollee == 1
+                        //           && $enrollment_is_new_enrollee == 1 
+                        //           && $enrollment_is_transferee == 0
+                        //           && $student_statusv2 == "Regular"
+                        //           && $enrollment_student_status == "Regular"
+                        //           ){
 
-                                  $updated_type = "New Regular";
+                        //           $updated_type = "New Regular";
 
-                                  $button_url = "
-                                      <button class='default clean'
-                                        onclick=\"window.location.href = '" . $regular_insertion_url . "'\">
-                                          Modified
-                                      </button>
-                                  ";
+                        //           $button_url = "
+                        //               <button class='default clean'
+                        //                 onclick=\"window.location.href = '" . $regular_insertion_url . "'\">
+                        //                   Modified
+                        //               </button>
+                        //           ";
 
-                              }
+                        //       }
 
-                              else if($new_enrollee == 1
-                                  && $enrollment_is_new_enrollee == 1 
-                                  && $enrollment_is_transferee == 1
-                                  && $student_statusv2 == ""
-                                  && $enrollment_student_status == ""
-                                  ){
+                        //       else if($new_enrollee == 1
+                        //           && $enrollment_is_new_enrollee == 1 
+                        //           && $enrollment_is_transferee == 1
+                        //           && $student_statusv2 == ""
+                        //           && $enrollment_student_status == ""
+                        //           ){
 
-                                  $updated_type = "New Transferee";
+                        //           $updated_type = "New Transferee";
 
-                                  $button_url = "
-                                      <button class='default clean'
-                                        onclick=\"window.location.href = '" . $regular_insertion_url . "'\">
-                                          Modified
-                                      </button>
-                                  ";
+                        //           $button_url = "
+                        //               <button class='default clean'
+                        //                 onclick=\"window.location.href = '" . $regular_insertion_url . "'\">
+                        //                   Modified
+                        //               </button>
+                        //           ";
 
-                              }
+                        //       }
                               
-                              else if($student_status_pending == "Transferee"
-                                  ){
-                                  $updated_type = "New Transferee Enrollee";
+                        //       else if($student_status_pending == "Transferee"
+                        //           ){
+                        //           $updated_type = "New Transferee Enrollee";
 
 
-                                  $button_url = "
-                                      <button class='default'
-                                          onclick=\"window.location.href = '" . $regular_insertion_url . "'\">
-                                          Evaluate
-                                      </button>
-                                  ";
-                              }
+                        //           $button_url = "
+                        //               <button class='default'
+                        //                   onclick=\"window.location.href = '" . $regular_insertion_url . "'\">
+                        //                   Evaluate
+                        //               </button>
+                        //           ";
+                        //       }
                               
-                              else if($student_status_pending == "Standard"){
+                        //       else if($student_status_pending == "Standard"){
 
-                                $updated_type = "New Enrollee";
+                        //         $updated_type = "New Enrollee";
 
-                                $button_url = "
-                                    <button class='default'
-                                        onclick=\"window.location.href = '" . $regular_insertion_url . "'\">
-                                        Evaluate
-                                    </button>
-                                ";
-                              }
+                        //         $button_url = "
+                        //             <button class='default'
+                        //                 onclick=\"window.location.href = '" . $regular_insertion_url . "'\">
+                        //                 Evaluate
+                        //             </button>
+                        //         ";
+                        //       }
                                 
-                          }
+                        //   }
 
 
-                            echo "
-                                <tr class='text-center'>
-                                    <td>$fullname</td>
-                                    <td>$student_unique_id</td>
-                                    <td>$updated_type</td>
-                                    <td>$program_section</td>
-                                    <td>$enrollment_approve </td>
-                                    <td>
-                                        $evaluateBtn
-                                    </td>
-                                </tr>
+                        //     echo "
+                        //         <tr class='text-center'>
+                        //             <td>$fullname</td>
+                        //             <td>$student_unique_id</td>
+                        //             <td>$updated_type</td>
+                        //             <td>$program_section</td>
+                        //             <td>$enrollment_approve </td>
+                        //             <td>
+                        //                 $evaluateBtn
+                        //             </td>
+                        //         </tr>
+                        //     ";
+
+                        // }
+
+
+                      foreach ($waitingApprovalEnrollment as $key => $row) {
+
+                        $enrollement_student_id = $row['student_id'];
+                        $fullname = ucfirst($row['firstname']) . " " . ucfirst($row['lastname']);
+                        $enrollment_date = $row['enrollment_date'];
+                        $standing = $row['course_level'];
+                        $course_id = $row['course_id'];
+                        $enrollment_course_id = $row['enrollment_course_id'];
+                        $registrar_confirmation_date = $row['registrar_confirmation_date'];
+                        
+                        $dateTime = new DateTime($registrar_confirmation_date);
+                        // Format the DateTime object as desired
+                        $registrar_confirmation_date = $dateTime->format('Y-m-d g:i A');
+
+
+                        $username = $row['username'];
+                        $student_unique_id = $row['student_unique_id'];
+                        $student_id = $row['t2_student_id'];
+                        $program_section = $row['program_section'];
+                        $cashier_evaluated = $row['cashier_evaluated'];
+                        $registrar_evaluated = $row['registrar_evaluated'];
+                        $course_level = $row['course_level'];
+
+                        $student_status = $row['student_statusv2'];
+                        $student_statusv2 = $row['student_statusv2'];
+                        // $admission_status = $row['admission_status'];
+
+
+                        $new_enrollee = $row['new_enrollee'];
+                        $enrollment_student_status = $row['enrollment_student_status'];
+                        $enrollment_is_new_enrollee = $row['enrollment_is_new_enrollee'];
+                        $enrollment_is_transferee = $row['enrollment_is_transferee'];
+
+
+                        $new_enrollee = $row['new_enrollee'];
+                        $is_tertiary = $row['is_tertiary'];
+                        // $is_transferee = $row['is_transferee'];
+
+
+                        $process_url = "";
+                        $waiting_payment_url = "subject_insertion_summary.php?id=$enrollement_student_id&enrolled_subject=show";
+
+                        $student_status_pending = "";
+
+                        $updated_type = "";
+                        $button_url = "";
+                        $strand = "";
+
+
+                        $section = new Section($con, $enrollment_course_id);
+
+                        $sectionProgramId = $section->GetSectionProgramId($enrollment_course_id);
+                        $sectionAcronym = $section->GetAcronymByProgramId($sectionProgramId);
+
+                        if($new_enrollee == 0
+                            && $enrollment_is_new_enrollee == 0 
+                            && $enrollment_is_transferee == 0
+                            && $student_statusv2 == "Irregular"
+                            && ($enrollment_student_status == "" || $enrollment_student_status == "Irregular")
+                            ){
+
+                            $updated_type = "Old Irregular";
+
+                            $button_url = "
+                                <button class='default success'
+                                    onclick=\"window.location.href = '" . $waiting_payment_url . "subject_insertion_summary.php?id=560&enrolled_subject=show'\">
+                                    Evaluate
+                                </button>
                             ";
-
                         }
+                        else if($new_enrollee == 0
+                            && $enrollment_is_new_enrollee == 0 
+                            && $enrollment_is_transferee == 0
+                            && $student_statusv2 == "Regular"
+                            && $enrollment_student_status == "Regular"
+                            ){
+
+                            $updated_type = "Old Regular";
+
+                            $button_url = "
+                                <button class='default success'
+                                  onclick=\"window.location.href = '" . $waiting_payment_url . "subject_insertion_summary.php?id=560&enrolled_subject=show'\">
+                                    Evaluate
+                                </button>
+                            ";
+                        }
+
+                        else if($new_enrollee == 1
+                          && $enrollment_is_new_enrollee == 1 
+                          && $enrollment_is_transferee == 0
+                          && $student_statusv2 == "Regular"
+                          && $enrollment_student_status == "Regular"
+                          ){
+
+                          $updated_type = "New Regular";
+
+                          $button_url = "
+                              <button class='default clean'
+                                onclick=\"window.location.href = '" . $waiting_payment_url . "subject_insertion_summary.php?id=560&enrolled_subject=show'\">
+                                  Evaluate
+                              </button>
+                          ";
+                        }
+                        // 
+                        else if($new_enrollee == 1
+                          && $enrollment_is_new_enrollee == 1 
+                          && $enrollment_is_transferee == 1
+                          && $student_statusv2 == ""
+                          && ($enrollment_student_status == "Irregular" || $enrollment_student_status == "Regular")
+                          ){
+
+                          $updated_type = "New Transferee";
+
+                          $button_url = "
+                              <button class='default clean'
+                                onclick=\"window.location.href = '" . $waiting_payment_url . "subject_insertion_summary.php?id=560&enrolled_subject=show'\">
+                                  Evaluate
+                              </button>
+                          ";
+                        }
+                    
+                        $createUrl = "http://localhost/dcbt/admin/student/edit.php?id=$student_id";
+
+                        // $transferee_insertion_url = "http://localhost/dcbt/admin/student/transferee_insertion.php?id=$student_id";
+                        $transferee_insertion_url = "../student/transferee_insertion.php?enrolled_subjects=true&id=$student_id";
+
+                        $regular_insertion_url = "./subject_insertion_summary.php?id=$student_id&student_details=show";
+
+                        $confirmButton  = "
+                            <button onclick='confirmValidation(" . $course_id . ", " . $enrollement_student_id . ")' name='confirm_validation_btn' class='btn btn-primary btn-sm'>Confirm</button>
+                        ";
+
+                        $evaluateBtn = "";
+
+                        $student_type_status = "";
+
+
+                        echo "
+                            <tr class='text-center'>
+                                <td>$fullname</td>
+                                <td>$student_unique_id</td>
+                                <td>$updated_type</td>
+                                <td>$sectionAcronym</td>
+                                <td>$registrar_confirmation_date </td>
+                                <td>
+                                    $button_url
+                                </td>
+                            </tr>
+                        ";
+                      }
                     ?>
                 </tbody>
             </table>

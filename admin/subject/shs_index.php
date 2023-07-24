@@ -22,25 +22,7 @@
  
 <div class="content">
 
-    <!-- <nav>
-        <h3>Department</h3>
-        <div class="form-box">
-            <div class="button-box">
-                <div id="btn"></div>
-                    <a style="color: white;" href="shs_index.php">
-                        <button type="button" class="toggle-btn">
-                            SHS
-                        </button>
-                    </a>
-                    <a style="color: white;" href="tertiary_index.php">
-                        <button type="button" class="toggle-btn">
-                            Tertiary
-                        </button>
-                    </a>
-            </div>
-        </div>
-    </nav> -->
-
+ 
     <?php echo Helper::CreateTopDepartmentTab(false);?>
 
     <main>

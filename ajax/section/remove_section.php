@@ -7,7 +7,8 @@
         $course_id = $_POST['course_id'];
        
         $query = $con->prepare("DELETE FROM course 
-            WHERE course_id = :course_id");
+            WHERE course_id = :course_id
+            AND is_remove = 1");
             
         $query->bindParam(":course_id", $course_id);
 

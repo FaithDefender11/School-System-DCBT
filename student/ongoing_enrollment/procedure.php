@@ -660,18 +660,37 @@
                     // Note. registrar in evaluation can modify the selected course id.
                     # System had choose only the previous section of student in their 1st semester (As DEFAULT).
                     
-                    // I HIT THIS LAST TOUCHED.
-                    
-                    $enrollment_request_success = $enrollment->ApplyEnrollmentOS($student_id, $student_course_id, $school_year_id,
-                        $enrollment_form_id, $student_status, $type);
-                    
-                    if($enrollment_request_success == true){
 
-                        Alert::success("Success applied for S.Y $current_term $current_semester Semester",
-                            "application_summary.php?e_id=$enrollment_form_id&id=$student_id");
-                        exit();
+                    // $asd = $student_status == "Regular" ? $student_course_id : 0;
+                    // student_course_id should be zero because the course section they was belong
+                    // is now deactivated and had moved-up to new section.
+                    
+                    if($current_semester == "First"){
+                        $enrollment_request_success = $enrollment->ApplyEnrollmentOS($student_id, 0, $school_year_id,
+                            $enrollment_form_id, $student_status, $type);
                         
+                        if($enrollment_request_success == true){
+
+                            Alert::success("Success applied for S.Y $current_term $current_semester Semester",
+                                "application_summary.php?e_id=$enrollment_form_id&id=$student_id");
+                            exit();
+                            
+                        }
                     }
+                    else if($current_semester == "Second"){
+                        $enrollment_request_success = $enrollment->ApplyEnrollmentOS($student_id, $student_course_id,
+                            $school_year_id, $enrollment_form_id, $student_status, $type);
+                        
+                        if($enrollment_request_success == true){
+
+                            Alert::success("Success applied for S.Y $current_term $current_semester Semester",
+                                "application_summary.php?e_id=$enrollment_form_id&id=$student_id");
+                            exit();
+                            
+                        }
+                    }
+                    
+
                 }
                 ?>
 

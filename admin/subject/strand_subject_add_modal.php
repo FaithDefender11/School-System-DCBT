@@ -1,21 +1,5 @@
 <?php 
 
-    // $subject = new Subject($con);
-    // $form = $subject->createForm();
-    // $selectSubjectTitle = $subject->SelectSubjectTitle();
-
-    // $strand_name = "";
-    // if(isset($_POST['program_id'])){
-        
-    //     $program_id = $_POST['program_id'];
-    //     $section = new Section($con, null);
-    //     $strand_name = $section->GetAcronymByProgramId($program_id);
-    //     // ...
-
-    //     echo $strand_name;
-    // }
-
-    // Modal HTML (outside the if block)
     ?>
     <div class="modal fade" id="subjectAddModal" tabindex="-1"
         aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -74,7 +58,8 @@
         // Result would be the form of #saveStudent
         // console.log(this);
 
-        // console.log(subject_template_id)
+        // console.log(program_id)
+
         $.ajax({
             url: "../../ajax/subject/strand_subject_add_modal.php",
             type: "POST",
@@ -92,7 +77,8 @@
             success: function (response) {
 
                 var output = response.trim();
-
+                console.log(output);
+                
                 // $('#strand_subject_view_table').load(location.href + " #strand_subject_view_table");
                 // $('#subjectAddModal').modal('hide');
                 // $('#saveStudent')[0].reset();

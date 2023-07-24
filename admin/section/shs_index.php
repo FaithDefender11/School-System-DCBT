@@ -1,5 +1,4 @@
 
-
 <?php 
 
     include_once('../../includes/admin_header.php');
@@ -31,8 +30,6 @@
 
 ?>
 
-
-
 <div class="content">
 
     <?php echo Helper::CreateTopDepartmentTab(false);?>
@@ -42,12 +39,12 @@
             <header>
 
                 <div class="title">
-                    <h3 style="font-weight: bold;">Strand Section</h3>
+                    <h3 style="font-weight: bold;">Strand <a href="to_remove.php">Section</a></h3>
                 </div>
             </header>
             <main>
                 <table id="shs_program_table"
-                    class="ws-table-all cw3-striped cw3-bordered" style="margin: 0">
+                    class="a" style="margin: 0">
                     <thead>
                         <tr>
                             <th>Program ID</th>
@@ -55,7 +52,6 @@
                             <th>Grade 11</th>
                             <th>Grade 12</th>
                             <th>Action</th>
-                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -99,11 +95,13 @@
                                             <td>$grade_11_sections</td>
                                             <td>$grade_12_sections</td>
                                             <td>
-                                                <a href='shs_list.php?id=$program_id&term=$current_school_year_term'>
-                                                    <button class='btn btn-primary'>
-                                                        <i class='fas fa-eye'></i>
-                                                    </button>
-                                                </a>
+                                                <button 
+                                                    class='btn btn-primary'
+                                                    onclick=\"window.location.href='shs_list.php?id=$program_id&term=$current_school_year_term'\"
+
+                                                    >
+                                                    <i class='fas fa-eye'></i>
+                                                </button>
                                             </td>
                                         </tr>
                                     

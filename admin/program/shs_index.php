@@ -106,7 +106,9 @@
 
                                                 <div class='dropdown-menu'>
                                                     <a class='dropdown-item' href='edit.php?id=$program_id'>
-                                                        <button class='btn btn-primary' style='width: 100%;'>
+                                                        <button class='btn btn-primary'style='width: 100%;'
+                                                            
+                                                        >
                                                             Edit
                                                         </button>
                                                     </a>
@@ -138,7 +140,6 @@
 <script>
     function removeProgramBtn(program_id){
         Swal.fire({
-
                 icon: 'question',
                 title: `I agreed to removed Program ID: ${program_id}`,
                 text: 'Please note that this action cannot be undone',

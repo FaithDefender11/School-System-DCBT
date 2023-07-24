@@ -133,9 +133,11 @@ class Helper {
         ";
     }
 
-    public static function RevealStudentTypePending($type){
+    public static function RevealStudentTypePending($type, $doesGraduate = null){
 
         $output = "";
+
+        $text = $doesGraduate == true ? "<span style='font-weight: bold;' class='text-primary'>Graduate</span>" : "";
 
         if($type == 'SHS' || $type == 'Senior High School'){
             $output = "Senior High School";
@@ -146,7 +148,7 @@ class Helper {
 
         return "
             <span class='text-muted' style='font-size: 15px;'>
-               <em>$output</em> 
+                <em>$output &nbsp &nbsp $text</em> 
             </span>
         ";
     }
@@ -207,7 +209,41 @@ class Helper {
             </div>
         ";
     }
-
+    public static function SectionHeaderCards($section_id,
+        $school_year_term, $school_year_period,
+        $acronym, $level, $totalStudents){
+       
+        return "
+            <div class='cards'>
+                <div class='card'>
+                    <p class='text-center mb-0'>Section ID</p>
+                    <p class='text-center'>$section_id</p>
+                </div>
+                <div class='card'>
+                    <p class='text-center mb-0'>School Year</p>
+                    <p class='text-center'>$school_year_term</p>
+                </div>
+                <div class='card'>
+                    <p class='text-center mb-0'>Semester</p>
+                    <p class='text-center'>$school_year_period</p>
+                </div>
+                <div class='card'>
+                    <p class='text-center mb-0'>Strand</p>
+                    <p class='text-center'>$acronym</p>
+                </div>
+                <div class='card'>
+                    <p class='text-center mb-0'>Level</p>
+                    <p class='text-center'>$level</p>
+                </div>
+                <div class='card'>
+                    <p class='text-center mb-0'>Students</p>
+                    <p class='text-center'>
+                        $totalStudents
+                    </p>
+                </div>
+            </div>
+        ";
+    }
 
     public static function ProcessPendingCards($enrollment_form_id,
         $date_creation, $admission_status){
@@ -246,9 +282,14 @@ class Helper {
         ";
     }
 
-    public static function ProcessStudentCards($enrollment_form_id, $student_unique_id,
+    public static function ProcessStudentCards($student_id, $enrollment_form_id, $student_unique_id,
         $date_creation, $new_enrollee,
-        $enrollment_is_new_enrollee, $enrollment_is_transferee){
+        $enrollment_is_new_enrollee, $enrollment_is_transferee,
+            $student_enrollment_student_status){
+
+        // $student = new Student($con);
+
+        $link = "../student/record_details.php?id=$student_id&grade_records=show";
 
 
         $date = new DateTime($date_creation);
@@ -260,7 +301,9 @@ class Helper {
 
         if($new_enrollee == 1 
             && $enrollment_is_new_enrollee == 1 
-            && $enrollment_is_transferee == 1){
+            && $enrollment_is_transferee == 1
+ 
+            ){
 
             $updated_type = "New Transferee";
 
@@ -274,11 +317,23 @@ class Helper {
         }
         else if($new_enrollee == 0 
             && $enrollment_is_new_enrollee == 0 
-            && $enrollment_is_transferee == 0){
+            && $enrollment_is_transferee == 0
+            && $student_enrollment_student_status == "Irregular"
+            ){
 
-            $updated_type = "Old";
+            $updated_type = "Old Irregular";
 
         }
+        else if($new_enrollee == 0 
+            && $enrollment_is_new_enrollee == 0 
+            && $enrollment_is_transferee == 0
+            && $student_enrollment_student_status == "Regular"
+            ){
+
+            $updated_type = "Old Regular";
+
+        }
+
 
         return "
             <div class='cards'>
@@ -292,7 +347,7 @@ class Helper {
                 </div>
                 <div class='card'>
                     <p class='text-center mb-0'>Student no.</p>
-                    <p class='text-center'>$student_unique_id</p>
+                    <a style='color: #333' href='$link'class='text-center'>$student_unique_id</a>
                 </div>
                 <div class='card'>
                     <p class='text-center mb-0'>Status</p>

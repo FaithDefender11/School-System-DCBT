@@ -17,6 +17,7 @@
 
         $dashboard_url = $base_url .  "/dashboard/index.php";
         $school_year_url = $base_url .  "/school_year/index.php";
+        $room_url = $base_url .  "/room/index.php";
         $department_url = $base_url .  "/department/index.php";
         $program_url = $base_url .  "/program/shs_index.php";
         $teacher_url = $base_url .  "/teacher/index.php";
@@ -42,6 +43,10 @@
 
         $sideBarNavigationItem .= Helper::createNavByIcon("Department", 
             "bi bi-people", $department_url, Constants::$navigationClass . Helper::GetActiveClass($page, "department"));
+
+        $sideBarNavigationItem .= Helper::createNavByIcon("Room", 
+            "bi bi-house", $room_url, Constants::$navigationClass . Helper::GetActiveClass($page, "room"));
+
 
         $sideBarNavigationItem .= Helper::createNavByIcon("Teacher", 
             "bi bi-person icon ", $teacher_url, Constants::$navigationClass . Helper::GetActiveClass($page, "teacher"));

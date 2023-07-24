@@ -6,6 +6,7 @@
     include_once('../../includes/classes/Program.php');
     include_once('../../includes/classes/Section.php');
     include_once('../../includes/classes/SubjectProgram.php');
+    include_once('../../includes/classes/Room.php');
     // include_once('../../assets/images/');
 
     $teacher = new Teacher($con);
@@ -18,6 +19,7 @@
 
     $current_school_year_term = $school_year_obj['term'];
     $current_school_year_period = $school_year_obj['period'];
+    $current_school_year_id = $school_year_obj['school_year_id'];
 
     if(isset($_GET['id']) && isset($_GET['p_id'])){
 
@@ -63,6 +65,14 @@
         $db_capacity = $section->GetSectionCapacity();
         $db_advisery_id = $section->GetSectionAdviseryId();
 
+        $first_period_room_id = $section->GetSectionFirstPeriodRoomId();
+        $second_period_room_id = $section->GetSectionSecondPeriodRoomId();
+
+        $current_period_room_id = $current_school_year_period == "First" ? $first_period_room_id : 
+            ($current_school_year_period == "Second" ? $second_period_room_id : NULL);
+
+        // echo $second_period_room_id;
+
         $trackDropdown = $section->createProgramSelection($program_id);
 
         $promptIfIDNotExists = $program->CheckIdExists($program_id);
@@ -101,7 +111,8 @@
             isset($_POST['program_id']) &&
             isset($_POST['capacity']) &&
             isset($_POST['adviser_teacher_id']) &&
-            isset($_POST['room']) &&
+            isset($_POST['room_id']) &&
+            // isset($_POST['room']) &&
             isset($_POST['course_level'])
         ){
 
@@ -111,26 +122,15 @@
             $program_id = $_POST['program_id'];
             $capacity = $_POST['capacity'];
             $adviser_teacher_id = $_POST['adviser_teacher_id'];
-            $room = $_POST['room'];
+            $room_id = $_POST['room_id'];
+
+            $room_id = ($_POST['room_id'] == 0) ? NULL : $_POST['room_id'];
+
             $course_level = (int) $_POST['course_level'];
 
             $is_active = "yes";
             $not_full = "no";
 
-            // $sql = $con->prepare("SELECT t2.department_name FROM program as t1
-
-            //     INNER JOIN department as t2 ON t2.department_id = t1.department_id 
-            //     WHERE t1.program_id=:program_id
-            //     LIMIT 1");
-
-            // $sql->bindValue(":program_id", $program_id);
-            // $sql->execute();
-
-            // if($sql->rowCount() > 0){
-
-            //     $department_name = $sql->fetchColumn();
-            //     $is_tertiary = ($department_name == "Senior High School") ? 0 : 1;
-            // }
 
             $is_tertiary = ($department_type_section == "Senior High School") ? 0 : 1;
 
@@ -142,274 +142,79 @@
             //     exit();
             // }
 
-            $update = $con->prepare("UPDATE course SET
-                program_section = :program_section,
-                program_id = :program_id,
-                capacity = :capacity,
-                adviser_teacher_id = :adviser_teacher_id,
-                room = :room,
-                course_level = :course_level
-                WHERE course_id = :course_id");
+            if ($current_school_year_period == "First") {
+                $update = $con->prepare("UPDATE course SET
+                    program_section = :program_section,
+                    program_id = :program_id,
+                    capacity = :capacity,
+                    adviser_teacher_id = :adviser_teacher_id,
+                    first_period_room_id = :first_period_room_id,
+                    course_level = :course_level
+                    WHERE course_id = :course_id");
+
+                $update->bindParam(":first_period_room_id", $room_id);
+
+            }else if ($current_school_year_period == "Second") {
+
+                $update = $con->prepare("UPDATE course SET
+                    program_section = :program_section,
+                    program_id = :program_id,
+                    capacity = :capacity,
+                    adviser_teacher_id = :adviser_teacher_id,
+                    second_period_room_id = :second_period_room_id,
+                    course_level = :course_level
+                    WHERE course_id = :course_id");
+
+                $update->bindParam(":second_period_room_id", $room_id);
+
+            }
+
+            // $update = $con->prepare("UPDATE course SET
+            //     program_section = :program_section,
+            //     program_id = :program_id,
+            //     capacity = :capacity,
+            //     adviser_teacher_id = :adviser_teacher_id,
+            //     -- room = :room,
+            //     course_level = :course_level
+            //     WHERE course_id = :course_id");
 
             $update->bindParam(":program_section", $program_section);
             $update->bindParam(":program_id", $program_id);
             $update->bindParam(":capacity", $capacity);
             $update->bindParam(":adviser_teacher_id", $adviser_teacher_id);
-            $update->bindParam(":room", $room);
             $update->bindParam(":course_level", $course_level, PDO::PARAM_INT);
             $update->bindParam(":course_id", $course_id);
+            $update->execute();
 
-            if($update->execute()){
-            
-                // Update all subjects that are linked with course_id
+            if($update->rowCount() > 0){
 
-                $get_subjects_linked = $con->prepare("SELECT * 
-                    
-                    FROM subject
+                // $recently_created_course_id = $con->lastInsertId();
 
-                    WHERE course_id=:course_id
-                    ");
+                // Alert::success("Successfully created $program_section section (S.Y $current_school_year_term).",
+                //         "$back_url");
+                // exit();
 
-                $get_subjects_linked->bindParam(":course_id", $course_id);
-                $get_subjects_linked->execute();
+                $sectionExec = new Section($con, $course_id);
+                $section_type = $sectionExec->GetSectionType();
 
-                if($get_subjects_linked->rowCount() > 0){
+                if($course_id != 0){
 
-                    $isSuccess = false;
-                    $str = "";
-                    $i = 0;
+                    $room = new Room($con);
 
-                    $update_subject_code = $con->prepare("UPDATE subject 
-                        SET subject_code = :subject_code
-                        WHERE course_id = :course_id
-                        AND subject_program_id = :subject_program_id
-                        ");
+                    $wasSuccess = $room->RoomTypeUpdate(
+                        $room_id, $section_type, $current_period_room_id);
 
-                    while($row = $get_subjects_linked->fetch(PDO::FETCH_ASSOC)){
+                    // echo $room_id;
+                    // echo $current_period_room_id;
 
-                        $subject_code = $row['subject_code'];
-                        $subject_program_id = $row['subject_program_id'];
-
-                        $subject_program = new SubjectProgram($con, $subject_program_id);
-
-                        $sp_subject_code = $subject_program->GetSubjectProgramRawCode();
-                        $sp_id = $subject_program->GetSubjectProgramId();
-
-                        // BUILD - PE101-STEM11-EX
-                        $build = $sp_subject_code . "-". $program_section;
-
-                        // $str .= $sp_subject_code . " ";
-                        $str .= $build . " ";
-
-                        // $substring = substr($subject_code, strpos($subject_code, '-') + 1);
-
-                        // Replace the $substring into $program_section
-                        // $newString = str_replace($substring, $program_section, $subject_code);
-                        
-                        // UPDATE
-
-                        $update_subject_code->bindParam(":subject_code", $build);
-                        $update_subject_code->bindParam(":subject_program_id", $sp_id);
-                        $update_subject_code->bindParam(":course_id", $course_id);
-
-                        if($update_subject_code->execute()){
-
-                            $i++;
-                            $isSuccess = true;
-                        }
-
-                    }
-
-                    // if($i == 1){
-                    //     echo $i;
-                    // } 
-                    if($isSuccess === true){
-                        // echo $str;
-                        Alert::success("Successfully Edited: $program_section section and its Subject Code has been aligned.",
-                                "$back_url");
+                    if($wasSuccess){
+                        Alert::success("Successfully created $program_section section (S.Y $current_school_year_term).",
+                            "$back_url");
                         exit();
                     }
                 }
                 
-
-                
             }
-
-            // $insert = $con->prepare("INSERT INTO course
-            //     (program_section, program_id, capacity, adviser_teacher_id, room, school_year_term, active, is_full, course_level, is_tertiary)
-            //     VALUES(:program_section, :program_id, :capacity, :adviser_teacher_id, :room, :school_year_term, :active, :is_full, :course_level, :is_tertiary)");
-            
-            // $insert->bindParam(":program_section", $program_section);
-            // $insert->bindParam(":program_id", $program_id);
-            // $insert->bindParam(":capacity", $capacity);
-            // $insert->bindParam(":adviser_teacher_id", $adviser_teacher_id);
-            // $insert->bindParam(":room", $room);
-            // $insert->bindParam(":school_year_term", $current_school_year_term);
-            // $insert->bindParam(":active", $is_active);
-            // $insert->bindParam(":is_full", $not_full);
-            // $insert->bindParam(":course_level", $course_level, PDO::PARAM_INT);
-            // $insert->bindParam(":is_tertiary", $is_tertiary, PDO::PARAM_INT);
-
-            // if($insert->execute()){
-            
-            //     $recently_created_course_id = $con->lastInsertId();
-
-            //     $sectionObj = new Section($con, $recently_created_course_id);
-                
-            //     $created_program_section = $sectionObj->GetSectionName();
-
-            //     $get_program_section = $section->GetSectionName();
-
-            //     if($current_school_year_period == "First"){
-
-            //         $get_subject_program = $con->prepare("SELECT * 
-                    
-            //             FROM subject_program
-
-            //             WHERE program_id=:program_id
-            //             AND course_level=:course_level
-            //             ");
-
-            //         # Second Semester Subjects only,
-            //         # None usage of First Semester subject here.
-                    
-            //         $get_subject_program->bindParam(":program_id", $program_id);
-            //         $get_subject_program->bindParam(":course_level", $course_level);
-            //         // $get_subject_program->bindParam(":semester", $current_school_year_period);
-            //         $get_subject_program->execute();
-
-            //         if($get_subject_program->rowCount() > 0){
-
-            //             $isSubjectCreated = false;
-
-            //             $insert_section_subject = $con->prepare("INSERT INTO subject
-            //                 (subject_title, description, subject_program_id, unit, semester,
-            //                     program_id, course_level, course_id, subject_type, subject_code,
-            //                     pre_requisite)
-            //                 VALUES(:subject_title, :description, :subject_program_id, :unit, :semester, 
-            //                     :program_id, :course_level, :course_id, :subject_type, :subject_code,
-            //                     :pre_requisite)");
-
-            //             while($row = $get_subject_program->fetch(PDO::FETCH_ASSOC)){
-
-            //                 $program_program_id = $row['subject_program_id'];
-            //                 $program_course_level = $row['course_level'];
-            //                 $program_semester = $row['semester'];
-            //                 $program_subject_type = $row['subject_type'];
-            //                 $program_subject_title = $row['subject_title'];
-            //                 $program_subject_description = $row['description'];
-            //                 $program_subject_unit = $row['unit'];
-            //                 $program_subject_pre_requisite = $row['pre_req_subject_title'];
-
-            //                 $program_subject_code = $row['subject_code'] . "-". $program_section; 
-            //                 // $program_subject_code = $row['subject_code']; 
-
-            //                 $insert_section_subject->bindValue(":subject_title", $program_subject_title);
-            //                 $insert_section_subject->bindValue(":description", $program_subject_description);
-            //                 $insert_section_subject->bindValue(":subject_program_id", $program_program_id);
-            //                 $insert_section_subject->bindValue(":unit", $program_subject_unit);
-            //                 $insert_section_subject->bindValue(":semester", $program_semester);
-            //                 $insert_section_subject->bindValue(":program_id", $program_id);
-            //                 $insert_section_subject->bindValue(":course_level", $program_course_level);
-            //                 $insert_section_subject->bindValue(":course_id", $recently_created_course_id);
-            //                 $insert_section_subject->bindValue(":subject_type", $program_subject_type);
-            //                 $insert_section_subject->bindValue(":subject_code", $program_subject_code);
-            //                 $insert_section_subject->bindValue(":pre_requisite", $program_subject_pre_requisite);
-
-            //                 // $insert_section_subject->execute();
-            //                 if($insert_section_subject->execute()){
-            //                     $isSubjectCreated = true;
-            //                 }
-            //             }
-
-            //             if($isSubjectCreated){
-
-            //                 Alert::success("Successfully created $program_section section (S.Y $current_school_year_term).",
-            //                     "$back_url");
-
-            //                 exit();
-            //             }
-
-            //         }else{
-            //             Alert::error("It seems section subjects is not populated properly.", "shs_list.php?id=$program_id&term=$current_school_year_term");
-            //             exit();
-            //         }
-            //     }
-
-            //     else if($current_school_year_period == "Second"){
-
-            //         $get_subject_program = $con->prepare("SELECT * 
-                    
-            //             FROM subject_program
-
-            //             WHERE program_id=:program_id
-            //             AND course_level=:course_level
-            //             AND semester=:semester
-            //             ");
-
-            //         # Second Semester Subjects only,
-            //         # None usage of First Semester subject here.
-                    
-            //         $get_subject_program->bindParam(":program_id", $program_id);
-            //         $get_subject_program->bindParam(":course_level", $course_level);
-            //         $get_subject_program->bindParam(":semester", $current_school_year_period);
-            //         $get_subject_program->execute();
-
-            //         if($get_subject_program->rowCount() > 0){
-
-            //             $isSubjectCreated = false;
-
-            //             $insert_section_subject = $con->prepare("INSERT INTO subject
-            //                 (subject_title, description, subject_program_id, unit, semester,
-            //                     program_id, course_level, course_id, subject_type, subject_code,
-            //                     pre_requisite)
-            //                 VALUES(:subject_title, :description, :subject_program_id, :unit, :semester, 
-            //                     :program_id, :course_level, :course_id, :subject_type, :subject_code,
-            //                     :pre_requisite)");
-
-            //             while($row = $get_subject_program->fetch(PDO::FETCH_ASSOC)){
-
-            //                 $program_program_id = $row['subject_program_id'];
-            //                 $program_course_level = $row['course_level'];
-            //                 $program_semester = $row['semester'];
-            //                 $program_subject_type = $row['subject_type'];
-            //                 $program_subject_title = $row['subject_title'];
-            //                 $program_subject_description = $row['description'];
-            //                 $program_subject_unit = $row['unit'];
-            //                 $program_subject_pre_requisite = $row['pre_req_subject_title'];
-
-            //                 $program_subject_code = $row['subject_code'] . "-". $program_section; 
-            //                 // $program_subject_code = $row['subject_code']; 
-
-            //                 $insert_section_subject->bindValue(":subject_title", $program_subject_title);
-            //                 $insert_section_subject->bindValue(":description", $program_subject_description);
-            //                 $insert_section_subject->bindValue(":subject_program_id", $program_program_id);
-            //                 $insert_section_subject->bindValue(":unit", $program_subject_unit);
-            //                 $insert_section_subject->bindValue(":semester", $program_semester);
-            //                 $insert_section_subject->bindValue(":program_id", $program_id);
-            //                 $insert_section_subject->bindValue(":course_level", $program_course_level);
-            //                 $insert_section_subject->bindValue(":course_id", $recently_created_course_id);
-            //                 $insert_section_subject->bindValue(":subject_type", $program_subject_type);
-            //                 $insert_section_subject->bindValue(":subject_code", $program_subject_code);
-            //                 $insert_section_subject->bindValue(":pre_requisite", $program_subject_pre_requisite);
-
-            //                 // $insert_section_subject->execute();
-            //                 if($insert_section_subject->execute()){
-            //                     $isSubjectCreated = true;
-            //                 }
-            //             }
-
-            //             if($isSubjectCreated){
-
-            //                 Alert::success("Successfully created $program_section section (S.Y $current_school_year_term).", "shs_list.php?id=$program_id&term=$current_school_year_term");
-            //                 exit();
-            //             }
-
-            //         }
-            //     }
-                
-            // }
-
         }
 
         ?>
@@ -457,8 +262,13 @@
                                         <?php
                                             $query = $con->prepare("SELECT * FROM teacher");
                                             $query->execute();
+
+                                            $output = "";
                                             
-                                            echo "<option value='' disabled selected>Choose Teacher</option>";
+                                            $output .= "<option value='' disabled selected>Choose Teacher</option>";
+                                            // $output .= "<option value='' disabled selected>Choose Teacher</option>";
+                                            // $output .= "<option value=''>Remove Room</option>";
+
 
                                             if ($query->rowCount() > 0) {
                                                 while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
@@ -468,17 +278,110 @@
                                                     if ($row['teacher_id'] == $db_advisery_id) {
                                                         $selected = "selected";
                                                     }
-                                                    echo "<option value='" . $row['teacher_id'] . "' $selected>" . $row['firstname'] . " " . $row['lastname'] . "</option>";
+                                                    $output .= "<option value='" . $row['teacher_id'] . "' $selected>" . $row['firstname'] . " " . $row['lastname'] . "</option>";
                                                 }
                                             }
+                                            echo $output;
                                         ?>
                                     </select>
                                 </div>
 
-                                <div class='form-group mb-2'>
+                                <!-- <div class='form-group mb-2'>
                                     <label class='mb-2'>Room</label>
                                     <input required class='form-control' value="<?php echo $db_room;?>" type='number' placeholder='Room' name='room'>
-                                </div>
+                                </div> -->
+
+                                <!-- <div class='form-group mb-2'>
+                                    <label class='mb-2'>* Room</label>
+
+                                    <select required class="form-control" name="room_id" id="room_id">
+                                        <?php
+                                            $query = $con->prepare("SELECT * FROM room
+                                                WHERE school_year_id=:school_year_id");
+                                            $query->bindParam(":school_year_id", $current_school_year_id);
+                                            $query->execute();
+                                            
+                                            echo "<option value='' disabled selected>Choose Room</option>";
+                                            if ($query->rowCount() > 0) {
+                                                while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+                                                    $selected = "";  
+                                                    if($row['course_id'] == $course_id) $selected = "selected";
+                                                    echo "<option value='" . $row['room_id'] . "' $selected>" . $row['room_number'] ."</option>";
+                                                }
+                                            }
+                                        ?>
+                                    </select>
+                                </div> -->
+
+                                <?php
+                                
+                                    if($current_school_year_period == "First"){
+                                        ?>
+                                            <div class='form-group mb-2'>
+
+                                                <label class='mb-2'>* Room</label>
+
+                                                <select required class="form-control" name="room_id" id="room_id">
+                                                    <?php
+                                                        $query = $con->prepare("SELECT * FROM room
+                                                            -- WHERE room_id=:room_id
+                                                            ");
+
+                                                        // $query->bindParam(":room_id", $current_period_room_id);
+                                                        $query->execute();
+                                                        
+                                                        echo "<option value='' disabled selected>Choose Room</option>";
+                                                        echo "<option value='0'>Reset</option>";
+
+                                                        if ($query->rowCount() > 0) {
+                                                            while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+                                                                $selected = "";  
+                                                                if($row['room_id'] == $current_period_room_id) $selected = "selected";
+                                                                echo "<option value='" . $row['room_id'] . "' $selected>" . $row['room_number'] ."</option>";
+                                                            }
+                                                        }
+
+                                                    ?>
+                                                </select>
+                                            </div>
+
+                                        <?php   
+                                    }
+
+                                    else if($current_school_year_period == "Second"){
+                                        ?>
+                                            <div class='form-group mb-2'>
+
+                                                <label class='mb-2'>* Room</label>
+
+                                                <select required class="form-control" name="room_id" id="room_id">
+                                                    <?php
+                                                        $query = $con->prepare("SELECT * FROM room
+                                                            -- WHERE room_id=:room_id
+                                                            ");
+
+                                                        // $query->bindParam(":room_id", $current_period_room_id);
+                                                        $query->execute();
+                                                        
+                                                        echo "<option value='' disabled selected>Choose Room</option>";
+
+                                                        if ($query->rowCount() > 0) {
+                                                            while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+                                                                $selected = "";  
+                                                                if($row['room_id'] == $current_period_room_id) $selected = "selected";
+                                                                echo "<option value='" . $row['room_id'] . "' $selected>" . $row['room_number'] ."</option>";
+                                                            }
+                                                        }
+
+                                                    ?>
+                                                </select>
+                                            </div>
+
+                                        <?php   
+                                    }
+
+                                ?>
+
 
                                 <div class="modal-footer">
                                     <button type='submit' class='btn btn-success' name='edit_section_btn_<?php echo $program_id;?>'>Save Section</button>

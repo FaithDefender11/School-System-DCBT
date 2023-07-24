@@ -6,17 +6,20 @@
     if (isset($_POST['subject_program_id'])
         && isset($_POST['current_school_year_id'])
         && isset($_POST['student_id'])
+        && isset($_POST['subject_code'])
+        
         && isset($_POST['type']) && $_POST['type'] == "Credit"
         ) {
 
         $subject_program_id = $_POST['subject_program_id'];
         $current_school_year_id = $_POST['current_school_year_id'];
         $student_id = $_POST['student_id'];
+        $subject_code = $_POST['subject_code'];
 
         $student_subject = new StudentSubject($con);
 
         $wasSuccess = $student_subject->MarkStudentSubjectAsCredited($student_id,
-            $current_school_year_id, $subject_program_id);
+            $current_school_year_id, $subject_program_id, $subject_code);
 
         if($wasSuccess){
             echo "credited_success";
@@ -40,7 +43,6 @@
 
         $student_subject = new StudentSubject($con);
 
- 
 
         $query = $con->prepare("DELETE FROM student_subject 
             WHERE school_year_id = :school_year_id
@@ -60,13 +62,6 @@
             echo "uncredited_success";
         }
 
-        // $wasSuccess = $student_subject->MarkStudentSubjectAsCredited($student_id,
-        //     $current_school_year_id, $subject_program_id);
-
-        // if($wasSuccess){
-        //     echo "credited_success";
-        // }
- 
     }
 
     if (isset($_POST['subject_program_id'])
@@ -74,6 +69,7 @@
         && isset($_POST['student_id'])
         && isset($_POST['type']) && $_POST['type'] == "creditEnrolledSubject"
         && isset($_POST['student_subject_id'])
+        && isset($_POST['subject_code'])
 
         ) {
 
@@ -81,13 +77,14 @@
         $current_school_year_id = $_POST['current_school_year_id'];
         $student_id = $_POST['student_id'];
         $student_subject_id = $_POST['student_subject_id'];
+        $subject_code = $_POST['subject_code'];
 
         $student_subject = new StudentSubject($con);
 
 
         $wasSuccess = $student_subject->CreditAssignedStudentSubjectNonFinal(
             $student_subject_id, $subject_program_id,
-            $student_id, $current_school_year_id);
+            $student_id, $current_school_year_id, $subject_code);
 
         if($wasSuccess == true){
             echo "credited_success";
@@ -118,8 +115,6 @@
         $student_subject = new StudentSubject($con);
 
         // echo $student_subject_code;
-
-
 
         $wasSuccess = $student_subject->UnCreditAssignedStudentSubjectNonFinal(
             $student_subject_id, $subject_program_id,

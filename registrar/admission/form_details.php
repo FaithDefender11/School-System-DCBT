@@ -8,7 +8,7 @@
         </a>
     </nav>
     <div class="content-header">
-        <?php echo Helper::RevealStudentType($type); ?>
+        <?php echo Helper::RevealStudentTypePending($type); ?>
 
         <header>
             <div class="title">
@@ -27,34 +27,9 @@
                 </div>
             </div>
         </header>
-        <div class="cards">
-            <div class="card">
-                <p class="text-center mb-0">Form ID</p>
-                <p class="text-center"><?php echo $enrollment_form_id;?></p>
-            </div>
-            <div class="card">
-                <p class="text-center mb-0">Admission type</p>
-                <p class="text-center">N/A</p>
-            </div>
-            <div class="card">
-                <p class="text-center mb-0">Student no.</p>
-                <p class="text-center">N/A</p>
-            </div>
-            <div class="card">
-                <p class="text-center mb-0">Status</p>
-                <p class="text-center">Evaluation</p>
-            </div>
-            <div class="card">
-                <p class="text-center mb-0">Submitted on</p>
-                <p class="text-center">
-                    <?php
-                        $date = new DateTime($date_creation);
-                        $formattedDate = $date->format('m/d/Y H:i');
-                        echo $formattedDate;
-                    ?>
-                </p>
-            </div>
-        </div>
+        <?php echo Helper::ProcessStudentCards($student_id, $student_enrollment_form_id,
+            $student_unique_id, $enrollment_creation, $student_new_enrollee,
+            $enrollment_is_new_enrollee, $enrollment_is_transferee, $student_status_st); ?>
     </div>
     
     <main>
@@ -90,7 +65,7 @@
                     <label for="name">Name</label>
                     <div>
                         <input type="text" name="lastName" 
-                            id="lastName" value="<?php echo $firstname;?>" />
+                            id="lastName" value="<?php echo $student_lastname;?>" />
                         <small></small>
                     </div>
                     <div>
@@ -98,7 +73,7 @@
                         type="text"
                         name="firstName"
                         id="firstName"
-                        value="<?php echo $firstname;?>"
+                        value="<?php echo $student_firstname;?>"
                         />
                         <small>First name</small>
                     </div>
@@ -107,7 +82,7 @@
                         type="text"
                         name="middleName"
                         id="middleName"
-                        value="<?php echo $middle_name;?>"
+                        value="<?php echo $student_middle_name;?>"
                         />
                         <small>Middle name</small>
                     </div>
@@ -116,7 +91,7 @@
                         type="text"
                         name="suffixName"
                         id="suffixName"
-                        value="<?php echo $suffix;?>"
+                        value="<?php echo $student_suffix;?>"
                         />
                         <small>Suffix name</small>
                     </div>
@@ -127,10 +102,10 @@
                     <label for="status">Status</label>
                     <div>
                         <select name="status" id="status">
-                            <option value="Single"<?php echo ($civil_status == "Single") ? " selected" : ""; ?>>Single</option>
-                            <option value="Married"<?php echo ($civil_status == "Married") ? " selected" : ""; ?>>Married</option>
-                            <option value="Divorced"<?php echo ($civil_status == "Divorced") ? " selected" : ""; ?>>Divorced</option>
-                            <option value="Widowed"<?php echo ($civil_status == "Widowed") ? " selected" : ""; ?>>Widowed</option>
+                            <option value="Single"<?php echo ($student_civil_status == "Single") ? " selected" : ""; ?>>Single</option>
+                            <option value="Married"<?php echo ($student_civil_status == "Married") ? " selected" : ""; ?>>Married</option>
+                            <option value="Divorced"<?php echo ($student_civil_status == "Divorced") ? " selected" : ""; ?>>Divorced</option>
+                            <option value="Widowed"<?php echo ($student_civil_status == "Widowed") ? " selected" : ""; ?>>Widowed</option>
                         </select>
                     </div>
                     </span>
@@ -142,7 +117,7 @@
                         type="text"
                         name="citizenship"
                         id="citizenship"
-                        value="<?php echo $nationality;?>"
+                        value="<?php echo $student_nationality;?>"
                         />
                     </div>
                     </span>
@@ -150,8 +125,8 @@
                     <label for="gender">Gender</label>
                     <div>
                         <select name="gender" id="gender">
-                        <option value="Male"<?php echo ($sex == "Male") ? " selected" : ""; ?>>Male</option>
-                                            <option value="Female"<?php echo ($sex == "Female") ? " selected" : ""; ?>>Female</option>
+                        <option value="Male"<?php echo ($student_gender == "Male") ? " selected" : ""; ?>>Male</option>
+                        <option value="Female"<?php echo ($student_gender == "Female") ? " selected" : ""; ?>>Female</option>
                         </select>
                     </div>
                     </span>
@@ -164,7 +139,7 @@
                         type="date"
                         name="birthdate"
                         id="birthdate"
-                        value="<?php echo $birthday;?>"
+                        value="<?php echo $student_birthday;?>"
                         />
                     </div>
                     </span>
@@ -175,14 +150,14 @@
                         type="text"
                         name="birthplace"
                         id="birthplace"
-                        value="<?php echo $birthplace;?>"
+                        value="<?php echo $student_birthplace;?>"
                         />
                     </div>
                     </span>
                     <span>
                     <label for="religion">Religion</label>
                     <div>
-                        <input type="text" name="religion" id="religion" value="<?php echo $religion;?>" />
+                        <input type="text" name="religion" id="religion" value="<?php echo $student_religion;?>" />
                     </div>
                     </span>
                 </div>
@@ -190,7 +165,7 @@
                     <span>
                     <label for="address">Address</label>
                     <div>
-                        <input type="text" name="address" id="address" value="<?php echo $address;?>" />
+                        <input type="text" name="address" id="address" value="<?php echo $student_address;?>" />
                     </div>
                     </span>
                 </div>
@@ -198,13 +173,13 @@
                     <span>
                     <label for="phoneNo">Phone no.</label>
                     <div>
-                        <input type="text" name="phone" id="phone" value="<?php echo $contact_number;?>" />
+                        <input type="text" name="phone" id="phone" value="<?php echo $student_contact_number;?>" />
                     </div>
                     </span>
                     <span>
                     <label for="email">Email</label>
                     <div>
-                        <input type="email" name="email" id="email" value="<?php echo $email;?>" />
+                        <input type="email" name="email" id="email" value="<?php echo $student_email;?>" />
                     </div>
                     </span>
                 </div>
@@ -217,15 +192,15 @@
                 </div>
             </header>
 
-            <main>
+            <main >
                 <form action="">
                 <div class="row">
                     <span>
                     <label for="schoolType">School type</label>
                     <div>
                         <select name="schoolType" id="schoolType">
-                        <option value="">SHS</option>
-                        <option value="">College</option>
+                            <option value="">SHS</option>
+                            <option value="">College</option>
                         </select>
                     </div>
                     </span>
@@ -507,7 +482,7 @@
                         type="text"
                         name="guardianRelation"
                         id="guardianRelation"
-                        value=""
+                        value="<?php echo $parent_relationship;?>"
                         />
                     </div>
                     </span>
@@ -530,7 +505,7 @@
 
         <div class="action">
             <button class="default success large" 
-                onclick="window.location.href = 'advising_pending_process_enrollment.php?finding_section=show&id=<?php echo $pending_enrollees_id; ?>'">
+                onclick="window.location.href = 'process_enrollment.php?find_section=show&st_id=<?php echo $student_id; ?>&c_id=<?php echo $student_course_id;?>'">
                 Proceed
             </button>
         </div>

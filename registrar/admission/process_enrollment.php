@@ -8,6 +8,7 @@
     include_once('../../includes/classes/Student.php');
     include_once('../../includes/classes/Pending.php');
     include_once('../../includes/classes/StudentSubject.php');
+    include_once('../../includes/classes/Program.php');
 
 
     $department = new Department($con);
@@ -25,8 +26,6 @@
     $tertiary_department_id = $department->GetDepartmentIdByName("Tertiary");
     
     $now = date("Y-m-d H:i:s");
-
-
 
     if(isset($_GET['id'])){
 
@@ -149,14 +148,12 @@
 
                 $student_subject = new StudentSubject($con);
 
-
                 if(isset($_POST['pending_choose_section'])
                     && isset($_POST['selected_course_id'])
                     ){
 
                     // New (Standard start from the beginning of DCBT). 
                     // Make sure it is First Semester
-                    // If New and second Semester, then it should be New Transferee
 
                     if($admission_status == "Standard" 
                         && $current_school_year_period == "First"){
@@ -174,11 +171,11 @@
 
                         $stmt_insert = $con->prepare("INSERT INTO student (firstname, lastname, middle_name, password, civil_status, nationality, contact_number, birthday, age, sex,
                             course_id, student_unique_id, course_level, username,
-                            address, lrn, religion, birthplace, email, student_statusv2, is_tertiary, citizenship, new_enrollee) 
+                            address, lrn, religion, birthplace, email, student_statusv2, is_tertiary, new_enrollee) 
 
                             VALUES (:firstname, :lastname, :middle_name, :password, :civil_status, :nationality, :contact_number, :birthday, :age, :sex,
                                 :course_id, :student_unique_id, :course_level, :username,
-                                :address, :lrn, :religion, :birthplace, :email, :student_statusv2, :is_tertiary, :citizenship, :new_enrollee)");
+                                :address, :lrn, :religion, :birthplace, :email, :student_statusv2, :is_tertiary , :new_enrollee)");
 
                         $stmt_insert->bindParam(':firstname', $firstname);
                         $stmt_insert->bindParam(':lastname', $lastname);
@@ -191,10 +188,10 @@
                         $stmt_insert->bindParam(':age', $age);
                         $stmt_insert->bindParam(':sex', $sex);
                         // 
-                        // SHOULD BE NULL FIRST.
-                        $stmt_insert->bindParam(':course_id', $selected_course_id_value);
+                        // SHOULD BE NULL FIRST If Irregular.
+                        $stmt_insert->bindParam(':course_id', 0);
                         $stmt_insert->bindParam(':student_unique_id', $generateStudentUniqueId);
-                        $stmt_insert->bindParam(':course_level', $pending_course_level);
+                        $stmt_insert->bindParam(':course_level', 0);
                         $stmt_insert->bindParam(':username', $username);
                         $stmt_insert->bindParam(':address', $address);
                         $stmt_insert->bindParam(':lrn', $lrn);
@@ -279,65 +276,29 @@
                     }
 
                     // New Transferee
+                    // If student is New and second Semester, then it should be New Transferee
 
                     if($admission_status == "Transferee" 
-                        && $current_school_year_period == "Second"){
+                        // && $current_school_year_period == "Second"
+                        ){
 
                         $selected_course_id_value = $_POST['selected_course_id'];
+
+                        // echo $selected_course_id_value;
 
                         $section_url = "process_enrollment.php?step3=true&id=$pending_enrollees_id&selected_course_id=$selected_course_id_value";
                         // Pending Info to Student
                         $generateStudentUniqueId = $student->GenerateUniqueStudentNumber();
                         $username = strtolower($lastname) . '.' . $generateStudentUniqueId . '@dcbt.ph';
 
-
-           
                         $selected_course_id_value = $_POST['selected_course_id'];
-
-                        // $stmt_insert = $con->prepare("INSERT INTO student (firstname, lastname, middle_name, password, civil_status, nationality, contact_number, birthday, age, sex,
-                        //     course_id, student_unique_id, course_level, username,
-                        //     address, lrn, religion, birthplace, email, student_statusv2, is_tertiary, citizenship, new_enrollee) 
-
-                        //     VALUES (:firstname, :lastname, :middle_name, :password, :civil_status, :nationality, :contact_number, :birthday, :age, :sex,
-                        //         :course_id, :student_unique_id, :course_level, :username,
-                        //         :address, :lrn, :religion, :birthplace, :email, :student_statusv2, :is_tertiary, :citizenship, :new_enrollee)");
-
-                        // $stmt_insert->bindParam(':firstname', $firstname);
-                        // $stmt_insert->bindParam(':lastname', $lastname);
-                        // $stmt_insert->bindParam(':middle_name', $middle_name);
-                        // $stmt_insert->bindParam(':password', $password);
-                        // $stmt_insert->bindParam(':civil_status', $civil_status);
-                        // $stmt_insert->bindParam(':nationality', $nationality);
-                        // $stmt_insert->bindParam(':contact_number', $contact_number);
-                        // $stmt_insert->bindParam(':birthday', $birthday);
-                        // $stmt_insert->bindParam(':age', $age);
-                        // $stmt_insert->bindParam(':sex', $sex);
-                        // // 
-                        // // SHOULD BE NULL FIRST.
-                        // $stmt_insert->bindParam(':course_id', $selected_course_id_value);
-                        // $stmt_insert->bindParam(':student_unique_id', $generateStudentUniqueId);
-                        // $stmt_insert->bindParam(':course_level', $pending_course_level);
-                        // $stmt_insert->bindParam(':username', $username);
-                        // $stmt_insert->bindParam(':address', $address);
-                        // $stmt_insert->bindParam(':lrn', $lrn);
-                        // $stmt_insert->bindParam(':religion', $religion);
-                        // $stmt_insert->bindParam(':birthplace', $birthplace);
-                        // $stmt_insert->bindParam(':email', $email);
-                        // $stmt_insert->bindValue(':student_statusv2', "Regular");
-                        // // replaced by new_enrollee
-                        // // $stmt_insert->bindValue(':admission_status', "");
-                        // $stmt_insert->bindValue(':is_tertiary', $type == "Tertiary" ? 1 : 0);
-                        
-                        // $stmt_insert->bindValue(':new_enrollee', 1);
-
-                        
-
-                        // if($stmt_insert->execute()){
+ 
                         $new_enrollee = 1;
 
+                        // Course Id of New Transferee should be 0 
                         if($student->InsertStudentFromPendingTable($firstname, $lastname, $middle_name, $password, $civil_status, $nationality,
-                            $contact_number, $birthday, $age, $sex, $selected_course_id_value, $generateStudentUniqueId,
-                            $pending_course_level, $username, $address, $lrn, $religion, $birthplace, $email,
+                            $contact_number, $birthday, $age, $sex, 0, $generateStudentUniqueId,
+                            0, $username, $address, $lrn, $religion, $birthplace, $email,
                             $type, $new_enrollee)){
 
                             $generated_student_id = $con->lastInsertId();
@@ -351,33 +312,9 @@
                                 Alert::error("Attaching Parent has failed", "");
                                 exit();
                             }
- 
-                            // Enrollment - r.e=no
-                            // $insert_enrollment = $con->prepare("INSERT INTO enrollment
-                            //     (student_id, course_id, school_year_id, enrollment_status, is_new_enrollee,
-                            //         registrar_evaluated, is_transferee, enrollment_form_id,
-                            //         is_tertiary, enrollment_date, student_status)
-                            //     VALUES (:student_id, :course_id, :school_year_id, :enrollment_status,
-                            //         :is_new_enrollee, :registrar_evaluated, :is_transferee, :enrollment_form_id, :is_tertiary,
-                            //         :enrollment_date, :student_status)");
-
-                            // $insert_enrollment->bindValue(':student_id', $generated_student_id);
-                            // $insert_enrollment->bindValue(':course_id', $selected_course_id_value);
-                            // $insert_enrollment->bindValue(':enrollment_date', $now);
-                            // $insert_enrollment->bindValue(':school_year_id', $current_school_year_id);
-                            // $insert_enrollment->bindValue(':enrollment_status', "tentative");
-                            // $insert_enrollment->bindValue(':is_new_enrollee', 1);
-
-                            // # Modified
-                            // $insert_enrollment->bindValue(':registrar_evaluated', "no");
-                            // $insert_enrollment->bindValue(':is_transferee', $admission_status == "Transferee" ? 1 : 0);
-                            // $insert_enrollment->bindValue(':enrollment_form_id', $enrollment_form_id);
-                            // $insert_enrollment->bindValue(':is_tertiary', $type == "Tertiary" ? 1 : 0);
-                            // // New Student From Online
-                            // $insert_enrollment->bindValue(':student_status', "Regular");
-
 
                             // if($insert_enrollment->execute()){ fadd
+                            // it should follow the enrollment course id into student table.
                             if($enrollment->InsertPendingRequestToEnrollment($generated_student_id,
                                 $selected_course_id_value, $now, $current_school_year_id,
                                 $admission_status, $enrollment_form_id, $type)){
@@ -397,14 +334,10 @@
 
                                     if($pendingSuccess == true){
 
-                                        // $url = "process_enrollment.php?subject_evaluation=show&selected_course_id=$selected_course_id_value";
-                                        // $xd = "process_enrollment.php?step3=show&st_id=$generated_student_id&c_id=$selected_course_id_value";
-
                                         $student_table_subject_review = "process_enrollment.php?subject_review=show&st_id=$generated_student_id&selected_course_id=$selected_course_id_value";
 
                                         Alert::success("Success Up to Pending (5steps)",
                                             $student_table_subject_review);
-
                                         exit();
                                     }
                                 }
@@ -432,6 +365,7 @@
                                 <div class="title">
                                     <h1>Enrollment form</h1> 
                                 </div>
+                                
                                 <div class="action">
                                     <div class="dropdown">
 
@@ -440,9 +374,12 @@
                                         </button>
 
                                         <div class="dropdown-menu">
-                                            <a href="#" class="dropdown-item" style="color: red"
-                                            ><i class="bi bi-file-earmark-x"></i>Delete form</a
-                                            >
+                                            <a href="#" class="dropdown-item" style="color: red">
+                                                <i class="bi bi-file-earmark-x"></i>Delete form
+                                            </a>
+                                            <a href="form_alignment.php?id=<?php echo $pending_enrollees_id;?>" class="text-primary dropdown-item">
+                                                <i class="bi bi-pencil"></i>Edit form
+                                            </a>
                                         </div>
                                         
                                     </div>
@@ -490,12 +427,10 @@
                                                             <label label for="track">Track</label>
 
                                                             <div>
-                                                                <select style="pointer-events: none;" id="inputTrack" class="form-select">
+                                                                <select class="text-center" style="pointer-events: none;" id="inputTrack" class="form-select">
                                                                     <?php 
 
                                                                         // $SHS_DEPARTMENT = 4;
-
-
                                                                     
                                                                         $track_sql = $con->prepare("SELECT 
                                                                             program_id, track, acronym 
@@ -528,7 +463,7 @@
                                                         <span>
                                                             <label for="strand">Strand</label>
 
-                                                            <select onchange="chooseStrand(this, <?php echo $pending_enrollees_id;?>)" 
+                                                            <select style="width: 170px" class="text-center" onchange="chooseStrand(this, <?php echo $pending_enrollees_id;?>)" 
                                                                 name="strand" id="strand" class="form-select">
                                                                 <?php 
 
@@ -567,7 +502,7 @@
                                                         <span>
                                                             <label label for="track">Track</label>
                                                             <div>
-                                                                <select style="pointer-events: none;" id="inputTrack" class="form-select">
+                                                                <select style="width: 170px" class="text-center" style="pointer-events: none;" id="inputTrack" class="form-select">
                                                                     <?php 
                                                                         $SHS_DEPARTMENT = 4;
 
@@ -603,7 +538,7 @@
 
                                                         <span>
                                                             <label for="strand">Strand</label>
-                                                            <select onchange="chooseStrand(this, <?php echo $pending_enrollees_id;?>)" 
+                                                            <select class="text-center" style="width: 170px" onchange="chooseStrand(this, <?php echo $pending_enrollees_id;?>)" 
                                                                 name="strand" id="strand" class="form-select">
                                                                 <?php 
                                                                 
@@ -746,8 +681,10 @@
 
                                                         WHERE program_id=:program_id
                                                         AND active=:active
-                                                        AND school_year_term=:school_year_term
-                                                        AND course_level=:course_level
+                                                        AND school_year_term =:school_year_term
+                                                        AND course_level =:course_level
+                                                        AND is_full ='no'
+                                                        AND is_remove = 0
                                                         ");
 
                                                     $sql->bindParam(":program_id", $program_id);
@@ -780,17 +717,17 @@
 
                                                             }
                                                             echo "
-                                                            <tr class='text-center'>
-                                                                <td>$course_id</td>
-                                                                <td>$program_section</td>
-                                                                <td>$totalStudent</td>
-                                                                <td>$capacity</td>
-                                                                <td>$school_year_term</td>
-                                                                <td>
-                                                                    <input name='selected_course_id' class='radio' value='$course_id' type='radio' " . (($totalStudent == $capacity) ? "disabled" : "") . ">
-                                                                </td>
-                                                            </tr>
-                                                        ";
+                                                                <tr class='text-center'>
+                                                                    <td>$course_id</td>
+                                                                    <td>$program_section</td>
+                                                                    <td>$totalStudent</td>
+                                                                    <td>$capacity</td>
+                                                                    <td>$school_year_term</td>
+                                                                    <td>
+                                                                        <input name='selected_course_id' class='radio' value='$course_id' type='radio' " . (($totalStudent == $capacity) ? "disabled" : "") . ">
+                                                                    </td>
+                                                                </tr>
+                                                            ";
                                                         }
                                                         
                                                     }else{
@@ -1368,7 +1305,6 @@
 
         $student_course_id = $student->GetStudentCurrentCourseId();
 
-        $section = new Section($con, $student_course_id);
 
         $promptIDIfDoesntExists = $student->CheckIdExists($student_id);
 
@@ -1389,7 +1325,9 @@
         $student_nationality = $student->GetNationality();
         $student_religion = $student->GetReligion();
         $student_email = $student->GetEmail();
-        $student_status = $student->GetStudentStatus();
+        $student_status_st = $student->GetStudentStatus();
+
+        // echo $student_status_st;
 
         $type = $type_status == 1 ? "Tertiary" : ($type_status === 0 ? "SHS" : "");
         $student_suffix = $student->GetSuffix();
@@ -1397,21 +1335,22 @@
 
         $student_unique_id = $student->GetStudentUniqueId();
 
-        $student_program_section = $section->GetSectionName();
-        $section_capacity = $section->GetSectionCapacity();
+        // $student_program_section = $section->GetSectionName();
 
         // $student_enrollment_id = $enrollment->GetEnrollmentId($student_id,
         //     $student_course_id, $current_school_year_id);
 
         $student_enrollment_id = $enrollment->GetEnrollmentIdNonDependent($student_id,
             $current_school_year_id);
+
         
-        // echo $student_enrollment_id;
-            
        $student_enrollment_course_id = $enrollment->GetEnrollmentFormCourseId($student_id,
             $student_enrollment_id, $current_school_year_id);
 
         $student_enrollment_student_status = $enrollment->GetEnrollmentFormStudentStatus($student_id,
+            $student_enrollment_id, $current_school_year_id);
+
+        $student_enrollment_retake_status = $enrollment->GetEnrollmentFormRetakeStatus($student_id,
             $student_enrollment_id, $current_school_year_id);
         
         $student_enrollment_is_transferee = $enrollment->GetEnrollmentFormIsTransferee($student_id,
@@ -1420,16 +1359,28 @@
         $student_enrollment_is_new = $enrollment->GetEnrollmentFormIsTransferee($student_id,
             $student_enrollment_id, $current_school_year_id);
 
-        // echo $student_enrollment_course_id;
+        $student_evaluated_by_registrar = $enrollment->CheckEnrollmentFormRegistrarEvaluated($student_id,
+            $student_enrollment_id, $current_school_year_id);
+
+        // echo $student_enrollment_is_new;
+
 
         $student_enrollment_form_id = $enrollment->GetEnrollmentFormId($student_id,
             $student_enrollment_course_id, $current_school_year_id);
+        
+        $section = new Section($con, $student_enrollment_course_id);
+        $student_program_section = $section->GetSectionName();
+        $section_capacity = $section->GetSectionCapacity();
 
+        $student_program_id = $section->GetSectionProgramId($student_enrollment_course_id === 0 ? $student_course_id : $student_enrollment_course_id);
 
-        // If only given a form. 
+        $student_enrollment_course_level = $section->GetSectionGradeLevel($student_enrollment_course_id === 0 ? $student_course_id : $student_enrollment_course_id);
 
-        $asd = $student_status;
-        // echo $student_enrollment_id;
+        // echo $student_program_id;
+
+        $program = new Program($con, $student_program_id);
+
+        $student_program_acronym = $program->GetProgramAcronym();
 
         $enrollment_creation = $enrollment->GetEnrollmentDate($student_id,
             $student_course_id, $current_school_year_id);
@@ -1441,7 +1392,7 @@
             $student_course_id, $current_school_year_id);
 
         $section_name = $section->GetSectionName();
-        $student_program_id = $section->GetSectionProgramId($student_course_id);
+        // $student_program_id = $section->GetSectionProgramId($student_course_id);
 
         // Parent based on Student ID.
 
@@ -1479,8 +1430,7 @@
         if(isset($_GET['details']) 
             && $_GET['details'] == "show"){
 
-            include("./student_process_step1.php");
-                
+            include("./form_details.php");
         }
 
         if(isset($_GET['find_section']) 
@@ -1489,8 +1439,6 @@
             ){
 
             include_once('./student_find_section.php');
-
-            // Student course id in the url.
                 
         }
 
@@ -1499,7 +1447,6 @@
             && isset($_GET['selected_course_id'])){
 
             include_once('./subject_review.php');
-
         }
     }
 

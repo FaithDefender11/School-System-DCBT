@@ -13,7 +13,6 @@
   $current_school_year_period = $school_year_obj['period'];
 
 ?>
- 
 
 <div style="display: none;" class="row col-md-12">
   <div class="content">
@@ -41,28 +40,29 @@
 
                   while($row = $query->fetch(PDO::FETCH_ASSOC)){
 
-                      $term = $row['term'];
-                      $school_year_id = $row['school_year_id'];
+                    $term = $row['term'];
+                    $school_year_id = $row['school_year_id'];
 
-                      $text = "";
+                    $text = "";
 
-                      if($term == $current_school_year_term){
-                        $text = "Current";
-                      }
+                    if($term == $current_school_year_term){
+                      $text = "Current";
+                    }
 
-                      echo "
-                        <tr style='font-weight: 700'>
-                          <td style='font-weight: 700'>$term</td>
-                          <td style='text-align: right'>$text</td>
-                          <td>
-                              <a href='timeframe.php?term=$term'>
-                                <button type='button' class='redirect-btn' id='shs-calendar'>
-                                  <i class='bi bi-arrow-right-circle'></i>
-                                </button>
-                              </a>
-                            </td>
-                        </tr>
-                      ";
+                    echo "
+                      <tr style='font-weight: 700'>
+                        <td style='font-weight: 700'>$term</td>
+                        <td style='text-align: right'>$text</td>
+                        <td>
+                            <a href='timeframe.php?term=$term'>
+                              <button type='button' class='redirect-btn' id='shs-calendar'>
+                                <i class='bi bi-arrow-right-circle'></i>
+                              </button>
+                            </a>
+                          </td>
+                      </tr>
+                    ";
+                    
                   }
                 }
               ?>

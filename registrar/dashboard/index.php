@@ -1,4 +1,84 @@
-<?php include_once('../../includes/registrar_header.php')?>
+<?php 
+
+    include_once('../../includes/registrar_header.php');
+    include_once('../../includes/classes/StudentSubject.php');
+    include_once('../../includes/classes/Enrollment.php');
+    include_once('../../includes/classes/SchoolYear.php');
+    include_once('../../includes/classes/Student.php');
+    include_once('../../includes/classes/Task.php');
+
+    // $task = new Task($con);
+    // $task->MarkStudentAsApplicable();
+
+    // $school_year_obj = $school_year->GetActiveSchoolYearAndSemester();
+
+    // $current_school_year_term = $school_year_obj['term'];
+    // $current_school_year_period = $school_year_obj['period'];
+    // $current_school_year_id = $school_year_obj['school_year_id'];
+
+    // $studentQuery = $con->prepare("SELECT *
+        
+
+    //     FROM student as t1
+
+    //     INNER JOIN enrollment as t2 ON t2.student_id = t1.student_id
+    //     AND school_year_id=:school_year_id
+    //     AND enrollment_status=:enrollment_status
+
+
+    //     WHERE t1.active = 1
+    //     AND t1.nsy_applicable = 0
+        
+    // ");
+    // $studentQuery->bindParam(":school_year_id", $current_school_year_id);
+    // $studentQuery->bindValue(":enrollment_status", "enrolled");
+    // $studentQuery->execute();
+
+    // if($studentQuery->rowCount() > 0){
+
+    //     $enrollment = new Enrollment($con);
+    //     $student_subject = new StudentSubject($con);
+
+    //     while($row = $studentQuery->fetch(PDO::FETCH_ASSOC)){
+
+    //         $student_name = $row['firstname'];
+    //         $student_id = $row['student_id'];
+
+    //         // Get student enrollment form id within current semester & S.Y
+    //         $student_enrollment_id = $enrollment->GetEnrollmentIdNonDependent($student_id,
+    //             $current_school_year_id);
+
+    //         // echo $student_enrollment_id;
+    //         // echo "<br>";
+
+    //         $applicableStudentId = $student_subject->CheckCurrentSemesterSubjectAllPassed($student_enrollment_id,
+    //             $student_id, $current_school_year_id);
+
+    //         if($applicableStudentId != 0){
+
+    //             $student = new Student($con, $applicableStudentId);
+
+    //             $applicable = $student->DoesApplicableToApplyNextYear();
+
+    //             if($applicable == 0){
+
+    //                 if($student->UpdateStudentApplicableApplyNextSY($applicableStudentId) == true){
+
+    //                     // Student id that has qualified requirements.
+    //                     // Enrollment form based.
+    //                     echo $applicableStudentId . "has been eligible to apply next s_y";
+
+    //                 }
+    //             }
+    //         }
+    //         else{
+    //             // echo "nothing eligible";
+    //         }
+    //     }
+    // }
+
+
+?>
 
 
     <div class="col-md-12 row table-responsive">

@@ -13,6 +13,7 @@
         $program_id = $_POST['program_id'];
         $subject_template_id = $_POST['subject_template_id'];
 
+        // echo $program_id;
         // $subject_code = $_POST['subject_code'];
 
         $course_level = $_POST['course_level'];
@@ -33,6 +34,7 @@
             
             $subject_title = $row['subject_title'];
             $subject_code = $row['subject_code'];
+            $template_program_id = $row['program_id'];
 
             $description = $row['description'];
             $unit = $row['unit'];
@@ -40,10 +42,10 @@
             $pre_requisite_title = $row['pre_requisite_title'];
 
 
-            if($subject_program->CheckIfSubjectProgramExists($subject_title) == true){
+            if($subject_program->CheckIfSubjectProgramExists($subject_title, $template_program_id) == true){
                 echo "already_registered";
 
-            }else if($subject_program->CheckIfSubjectProgramExists($subject_title) == false){
+            }else if($subject_program->CheckIfSubjectProgramExists($subject_title, $template_program_id) == false){
                 $create = $con->prepare("INSERT INTO subject_program
                         (program_id, subject_code, pre_req_subject_title, 
                             subject_title, unit, description, 
@@ -53,7 +55,7 @@
                             :subject_title, :unit, :description,
                             :course_level, :semester, :subject_type, :subject_template_id)");
                                             
-                $create->bindParam(':program_id', $program_id);
+                $create->bindValue(':program_id', $template_program_id == 0 ? $program_id : $template_program_id);
                 $create->bindParam(':subject_code', $subject_code);
                 $create->bindParam(':pre_req_subject_title', $pre_requisite_title);
                 $create->bindParam(':subject_title', $subject_title);

@@ -45,6 +45,7 @@
 
         return $sql->rowCount() > 0;
     }
+   
 
     public function CheckRequestEnrollmentRequestValid($enrollment_form_id,
         $student_id, $school_year_id){
@@ -121,8 +122,11 @@
         }
         return null;
     }
+
     public function GetStudentSectionGradeLevelSemester(
         $student_id, $grade_level, $SEMESTER){
+
+        // echo $grade_level;
 
         $query = $this->con->prepare("SELECT 
 
@@ -131,7 +135,8 @@
             e.enrollment_approve,
             c.course_level,
             c.course_id,
-            e.student_status
+            e.student_status,
+            e.enrollment_form_id
 
             FROM enrollment e
 
@@ -139,10 +144,10 @@
             INNER JOIN course c ON c.course_id = e.course_id
 
             WHERE e.student_id = :student_id
-            AND e.enrollment_status=:enrollment_status
-            AND sy.period =:selected_semester
-            AND c.course_level =:course_level
-            -- AND c.course_id =:course_id
+            AND e.enrollment_status = :enrollment_status
+            AND sy.period = :selected_semester
+            AND c.course_level = :course_level
+            AND e.retake = 0
             ");
 
         $query->bindValue(":student_id", $student_id); 
@@ -156,18 +161,153 @@
             // print_r($result);
             return $result;
         }
+
         return null;
     }
 
-    public function getEnrollmentSectionDetails($student_id, $grade_level, $semester){
+    public function RetakeEnrollment($student_id){
+        $query = $this->con->prepare("SELECT 
 
-        $enrollment = new Enrollment($this->con); // Assuming $this->con is your database connection
+            t1.*, t2.term, t2.period,
+            t3.course_id, t3.program_section,
+            t3.course_level
 
-        $enrollmentDetails = $enrollment->GetStudentSectionGradeLevelSemester($student_id, $grade_level, $semester);
+            -- t4.subject_code,
 
-        if ($enrollmentDetails === null) {
-            return null;
+            -- t5.subject_code AS sp_subjectCode
+
+            FROM enrollment AS t1
+
+            INNER JOIN school_year AS t2 ON t2.school_year_id = t1.school_year_id
+        
+            LEFT JOIN course AS t3 ON t3.course_id = t1.course_id
+
+            -- LEFT JOIN student_subject AS t4 ON t4.enrollment_id = t1.enrollment_id
+            -- AND t1.student_id = t4.student_id
+
+            -- LEFT JOIN subject_program AS t5 ON t5.subject_program_id = t4.subject_program_id
+
+
+            WHERE t1.student_id=:student_id
+            AND t1.retake = 1
+
+            ");
+
+            $query->bindValue(":student_id", $student_id); 
+            $query->execute(); 
+
+            if($query->rowCount() > 0){
+
+                // while($row = $query->fetch(PDO::FETCH_ASSOC)){
+
+                //     $enrollment_id = $row['enrollment_id'];
+                //     $course_id = $row['course_id'];
+                //     $school_year_id = $row['school_year_id'];
+
+                // }
+                $result = $query->fetchAll(PDO::FETCH_ASSOC);
+                // print_r($result);
+                return $result;
+            }
+
+            return []; 
+    }
+
+    public function GetEnrolledSubjectForm($student_id){
+        $query = $this->con->prepare("SELECT 
+
+            t1.*, t2.term, t2.period, t2.school_year_id,
+            t3.course_id, t3.program_section,
+            t3.course_level
+
+            -- t4.subject_code,
+
+            -- t5.subject_code AS sp_subjectCode
+
+            FROM enrollment AS t1
+
+            INNER JOIN school_year AS t2 ON t2.school_year_id = t1.school_year_id
+        
+            LEFT JOIN course AS t3 ON t3.course_id = t1.course_id
+
+            WHERE t1.student_id=:student_id
+            -- AND t1.retake = 1
+
+            ");
+
+            $query->bindValue(":student_id", $student_id); 
+            $query->execute(); 
+
+            if($query->rowCount() > 0){
+
+                $result = $query->fetchAll(PDO::FETCH_ASSOC);
+                // print_r($result);
+                return $result;
+            }
+
+            return []; 
+    }
+ 
+    public function GetRetake($student_id){
+
+        // echo $grade_level;
+
+        $query = $this->con->prepare("SELECT 
+
+            t1.enrollment_id,
+            t1.student_status,
+            t2.term,
+            t2.period,
+            t3.program_section,
+            t3.course_id,
+
+            t4.subject_code,
+
+            t5.remarks
+
+            FROM enrollment AS t1
+
+            INNER JOIN school_year AS t2 ON t2.school_year_id = t1.school_year_id
+            INNER JOIN course AS t3 ON t3.course_id = t1.course_id
+
+            INNER JOIN student_subject AS t4 ON t4.enrollment_id = t1.enrollment_id
+            AND t1.student_id = t4.student_id
+
+            LEFT JOIN student_subject_grade AS t5 ON t5.student_subject_id = t4.student_subject_id
+ 
+            WHERE t1.student_id=:student_id
+            AND t1.retake= 1
+
+            ");
+
+        $query->bindValue(":student_id", $student_id); 
+        $query->execute(); 
+
+        if($query->rowCount() > 0){
+
+            // while($row = $query->fetch(PDO::FETCH_ASSOC)){
+            // }
+            $result = $query->fetchAll(PDO::FETCH_ASSOC);
+            // print_r($result);
+            return $result;
         }
+
+        return null;
+    }
+
+    public function getEnrollmentSectionDetails($student_id,
+        $grade_level, $semester){
+
+        $enrollment = new Enrollment($this->con); 
+
+        // echo $semester;
+
+        $enrollmentDetails = $enrollment->GetStudentSectionGradeLevelSemester(
+            $student_id, $grade_level, $semester
+        );
+
+        if ($enrollmentDetails === null) return null;
+
         $enrollment_course_id = $enrollmentDetails['course_id'];
         $enrollment_date_approved = $enrollmentDetails['enrollment_approve'];
         $enrollment_student_status = $enrollmentDetails['student_status'];
@@ -253,8 +393,10 @@
 
             FROM student as t1
             INNER JOIN enrollment as t2 ON t2.student_id = t1.student_id
+            AND t1.active = 1
 
-            AND t2.course_id = t1.course_id
+            AND (t2.course_id = t1.course_id OR t2.course_id = 0 OR t2.course_id != 0)
+
             -- AND t2.student_status = 'Irregular'
             AND t2.registrar_evaluated = 'no'
             AND t2.cashier_evaluated = 'no'
@@ -449,6 +591,34 @@
 
     }
 
+    public function GetEnrollmentFormRetakeStatus($student_id, $enrollment_id,
+        $school_year_id) {
+
+        $student_status = "";
+
+        // Check if the enrollment form ID already exists in the database
+
+        $sql = $this->con->prepare("SELECT retake FROM enrollment 
+
+            WHERE enrollment_id = :enrollment_id
+            AND student_id = :student_id
+            AND school_year_id = :school_year_id
+            
+        ");
+ 
+        $sql->bindValue(":enrollment_id", $enrollment_id);
+        $sql->bindValue(":student_id", $student_id);
+        $sql->bindValue(":school_year_id", $school_year_id);
+        $sql->execute();
+
+        if($sql->rowCount() > 0){
+            $student_status = $sql->fetchColumn();
+        }
+
+        return $student_status;
+
+    }
+
     public function GetEnrollmentFormIsTransferee($student_id, $enrollment_id,
         $school_year_id) {
 
@@ -457,6 +627,34 @@
         // Check if the enrollment form ID already exists in the database
 
         $sql = $this->con->prepare("SELECT is_transferee FROM enrollment 
+
+            WHERE enrollment_id = :enrollment_id
+            AND student_id = :student_id
+            AND school_year_id = :school_year_id
+            
+        ");
+ 
+        $sql->bindValue(":enrollment_id", $enrollment_id);
+        $sql->bindValue(":student_id", $student_id);
+        $sql->bindValue(":school_year_id", $school_year_id);
+        $sql->execute();
+
+        if($sql->rowCount() > 0){
+            $student_status = $sql->fetchColumn();
+        }
+
+        return $student_status;
+
+    }
+
+    public function CheckEnrollmentFormRegistrarEvaluated($student_id, $enrollment_id,
+        $school_year_id) {
+
+        $student_status = "";
+
+        // Check if the enrollment form ID already exists in the database
+
+        $sql = $this->con->prepare("SELECT registrar_evaluated FROM enrollment 
 
             WHERE enrollment_id = :enrollment_id
             AND student_id = :student_id
@@ -589,7 +787,13 @@
         $registrar_side = $this->con->prepare("SELECT 
 
             t1.student_id, t1.cashier_evaluated,t1.registrar_evaluated,
-            t1.enrollment_date, t1.is_transferee,
+            t1.enrollment_date,
+            t1.is_transferee,
+            t1.course_id as enrollment_course_id,
+            t1.student_status as enrollment_student_status,
+            t1.is_new_enrollee as enrollment_is_new_enrollee,
+            t1.is_transferee as enrollment_is_transferee,
+            t1.registrar_confirmation_date,
 
             t2.firstname,t2.username, t2.student_statusv2,t2.student_unique_id,
             t2.lastname,t2.course_level,
@@ -621,7 +825,7 @@
 
         $registrar_side->bindValue(":is_new_enrollee", $is_new_enrollee);
         $registrar_side->bindValue(":is_new_enrollee2", 0);
-        $registrar_side->bindValue(":is_transferee", $is_transferee);
+        $registrar_side->bindValue(":is_transferee", 1);
         $registrar_side->bindValue(":is_transferee2", "0");
         $registrar_side->bindValue(":enrollment_status", $enrollment_status);
         $registrar_side->bindValue(":school_year_id", $current_school_year_id);
@@ -649,6 +853,9 @@
 
             t1.student_id, t1.cashier_evaluated,t1.registrar_evaluated,
             t1.is_transferee, t1.enrollment_approve,
+            t1.course_id as enrollment_course_id,
+            t1.enrollment_date,
+            t1.registrar_confirmation_date,
 
             t2.firstname,t2.username, t2.student_unique_id,
             t2.lastname,t2.course_level,
@@ -664,7 +871,6 @@
             t3.program_section
 
             FROM enrollment as t1
-
             INNER JOIN student as t2 ON t2.student_id = t1.student_id
 
             LEFT JOIN course as t3 ON t2.course_id = t3.course_id
@@ -696,8 +902,10 @@
 
             return $registrar_side->fetchAll(PDO::FETCH_ASSOC);
         }
+
         return [];
     }
+
 
     public function EnrolledStudentsWithinSYSemester($current_school_year_id){
 
@@ -809,10 +1017,11 @@
         $student_id, $enrollment_form_id){
 
         $registrar_evaluated = "yes";
+        $now = date("Y-m-d H:i:s");
      
         $update_tentative = $this->con->prepare("UPDATE enrollment
-            SET registrar_evaluated=:registrar_evaluated
-
+            SET registrar_evaluated=:registrar_evaluated,
+                registrar_confirmation_date=:registrar_confirmation_date
             
             WHERE student_id=:student_id
             AND school_year_id=:school_year_id
@@ -821,6 +1030,7 @@
             ");
 
         $update_tentative->bindParam(":registrar_evaluated", $registrar_evaluated);
+        $update_tentative->bindParam(":registrar_confirmation_date", $now);
         $update_tentative->bindParam(":student_id", $student_id);
         $update_tentative->bindParam(":school_year_id", $current_school_year_id);
         $update_tentative->bindParam(":enrollment_form_id", $enrollment_form_id);
@@ -830,34 +1040,181 @@
       
     }
 
-    public function EnrollmentFormMarkAsEnrolled($current_school_year_id, $student_course_id,
-        $student_id, $enrollment_form_id, $student_enrollment_student_status){
+    public function FormUpdateStudentStatus($current_school_year_id,
+        $student_id, $enrollment_id, $type){
+
+        $resetRetake = 0;
+
+        $updateSuccess = false;
+        if($type == "Regular"){
+            $update_tentative = $this->con->prepare("UPDATE enrollment
+                SET student_status=:student_status,
+                    retake=:retake
+
+                WHERE student_id=:student_id
+                AND school_year_id=:school_year_id
+                AND enrollment_id=:enrollment_id
+                ");
+
+            $update_tentative->bindParam(":student_status", $type);
+            $update_tentative->bindParam(":retake", $resetRetake);
+            $update_tentative->bindParam(":student_id", $student_id);
+            $update_tentative->bindParam(":school_year_id", $current_school_year_id);
+            $update_tentative->bindParam(":enrollment_id", $enrollment_id);
+
+            if($update_tentative->execute() && $update_tentative->rowCount() > 0){
+                $updateSuccess = true;
+            }   
+        }
+        if($type == "Irregular"){
+
+            $updateToIrreg = $this->con->prepare("UPDATE enrollment
+                SET student_status=:student_status
+
+                WHERE student_id=:student_id
+                AND school_year_id=:school_year_id
+                AND enrollment_id=:enrollment_id
+                ");
+
+            $updateToIrreg->bindParam(":student_status", $type);
+            $updateToIrreg->bindParam(":student_id", $student_id);
+            $updateToIrreg->bindParam(":school_year_id", $current_school_year_id);
+            $updateToIrreg->bindParam(":enrollment_id", $enrollment_id);
+            if($updateToIrreg->execute() && $updateToIrreg->rowCount() > 0){
+                $updateSuccess = true;
+            } 
+        }
+
+        return $updateSuccess;
+    }
+
+    public function FormUpdateAsRetake($current_school_year_id,
+        $student_id, $enrollment_id, $type){
+
+        $exec = false;
+        if($type == "Retake"){
+            $update_tentative = $this->con->prepare("UPDATE enrollment
+                SET retake=:retake
+
+                WHERE student_id=:student_id
+                AND school_year_id=:school_year_id
+                AND enrollment_id=:enrollment_id
+                ");
+
+            $update_tentative->bindValue(":retake", 1);
+            $update_tentative->bindParam(":student_id", $student_id);
+            $update_tentative->bindParam(":school_year_id", $current_school_year_id);
+            $update_tentative->bindParam(":enrollment_id", $enrollment_id);
+
+            if($update_tentative->execute()){
+                $exec = true;
+            }
+        }
+        elseif($type == "Unretake"){
+            $update_tentative = $this->con->prepare("UPDATE enrollment
+                SET retake=:retake
+
+                
+                WHERE student_id=:student_id
+                AND school_year_id=:school_year_id
+                AND enrollment_id=:enrollment_id
+                ");
+
+            $update_tentative->bindValue(":retake", 0);
+            $update_tentative->bindParam(":student_id", $student_id);
+            $update_tentative->bindParam(":school_year_id", $current_school_year_id);
+            $update_tentative->bindParam(":enrollment_id", $enrollment_id);
+
+            if($update_tentative->execute()){
+                $exec = true;
+            }
+        }
+
+        return $exec;
+    }
+
+    // Was used by enrolled status (Enrolled Subjects)
+    // and tentative status (Approval SubjectInsertion).
+    public function FormUpdateCourseId($current_school_year_id,
+        $student_id, $enrollment_id, $course_id){
+
+        $exec = false;
+        // $enrollment_status = "enrolled";
+
+        $section = new Section($this->con, $course_id);
+
+        $sectionLevel = $section->GetSectionGradeLevel();
+
+        $update_tentative = $this->con->prepare("UPDATE enrollment
+            SET course_id=:course_id
+
+            WHERE student_id=:student_id
+            AND school_year_id=:school_year_id
+            AND enrollment_id=:enrollment_id
+            -- AND enrollment_status=:enrollment_status
+            ");
+
+        $update_tentative->bindValue(":course_id", $course_id);
+        $update_tentative->bindParam(":student_id", $student_id);
+        $update_tentative->bindParam(":school_year_id", $current_school_year_id);
+        $update_tentative->bindParam(":enrollment_id", $enrollment_id);
+        // $update_tentative->bindParam(":enrollment_status", $enrollment_status);
+
+        if($update_tentative->execute() && $update_tentative->rowCount() > 0){
+
+            // Update student
+            $update_student_course = $this->con->prepare("UPDATE student 
+                SET course_id=:change_course_id,
+                    course_level=:change_course_level
+
+                WHERE student_id=:student_id
+                AND active = 1
+                ");
+
+            $update_student_course->bindParam(":change_course_id", $course_id);
+            $update_student_course->bindParam(":change_course_level", $sectionLevel);
+            $update_student_course->bindParam(":student_id", $student_id);
+            
+            if($update_student_course->execute()){
+                $exec = true;
+            }
+        }
+        return $exec;
+    }
+
+    public function EnrollmentFormMarkAsEnrolled($current_school_year_id,
+        $student_course_id, $student_id, $enrollment_form_id,
+        $student_enrollment_student_status){
 
         $enrollment_status = "enrolled";
         $now = date("Y-m-d H:i:s");
-     
+
 
         $update_tentative = $this->con->prepare("UPDATE enrollment
             SET enrollment_status=:enrollment_status,
-                enrollment_approve=:enrollment_approve,
-                student_status=:student_status
+                enrollment_approve=:enrollment_approve
+
+                -- student_status=:student_status
 
             
             WHERE student_id=:student_id
             AND school_year_id=:school_year_id
             AND enrollment_form_id=:enrollment_form_id
-            AND course_id=:course_id
+            -- AND course_id=:course_id
             ");
 
         $update_tentative->bindValue(":enrollment_status", $enrollment_status);
         $update_tentative->bindValue(":enrollment_approve", $now);
-        $update_tentative->bindValue(":student_status", $student_enrollment_student_status);
+        // $update_tentative->bindValue(":student_status", $student_enrollment_student_status);
         $update_tentative->bindValue(":student_id", $student_id);
         $update_tentative->bindValue(":school_year_id", $current_school_year_id);
         $update_tentative->bindValue(":enrollment_form_id", $enrollment_form_id);
-        $update_tentative->bindValue(":course_id", $student_course_id);
+        // $update_tentative->bindValue(":course_id", $student_course_id);
 
-        return $update_tentative->execute(); 
+        if($update_tentative->execute()){
+            return true;
+        } 
+        return false;
       
     }
 
@@ -884,8 +1241,6 @@
       
     }
 
-
-
     public function CheckEnrollmentEnrolled($student_id, $course_id,
         $school_year_id, $student_enrollment_id) {
 
@@ -908,11 +1263,33 @@
         $sql->bindValue(":enrollment_status", "enrolled");
         $sql->execute();
 
-        return $sql->rowCount() > 0;
+        return $sql->rowCount() > 0 ? "true" : "false";
     }
 
-    public function GetCourseIdByEnrollmentForm($student_id, $enrollment_form_id,
-        $school_year_id) {
+    public function CheckEnrollmentEnrolledStatus($student_id,
+        $school_year_id, $student_enrollment_id) {
+
+        // Check if the enrollment form ID already exists in the database
+
+        $sql = $this->con->prepare("SELECT enrollment_status FROM enrollment
+
+            WHERE student_id = :student_id
+            AND school_year_id = :school_year_id
+            AND enrollment_id = :enrollment_id
+            ");
+        $sql->bindParam(":student_id", $student_id);
+        $sql->bindParam(":school_year_id", $school_year_id);
+        $sql->bindParam(":enrollment_id", $student_enrollment_id);
+        $sql->execute();
+
+        if($sql->rowCount() > 0){
+            return $sql->fetchColumn();
+        }
+        return "";
+    }
+
+    public function GetCourseIdByEnrollmentForm($student_id,
+        $enrollment_form_id, $school_year_id) {
 
         $sql = $this->con->prepare("SELECT course_id FROM enrollment 
             WHERE student_id = :student_id
@@ -929,6 +1306,24 @@
         }
         return 0;
     }
+
+    public function GetAllEnrolledEnrollmentCourseIDWithinSemester($school_year_id) {
+
+        $sql = $this->con->prepare("SELECT course_id FROM enrollment 
+            WHERE school_year_id = :school_year_id
+            AND enrollment_status = 'enrolled'
+            AND enrollment_approve IS NOT NULL
+            ");
+        
+        $sql->bindParam(":school_year_id", $school_year_id);
+        $sql->execute();
+
+        if($sql->rowCount() > 0){
+            return $sql->fetchAll(PDO::FETCH_COLUMN);
+        }
+        return [];
+    }
+
 
     public function UpdateEnrollmentCourseId($student_id, $enrollment_form_id,
         $school_year_id, $course_id) {
@@ -947,6 +1342,49 @@
         return $sql->execute();
     }
 
+    public function GetEnrolledNewStudentWithinSemester($school_year_id) {
+
+        $sql = $this->con->prepare("SELECT student_id FROM enrollment 
+            WHERE school_year_id = :school_year_id
+            AND enrollment_status = 'enrolled'
+            AND enrollment_approve IS NOT NULL
+            AND is_new_enrollee = 1
+            ");
+        
+        $sql->bindParam(":school_year_id", $school_year_id);
+
+        $sql->execute();
+
+        if($sql->rowCount() > 0){
+            return $sql->fetchAll(PDO::FETCH_COLUMN);
+        }
+        return [];
+    }
+    public function GetEnrolledRegularStudentWithinSemester($school_year_id) {
+
+        $sql = $this->con->prepare("SELECT 
+        
+            t2.student_id 
+            
+            FROM enrollment AS t1
+
+            INNER JOIN student as t2 ON t2.student_id = t1.student_id
+            AND t2.student_statusv2 = 'Regular'
+
+            WHERE t1.school_year_id = :school_year_id
+            AND t1.enrollment_status = 'enrolled'
+            AND t1.enrollment_approve IS NOT NULL
+            ");
+        
+        $sql->bindParam(":school_year_id", $school_year_id);
+
+        $sql->execute();
+
+        if($sql->rowCount() > 0){
+            return $sql->fetchAll(PDO::FETCH_COLUMN);
+        }
+        return [];
+    }
 
     public function ApplyEnrollmentOS($student_id, $course_id, $school_year_id,
         $enrollment_form_id, $isRegular, $type){
@@ -955,7 +1393,8 @@
 
         // $registrar_evaluated = $isRegular == "Regular" ? "yes" : "no";
         $registrar_evaluated = "no";
-        $student_status = $isRegular == "Regular" ? "Regular" : "Irregular";
+        // $student_status = $isRegular == "Regular" ? "Regular" : "Irregular";
+        $student_status = $isRegular == "Regular" ? "Regular" : "";
         $is_tertiary = $type == "Tertiary" ? 1 : 0;
 
         $sql = $this->con->prepare("INSERT INTO enrollment
@@ -965,7 +1404,8 @@
                 :is_transferee, :registrar_evaluated, :student_status, :is_tertiary)");
 
         $sql->bindParam(":student_id", $student_id);
-        $sql->bindParam(":course_id", $course_id);
+        // Registrar would select the course
+        $sql->bindValue(":course_id", 0);
         $sql->bindParam(":school_year_id", $school_year_id);
         $sql->bindParam(":enrollment_form_id", $enrollment_form_id);
         $sql->bindParam(":enrollment_date", $now);

@@ -23,33 +23,46 @@
 
     if(isset($_GET['e_id']) && isset($_GET['st_id'])){
 
-
-
         $enrollment_id = $_GET['e_id'];
         $student_id = $_GET['st_id'];
 
-
         $student = new Student($con, $student_id);
         $enrollment = new Enrollment($con);
-
-        $student_course_id = $student->GetStudentCurrentCourseId();
-
-        $section = new Section($con, $student_course_id);
-        $section_name = $section->GetSectionName();
-
-        $student_program_id = $section->GetSectionProgramId($student_course_id);
-        $student_course_level = $student->GetStudentLevel($student_id);
 
 
         $student_enrollment_course_id = $enrollment->GetEnrollmentFormCourseId($student_id,
             $enrollment_id, $current_school_year_id);
 
+        // $student_enrollment_course_id = $student->GetStudentCurrentCourseId();
+        // $student_enrollment_course_id= 805;
+
+        $section = new Section($con, $student_enrollment_course_id);
+        $section_name = $section->GetSectionName();
+
+        $student_program_id = $section->GetSectionProgramId($student_enrollment_course_id);
+        $student_course_level = $student->GetStudentLevel($student_id);
+
+        $student_enrollment_course_id = $enrollment->GetEnrollmentFormCourseId($student_id, $enrollment_id, $current_school_year_id);
+
+        $enrollment_section_level = $section->GetSectionGradeLevel($student_enrollment_course_id);
+
+
+        $student_enrollment_course_id = $enrollment->GetEnrollmentFormCourseId($student_id,
+            $enrollment_id, $current_school_year_id);
+        
+        $back_url = "process_enrollment.php?subject_review=show&st_id=$student_id&selected_course_id=$student_enrollment_course_id";
 
         ?>
             <div class="content">
+                <nav>
+                    <a href="<?php echo $back_url;?>"><i class="bi bi-arrow-return-left fa-1x"></i>
+                        <h3>Back</h3>
+                    </a>
+                </nav>
                 <main>
                     <div class="floating">
                         <header class="mb-2">
+
                             <div class="title">
                                 <h4 class="text-center">Subject Curriculum</h4>
                             </div>
@@ -57,9 +70,11 @@
                         </header>
                         <main>
 
-                            <table id="credited_subject_table" class="ws-table-all cw3-striped cw3-bordered" style="margin: 0">
+                            <table id="credited_subject_table" class="a" style="margin: 0">
                                 <thead>
                                     <tr class="text-center"> 
+                                        <th rowspan="2">SS_ID</th>
+                                        <th rowspan="2">SP_ID</th>
                                         <th rowspan="2">Code</th>
                                         <th rowspan="2">Description</th>
                                         <th rowspan="2">Unit</th>
@@ -78,14 +93,23 @@
 
                                             t2.subject_program_id AS ss_subject_program_id,
 
-                                            t2.is_transferee, t2.enrollment_id, t2.student_subject_id
+                                            t2.is_transferee, t2.enrollment_id,
+                                            t2.student_subject_id, t2.is_final,
+                                            t2.student_id,
+                                            t2.school_year_id,
+
+                                            t3.student_subject_id AS ssg_student_subject_id
                                         
                                             FROM subject_program AS t1
 
                                             LEFT JOIN student_subject as t2 ON t2.subject_program_id = t1.subject_program_id
-                                            -- AND t2.enrollment_id IS NULL
-                                            -- AND t2.is_transferee = 1
+                                           
                                             AND t2.student_id =:student_id
+
+
+                                            LEFT JOIN student_subject_grade AS t3 ON t3.student_subject_id = t2.student_subject_id
+                                            AND t3.remarks = 'Passed'
+                                            AND t3.student_id = t2.student_id
 
                                             
                                             WHERE t1.program_id=:program_id
@@ -116,74 +140,111 @@
                                                 $is_transferee = $row['is_transferee'];
                                                 $student_subject_id = $row['student_subject_id'];
                                                 $query_enrollment_id = $row['enrollment_id'];
-
+                                                $is_final = $row['is_final'];
+                                                $ss_student_id = $row['student_id'];
+                                                $ssg_student_subject_id = $row['ssg_student_subject_id'];
+                                                $ss_school_year_id = $row['school_year_id'];
 
                                                 $student_subject_code = $section->CreateSectionSubjectCode($section_name,
                                                     $subject_code);
 
-
-
                                                 $action = "";
 
-                                                $credit_btn = "creditSubjectAction($subject_program_id, $current_school_year_id, $student_id, \"$subject_title\")";
-                                                $undo_credit_btn = "undoCreditSubjectAction($subject_program_id, $current_school_year_id, $student_id, \"$subject_title\")";
+                                                $credit_btn = "creditNonAssignSubject($subject_program_id, $current_school_year_id, $student_id, \"$subject_title\", \"$subject_code\")";
 
-
-                                                // Default assigned subject (non final).
-
-                                                if($ss_subject_program_id === $subject_program_id 
-                                                    && $is_transferee == 0 && $student_subject_id != NULL){
+                                                // ASSIGN Subjects
+                                                // Subjects that are present in the current selected subject load list
+                                                if($ss_subject_program_id == $subject_program_id 
+                                                    && $is_transferee == 0 && $is_final == 0){
                                                     
-                                                    if($student_course_level == $course_level
-                                                        && $current_school_year_period == $semester){
+                                                    // if($student_course_level == $course_level
+                                                    //     && $current_school_year_period == $semester){
 
-                                                    $credit_assign_subject = "creditAssignSubject($subject_program_id, $current_school_year_id,
-                                                        $student_id, \"$subject_title\", $student_subject_id)";
+                                                        $credit_assign_subject = "creditAssignSubject($subject_program_id, $current_school_year_id,
+                                                            $student_id, \"$subject_title\", $student_subject_id, \"$subject_code\")";
 
-                                                    $action = "
-                                                        <button onclick='$credit_assign_subject' class='btn btn-success btn-sm'>
-                                                            <i class='fas fa-plus-circle'></i>
-                                                        </button>
-                                                    ";
-                                                    }
-
-                                                    
+                                                        $action = "
+                                                            <button onclick='$credit_assign_subject' class='btn btn-success btn-sm'>
+                                                                <i class='fas fa-plus-circle'></i>
+                                                            </button>
+                                                        ";
+                                                    // }
                                                 }
 
                                                 // Default assigned subject credited.
-
                                                 else if($ss_subject_program_id === $subject_program_id 
-                                                    && $is_transferee == 1 && $student_subject_id != NULL
-                                                    && $query_enrollment_id == NULL){
+                                                    && $is_transferee == 1 
+                                                    && $query_enrollment_id == NULL
+                                                    && $ss_student_id == $student_id
+                                                    && $is_final == 1){
 
-                                                    
-
-                                                    if($student_course_level == $course_level
-                                                        && $current_school_year_period == $semester){
+                                                    if(
+                                                        $enrollment_section_level == $course_level && 
+                                                        $current_school_year_period == $semester){
+                                                            // echo "Qwe";
 
                                                         $un_credit_assign_subject = "unCreditAssignSubject($subject_program_id, $current_school_year_id,
                                                             $student_id, \"$subject_title\",$student_subject_id, $enrollment_id, $student_enrollment_course_id, \"$student_subject_code\")";
 
+                                                        $disabled = $ss_school_year_id == $current_school_year_id ? "" : "disabled";
+
                                                         $action = "
-                                                            <button onclick='$un_credit_assign_subject' class='btn btn-success btn-sm'>
+                                                            <button $disabled onclick='$un_credit_assign_subject' class='btn btn-success btn-sm'>
                                                                 <i class='fas fa-undo'></i>
                                                             </button>
                                                         ";
+
                                                     }
                                                    
                                                 }
 
-                                                // Credited Subject but not course level & semester assigned subject
-                                                if($ss_subject_program_id === $subject_program_id 
-                                                    && $is_transferee == 1){
+                                                // Credited Subject but not course level 
+                                                // && semester not assigned subject (default)
 
-                                                    if($student_course_level != $course_level){
+                                                if($ss_subject_program_id === $subject_program_id 
+                                                    && $is_transferee == 1 
+                                                    && $query_enrollment_id == NULL
+                                                    && $ss_student_id == $student_id
+                                                    && $is_final == 1){
+
+
+                                                    $disabled = $ss_school_year_id == $current_school_year_id ? "" : "disabled";
+ 
+                                                    $undo_credit_btn = "undoCreditNonAssignSubject($subject_program_id, $current_school_year_id, $student_id, \"$subject_title\")";
+
+                                                    if(
+                                                        $enrollment_section_level == $course_level && 
+                                                        $current_school_year_period != $semester && 
+                                                        $ss_school_year_id == $current_school_year_id
+
+                                                        ){
                                                         $action = "
-                                                            <button onclick='$undo_credit_btn' class='btn btn-sm btn-danger'>
+                                                            <button $disabled onclick='$undo_credit_btn' class='btn btn-sm btn-danger'>
                                                                 <i class='fas fa-undo'></i>
                                                             </button>
                                                         ";
                                                     }
+
+                                                    if(
+                                                        $enrollment_section_level != $course_level  &&
+                                                        $ss_school_year_id != $current_school_year_id
+                                                        // $current_school_year_period != $semester 
+                                                        ){
+                                                            $undo_credit_btn = "";
+                                                        $action = "
+                                                            <button $disabled onclick='$undo_credit_btn' class='btn btn-sm btn-danger'>
+                                                                Credited
+                                                            </button>
+                                                        ";
+                                                    }
+
+                                                }
+                                                else if($ss_subject_program_id !== $subject_program_id){
+                                                    $action = "
+                                                        <button onclick='$credit_btn' class='btn btn-sm btn-primary'>
+                                                            <i class='bi bi-map'></i>
+                                                        </button>
+                                                    ";
                                                 }
                                                 else if($ss_subject_program_id !== $subject_program_id){
                                                     $action = "
@@ -193,8 +254,19 @@
                                                     ";
                                                 }
 
+                                                if($ssg_student_subject_id == $student_subject_id
+                                                    && $is_final == 1){
+                                                    $action = "
+                                                        <button class='btn btn-sm btn-success'>
+                                                            Passed
+                                                        </button>
+                                                    ";
+                                                }
+
                                                 echo "
                                                     <tr class='text-center'>
+                                                        <td>$ss_subject_program_id</td>
+                                                        <td>$subject_program_id</td>
                                                         <td>$subject_code</td>
                                                         <td>$subject_title</td>
                                                         <td>$unit</td>
@@ -225,8 +297,11 @@
 
 <script>
     
+    // Enrollment ID WILL BE NULL
+    // FINALIZED
     function creditAssignSubject(subject_program_id,
-        current_school_year_id, student_id, subject_title, student_subject_id){
+        current_school_year_id, student_id,
+        subject_title, student_subject_id, subject_code){
 
         Swal.fire({
                 icon: 'question',
@@ -245,7 +320,8 @@
                             subject_program_id,
                             current_school_year_id, student_id,
                             type: "creditEnrolledSubject",
-                            student_subject_id
+                            student_subject_id,
+                            subject_code
                         },
                         success: function(response) {
                             response = response.trim();
@@ -285,6 +361,8 @@
                 }
         });
     }
+     
+    // Revert the state of currently assigned subject column attributes.
 
     function unCreditAssignSubject(subject_program_id,
         current_school_year_id, student_id, subject_title,
@@ -351,12 +429,15 @@
         });
     }
 
-    function undoCreditSubjectAction(subject_program_id,
-        current_school_year_id, student_id, subject_title){
+
+
+    function creditNonAssignSubject(subject_program_id,
+        current_school_year_id, student_id, subject_title,
+        subject_code){
 
         Swal.fire({
                 icon: 'question',
-                title: `I agreed to un-credit subject: ${subject_title}`,
+                title: `Do you want to credit subject: ${subject_title}`,
                 text: '',
                 showCancelButton: true,
                 confirmButtonText: 'Yes',
@@ -370,16 +451,17 @@
                         data: {
                             subject_program_id,
                             current_school_year_id, student_id,
-                            type: "Uncredit"
+                            subject_code,
+                            type: "Credit"
                         },
                         success: function(response) {
                             response = response.trim();
 
                             console.log(response);
-                            if(response == "uncredited_success"){
+                            if(response == "credited_success"){
                                 Swal.fire({
                                 icon: 'success',
-                                title: `Successfully Uncredited`,
+                                title: `Successfully Credited`,
                                 showConfirmButton: false,
                                 timer: 1000, // Adjust the duration of the toast message in milliseconds (e.g., 3000 = 3 seconds)
                                 toast: true,
@@ -411,12 +493,13 @@
         });
     }
 
-    function creditSubjectAction(subject_program_id,
+        //  Simply deleted the generated credited subject of creditNonAssignSubject
+    function undoCreditNonAssignSubject(subject_program_id,
         current_school_year_id, student_id, subject_title){
 
         Swal.fire({
                 icon: 'question',
-                title: `Do you want to credit subject: ${subject_title}`,
+                title: `I agreed to un-credit subject: ${subject_title}`,
                 text: '',
                 showCancelButton: true,
                 confirmButtonText: 'Yes',
@@ -430,16 +513,16 @@
                         data: {
                             subject_program_id,
                             current_school_year_id, student_id,
-                            type: "Credit"
+                            type: "Uncredit"
                         },
                         success: function(response) {
                             response = response.trim();
 
                             console.log(response);
-                            if(response == "credited_success"){
+                            if(response == "uncredited_success"){
                                 Swal.fire({
                                 icon: 'success',
-                                title: `Successfully Credited`,
+                                title: `Successfully Uncredited`,
                                 showConfirmButton: false,
                                 timer: 1000, // Adjust the duration of the toast message in milliseconds (e.g., 3000 = 3 seconds)
                                 toast: true,

@@ -13,8 +13,6 @@
                 justify-content: space-between;
                 width: 165px;
             }
-
-            
         </style>
     <?php
 
@@ -25,6 +23,7 @@
 
     $current_school_year_term = $school_year_obj['term'];
     $current_school_year_period = $school_year_obj['period'];
+    $current_school_year_id = $school_year_obj['school_year_id'];
 
     $GRADE_ELEVEN = 11;
     $GRADE_TWELVE = 12;
@@ -83,12 +82,13 @@
             </header>
             <main>
                 <table id="section_table_11" 
-                    class="ws-table-all cw3-striped cw3-bordered"
+                    class="a"
                     style="margin: 0">
                     <thead>
                         <tr>
                             <th>Section ID</th>
                             <th>Section Name</th>
+                            <th>Room</th>
                             <th>Students / Capacity</th>
                             <th>Active</th>
                             <th>Actions</th>
@@ -96,8 +96,15 @@
                     </thead>
                     <tbody>
                         <?php
-                            echo $section->CreateSectionLevelContent($program_id, $term,
-                                $GRADE_ELEVEN, $enrollment);
+
+                            if($current_school_year_period == "First"){
+
+                                echo $section->CreateSHSSectionLevelFirstSemesterContent($program_id, $term,
+                                    $GRADE_ELEVEN, $enrollment,);
+                            }
+
+                            // echo $section->CreateSectionLevelContent($program_id, $term,
+                            //     $GRADE_ELEVEN, $enrollment, $current_school_year_id);
                         ?>
                     </tbody>
                         
@@ -137,7 +144,7 @@
                     <tbody>
                         <?php
                             echo $section->CreateSectionLevelContent($program_id, $term,
-                                $GRADE_TWELVE, $enrollment);
+                                $GRADE_TWELVE, $enrollment, $current_school_year_id);
                         ?>
                     </tbody>
                         
@@ -196,7 +203,7 @@
                     <tbody>
                         <?php
                             echo $section->CreateSectionLevelContent($program_id, $term,
-                                $GRADE_ELEVEN, $enrollment);
+                                $GRADE_ELEVEN, $enrollment, $current_school_year_id);
                         ?>
                     </tbody>
                 </table>
@@ -232,7 +239,7 @@
                     <tbody>
                         <?php
                             echo $section->CreateSectionLevelContent($program_id, $term,
-                                $GRADE_TWELVE, $enrollment);
+                                $GRADE_TWELVE, $enrollment, $current_school_year_id);
                         ?>
                     </tbody>
                 </table>

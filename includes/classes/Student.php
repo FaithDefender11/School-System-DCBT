@@ -56,6 +56,10 @@ class Student{
         return isset($this->sqlData['student_id']) ? $this->sqlData["student_id"] : 0; 
     }
 
+    public function DoesApplicableToApplyNextYear() {
+        return isset($this->sqlData['nsy_applicable']) ? $this->sqlData["nsy_applicable"] : 0; 
+    }
+
  
     public function GetIsGraduated() {
         return isset($this->sqlData['is_graduated']) ? $this->sqlData["is_graduated"] : null; 
@@ -249,23 +253,94 @@ class Student{
     }
 
     public function UpdateStudentCourseId($student_id,
-        $current_course_id, $to_change_course_id, $student_enrollment_student_status){
+        $current_course_id, $coursen_level, $to_change_course_id, 
+        $student_enrollment_student_status){
 
         // Update the student's password in the database
 
         $query = $this->con->prepare("UPDATE student 
             SET course_id=:change_course_id,
-                student_statusv2=:change_student_statusv2
+                student_statusv2=:change_student_statusv2,
+                course_level=:change_course_level
+
             WHERE student_id=:student_id
             AND course_id=:course_id
             ");
 
         $query->bindParam(":student_id", $student_id);
         $query->bindParam(":change_student_statusv2", $student_enrollment_student_status);
-        $query->bindParam(":course_id", $current_course_id);
+        $query->bindParam(":change_course_level", $student_enrollment_student_status);
+        $query->bindParam(":course_id", $coursen_level);
         $query->bindParam(":change_course_id", $to_change_course_id);
         
         return $query->execute();
+    }
+
+    public function UpdateStudentEnrollmentFormBased($student_id,
+        $student_enrollment_course_level, $to_change_course_id, 
+        $student_enrollment_student_status){
+
+        // Update the student's password in the database
+
+        $query = $this->con->prepare("UPDATE student 
+            SET course_id=:change_course_id,
+                student_statusv2=:change_student_statusv2,
+                course_level=:change_course_level
+
+            WHERE student_id=:student_id
+            -- AND course_id=:course_id
+            ");
+
+        $query->bindParam(":change_course_id", $to_change_course_id);
+        $query->bindParam(":change_student_statusv2", $student_enrollment_student_status);
+        $query->bindParam(":change_course_level", $student_enrollment_course_level);
+        $query->bindParam(":student_id", $student_id);
+        // $query->bindParam(":course_id", $coursen_level);
+        
+        if($query->execute()){
+            return true;
+        }
+        return false;
+    }
+
+    public function UpdateStudentApplicableApplyNextSY($student_id){
+
+        // Update the student's password in the database
+        // Check 
+        $isExec = false;
+
+        // $applicable = $this->DoesApplicableToApplyNextYear();
+        $change_nsy_applicable = 1;
+
+        $query = $this->con->prepare("UPDATE student 
+            SET nsy_applicable=:change_nsy_applicable
+            WHERE student_id=:student_id");
+
+        $query->bindParam(":change_nsy_applicable", $change_nsy_applicable);
+        $query->bindParam(":student_id", $student_id);
+        $isExec =  $query->execute();  
+
+        return $isExec;
+
+    }
+
+    public function UpdateStudentAdmissionStatusToOld($student_id){
+
+        $old = 0;
+
+        $query = $this->con->prepare("UPDATE student 
+            SET new_enrollee=:change_new_enrollee
+
+            WHERE student_id=:student_id
+            AND new_enrollee = 1
+            
+            ");
+
+        $query->bindParam(":change_new_enrollee", $old);
+        $query->bindParam(":student_id", $student_id);
+
+        return $query->execute();  
+
     }
     public function ResetPassword($student_username){
 

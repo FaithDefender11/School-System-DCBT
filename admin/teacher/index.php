@@ -42,7 +42,7 @@
       </header>
       <main>
         <table
-          class="ws-table-all cw3-striped cw3-bordered"
+          class="a"
           style="margin: 0"
         >
           <thead>
@@ -91,9 +91,9 @@
                       <td>$teacher_status</td>
                       <td>$date_creation</td>
                       <td>
-                        <a href='info.php?details=show&id=$teacher_id'>
-                          <button  type='button'class='information'>View</button>
-                        </a>
+                          <button type='button' 
+                            onclick=\"window.location.href='info.php?details=show&id=$teacher_id'\"
+                            class='information'>View</button>
                       </td>
                     </tr>
                   ";

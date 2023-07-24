@@ -68,9 +68,12 @@
         $query->execute();
 
         if($query->rowCount() > 0){
+            
             $row = $query->fetch(PDO::FETCH_ASSOC);
 
             $school_year_id = $row['school_year_id'];
+            $school_year_period = $row['period'];
+            $school_year_term = $row['term'];
 
             // echo $school_year_id;
 
@@ -79,8 +82,17 @@
 
             $start_enrollment_date_status = $this->CheckIfEnded($start_enrollment_date_db);
             
+            $endingEnrollmentDate = "endingDate($school_year_id, \"$school_year_period\",
+                \"end_enrollment\", \"$school_year_term\")";
+
+            $endEnrollmentEnded = "
+                <span style='cursor:pointer; color: green;'  onclick='$endingEnrollmentDate'>Not Set</span>
+            ";
+
             $end_enrollment_date_db = $row['end_enrollment_date'];
-            $end_enrollment_date = $end_enrollment_date_db !== NULL ? date('Y-m-d', strtotime($end_enrollment_date_db)) : 'Not Set';
+            $end_enrollment_date = $end_enrollment_date_db !== NULL ? date('Y-m-d', strtotime($end_enrollment_date_db)) : $endEnrollmentEnded;
+            // $final_exam_enddate = $final_exam_enddate_db !== NULL ? date('Y-m-d', strtotime($final_exam_enddate_db)) : $finalExamEnded;
+
             $start_enrollment_date_status = $this->CheckIfEnded($end_enrollment_date_db);
 
             $start_period = $row['start_period'];
@@ -120,8 +132,17 @@
             $final_exam_startdate = $row['final_exam_startdate'];
             $final_exam_startdate = $final_exam_startdate !== NULL ? date('Y-m-d', strtotime($final_exam_startdate)) : 'Not Set';
 
+
+            $endingFinal = "endingDate($school_year_id, \"$school_year_period\",
+                \"finals\", \"$school_year_term\")";
+                
+            $finalExamEnded = "
+                <span style='cursor:pointer; color: green;'  onclick='$endingFinal'>Not Set</span>
+            ";
+
+
             $final_exam_enddate_db = $row['final_exam_enddate'];
-            $final_exam_enddate = $final_exam_enddate_db !== NULL ? date('Y-m-d', strtotime($final_exam_enddate_db)) : 'Not Set';
+            $final_exam_enddate = $final_exam_enddate_db !== NULL ? date('Y-m-d', strtotime($final_exam_enddate_db)) : $finalExamEnded;
             $final_exam_enddate_status = $this->CheckIfEnded($final_exam_enddate_db);
 
             $break_startdate = $row['break_startdate'];
@@ -176,6 +197,8 @@
                 </tr>
             ";
 
+
+
             $result .= "
                 <tr>
                     <td>Final Exam</td>
@@ -185,9 +208,11 @@
                 </tr>
             ";
 
+            $endBreak = "endBreak($school_year_id, \"$school_year_period\")";
+
             $result .= "
                 <tr>
-                    <td>Break</td>
+                    <td style='cursor: pointer;' onclick='$endBreak'>Break</td>
                     <td>$break_startdate</td>
                     <td>$break_enddate</td>
                     <td>$break_enddate_status</td>

@@ -33,9 +33,20 @@
     public function GetPendingEmail() {
         return isset($this->sqlData['email']) ? $this->sqlData["email"] : ""; 
     }
+    public function GetCourseLevel() {
+        return isset($this->sqlData['course_level']) ? $this->sqlData["course_level"] : 0; 
+    }
 
     public function GetPendingToken() {
         return isset($this->sqlData['token']) ? $this->sqlData["token"] : ""; 
+    }
+
+    public function GetPendingType() {
+        return isset($this->sqlData['type']) ? $this->sqlData["type"] : ""; 
+    }
+
+    public function GetPendingProgramId() {
+        return isset($this->sqlData['program_id']) ? $this->sqlData["program_id"] : 0; 
     }
 
     public function GetIsActivated() {
@@ -133,6 +144,30 @@
         $execute =  $query->execute();
         
         return $execute;
+    }
+
+    public function UpdateEnrollmentDetails($type, $course_level,
+            $program_id, $pending_enrollees_id){
+        
+        $query = $this->con->prepare("UPDATE pending_enrollees
+            SET type=:type,
+                course_level=:course_level,
+                program_id=:program_id
+            
+            WHERE pending_enrollees_id=:pending_enrollees_id
+        ");
+
+        $query->bindParam(":type", $type);
+        $query->bindParam(":course_level", $course_level);
+        $query->bindParam(":program_id", $program_id);
+        $query->bindParam(":pending_enrollees_id", $pending_enrollees_id);
+
+        if($query->execute() && $query->rowCount() > 0){
+            return true;
+        }
+
+        return false;
+
     }
 
     public function UpdatePendingNewStep2($pending_enrollees_id, $firstname, 

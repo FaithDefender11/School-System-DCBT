@@ -167,5 +167,34 @@ class Program{
             </div>";
         return $html;
     }
+
+    public function GetAllOfferedPrograms(){
+
+        $offeredPrograms = [];
+
+        $sql = $this->con->prepare("SELECT 
+            t1.acronym,
+            t1.program_id,
+            t2.department_name 
+
+            FROM program as t1
+
+            INNER JOIN department as t2 ON t2.department_id = t1.department_id
+            
+            -- WHERE t1.department_id=:department_id
+            ");
+            
+        // $sql->bindParam(":");
+        $sql->execute();
+
+        if($sql->rowCount() > 0){
+            $offeredPrograms = $sql->fetchAll(PDO::FETCH_ASSOC);
+        }
+        
+        // print_r($course_ids);
+        return $offeredPrograms;
+
+
+    }
 }
 ?>

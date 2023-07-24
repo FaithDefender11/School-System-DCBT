@@ -12,33 +12,26 @@
         $chosen_course_id = intval($_POST['find_selected_course_id']);
 
         // And If Student chosen_course_id has data in Student_Subject 
-        // along with School Year ID, should redirect only function
+        // along with School Year ID, should REDIRECT only to the page.
 
         // Else, it means, that student was enrolled in the prev S.Y
         // and in todays S.Y should be addadble in the Student_Subject
 
-        // if($student_enrollment_course_id != $chosen_course_id){
-        //     echo "equal";
-        // }else{
-        //     echo "Not";
-        // }
-
+        // if(false){
         if($student_enrollment_course_id == $chosen_course_id){
 
             // Should not do anything, Just direct the next page.
             // echo "direct";
-
-
-            if($checkSectionAlreadyAssigned == true){
+            if($checkSectionAlreadyAssigned == true
+                || ($ccheckSectionAlreadyAssigned == false 
+                    && $student_enrollment_course_id != 0)){
+                        
                 header("Location: process_enrollment.php?subject_review=show&st_id=$student_id&selected_course_id=$chosen_course_id");
                 exit();
             }
 
-            // Decide if Irregular has the same with Regular 
-            // on the functuionality in Student_Subject
-
             if($checkSectionAlreadyAssigned == false 
-                && $student_status == "Regular"){
+                ){
 
                 $wasStudentSubjectPopulated = $student_subject
                     ->AddNonFinalDefaultEnrolledSubject($student_id, 
@@ -52,11 +45,7 @@
                     Alert::success("Successfully selects section: $chosen_section_name.", "process_enrollment.php?subject_review=show&st_id=$student_id&selected_course_id=$chosen_course_id");
                     exit();
                 }
-                // Enrollment
-                // Student Subject
             }
-
-
         }
 
         // else if(false){
@@ -66,14 +55,16 @@
             // If new student, means, recently came-up from pending table
             //  should remove the student_table, enrollment form, student_subject, parent
             // and pending student_status should be back in blank state
-
-                
             // For Editing
+
+            // echo "two";
+
             $change_enrollment_course_id_success = $enrollment->ChangeEnrollmentCourseId($current_school_year_id,
                 $student_id, $student_enrollment_form_id, $student_enrollment_course_id,
                 $chosen_course_id);
             
             if($change_enrollment_course_id_success){
+                // echo "we";
 
                 $update_student_subject_success = $student_subject->UpdateStudentSubjectCourseId($student_id, $student_enrollment_course_id,
                         $chosen_course_id, $student_enrollment_id, $current_school_year_id,
@@ -83,23 +74,10 @@
 
                     Alert::success("Successfully section changed.", "process_enrollment.php?subject_review=show&st_id=$student_id&selected_course_id=$chosen_course_id");
                     exit();
+                }else{
+                    Alert::success("Successfully find a section.", "process_enrollment.php?subject_review=show&st_id=$student_id&selected_course_id=$chosen_course_id");
+                    exit();
                 }
-                
-                // $change_student_course_id_success =  $student->UpdateStudentCourseId($student_id, $student_course_id,
-                //     $chosen_course_id);
-
-                // if($change_student_course_id_success){
-
-                //     $update_student_subject_success = $student_subject->UpdateStudentSubjectCourseId($student_id, $student_course_id,
-                //         $chosen_course_id, $student_enrollment_id, $current_school_year_id,
-                //         $current_school_year_period);
-
-                //     if($update_student_subject_success){
-
-                //         Alert::success("Successfully section changed.", "process_enrollment.php?subject_review=show&st_id=$student_id&selected_course_id=$chosen_course_id");
-                //         exit();
-                //     }
-                // }
             }
         }
     }
@@ -127,10 +105,9 @@
                 </div>
                 </header>
 
-                <?php echo Helper::ProcessStudentCards($student_enrollment_form_id,
+                <?php echo Helper::ProcessStudentCards($student_id, $student_enrollment_form_id,
                     $student_unique_id, $enrollment_creation, $student_new_enrollee,
-                    $enrollment_is_new_enrollee, $enrollment_is_transferee); ?>
-
+                    $enrollment_is_new_enrollee, $enrollment_is_transferee, $student_status_st); ?>
             </div>
 
             <main>
@@ -374,28 +351,116 @@
                                     <tbody>
                                         <?php
 
-                                        
                                             $active = "yes";
+                                            // course_level + 1, regular students are applying
+                                            // for grade 12, but they are in their current course_level 11
 
-                                            # Only Available now.
-                                            $sql = $con->prepare("SELECT * FROM course
+                                            // $student_course_level = $student_status_st == "Regular" 
+                                            //     && $current_school_year_period == "First" 
+                                            //     && $student_new_enrollee == 0 ? $student_course_level + 1 : $student_course_level;
 
-                                                WHERE program_id=:program_id
-                                                AND active=:active
-                                                AND school_year_term=:school_year_term
-                                                AND course_level=:course_level
-                                            ");
+                                            // $regularOldSections = $section->GetRegularOldSectionList($student_program_id, $current_school_year_term,
+                                            //     $student_enrollment_course_level);
 
-                                            $sql->bindParam(":program_id", $student_program_id);
-                                            $sql->bindParam(":active", $active);
-                                            $sql->bindParam(":school_year_term", $current_school_year_term);
-                                            $sql->bindParam(":course_level", $student_course_level);
+                                            // $irregularOldSections = $section->GetIrregularOldSectionList($student_program_id,
+                                            //     $current_school_year_term);
+                                            // // echo $student_status_st;
 
-                                            $sql->execute();
-                                        
-                                            if($sql->rowCount() > 0){
+                                            // $provideSection = [];
 
-                                                while($get_course = $sql->fetch(PDO::FETCH_ASSOC)){
+                                            // // print_r($regularOldSections);
+
+                                            // // 
+
+                                            // if($student_status_st == "Regular" 
+                                            //     && $current_school_year_period == "First" 
+                                            //     && ($student_new_enrollee == 0 || $student_new_enrollee == 1)){
+                                            //         $provideSection = $regularOldSections;
+
+                                            // }
+                                            
+                                            // // All Sections are available
+                                            // // Registrar should look on student records history for better insights
+                                            // else if($student_status_st == "Irregular" 
+                                            //     && $current_school_year_period == "First" 
+                                            //     && $student_new_enrollee == 0){
+                                            //         $provideSection = $irregularOldSections;
+                                            // }
+                                            // else if($current_school_year_period == "Second"){
+
+                                            //     $provideSection = $regularOldSections;
+                                            // }
+
+                                            $provideSection = [];
+
+                                            if($student_enrollment_is_new == 1){
+
+                                                // if($current_school_year_period == "First"){
+                                                    // Enrollment Course Id is mandatory.
+
+                                                    // PROB.  Enrollment Course id is for grade 11
+                                                    // but you want to select the grade 12 
+
+                                                    $regularOldSections = $section->GetIrregularOldSectionList(
+                                                        $student_program_id, $current_school_year_term,
+                                                        $student_enrollment_course_level);
+
+                                                    $provideSection = $regularOldSections;
+                                                // }
+                                                
+                                            }
+
+
+                                            // Should have filter in selecting course level section.
+                                            // 
+                                            if($student_enrollment_is_new == 0){
+                                                // echo $student_program_id;
+                                                // echo $current_school_year_period;
+
+                                                if($current_school_year_period == "First" 
+                                                    // && $student_status_st == "Irregular"
+                                                    ){
+                                                    
+                                                    // echo "irreg";
+
+                                                    $irregularOldSections = $section->GetIrregularOldSectionList($student_program_id,
+                                                        $current_school_year_term);
+
+                                                    $provideSection = $irregularOldSections;
+
+                                                }
+
+                                                if($current_school_year_period == "First" 
+                                                    // && $student_status_st == "Regular"
+                                                    ){
+                                                    
+                                                    $irregularOldSections = $section->GetIrregularOldSectionList(
+                                                        $student_program_id, $current_school_year_term, 
+                                                        $student_enrollment_course_level);
+
+                                                    $provideSection = $irregularOldSections;
+                                                }
+
+                                                if($current_school_year_period == "Second"){
+
+                                                    $regularOldSections = $section->GetRegularOldSectionList($student_program_id, $current_school_year_term,
+                                                        $student_enrollment_course_level);
+
+                                                    $provideSection = $regularOldSections;
+
+                                                }
+
+                                            }
+
+                                            // New 1st Semester
+
+
+
+                                            // Old 1st Semester
+
+                                            if(count($provideSection) > 0){
+
+                                                foreach ($provideSection as $key => $get_course) {
 
                                                     $course_id = $get_course['course_id'];
 
@@ -411,9 +476,6 @@
 
                                                     $program_id = $section->GetSectionProgramId($course_id);
                                                     $course_level = $section->GetSectionGradeLevel();
-    
-
-                                                    echo $student_enrollment_course_id;
 
                                                     echo "
                                                         <tr class='text-center'>
@@ -428,13 +490,19 @@
                                                             </td>
                                                         </tr>
                                                     ";
-                                                
                                                 }
-                                                
                                             }else{
-                                                echo "
+                                                // TODO. 
+                                                // It means Enrollment Course Id or Student Course Id is zero
+                                                // Should based on the student program ex STEM,HUMMS etc
+                                                // 1. Provide Program Selection
+                                                // 2. Provide list of available section based on the program selected.
+                                                // 3. Update the enrollment course_id.
+
+                                               echo "
+
                                                     <div class='col-md-12'>
-                                                        <h4 class='text-center text-muted'>No currently available section for $program_acronym</h4>
+                                                        <h4 class='text-center text-muted'>No currently available section for $student_program_acronym</h4>
                                                     </div>
                                                 ";
                                             }
@@ -442,7 +510,6 @@
                                     </tbody>
                                 </table>
                             </main>
-
                             
                             <div style="margin-top: 20px;" class="action">
                                 <button
@@ -456,6 +523,7 @@
                                     Proceed
                                 </button>
                             </div>
+                            
                         </form>
 
                     </div>

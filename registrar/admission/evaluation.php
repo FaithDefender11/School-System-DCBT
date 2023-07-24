@@ -190,8 +190,6 @@
                                     // 1. New Transferee -> Pending Table.
                                     // 2. Irregular -> Student Table.
 
-
-
                                     // $advicing_os_enrollment_url = "advising_os_process_enrollment.php?details=show&id=$student_id";
 
                                     $student_table_enrollment_url = "process_enrollment.php?details=show&st_id=$student_id";
@@ -214,37 +212,20 @@
                                     // 2. New And Transferee
                                     // 3. Ongoing Irregular
 
-
-
                                     $updated_type = "";
-
-                                    // if($new_enrollee == 1 
-                                    //     && $enrollment_is_new_enrollee == 1 
-                                    //     && $enrollment_is_transferee == 1){
-
-                                    //     $updated_type = "New Transferee";
-
-                                    // }
-                                    // else if($new_enrollee == 1 
-                                    //     && $enrollment_is_new_enrollee == 1 
-                                    //     && $enrollment_is_transferee == 0){
-
-                                    //     $updated_type = "New";
-
-                                    // }
-
+                                    
                                     if($new_enrollee == 0
                                         && $enrollment_is_new_enrollee == 0 
                                         && $enrollment_is_transferee == 0
                                         && $student_statusv2 == "Irregular"
-                                        && $enrollment_student_status == "Irregular"
+                                        && ($enrollment_student_status == "" || $enrollment_student_status == "Irregular")
                                         ){
 
                                         $updated_type = "Old Irregular";
 
                                         $button_url = "
                                             <button class='default'
-                                                onclick=\"window.location.href = '" . $advicing_os_enrollment_url . "'\">
+                                                onclick=\"window.location.href = '" . $student_table_enrollment_url . "'\">
                                                 Evaluate
                                             </button>
                                         ";
@@ -256,50 +237,48 @@
                                         && $enrollment_student_status == "Regular"
                                         ){
 
-                                        $updated_type = "Evaluate";
+                                        $updated_type = "Old Regular";
 
                                         $button_url = "
-                                            <button class='default success'
+                                            <button class='default'
                                               onclick=\"window.location.href = '" . $student_table_enrollment_url . "'\">
-                                                Modified
+                                                Evaluate
                                             </button>
                                         ";
                                     }
 
                                     else if($new_enrollee == 1
-                                        && $enrollment_is_new_enrollee == 1 
-                                        && $enrollment_is_transferee == 0
-                                        && $student_statusv2 == "Regular"
-                                        && $enrollment_student_status == "Regular"
-                                        ){
+                                      && $enrollment_is_new_enrollee == 1 
+                                      && $enrollment_is_transferee == 0
+                                      && $student_statusv2 == "Regular"
+                                      && $enrollment_student_status == "Regular"
+                                      ){
 
-                                        $updated_type = "New Regular";
+                                      $updated_type = "New Regular";
 
-                                        $button_url = "
-                                            <button class='default clean'
-                                              onclick=\"window.location.href = '" . $student_table_enrollment_url . "'\">
-                                                Modified
-                                            </button>
-                                        ";
-
+                                      $button_url = "
+                                          <button class='default clean'
+                                            onclick=\"window.location.href = '" . $student_table_enrollment_url . "'\">
+                                              Evaluate
+                                          </button>
+                                      ";
                                     }
-
+                                    // 
                                     else if($new_enrollee == 1
-                                        && $enrollment_is_new_enrollee == 1 
-                                        && $enrollment_is_transferee == 1
-                                        && $student_statusv2 == ""
-                                        && $enrollment_student_status == ""
-                                        ){
+                                      && $enrollment_is_new_enrollee == 1 
+                                      && $enrollment_is_transferee == 1
+                                      && $student_statusv2 == ""
+                                      // && $enrollment_student_status == ""
+                                      ){
 
-                                        $updated_type = "New Transferee";
+                                      $updated_type = "New Transferee";
 
-                                        $button_url = "
-                                            <button class='default clean'
-                                              onclick=\"window.location.href = '" . $student_table_enrollment_url . "'\">
-                                                Modified
-                                            </button>
-                                        ";
-
+                                      $button_url = "
+                                          <button class='default clean'
+                                            onclick=\"window.location.href = '" . $student_table_enrollment_url . "'\">
+                                              Evaluate
+                                          </button>
+                                      ";
                                     }
                                     
                                     else if($student_status_pending == "Transferee"
@@ -314,6 +293,7 @@
                                             </button>
                                         ";
                                     }
+
                                     else if($student_status_pending == "Standard"
                                         ){
                                         $updated_type = "New Enrollee";

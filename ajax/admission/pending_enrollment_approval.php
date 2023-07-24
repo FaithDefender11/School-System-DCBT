@@ -185,7 +185,6 @@
                 $insert_enrollment->bindParam(':enrollment_form_id', $enrollment_form_id);
                 $insert_enrollment->bindValue(':is_tertiary', $type == "tertiary" ? 1 : 0);
               
-
                 if($insert_enrollment->execute()){
 
                     $studentNumberInSection = $section->

@@ -71,9 +71,7 @@
                             </div>
 
                             <div class="action">
-                                <!-- <a href="<?php echo $templateUrl;?>">
-                                    <button type="button" class="clean large success">+ Add new</button>
-                                </a> -->
+                               
                                 <button type="button" 
                                     data-bs-target="#subjectAddModal" 
                                     data-bs-toggle="modal"
@@ -85,7 +83,7 @@
                             </div>
                         </header>
                         <main>
-                            <table id="strand_subject_view_table" class="ws-table-all cw3-striped cw3-bordered" style="margin: 0"> 
+                            <table id="strand_subject_view_table" class="a" style="margin: 0"> 
                                 <thead>
                                     <tr class="text-center"> 
                                         <th rowspan="2">Template ID</th>
@@ -187,13 +185,13 @@
                                 timer: 1000, // Adjust the duration of the toast message in milliseconds (e.g., 3000 = 3 seconds)
                                 toast: true,
                                 position: 'top-end',
-                                showClass: {
-                                popup: 'swal2-noanimation',
-                                backdrop: 'swal2-noanimation'
-                                },
-                                hideClass: {
-                                popup: '',
-                                backdrop: ''
+                                    showClass: {
+                                    popup: 'swal2-noanimation',
+                                    backdrop: 'swal2-noanimation'
+                                    },
+                                    hideClass: {
+                                    popup: '',
+                                    backdrop: ''
                                 }
                             }).then((result) => {
 

@@ -22,7 +22,7 @@
             </header>
             <main>
 
-                <table id="department_table" class="ws-table-all cw3-striped cw3-bordered" style="margin: 0">
+                <table id="department_table" class="a" style="margin: 0">
                     <thead>
                         <tr>
                             <th>ID</th>
