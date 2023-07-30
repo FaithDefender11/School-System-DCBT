@@ -13,7 +13,7 @@
         </head> -->
     <?php
 
-     if (isset($_SESSION['enrollment_form_id'])) {
+    if (isset($_SESSION['enrollment_form_id'])) {
             unset($_SESSION['enrollment_form_id']);
     }
 
@@ -160,7 +160,10 @@
                                     $student_course_id = $row['student_course_id'];
                                     $student_id = $row['student_id'];
 
-                                    $student_unique_id = empty($student_unique_id) ? $row['student_unique_id'] : "N/A";
+                                    $student_unique_id = $row['student_unique_id'];
+
+                                    // $student_unique_id = empty($student_unique_id) ? $row['student_unique_id'] : "N/A";
+                                    $student_unique_id = $student_unique_id != NULL ? $student_unique_id : "N/A";
 
                                     $program_id = $row['program_id'];
                                     $new_enrollee = $row['new_enrollee'];
@@ -250,8 +253,8 @@
                                     else if($new_enrollee == 1
                                       && $enrollment_is_new_enrollee == 1 
                                       && $enrollment_is_transferee == 0
-                                      && $student_statusv2 == "Regular"
-                                      && $enrollment_student_status == "Regular"
+                                      && $student_statusv2 == ""
+                                      // && $enrollment_student_status == "Regular"
                                       ){
 
                                       $updated_type = "New Regular";
@@ -282,9 +285,8 @@
                                     }
                                     
                                     else if($student_status_pending == "Transferee"
-                                        ){
+                                      ){
                                         $updated_type = "New Transferee Enrollee";
-
 
                                         $button_url = "
                                             <button class='default'

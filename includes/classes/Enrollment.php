@@ -409,7 +409,7 @@
 
             AND t2.registrar_evaluated = 'no'
             AND t2.enrollment_status = 'tentative'
-            AND t2.is_new_enrollee = 'no'
+            -- AND t2.is_new_enrollee = 'no'
 
             UNION
 
@@ -682,7 +682,7 @@
 
         // Check if the enrollment form ID already exists in the database
 
-        $sql = $this->con->prepare("SELECT is_transferee FROM enrollment 
+        $sql = $this->con->prepare("SELECT is_new_enrollee FROM enrollment 
 
             WHERE enrollment_id = :enrollment_id
             AND student_id = :student_id
@@ -763,10 +763,13 @@
           ");
         $query->bindParam(":enrollment_form_id", $enrollment_form_id);
         $query->execute();
+
+        // echo $enrollment_form_id;
         
         if($query->rowCount() > 0){
             # Generate new Unique Enrollment Form Id to be use.
 
+            // echo "hey";
             $new_enrollment_form_id = $this->GenerateEnrollmentFormId();
 
             return $new_enrollment_form_id;
@@ -1416,7 +1419,48 @@
         $sql->bindParam(":student_status", $student_status);
 
         return $sql->execute();
+    }
 
+    public function InsertEnrollmentManualNewStudent($student_id, $course_id, $school_year_id,
+        $enrollment_form_id, $student_status, $is_tertiary, $is_transferee, $is_new_enrollee){
+
+        $now = date("Y-m-d H:i:s");
+
+        $registrar_evaluated = "no";
+
+        // $student_status = $isRegular == "Regular" ? "Regular" : "";
+
+        // $is_tertiary = $is_tertiary == "Tertiary" ? 1 : 0;
+
+        // Check if Enrollment Form Id is Unique
+        // If not generate another one.
+        $enrollment_form_id = $this->CheckEnrollmentFormIdExists($enrollment_form_id);
+
+
+        $sql = $this->con->prepare("INSERT INTO enrollment
+            (student_id, course_id, school_year_id, enrollment_form_id, enrollment_approve, enrollment_date,
+                is_transferee, is_new_enrollee, registrar_evaluated, student_status, is_tertiary)
+            VALUES(:student_id, :course_id, :school_year_id, :enrollment_form_id, :enrollment_approve, :enrollment_date,
+                :is_transferee, :is_new_enrollee, :registrar_evaluated, :student_status, :is_tertiary)");
+
+        $sql->bindParam(":student_id", $student_id);
+        // Registrar would select the course
+        $sql->bindValue(":course_id", $course_id);
+        $sql->bindParam(":school_year_id", $school_year_id);
+        $sql->bindParam(":enrollment_form_id", $enrollment_form_id);
+        $sql->bindParam(":enrollment_date", $now);
+        $sql->bindValue(":enrollment_approve", NULL, PDO::PARAM_NULL);
+        $sql->bindValue(":is_tertiary", $is_tertiary);
+        $sql->bindValue(":is_transferee", $is_transferee);
+        $sql->bindValue(":is_new_enrollee", $is_new_enrollee);
+        $sql->bindParam(":registrar_evaluated", $registrar_evaluated);
+        $sql->bindParam(":student_status", $student_status);
+
+        $sql->execute();
+        if($sql->rowCount() > 0){
+            return true;
+        }
+        return false;
     }
 
     public function InsertPendingRequestToEnrollment($generated_student_id,
@@ -1444,7 +1488,7 @@
         $insert_enrollment->bindValue(':enrollment_form_id', $enrollment_form_id);
         $insert_enrollment->bindValue(':is_tertiary', $type == "Tertiary" ? 1 : 0);
         // New Student From Online
-        $insert_enrollment->bindValue(':student_status', $admission_status == "Transferee" ? "" : "Regular");
+        $insert_enrollment->bindValue(':student_status', $admission_status == "Transferee" ? "Irregular" : "Regular");
 
         return $insert_enrollment->execute();
     }

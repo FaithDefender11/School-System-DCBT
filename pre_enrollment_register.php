@@ -55,7 +55,7 @@
             }
                         
         } catch (Exception $e) {
-            echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+            echo "Sending email is not working. Please contact the school. {$mail->ErrorInfo}";
         }
     } 
 

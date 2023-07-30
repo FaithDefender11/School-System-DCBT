@@ -2,6 +2,7 @@
 
     include_once('../../includes/student_header.php');
     include_once('../../includes/classes/Pending.php');
+    include_once('../../includes/classes/PendingParent.php');
     include_once('../../includes/classes/Section.php');
     include_once('../../includes/classes/SchoolYear.php');
 
@@ -12,6 +13,7 @@
     <?php
 
     if(isset($_SESSION['username'])
+        && isset($_SESSION['enrollee_id'])
         && isset($_SESSION['status']) 
         && $_SESSION['status'] == 'pending'
         && $_SESSION['status'] != 'enrolled'
@@ -19,8 +21,18 @@
         # Pending firstname;
 
         $username = $_SESSION['username'];
+        $enrollee_id = $_SESSION['enrollee_id'];
 
-        $pending = new Pending($con);
+        $school_year = new SchoolYear($con);
+        $section = new Section($con, null);
+
+        $school_year_obj = $school_year->GetActiveSchoolYearAndSemester();
+
+        $school_year_id = $school_year_obj['school_year_id'];
+        $current_semester = $school_year_obj['period'];
+        $current_term = $school_year_obj['term'];
+
+        $pending = new Pending($con, $enrollee_id);
         // echo $username;
 
         $sql = $con->prepare("SELECT * FROM pending_enrollees
@@ -33,36 +45,45 @@
         $sql->bindValue(":is_finished", 1);
         $sql->execute();
 
-        if($sql->rowCount() > 0){
+        $isFinished = $pending->GetPendingIsFinished();
+        $pending_enrollees_id = $pending->GetPendingID();
+
+
+        // if($sql->rowCount() > 0){
+        if($isFinished != null && $isFinished == 1){
 
             $row = $sql->fetch(PDO::FETCH_ASSOC);
 
-            # STEP 1
-            $pending_enrollees_id = empty($row['pending_enrollees_id']) ? null : $row['pending_enrollees_id'];
-            $program_id = empty($row['program_id']) ? 0 : $row['program_id'];
-            $type = empty($row['type']) ? '' : $row['type'];
-            $student_status = empty($row['student_status']) ? '' : $row['student_status'];
+            $enrollee_id = $_SESSION['enrollee_id'];
 
-            // STEP 2
-            $firstname = empty($row['firstname']) ? '' : $row['firstname'];
-            $middle_name = empty($row['middle_name']) ? '' : $row['middle_name'];
-            $lastname = empty($row['lastname']) ? '' : $row['lastname'];
-            $civil_status = empty($row['civil_status']) ? '' : $row['civil_status'];
-            $nationality = empty($row['nationality']) ? '' : $row['nationality'];
-            $sex = empty($row['sex']) ? '' : $row['sex'];
-            $birthday = empty($row['birthday']) ? '' : $row['birthday'];
-            $religion = empty($row['religion']) ? '' : $row['religion'];
-            $address = empty($row['address']) ? '' : $row['address'];
-            $contact_number = empty($row['contact_number']) ? '' : $row['contact_number'];
-            $email = empty($row['email']) ? '' : $row['email'];
-            $birthplace = empty($row['birthplace']) ? '' : $row['birthplace'];
+            // # STEP 1
+            // $pending_enrollees_id = empty($row['pending_enrollees_id']) ? null : $row['pending_enrollees_id'];
+            // $program_id = empty($row['program_id']) ? 0 : $row['program_id'];
+            // $type = empty($row['type']) ? '' : $row['type'];
+            // $student_status = empty($row['student_status']) ? '' : $row['student_status'];
 
+            // // STEP 2
+            // $firstname = empty($row['firstname']) ? '' : $row['firstname'];
+            // $middle_name = empty($row['middle_name']) ? '' : $row['middle_name'];
+            // $lastname = empty($row['lastname']) ? '' : $row['lastname'];
+            // $civil_status = empty($row['civil_status']) ? '' : $row['civil_status'];
+            // $nationality = empty($row['nationality']) ? '' : $row['nationality'];
+            // $sex = empty($row['sex']) ? '' : $row['sex'];
+            // $birthday = empty($row['birthday']) ? '' : $row['birthday'];
+            // $religion = empty($row['religion']) ? '' : $row['religion'];
+            // $address = empty($row['address']) ? '' : $row['address'];
+            // $contact_number = empty($row['contact_number']) ? '' : $row['contact_number'];
+            // $email = empty($row['email']) ? '' : $row['email'];
+            // $birthplace = empty($row['birthplace']) ? '' : $row['birthplace'];
 
             if(isset($_GET['fill_up_state']) && $_GET['fill_up_state'] == "finished"){
 
                 $isFinishedForm = $pending->CheckStudentFinishedForm($pending_enrollees_id);
+                // echo Helper::RemoveSidebar();
 
-                ?>
+                // include_once('./enrollee_summary_details.php');
+
+                 ?>
                     <div class="row col-md-12">
                         <div class="row">
 
@@ -82,17 +103,17 @@
 
                             <?php
 
-                                $url = "./process.php?new_student=true&step=3";
+                                $url = "./enrollee_summary_details_test.php?id=$pending_enrollees_id&details=show";
 
                                 if($isFinishedForm == true){
-                                echo "
-                                    <div class='col-md-6'>
-                                        <a href='$url'>
-                                            <button class='btn btn-outline-info'>View Form</button>
-                                        </a>
-                                    </div>
-                                    ";
-                                }
+                                    echo "
+                                        <div class='col-md-6'>
+                                            <a href='$url'>
+                                                <button class='btn btn-outline-info'>View Form</button>
+                                            </a>
+                                        </div>
+                                        ";
+                                    }
                             ?>
 
                         </div>
@@ -224,11 +245,9 @@
                     <?php
             }
         }else{
-
-            header("Location: process.php?new_student=true&step=1");
+            header("Location: process.php?new_student=true&step=preferred_course");
             exit();
         }
-
     }
 
 ?>

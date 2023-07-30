@@ -1,23 +1,20 @@
 <?php
 
-  include('includes/config.php');
-
+    include('includes/config.php');
 
     if(isset($_GET['token'])){
-
 
         $token = $_GET['token'];
 
         $sql = $con->prepare("SELECT * FROM pending_enrollees
             WHERE token=:token");
 
-        $sql->bindValue(":token", $token);
+        $sql->bindParam(":token", $token);
         $sql->execute();
 
         if($sql->rowCount() > 0){
             
             $row = $sql->fetch(PDO::FETCH_ASSOC);
-
             // Check if the record exists and if the expiration time has passed
             if ($row && strtotime($row['expiration_time']) < time()) {
                 
@@ -25,7 +22,8 @@
                 $sql = $con->prepare("DELETE FROM pending_enrollees 
                     WHERE token=:token");
 
-                $sql->bindValue(':token', $token);
+                $sql->bindParam(':token', $token);
+
                 if($sql->execute()){
                     // Redirect the user to the enrollment form
 
@@ -36,6 +34,7 @@
             
             $_SESSION['authenticated'] = true;
             $_SESSION['username'] = $row['firstname'];
+            $_SESSION['enrollee_id'] = $row['pending_enrollees_id'];
             $_SESSION['studentLoggedIn'] = $row['firstname'];
             $_SESSION['status'] = "pending";
 
@@ -51,8 +50,10 @@
             $update->bindValue(":token", $token);
 
             if($update->execute()){
-                $qwe = "/school-system-dcbt/student/tentative/process.php?new_student=true&step=1";
-                header("Location: $qwe");
+
+                $url = "/school-system-dcbt/student/tentative/process.php?new_student=true&step=preferred_course";
+                
+                header("Location: $url");
                 // header("Location: profile.php");
                 // header("Location: process.php");
 
@@ -64,7 +65,7 @@
         }
         else{
             echo "
-                <h3>Wrong Token. If you multiple requested an token, Please Click the latest email from DCBT.</h3>
+                <h3>Wrong Token. If you have multiple requests of token, Please Click the latest email from us.</h3>
             ";
         }
     }

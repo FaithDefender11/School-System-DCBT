@@ -99,6 +99,7 @@
                                 <tbody>
                                     <?php
 
+// echo $department_type;
                                         $sql = $con->prepare("SELECT 
                                         
                                             t1.*
@@ -135,7 +136,8 @@
                                             -- AND t1.program_id= 4
                                             -- AND t1.course_level=12
 
-                                            ORDER BY t1.course_level,t1.semester
+                                            ORDER BY t1.course_level,
+                                            t1.semester DESC
                                         ");
 
                                         $sql->bindParam(":department_type", $department_type);
@@ -400,6 +402,7 @@
                                 });
                             }
 
+                            
                             if(response == "failed_pre_requisite_of_selected_code"){
 
                                 Swal.fire({

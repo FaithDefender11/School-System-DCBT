@@ -209,5 +209,30 @@
         }
     }
 
+    public function filterSubsequentOccurrencesSa(&$occurrences, &$subject, 
+        $course_id, $subject_program_id) {
+
+        $query = $this->con->prepare("SELECT * FROM subject_schedule
+                WHERE course_id=:course_id
+                AND subject_program_id=:subject_program_id
+                ");
+
+        $query->bindParam(":course_id", $course_id);
+        $query->bindParam(":subject_program_id", $subject_program_id);
+        $query->execute();
+
+        if($query->rowCount() > 1){
+            if (isset($occurrences[$subject])) {
+                // If subject occurred before, set it to an empty string
+                $subject = "";
+            } else {
+                // Mark the subject as occurred
+                $occurrences[$subject] = true;
+            }
+        }
+        
+    }
 }
+
+ 
 ?>

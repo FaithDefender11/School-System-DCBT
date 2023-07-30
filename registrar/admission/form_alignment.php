@@ -11,7 +11,6 @@
 
         $pending_enrollees_id = $_GET['id'];
 
-
         $pending = new Pending($con, $pending_enrollees_id);
 
         $pending_level = $pending->GetCourseLevel();
@@ -31,10 +30,6 @@
             $course_level = $_POST['course_level'];
             $department_type = $_POST['department_type'];
             $program_id = $_POST['program_id'];
-
-            echo $course_level;
-            echo $department_type;
-            echo $program_id;
 
             $updateSuccess = $pending->UpdateEnrollmentDetails($department_type, $course_level, $program_id,
                 $pending_enrollees_id);
@@ -59,8 +54,8 @@
                     <div class="floating">
                         <header>
                             <div class="title">
-                            <h3>Enrollment Details</h3>
-                            <small>Please fill-up all (*) inputs</small>
+                                <h3>Enrollment Details</h3>
+                                <small>Please fill-up all (*) inputs</small>
                             </div>
                         </header>
                         <main>
@@ -70,7 +65,7 @@
                                     <span>
                                         <label for="Year">* Department Type</label>
                                         <div>
-                                            <select class="text-center" name="department_type" id="department_type">
+                                            <select class="form-control text-center" name="department_type" id="department_type">
                                                 <option <?php if ($pending_type === "Senior High School") echo "selected"; ?> value="SHS">Senior High School</option>
                                                 <option <?php if ($pending_type === "Tertiary") echo "selected"; ?> value="Tertiary">Tertiary</option>
                                             </select>
@@ -79,7 +74,7 @@
                                     <span>
                                         <label for="semester">* Program</label>
                                         <div>
-                                            <select class="text-center" name="program_id" id="program_id">
+                                            <select class="form-control text-center" name="program_id" id="program_id">
                                             <?php
                                             
                                                     $query = $con->prepare("SELECT * FROM program
@@ -115,7 +110,7 @@
                                         <label>* Grade Level</label>
                                         <div>
                                             <input
-                                                class="text-center"
+                                                class="text-center form-control "
                                                 style="width: 300px;"
                                                 type="number"
                                                 name="course_level"

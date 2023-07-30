@@ -182,10 +182,12 @@ class Account {
 
         if(strlen($pw) > 30 || strlen($pw) < 5) {
             array_push($this->errorArray, Constants::$passwordLength);
+            return;
         }
     }
     
     public function getError($error) {
+        
         if(in_array($error, $this->errorArray)) {
             return "<span class='errorMessage'>$error</span>";
         }

@@ -3,7 +3,6 @@
     require_once('../../includes/config.php');
     require_once('../../includes/navigation/StudentNavigationMenuProvider.php');
     require_once('../../includes/navigation/PendingNavigationMenuProvider.php');
-    
     require_once('../../includes/classes/User.php');
     require_once('../../includes/classes/Student.php');
     require_once('../../includes/classes/Helper.php');
@@ -46,11 +45,14 @@
         <link rel="stylesheet" type="text/css" href="../../assets/css/scheduler.css">
         <link rel="stylesheet" href="../../assets/css/others/toggle-switch.css">
 
-        <!-- Google Fonts -->
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Arimo">
-
-
+        <link
+        href="https://fonts.googleapis.com/css2?family=IM+Fell+Double+Pica&display=swap"
+        rel="stylesheet"
+        />
+        <link
+        href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400&display=swap"
+        rel="stylesheet"
+        />
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         
@@ -89,12 +91,12 @@
                 // Ongoing Application Procedure
                 else if(isset($_SESSION['status']) 
                     && $_SESSION['status'] == "enrolled"
+                    && isset($_SESSION['applicaton_status'])
                     && $_SESSION['applicaton_status'] == "ongoing"
                     ){
+                        // echo "qwe";
                     echo $nav->create($page);
                 }
-
-
             ?>
           
         </div>

@@ -13,17 +13,16 @@
 
         // And If Student chosen_course_id has data in Student_Subject 
         // along with School Year ID, should REDIRECT only to the page.
-
         // Else, it means, that student was enrolled in the prev S.Y
         // and in todays S.Y should be addadble in the Student_Subject
 
-        // if(false){
-        if($student_enrollment_course_id == $chosen_course_id){
+        if(false){
+        // if($student_enrollment_course_id == $chosen_course_id){
 
             // Should not do anything, Just direct the next page.
             // echo "direct";
             if($checkSectionAlreadyAssigned == true
-                || ($ccheckSectionAlreadyAssigned == false 
+                || ($checkSectionAlreadyAssigned == false 
                     && $student_enrollment_course_id != 0)){
                         
                 header("Location: process_enrollment.php?subject_review=show&st_id=$student_id&selected_course_id=$chosen_course_id");
@@ -47,24 +46,24 @@
                 }
             }
         }
-
-        // else if(false){
-        else if($student_enrollment_course_id != $chosen_course_id){
+        else if(false){
+        // else if($student_enrollment_course_id != $chosen_course_id){
 
             // FOR REMOVING.
+
             // If new student, means, recently came-up from pending table
             //  should remove the student_table, enrollment form, student_subject, parent
             // and pending student_status should be back in blank state
-            // For Editing
-
-            // echo "two";
 
             $change_enrollment_course_id_success = $enrollment->ChangeEnrollmentCourseId($current_school_year_id,
                 $student_id, $student_enrollment_form_id, $student_enrollment_course_id,
                 $chosen_course_id);
             
             if($change_enrollment_course_id_success){
-                // echo "we";
+
+                // Regular In the Previous Semester
+                // The subjects offered in todays semester should be all populated.
+
 
                 $update_student_subject_success = $student_subject->UpdateStudentSubjectCourseId($student_id, $student_enrollment_course_id,
                         $chosen_course_id, $student_enrollment_id, $current_school_year_id,
@@ -74,12 +73,91 @@
 
                     Alert::success("Successfully section changed.", "process_enrollment.php?subject_review=show&st_id=$student_id&selected_course_id=$chosen_course_id");
                     exit();
+
                 }else{
                     Alert::success("Successfully find a section.", "process_enrollment.php?subject_review=show&st_id=$student_id&selected_course_id=$chosen_course_id");
                     exit();
                 }
             }
         }
+
+        // Default state student_enrollment_course_id = 0
+
+        // echo $chosen_course_id;
+
+        // $wasStudentSubjectPopulated = $student_subject
+        //             ->AddNonFinalDefaultEnrolledSubject($student_id, 
+        //             $student_enrollment_id, $chosen_course_id, $current_school_year_id,
+        //             $current_school_year_period,  $admission_status);
+
+        
+        if($student_enrollment_course_id != 0 && 
+            $student_enrollment_course_id == $chosen_course_id){
+
+            if($checkSectionAlreadyAssigned == true
+                || $checkSectionAlreadyAssigned == false){
+                        
+                header("Location: process_enrollment.php?subject_review=show&st_id=$student_id&selected_course_id=$chosen_course_id");
+                exit();
+            }
+        }
+
+        if($student_enrollment_course_id == 0 && 
+            $student_enrollment_course_id != $chosen_course_id){
+
+            $change_enrollment_course_id_success = $enrollment->ChangeEnrollmentCourseId($current_school_year_id,
+                $student_id, $student_enrollment_form_id, $student_enrollment_course_id,
+                $chosen_course_id);
+            
+            if($change_enrollment_course_id_success){
+
+                // Populated the selected $chosen_course_id
+                $wasStudentSubjectPopulated = $student_subject
+                    ->AddNonFinalDefaultEnrolledSubject($student_id, 
+                    $student_enrollment_id, $chosen_course_id, $current_school_year_id,
+                    $current_school_year_period,  $admission_status);
+                
+                $section = new Section($con, $chosen_course_id);
+                $chosen_section_name = $section->GetSectionName();
+
+                if($wasStudentSubjectPopulated){
+                    Alert::success("Successfully selects section: $chosen_section_name.", "process_enrollment.php?subject_review=show&st_id=$student_id&selected_course_id=$chosen_course_id");
+                    exit();
+                }
+            }
+        }
+
+        if($student_enrollment_course_id != 0 && 
+            $student_enrollment_course_id != $chosen_course_id){
+
+            $change_enrollment_course_id_success = $enrollment->ChangeEnrollmentCourseId($current_school_year_id,
+                $student_id, $student_enrollment_form_id, $student_enrollment_course_id,
+                $chosen_course_id);
+            
+            if($change_enrollment_course_id_success){
+
+                // Regular In the Previous Semester
+                // The subjects offered in todays semester should be all populated.
+
+                $update_student_subject_success = $student_subject->UpdateStudentSubjectCourseId($student_id, $student_enrollment_course_id,
+                        $chosen_course_id, $student_enrollment_id, $current_school_year_id,
+                        $current_school_year_period);
+
+                if($update_student_subject_success){
+
+                    Alert::success("Successfully section changed.", "process_enrollment.php?subject_review=show&st_id=$student_id&selected_course_id=$chosen_course_id");
+                    exit();
+
+                }
+                // else{
+                //     Alert::success("Successfully find a section.", "process_enrollment.php?subject_review=show&st_id=$student_id&selected_course_id=$chosen_course_id");
+                //     exit();
+                // }
+            }
+        }
+
+
+
     }
 
     ?>
@@ -107,7 +185,7 @@
 
                 <?php echo Helper::ProcessStudentCards($student_id, $student_enrollment_form_id,
                     $student_unique_id, $enrollment_creation, $student_new_enrollee,
-                    $enrollment_is_new_enrollee, $enrollment_is_transferee, $student_status_st); ?>
+                    $student_enrollment_is_new, $student_enrollment_is_transferee, $student_status_st); ?>
             </div>
 
             <main>

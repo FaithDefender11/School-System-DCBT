@@ -439,7 +439,9 @@
                                                         t7.student_subject_id as graded_student_subject_id,
                                                         t7.remarks,
 
-
+                                                        t8.subject_schedule_id,
+                                                        t8.course_id AS subject_schedule_course_id,
+                                                        t8.subject_program_id AS subject_subject_program_id,
                                                         t8.time_from,
                                                         t8.time_to,
                                                         t8.schedule_day,
@@ -462,6 +464,11 @@
 
                                                         WHERE t4.student_id=:student_id
                                                         AND t4.enrollment_id=:enrollment_id
+
+                                                        ORDER BY t5.subject_title DESC
+
+                                                        -- GROUP BY t8.schedule_time -- Distinct on t1.subject_title
+
                                                     ");
 
                                                     $query->bindValue(":student_id", $student_id); 
@@ -470,11 +477,25 @@
 
                                                     if($query->rowCount() > 0){
 
+                                                        $subject_titles_occurrences = [];
+                                                        $subject_code_occurrences = [];
+                                                        $subject_type_occurrences = [];
+                                                        $subject_unit_occurrences = [];
+                                                        $section_occurrences = [];
+                                                        $sched_arr = [];
+
                                                         while($row_inner = $query->fetch(PDO::FETCH_ASSOC)){
+                                                            $subject_title = $row_inner['subject_title'];
+
+                                                            $schedule = new Schedule($con);
+
                                                             $student_subject_code = $row_inner['student_subject_code'];
                                                             $sp_subjectCode = $row_inner['sp_subjectCode'];
-                                                            $subject_title = $row_inner['subject_title'];
-                                                            
+                                                            $subject_schedule_id = $row_inner['subject_schedule_id'];
+
+                                                            $subject_schedule_course_id = $row_inner['subject_schedule_course_id'];
+                                                            $subject_subject_program_id = $row_inner['subject_subject_program_id'];
+
                                                             $subject_type = $row_inner['subject_type'];
                                                             $unit = $row_inner['unit'];
                                                             $program_section = $row_inner['program_section'];
@@ -482,8 +503,33 @@
                                                             $ss_retake = $row_inner['ss_retake'];
                                                             $ss_overlap = $row_inner['ss_overlap'];
 
-                                                            // if($remarks == null) echo "qwe";
+                                                            $schedule_time = $row_inner['schedule_time'] != "" ? $row_inner['schedule_time'] : "-";
+                                                            
+                                                            $schedule->filterSubsequentOccurrencesSa($subject_titles_occurrences,
+                                                                $subject_title, $subject_schedule_course_id, $subject_subject_program_id);
 
+                                                            $schedule->filterSubsequentOccurrencesSa($subject_code_occurrences,
+                                                                $sp_subjectCode, $subject_schedule_course_id, $subject_subject_program_id);
+
+                                                            $schedule->filterSubsequentOccurrencesSa($subject_type_occurrences,
+                                                                $subject_type, $subject_schedule_course_id, $subject_subject_program_id);
+
+                                                            $schedule->filterSubsequentOccurrencesSa($section_occurrences,
+                                                                $program_section, $subject_schedule_course_id, $subject_subject_program_id);
+
+                                                            $schedule->filterSubsequentOccurrencesSa($subject_unit_occurrences,
+                                                                $unit, $subject_schedule_course_id, $subject_subject_program_id);
+
+
+
+                                                            // $schedule->filterSubsequentOccurrences($subject_code_occurrences, $sp_subjectCode);
+                                                            // $schedule->filterSubsequentOccurrences($subject_type_occurrences, $subject_type);
+                                                            // $schedule->filterSubsequentOccurrences($section_occurrences, $schedule_time);
+
+
+                                               
+
+                                                            
 
                                                             $ss_retake_msg = $ss_retake == 1 ? "RT" : " &nbsp&nbsp&nbsp&nbsp";
                                                             $ss_overlap_msg = $ss_overlap == 1 ? "OL" : "";
@@ -514,7 +560,6 @@
 
                                                             $room = $row_inner['room'] != "" ? $row_inner['room'] : "-";
                                                             $schedule_day = $row_inner['schedule_day'] != "" ? $row_inner['schedule_day'] : "-";
-                                                            $schedule_time = $row_inner['schedule_time'] != "" ? $row_inner['schedule_time'] : "-";
 
                                                             $teacher_firstname = $row_inner['firstname'];
                                                             $teacher_lastname = $row_inner['lastname'];

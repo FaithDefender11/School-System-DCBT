@@ -37,6 +37,28 @@
             return 0;
         }
 
+     
+
+
+
+        public function GetOfferedDepartment(){
+
+            $query = $this->con->prepare("SELECT department_id, department_name FROM department
+                WHERE department_name=:department_name1
+                OR department_name=:department_name2
+                ");
+
+            $query->bindValue(":department_name1", "Senior High School");
+            $query->bindValue(":department_name2", "Tertiary");
+
+            $query->execute();
+
+            if($query->rowCount() > 0){
+                return $query->fetchAll(PDO::FETCH_ASSOC);
+            }
+
+            return [];
+        }
 
         public function CreateDepartmentDropdown($department_id = null){
 

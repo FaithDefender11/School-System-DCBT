@@ -21,6 +21,8 @@
     $current_school_year_period = $school_year_obj['period'];
     $current_school_year_id = $school_year_obj['school_year_id'];
 
+    // $current_school_year_period = "Second";
+
     if(isset($_GET['id']) && isset($_GET['p_id'])){
 
         $course_id = $_GET['id'];
@@ -29,35 +31,6 @@
         $program = new Program($con, $program_id);
 
         $section = new Section($con, $course_id);
-
-
-        $get_subjects_linked = $con->prepare("SELECT * 
-            
-            FROM subject
-
-            WHERE course_id=:course_id
-            ");
-
-        $get_subjects_linked->bindParam(":course_id", $course_id);
-        $get_subjects_linked->execute();
-
-        // if($get_subjects_linked->rowCount()> 0){
-        //     while($row = $get_subjects_linked->fetch(PDO::FETCH_ASSOC)){
-
-        //         $subject_code = $row['subject_code'];
-
-        //         $string = "PE101-STEM11-E";
-        //         $substring = substr($string, strpos($string, '-') + 1);
-
-
-        //         $newString = str_replace($substring, "New String", $string);
-        //         echo $newString . "<br>";
-                
-        //         // UPDATE
-        //     }
-        // }
-
-
 
         $db_course_level = $section->GetSectionGradeLevel();
         $db_program_section = $section->GetSectionName();
@@ -68,10 +41,12 @@
         $first_period_room_id = $section->GetSectionFirstPeriodRoomId();
         $second_period_room_id = $section->GetSectionSecondPeriodRoomId();
 
+
+        // echo $first_period_room_id;
         $current_period_room_id = $current_school_year_period == "First" ? $first_period_room_id : 
             ($current_school_year_period == "Second" ? $second_period_room_id : NULL);
 
-        // echo $second_period_room_id;
+        // echo $current_period_room_id;
 
         $trackDropdown = $section->createProgramSelection($program_id);
 
@@ -111,7 +86,7 @@
             isset($_POST['program_id']) &&
             isset($_POST['capacity']) &&
             isset($_POST['adviser_teacher_id']) &&
-            isset($_POST['room_id']) &&
+            // isset($_POST['room_id']) &&
             // isset($_POST['room']) &&
             isset($_POST['course_level'])
         ){
@@ -122,15 +97,21 @@
             $program_id = $_POST['program_id'];
             $capacity = $_POST['capacity'];
             $adviser_teacher_id = $_POST['adviser_teacher_id'];
-            $room_id = $_POST['room_id'];
 
-            $room_id = ($_POST['room_id'] == 0) ? NULL : $_POST['room_id'];
+            // $room_id = $_POST['room_id'];
+
+            // $room_id = ($_POST['room_id'] == 0) ? NULL : $_POST['room_id'];
+
+
+            $first_period_room_id = isset($_POST['first_period_room_id']) ? ($_POST['first_period_room_id'] == 0 ? NULL : $_POST['first_period_room_id']) : 0;
+            $second_period_room_id = isset($_POST['second_period_room_id']) ? ($_POST['second_period_room_id'] == 0 ? NULL : $_POST['second_period_room_id']) : 0;
+
+            // $second_period_room_id = isset($_POST['second_period_room_id']) ? $_POST['second_period_room_id'] : NULL;
 
             $course_level = (int) $_POST['course_level'];
 
             $is_active = "yes";
             $not_full = "no";
-
 
             $is_tertiary = ($department_type_section == "Senior High School") ? 0 : 1;
 
@@ -142,7 +123,28 @@
             //     exit();
             // }
 
+            if($current_school_year_period == "First"
+                && $section->CheckSHSRoomIsTaken($first_period_room_id,
+                "first_period_room_id",
+                $current_school_year_term)){
+
+                Alert::error("The chosen Room already has been taken. Please choose an available one.",
+                    "shs_list.php?id=$program_id&term=$current_school_year_term");
+                return;
+            }
+
+            if($current_school_year_period == "Second"
+                && $section->CheckSHSRoomIsTaken($second_period_room_id,
+                "second_period_room_id",
+                $current_school_year_term)){
+                    
+                Alert::error("The chosen Room already has been taken. Please choose an available one.",
+                    "shs_list.php?id=$program_id&term=$current_school_year_term");
+                return;
+            }
+
             if ($current_school_year_period == "First") {
+
                 $update = $con->prepare("UPDATE course SET
                     program_section = :program_section,
                     program_id = :program_id,
@@ -152,7 +154,7 @@
                     course_level = :course_level
                     WHERE course_id = :course_id");
 
-                $update->bindParam(":first_period_room_id", $room_id);
+                $update->bindParam(":first_period_room_id", $first_period_room_id);
 
             }else if ($current_school_year_period == "Second") {
 
@@ -165,19 +167,9 @@
                     course_level = :course_level
                     WHERE course_id = :course_id");
 
-                $update->bindParam(":second_period_room_id", $room_id);
+                $update->bindParam(":second_period_room_id", $second_period_room_id);
 
             }
-
-            // $update = $con->prepare("UPDATE course SET
-            //     program_section = :program_section,
-            //     program_id = :program_id,
-            //     capacity = :capacity,
-            //     adviser_teacher_id = :adviser_teacher_id,
-            //     -- room = :room,
-            //     course_level = :course_level
-            //     WHERE course_id = :course_id");
-
             $update->bindParam(":program_section", $program_section);
             $update->bindParam(":program_id", $program_id);
             $update->bindParam(":capacity", $capacity);
@@ -201,13 +193,22 @@
 
                     $room = new Room($con);
 
+                    $room_id = $current_school_year_period == "First" ? $first_period_room_id
+                        : ($current_school_year_period == "Second" ? $second_period_room_id : 0);
+
+                    
+                    // echo $section_type;
+
                     $wasSuccess = $room->RoomTypeUpdate(
                         $room_id, $section_type, $current_period_room_id);
 
                     // echo $room_id;
                     // echo $current_period_room_id;
 
-                    if($wasSuccess){
+                    if($wasSuccess == true){
+
+                        // echo "exec";
+
                         Alert::success("Successfully created $program_section section (S.Y $current_school_year_term).",
                             "$back_url");
                         exit();
@@ -316,13 +317,16 @@
                                 <?php
                                 
                                     if($current_school_year_period == "First"){
+                                    
                                         ?>
                                             <div class='form-group mb-2'>
+                                                <label class='mb-2'>* Room for 1st Semester</label>
+                                                    
+                                                <select <?php echo $current_school_year_period == "First" ? "" : "disabled='disabled'"; ?> class="form-control" 
+                                                        name="first_period_room_id" id="first_period_room_id">
 
-                                                <label class='mb-2'>* Room</label>
-
-                                                <select required class="form-control" name="room_id" id="room_id">
                                                     <?php
+
                                                         $query = $con->prepare("SELECT * FROM room
                                                             -- WHERE room_id=:room_id
                                                             ");
@@ -344,49 +348,50 @@
                                                     ?>
                                                 </select>
                                             </div>
-
-                                        <?php   
+                                        <?php
                                     }
+                                ?>
 
-                                    else if($current_school_year_period == "Second"){
+
+                                <?php 
+                                    if($current_school_year_period == "Second"){
+
                                         ?>
                                             <div class='form-group mb-2'>
 
-                                                <label class='mb-2'>* Room</label>
+                                    <label class='mb-2'>* Room for 2nd Semester</label>
 
-                                                <select required class="form-control" name="room_id" id="room_id">
-                                                    <?php
-                                                        $query = $con->prepare("SELECT * FROM room
-                                                            -- WHERE room_id=:room_id
-                                                            ");
+                                    <select <?php echo $current_school_year_period == "Second" ? "" : "disabled='disabled'"; ?> class="form-control" name="second_period_room_id" id="second_period_room_id">
+                                        <?php
 
-                                                        // $query->bindParam(":room_id", $current_period_room_id);
-                                                        $query->execute();
-                                                        
-                                                        echo "<option value='' disabled selected>Choose Room</option>";
+                                            $query = $con->prepare("SELECT * FROM room
+                                                -- WHERE room_id=:room_id
+                                                ");
 
-                                                        if ($query->rowCount() > 0) {
-                                                            while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
-                                                                $selected = "";  
-                                                                if($row['room_id'] == $current_period_room_id) $selected = "selected";
-                                                                echo "<option value='" . $row['room_id'] . "' $selected>" . $row['room_number'] ."</option>";
-                                                            }
-                                                        }
+                                            // $query->bindParam(":room_id", $current_period_room_id);
+                                            $query->execute();
+                                            
+                                            echo "<option value='' disabled selected>Choose Room</option>";
+                                            echo "<option value='0'>Reset</option>";
 
-                                                    ?>
-                                                </select>
-                                            </div>
-
-                                        <?php   
+                                            if ($query->rowCount() > 0) {
+                                                while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+                                                    $selected = "";  
+                                                    if($row['room_id'] == $current_period_room_id) $selected = "selected";
+                                                    echo "<option value='" . $row['room_id'] . "' $selected>" . $row['room_number'] ."</option>";
+                                                }
+                                            }
+                                        ?>
+                                    </select>
+                                </div>
+                                        <?php
                                     }
-
                                 ?>
-
+                                
 
                                 <div class="modal-footer">
                                     <button type='submit' class='btn btn-success' name='edit_section_btn_<?php echo $program_id;?>'>Save Section</button>
                                 </div>
-
                             </form>
                         </div>
 

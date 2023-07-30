@@ -25,6 +25,10 @@
             return isset($this->sqlData['room_capacity']) ? $this->sqlData["room_capacity"] : ""; 
         }
 
+        public function GetRoomNumber(){
+            return isset($this->sqlData['room_number']) ? $this->sqlData["room_number"] : ""; 
+        }
+
         public function CheckIdExists($room_id) {
 
             $query = $this->con->prepare("SELECT * FROM room
@@ -147,8 +151,9 @@
             $select->bindParam(":room_id", $current_room_id);
             $select->execute();
 
+            // $output = false;
+
             if($select->rowCount() > 0){
-                // echo "qweew";
                 // echo "1";
                 $init = $this->con->prepare("UPDATE room
                     SET type=:reset_type
@@ -157,9 +162,12 @@
 
                 $init->bindValue(":reset_type", "");
                 $init->bindParam(":room_id", $current_room_id);
-                $init->execute();
+                // $init->execute();
 
-                if($init->rowCount() > 0){
+                if($init->execute()){
+
+                    // echo "qweew";
+
                     $update_type = $this->con->prepare("UPDATE room
                         SET type=:type
                         WHERE room_id=:room_id
@@ -167,24 +175,31 @@
 
                     $update_type->bindParam(":type", $roomType);
                     $update_type->bindParam(":room_id", $selected_room_id);
-                    $update_type->execute();
+                    // $update_type->execute();
 
-                    if($update_type->rowCount() > 0) return true;
-
+                    if($update_type->execute()){
+                        return true;
+                    }
                 }
-            
-            }else if($select->rowCount() == 0){
-                $update_type = $this->con->prepare("UPDATE room
+
+                
+            }  
+            if($select->rowCount() == 0){
+
+                // echo "zero";
+                $update_type2 = $this->con->prepare("UPDATE room
                     SET type=:type
                     WHERE room_id=:room_id
                 ");
 
-                $update_type->bindParam(":type", $roomType);
-                $update_type->bindParam(":room_id", $selected_room_id);
-                $update_type->execute();
+                $update_type2->bindParam(":type", $roomType);
+                $update_type2->bindParam(":room_id", $selected_room_id);
+                // $update_type2->execute();
 
-                if($update_type->rowCount() > 0) return true;
-            }
+                if($update_type2->execute()) {
+                    return true;
+                }
+            }    
 
             return false;
         }

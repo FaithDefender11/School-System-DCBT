@@ -36,21 +36,15 @@
         $section_program_id = $section->GetSectionProgramId($course_id);
         $section_acronym = $section->GetAcronymByProgramId($section_program_id);
  
-        // Requirements
-        # Can view First and Second Semester within the specific S.Y
-
-        # (TOP) Section name, Grade Level, Strand/Course, Number of students inside of the section
-
-        # (Bottom) List of Subjects with regards to its Specific Period, Section and S.Y
-        
         $recordsPerPageOptions = ["First", "Second"]; 
+
+
 
         $selectedSemester = isset($_GET['per_semester']) 
             ? $_GET['per_semester'] : $recordsPerPageOptions[0];
         
         $db_school_year_id = $school_year->GetSchoolYearIdBySyID($selectedSemester,
             $current_school_year_term);
- 
 
         $totalStudent = $section->GetTotalNumberOfStudentInSection($course_id, 
             $db_school_year_id);
@@ -130,8 +124,7 @@
                 </nav>
 
                 <div class="content-header">
-                    <div style="display: flex;
-                            justify-content: center;" class="text-center mb-3">
+                    <div style="display: flex;justify-content: center;" class="text-center mb-3">
                         <form method="GET" class="form-inline" action="<?php echo $_SERVER['REQUEST_URI']; ?>">
                             <!-- Hidden input field to preserve the 'id' parameter -->
                             <input type="hidden" name="id" value="<?php echo $_GET['id']; ?>">
@@ -139,6 +132,7 @@
                             <?php echo $recordsPerPageDropdown; ?>
                         </form>
                     </div>
+                    
                     <?php echo Helper::RevealStudentTypePending($type); ?>
                     <header style="margin-top: -45px;">
                         <div class="title">
@@ -258,7 +252,8 @@
                                                 -- ORDER BY t1.course_level DESC,
                                                 -- t1.semester
 
-                                                  ORDER BY t4.day_count ASC
+                                                -- ORDER BY t4.day_count ASC
+                                                ORDER BY t1.subject_title DESC
                                                 
                                             ");
 
@@ -348,35 +343,6 @@
                                                     // $schedule->filterSubsequentOccurrences($teacher_fullname_occurrences, $teacherFullName);
                                                     // $schedule->filterSubsequentOccurrences($days_occurrences, $schedule_day);
 
-                                                    // if (isset($subject_titles_occurrences[$subject_title])) {
-
-                                                    //     // If subject_title occurred before, set it to an empty string
-                                                    //     $subject_title = "";
-
-                                                    // } else {
-
-                                                    //     // Mark the subject_title as occurred
-                                                    //     $subject_titles_occurrences[$subject_title] = true;
-                                                    // }
-
-                                                    // if (isset($subject_code_occurrences[$section_subject_code])) {
-
-                                                    //     // If section_subject_code occurred before, set it to an empty string
-                                                    //     $section_subject_code = "";
-
-                                                    // } else {
-
-                                                    //     // Mark the subject_title as occurred
-                                                    //     $subject_code_occurrences[$section_subject_code] = true;
-                                                    // }
-
-
-
-
-
-
-                                                    // echo $subject_title;
-
                                                     $subject_program_id = $row['subject_program_id'];
                                                     $course_level = $row['course_level'];
                                                     $semester = $row['semester'];
@@ -385,8 +351,6 @@
                                                     $pre_requisite = $row['pre_req_subject_title'];
                                                     $subject_type = $row['subject_type'];
                                                     $subject_program_id = $row['subject_program_id'];
-
-
 
                                                     $time_to = $row['time_to'];
                                                     $time_from = $row['time_from'];

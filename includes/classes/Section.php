@@ -189,7 +189,9 @@
 
         }
 
-        public function CreateSHSSectionLevelFirstSemesterContent($program_id, $term,
+        public function CreateSHSSectionLevelFirstSemesterContent($program_id,
+            $term,
+            $period_room_id,
             $course_level, $enrollment){
 
             $output = "";
@@ -197,8 +199,8 @@
 
                 FROM course as t1 
 
-                LEFT JOIN room as t2 ON t2.room_id = t1.first_period_room_id
-                -- AND school_year_id=:school_year_id
+                LEFT JOIN room as t2 ON t2.room_id = t1.$period_room_id
+                -- LEFT JOIN room as t2 ON t2.room_id = t1.second_period_room_id
 
                 WHERE t1.program_id=:program_id
                 AND t1.school_year_term=:school_year_term
@@ -291,6 +293,7 @@
             }
             return $output;
         }
+        
         public function CreateSectionLevelContent($program_id, $term,
             $course_level, $enrollment, $current_school_year_id = null){
 
@@ -1168,5 +1171,60 @@
 
         }
          
+
+        public function CheckSHSRoomIsTaken(
+            $first_or_second_period_room_id,
+            $column_name,
+            $current_school_year_term
+        ) {
+
+            // if($first_or_second_period_room_id == 0) return;
+
+            $sql = $this->con->prepare("SELECT * FROM course
+                WHERE $column_name = :first_or_second_period_room_id
+                AND school_year_term = :school_year_term
+                AND active = 'yes'
+            ");
+
+            $sql->bindParam(":first_or_second_period_room_id", $first_or_second_period_room_id);
+            $sql->bindParam(":school_year_term", $current_school_year_term);
+
+            $sql->execute();
+
+            return $sql->rowCount() > 0;
+        }
+
+
+        public function GetAvailableFindSection($program_id,
+            $current_school_year_term,
+            $pending_course_level){
+
+            $sql = $this->con->prepare("SELECT * FROM course
+
+                WHERE program_id=:program_id
+                AND active=:active
+                AND school_year_term =:school_year_term
+                AND course_level =:course_level
+                AND is_full ='no'
+                AND is_remove = 0
+                
+                ");
+
+            $sql->bindParam(":program_id", $program_id);
+            $sql->bindValue(":active", "yes");
+            $sql->bindParam(":school_year_term", $current_school_year_term);
+            $sql->bindParam(":course_level", $pending_course_level);
+
+            $sql->execute();
+        
+            if($sql->rowCount() > 0){
+                return $sql->fetchAll(PDO::FETCH_ASSOC);
+            }
+
+            return [];
+        }
+
     }
+
+
 ?>

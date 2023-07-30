@@ -86,12 +86,19 @@ function getInputValue($name) {
 
             <div class="loginForm">
                 <form  method="POST">
-                    <?php echo $account->getError(Constants::$loginFailed); ?>
+
+                    <?php 
+                        echo $account->getError(Constants::$loginFailed); 
+                    ?>
+
                     <input type="text" value='registrar' name="username" placeholder="Username" value="<?php getInputValue('username'); ?>" 
                         required autocomplete="off">
+                    
                     <input type="password" value="123456" name="password" placeholder="Password" required>
-                    <input type="submit" name="enrollment_log_in_btn" 
-                        value="SUBMIT">
+                    
+                    <input type="submit" 
+                        name="enrollment_log_in_btn" value="SUBMIT">
+                        
                 </form>
             </div>
             <!-- <a class="signInMessage" href="signUp.php">Need an account? Sign up here!</a> -->

@@ -97,12 +97,27 @@
                     <tbody>
                         <?php
 
+                            // $current_school_year_period = "Second";
+
                             if($current_school_year_period == "First"){
 
-                                echo $section->CreateSHSSectionLevelFirstSemesterContent($program_id, $term,
+                                echo $section->CreateSHSSectionLevelFirstSemesterContent($program_id,
+                                    $term, "first_period_room_id",
+                                    $GRADE_ELEVEN, $enrollment,);
+                            }
+                            else if($current_school_year_period == "Second"){
+
+                                echo $section->CreateSHSSectionLevelFirstSemesterContent($program_id,
+                                    $term, "second_period_room_id",
                                     $GRADE_ELEVEN, $enrollment,);
                             }
 
+                            // if($current_school_year_period == "Second"){
+
+                            //     echo $section->CreateSHSSectionLevelSecondSemesterContent($program_id, $term,
+                            //         $GRADE_ELEVEN, $enrollment,);
+                            // }
+                          
                             // echo $section->CreateSectionLevelContent($program_id, $term,
                             //     $GRADE_ELEVEN, $enrollment, $current_school_year_id);
                         ?>
@@ -130,12 +145,13 @@
 
             <main>
                 <table id="section_table_12" 
-                    class="ws-table-all cw3-striped cw3-bordered"
+                    class="a"
                     style="margin: 0">
                     <thead>
                         <tr>
                             <th>Section ID</th>
                             <th>Section Name</th>
+                            <th>Room</th>
                             <th>Students / Capacity</th>
                             <th>Active</th>
                             <th>Actions</th>
@@ -143,9 +159,25 @@
                     </thead>
                     <tbody>
                         <?php
-                            echo $section->CreateSectionLevelContent($program_id, $term,
-                                $GRADE_TWELVE, $enrollment, $current_school_year_id);
+
+                            if($current_school_year_period == "First"){
+
+                                echo $section->CreateSHSSectionLevelFirstSemesterContent($program_id,
+                                    $term, "first_period_room_id",
+                                    $GRADE_TWELVE, $enrollment,);
+                            }
+                            else if($current_school_year_period == "Second"){
+
+                                echo $section->CreateSHSSectionLevelFirstSemesterContent($program_id,
+                                    $term, "second_period_room_id",
+                                    $GRADE_TWELVE, $enrollment,);
+                            }
+
+                            // echo $section->CreateSectionLevelContent($program_id, $term,
+                            //     $GRADE_TWELVE, $enrollment, $current_school_year_id);
                         ?>
+
+                        
                     </tbody>
                         
                 </table>
@@ -263,6 +295,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
 
+                    
                     $.ajax({
                         url: "../../ajax/section/remove_section.php",
                         type: 'POST',
@@ -301,6 +334,7 @@
                             // handle any errors here
                         }
                     });
+
                 } else {
                     // User clicked "No," perform alternative action or do nothing
                 }

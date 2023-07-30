@@ -154,6 +154,13 @@
 
                                                 // ASSIGN Subjects
                                                 // Subjects that are present in the current selected subject load list
+
+                                                // echo " ss_subject_program_id: $ss_subject_program_id";
+                                                // echo "<br>";
+
+                                                // echo " subject_program_id: $subject_program_id";
+                                                // echo "<br>";
+
                                                 if($ss_subject_program_id == $subject_program_id 
                                                     && $is_transferee == 0 && $is_final == 0){
                                                     
@@ -172,15 +179,21 @@
                                                 }
 
                                                 // Default assigned subject credited.
-                                                else if($ss_subject_program_id === $subject_program_id 
+                                                else if(
+                                                    $ss_subject_program_id === $subject_program_id 
                                                     && $is_transferee == 1 
                                                     && $query_enrollment_id == NULL
                                                     && $ss_student_id == $student_id
-                                                    && $is_final == 1){
+                                                    && $is_final == 1
+                                                    
+                                                    ){
 
                                                     if(
+                                                        // true
                                                         $enrollment_section_level == $course_level && 
-                                                        $current_school_year_period == $semester){
+                                                        $current_school_year_period == $semester
+                                                        
+                                                        ){
                                                             // echo "Qwe";
 
                                                         $un_credit_assign_subject = "unCreditAssignSubject($subject_program_id, $current_school_year_id,
@@ -188,8 +201,15 @@
 
                                                         $disabled = $ss_school_year_id == $current_school_year_id ? "" : "disabled";
 
+                                                        // $action = "
+                                                        //     <button $disabled onclick='$un_credit_assign_subject' class='btn btn-success btn-sm'>
+                                                        //         <i class='fas fa-undo'></i>
+                                                        //     </button>
+                                                        // ";
+                                                        $undo_credit_btn = "undoCreditNonAssignSubject($subject_program_id, $current_school_year_id, $student_id, \"$subject_title\")";
+
                                                         $action = "
-                                                            <button $disabled onclick='$un_credit_assign_subject' class='btn btn-success btn-sm'>
+                                                            <button $disabled onclick='$undo_credit_btn' class='btn btn-sm btn-danger'>
                                                                 <i class='fas fa-undo'></i>
                                                             </button>
                                                         ";
@@ -205,7 +225,8 @@
                                                     && $is_transferee == 1 
                                                     && $query_enrollment_id == NULL
                                                     && $ss_student_id == $student_id
-                                                    && $is_final == 1){
+                                                    && $is_final == 1
+                                                    ){
 
 
                                                     $disabled = $ss_school_year_id == $current_school_year_id ? "" : "disabled";
@@ -252,6 +273,8 @@
                                                             <i class='bi bi-map'></i>
                                                         </button>
                                                     ";
+                                                }else{
+                                                    // echo "qwe";
                                                 }
 
                                                 if($ssg_student_subject_id == $student_subject_id

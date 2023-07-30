@@ -3,19 +3,6 @@
   --activeProgress: #8fafff;
   --inactiveProgress: #e4e4e4;
 }
-@media only screen and (max-width: 800px) {
-  form > .row > span > label {
-    display: block;
-  }
-  form .row {
-    flex-wrap: wrap;
-  }
-
-  form .row > span {
-    flex-wrap: wrap;
-    flex-direction: column;
-  }
-}
 
 form .row {
   display: flex;
@@ -64,7 +51,7 @@ form .row > span > div > input {
   justify-content: center;
   align-items: center;
   padding: 0px 10% 30px 10%;
-  height: 4rem;
+  height: 70px;
 }
 
 .content .progress > .line {
@@ -98,6 +85,19 @@ form .row > span > div > input {
   font-weight: bold;
   position: relative;
   top: 30px;
-    font-size: 17px;
-    margin-top: 11px;
+  font-size: 15px;
+}
+
+@media only screen and (max-width: 800px) {
+  form > .row > span > label {
+    display: block;
+  }
+  form .row {
+    flex-wrap: wrap;
+  }
+
+  form .row > span {
+    flex-wrap: wrap;
+    flex-direction: column;
+  }
 }

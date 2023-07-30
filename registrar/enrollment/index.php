@@ -1,8 +1,15 @@
-<?php include_once('../../includes/registrar_header.php')?>
+<?php 
+    include_once('../../includes/registrar_header.php');
+
+    if (isset($_SESSION['enrollment_form_id'])) {
+        unset($_SESSION['enrollment_form_id']);
+    }
+?>
 
 
     <div class="col-md-12 row table-responsive">
         <h4 class="text-center">Registrar Enrollment History List</h4>
+        <button onclick="window.location.href = 'manual_create.php' " class="btn btn-success">Enroll Here</button>
         <table class="table table-bordered ">
             <thead>
                 <tr>

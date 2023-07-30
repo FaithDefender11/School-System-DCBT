@@ -20,6 +20,8 @@
     $current_school_year_period = $school_year_obj['period'];
     $current_school_year_id = $school_year_obj['school_year_id'];
 
+    // $current_school_year_period = "Second";
+
     if(isset($_GET['id']) && isset($_GET['level'])){
 
         $course_level = $_GET['level'];
@@ -59,9 +61,9 @@
             isset($_POST['program_section']) && 
             isset($_POST['program_id']) &&
             isset($_POST['capacity']) &&
-            isset($_POST['adviser_teacher_id']) &&
+            isset($_POST['adviser_teacher_id'])
             // isset($_POST['room'])
-            isset($_POST['room_id'])
+            // isset($_POST['room_id'])
             // isset($_POST['course_level'])
 
         ){
@@ -73,26 +75,41 @@
             $capacity = $_POST['capacity'];
             $adviser_teacher_id = $_POST['adviser_teacher_id'];
             // $room = $_POST['room'];
-            $room_id = $_POST['room_id'];
 
-            // $course_level = (int) $_POST['course_level'];
+            // $room_id = $_POST['room_id'];
+
+            $first_period_room_id = isset($_POST['first_period_room_id']) ? $_POST['first_period_room_id'] : 0;
+            $second_period_room_id = isset($_POST['second_period_room_id']) ? $_POST['second_period_room_id'] : 0;
+
+            // echo $first_period_room_id;
+            // echo "<br>";
+
+            // echo $second_period_room_id;
+            // echo "<br>";
 
             $is_active = "yes";
             $not_full = "no";
 
-            $sql = $con->prepare("SELECT t2.department_name FROM program as t1
+            if($first_period_room_id != 0 && $current_school_year_period == "First"
+                && $section->CheckSHSRoomIsTaken($first_period_room_id,
+                "first_period_room_id",
+                $current_school_year_term)){
 
-                INNER JOIN department as t2 ON t2.department_id = t1.department_id 
-                WHERE t1.program_id=:program_id
-                LIMIT 1");
+                Alert::error("The chosen Room already has been taken. Please choose an available one.",
+                    "");
+                    // "shs_list.php?id=$program_id&term=$current_school_year_term");
+                return;
+            }
 
-            $sql->bindValue(":program_id", $program_id);
-            $sql->execute();
-
-            if($sql->rowCount() > 0){
-
-                $department_name = $sql->fetchColumn();
-                $is_tertiary = ($department_name == "Senior High School") ? 0 : 1;
+            if($second_period_room_id != 0 && 
+                $current_school_year_period == "Second"
+                && $section->CheckSHSRoomIsTaken($second_period_room_id,
+                    "second_period_room_id",
+                    $current_school_year_term)){
+                    
+                Alert::error("The chosen Room already has been taken. Please choose an available one.",
+                    "");
+                return;
             }
 
             if($section->CheckSetionExistsWithinCurrentSY($program_section,
@@ -148,8 +165,8 @@
                 
             }
 
-            // $current_school_year_period = "Second";
-
+            $insert = "";
+            // if (false) {
             if ($current_school_year_period == "First") {
 
                 $insert = $con->prepare("INSERT INTO course
@@ -159,9 +176,10 @@
                     VALUES(:program_section, :program_id, :capacity, :adviser_teacher_id,
                     :school_year_term, :first_period_room_id, :active, :is_full, :course_level, :is_tertiary)");
 
-                $insert->bindParam(":first_period_room_id", $room_id);
+                $insert->bindParam(":first_period_room_id", $first_period_room_id);
 
             } 
+            // else if (false) {
             else if ($current_school_year_period == "Second") {
 
                 $insert = $con->prepare("INSERT INTO course
@@ -171,7 +189,7 @@
                     VALUES(:program_section, :program_id, :capacity, :adviser_teacher_id,
                     :school_year_term, :second_period_room_id, :active, :is_full, :course_level, :is_tertiary)");
 
-                $insert->bindParam(":second_period_room_id", $room_id);
+                $insert->bindParam(":second_period_room_id", $second_period_room_id);
             }
 
             $insert->bindParam(":program_section", $program_section);
@@ -185,6 +203,7 @@
             $insert->bindParam(":is_tertiary", $is_tertiary, PDO::PARAM_INT);
             $insert->execute();
 
+            // if(false){
             if($insert->rowCount() > 0){
 
                 $recently_created_course_id = $con->lastInsertId();
@@ -192,21 +211,36 @@
                 $sectionExec = new Section($con, $recently_created_course_id);
                 $section_type = $sectionExec->GetSectionType();
 
-                if($recently_created_course_id != 0){
+                if($recently_created_course_id != 0
+                    && ($first_period_room_id == 0 || $second_period_room_id == 0)){
+
+                    Alert::success("Successfully created $program_section section (S.Y $current_school_year_term).",
+                        "$back_url");
+                    exit();
+                }
+
+                if($recently_created_course_id != 0
+                    && ($first_period_room_id != 0 || $second_period_room_id != 0)){
 
                     $room = new Room($con);
+
+                    // $current_school_year_period = "Second";
+
+                    $room_id = $current_school_year_period == "First" ? $first_period_room_id
+                        : ($current_school_year_period == "Second" ? $second_period_room_id : 0);
 
                     $wasSuccess = $room->RoomTypeUpdate(
                         $room_id, $section_type);
 
                     if($wasSuccess){
                         Alert::success("Successfully created $program_section section (S.Y $current_school_year_term).",
-                                "$back_url");
+                            "$back_url");
+
                         exit();
                     }
                 }
+                
             }
-
         }
 
         ?>
@@ -278,7 +312,56 @@
 
                                 <div class='form-group mb-2'>
 
-                                    <label class='mb-2'>* Room</label>
+                                    <label class='mb-2'>* Room for 1st Semester</label>
+                                            
+                                    <select <?php echo $current_school_year_period == "First" ? "" : "disabled='disabled'"; ?> class="form-control" 
+                                            name="first_period_room_id" id="first_period_room_id">
+                                        <?php
+                                            $query = $con->prepare("SELECT * FROM room
+                                                -- WHERE school_year_id=:school_year_id
+                                                ");
+
+                                            // $query->bindParam(":school_year_id", $current_school_year_id);
+                                            $query->execute();
+                                            
+                                            echo "<option value='' disabled selected>Choose Room</option>";
+                                            if ($query->rowCount() > 0) {
+                                                while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+                                                    $selected = "";  
+                                                    echo "<option value='" . $row['room_id'] . "' $selected>" . $row['room_number'] ."</option>";
+                                                }
+                                            }
+                                        ?>
+                                    </select>
+                                </div>
+
+                                <div class='form-group mb-2'>
+
+                                    <label class='mb-2'>* Room for 2nd Semester</label>
+
+                                    <select <?php echo $current_school_year_period == "Second" ? "" : "disabled='disabled'"; ?> class="form-control" name="second_period_room_id" id="second_period_room_id">
+                                        <?php
+                                            $query = $con->prepare("SELECT * FROM room
+                                                -- WHERE school_year_id=:school_year_id
+                                                ");
+
+                                            // $query->bindParam(":school_year_id", $current_school_year_id);
+                                            $query->execute();
+                                            
+                                            echo "<option value='' disabled selected>Choose Room</option>";
+                                            if ($query->rowCount() > 0) {
+                                                while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+                                                    $selected = "";  
+                                                    echo "<option value='" . $row['room_id'] . "' $selected>" . $row['room_number'] ."</option>";
+                                                }
+                                            }
+                                        ?>
+                                    </select>
+                                </div>
+
+                                <!-- <div class='form-group mb-2'>
+
+                                    <label class='mb-2'>* Room for 2nd Semester</label>
 
                                     <select required class="form-control" name="room_id" id="room_id">
                                         <?php
@@ -298,7 +381,9 @@
                                             }
                                         ?>
                                     </select>
-                                </div>
+                                </div> -->
+
+
 
                                 <!-- <div class='form-group mb-2'>
                                     <label class='mb-2'>* Room</label>

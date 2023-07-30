@@ -25,7 +25,7 @@
         <!-- Student Table Subject Review-->
         <div class="content">
             <nav>
-                <a href="SHS-find-form-evaluation.html"
+                <a href="process_enrollment.php?find_section=show&st_id=<?php echo $student_id?>&c_id=<?php echo $student_enrollment_course_id?>"
                 ><i class="bi bi-arrow-return-left fa-1x"></i>
                 <h3>Back</h3>
                 </a>
@@ -120,6 +120,8 @@
                                                     AND t1.is_transferee=1
                                                     AND t1.is_final= 1
 
+                                                    ORDER BY t2.course_level, t2.semester
+
                                                 ");
 
                                                 $sql->bindParam(":student_id", $student_id);
@@ -206,7 +208,6 @@
                                             }
 
                                             if($student_enrollment_student_status == "Irregular"){
-
                                                 ?>
 
                                                     <button onclick="javascript: <?php echo $retakeFunc; ?>" 
@@ -274,8 +275,6 @@
 
                                         $totalSubjectList = $sql->rowCount();
 
-                                        
-
                                         while($row = $sql->fetch(PDO::FETCH_ASSOC)){
 
                                             $student_subject_id = $row['student_subject_id'];
@@ -287,7 +286,6 @@
                                             $pre_req_subject_title = $row['pre_req_subject_title'];
                                             $program_section = $row['program_section'];
                                             $output_subject_code = $row['output_subject_code'];
-                                            
 
                                             $section_subject_code = $section->CreateSectionSubjectCode($program_section, $subject_code);
 

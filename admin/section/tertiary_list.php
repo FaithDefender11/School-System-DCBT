@@ -27,7 +27,7 @@ if (isset($_GET['id']) && $_GET['term']) {
     $FOURTH_YEAR = 4;
 
     $program = new Program($con, $program_id);
-
+    
 }
 ?>
 

@@ -34,9 +34,11 @@ if(isset($_POST["student_log_in_btn"])) {
         && $wasSuccess[2] == "enrolled"){
 
         $_SESSION['username'] = $wasSuccess[0];
+        // $_SESSION['enrollee_id'] = $wasSuccess[2];
         $_SESSION['status'] = "enrolled";
 
         $_SESSION["studentLoggedIn"] = $username;
+
 
         header("Location: student/dashboard/index.php");
         
@@ -46,6 +48,10 @@ if(isset($_POST["student_log_in_btn"])) {
         && $wasSuccess[2] != "enrolled"){
         
         $_SESSION['username'] = $wasSuccess[0];
+        $_SESSION['enrollee_id'] = $wasSuccess[3];
+
+        // echo $_SESSION['enrollee_id'];
+
         $_SESSION['status'] = "pending";
         $_SESSION["studentLoggedIn"] = $username;
 

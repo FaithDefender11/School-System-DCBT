@@ -290,16 +290,16 @@ class SubjectProgram{
 
             t3.course_id, t3.program_section,
             t4.student_subject_id AS graded_student_subject_id,
-            t4.remarks,
+            t4.remarks
                 
-            t5.time_from,
-            t5.time_to,
-            t5.schedule_day,
-            t5.schedule_time,
-            t5.room,
+            -- t5.time_from,
+            -- t5.time_to,
+            -- t5.schedule_day,
+            -- t5.schedule_time,
+            -- t5.room,
 
-            t6.firstname,
-            t6.lastname
+            -- t6.firstname,
+            -- t6.lastname
 
             FROM subject_program as t1
 
@@ -312,12 +312,12 @@ class SubjectProgram{
 
             
             LEFT JOIN course as t3 ON t3.course_id = t2.course_id
-
             LEFT JOIN student_subject_grade as t4 ON t4.student_subject_id = t2.student_subject_id
-            LEFT JOIN subject_schedule as t5 ON t5.subject_code = t2.subject_code
-            AND t5.course_id = t2.course_id
+            
+            -- LEFT JOIN subject_schedule as t5 ON t5.subject_code = t2.subject_code
+            -- AND t5.course_id = t2.course_id
 
-            LEFT JOIN teacher as t6 ON t6.teacher_id = t5.teacher_id
+            -- LEFT JOIN teacher as t6 ON t6.teacher_id = t5.teacher_id
 
             WHERE t1.semester=:semester
             AND t1.program_id=:program_id
@@ -342,63 +342,7 @@ class SubjectProgram{
 
     }
 
-    public function GetStudentEnrolledSubjectCodeBasev2($program_id,
-        $student_id, $GRADE_ELEVEN, $SELECTED_SEMESTER){
-
-            // echo $program_id;
-        // Enrollment student course_id
-        $subject_query = $this->con->prepare("SELECT 
-
-            -- t3.subject_code as t3_subject_code,
-            -- t3.subject_id, t3.course_id,
-            t3.*,
-
-            t2.subject_code AS student_subject_code,
-            t2.student_subject_id,
-            t2.enrollment_id,
-            t2.is_transferee, 
-            t2.is_final, 
-
-            t4.course_id, t4.program_section,
-            t5.student_subject_id AS graded_student_subject_id,
-            t5.remarks
-                
-            FROM enrollment as t1
-
-            LEFT JOIN student_subject as t2 ON t2.enrollment_id = t1.enrollment_id
-            AND t2.student_id=:student_id
-            -- AND t2.retake = 0
-            -- AND t2.overlap = 0
-
-            LEFT JOIN subject_program as t3 ON t3.subject_code = t2.program_code
-
-            LEFT JOIN course as t4 ON t4.course_id = t2.course_id
-
-            LEFT JOIN student_subject_grade as t5 ON t5.student_subject_id = t2.student_subject_id
-            
-            WHERE t1.retake = 0
-            AND t3.semester = :semester
-            AND t3.program_id = :program_id
-            AND t3.course_level = :course_level
-
-        ");
-
-        $subject_query->bindParam(":student_id", $student_id); 
-        $subject_query->bindParam(":semester", $SELECTED_SEMESTER); 
-        $subject_query->bindParam(":program_id", $program_id); 
-        $subject_query->bindParam(":course_level", $GRADE_ELEVEN); 
-        $subject_query->execute();
-
-        if($subject_query->rowCount() > 0){
-
-            $row_sub = $subject_query->fetchAll(PDO::FETCH_ASSOC);
-            // print_r($row_sub);
-            return $row_sub;
-        }
-        
-        return [];
-
-    }
+     
 
     public function GradeRecordsSHSBody($enrolledSubjectsGradeLevelSemesterBased,
         $checkEnrollmentEnrolled, $student_id) {

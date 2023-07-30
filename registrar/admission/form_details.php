@@ -505,7 +505,7 @@
 
         <div class="action">
             <button class="default success large" 
-                onclick="window.location.href = 'process_enrollment.php?find_section=show&st_id=<?php echo $student_id; ?>&c_id=<?php echo $student_course_id;?>'">
+                onclick="window.location.href = 'process_enrollment.php?find_section=show&st_id=<?php echo $student_id; ?>&c_id=<?php echo $student_enrollment_course_id;?>'">
                 Proceed
             </button>
         </div>

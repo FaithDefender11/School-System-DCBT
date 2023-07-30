@@ -6,6 +6,7 @@
     include_once('../../includes/classes/SchoolYear.php');
     include_once('../../includes/classes/Schedule.php');
     include_once('../../includes/classes/Teacher.php');
+    include_once('../../includes/classes/Room.php');
 
     $school_year = new SchoolYear($con, null);
     $schedule = new Schedule($con);
@@ -58,15 +59,26 @@
         $section = new Section($con, $course_id);
 
         $sectionName = $section->GetSectionName();
+        $first_period_room_id = $section->GetSectionFirstPeriodRoomId();
+        $second_period_room_id = $section->GetSectionSecondPeriodRoomId();
+
+
+        // $current_school_year_period = "Second";
+
+        $room = new Room($con, $current_school_year_period == "First" ? $first_period_room_id 
+            : ($current_school_year_period == "Second" ? $second_period_room_id : 0));
+
+        $room_number = $room->GetRoomNumber();
+
+        // echo $room_number;
 
         $sp_subject_code = $subject_program->GetSubjectProgramRawCode();
-
 
         $section_subject_code = $section->CreateSectionSubjectCode($sectionName, $sp_subject_code);
 
         $back_url = "show.php?id=$course_id";
 
-            $teacher = new Teacher($con);
+        $teacher = new Teacher($con);
 
     // $fullname = $teacher->GetTeacherFullName();
 
@@ -149,7 +161,6 @@
             //     exit();
             //     return;
             // }
-
             $scheduleAddedSuccess = $schedule->AddScheduleCodeBase(
                 $room, $time_from_meridian, $time_to_meridian,
                 $schedule_day, $time_from_meridian_military, $time_to_meridian_military,
@@ -161,8 +172,6 @@
                 Alert::success("Subject Code: $section_subject_code has been placed to $new_teacher_fullname", $back_url);
                 exit();
             }
-
-            
         }
     }
 
@@ -203,8 +212,10 @@
 
                             <div class="mb-3">
                                 <label for="">* Room Number</label>
-                                <input value='55' required type="text" placeholder="Input Room" name="room" id="room" class="form-control" />
+                                <input value='<?php echo $room_number;?>' type="text" placeholder="Input Room" name="room" id="room" class="form-control" />
                             </div>
+
+                            
 
                             <div class="mb-3" style="position: relative">
                                 <label for="">* Time From</label>
@@ -274,7 +285,7 @@
                                     <option value="M">Monday</option>
                                     <option value="T">Tuesday</option>
                                     <option value="W">Wednesday</option>
-                                    <option value="Th">Thursday</option>
+                                    <option value="TH">Thursday</option>
                                     <option value="F">Friday</option>
                                 </select>
                             </div>

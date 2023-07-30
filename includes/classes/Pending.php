@@ -16,12 +16,32 @@
         $query->execute();
 
         $this->sqlData = $query->fetch(PDO::FETCH_ASSOC);
+
+
+        // if($this->sqlData == null){
+
+        //     $pending_enrollees_id = $pending_enrollees_id;
+
+        //     $query = $this->con->prepare("SELECT * FROM pending_enrollees
+        //         WHERE firstname=:firstname");
+
+        //     $query->bindValue(":firstname", $firstname);
+        //     $query->execute();
+
+        //     $this->sqlData = $query->fetch(PDO::FETCH_ASSOC);
+        // }
     }
 
     public function GetPendingFirstName() {
         return isset($this->sqlData['firstname']) ? ucfirst($this->sqlData["firstname"]) : ""; 
     }
 
+    public function GetPendingAdmissionStatus() {
+        return isset($this->sqlData['admission_status']) ? ucfirst($this->sqlData["admission_status"]) : ""; 
+    }
+    public function GetPendingID() {
+        return isset($this->sqlData['pending_enrollees_id']) ? $this->sqlData["pending_enrollees_id"] : ""; 
+    }
     public function GetPendingLastName() {
         return isset($this->sqlData['lastname']) ? ucfirst($this->sqlData["lastname"]) : ""; 
     }
@@ -30,9 +50,17 @@
         return isset($this->sqlData['middle_name']) ? ucfirst($this->sqlData["middle_name"]) : ""; 
     }
 
+    public function GetPendingLRN() {
+        return isset($this->sqlData['lrn']) ? $this->sqlData["lrn"] : ""; 
+    }
+
     public function GetPendingEmail() {
         return isset($this->sqlData['email']) ? $this->sqlData["email"] : ""; 
     }
+    public function GetPendingSuffix() {
+        return isset($this->sqlData['suffix']) ? $this->sqlData["suffix"] : ""; 
+    }
+
     public function GetCourseLevel() {
         return isset($this->sqlData['course_level']) ? $this->sqlData["course_level"] : 0; 
     }
@@ -43,6 +71,42 @@
 
     public function GetPendingType() {
         return isset($this->sqlData['type']) ? $this->sqlData["type"] : ""; 
+    }
+
+    public function GetPendingNationality() {
+        return isset($this->sqlData['nationality']) ? ucfirst($this->sqlData["nationality"]) : ""; 
+    }
+
+    public function GetPendingGender() {
+        return isset($this->sqlData['sex']) ? ucfirst($this->sqlData["sex"]) : ""; 
+    }
+
+    public function GetPendingIsFinished() {
+        return isset($this->sqlData['is_finished']) ? $this->sqlData["is_finished"] : null; 
+    }
+
+
+    public function GetPendingBirthday() {
+        return isset($this->sqlData['birthday']) ? $this->sqlData["birthday"] : ""; 
+    }
+    public function GetPendingBirthplace() {
+        return isset($this->sqlData['birthplace']) ? ucfirst($this->sqlData["birthplace"]) : ""; 
+    }
+
+    public function GetPendingReligion() {
+        return isset($this->sqlData['religion']) ? ucfirst($this->sqlData["religion"]) : ""; 
+    }
+
+    public function GetPendingCivilStatus() {
+        return isset($this->sqlData['civil_status']) ? ucfirst($this->sqlData["civil_status"]) : ""; 
+    }
+
+    public function GetPendingAddress() {
+        return isset($this->sqlData['address']) ? ucfirst($this->sqlData["address"]) : ""; 
+    }
+
+    public function GetPendingContactNumber() {
+        return isset($this->sqlData['contact_number']) ? ucfirst($this->sqlData["contact_number"]) : ""; 
     }
 
     public function GetPendingProgramId() {
@@ -83,6 +147,67 @@
         return $execute;
     }
 
+   public function UpdateStudentInformation(
+        $firstname,
+        $lastname,
+        $middle_name,
+        $suffix,
+        $civil_status,
+        $nationality,
+        $contact_number,
+        $birthday,
+        $birthplace,
+        $age,
+        $sex,
+        $address,
+        $lrn,
+        $religion,
+        $pending_enrollees_id
+    ) {
+
+
+        $query = $this->con->prepare("UPDATE pending_enrollees SET 
+            firstname = :firstname,
+            lastname = :lastname,
+            middle_name = :middle_name,
+            suffix = :suffix,
+            civil_status = :civil_status,
+            nationality = :nationality,
+            contact_number = :contact_number,
+            birthday = :birthday,
+            birthplace = :birthplace,
+            age = :age,
+            sex = :sex,
+            address = :address,
+            lrn = :lrn,
+            religion = :religion
+            WHERE pending_enrollees_id = :pending_enrollees_id");
+
+        $query->bindParam(":firstname", $firstname);
+        $query->bindParam(":lastname", $lastname);
+        $query->bindParam(":middle_name", $middle_name);
+        $query->bindParam(":suffix", $suffix);
+        $query->bindParam(":civil_status", $civil_status);
+        $query->bindParam(":nationality", $nationality);
+        $query->bindParam(":contact_number", $contact_number);
+        $query->bindParam(":birthday", $birthday);
+        $query->bindParam(":birthplace", $birthplace);
+        $query->bindParam(":age", $age);
+        $query->bindParam(":sex", $sex);
+        $query->bindParam(":address", $address);
+        $query->bindParam(":lrn", $lrn);
+        $query->bindParam(":religion", $religion);
+        $query->bindParam(":pending_enrollees_id", $pending_enrollees_id);
+
+
+        $query->execute();
+
+        if($query->rowCount() > 0){
+            return true;
+        }
+
+        return false;
+    }
 
     public function CreateRegisterStrand($program_id = null){
 
@@ -121,6 +246,7 @@
             $program_id, $pending_enrollees_id){
         
         $db_status = "";
+
         if($admission_status == "Regular"){
             $db_status = "Standard";
         }else if($admission_status == "Transferee"){
@@ -146,6 +272,69 @@
         return $execute;
     }
 
+    public function PendingCourseLevelDropdown($pending_type,
+        $course_level){
+
+        $output = "";
+        if ($pending_type == "SHS") {
+            $output .= "
+                <select style='width: 450px' class='form-control' name='choose_level' id='choose_level'>
+                    <option value='11' " . ($course_level == '11' ? 'selected' : '') . ">Grade 11</option>
+                    <option value='12' " . ($course_level == '12' ? 'selected' : '') . ">Grade 12</option> 
+                </select>
+            ";
+        } else if ($pending_type == "Tertiary") {
+            $output .= "
+                <select style='width: 450px' class='form-control' name='choose_level' id='choose_level'>
+                    <option value='1' " . ($course_level == '1' ? 'selected' : '') . ">1st Year</option>
+                    <option value='2' " . ($course_level == '2' ? 'selected' : '') . ">2nd Year</option>
+                    <option value='3' " . ($course_level == '3' ? 'selected' : '') . ">3rd Year</option>
+                    <option value='4' " . ($course_level == '4' ? 'selected' : '') . ">4th Year</option>
+                </select>
+            ";
+        }else{
+            $output .= "
+                <select style='width: 450px' class='form-control' name='choose_level' id='choose_level'>
+                </select>
+            ";
+        }
+
+        return $output;
+    }
+
+    public function PreferredCourseUpdate($selected_admission_type,
+            $selected_department_type, $selected_program_id,
+            $selected_course_level, $pending_enrollees_id){
+
+        $admission_status = $selected_admission_type == "New" ? "Standard" 
+            : ($selected_admission_type == "Transferee" ? "Transferee" : "");
+        
+        $type = $selected_department_type == "Senior High School" ? "SHS" 
+            : ($selected_department_type == "Tertiary" ? "Tertiary" : "");
+        
+
+        $query = $this->con->prepare("UPDATE pending_enrollees
+            SET admission_status=:admission_status,
+                type=:type,
+                program_id=:program_id,
+                course_level=:course_level
+            
+            WHERE pending_enrollees_id=:pending_enrollees_id");
+
+        $query->bindParam(":pending_enrollees_id", $pending_enrollees_id);
+        $query->bindParam(":admission_status", $admission_status);
+        $query->bindParam(":type", $type);
+        $query->bindParam(":program_id", $selected_program_id);
+        $query->bindParam(":course_level", $selected_course_level);
+        $query->execute();
+
+        if($query->rowCount() > 0){
+            return true;
+        }
+
+        return false;
+    }
+
     public function UpdateEnrollmentDetails($type, $course_level,
             $program_id, $pending_enrollees_id){
         
@@ -168,6 +357,63 @@
 
         return false;
 
+    }
+
+    public function UpdatePendingEnrolleeDetails(
+        $pending_enrollees_id,
+        $firstname,
+        $lastname,
+        $middle_name,
+        $suffix,
+        $civil_status,
+        $nationality,
+        $sex,
+        $birthday,
+        $birthplace,
+        $religion,
+        $address,
+        $contact_number,
+        $email) {
+
+    $query = $this->con->prepare("UPDATE pending_enrollees
+        SET firstname=:firstname,
+            lastname=:lastname,
+            middle_name=:middle_name,
+            suffix=:suffix,
+            civil_status=:civil_status,
+            nationality=:nationality,
+            sex=:sex,
+            birthday=:birthday,
+            birthplace=:birthplace,
+            religion=:religion,
+            address=:address,
+            contact_number=:contact_number,
+            email=:email
+            
+        WHERE pending_enrollees_id=:pending_enrollees_id");
+
+        $query->bindParam(":firstname", $firstname);
+        $query->bindParam(":lastname", $lastname);
+        $query->bindParam(":middle_name", $middle_name);
+        $query->bindParam(":suffix", $suffix);
+        $query->bindParam(":civil_status", $civil_status);
+        $query->bindParam(":nationality", $nationality);
+        $query->bindParam(":sex", $sex);
+        $query->bindParam(":birthday", $birthday);
+        $query->bindParam(":birthplace", $birthplace);
+        $query->bindParam(":religion", $religion);
+        $query->bindParam(":address", $address);
+        $query->bindParam(":contact_number", $contact_number);
+        $query->bindParam(":email", $email);
+        
+        $query->bindParam(":pending_enrollees_id", $pending_enrollees_id);
+        $query->execute();
+
+        if($query->rowCount() > 0) {
+            return true;
+        }
+
+        return false;
     }
 
     public function UpdatePendingNewStep2($pending_enrollees_id, $firstname, 
@@ -762,8 +1008,37 @@
         return $query->execute();
     }
 
-    
+    public function MarkAsValidated($pending_enrollees_id) {
 
+
+
+        $query = $this->con->prepare("UPDATE pending_enrollees
+        
+            SET is_finished = :set_is_finished
+
+            WHERE pending_enrollees_id = :pending_enrollees_id
+            AND is_finished = 0
+            AND activated = 1
+            AND student_status != 'APPROVED'
+            ");
+
+        $query->bindValue(":set_is_finished", 1);
+        $query->bindValue(":pending_enrollees_id", $pending_enrollees_id, PDO::PARAM_INT);
+
+        $query->execute();
+
+        if($query->rowCount() > 0){
+            return true;
+        }else{
+            echo "qwe";
+        }
+        return false;
+    }
+    
+    
+    public function Check($pending_enrollees_id) {
+
+    }
 }
 
 ?>

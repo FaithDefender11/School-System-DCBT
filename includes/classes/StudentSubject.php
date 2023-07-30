@@ -82,7 +82,7 @@
 
     public function AddNonFinalDefaultEnrolledSubject($student_id, 
         $student_enrollment_id, $student_course_id, $current_school_year_id,
-        $current_school_year_period, $admission_status){
+        $current_school_year_period, $admission_status = null){
 
 
         $is_transferee = $admission_status == "Transferee" ? 1 : 0;
@@ -115,7 +115,9 @@
         $isFinish = false;
 
         if($sql->rowCount() > 0){
-                $hasError = false;
+
+            // echo "hey";
+            $hasError = false;
 
             while($row = $sql->fetch(PDO::FETCH_ASSOC)){
              
@@ -131,26 +133,31 @@
                 $checkIfSubjectAlreadyPassed = $student_subject->
                     CheckIfSubjectAlreadyPassed($student_id, $subject_code);
 
-                $checkIfSubjectNotPassedForPreRequisite = $student_subject->CheckIfSubjectNotPassedForValidation(
+                $checkIfSubjectNotPassedForPreRequisite = $student_subject->CheckIfSubjectPreRequisiteHasFailed(
                     $student_id,
                     $pre_requisite_code, $current_school_year_id, $subject_code);
 
                 $checkIfCredited = $this->CheckIfSubjectAlreadyCredited($student_id, $subject_code);
                 
                 if($checkIfCredited == true){
-                    $hasError = true;
-
-                    // continue;
-                }else if($checkIfSubjectAlreadyPassed == true){
-                    $hasError = true;
-                    // continue;
+                    // $hasError = true;
+                    continue;
                 }
-                else if($checkIfSubjectNotPassedForPreRequisite == true){
-                    $hasError = true;
-                    // continue;
+                if($checkIfSubjectAlreadyPassed == true){
+                    // $hasError = true;
+                    continue;
                 }
 
-                if($hasError == false){
+                // if($checkIfSubjectNotPassedForPreRequisite == true){
+                //     // $hasError = true;
+                //     continue;
+                // }
+
+                // echo $subject_code;
+
+                // if($hasError == false){
+                // if(false){
+                if(true){
                     // echo "$subject_code is available";
                     // echo "<br>";
 
@@ -171,12 +178,6 @@
                         $isFinish = true;
                     }
                 }
-
-
-
-
-
-               
             }
         }
 
@@ -203,6 +204,7 @@
 
         return $code;
     }
+    
     // updax
     public function UpdateStudentSubjectCourseId($student_id,
         $current_course_id, $to_change_course_id, $enrollment_id,
@@ -269,7 +271,7 @@
                         CheckIfSubjectAlreadyPassed($student_id, $subject_code);
 
                     $checkIfSubjectNotPassedForPreRequisite = $student_subject->
-                        CheckIfSubjectNotPassedForValidation($student_id,
+                        CheckIfSubjectPreRequisiteHasFailed($student_id,
                             $pre_requisite_code, $current_school_year_id, $subject_code);
 
                     $checkIfCredited = $this->CheckIfSubjectAlreadyCredited($student_id, $subject_code);
@@ -391,7 +393,7 @@
                         CheckIfSubjectAlreadyPassed($student_id, $subject_code);
 
                     $checkIfSubjectNotPassedForPreRequisite = $student_subject->
-                        CheckIfSubjectNotPassedForValidation($student_id,
+                        CheckIfSubjectPreRequisiteHasFailed($student_id,
                             $pre_requisite_code, $current_school_year_id, $subject_code);
 
                     $checkIfCredited = $this->CheckIfSubjectAlreadyCredited($student_id, $subject_code);
@@ -956,7 +958,6 @@
     public function CheckIfSubjectAlreadyCredited($student_id,
         // $subject_program_id,
         $subject_code){
-
         
         $sql = $this->con->prepare(" SELECT t1.student_subject_id
 
@@ -1095,23 +1096,11 @@
         return $checkIfSubjectAlreadyPassed;
     }
 
-    public function CheckIfSubjectNotPassedForValidation($student_id,
+    // 2 ###
+
+    public function CheckIfSubjectPreRequisiteHasFailed($student_id,
         $pre_requisite_code, $current_school_year_id,
         $subject_code){
-
-        // echo $pre_requisite_code;
-
-        # REQUIREMENTS
-
-        // STEM1-Code -> Failed
-        // Retake STEM1-Code -> Passed
-
-        // Trying to insert the STEM1-Code -> Already Passed
-
-        // STEM1-Code -> Failed
-        // Retake STEM1-Code -> Failed Again
-
-        // Trying to insert the STEM1-Code -> Inserted.
 
         $sql = $this->con->prepare("SELECT t2.remarks
 
@@ -1137,7 +1126,7 @@
         $sql->execute();
 
         // return $sql->rowCount() > 0;
-        $isFailedSelectedSubjectCode = false;
+        $isFailedSelectedSubjectCode = NULL;
 
         if($sql->rowCount() > 0){
 
@@ -1146,9 +1135,11 @@
 
             // If subject pre requisite subject is inserted
             // but not yet passed
-            if($remarks == null){
-                $isFailedSelectedSubjectCode = true;
-            }
+
+            // if($remarks == null){
+            //     $isFailedSelectedSubjectCode = true;
+            // }
+
             // If subject pre requisite subject is inserted
             // the remarks is failed
             if($remarks != null && $remarks == "Failed"){
@@ -1158,14 +1149,12 @@
             
             // If subject pre requisite subject is inserted
             // the remarks is passed
-            }else if($remarks != null && $remarks == "Passed"){
-                // echo "You have already passed the subject $pre_requisite_code, so you can get $subject_code";
-                $isFailedSelectedSubjectCode = false;
             }
-            // echo $remarks;
         } 
         return $isFailedSelectedSubjectCode;
     }
+
+    // 1 ###
 
     public function CheckIfPreRequisiteSubjectTakenPassed($student_id,
         $pre_requisite_code, $current_school_year_id,
@@ -1173,11 +1162,12 @@
 
             // echo $pre_requisite_code;
 
-        $isPreRequisiteTaken = false;
+        $isPreRequisiteTaken = NULL;
 
         if($pre_requisite_code == "None" ) return true;
 
         if($pre_requisite_code != "None"){
+
             $sql = $this->con->prepare("SELECT t2.remarks
 
             FROM student_subject AS t1
@@ -1207,24 +1197,24 @@
 
                 // echo "hmm";
                 $remarks = $sql->fetchColumn();
-
               
-                if($remarks == null){
-                    $isPreRequisiteTaken = false;
-                }
-                // If subject pre requisite subject is inserted
-                // the remarks is failed
-                if($remarks != null && $remarks == "Failed"){
-                    $isPreRequisiteTaken = false;
-                    // echo "You had failed the subject $pre_requisite_code, so you cant get $subject_code";
+                // if($remarks == null){
+                //     $isPreRequisiteTaken = false;
+                // }
+                // // If subject pre requisite subject is inserted
+                // // the remarks is failed
+                // if($remarks != null && $remarks == "Failed"){
+                //     $isPreRequisiteTaken = false;
+                //     // echo "You had failed the subject $pre_requisite_code, so you cant get $subject_code";
                 
-                // If subject pre requisite subject is inserted
-                // the remarks is passed
-                }else if($remarks != null && $remarks == "Passed"){
+                // // If subject pre requisite subject is inserted
+                // // the remarks is passed
+                // }
+                
+                if($remarks != null && $remarks == "Passed"){
                     // echo "You have already passed the subject $pre_requisite_code, so you can get $subject_code";
                     $isPreRequisiteTaken = true;
                 }
-                // echo $remarks;
             } 
         }
 
@@ -1232,6 +1222,96 @@
         return $isPreRequisiteTaken;
     }
 
+    public function CheckIfPreRequisiteIsNotTaken($student_id,
+        $pre_requisite_code, $current_school_year_id,
+        $subject_code){
+
+            // echo $pre_requisite_code;
+
+        $isPreRequisiteNotTaken = NULL;
+
+        if($pre_requisite_code == "None" ) return true;
+
+        if($pre_requisite_code != "None"){
+
+            $sql = $this->con->prepare("SELECT t2.remarks
+
+            FROM student_subject AS t1
+
+            LEFT JOIN student_subject_grade as t2 
+            ON t2.student_subject_id = t1.student_subject_id
+
+            WHERE t1.student_id=:student_id
+            AND t1.program_code = :program_code
+            AND t1.is_final = 1
+            AND t1.is_transferee = 0
+            AND t1.school_year_id != :current_school_year_id
+            
+            ORDER BY t1.student_subject_id DESC
+            LIMIT 1
+
+        ");
+
+            $sql->bindParam(":student_id", $student_id);
+            $sql->bindParam(":program_code", $pre_requisite_code);
+            $sql->bindParam(":current_school_year_id", $current_school_year_id);
+            $sql->execute();
+
+            // return $sql->rowCount() > 0;
+
+            if($sql->rowCount() > 0){
+
+                // echo "hmm";
+                $remarks = $sql->fetchColumn();
+              
+                if($remarks == null){
+                    $isPreRequisiteNotTaken = true;
+                }
+               
+                // if($remarks != null && $remarks == "Passed"){
+                //     // echo "You have already passed the subject $pre_requisite_code, so you can get $subject_code";
+                //     $isPreRequisiteNotTaken = true;
+                // }
+            } 
+        }
+
+        
+        return $isPreRequisiteNotTaken;
+    }
+
+    public function CheckIfChosenSubjectAlreadyCredited($student_id,
+        $pre_requisite_code_of_chosen_subject
+        ){
+        
+            // echo $pre_requisite_code_of_chosen_subject;
+        $sql = $this->con->prepare("SELECT t1.student_subject_id
+
+            FROM student_subject AS t1
+
+            WHERE t1.student_id = :student_id
+            AND program_code = :program_code
+
+                -- AND t1.subject_program_id IN (
+                --     SELECT subject_program_id
+                --     FROM subject_program
+                --     WHERE program_code = :program_code
+                -- )
+                -- AND t1.is_transferee = 1
+                -- AND t1.is_final = 1
+
+            AND t1.is_transferee = 1
+            AND t1.is_final = 1
+
+        ");
+
+                
+        $sql->bindParam(":student_id", $student_id);
+        $sql->bindParam(":program_code", $pre_requisite_code_of_chosen_subject);
+        $sql->execute();
+
+        return $sql->rowCount() > 0;
+    }
+     
     public function CheckIfSubjectCodeRetaken($student_id,
         $pre_requisite_code, $current_school_year_id,
         $subject_code){

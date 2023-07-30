@@ -8,6 +8,11 @@
     include_once('../../includes/classes/SubjectProgram.php');
     include_once('../../includes/classes/StudentSubject.php');
     include_once('../../includes/classes/SchoolYear.php');
+    include_once('../../includes/classes/Schedule.php');
+
+    ?>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+    <?php
 
     $school_year = new SchoolYear($con, null);
     $school_year_obj = $school_year->GetActiveSchoolYearAndSemester();
@@ -32,15 +37,22 @@
         $SECOND_SEMESTER = "Second";
 
         $subject_program = new SubjectProgram($con);
+
         $enrollment = new Enrollment($con);
+
         $student = new Student($con, $student_id);
+
         $parent = new StudentParent($con, $student_id);
+
         $student_subject = new StudentSubject($con);
 
         $prompIfIDNotExists = $student->CheckIdExists($student_id);
         $raw_type = $student->CheckIfTertiary($student_id);
 
         $student_level = $student->GetStudentLevel($student_id);
+
+        $student_type = $student->GetIsTertiary();
+
         $student_course_id = $student->GetStudentCurrentCourseId($student_id);
 
         $section = new Section($con, $student_course_id);
@@ -68,6 +80,9 @@
         $civil_status = $student->GetCivilStatus();
         $nationality = $student->GetNationality();
 
+        $parent_id = $parent->GetParentID();
+
+        // Guardian
         $parent_firstname = $parent->GetFirstName();
         $parent_lastname = $parent->GetLastName();
         $parent_middle_name = $parent->GetMiddleName();
@@ -75,7 +90,30 @@
         $parent_contact_number = $parent->GetContactNumber();
         $parent_email = $parent->GetEmail();
         $parent_occupation = $parent->GetOccupation();
+        $parent_relationship = $parent->GetGuardianRelationship();
+        // 
 
+
+        // Father
+        $father_firstname = $parent->GetFatherFirstName();
+        $father_lastname = $parent->GetFatherLastName();
+        $father_middle = $parent->GetFatherMiddleName();
+        $father_suffix = $parent->GetFatherSuffix();
+        $father_contact_number = $parent->GetFatherContactNumber();
+        $father_email = $parent->GetFatherEmail();
+        $father_occupation = $parent->GetFatherOccupation();
+
+
+        // Father
+        $mother_firstname = $parent->GetMotherFirstName();
+        $mother_lastname = $parent->GetMotherLastName();
+        $mother_middle = $parent->GetMotherMiddleName();
+        $mother_suffix = $parent->GetMotherSuffix();
+        $mother_contact_number = $parent->GetMotherContactNumber();
+        $mother_email = $parent->GetMotherEmail();
+        $mother_occupation = $parent->GetMotherOccupation();
+
+        // 
         
         $student_program_id = $section->GetSectionProgramId($student_course_id);
         
@@ -137,65 +175,10 @@
         $enrollment_section = new Section($con);
         $student_enrollment_course_level = $enrollment_section->GetSectionGradeLevel($student_enrollment_course_id);
         
-        
-        $enrollmentRecordDetails1 = $enrollment->getEnrollmentSectionDetails($student_id,
-            $GRADE_ELEVEN, $FIRST_SEMESTER);
-
-        if($enrollmentRecordDetails1 != null){
-
-            $enrollment_date_approved11_1st = $enrollmentRecordDetails1['enrollment_date_approved'];
-            $enrollment_section_acronym11_1st = $enrollmentRecordDetails1['enrollment_section_acronym'];
-            $enrollment_section_level11_1st = $enrollmentRecordDetails1['enrollment_section_level'];
-            $enrollment_period11_1st = $enrollmentRecordDetails1['enrollment_period'];
-            $enrollment_student_status11_1st = $enrollmentRecordDetails1['enrollment_student_status'];
-        }
-
-        $enrollmentRecordDetails2 = $enrollment->getEnrollmentSectionDetails($student_id,
-            $GRADE_ELEVEN, $SECOND_SEMESTER);
-        
-        if($enrollmentRecordDetails2 != null){
-
-            $enrollment_date_approved11_2nd = $enrollmentRecordDetails2['enrollment_date_approved'];
-            $enrollment_section_acronym11_2nd = $enrollmentRecordDetails2['enrollment_section_acronym'];
-            $enrollment_section_level11_2nd = $enrollmentRecordDetails2['enrollment_section_level'];
-            $enrollment_period11_2nd = $enrollmentRecordDetails2['enrollment_period'];
-            $enrollment_student_status11_2nd = $enrollmentRecordDetails2['enrollment_student_status'];
-        }
-
-
-        $enrollmentRecordDetails3 = $enrollment->getEnrollmentSectionDetails($student_id,
-            $GRADE_TWELVE, $FIRST_SEMESTER);
-        
-        
-        if($enrollmentRecordDetails3 != null){
-
-            $enrollment_date_approved12_1st = $enrollmentRecordDetails3['enrollment_date_approved'];
-            $enrollment_section_acronym12_1st = $enrollmentRecordDetails3['enrollment_section_acronym'];
-            $enrollment_section_level12_1st = $enrollmentRecordDetails3['enrollment_section_level'];
-            $enrollment_period12_1st = $enrollmentRecordDetails3['enrollment_period'];
-            $enrollment_student_status12_1st = $enrollmentRecordDetails3['enrollment_student_status'];
-        }
-
-
-        $enrollmentRecordDetails4 = $enrollment->getEnrollmentSectionDetails($student_id,
-            $GRADE_TWELVE, $SECOND_SEMESTER);
-        
-        
-        if($enrollmentRecordDetails4 != null){
-
-            $enrollment_date_approved12_2nd = $enrollmentRecordDetails4['enrollment_date_approved'];
-            $enrollment_section_acronym12_2nd = $enrollmentRecordDetails4['enrollment_section_acronym'];
-            $enrollment_section_level12_2nd = $enrollmentRecordDetails4['enrollment_section_level'];
-            $enrollment_period12_2nd = $enrollmentRecordDetails4['enrollment_period'];
-            $enrollment_student_status12_2nd = $enrollmentRecordDetails4['enrollment_student_status'];
-        }
-
 
         $regularEnrolledStudents = $enrollment->GetEnrolledRegularStudentWithinSemester(
             $current_school_year_id);
 
-        
-        
         if(isset($_GET['details']) && $_GET['details'] == "show"){
 
             include_once('./details.php');

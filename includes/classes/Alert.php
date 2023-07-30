@@ -2,26 +2,7 @@
 
 class Alert{
 
-    private $con, $sqlData;
-
-    public function __construct($con, $input)
-    {
-        $this->con = $con;
-        $this->sqlData = $input;
-
-        // echo "hey";
-        // print_r($input);
-        if(!is_array($input)){
-            $query = $this->con->prepare("SELECT * FROM users
-            WHERE username=:username");
-
-            $query->bindValue(":username", $input);
-            $query->execute();
-
-            $this->sqlData = $query->fetch(PDO::FETCH_ASSOC);
-        }
-    }
-                // allowEscapeKey: false,
+             // allowEscapeKey: false,
 
     public static function success($text, $redirectUrl) {
         echo "<script>
@@ -38,6 +19,25 @@ class Alert{
             });
         </script>";
     }
+
+    public static function successAutoRedirect($text, $redirectUrl) {
+        echo "<script>
+            Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: '$text',
+            backdrop: false,
+            confirmButtonText: 'Wait',
+            showCancelButton: false,
+            showCloseButton: false,
+        });
+            setTimeout(() => {
+                window.location.href = '$redirectUrl';
+            }, 1000);
+        </script>";
+    }
+
+
     public static function error($text, $redirectUrl) {
         echo "<script>
             Swal.fire({

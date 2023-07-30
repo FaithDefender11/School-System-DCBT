@@ -68,7 +68,7 @@
             $student_id,
             $subject_code);
 
-        $checkIfSubjectNotPassedForPreRequisite = $student_subject->CheckIfSubjectNotPassedForValidation(
+        $checkIfSubjectPreRequisiteHasFailed = $student_subject->CheckIfSubjectPreRequisiteHasFailed(
             $student_id, $pre_requisite_code,
             $current_school_year_id, $subject_code);
 
@@ -80,27 +80,40 @@
         $checkIfSubjectCodeRetaken = $student_subject->CheckIfSubjectCodeRetaken(
             $student_id, $pre_requisite_code,
             $current_school_year_id, $subject_code);
- 
 
-        // if($alreadyInsertedThisSemester == true){
-        //     echo "already inserted";
-        //     $hasError = true;
 
-        // }
+        $checkIfChosenSubjectAlreadyCredited = $student_subject->CheckIfChosenSubjectAlreadyCredited(
+            $student_id, $pre_requisite_code); 
+            
+        $checkIfPreRequisiteIsNotTaken = $student_subject->CheckIfPreRequisiteIsNotTaken(
+            $student_id, $pre_requisite_code,
+            $current_school_year_id, $subject_code); 
+
 
         $hasError = false;
         $hasErrorArr = [];
 
-        // if($checkIfSubjectCodeRetaken == true){
-        //     echo "taken_failed";
-        //     array_push($hasErrorArr, "taken_failed");
-        // }
+        if($checkIfSubjectCodeRetaken == true){
+            echo "taken_failed";
+            array_push($hasErrorArr, "taken_failed");
+            $hasError = true;
+
+        }
+
+        if($checkIfChosenSubjectAlreadyCredited == true){
+            echo "already_credited";
+            $hasError = true;
+            array_push($hasErrorArr, "already_credited");
+        }
+
         
         if($checkIfSubjectAlreadyCredited == true){
             echo "already_credited";
             $hasError = true;
             array_push($hasErrorArr, "already_credited");
         }
+
+
         if($checkIfSubjectAlreadyTaken == true){
             echo "taken_different_strand";
             // echo "already taken by different strand/course";
@@ -115,25 +128,39 @@
             array_push($hasErrorArr, "already_passed");
 
         }
-        if($checkIfSubjectNotPassedForPreRequisite == true){
+
+        // Pre Requisite taken and failed
+        if($checkIfSubjectPreRequisiteHasFailed == true
+            && $checkIfSubjectPreRequisiteHasFailed != NULL
+        ){
 
             echo "failed_pre_requisite_of_selected_code";
             // echo "You had failed the subject $pre_requisite_code, so you cant get $subject_code";
             $hasError = true;
             array_push($hasErrorArr, "failed_pre_requisite_of_selected_code");
-
         }
-        if($checkIfPreRequisiteSubjectTakenPassed == false){
+
+        // Pre requisite is student subject grade is null
+
+        // Chosen subject pre_requisite is not taken
+        // And subject pre_requisite is not credited
+
+        if($checkIfPreRequisiteIsNotTaken != NULL &&
+            $checkIfPreRequisiteIsNotTaken == true
+            && $checkIfChosenSubjectAlreadyCredited == false
+
+            // && $checkIfChosenSubjectAlreadyCredited == false
+            ){
 
             echo "subject_prerequisite_not_taken";
             array_push($hasErrorArr, "subject_prerequisite_not_taken");
-
             $hasError = true;
         }
 
         if(empty($hasErrorArr) == true){
             // echo $hasError;
             // echo " without err";
+
             $insertSubjectLoad = $student_subject->InsertStudentSubjectNonFinal($student_id, $student_subject_code,
                 $enrollment_id, $course_id, $subject_program_id,
                 $current_school_year_id, $subject_code, $student_enrollment_course_level, $checkIfSubjectCodeRetaken);
@@ -143,10 +170,7 @@
                return;
             }
 
-        }else{
-            // echo "with error";
-            print_r($hasErrorArr);
-        }
+        } 
 
         // Allow Subject to be taken if it was failed by the previous
         // if($checkIfSubjectAlreadyCredited == true){

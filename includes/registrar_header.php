@@ -28,7 +28,6 @@
     $document_title = Helper::DocumentTitlePage($page);
 
     // $registrarLoggedInObj->MarkStudentAsApplicable();
-
     
 ?>
 
@@ -75,6 +74,7 @@
          <!-- Bootstrap 4 JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     </head>
+
 <body>
     <div class="pageContainer">
        
@@ -98,12 +98,11 @@
                     // echo $registrarLoggedInObj->MarkStudentAsApplicable();
                 ?>
 
-
 <script>
-$(document).ready(function() {
-    $('.navigationItem').click(function() {
-        $('.navigationItem').removeClass('active'); // Remove "active" class from all navigation items
-        $(this).addClass('active'); // Add "active" class to the clicked navigation item
+    $(document).ready(function() {
+        $('.navigationItem').click(function() {
+            $('.navigationItem').removeClass('active'); // Remove "active" class from all navigation items
+            $(this).addClass('active'); // Add "active" class to the clicked navigation item
+        });
     });
-});
 </script>

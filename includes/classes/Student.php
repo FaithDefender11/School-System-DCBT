@@ -139,6 +139,10 @@ class Student{
         return isset($this->sqlData['is_tertiary']) ? $this->sqlData["is_tertiary"] : ""; 
     }
 
+    public function GetStudentGender() {
+        return isset($this->sqlData['sex']) ? $this->sqlData["sex"] : ""; 
+    }
+
     public function GetStudentBirthdays() {
         return isset($this->sqlData['birthday']) ? $this->sqlData["birthday"] : ""; 
     }
@@ -275,6 +279,56 @@ class Student{
         
         return $query->execute();
     }
+
+    public function UpdateStudentDetails($student_id, $firstname, $lastname,
+        $middle_name, $suffix, $civil_status, $nationality, $sex,
+        $birthday, $birthplace, $religion, $address, $contact_number,
+        $email) {
+
+        $query = $this->con->prepare("UPDATE student 
+            SET firstname=:firstname,
+                lastname=:lastname,
+                middle_name=:middle_name,
+                suffix=:suffix,
+                civil_status=:civil_status,
+                nationality=:nationality,
+                sex=:sex,
+                birthday=:birthday,
+                birthplace=:birthplace,
+                religion=:religion,
+                address=:address,
+                contact_number=:contact_number,
+                email=:email
+
+            WHERE student_id=:student_id
+            -- AND active=
+        ");
+
+        $query->bindParam(":firstname", $firstname);
+        $query->bindParam(":lastname", $lastname);
+        $query->bindParam(":middle_name", $middle_name);
+        $query->bindParam(":suffix", $suffix);
+        $query->bindParam(":civil_status", $civil_status);
+        $query->bindParam(":nationality", $nationality);
+        $query->bindParam(":sex", $sex);
+        $query->bindParam(":birthday", $birthday);
+        $query->bindParam(":birthplace", $birthplace);
+        $query->bindParam(":religion", $religion);
+        $query->bindParam(":address", $address);
+        $query->bindParam(":contact_number", $contact_number);
+        $query->bindParam(":email", $email);
+        $query->bindParam(":student_id", $student_id);
+
+        $query->execute();
+
+        if($query->rowCount() > 0){
+            return true;
+        }
+
+        return false;
+
+    }
+
 
     public function UpdateStudentEnrollmentFormBased($student_id,
         $student_enrollment_course_level, $to_change_course_id, 
@@ -451,7 +505,9 @@ class Student{
         if($query_student->rowCount() == 0){
 
             $activated = 1;
-            $query = $this->con->prepare("SELECT firstname, password 
+            $query = $this->con->prepare("SELECT 
+                pending_enrollees_id,
+                firstname, password 
             
                 FROM pending_enrollees
 
@@ -476,6 +532,7 @@ class Student{
                     array_push($arr, $username);
                     array_push($arr, true);
                     array_push($arr, "pending");
+                    array_push($arr,  $userPending['pending_enrollees_id']);
                 }else{
                     echo "not cocrrect pending";
                 }
@@ -536,6 +593,20 @@ class Student{
 
     }
 
+    public function GenerateStudentUsername($lastname, $generateStudentUniqueId){
+                        
+        $username = strtolower($lastname) . '.' . $generateStudentUniqueId . '@dcbt.ph';
+        return $username;
+    }
+
+    public function CalculateAge($birthdate) {
+
+        $birthdateObj = new DateTime($birthdate);
+        $today = new DateTime();
+        $ageInterval = $today->diff($birthdateObj);
+        return $ageInterval->y;
+
+    }
     public function CheckEnrolleeExists($firstname, $lastname, $middle_name,
          $birthday, $email){
 
@@ -595,6 +666,57 @@ class Student{
 
         // Execute the prepared statement
         return $stmt_insert->execute();
+    }
+
+    public function InsertStudentFromEnrollmentForm($firstname, $lastname, $middle_name, $password, $civil_status, $nationality, $contact_number, $birthday, $age, $sex, $course_id, $student_unique_id, $course_level, $username, $address, $lrn, $religion, $birthplace, $email, $type, $new_enrollee) {
+
+
+        $hash_password = password_hash($password, PASSWORD_BCRYPT);
+
+        $student_statusv2 = "";
+        
+        $stmt_insert = $this->con->prepare("INSERT INTO student 
+            (firstname, lastname, middle_name, password, civil_status, nationality,
+            contact_number, birthday, age, sex, course_id, student_unique_id,
+            course_level, username, address, lrn, religion, birthplace, email,
+            student_statusv2, is_tertiary, new_enrollee) 
+            
+            VALUES (:firstname, :lastname, :middle_name, :password, :civil_status, 
+            :nationality, :contact_number, :birthday, :age, :sex, :course_id,
+            :student_unique_id, :course_level, :username, :address, :lrn, :religion,
+            :birthplace, :email, :student_statusv2, :is_tertiary,:new_enrollee)");
+
+        $stmt_insert->bindParam(':firstname', $firstname);
+        $stmt_insert->bindParam(':lastname', $lastname);
+        $stmt_insert->bindParam(':middle_name', $middle_name);
+        $stmt_insert->bindParam(':password', $hash_password);
+        $stmt_insert->bindParam(':civil_status', $civil_status);
+        $stmt_insert->bindParam(':nationality', $nationality);
+        $stmt_insert->bindParam(':contact_number', $contact_number);
+        $stmt_insert->bindParam(':birthday', $birthday);
+        $stmt_insert->bindParam(':age', $age);
+        $stmt_insert->bindParam(':sex', $sex);
+        $stmt_insert->bindParam(':course_id', $course_id);
+        $stmt_insert->bindParam(':student_unique_id', $student_unique_id);
+        $stmt_insert->bindParam(':course_level', $course_level);
+        $stmt_insert->bindParam(':username', $username);
+        $stmt_insert->bindParam(':address', $address);
+        $stmt_insert->bindParam(':lrn', $lrn);
+        $stmt_insert->bindParam(':religion', $religion);
+        $stmt_insert->bindParam(':birthplace', $birthplace);
+        $stmt_insert->bindParam(':email', $email);
+        $stmt_insert->bindValue(':student_statusv2', $student_statusv2);
+        $stmt_insert->bindValue(':is_tertiary', $type == "Tertiary" ? 1 : 0);
+        // $stmt_insert->bindParam(':citizenship', $nationality);
+        $stmt_insert->bindValue(':new_enrollee', $new_enrollee);
+
+        // Execute the prepared statement
+        $stmt_insert->execute();
+
+        if($stmt_insert->rowCount() > 0){
+            return true;
+        }
+        return false;
     }
 
 }
