@@ -17,25 +17,6 @@
 </head>
 
 <body>
-  <div><?php
-        $servername = "localhost";
-        $database = "u544299924_main";
-        $username = "u544299924_master";
-        $password = "xTVeEU~k=O8:";
-
-        // Create connection
-
-        $conn = mysqli_connect($servername, $username, $password, $database);
-
-        // Check connection
-
-        if (!$conn) {
-
-          die("Connection failed: " . mysqli_connect_error());
-        }
-        echo "Connected successfully";
-        mysqli_close($conn);
-        ?></div>
   <nav>
     <input type="checkbox" id="check" />
     <label for="check" class="check-btn">
