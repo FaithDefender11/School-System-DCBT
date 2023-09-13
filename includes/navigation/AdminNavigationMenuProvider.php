@@ -1,6 +1,7 @@
 <?php
 
-    class AdminNavigationMenuProvider {
+class AdminNavigationMenuProvider
+{
 
     private $con, $userLoggedInObj;
 
@@ -10,10 +11,11 @@
         $this->userLoggedInObj = $userLoggedInObj;
     }
 
-    public function create($page){
+    public function create($page)
+    {
 
 
-        $base_url = 'http://localhost/school-system-dcbt/admin';
+        $base_url = '/admin';
 
         $dashboard_url = $base_url .  "/dashboard/index.php";
         $school_year_url = $base_url .  "/school_year/index.php";
@@ -23,7 +25,7 @@
         $section_url = $base_url .  "/section/index.php";
         $schedule_url = $base_url .  "/schedule/index.php";
         $account_url = $base_url .  "/account/index.php";
-        $logout_url = 'http://localhost/school-system-dcbt/logout.php';
+        $logout_url = '/logout.php';
 
         $class = "navigationItem ";
 
@@ -33,34 +35,66 @@
 
         // $sideBarNavigationItem = $this->createNavByIcon("Dashboard", 
         //     "bi bi-clipboard-data icon ", $dashboard_url, $class . $active_nav_dashboard);
-        
+
         // $sideBarNavigationItem .= $this->createNavByIcon("School Year", 
         //     "bi bi-calendar icon", $school_year_url, $class . $active_nav_sy);
 
-        $sideBarNavigationItem = $this->createNavByIcon("Dashboard", 
-            "bi bi-clipboard-data icon ", $dashboard_url, $class . $this->GetActiveClass($page, "dashboard"));
-        
-        $sideBarNavigationItem .= $this->createNavByIcon("School Year", 
-            "bi bi-calendar icon ", $school_year_url, $class . $this->GetActiveClass($page, "school_year"));
+        $sideBarNavigationItem = $this->createNavByIcon(
+            "Dashboard",
+            "bi bi-clipboard-data icon ",
+            $dashboard_url,
+            $class . $this->GetActiveClass($page, "dashboard")
+        );
 
-        $sideBarNavigationItem .= $this->createNavByIcon("Teacher", 
-            "bi bi-person icon ", $teacher_url, $class . $this->GetActiveClass($page, "teacher"));
+        $sideBarNavigationItem .= $this->createNavByIcon(
+            "School Year",
+            "bi bi-calendar icon ",
+            $school_year_url,
+            $class . $this->GetActiveClass($page, "school_year")
+        );
 
-        $sideBarNavigationItem .= $this->createNavByIcon("Courses", 
-            "bi bi-book icon ", $course_url, $class . $this->GetActiveClass($page, "course"));
+        $sideBarNavigationItem .= $this->createNavByIcon(
+            "Teacher",
+            "bi bi-person icon ",
+            $teacher_url,
+            $class . $this->GetActiveClass($page, "teacher")
+        );
 
-        $sideBarNavigationItem .= $this->createNavByIcon("Subject", 
-            "bi bi-file icon ", $subject_url, $class . $this->GetActiveClass($page, "subject"));
+        $sideBarNavigationItem .= $this->createNavByIcon(
+            "Courses",
+            "bi bi-book icon ",
+            $course_url,
+            $class . $this->GetActiveClass($page, "course")
+        );
 
-        $sideBarNavigationItem .= $this->createNavByIcon("Section", 
-            "bi bi-person-plus-fill icon", $section_url, $class . $this->GetActiveClass($page, "section"));
+        $sideBarNavigationItem .= $this->createNavByIcon(
+            "Subject",
+            "bi bi-file icon ",
+            $subject_url,
+            $class . $this->GetActiveClass($page, "subject")
+        );
 
-        $sideBarNavigationItem .= $this->createNavByIcon("Schedule", 
-            "bi bi-clock icon", $schedule_url, $class . $this->GetActiveClass($page, "schedule"));
+        $sideBarNavigationItem .= $this->createNavByIcon(
+            "Section",
+            "bi bi-person-plus-fill icon",
+            $section_url,
+            $class . $this->GetActiveClass($page, "section")
+        );
 
-        $sideBarNavigationItem .= $this->createNavByIcon("Account", 
-            "bi bi-person-circle", $account_url, $class . $this->GetActiveClass($page, "account"));
-        
+        $sideBarNavigationItem .= $this->createNavByIcon(
+            "Schedule",
+            "bi bi-clock icon",
+            $schedule_url,
+            $class . $this->GetActiveClass($page, "schedule")
+        );
+
+        $sideBarNavigationItem .= $this->createNavByIcon(
+            "Account",
+            "bi bi-person-circle",
+            $account_url,
+            $class . $this->GetActiveClass($page, "account")
+        );
+
 
         // $sideBarNavigationItem .= $this->createNavByIcon("Teacher", 
         //     "bi bi-person icon", $teacher_url, $class);
@@ -81,9 +115,13 @@
         // $sideBarNavigationItem .= $this->createNavByIcon("Account", 
         //     "bi bi-person-circle icon", $account_url, $class);
 
-        if(User::isAdminLoggedIn()) {
-            $sideBarNavigationItem .= $this->createNavByIcon("Log Out", 
-                "bi bi-box-arrow-right icon", $logout_url, $class);
+        if (User::isAdminLoggedIn()) {
+            $sideBarNavigationItem .= $this->createNavByIcon(
+                "Log Out",
+                "bi bi-box-arrow-right icon",
+                $logout_url,
+                $class
+            );
         }
 
         return "
@@ -93,11 +131,13 @@
         ";
     }
 
-    private function GetActiveClass($currentPage, $activePage) : string {
+    private function GetActiveClass($currentPage, $activePage): string
+    {
         return $currentPage == $activePage ? "active" : "";
     }
 
-    public function createNavByIcon($text, $icon, $link, $active_class){
+    public function createNavByIcon($text, $icon, $link, $active_class)
+    {
 
         return "
             <div class='$active_class'>
@@ -109,7 +149,8 @@
         ";
     }
 
-    public function createNavItem($text, $icon, $link){
+    public function createNavItem($text, $icon, $link)
+    {
         return "
             <div class='navigationItem'>
                 <a href='$link'>
@@ -119,9 +160,4 @@
             </div>
         ";
     }
-
-
-
 }
-
-?>
