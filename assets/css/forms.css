@@ -3,19 +3,6 @@
   --activeProgress: #8fafff;
   --inactiveProgress: #e4e4e4;
 }
-@media only screen and (max-width: 800px) {
-  form > .row > span > label {
-    display: block;
-  }
-  form .row {
-    flex-wrap: wrap;
-  }
-
-  form .row > span {
-    flex-wrap: wrap;
-    flex-direction: column;
-  }
-}
 
 form .row {
   display: flex;
@@ -97,4 +84,17 @@ form .row > span > div > input {
   font-weight: bold;
   position: relative;
   top: 30px;
+}
+@media only screen and (max-width: 800px) {
+  form > .row > span > label {
+    display: block;
+  }
+  form .row {
+    flex-wrap: wrap;
+  }
+
+  form .row > span {
+    flex-wrap: wrap;
+    flex-direction: column;
+  }
 }

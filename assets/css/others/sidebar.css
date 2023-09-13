@@ -1,0 +1,71 @@
+:root {
+  --theme: #02001c;
+}
+/* .content .sidebar * {
+  border: 1px solid black;
+  box-sizing: border-box;
+} */
+.content .sidebar {
+  /* border: 1px solid black; */
+  display: flex;
+  background-color: var(--theme);
+  color: white;
+  flex-direction: column;
+  width: 20%;
+  padding: 10px;
+  white-space: nowrap;
+}
+
+.content .sidebar > .profile {
+  padding: 10px 10px;
+}
+.content .sidebar > nav > .menu-content {
+  display: flex;
+  flex-direction: column;
+}
+.content .sidebar > nav > i {
+  display: none;
+}
+
+.content .sidebar > nav > span {
+  padding: 5px 10px;
+}
+
+@media only screen and (max-width: 800px) {
+  .content .sidebar {
+    width: auto;
+    flex-direction: row;
+    align-items: center;
+  }
+  .content .sidebar > .profile {
+    display: flex;
+    flex: 1;
+    align-self: start;
+  }
+
+  .content .sidebar > nav {
+    display: inline-block;
+    position: relative;
+  }
+  .content .sidebar > nav > .menu-content {
+    display: none;
+  }
+
+  .content .sidebar > nav > i {
+    display: block;
+    font-size: 25px;
+  }
+
+  .content .sidebar > nav:hover .menu-content {
+    display: flex;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    color: black;
+    background-color: white;
+    padding: 10px;
+    position: absolute;
+    right: 0px;
+  }
+  .content .sidebar > nav:hover .menu-content > span {
+    padding: 0px 50px;
+  }
+}

@@ -236,10 +236,6 @@
   overflow-x: auto;
 }
 
-/* ADDED TIMESTAMP */
-
-/* ADDED TIMESTAMP */
-
 .floating>main>.menu {
   display: flex;
   flex-direction: column;
@@ -385,6 +381,48 @@
 
 .floating>header>.action>.dropdown>.dropdown-menu>.dropdown-item:hover {
   background-color: #ddd;
+}
+
+.floating.noBorder>main>form>.row>span>.form-element {
+  flex-direction: row;
+  align-items: center;
+  padding: 10px;
+  box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+  background-color: #fff;
+  width: 100%;
+}
+
+.floating.noBorder>main>form>.row>span>.form-element>label {
+  width: 100%;
+}
+
+.floating.noBorder>main>form>header>.title {
+  padding: 5px;
+}
+
+.floating.noBorder>main>form>header>.title>h3 {
+  color: var(--titleTheme);
+}
+
+.floating.noBorder>main>form>.row>span>.form-element.courseStrand {
+  display: inline;
+  align-items: center;
+  align-self: stretch;
+  width: 100%;
+}
+
+.floating.noBorder>main>form>.row>span>.form-element.courseStrand>div>select {
+  display: flex;
+  align-items: center;
+  align-content: stretch;
+  width: 100%;
+  border: none;
+  font-size: 16px;
+}
+
+.floating.noBorder>main>form>.row>span>.form-element.courseStrand>div>select>option {
+  font-size: 16px;
 }
 
 /* ADDED DROPDOWN */
