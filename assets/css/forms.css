@@ -85,7 +85,6 @@ form .row > span > div > input {
   position: relative;
   top: 30px;
 }
-
 @media only screen and (max-width: 800px) {
   form > .row > span > label {
     display: block;
