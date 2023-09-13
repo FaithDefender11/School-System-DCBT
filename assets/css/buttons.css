@@ -24,6 +24,7 @@
   transition-duration: 0.4s;
   text-align: center;
 }
+
 /* fixed class if you want fixed size buttons */
 .content button.fixed {
   width: 120px;
@@ -48,6 +49,7 @@
   margin: 2px;
   /* min-width: 70px; */
 }
+
 
 /* button design based on function */
 .content button.default,

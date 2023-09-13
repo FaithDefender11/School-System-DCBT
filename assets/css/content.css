@@ -76,7 +76,9 @@
   font-size: 25px;
 }
 
-.content-header>.cards {
+
+.content-header>.cards,
+.floating>main>.cards {
   display: flex;
   justify-content: space-around;
   gap: 10px;
@@ -157,6 +159,7 @@
   gap: 15px;
 }
 
+
 .floating.noBorder {
   box-shadow: none;
   background-color: var(--mainContentBG);
@@ -184,6 +187,7 @@
   margin: 0px;
   color: var(--titleTheme);
 }
+
 
 .floating>header>.title>h4 {
   margin: 0px;
@@ -381,6 +385,7 @@
 .floating>header>.action>.dropdown>.dropdown-menu>.dropdown-item:hover {
   background-color: #ddd;
 }
+
 
 .floating.noBorder>main>form>.row>span>.form-element {
   flex-direction: row;
