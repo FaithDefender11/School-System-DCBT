@@ -50,6 +50,7 @@
   flex-direction: column;
 }
 
+
 .floating>main>.scheduler>nav>.drop {
   display: flex;
   text-align: center;
@@ -79,6 +80,7 @@
   justify-content: center;
 }
 
+
 .floating>main>.scheduler>nav>.drop>label {
   display: none;
   border: none;
@@ -88,6 +90,7 @@
   font-weight: bold;
   justify-content: center;
 }
+
 
 .floating>main>.scheduler>nav>.drop>input:hover {
   background-color: rgb(172, 172, 172);
@@ -106,6 +109,7 @@
   color: white;
 }
 
+
 .floating>main>.scheduler>nav>.drop.ict>input.active-button,
 .floating>main>.scheduler>nav>.drop.bpe>input.active-button {
   background-color: darkred;
@@ -123,6 +127,7 @@
   background-color: rgb(30, 122, 115);
   color: white
 }
+
 
 .floating>main>.scheduler>nav>.drop.ia>input.active-button,
 .floating>main>.scheduler>nav>.drop.btte>input.active-button {
@@ -147,6 +152,7 @@
 
 .floating>main>.scheduler>nav .drop.gas>.span-toggle.active-span,
 .floating>main>.scheduler>nav .drop.bcm>.span-toggle.active-span {
+
   background-color: darkblue;
   color: white;
 }
@@ -157,11 +163,13 @@
   color: white;
 }
 
+
 .floating>main>.scheduler>nav .drop.humss>.span-toggle.active-span,
 .floating>main>.scheduler>nav .drop.bae>.span-toggle.active-span {
   background-color: darkgreen;
   color: white;
 }
+
 
 .floating>main>.scheduler>nav .drop.abm>.span-toggle.active-span,
 .floating>main>.scheduler>nav .drop.bse>.span-toggle.active-span {
@@ -169,11 +177,13 @@
   color: white;
 }
 
+
 .floating>main>.scheduler>nav .drop.ia>.span-toggle.active-span,
 .floating>main>.scheduler>nav .drop.btte>.span-toggle.active-span {
   background-color: rgb(167, 53, 119);
   color: white
 }
+
 
 .floating>main>.scheduler>nav .drop.he>.span-toggle.active-span {
   background-color: rgb(26, 134, 102);
