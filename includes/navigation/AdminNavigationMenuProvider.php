@@ -13,7 +13,7 @@
     public function create($page){
 
 
-        $base_url = 'http://localhost/school-system-dcbt/admin';
+        $base_url = '/school-system-dcbt/admin';
 
         $dashboard_url = $base_url .  "/dashboard/index.php";
         $school_year_url = $base_url .  "/school_year/index.php";
@@ -23,7 +23,7 @@
         $section_url = $base_url .  "/section/index.php";
         $schedule_url = $base_url .  "/schedule/index.php";
         $account_url = $base_url .  "/account/index.php";
-        $logout_url = 'http://localhost/school-system-dcbt/logout.php';
+        $logout_url = '/school-system-dcbt/logout.php';
 
         $class = "navigationItem ";
 
@@ -123,5 +123,3 @@
 
 
 }
-
-?>
