@@ -1,7 +1,7 @@
 <?php
     session_start();
     session_destroy();
-    header("Location: /school-system-dcbt/enrollment_login.php");
+    header("Location: /school-system-dcbt/login.php");
 ?>
 
 
