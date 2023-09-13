@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, inital-scale=1" />
+    <title>Daehan College of Business & Technology</title>
+    <script src="assets/js/student-form.js" defer></script>
+    <!--Link stylesheets-->
+    <link rel="stylesheet" href="assets/css/fonts.css" />
+    <link rel="stylesheet" href="assets/css/buttons.css" />
+    <link rel="stylesheet" href="assets/css/content.css" />
+    <link rel="stylesheet" href="assets/css/forms.css" />
+    <link rel="stylesheet" href="assets/css/student-form-responsive.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+    />
+    <!--Link fonts-->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IM+Fell+Double+Pica&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background-color: #efefef;
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="content">
+      <nav>
+        <a href="Online-enrollment-page.html"
+          ><i class="bi bi-arrow-return-left fa-10x"></i>
+          <h3>Back</h3>
+        </a>
+      </nav>
+      <main>
+        <div class="floating noBorder">
+          <header>
+            <div class="title">
+              <h2 style="color: var(--titleTheme)">New Student Form</h2>
+              <small>SY *current sy*</small>
+            </div>
+          </header>
+          <div class="progress">
+            <span class="dot active"><p>Preferred Course/Strand</p></span>
+            <span class="line inactive"></span>
+            <span class="dot inactive"> <p>Personal Information</p></span>
+            <span class="line inactive"></span>
+            <span class="dot inactive"> <p>Validate Details</p></span>
+            <span class="line inactive"></span>
+            <span class="dot inactive"> <p>Finished</p></span>
+          </div>
+          <main>
+            <form action="">
+              <header>
+                <div class="title">
+                  <h3>Admission Type</h3>
+                </div>
+              </header>
+              <div class="row">
+                <span>
+                  <div class="form-element">
+                    <label for="newStudent">New Student</label>
+                    <div>
+                      <input
+                        type="radio"
+                        name="admissionType"
+                        id="newStudent"
+                        value="New Student"
+                      />
+                    </div>
+                  </div>
+                  <div class="form-element">
+                    <label for="transferee">Transferee</label>
+                    <div>
+                      <input
+                        type="radio"
+                        name="admissionType"
+                        id="transferee"
+                        value="Transferee"
+                        onclick="showTransferee()"
+                      />
+                    </div>
+                  </div>
+                </span>
+              </div>
+              <header>
+                <div class="title">
+                  <h3>Grade Level</h3>
+                </div>
+              </header>
+              <div class="row">
+                <span>
+                  <div class="form-element">
+                    <label for="college">College</label>
+                    <div>
+                      <input
+                        type="radio"
+                        name="gradeLevel"
+                        id="college"
+                        value="College"
+                        onclick="showTransferee()"
+                      />
+                    </div>
+                  </div>
+                  <div class="form-element">
+                    <label for="shs">Senior High</label>
+                    <div>
+                      <input
+                        type="radio"
+                        name="gradeLevel"
+                        id="shs"
+                        value="Senior High"
+                        onclick="showTransferee()"
+                      />
+                    </div>
+                  </div>
+                </span>
+              </div>
+              <header>
+                <div
+                  class="title"
+                  id="transferee-details"
+                  style="display: none"
+                >
+                  <h3>Transferee Details</h3>
+                  <h4 style="color: var(--titleTheme)">Year Level</h4>
+                </div>
+              </header>
+              <div class="row" id="shs-checkbox" style="display: none">
+                <span>
+                  <div class="form-element">
+                    <label for="11">11</label>
+                    <div>
+                      <input type="radio" name="yearLevel" id="11" value="11" />
+                    </div>
+                  </div>
+                  <div class="form-element">
+                    <label for="12">12</label>
+                    <div>
+                      <input type="radio" name="yearLevel" id="12" value="12" />
+                    </div>
+                  </div>
+                </span>
+              </div>
+              <div class="row" id="college-checkbox" style="display: none">
+                <span>
+                  <div class="form-element">
+                    <label for="1">1</label>
+                    <div>
+                      <input type="radio" name="yearLevel" id="1" value="1" />
+                    </div>
+                  </div>
+                  <div class="form-element">
+                    <label for="2">2</label>
+                    <div>
+                      <input type="radio" name="yearLevel" id="2" value="2" />
+                    </div>
+                  </div>
+                  <div class="form-element">
+                    <label for="3">3</label>
+                    <div>
+                      <input type="radio" name="yearLevel" id="3" value="3" />
+                    </div>
+                  </div>
+                  <div class="form-element">
+                    <label for="4">4</label>
+                    <div>
+                      <input type="radio" name="yearLevel" id="4" value="4" />
+                    </div>
+                  </div>
+                </span>
+              </div>
+              <header>
+                <div class="title">
+                  <h3>Course/Strand</h3>
+                </div>
+              </header>
+              <div class="row">
+                <span>
+                  <div class="form-element courseStrand">
+                    <div>
+                      <select name="course-strand" id="course-strand">
+                        <option value="ABM">
+                          Accountancy, Business and Management (ABM)
+                        </option>
+                        <option value="HUMMS">
+                          Humanities and Social Science (HUMMS)
+                        </option>
+                        <option value="GAS">
+                          General Academic Strand (GAS)
+                        </option>
+                        <option value="ICT">
+                          Information and Communication Technology (ICT)
+                        </option>
+                        <option value="IA">
+                          Industrial Arts - Consumer Electronics/Electrical
+                          Installation Maintenance (IA)
+                        </option>
+                        <option value="BCM">
+                          Bachelor of Christian Ministries (BCM)
+                        </option>
+                        <option value="ABE">
+                          Bachelor of Arts in English (ABE)
+                        </option>
+                        <option value="BSETREP">
+                          Bachelor of Science in Entrepreneurship (BSENTREP)
+                        </option>
+                        <option value="BTTE">
+                          Bachelor of Science in Teachers Education (BTTE)
+                        </option>
+                        <option value="BPE">
+                          Bachelor of Physical Education (BPE)
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                </span>
+              </div>
+            </form>
+          </main>
+          <div class="action">
+            <button
+              class="default large"
+              onclick="window.location.href = 'New-student-form-2.html';"
+            >
+              Proceed
+            </button>
+          </div>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

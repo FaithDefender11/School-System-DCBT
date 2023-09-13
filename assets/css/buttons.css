@@ -13,7 +13,8 @@
 .content button.clean,
 .content button.information,
 .content button.warning,
-.content button.danger {
+.content button.danger,
+.content form > .action > input {
   border: none;
   color: white;
   cursor: pointer;
@@ -31,91 +32,48 @@
   padding-right: 0px;
 }
 
+.content button.large,
+.content form > .action > input.large {
+  min-height: var(--largeHeight);
+  min-width: var(--largeWidth);
+  border-radius: 10px;
+  font-weight: bold;
+  padding: 10px 35px;
+}
+
+.content button:hover {
+  filter: brightness(var(--dark));
+}
 /* overide for table buttons */
-.content td>button {
+.content td > button {
   margin: 2px;
   /* min-width: 70px; */
 }
 
+
 /* button design based on function */
-.content button.default {
+.content button.default,
+.content form > .action > input.default {
   background-color: var(--default);
 }
-
-.content button.default.large {
-  min-height: var(--largeHeight);
-  min-width: var(--largeWidth);
-  border-radius: 10px;
-  font-weight: bold;
-  padding: 10px 35px;
-}
-
-.content button.default:hover {
-  filter: brightness(var(--dark));
-}
-
-.content button.clean {
+.content button.clean,
+.content form > .action > input.clean {
   background-color: var(--clean);
 }
 
-.content button.clean.large {
-  min-height: var(--largeHeight);
-  min-width: var(--largeWidth);
-  border-radius: 10px;
-  font-weight: bold;
-  padding: 10px 35px;
-}
-
-.content button.clean:hover {
-  filter: brightness(var(--dark));
-}
-
-.content button.information {
+.content button.information,
+.content form > .action > input.information {
   background-color: var(--information);
 }
 
-.content button.information.large {
-  min-height: var(--largeHeight);
-  min-width: var(--largeWidth);
-  border-radius: 10px;
-  font-weight: bold;
-  padding: 10px 35px;
-}
-
-.content button.information:hover {
-  filter: brightness(var(--dark));
-}
-
-.content button.warning {
+.content button.warning,
+.content form > .action > input.warning {
   background-color: var(--warning);
 }
 
-.content button.warning.large {
-  min-height: var(--largeHeight);
-  min-width: var(--largeWidth);
-  border-radius: 10px;
-  font-weight: bold;
-  padding: 10px 35px;
-}
-
-.content button.warning:hover {
-  filter: brightness(var(--dark));
-}
-
-.content button.danger {
+.content button.danger,
+.content form > .action > input.danger {
   background-color: var(--danger);
-}
-
-.content button.danger.large {
-  min-height: var(--largeHeight);
-  min-width: var(--largeWidth);
-  border-radius: 10px;
-  font-weight: bold;
-  padding: 10px 35px;
-}
-
-.content button.danger:hover {
-  filter: brightness(var(--dark));
 }
 
 .content button.icon {
@@ -124,4 +82,10 @@
   margin: 0px;
   background-color: transparent;
   border: none;
+}
+
+/* table submit button (inside form only) */
+
+.content form > .action > input:hover {
+  filter: brightness(var(--dark));
 }

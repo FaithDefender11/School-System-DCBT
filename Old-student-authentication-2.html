@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, inital-scale=1" />
+    <title>Daehan College of Business & Technology</title>
+    <script src="assets/js/loading.js" defer></script>
+    <!--Link stylesheets-->
+    <link rel="stylesheet" href="assets/css/DCBT-landing-page.css" />
+    <link rel="stylesheet" href="assets/css/fonts.css" />
+    <link rel="stylesheet" href="assets/css/forms.css" />
+    <link rel="stylesheet" href="assets/css/loading.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+    />
+    <!--Link fonts-->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IM+Fell+Double+Pica&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background-color: #efefef;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="login-element">
+      <div class="floating">
+        <div class="close-btn">
+          <a href="Online-enrollment-page.html">&times;</a>
+        </div>
+        <header>
+          <div class="title">
+            <h2>Student no.</h2>
+            <small>Please input your student no.</small>
+          </div>
+        </header>
+        <div id="loading_indicator"></div>
+        <main>
+          <form action="">
+            <div class="form-element">
+              <label for="studetnNo">Student no.</label>
+              <div>
+                <input
+                  type="text"
+                  name="studentNo"
+                  id="studentNo"
+                  value=""
+                  disabled
+                />
+              </div>
+              <small><a href="#">Forgot student no.?</a></small>
+            </div>
+            <header>
+              <div class="title">
+                <small
+                  >The system has automatically created a form for you please
+                  proceed to registrar to print form.</small
+                >
+              </div>
+            </header>
+            <div class="action">
+              <button class="close">Close window</button>
+            </div>
+          </form>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>
