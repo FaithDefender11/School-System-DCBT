@@ -20,6 +20,9 @@
         $students_url = $base_url .  "student/index.php";
         $section_url = $base_url .  "section/index.php";
         $enrollment_url = $base_url .  "enrollment/index.php";
+        $requirement_url = $base_url .  "requirements/index.php";
+        $room_url = $base_url .  "room/index.php";
+        $waiting_list_url = $base_url .  "waiting_list/index.php";
 
         // $class = "navigationItem ";
         
@@ -37,6 +40,17 @@
 
         $sideBarNavigationItem .= Helper::createNavByIcon("Enrollment", 
             "bi bi-clock-history icon", $enrollment_url, Constants::$navigationClass . Helper::GetActiveClass($page, "enrollment"));
+        
+        $sideBarNavigationItem .= Helper::createNavByIcon("Requirement", 
+            "bi bi-file", $requirement_url, Constants::$navigationClass . Helper::GetActiveClass($page, "requirements"));
+
+        $sideBarNavigationItem .= Helper::createNavByIcon("Room", 
+            "bi bi-house", $room_url, Constants::$navigationClass . Helper::GetActiveClass($page, "room"));
+
+        // $sideBarNavigationItem .= Helper::createNavByIcon("Waiting List", 
+        //     "bi bi-flag", $waiting_list_url, Constants::$navigationClass . Helper::GetActiveClass($page, "waiting_list"));
+
+
 
         if(User::isRegistrarLoggedIn()) {
             // $sideBarNavigationItem .= Helper::createNavItem("Settings", "assets/images/icons/settings.png", "settings.php");

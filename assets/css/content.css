@@ -82,7 +82,9 @@
   gap: 10px;
   flex-wrap: wrap;
 }
-
+.cards > .card {
+  border: none;
+}
 .cards > .card > sub,
 .cards > .card > sup {
   display: block;
@@ -329,6 +331,7 @@
   display: block;
   z-index: 2;
 }
+
 
 .content-header
   > header

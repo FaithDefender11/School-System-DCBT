@@ -185,7 +185,7 @@
                 echo domainName;
             ?>`;
 
-        window.location.href = `${root}/old_enrollment_verification.php`
+        window.location.href = `${root}/student_enrollment.php`
     }
     
 </script>

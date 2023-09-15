@@ -1,273 +1,509 @@
 <?php 
 
-  include_once('../../includes/admin_header.php');
-  include_once('../../includes/classes/Teacher.php');
+    $schedule = new Schedule($con);
 
-    ?>
-        <head>
-            <meta charset="UTF-8">
-            <meta http-equiv="X-UA-Compatible" content="IE=edge">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <link rel="stylesheet" href="../subject/subject.css">
-        </head>
-    <?php
+    $selected_school_year_id = "";
+    $selected_course_id = "";
 
+    if($_SERVER['REQUEST_METHOD'] === "POST" 
+            && isset($_POST['teacher_search_btn'])){
 
-  $teacher = new Teacher($con, null);
+        $selected_school_year_id = $_POST['school_year_id'] ?? NULL;
 
+        $school_year = new SchoolYear($con, $selected_school_year_id);
 
-?>
-    
+        $selected_course_id = $_POST['course_id'] ?? NULL;
+     
+    }
+
+    // echo $selected_school_year_id;
+    // echo "<br>";
+    // echo $selected_course_id;
+
+    if(isset($_POST['reset_btn'])){
+
+        $sy_id = NULL;
+        $selected_program_id = NULL;
+    }
  
-    <div class="content">
-      <nav>
-        <h3>Department</h3>
-        <div class="form-box">
-          <div class="button-box">
-            <div id="btn"></div>
-            <button
-              type="button"
-              class="toggle-btn"
-              id="shs-btn"
-              onclick="shs()"
-            >
-              SHS
-            </button>
-            <button
-              type="button"
-              class="toggle-btn"
-              id="college-btn"
-              onclick="college()"
-            >
-              Tertiary
-            </button>
-          </div>
-        </div>
-      </nav>
+?>
 
-      <div class="content-header"></div>
-      
-      <div class="tabs">
+    <head>
+        <style>
+            .show_search{
+                position: relative;
+                /* margin-top: -38px;
+                margin-left: 215px; */
+            }
+            div.dataTables_length {
+                display: none;
+            }
 
-          <a class="tab" href="index.php">
-            <button id="teachers-list">
-                <i class="bi bi-clipboard-check icon"></i>
-                  Teachers List
-            </button>
-          </a>
-          <a style="background-color: #d6cdcd;" class="tab" href="subject_load.php">
-            <button style="background-color: #d6cdcd;" id="teachers-list">
-                <i class="bi bi-collection icon"></i>
-                  Subjects Load
-            </button>
-          </a>
-      </div>
+            #enrolled_students_table_filter{
+            margin-top: 12px;
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            justify-content: start;
+            }
 
-      <main>
-        <div class="floating" id="shs-teachers">
-          <header>
-            <div class="title">
-              <h3>Subject Loader</h3>
-            </div>
-            <div class="action">
-              <a href="../schedule/create.php">
-                <button type="button" class="default large">
-                  <i style="color: white;" class="fas fa-plus-circle"></i> Schedule</button>
-              </a>
-            </div>
-          </header>
-          <main>
-            <table
-              id="subject_loader_view_table"
-              class="ws-table-all cw3-striped cw3-bordered"
-              style="margin: 0"
-            >
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Subject ID</th>
-                  <th>Subject Title</th>
-                  <th>Section</th>
-                  <th>S.Y - Semester</th>
-                  <th>Schedule</th>
-                  <th style="width: 115px">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                <?php
+            #enrolled_students_table_filter input{
+            width: 250px;
+            }
+        </style>
+
+        <link href='https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css' rel='stylesheet' type='text/css'>
+        <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+
+    </head>
+
+
+<div class="tabs">
+    <?php
+        echo "
+            <button class='tab' 
+                style='background-color: var(--them)'
+                onclick=\"window.location.href = 'info.php?details=show&id=$teacher_id';\">
+                <i class='bi bi-clipboard-check'></i>
+                Details
+            </button>
+        ";
+
+        echo "
+            <button class='tab' 
+                id='shsPayment'
+                style='background-color: var(--mainContentBG); color: white'
+                onclick=\"window.location.href = 'info.php?subject_load=show&id=$teacher_id';\">
+                <i class='bi bi-book'></i>
+                Subject Load
+            </button>
+        ";
+    ?>
+</div>
+
+
+
+
+<div class="content">
+    <main>
+        <div style="display: none;" class="floating">
+            <header>
+                <div class="title">
+                    <h3>Schedule List</h3>
+                </div>
+
+                <div class="form-group">
+                    <label for="select_term">Term</label>
+                    <select name="" id="select_term" class="form-control">
+                        <option value="">First Semester</option>
+                    </select>
+                </div>
                 
-                  $query = $con->prepare("SELECT 
-                    t1.*, t2.*, 
-                    t3.subject_title, t3.subject_id AS subjectId,
+            </header>
+            <main>
 
-                    t3.course_id,
-
-                    t4.program_section,
-                    t4.course_level,
-                    t5.term,
-                    t5.period
-
-
-                    FROM teacher AS t1
-                  
-                    INNER JOIN subject_schedule AS t2 ON t1.teacher_id = t2.teacher_id
-
-                    INNER JOIN subject AS t3 ON t3.subject_id = t2.subject_id
-                    INNER JOIN course AS t4 ON t4.course_id = t3.course_id
-                    INNER JOIN school_year AS t5 ON t5.school_year_id = t2.school_year_id
-
-                    ");
-
-                  $query->execute();
-
-                  if($query->rowCount() > 0){
-
-                    while($row = $query->fetch(PDO::FETCH_ASSOC)){
-
-                      $teacher_id = $row['teacher_id'];
-                      $subject_schedule_id = $row['subject_schedule_id'];
-
-                      $fullname = $row['firstname'] . " " . $row['lastname'];
-                      $teacher_status = $row['teacher_status'];
-                      $date_creation = $row['date_creation'];
-
-                      $schedule_time = $row['schedule_time'];
-                      $subject_title = $row['subject_title'];
-                      $subjectId = $row['subjectId'];
-                      $program_section = $row['program_section'];
-                      $course_level = $row['course_level'];
-                      $course_id = $row['course_id'];
-                      $term = $row['term'];
-                      $period = $row['period'];
-
-                    //   $program_section = "";
-                    //   $course_level = "";
-
-
-                      $date_creation = $date_creation !== NULL ? date('Y-m-d', strtotime($date_creation)) : 'Not Set';
-
-                      $fullname = $row['firstname'] . " " . $row['lastname'];
-
-                      $subject_load_count = $teacher->GetTeacherSubjectLoad($teacher_id);
-
-                      $teacher_schedule_url = "../schedule/assign.php?id=$teacher_id";
-
-                      $removeSubjectLoadBtn = "removeSubjectLoadBtn($subject_schedule_id)";
-
-                      echo "
+                <table id="department_table" class="a" style="margin: 0">
+                    <thead>
                         <tr>
-                          <td>$fullname</td>
-                          <td>$subjectId</td>
-                          <td>$subject_title</td>
-                          <td>$program_section</td>
-                          <td>$term - $period</td>
-                          <td>$schedule_time</td>
-                          <td>
-                            <div class='dropdown'>
-                              <button class='btn btn-info dropdown-toggle' type='button' id='dropdownMenuButton' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
-                                Actions
-                              </button>
+                            <th>Subject</th>
+                            <th>Code</th>
+                            <th>Section</th>
+                            <th>Days</th>
+                            <th>Schedule</th>
+                            <th>Hrs/Week</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        
+                            $subject_titles_occurrences = [];
+                            $subject_code_occurrences = [];
+                            $section_occurrences = [];
 
-                              <div class='dropdown-menu' aria-labelledby='dropdownMenuButton'>
-                                <a class='dropdown-item' href='info.php?details=show&id=$teacher_id'>
-                                  <button style='width: 100%' class='btn btn btn-primary'>
-                                    View
-                                  </button>
+                            $section = new Section($con);
 
-                                </a>
-                                <a class='dropdown-item' href='$teacher_schedule_url'>
-                                  <button style='width: 100%'  class='btn btn btn-success'>
-                                    Add Schedule
-                                  </button>
-                                </a>
-                                <a class='dropdown-item' href='#'>
-                                   <button style='width: 100%' onclick='$removeSubjectLoadBtn'
-                                      type='button'
-                                        class='btn btn-danger btn'>
-                                        Remove
-                                    </button>
-                                </a>
-                              </div>
+                            $query = $con->prepare("SELECT 
+                                t1.subject_schedule_id,
+                                t1.course_id AS subject_schedule_course_id,
+                                t1.subject_program_id AS subject_subject_program_id,
+                                t1.time_from,
+                                t1.time_to,
+                                t1.schedule_day,
+                                t1.schedule_time,
+                                t1.room,
+                                t1.course_id, t1.subject_code,
+
+
+                                -- t3.subject_code, 
+                                t4.program_section,
+                                t4.course_id as courseCourseId,
+
+                                t3.subject_title,
+                                t3.subject_program_id,
+                                t3.subject_code AS sp_subject_code
+                                
+                                FROM subject_schedule as t1
+                                INNER JOIN teacher as t2 ON t2.teacher_id = t1.teacher_id
+                                
+                                LEFT JOIN subject_program as t3 ON t3.subject_program_id = t1.subject_program_id
+                                LEFT JOIN course as t4 ON t4.course_id = t1.course_id
+
+                                WHERE t1.teacher_id = :teacher_id
+
+                                ORDER BY t3.subject_title DESC
+
+                                ");
+
+                            $query->bindParam(":teacher_id", $teacher_id);
+                            $query->execute();
+                            if($query->rowCount() > 0){
+
+                                while($row = $query->fetch(PDO::FETCH_ASSOC)){
+
+                                    $subject_title = $row['subject_title'];
+                                    $course_id = $row['course_id'];
+                                    $subject_code = $row['subject_code'];
+                                    $program_section = $row['program_section'];
+                                    $subject_program_id = $row['subject_program_id'];
+                                    $courseCourseId = $row['courseCourseId'];
+                                    $schedule_day = $row['schedule_day'];
+                                    $time = $row['schedule_time'];
+                                    $subject_subject_program_id = $row['subject_subject_program_id'];
+                                    
+                                    $subject_schedule_course_id = $row['subject_schedule_course_id'];
+
+                                    $sp_subject_code = $row['sp_subject_code'];
+
+                                    $status = "";
+                                    $hrs_per_week = "";
+
+
+                                    // $section_subject_code = $section->CreateSectionSubjectCode(
+                                    //     $program_section, $subject_code
+                                    // );
+
+                                    // echo $subject_code;
+
+
+                                    $schedule->filterSubsequentOccurrencesSa($subject_titles_occurrences,
+                                        $subject_title, $subject_schedule_course_id, $subject_program_id);
+
+                                    $schedule->filterSubsequentOccurrencesSa($subject_code_occurrences,
+                                        $subject_code, $subject_schedule_course_id, $subject_subject_program_id);
+
+                                    // $schedule->filterSubsequentOccurrencesSa($section_occurrences,
+                                    //     $program_section, $subject_schedule_course_id, $subject_subject_program_id);
+
+                                    echo "
+                                        <tr>
+                                            <td>$subject_title</td>
+                                            <td>
+                                                <a style='color: inherit' href='subject_enrolled.php?term=$current_school_year_term&cd=$subject_code&c=$course_id'>
+                                                    $subject_code
+                                                </a>
+                                            </td>
+                                            <td>$program_section</td>
+                                            <td>$schedule_day</td>
+                                            <td>$time</td>
+                                            
+                                            <td>$hrs_per_week</td>
+                                        </tr>
+                                    ";
+
+                                }
+                            }else{
+                                echo "
+                                    <div class='col-md-12'>
+                                        <h4 class='text-info text-center'>No Subject Load</h4>
+                                    </div>
+                                ";
+                            }
+                        
+                        ?>
+                    </tbody>
+
+                </table>
+
+            </main>
+        </div>
+
+        <div class="floating">
+            <main>
+                <header>
+                    <div class="title">
+                        <h3>Schedule List</h3>
+
+                        <?php 
+                            if($selected_course_id != "" && $selected_school_year_id != ""){
+                                ?>
+                                    <form  action='print_schedule.php' method='POST'>
+
+                                        <input type="hidden" name="selected_sy_id" id="selected_sy_id" value="<?php echo $selected_school_year_id;?>">
+                                        <input type="hidden" name="selected_course_id" id="selected_course_id" value="<?php echo $selected_course_id;?>">
+                                    
+                                        <button style="cursor: pointer;"
+                                            type='submit' 
+                                            
+                                            href='#' name="print_schedule"
+                                            class=' btn btn-primary'>
+                                            <i class='bi bi-file-earmark-x'></i>&nbsp Print
+                                        </button>
+                                    </form>
+                                <?php
+                            }
+                        ?>
+                        
+                    </div>
+
+                    
+                    
+                </header>   
+
+                <div class="col-md-12">
+
+                    <form method="POST">
+                        <div class="row invoice-info">
+                            
+                        <input type="hidden" id="teacher_id" value="<?php echo $teacher_id;?> ">
+
+                            <div class="col-sm-3 invoice-col">
+                                Academic Year
+                                <select name="school_year_id" id="school_year_id" class="form-control">
+                                    <?php 
+                                        $query = $con->prepare("SELECT t1.*
+                                            FROM school_year AS t1
+                                        ");
+
+                                        // $query->bindParam(":condition2", $Tertiary);
+                                        $query->execute();
+                                        if($query->rowCount() > 0){
+
+                                            echo "
+                                                <option value='' selected>Select Term</option>
+                                            ";
+
+                                            while($row = $query->fetch(PDO::FETCH_ASSOC)){
+
+                                                $term = $row['term'];
+                                                $period = $row['period'];
+                                                $school_year_id = $row['school_year_id'];
+
+                                                $selected = "";
+                                                if($sy_id == $school_year_id){
+                                                    $selected = "selected";
+                                                }
+                                                echo "
+                                                    <option $selected value='$school_year_id'>$term $period Semester</option>
+                                                ";
+                                            }
+                                        }
+                                    ?>
+                                </select>
 
                             </div>
-                          </td>
+
+                            <!-- <div class="col-sm-3 invoice-col">
+                                Program - Section
+
+                                <select name="program_id" id="program_id" class="form-control">
+                                    <?php 
+                                        $query = $con->prepare("SELECT t1.*
+
+                                            FROM program AS t1
+                                        ");
+
+                                        // $query->bindParam(":condition2", $Tertiary);
+                                        $query->execute();
+                                        if($query->rowCount() > 0){
+
+                                            echo "
+                                                <option value='' selected>Choose Program</option>
+                                            ";
+
+                                            while($row = $query->fetch(PDO::FETCH_ASSOC)){
+
+                                                $program_name = $row['program_name'];
+                                                $acronym = $row['acronym'];
+                                                $program_id = $row['program_id'];
+
+                                                $selected = "";
+                                                if($selected_program_id == $program_id){
+                                                    $selected = "selected";
+                                                }
+                                                echo "
+                                                    <option $selected value='$program_id'>$acronym</option>
+                                                ";
+                                            }
+                                        }
+                                    ?>
+                                </select>
+                            </div> -->
+
+                            <div class="col-sm-3 invoice-col">
+                                Program - Section
+                                    <select name="course_id" id="course_id"  class="form-control">
+                                        <?php 
+
+                                            if($selected_course_id != "") {
+                                                $query = $con->prepare("SELECT t1.*
+
+                                                FROM course AS t1
+                                                WHERE t1.course_id=:course_id
+                                                ");
+
+                                                $query->bindParam(":course_id", $selected_course_id);
+                                                $query->execute();
+
+                                                if($query->rowCount() > 0){
+
+                                                    $row = $query->fetch(PDO::FETCH_ASSOC);
+
+                                                    $program_section = $row['program_section'];
+                                                    // $acronym = $row['acronym'];
+                                                    $course_id = $row['course_id'];
+
+                                                    $selected = "";
+                                                    if($selected_course_id == $course_id){
+                                                        $selected = "selected";
+                                                    }
+                                                    echo "
+                                                        <option $selected value='$course_id'>$program_section</option>
+                                                    ";
+                                                }   
+                                            }
+                                            
+                                        ?>
+                                    </select>
+                            </div>
+
+
+                            <div class="col-sm-0 invoice-col"> 
+                                <br>
+                                <div class="form-group"> 
+                                    <button type="submit" name="teacher_search_btn" class="btn btn-primary">
+                                        <i class="fas fa-search fa-1x"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-sm-0 invoice-col"> 
+                                <br>
+                                <div class="form-group"> 
+                                    <button type="submit" name="reset_btn" class="btn btn-outline-primary">
+                                        <i class="fas fa-undo"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <table id="teacher_subject_list" class="a" style="margin: 0">
+                    <thead>
+                        <tr>
+                            <th>Subject</th>
+                            <th>Code</th>
+                            <th>Section</th>
+                            <th>A.Y - Term</th>
+                            <th>Days</th>
+                            <th>Schedule</th>
                         </tr>
-                      
-                      ";
-                    }
-                  }
-
-                ?>
-              </tbody>
-            </table>
-          </main>
+                    </thead>
+                </table>
+            </main>
         </div>
-      </main>
-
-    </div>
- 
-<?php include_once('../../includes/footer.php')?>
+    </main>
+</div>
 
 <script>
 
-    function removeSubjectLoadBtn(subject_schedule_id){
-        Swal.fire({
-                icon: 'question',
-                title: `Do you want to remove Schedule ID: #${subject_schedule_id}`,
-                text: 'Please note that this action cannot be undone',
-                showCancelButton: true,
-                confirmButtonText: 'Yes',
-                cancelButtonText: 'Cancel'
-            }).then((result) => {
+    $('#school_year_id').on('change', function() {
 
-                // console.log('qwe');
+        var school_year_id = parseInt($(this).val());
+        var teacher_id = parseInt($("#teacher_id").val());
 
-                if (result.isConfirmed) {
-                    $.ajax({
-                        url: "../../ajax/schedule/remove_schedule.php",
-                        type: 'POST',
-                        data: {
-                            subject_schedule_id
-                        },
-                        success: function(response) {
-                          response = response.trim();
+        $.ajax({
+            // url: '../../ajax/teacher/get_schedule_program_section.php',
+            url: '../../ajax/teacher/populate_teaching_section.php',
+            type: 'POST',
 
-                            // console.log(response);
-                            if(response == "success_delete"){
-                                Swal.fire({
-                                icon: 'success',
-                                title: `Successfully Removed`,
-                                showConfirmButton: false,
-                                timer: 1000, // Adjust the duration of the toast message in milliseconds (e.g., 3000 = 3 seconds)
-                                toast: true,
-                                position: 'top-end',
-                                showClass: {
-                                popup: 'swal2-noanimation',
-                                backdrop: 'swal2-noanimation'
-                                },
-                                hideClass: {
-                                popup: '',
-                                backdrop: ''
-                                }
-                            }).then((result) => {
+            data: {
+                school_year_id,
+                teacher_id
+            },
+            dataType: 'json',
 
-                                $('#subject_loader_view_table').load(
-                                    location.href + ' #subject_loader_view_table'
-                                );
-                            });
-                          }
+            success: function(response) {
 
-                        },
-                        error: function(xhr, status, error) {
-                            // handle any errors here
-                        }
+                // response = response.trim();
+
+                console.log(response);
+
+                if(response.length > 0){
+                    var options = '<option selected value="">Available Sections</option>';
+                    
+                    $.each(response, function (index, value) {
+                        options +=
+                        '<option value="' + value.course_id + '">' + value.program_section + '</option>';
                     });
-                } else {
-                    // User clicked "No," perform alternative action or do nothing
+
+                    $('#course_id').html(options);
+                }else{
+                    $('#course_id').html('<option selected value="">No data found(s).</option>');
+
                 }
+            }
         });
-    }
+
+    });
+
+    var selected_sy_id = `
+        <?php echo $selected_school_year_id; ?>
+    `;
+
+    selected_sy_id = selected_sy_id.trim();
+    
+    var selected_course_id = `
+        <?php echo $selected_course_id; ?>
+    `;
+
+    selected_course_id = selected_course_id.trim();
+
+
+    var teacher_id = parseInt($("#teacher_id").val());
+
+
+    $(document).ready(function() {
+
+        var table = $('#teacher_subject_list').DataTable({
+            'processing': true,
+            'serverSide': true,
+            'serverMethod': 'POST',
+            'ajax': {
+                'url': `subjectLoadList.php?sy_id=${selected_sy_id}&c_id=${selected_course_id}&t_id=${teacher_id}`,
+                'error': function(xhr, status, error) {
+                    // Handle error response here
+                    console.error('Error:', error);
+                    console.log('Status:', status);
+                    console.log('Response Text:', xhr.responseText);
+                    console.log('Response Code:', xhr.status);
+                }
+            },
+            // 'pageLength': 2,
+            'language': {
+                'infoFiltered': '',
+                'processing': '<i class="fas fa-spinner fa-spin"></i> Processing...',
+                'emptyTable': "No available data for enrolled students."
+            },
+            
+            'columns': [
+            { data: 'subject_title', orderable: false },  
+            { data: 'subject_code', orderable: false },  
+            { data: 'program_section', orderable: false },
+            { data: 'term_period', orderable: false },
+            { data: 'schedule_day', orderable: false },
+            { data: 'schedule_time', orderable: false }, 
+            ],
+            'ordering': true
+        });
+    });
 </script>
-
-
-

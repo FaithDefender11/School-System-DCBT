@@ -4,6 +4,7 @@
     $lastname = $pending->GetPendingLastName();
     $middle_name = $pending->GetPendingMiddleName();
     $suffix = $pending->GetPendingSuffix();
+
     $civil_status = $pending->GetPendingCivilStatus();
     $nationality = $pending->GetPendingNationality();
     $sex = $pending->GetPendingGender();
@@ -15,7 +16,6 @@
     $contact_number = $pending->GetPendingContactNumber();
     $admission_status = $pending->GetPendingAdmissionStatus();
  
-    // $pending_enrollees_id = $pending->
     $parent = new PendingParent($con, $enrollee_id);
 
     // Guardian
@@ -52,8 +52,7 @@
     $mother_occupation = $parent->GetMotherOccupation();
 
 
-    if(
-        $_SERVER["REQUEST_METHOD"] === "POST"
+    if($_SERVER["REQUEST_METHOD"] === "POST"
         && isset($_POST['student_details_btn_' . $pending_enrollees_id])
         && isset($_POST['firstname'])
         && isset($_POST['middle_name'])
@@ -74,7 +73,7 @@
 
         $lastname = Helper::ValidateLastname($_POST['lastname']);
 
-        $suffix = isset($_POST['suffix']) ? Helper::ValidateSuffix($_POST['suffix']) : 'N/A';
+        $suffix = isset($_POST['suffix']) ? Helper::ValidateSuffix($_POST['suffix']) : '';
 
         // echo $suffix;
 
@@ -83,26 +82,43 @@
         $sex = Helper::ValidateGender($_POST['sex']);
 
         $birthday = Helper::sanitizeFormString($_POST['birthday']);
+
         $address = Helper::ValidateAddress($_POST['address']);
 
         $age = $pending->CalculateAge($birthday);
 
         $birthplace = Helper::ValidateBirthPlace($_POST['birthplace']);
 
-        // echo $birthplace;
-
         $nationality = Helper::ValidateNationality($_POST['nationality']);
 
         $religion = isset($_POST['religion']) ? Helper::ValidateReligion($_POST['religion']) : '';
 
-
         $contact_number = Helper::ValidateContactNumber($_POST['contact_number']);
 
-        $email = Helper::ValidateEmail($_POST['email']);
-
-        // echo $email;
+        $email = Helper::ValidateEmailNewEnrollee(
+            $pending_enrollees_id,
+            $_POST['email'], false, $con);
 
         $lrn = isset($_POST['lrn']) ? Helper::sanitizeFormString($_POST['lrn']) : '';
+
+
+        
+        // echo "firstname: $firstname<br>";
+        // echo "middle_name: $middle_name<br>";
+        // echo "lastname: $lastname<br>";
+        // echo "suffix: $suffix<br>";
+        // echo "civil_status: $civil_status<br>";
+        // echo "sex: $sex<br>";
+        // echo "birthday: $birthday<br>";
+        // echo "address: $address<br>";
+        // echo "age: $age<br>";
+        // echo "birthplace: $birthplace<br>";
+        // echo "nationality: $nationality<br>";
+        // echo "religion: $religion<br>";
+        // echo "contact_number: $contact_number<br>";
+        // echo "email: $email<br>";
+        // echo "lrn: $lrn<br>";
+
 
         if(empty(Helper::$errorArray)){
 
@@ -127,16 +143,19 @@
       
             if($enrolleeSuccess){
 
-                // $url = "enrollee_parent_information_test.php?id=$pending_enrollees_id&parent_info_form=show";
+                // $url = "process.php?new_student=true&step=student_requirements";
+
                 $url = "process.php?new_student=true&step=enrollee_parent_information";
 
                 Alert::success("Student Information filled-up.",
                     $url);
                 exit();
-            }else{
-                $url = "process.php?new_student=true&step=enrollee_parent_information";
 
-                // $url = "enrollee_parent_information_test.php?id=$pending_enrollees_id&parent_info_form=show";
+            }else{
+
+                // $url = "process.php?new_student=true&step=student_requirements";
+                
+                $url = "process.php?new_student=true&step=enrollee_parent_information";
 
                 header("Location: $url");
 
@@ -145,7 +164,7 @@
 
         }
         else{
-            // echo "has error";
+            echo "has error";
         }
         
        
@@ -155,13 +174,6 @@
 ?>
 
 <div class="content">
-
-    <nav>
-        <a href="Online-enrollment-page.html">
-            <i class="bi bi-arrow-return-left fa-10x"></i>
-            <h3>Back</h3>
-        </a>
-    </nav>
 
     <main>
         <div class="floating noBorder">
@@ -208,7 +220,7 @@
                                         Constants::$lastNameIsTooShort, Constants::$lastNameIsTooLong
                                     );
                                 ?>
-                                <input class=" form-control" type="text"
+                                <input class="read_only form-control" type="text"
                                     name="lastname" id="lastName"  placeholder="Last name" 
                                     value="<?php  
                                         echo Helper::DisplayText('lastname', $lastname);
@@ -220,7 +232,7 @@
                                 Helper::EchoErrorField(Constants::$firstNameRequired, Constants::$invalidFirstNameCharacters,
                                     Constants::$firstNameIsTooShort, Constants::$firstNameIsTooLong);
                             ?>
-                            <input class=" form-control"
+                            <input class="read_only form-control"
                                 type="text" name="firstname" 
                                 placeholder="First name"
                                 id="firstName" 
@@ -239,7 +251,7 @@
                                     Constants::$middleNameIsTooShort,
                                     Constants::$middleNameIsTooLong);
                             ?>
-                            <input class="form-control" type="text" name="middle_name" id="middleName" 
+                            <input class="read_only form-control" type="text" name="middle_name" id="middleName" 
                                 placeholder="Middle name"
                                 value="<?php
                                     echo Helper::DisplayText('middle_name', $middle_name);
@@ -253,7 +265,7 @@
                             <input maxlength="3" class="form-control" 
                             type="text" name="suffix" id="suffixName" placeholder="e.g. Jr, Sr, II"
                             value="<?php 
-                                echo Helper::getInputValue('suffix', $suffix);;
+                                echo Helper::DisplayText('suffix', $suffix);;
                             ?>">
                             <small>Suffix name</small>
                         </div>
@@ -368,7 +380,7 @@
                                 ?>
                             <label for="address">Address</label>
                             <div>
-                                <input style="text-align: start;" type="text" 
+                                <input autocomplete="offpro" style="text-align: start;" type="text" 
                                 id="address" name="address" 
                                 class="form-control" 
                                 value="<?php
@@ -402,8 +414,8 @@
                             ?>
                             <label for="email">Email</label>
                             <div>
-                                <input type="email" id="email" name="email" 
-                                class="form-control" 
+                                <input autocomplete="off" type="email" id="email" name="email" 
+                                class="read_only form-control" 
                                 value="<?php 
                                     echo Helper::DisplayText('email', $email);
                                 ?>">

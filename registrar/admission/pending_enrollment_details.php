@@ -15,7 +15,7 @@
             <div class="row">
 
                 <span>
-                    <label for="Year">* Type</label>
+                    <label for="Year">Type</label>
                     <div>
                         <select onchange="UpdateDepartmentType(this, <?php echo $pending_enrollees_id;?>)" class="form-control text-center" name="department_type" id="department_type">
                             <option <?php if ($pending_type === "Senior High School") echo "selected"; ?> value="SHS">Senior High School</option>
@@ -25,20 +25,20 @@
                 </span>
 
                 <span>
-                    <label for="grade">* Level</label>
+                    <label for="grade">Level</label>
                     <div>
                         <select onchange="UpdatePendingLevel(this, <?php echo $pending_enrollees_id;?>)" class="form-control" name="course_level" id="course_level">
 
                             <?php 
                                 if($pending_type == "SHS"){
                                     ?>
-                                        <option class="text-center" value="" selected>* Choose SHS Level</option>
+                                        <option class="text-center" value="" selected>Choose SHS Level</option>
                                         <option class="text-center" value="11" <?php echo $pending_level == 11 ? "selected" : ""; ?>>11</option>
                                         <option class="text-center" value="12" <?php echo $pending_level == 12 ? "selected" : ""; ?>>12</option>
                                     <?php
                                 }else if($pending_type == "Tertiary"){
                                     ?>
-                                        <option class="text-center" value="" selected>* Choose Tertiary Level</option>
+                                        <option class="text-center" value="" selected>Choose Tertiary Level</option>
                                         <option class="text-center" value="1" <?php echo $pending_level == 1 ? "selected" : ""; ?>>1</option>
                                         <option class="text-center" value="2" <?php echo $pending_level == 2 ? "selected" : ""; ?>>2</option>
                                         <option class="text-center" value="3" <?php echo $pending_level == 3 ? "selected" : ""; ?>>3</option>
@@ -136,7 +136,7 @@
                     else if($type == "SHS"){
                         ?>
                             <span>
-                                <label label for="track">* Track</label>
+                                <label label for="track">Track</label>
                                 <div>
                                     <select style="width: 300px" class="form-control text-center" style="pointer-events: none;" id="inputTrack" class="form-select">
                                         <?php 
@@ -173,7 +173,7 @@
                             </span>
 
                             <span>
-                                <label for="strand">* Strand</label>
+                                <label for="strand">Strand</label>
                                 <select style="width: 300px" class="form-control  text-center" style="width: 170px" onchange="ChooseStrand(this, <?php echo $pending_enrollees_id;?>)" 
                                     name="strand" id="strand" class="form-select">
                                     <?php 
@@ -222,7 +222,6 @@
     </main>
 
 </div>
-
 
 <script>
 
@@ -379,3 +378,6 @@
     }
 
 </script>
+
+
+

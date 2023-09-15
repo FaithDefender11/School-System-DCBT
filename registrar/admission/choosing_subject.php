@@ -10,8 +10,13 @@
     include_once('../../includes/classes/StudentSubject.php');
     include_once('../../includes/classes/Program.php');
     include_once('../../includes/classes/SubjectProgram.php');
+    include_once('../../includes/classes/Schedule.php');
 
-
+    ?>
+        <header>
+            <script src="choosing_subject_code.js"></script>
+        </header>
+    <?php
   
     $school_year = new SchoolYear($con);
 
@@ -23,6 +28,7 @@
     $current_school_year_id = $school_year_obj['school_year_id'];
 
     $pre_requisite_subject_code = "";
+
     if(isset($_GET['e_id']) && isset($_GET['st_id'])){
 
         $enrollment_id = $_GET['e_id'];
@@ -42,8 +48,9 @@
         $student_program_id = $section->GetSectionProgramId($student_enrollment_course_id);
         $student_course_level = $student->GetStudentLevel($student_id);
 
-
         $program = new Program($con, $student_program_id);
+
+        $program_name = $program->GetProgramAcronym();
 
         $program_department_id = $program->GetProgramDepartmentId();
 
@@ -61,6 +68,20 @@
 
         $department_type = $program_department_name == "Senior High School" ? "SHS" : ( $program_department_name == "Tertiary" ? "Tertiary" : "");
  
+        
+        $selected_subject_program_id = NULL;
+        $search_word = NULL;
+
+        if(isset($_POST['search_student'])
+            && isset($_POST['selected_subject_program_id'])
+            && isset($_POST['search_word'])){
+
+            $search_word = $_POST['search_word'];
+
+            $selected_subject_program_id = $_POST['selected_subject_program_id'];
+            // echo "Search results: $search_word";
+        }
+
         ?>
             <div class="content">
                 <nav>
@@ -69,97 +90,116 @@
                     </a>
                 </nav>
                 <main>
-                    <!-- <?php include_once('./samp.php') ?> -->
-
+               
                     <div class="floating">
                         <header class="mb-2">
 
                             <div class="title">
-                                <h5 class="text-center text-primary">Available <?php echo $current_school_year_period;?> Semester Section Subjects for <?php echo $program_department_name ?></h5>
+                                <h5 class="text-center text-info">Available <?php echo $current_school_year_period;?> Semester Section Subjects for <?php echo $program_name ?> </h5>
                             </div>
 
                         </header>
-                        <main>
 
+                        <div class="filters">
+                            <table>
+                                <tr>
+                                    <th rowspan="2" style="border-right: 2px solid black">
+                                    Search by
+                                    </th>
+                                    <th><button>Subject Code</button></th>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <input id="student_enrollment_id" value="<?php echo $enrollment_id ?>" type="hidden">
+                        <input id="student_id" value="<?php echo $student_id ?>" type="hidden">
+
+                        <form id="choosingSubjectCodeForm" method="POST" class="p-3">
+                            <div class="input-group">
+                                <?php 
+                                    $searchText = $search_word !== NULL ? $search_word : "";
+                                ?>
+                                
+                                <input type="text" name="search_subject_code" 
+                                    id="search_subject_code" 
+                                    value="<?php echo htmlspecialchars($searchText); ?>"
+                                    class="form-control form-control-lg rounded-0 border-info"
+                                    placeholder="Search section subject code..." autocomplete="off">
+                                
+
+                                <div class="input-group-append">
+
+                                    <input type="hidden" id="selected_subject_program_id" name="selected_subject_program_id">
+                                    <input type="hidden" id="search_word" name="search_word">
+
+                                    <button type="submit" name="search_student" class="btn btn-info btn-lg rounded-0">
+                                        <i class="fas fa-undo"></i>
+                                    </button>
+              
+                                </div>
+
+                            </div>
+
+                        </form>
+
+
+                        <div class="col-md-8 show_search">
+                            <div class="list-group" id="show_subject_code_list">
+                                <!-- <a href="#" class="list-group-item list-group-item-action border-1">First</a>
+                                <a href="#" class="list-group-item list-group-item-action border-1">First</a> -->
+                            </div>
+                        </div>
+
+                        
+                    </div>
+
+                    <div class="floating">
+                        <main>
                             <table id="choosing_subject_tablex" class="a" style="margin: 0">
                                 <thead>
                                     <tr class="text-center"> 
-                                        <th rowspan="2">Course ID</th>
-                                        <th rowspan="2">ID</th>
+                                        <!-- <th rowspan="2">Course ID</th> -->
+                                        <!-- <th rowspan="2">ID</th> -->
                                         <th rowspan="2">Code</th>
                                         <th rowspan="2">Description</th>
-                                        <th rowspan="2">Pre-Code</th>
+                                        <th rowspan="2">Requisite</th>
                                         <th rowspan="2">Unit</th>
                                         <th rowspan="2">Level</th>
                                         <th rowspan="2">Semester</th>
                                         <th rowspan="2">Section</th>
+                                        <th rowspan="2">Schedule</th>
                                         <th rowspan="2">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php
+                                    <?php 
 
-// echo $department_type;
-                                        $sql = $con->prepare("SELECT 
-                                        
-                                            t1.*
-                                            ,t2.program_section
-                                            ,t2.course_id
+                                        $subject_program = new SubjectProgram($con);
 
-                                            ,t3.student_subject_id,
-                                            t3.is_final AS ss_is_final,
-                                            t3.enrollment_id AS ss_enrollment_id,
-                                            t3.subject_program_id AS ss_subject_program_id,
+                                        $sec_exec = new Section($con, $student_enrollment_course_id);
 
-                                            t3.is_transferee AS ss_is_transferee,
-                                            t3.school_year_id AS ss_school_year_id,
-                                            t3.course_id AS ss_course_id,
-                                            t3.student_id AS ss_student_id,
+                                        // echo $student_enrollment_course_id;
 
-                                            t4.student_subject_id AS ssg_student_subject_id
-                                            
-                                            FROM subject_program AS t1
-
-                                            INNER JOIN course as t2 ON t2.program_id = t1.program_id
-                                            AND t2.course_level = t1.course_level
- 
-                                            LEFT JOIN student_subject as t3 ON t1.subject_program_id = t3.subject_program_id
-                                            AND t3.student_id=:student_id
-
-                                            LEFT JOIN student_subject_grade AS t4 ON t4.student_subject_id = t3.student_subject_id
-                                            AND t4.remarks = 'Passed'
-                                            
-                                            WHERE t1.department_type = :department_type
-                                            AND t1.semester=:semester
-                                            AND t2.active= 'yes'
-                                            AND t2.school_year_term=:school_year_term
-                                            -- AND t1.program_id= 4
-                                            -- AND t1.course_level=12
-
-                                            ORDER BY t1.course_level,
-                                            t1.semester DESC
-                                        ");
-
-                                        $sql->bindParam(":department_type", $department_type);
-                                        $sql->bindParam(":semester", $current_school_year_period);
-                                        $sql->bindParam(":school_year_term", $current_school_year_term);
-                                        $sql->bindParam(":student_id", $student_id);
-
-                                        $sql->execute();
+                                        $student_enrollment_program_id_course_id = $sec_exec->GetSectionProgramId($student_enrollment_course_id);
 
 
-                                        $semester_subjects = [];
-                                        $inserted_semester_subjects = [];
-                                    
-                                        if($sql->rowCount() > 0){
+                                        $availableSubjectCode = $subject_program->GetAvailableSubjectCodeWithinSemester(
+                                            $department_type, $current_school_year_period, 
+                                            $current_school_year_term, $student_id,
+                                            $student_enrollment_program_id_course_id, 
+                                            // $student_program_id, 
+                                            $selected_subject_program_id
+                                        );
+
+                                        if(count($availableSubjectCode) > 0){
 
                                             $semester_subjects = [];
                                             $inserted_semester_subjects = [];
+                                            $schedule_array = [];
 
+                                            foreach ($availableSubjectCode as $key => $row) {
+                                                # code...
 
-                                            while($row = $sql->fetch(PDO::FETCH_ASSOC)){
-                                                
-                                                // $student_subject_id = $row['student_subject_id'];
                                                 $subject_program_id = $row['subject_program_id'];
                                                 $subject_code = $row['subject_code'];
                                                 $subject_title = $row['subject_title'];
@@ -169,31 +209,65 @@
                                                 $subject_type = $row['subject_type'];
                                                 $semester = $row['semester'];
                                                 $course_level = $row['course_level'];
-                                                // $program_section = "";
                                                 $program_section = $row['program_section'];
-                                                // $course_id = 0;
                                                 $course_id = $row['course_id'];
                                                 $ss_course_id = $row['ss_course_id'];
                                                 $ss_student_id = $row['ss_student_id'];
-
                                                 $student_subject_id = $row['student_subject_id'];
                                                 $ss_enrollment_id = $row['ss_enrollment_id'];
                                                 $ss_subject_program_id = $row['ss_subject_program_id'];
                                                 $ss_is_transferee = $row['ss_is_transferee'];
                                                 $ss_is_final = $row['ss_is_final'];
                                                 $ss_school_year_id = $row['ss_school_year_id'];
-
                                                 $ssg_student_subject_id = $row['ssg_student_subject_id'];
 
                                                 $section = new Section($con, $course_id);
-
                                                 $sectionName = $section->GetSectionName();
-                                                 
+
+
+                                                $sectionSubjectCode = $section->CreateSectionSubjectCode(
+                                                    $sectionName, $subject_code
+                                                );
+
+                                                $schedule = new Schedule($con);
+
+                                                $hasSubjectCode = $schedule->GetSameSubjectCode($course_id,
+                                                    $sectionSubjectCode, $current_school_year_id);
+
+                                                    // var_dump($hasSubjectCode);
+                                                $allTime  = "";
+                                                $allDays  = "";
+                                                $scheduleOutput = "TBA";
+                                                // if($hasSubjectCode !== NULL){
+                                                if($hasSubjectCode !== []){
+
+                                                    foreach ($hasSubjectCode as $key => $value) {
+
+                                                        // $schedule_subject_code = $value['subject_code'];
+                                                        
+                                                        $schedule_day = $value['schedule_day'];
+                                                        $schedule_time = $value['schedule_time'];
+                                                        
+                                                        // array_push($schedule_array, $schedule_time);
+
+                                                        $allDays .= $schedule_day;
+                                                        $allTime .= $schedule_time;
+
+                                                        $scheduleOutput .= "$schedule_day - $schedule_time <br>";
+                                                        // echo "<br>";
+                                                    }
+
+                                                   
+                                                    
+                                                }
+
+                                                // var_dump($schedule_array);
+                                                // echo "<br>";
+
+                                                // echo $sectionSubjectCode;
+                                                // echo "<br>";
+
                                                 $addAvailable = "addAvailable($subject_program_id, $current_school_year_id, $student_id, $student_enrollment_course_id, $enrollment_id, $course_id, \"$subject_code\")";
-
-                                                // $subject_program = new SubjectProgram($con, $subject_program_id);
-
-
 
                                                 $icon = "
                                                     <button onclick='$addAvailable' class='btn btn-primary btn-sm'>
@@ -201,84 +275,46 @@
                                                     </button>
                                                 ";
 
-                                                // echo $ss_course_id;
+                                                if ($ss_subject_program_id == $subject_program_id && $ss_is_final == 1 && $ss_is_transferee == 1) {
+                                                    $currentCredited = "currentCredited($enrollment_id, $student_id)";
 
-
-                                                if($ss_subject_program_id == $subject_program_id
-                                                    // && $ss_enrollment_id != NULL
-                                                    && $ss_is_final  == 1
-                                                    && $ss_is_transferee == 1
-                                                    ){
-                                                        $currentCredited = "currentCredited($enrollment_id, $student_id)";
-
-                                                        // Enable crediting
-                                                        if($ss_school_year_id == $current_school_year_id){
-                                                            $icon = "
-                                                                <button onclick='$currentCredited' class='btn btn-success btn-sm'>
-                                                                   Current Credited
-                                                                </button>
-                                                            ";
-                                                            array_push($inserted_semester_subjects, $subject_program_id);
-
-                                                        }
-                                                        // Disable crediting
-                                                        else if($ss_school_year_id != $current_school_year_id){
-                                                            $icon = "
-                                                                <button disabled class='btn btn-success btn-sm'>
-                                                                    Credited
-                                                                </button>
-                                                            ";
-                                                        }
-                                                }else if(
-                                                    $ss_subject_program_id == $subject_program_id
-                                                    && $ss_enrollment_id != NULL
-                                                    && $ss_is_final  == 0
-                                                    && $ss_is_transferee == 0
-                                                    // && $ss_subject_code == $subject_code
-                                                    // && $course_id == $ss_course_id
-                                                       ){
-
-                                                        // echo $subject_program_id;
+                                                    // Enable crediting
+                                                    if ($ss_school_year_id == $current_school_year_id) {
+                                                        $icon = "
+                                                            <button onclick='$currentCredited' class='btn btn-success btn-sm'>
+                                                                Current Credited
+                                                            </button>
+                                                        ";
                                                         array_push($inserted_semester_subjects, $subject_program_id);
+                                                    }
+                                                    // Disable crediting
+                                                    else if ($ss_school_year_id != $current_school_year_id) {
+                                                        $icon = "
+                                                            <button disabled class='btn btn-success btn-sm'>
+                                                                Credited
+                                                            </button>
+                                                        ";
+                                                    }
+                                                } else if ($ss_subject_program_id == $subject_program_id 
+                                                    && $ss_enrollment_id != NULL && $ss_is_final == 0 
+                                                    && $ss_is_transferee == 0) {
 
-                                                        // Comes from within Program and section enrollment course id BASED.
-                                                        if($ss_course_id == $course_id
-                                                            && $ss_enrollment_id == $enrollment_id
-                                                            && $ss_student_id == $student_id
-                                                            ){
-                                                            $icon = "
-                                                                <button class='btn btn-info btn-sm'>
-                                                                    Taken
-                                                                </button>
-                                                            ";
+                                                    array_push($inserted_semester_subjects, $subject_program_id);
 
-
-                                                        // }else if($course_id != $ss_course_id){
-                                                            
-                                                        // Comes from Other Program. enrollment course id not BASED. Ex you`re stem but registrar
-                                                        // selects HUMMS FOR PE101 subject code.
-                                                        }
-                                                        // else if(
-                                                        //     // $student_enrollment_course_id != $ss_course_id
-                                                        //     $student_enrollment_course_id != $ss_course_id
-                                                        //     // && $ss_course_id == $course_id
-                                                        //     && $ss_enrollment_id == $enrollment_id
-                                                        //     && $ss_student_id == $student_id
-                                                        // ){
-                                                        //     $icon = "
-                                                        //         <button class='btn btn-primary btn-sm'>
-                                                        //             Taken Other
-                                                        //         </button>
-                                                        //     ";
-                                                        // }
-                                                        
+                                                    // Comes from within Program and section enrollment course id BASED.
+                                                    if ($ss_course_id == $course_id 
+                                                        && $ss_enrollment_id == $enrollment_id 
+                                                        && $ss_student_id == $student_id) {
+                                                        $icon = "
+                                                            <button class='btn btn-info btn-sm'>
+                                                                Taken
+                                                            </button>
+                                                        ";
+                                                    }
                                                 }
-                                               
-
+ 
                                                 echo "
                                                     <tr class='text-center'>
-                                                        <td>$course_id</td>
-                                                        <td>$subject_program_id</td>
                                                         <td>$subject_code</td>
                                                         <td>$subject_title</td>
                                                         <td>$pre_req_subject_title</td>
@@ -286,23 +322,39 @@
                                                         <td>$course_level</td>
                                                         <td>$semester</td>
                                                         <td>$sectionName</td>
+                                                        <td>$scheduleOutput</td>
+                                                        ";
+                                                        
+                                                // Start your loop to populate values from $schedule_array
+                                                // foreach ($schedule_array as $schedule_time) {
+                                                //     echo "$schedule_time<br>"; // Assuming you want to separate the values with line breaks
+                                                // }
+
+                                                echo "</td>
                                                         <td>$icon</td>
                                                     </tr>
                                                 ";
+
+
                                             }
 
-                                            // print_r($inserted_semester_subjects);
-                                            // print_r($semester_subjects);
-
-                                          
-
                                         }
+                                        else{
+                                            echo "
+                                                <div style='height:150px;' class='bg-info col-md-12'>
+                                                    <h2 class='text-center'>No Subject Code Available.</h2>
+                                                </div>
+                                            ";
+                                        }
+
                                     ?>
                                 </tbody>
 
                             </table>
                         </main>
                     </div>
+
+
                 </main>
             </div>
 
@@ -311,7 +363,6 @@
     }
 
 ?>
-
 
 <script>
 
@@ -339,7 +390,7 @@
 
         Swal.fire({
                 icon: 'question',
-                title: `Adding Subject Load ID: ${subject_program_id}`,
+                title: `Adding Subject Code: ${subject_code}`,
                 text: '',
                 showCancelButton: true,
                 confirmButtonText: 'Yes',
@@ -364,9 +415,9 @@
                             if(response == "add_success"){
                                 Swal.fire({
                                 icon: 'success',
-                                title: `Successfully Uncredited`,
+                                title: `Successfully Added`,
                                 showConfirmButton: false,
-                                timer: 1000, // Adjust the duration of the toast message in milliseconds (e.g., 3000 = 3 seconds)
+                                timer: 1300, // Adjust the duration of the toast message in milliseconds (e.g., 3000 = 3 seconds)
                                 toast: true,
                                 position: 'top-end',
                                 showClass: {
@@ -379,30 +430,84 @@
                                 }
                             }).then((result) => {
 
+                                $("#search_subject_code").val('');
                                 $('#choosing_subject_tablex').load(
                                     location.href + ' #choosing_subject_tablex'
                                 );
+
+                                // window.location.href = `choosing_subject.php?e_id=${enrollment_id}&st_id=${student_id}`;
                             })}
 
-                            if(response == "taken_different_strand"){
+                            // if(response == "taken_different_strand"){
 
+                            //     Swal.fire({
+                            //         icon: 'error',
+                            //         title: 'Oh no!',
+                            //         text: `Subject ID: ${subject_program_id} has been already taken!`,
+                            //     });
+                            // }
+                            if (response == "subject_already_taken") {
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Oh no!',
-                                    text: `Subject ID: ${subject_program_id} has been already taken!`,
+                                    text: `Subject ID: ${subject_program_id} has been already taken!. Anyway, Do you want to insert the subject?`,
+                                    showCancelButton: true,  // Show the "Cancel" button
+                                    confirmButtonText: 'Proceed',  // Text for the "Proceed" button
+                                    cancelButtonText: 'Cancel',    // Text for the "Cancel" button
+                                       footer: '<p>Please use Student grade records as reference.</p>', // Additional text
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+
+                                        $.ajax({
+                                            url: "../../ajax/admission/continueAddSubject.php",
+                                            type: 'POST',
+                                            data: {
+                                                subject_program_id, current_school_year_id,
+                                                student_id, student_enrollment_course_id,
+                                                enrollment_id, course_id
+                                            },
+                                            success: function(response) {
+
+                                                // response = response.trim();
+                                                // console.log(response);
+                                                
+                                                // if(response == "add_success"){
+                                                    Swal.fire({
+                                                    icon: 'success',
+                                                    title: `Successfully Added`,
+                                                    showConfirmButton: false,
+                                                    timer: 1000, // Adjust the duration of the toast message in milliseconds (e.g., 3000 = 3 seconds)
+                                                    toast: true,
+                                                    position: 'top-end',
+                                                    showClass: {
+                                                    popup: 'swal2-noanimation',
+                                                    backdrop: 'swal2-noanimation'
+                                                    },
+                                                    hideClass: {
+                                                    popup: '',
+                                                    backdrop: ''
+                                                    }
+                                                }).then((result) => {
+
+                                                    $("#search_subject_code").val('');
+                                                    $('#choosing_subject_tablex').load(
+                                                        location.href + ' #choosing_subject_tablex'
+                                                    );
+                                                })}
+                                            // }
+                                        });
+                                    } 
+                                    // else if (result.isDismissed) {}
                                 });
                             }
 
                             if(response == "already_credited"){
-
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Oh no!',
                                     text: `Subject ID: ${subject_program_id} has been already credited!`,
                                 });
                             }
-
-                            
                             if(response == "failed_pre_requisite_of_selected_code"){
 
                                 Swal.fire({
@@ -412,7 +517,6 @@
                                 });
 
                             }
-
                             if(response == "subject_prerequisite_not_taken"){
 
                                 Swal.fire({
@@ -422,7 +526,6 @@
                                 });
 
                             }
-
                             if(response == "already_passed"){
 
                                 Swal.fire({
@@ -435,6 +538,10 @@
                         },
                         error: function(xhr, status, error) {
                             // handle any errors here
+                            console.error('Error:', error);
+                            console.log('Status:', status);
+                            console.log('Response Text:', xhr.responseText);
+                            console.log('Response Code:', xhr.status);
                         }
                     });
                 } else {
@@ -628,3 +735,9 @@
         });
     }
 </script>
+
+
+
+
+
+

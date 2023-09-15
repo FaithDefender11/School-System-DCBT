@@ -32,6 +32,11 @@
             return isset($this->sqlData['teacher_id']) ? $this->sqlData["teacher_id"] : "qwe"; 
         }
 
+        public function GetSchoolTeacherId() {
+            return isset($this->sqlData['school_teacher_id']) ? $this->sqlData["school_teacher_id"] : "qwe"; 
+        }
+        
+
         public function GetTeacherFirstName() {
             return isset($this->sqlData['firstname']) ? ucfirst($this->sqlData["firstname"]) : ""; 
         }
@@ -49,6 +54,10 @@
         public function GetStatus() {
             return isset($this->sqlData['teacher_status']) ? ucfirst($this->sqlData["teacher_status"]) : ""; 
         }     
+
+        public function GetCivilStatus() {
+            return isset($this->sqlData['civil_status']) ? ucfirst($this->sqlData["civil_status"]) : ""; 
+        }    
 
         public function GetDepartmentId() {
             return isset($this->sqlData['department_id']) ?  $this->sqlData["department_id"] : ""; 
@@ -638,6 +647,85 @@
             $query->execute();
 
             return $query->rowCount();
+
+        }
+
+        public function ELMSVerifyLoginCredentials($username, $password){
+
+            $in_active = "Inactive";
+
+            $arr = [];
+
+            $username = strtolower($username);
+
+            $query_teacher = $this->con->prepare("SELECT 
+
+                *
+
+                FROM teacher
+                WHERE username=:username
+                AND teacher_status !=:teacher_status
+
+                LIMIT 1");
+        
+            $query_teacher->bindParam(":username", $username);
+            $query_teacher->bindParam(":teacher_status", $in_active);
+            $query_teacher->execute();
+
+            if($query_teacher->rowCount() > 0){
+                
+                $user = $query_teacher->fetch(PDO::FETCH_ASSOC);    
+
+                $teacher_id = $user['teacher_id'];
+
+                // echo $user['password'];
+                if($user['password'] == $password){
+                }
+
+                if ($user && password_verify($password, $user['password'])) {
+                    array_push($arr, $username); // [0]
+                    array_push($arr, "teacher");
+                    array_push($arr, $teacher_id); // [3]
+                }
+                else{
+                    // echo "not cocrrect";
+                }
+            }else{
+
+                $query_admin = $this->con->prepare("SELECT *
+
+                    FROM users
+                    WHERE username=:username
+                    LIMIT 1");
+            
+                $query_admin->bindParam(":username", $username);
+                $query_admin->execute();
+
+                if($query_admin->rowCount() > 0){
+                    
+                    $admin_row = $query_admin->fetch(PDO::FETCH_ASSOC);    
+
+                    $admin_id = $admin_row['user_id'];
+                    $username = $admin_row['username'];
+
+                    if ($admin_row 
+                        && password_verify($password, $admin_row['password'])) {
+                        array_push($arr, $username); // [0]
+                        array_push($arr, "admin");
+                        array_push($arr, $admin_id); // [3]
+                    }
+
+                }
+            }
+
+
+
+
+            // else{
+            //     return "Username or Password is Incorrect.";
+            // }
+            
+            return $arr;
 
         }
 

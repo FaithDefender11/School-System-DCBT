@@ -197,9 +197,15 @@
 
         ?>
             <div class='col-md-10 row offset-md-1'>
-    
+
+
                 <div class='card'>
                     <div class='card-header'>
+                        <a href="template_list.php">
+                            <button class="btn btn-primary">
+                                <i class="fas fa-arrow-left"></i>
+                            </button>
+                        </a>
                         <h4 class='text-center mb-3'>Create Template Subject (<?php echo $department_type;?>)</h4>
                     </div>
                     <div class='card-body'>
@@ -268,6 +274,7 @@
     }
 
 ?>
+
 <script>
 
     $('#subject_type').on('change', function() {

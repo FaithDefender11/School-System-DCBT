@@ -51,7 +51,7 @@
             </header>
             <main>
                 <table id="template_table" 
-                    class="ws-table-all cw3-striped cw3-bordered" style="margin: 0"> 
+                    class="a" style="margin: 0"> 
                     <thead>
                         <tr class="text-center"> 
                             <th rowspan="2">Template Id</th>

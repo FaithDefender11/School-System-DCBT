@@ -5,41 +5,45 @@
     require_once("../../includes/classes/Student.php");
     require_once("../../includes/classes/Section.php");
 
-
-
     $school_year = new SchoolYear($con);
         $school_year_obj = $school_year->GetActiveSchoolYearAndSemester();
 
     $school_year_id = $school_year_obj['school_year_id'];
+
+    // echo $school_year_id;
     $current_school_year_semester = $school_year_obj['period'];
     $current_school_year_term = $school_year_obj['term'];
 
-    if (isset($_POST['studentId'])
-        && !isset($_POST['program_id'])) {
+    if (isset($_POST['studentId']) && !isset($_POST['program_id'])) {
 
-        $studentId = $_POST['studentId'];
+        // Unique ID
+        $student_unique_id = $_POST['studentId'];
 
-        // echo $studentId;
+        $student_check = new Student($con);
 
-        $student = new Student($con, $studentId);
+        $checkIfOngoing = $student_check->ValidateIfOngoingStudent($student_unique_id);
+
+        if($checkIfOngoing == false){
+            echo json_encode([]);
+            // echo "false";
+            return;
+        }else{
+            // echo "true";
+        }
+
+        $student = new Student($con, $student_unique_id);
 
         $student_prev_course_id = $student->GetStudentCurrentCourseId();
 
         $section = new Section($con, $student_prev_course_id);
 
+        $student_program_section = $section->GetSectionName();
+
         $student_program_id = $section->GetSectionProgramId($student_prev_course_id);
 
         // echo $student_program_id;
-
-        // $("#firstName").val(student_object['suffix']);
-        // $("#firstName").val(student_object['civil_status']);
-        // $("#firstName").val(student_object['nationality']);
-        // $("#firstName").val(student_object['sex']);
-        // $("#firstName").val(student_object['birthday']);
-        // $("#firstName").val(student_object['religion']);
-        //                     $("#firstName").val(student_object['birthplace']);
-
         $student_status = $student->GetStudentStatus();
+
         $lastname = $student->GetLastName();
         $firstname = $student->GetFirstName();
         $middle_name = $student->GetMiddleName();
@@ -54,7 +58,6 @@
         $contact_number = $student->GetContactNumber();
         $email = $student->GetEmail();
         $lrn = $student->GetStudentLRN();
-
 
         $object = (object)array(
             'lastname' => $lastname,
@@ -73,6 +76,8 @@
             'address' => $address,
             'contact_number' => $contact_number,
             'email' => $email,
+            'student_current_program_section' => $student_program_section,
+            'student_current_course_id' => $student_prev_course_id
         );
 
         $query = $con->prepare("SELECT * FROM course
@@ -92,8 +97,6 @@
                 $course_id = $row['course_id'];
                 $program_section = $row['program_section'];
 
-                // echo $course_id;
-
                 $data[] = array(
                     'course_id' => $course_id,
                     'program_section' => $program_section
@@ -102,19 +105,14 @@
         }
 
         $result = array();
-        if(empty($data) == false){
+
+        // if(empty($data)){
             $result = array(
                 'sections' => $data,
                 'students' => $object
             );      
-        }
-        
-
-        // foreach ($data as &$item) {
-        //     $item['first_name'] = 'Justine';
         // }
-        // unset($item); // Unset the reference to avoid unintended behavior in later code
-
+        
         if(empty($result)){
             echo json_encode([]);
         }else{
@@ -156,7 +154,7 @@
                 );
             }
         }
-      
+        
         if(empty($data)){
             echo json_encode([]);
         }else{

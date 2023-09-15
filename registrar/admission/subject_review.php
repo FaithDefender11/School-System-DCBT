@@ -1,3 +1,5 @@
+
+
 <?php 
 
     if($student_status_st == "" && $student_new_enrollee == 0){
@@ -42,14 +44,55 @@
                     
                     <div class="action">
                         <div class="dropdown">
-                        <button class="icon">
-                            <i class="bi bi-three-dots-vertical"></i>
-                        </button>
-                        <div class="dropdown-menu">
-                            <a href="#" class="dropdown-item" style="color: red"
-                            ><i class="bi bi-file-earmark-x"></i>Delete form</a
-                            >
-                        </div>
+
+                            <button class="icon">
+                                <i class="bi bi-three-dots-vertical"></i>
+                            </button>
+
+                            <div class="dropdown-menu">
+                                
+                                <?php 
+                                
+                                    $retakeFunc = "";
+                                    if($student_enrollment_retake_status == 1){
+                                        $retakeFunc = "markAsEnrollmentRetake($student_enrollment_id, $student_id, $current_school_year_id, 'Unretake')";
+                                    }else if($student_enrollment_retake_status == 0){
+                                        $retakeFunc = "markAsEnrollmentRetake($student_enrollment_id, $student_id, $current_school_year_id, 'Retake')";
+                                    }
+                                ?>
+
+                                <a 
+                                    onclick="javascript: <?php echo $retakeFunc; ?>"
+                                        href="#" class="dropdown-item" style="color: orange">
+                                    <i class="bi bi-file-earmark-x"></i>
+                                    Mark form as Retake
+                                </a>
+
+                                <a 
+                                    onclick="enrollmentStudentStatusChanging(<?php echo $student_enrollment_id;?>, <?php echo $student_id;?>,<?php echo $current_school_year_id;?>, '<?php echo "Irregular"?>')"
+                                        href="#" class="dropdown-item" style="color: blue">
+                                    <i class="bi bi-file-earmark-x"></i>
+                                    Mark as Irregular
+                                </a>
+
+                                <a onclick="enrollmentStudentStatusChanging(<?php echo $student_enrollment_id;?>, <?php echo $student_id;?>,<?php echo $current_school_year_id;?>, '<?php echo "Regular"?>')"
+                                        href="#" class="dropdown-item" style="color: green">
+                                    <i class="bi bi-file-earmark-x"></i>
+                                    Mark as Regular
+                                </a>
+
+                            </div>
+
+
+                            <!-- <button onclick="javascript: <?php echo $retakeFunc; ?>" 
+                                                        type="button" class="btn-sm <?php echo $retake;?>">Retake</button> -->
+
+                            <!-- <button onclick="enrollmentStudentStatusChanging(<?php echo $student_enrollment_id;?>, <?php echo $student_id;?>,<?php echo $current_school_year_id;?>, '<?php echo "Irregular"?>')" 
+                                type="button" class="btn-sm <?php echo $irreg;?>">Irregular</button>
+                                                        
+                            <button onclick="enrollmentStudentStatusChanging(<?php echo $student_enrollment_id;?>, <?php echo $student_id;?>,<?php echo $current_school_year_id;?>, '<?php echo "Regular"?>')"
+                                type="button" class="btn-sm <?php echo $reg;?>">Regular</button> -->
+
                         </div>
                     </div>
 
@@ -111,9 +154,11 @@
                         
                                             <?php
 
-                                                $sql = $con->prepare("SELECT * FROM student_subject as t1
+                                                $sql = $con->prepare("SELECT  * 
+                                                
+                                                    FROM student_subject as t1
 
-                                                    INNER JOIN subject_program as t2 ON t2.subject_program_id=t1.subject_program_id
+                                                    INNER JOIN subject_program as t2 ON t2.subject_program_id = t1.subject_program_id
                                                     
                                                     WHERE t1.student_id=:student_id
                                                     AND t1.school_year_id=:school_year_id
@@ -170,104 +215,69 @@
                 <div class="floating">
                     <header>
                         <div class="title">
-                            <h3><?php echo $section_subject_review_section_name;?> <a style="all:unset; cursor: pointer" href="choosing_subject.php?e_id=<?php echo $student_enrollment_id;?>&st_id=<?php echo $student_id?>">Subjects</a></h3>
+                            <!-- <h3><?php echo $section_subject_review_section_name;?> <a style="all:unset; cursor: pointer" href="choosing_subject.php?e_id=<?php echo $student_enrollment_id;?>&st_id=<?php echo $student_id?>">Subjects</a></h3> -->
+                            <h4><?php echo $section_subject_review_section_name;?> <a style="all:unset; cursor: pointer" href="choosing_subject.php?e_id=<?php echo $student_non_enrolled_enrollment_id;?>&st_id=<?php echo $student_id?>"></a></h4>
                         </div>
 
-                        <?php 
-                            // if($student_enrollment_student_status == ""){
-                                // Default Irregular | Regular (Both none active)
-
-                                $irreg = $student_enrollment_student_status == "Irregular" ? "btn-primary" : "";
-                                $reg = $student_enrollment_student_status == "Regular" ? "btn-primary" : "";
-                                $retake = $student_enrollment_retake_status == 1 ? "btn-success" : "";
-
-                                // $retakeFunc = "markAsEnrollmentRetake($student_enrollment_id, $student_id, $current_school_year_id, \"Retake\")";
-                                $retakeFunc = "";
-                                if($student_enrollment_retake_status == 1){
-                                    $retakeFunc = "markAsEnrollmentRetake($student_enrollment_id, $student_id, $current_school_year_id, 'Unretake')";
-                                }else if($student_enrollment_retake_status == 0){
-                                    $retakeFunc = "markAsEnrollmentRetake($student_enrollment_id, $student_id, $current_school_year_id, 'Retake')";
-                                }
-
-                                ?>
-                                    <div class="action">
-
-                                        <?php 
-                                        
-                                            if($student_enrollment_student_status == "" 
-                                                || $student_enrollment_student_status == "Regular"){
-
-                                                ?>
-                                                    <button onclick="enrollmentStudentStatusChanging(<?php echo $student_enrollment_id;?>, <?php echo $student_id;?>,<?php echo $current_school_year_id;?>, '<?php echo "Irregular"?>')" 
-                                                        type="button" class="btn-sm <?php echo $irreg;?>">Irregular</button>
-                                                        
-                                                    <button onclick="enrollmentStudentStatusChanging(<?php echo $student_enrollment_id;?>, <?php echo $student_id;?>,<?php echo $current_school_year_id;?>, '<?php echo "Regular"?>')" 
-                                                        type="button" class="btn-sm <?php echo $reg;?>">Regular</button>
-
-                                                <?php
-                                            }
-
-                                            if($student_enrollment_student_status == "Irregular"){
-                                                ?>
-
-                                                    <button onclick="javascript: <?php echo $retakeFunc; ?>" 
-                                                        type="button" class="btn-sm <?php echo $retake;?>">Retake</button>
-
-                                                    <button onclick="enrollmentStudentStatusChanging(<?php echo $student_enrollment_id;?>, <?php echo $student_id;?>,<?php echo $current_school_year_id;?>, '<?php echo "Irregular"?>')" 
-                                                        type="button" class="btn-sm <?php echo $irreg;?>">Irregular</button>
-                                                        
-                                                    <button onclick="enrollmentStudentStatusChanging(<?php echo $student_enrollment_id;?>, <?php echo $student_id;?>,<?php echo $current_school_year_id;?>, '<?php echo "Regular"?>')" 
-                                                        type="button" class="btn-sm <?php echo $reg;?>">Regular</button>
-
-                                                <?php
-                                            }
-                                        ?>
-                                    </div>
-                                <?php
-                            // }
-
-                            if($student_enrollment_student_status == "Irregular"){
-                                // Retake | Irregular (active)| Regular (none active)
-                            }
-                        
-                        ?>
+                        <a href="choosing_subject.php?e_id=<?php echo $student_non_enrolled_enrollment_id;?>&st_id=<?php echo $student_id?>">
+                            <button type="button" class="default large">+ Add Subjects
+                                
+                            </button>
+                        </a>
                     </header>
 
                     <main>
                         <table class="a" id="irregular_subject_review_table">
                             <thead>
-                                <tr class="text-center"> 
+                                <!-- <tr class="text-center"> 
                                     <th rowspan="2">ID</th>
                                     <th rowspan="2">Section - Code</th>
                                     <th rowspan="2">Description</th>
                                     <th rowspan="2">Unit</th>
                                     <th rowspan="2">Type</th>
-                                    <th rowspan="2">Pre - Requisite</th>
+                                    <th rowspan="2">Action</th>
+                                </tr> -->
+
+                                <tr class="text-center"> 
+                                    <th rowspan="2">Course Description</th>
+                                    <th rowspan="2">Unit</th>
+                                    <th rowspan="2">Section</th>
+                                    <th rowspan="2">Type</th>
+                                    <th rowspan="2">Schedule</th>
                                     <th rowspan="2">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
+
                                     $sql = $con->prepare("SELECT 
                                     
-                                        t2.*, t1.student_subject_id, t1.subject_code as output_subject_code,
+                                        t2.*,
+                                        t1.student_subject_id,
+                                        t1.program_code,
+                                        t1.course_id as enrolled_section_id,
+                                        t1.subject_code as output_subject_code,
                                         t3.program_section
                                     
                                         FROM student_subject as t1
 
                                         INNER JOIN subject_program as t2 ON t2.subject_program_id=t1.subject_program_id
-                                        LEFT JOIN course as t3 ON t3.course_id=t1.course_id
+
+                                        INNER JOIN enrollment as t4 ON t4.enrollment_id = t1.enrollment_id
+
+                                        LEFT JOIN course as t3 ON t3.course_id = t1.course_id
 
                                         WHERE t1.student_id=:student_id
                                         AND t1.school_year_id=:school_year_id
                                         AND t1.is_transferee = 0
-                                        -- AND t1.course_id=:course_id
                                         AND t1.is_final= 0
+                                        AND t4.enrollment_id = :enrollment_id
 
                                     ");
 
                                     $sql->bindParam(":student_id", $student_id);
                                     $sql->bindParam(":school_year_id", $current_school_year_id);
+                                    $sql->bindParam(":enrollment_id", $student_enrollment_id);
 
                                     $sql->execute();
                                 
@@ -281,6 +291,10 @@
                                             $subject_id = $row['subject_program_id'];
                                             $subject_code = $row['subject_code'];
                                             $subject_title = $row['subject_title'];
+                                            $program_code = $row['program_code'];
+                                            $enrolled_section_id = $row['enrolled_section_id'];
+
+
                                             $unit = $row['unit'];
                                             $subject_type = $row['subject_type'];
                                             $pre_req_subject_title = $row['pre_req_subject_title'];
@@ -289,19 +303,20 @@
 
                                             $section_subject_code = $section->CreateSectionSubjectCode($program_section, $subject_code);
 
+                                            $section_exec = new Section($con, $enrolled_section_id);
+                                            
+                                            $enrolled_section_Name = $section_exec->GetSectionName(); 
                                             $change_section_subject_url = "change_subject.php?id=$student_subject_id";
                                             $removeSubject = "removeSubject($student_subject_id)";
 
-
+                                                    // <td>$pre_req_subject_title</td>
                                             echo "
                                                 <tr class='text-center'>
-                                                    <td>$subject_id</td>
-                                                    <td>$output_subject_code</td>
                                                     <td>$subject_title</td>
                                                     <td>$unit</td>
+                                                    <td>$enrolled_section_Name</td>
                                                     <td>$subject_type</td>
-                                                    <td>$pre_req_subject_title</td>
-                                                    
+                                                    <td></td>
                                                     <td>
                                                         <button 
                                                             class='btn btn-sm btn-primary'
@@ -338,13 +353,13 @@
                     
                         if($student_evaluated_by_registrar == "yes"){
                             ?>
-                                <button onclick='EvaluateRequest("<?php echo $student_enrollment_form_id;?>", <?php echo $student_enrollment_course_id;?>, <?php echo $current_school_year_id;?>, <?php echo $student_id;?>, "<?php echo $student_enrollment_student_status;?>", <?php echo $totalSubjectList;?>, "<?php echo "Evaluated"; ?>")' class="default clean large">
+                                <button onclick='EvaluateRequest("<?php echo $student_enrollment_id;?>", "<?php echo $student_enrollment_form_id;?>", <?php echo $student_enrollment_course_id;?>, <?php echo $current_school_year_id;?>, <?php echo $student_id;?>, "<?php echo $student_enrollment_student_status;?>", <?php echo $totalSubjectList;?>, "<?php echo "Evaluated"; ?>")' class="default clean large">
                                     Evaluation Approved
                                 </button>
                             <?php
                         }else if($student_evaluated_by_registrar == "no"){
                             ?>
-                                <button onclick='EvaluateRequest("<?php echo $student_enrollment_form_id;?>", <?php echo $student_enrollment_course_id;?>, <?php echo $current_school_year_id;?>, <?php echo $student_id;?>, "<?php echo $student_enrollment_student_status;?>", <?php echo $totalSubjectList;?>, "<?php echo "Non-Evaluated"; ?>")' class="default clean success large">
+                                <button onclick='EvaluateRequest("<?php echo $student_enrollment_id;?>", "<?php echo $student_enrollment_form_id;?>", <?php echo $student_enrollment_course_id;?>, <?php echo $current_school_year_id;?>, <?php echo $student_id;?>, "<?php echo $student_enrollment_student_status;?>", <?php echo $totalSubjectList;?>, "<?php echo "Non-Evaluated"; ?>")' class="default clean success large">
                                     Confirm
                                 </button>
                             <?php
@@ -356,332 +371,379 @@
             </main>
         </div>
 
-        <script>
-                    
-            function removeSubject(student_subject_id){
-
-                Swal.fire({
-                    icon: 'question',
-                    title: `Do you want to remove Subject Load ID: ${student_subject_id}`,
-                    text: 'Please note this action cannot be undone',
-                    showCancelButton: true,
-                    confirmButtonText: 'Yes',
-                    cancelButtonText: 'Cancel'
-
-                }).then((result) => {
-
-                    if (result.isConfirmed) {
-                        $.ajax({
-                            url: "../../ajax/admission/remove_student_subject.php",
-                            type: 'POST',
-                            data: {
-                                student_subject_id
-                            },
-                            success: function(response) {
-                                response = response.trim();
-
-                                // console.log(response);
-
-                                if(response == "success_delete"){
-                                    Swal.fire({
-                                    icon: 'success',
-                                    title: `Successfully Removed`,
-                                    showConfirmButton: false,
-                                    timer: 1000, // Adjust the duration of the toast message in milliseconds (e.g., 3000 = 3 seconds)
-                                    toast: true,
-                                    position: 'top-end',
-                                    showClass: {
-                                    popup: 'swal2-noanimation',
-                                    backdrop: 'swal2-noanimation'
-                                    },
-                                    hideClass: {
-                                    popup: '',
-                                    backdrop: ''
-                                    }
-                                }).then((result) => {
-
-                                    $('#irregular_subject_review_table').load(
-                                        location.href + ' #irregular_subject_review_table'
-                                    );
-                                    location.reload();
-                                })}
-
-                            },
-                            error: function(xhr, status, error) {
-                                // handle any errors here
-                            }
-                        });
-                    }  
-                });
-            }
-
-            function EvaluateRequest(student_enrollment_form_id,
-                student_course_id, current_school_year_id, student_id,
-                student_status, totalSubjectList, remark){
-
-                var student_id = parseInt(student_id);
-                var student_course_id = parseInt(student_course_id);
-                var current_school_year_id = parseInt(current_school_year_id);
-                
-                var hasError = false;
-                console.log(totalSubjectList)
-
-                if(parseInt(totalSubjectList) === 0){
-
-                    hasError = true;
-
-                    var enrollmentId = `<?php
-                        echo $student_enrollment_id
-                    ?>`;
-                    Swal.fire({
-                        icon: 'warning',
-                        title: `Oh no! Please select appropriate subject load.`,
-                        text: "",
-                        showCancelButton: true,
-                        confirmButtonText: 'Yes',
-                        cancelButtonText: 'Cancel'
-
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            $url = `choosing_subject.php?e_id=${enrollmentId}&st_id=${student_id}`;
-                            window.location.href = $url;
-                        }
-                    });
-                }
-
-                else if(student_status === ""){
-
-                    hasError = true;
-
-                    Swal.fire({
-                        icon: 'warning',
-                        title: `Oh no! You have missed something.`,
-                        text: "Note: Please update student status.",
-                        showCancelButton: true,
-                        confirmButtonText: 'Yes',
-                        cancelButtonText: 'Cancel'
-
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            location.reload();
-                        }
-                    });
-                }
-                else if(hasError == false){
-
-                    var title = '';
-                    var text = '';
-
-                    if(remark == "Evaluated"){
-                        title = "Confirm Re-evaluation?"
-                        // text = "Note: You are changing the previous evaluation."
-
-                    }else if(remark == "Non-Evaluated"){
-                        title = "Confirm Enrollment?";
-                        // text = "Note: Please deliberately finalized your evaluation."
-                    }
-                    Swal.fire({
-                        icon: 'question',
-                        title:  `${title}`,
-                        // text: `${text}`,
-                        text: `Note: Please deliberately finalized your evaluation.`,
-                        showCancelButton: true,
-                        confirmButtonText: 'Yes',
-                        cancelButtonText: 'Cancel'
-
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            // console.log(student_enrollment_form_id)
-
-                                $.ajax({
-                                url: '../../ajax/admission/student_enrollment_confirm.php',
-                                type: 'POST',
-                                data: {student_enrollment_form_id,
-                                    student_course_id, current_school_year_id,
-                                    student_id},
-
-                                // dataType: "json",
-
-                                success: function(response) {
-
-                                    response = response.trim();
-                                    console.log(response)
-
-                                    if(response == "update_success"){
-
-                                        Swal.fire({
-                                                title: "Successfully Evaluated.",
-                                                icon: "success",
-                                                showCancelButton: false,
-                                                confirmButtonText: "OK",
-
-                                        }).then((result) => {
-                                            if (result.isConfirmed) {
-
-                                                // var url = `../student/record_details.php?id=${student_id}&enrolled_subject=show`;
-                                                var url = `./subject_insertion_summary.php?id=${student_id}&enrolled_subject=show`;
-                                                window.location.href = url;
-
-                                            } else {
-                                                // User clicked Cancel or closed the dialog
-                                            }
-                                        });
-                                    }
-                                },
-                                error: function(xhr, status, error) {
-                                    // handle any errors here
-                                }
-                            });
-                        }
-                    });
-                }
-
-            }
-
-            function enrollmentStudentStatusChanging(student_enrollment_id,
-                student_id, current_school_year_id, type){
-
-                var student_enrollment_id = parseInt(student_enrollment_id);
-                var student_id = parseInt(student_id);
-                var current_school_year_id = parseInt(current_school_year_id);
-               
-                var title = '';
-                var text = '';
-
-                if(type == "Regular"){
-                    // text = "Note: If retake form is activated, This will de-activate the Retake form.";
-                    text = "Note: Please finalized this changes.";
-                }
-                else if(type == "Irregular"){
-                    text = "Note: Please finalized this changes.";
-                }
-
-                Swal.fire({
-                    icon: 'question',
-                    title: `Change status as ${type}?`,
-                    text: `${text}`,
-                    showCancelButton: true,
-                    confirmButtonText: 'Yes',
-                    cancelButtonText: 'Cancel'
-
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        // console.log(student_enrollment_form_id)
-
-                            $.ajax({
-                            url: '../../ajax/admission/changingFormStatus.php',
-                            type: 'POST',
-                            data: {
-                                student_enrollment_id,
-                                student_id,
-                                current_school_year_id,
-                                type
-                            },
-
-                            // dataType: "json",
-
-                            success: function(response) {
-
-                                response = response.trim();
-
-                                console.log(response);
-
-                                if(response == "update_success"){
-
-                                    Swal.fire({
-                                        title: "Changes Successfully made",
-                                        icon: "success",
-                                        showCancelButton: false,
-                                        confirmButtonText: "OK",
-
-                                    }).then((result) => {
-                                        if (result.isConfirmed) {
-
-                                            location.reload();
-
-                                        } else {
-                                            
-                                        }
-                                    });
-                                }
-                            },
-                            error: function(xhr, status, error) {
-                                // handle any errors here
-                            }
-                        });
-                    }
-                });
-
-            }
-
-            function markAsEnrollmentRetake(student_enrollment_id,
-                student_id, current_school_year_id, type){
-
-                var student_enrollment_id = parseInt(student_enrollment_id);
-                var student_id = parseInt(student_id);
-                var current_school_year_id = parseInt(current_school_year_id);
-               
-                Swal.fire({
-                    icon: 'question',
-                    title: `Mark form as retake?`,
-                    text: "It means student has been placed again in the same year level",
-                    showCancelButton: true,
-                    confirmButtonText: 'Yes',
-                    cancelButtonText: 'Cancel'
-
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        // console.log(student_enrollment_form_id)
-
-                            $.ajax({
-                            url: '../../ajax/admission/changingFormStatus.php',
-                            type: 'POST',
-                            data: {
-                                student_enrollment_id,
-                                student_id,
-                                current_school_year_id,
-                                type
-                            },
-
-                            // dataType: "json",
-
-                            success: function(response) {
-
-                                response = response.trim();
-
-                                console.log(response);
-
-                                if(response == "update_success"){
-
-                                    Swal.fire({
-                                        title: "Changes Successfully made",
-                                        icon: "success",
-                                        showCancelButton: false,
-                                        confirmButtonText: "OK",
-
-                                    }).then((result) => {
-                                        if (result.isConfirmed) {
-
-                                            location.reload();
-
-                                        } else {
-                                            
-                                        }
-                                    });
-                                }
-                            },
-                            error: function(xhr, status, error) {
-                                // handle any errors here
-                            }
-                        });
-                    }
-                });
-
-            }
-
-
-            
-        </script>
+        
     <?php
 
 ?>
+
+<script>
+                    
+    function removeSubject(student_subject_id){
+
+        Swal.fire({
+            icon: 'question',
+            title: `Do you want to remove Subject Load ID: ${student_subject_id}`,
+            text: 'Please note this action cannot be undone',
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'Cancel'
+
+        }).then((result) => {
+
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "../../ajax/admission/remove_student_subject.php",
+                    type: 'POST',
+                    data: {
+                        student_subject_id
+                    },
+                    success: function(response) {
+                        response = response.trim();
+
+                        // console.log(response);
+
+                        if(response == "success_delete"){
+                            Swal.fire({
+                            icon: 'success',
+                            title: `Successfully Removed`,
+                            showConfirmButton: false,
+                            timer: 1000, // Adjust the duration of the toast message in milliseconds (e.g., 3000 = 3 seconds)
+                            toast: true,
+                            position: 'top-end',
+                            showClass: {
+                            popup: 'swal2-noanimation',
+                            backdrop: 'swal2-noanimation'
+                            },
+                            hideClass: {
+                            popup: '',
+                            backdrop: ''
+                            }
+                        }).then((result) => {
+
+                            $('#irregular_subject_review_table').load(
+                                location.href + ' #irregular_subject_review_table'
+                            );
+                            location.reload();
+                        })}
+
+                    },
+                    error: function(xhr, status, error) {
+                        // handle any errors here
+                    }
+                });
+            }  
+        });
+    }
+
+    function EvaluateRequest(student_enrollment_id, student_enrollment_form_id,
+        student_course_id, current_school_year_id, student_id,
+        student_status, totalSubjectList, remark){
+
+        var student_id = parseInt(student_id);
+        var student_course_id = parseInt(student_course_id);
+        var current_school_year_id = parseInt(current_school_year_id);
+        
+        var hasError = false;
+        // console.log(totalSubjectList)
+
+        if(parseInt(totalSubjectList) === 0){
+
+            hasError = true;
+
+            var enrollmentId = `<?php
+                echo $student_enrollment_id
+            ?>`;
+            Swal.fire({
+                icon: 'warning',
+                title: `Oh no! Please select appropriate subject load.`,
+                text: "",
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'Cancel'
+
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $url = `choosing_subject.php?e_id=${enrollmentId}&st_id=${student_id}`;
+                    window.location.href = $url;
+                }
+            });
+        }
+
+        else if(student_status === ""){
+
+            hasError = true;
+
+            Swal.fire({
+                icon: 'warning',
+                title: `Oh no! You have missed something.`,
+                text: "Note: Please update student status.",
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'Cancel'
+
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    location.reload();
+                }
+            });
+        }
+        else if(hasError == false){
+
+            var title = '';
+            var text = '';
+
+            if(remark == "Evaluated"){
+                title = "Confirm Re-evaluation?"
+                // text = "Note: You are changing the previous evaluation."
+
+            }else if(remark == "Non-Evaluated"){
+                title = "Confirm Enrollment?";
+                // text = "Note: Please deliberately finalized your evaluation."
+            }
+            Swal.fire({
+                icon: 'question',
+                title:  `${title}`,
+                // text: `${text}`,
+                text: `Note: Please deliberately finalized your evaluation.`,
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'Cancel'
+
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // console.log(student_enrollment_form_id)
+
+                        $.ajax({
+                        url: '../../ajax/admission/student_enrollment_confirm.php',
+                        type: 'POST',
+                        data: {student_enrollment_form_id,
+                            student_course_id, current_school_year_id,
+                            student_id},
+
+                        // dataType: "json",
+
+                        success: function(response) {
+
+                            response = response.trim();
+                            console.log(response)
+
+                            if(response == "update_success"){
+
+                                Swal.fire({
+                                        title: "Successfully Evaluated.",
+                                        icon: "success",
+                                        showCancelButton: false,
+                                        confirmButtonText: "OK",
+
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+
+                                        // var url = `../student/record_details.php?id=${student_id}&enrolled_subject=show`;
+                                        var url = `./subject_insertion_summary.php?id=${student_enrollment_id}&enrolled_subject=show`;
+                                        window.location.href = url;
+
+                                    } else {
+                                        // User clicked Cancel or closed the dialog
+                                    }
+                                });
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            // handle any errors here
+                        }
+                    });
+                }
+            });
+        }
+
+    }
+
+    function enrollmentStudentStatusChanging(student_enrollment_id,
+        student_id, current_school_year_id, type){
+
+        var student_enrollment_id = parseInt(student_enrollment_id);
+        var student_id = parseInt(student_id);
+        var current_school_year_id = parseInt(current_school_year_id);
+        
+        var title = '';
+        var text = '';
+
+        if(type == "Regular"){
+            // text = "Note: If retake form is activated, This will de-activate the Retake form.";
+            text = "Note: Please finalized this changes.";
+        }
+        else if(type == "Irregular"){
+            text = "Note: Please finalized this changes.";
+        }
+
+        Swal.fire({
+            icon: 'question',
+            title: `Change status as ${type}?`,
+            text: `${text}`,
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'Cancel'
+
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // console.log(student_enrollment_form_id)
+
+                    $.ajax({
+                    url: '../../ajax/admission/changingFormStatus.php',
+                    type: 'POST',
+                    data: {
+                        student_enrollment_id,
+                        student_id,
+                        current_school_year_id,
+                        type
+                    },
+
+                    // dataType: "json",
+
+                    success: function(response) {
+
+                        response = response.trim();
+
+                        console.log(response);
+
+                        if(response == "update_success"){
+
+                            Swal.fire({
+                                title: "Changes Successfully made",
+                                icon: "success",
+                                showCancelButton: false,
+                                confirmButtonText: "OK",
+
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+
+                                    location.reload();
+
+                                } else {
+                                    
+                                }
+                            });
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        // handle any errors here
+                    }
+                });
+            }
+        });
+
+    }
+
+    function markAsEnrollmentRetake(student_enrollment_id,
+        student_id, current_school_year_id, type){
+
+        var student_enrollment_id = parseInt(student_enrollment_id);
+        var student_id = parseInt(student_id);
+        var current_school_year_id = parseInt(current_school_year_id);
+        
+        Swal.fire({
+            icon: 'question',
+            title: `Mark form as retake?`,
+            text: "It means student has been placed again in the same year level",
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'Cancel'
+
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // console.log(student_enrollment_form_id)
+
+                    $.ajax({
+                    url: '../../ajax/admission/changingFormStatus.php',
+                    type: 'POST',
+                    data: {
+                        student_enrollment_id,
+                        student_id,
+                        current_school_year_id,
+                        type
+                    },
+
+                    // dataType: "json",
+
+                    success: function(response) {
+
+                        response = response.trim();
+
+                        console.log(response);
+
+                        if(response == "update_success"){
+
+                            Swal.fire({
+                                title: "Changes Successfully made",
+                                icon: "success",
+                                showCancelButton: false,
+                                confirmButtonText: "OK",
+
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+
+                                    location.reload();
+
+                                } else {
+                                    
+                                }
+                            });
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        // handle any errors here
+                    }
+                });
+            }
+        });
+    }
+
+    // function studentRemoveForm(student_id, enrollment_id, school_year_id){
+
+    //     var student_id = parseInt(student_id);
+    //     var enrollment_id = parseInt(enrollment_id);
+    //     var school_year_id = parseInt(school_year_id);
+
+    //     Swal.fire({
+    //         icon: 'question',
+    //         title: `Are you sure to remove this enrollment form?`,
+    //         text: 'Note: This action cannot be undone.',
+    //         showCancelButton: true,
+    //         confirmButtonText: 'Yes',
+    //         cancelButtonText: 'Cancel'
+    //     }).then((result) => {
+    //         if (result.isConfirmed) {
+    //             // REFX
+    //             $.ajax({
+    //                 url: '../../ajax/admission/removeEnrollmentForm.php',
+    //                 type: 'POST',
+    //                 data: {
+    //                     student_id, enrollment_id, school_year_id
+    //                 },
+    //                 success: function(response) {
+
+    //                     response = response.trim();
+
+    //                     console.log(response);
+
+    //                     Swal.fire({
+    //                         icon: 'success',
+    //                         title: `Enrollment form has been removed.`,
+    //                     });
+
+    //                     setTimeout(() => {
+    //                         Swal.close();
+    //                         // location.reload();
+    //                         window.location.href = "evaluation.php";
+    //                     }, 1000);
+    //                 },
+
+    //                 error: function(jqXHR, textStatus, errorThrown) {
+    //                     console.log('AJAX Error:', textStatus, errorThrown);
+    //                 }
+    //             });
+    //         }
+    //     });
+    // }
+            
+</script>

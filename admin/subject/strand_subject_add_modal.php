@@ -28,10 +28,18 @@
                             </select>
                         </div>
 
+                        <div class='form-group mb-2'>
+                            <label for="" class="mb-2">Pre Requisite</label>
+                            <input type="text" id="pre_req_subject_title" name="pre_req_subject_title" 
+                                class="form-control">
+                        </div>
+
                     </div>
 
                     <div class="modal-footer">
                         <input type="hidden" id="program_id" value="<?php echo $program_id?>">
+                        <input type="hidden" id="department_name" value="<?php echo $department_name?>">
+                       
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-primary">Save</button>
                     </div>
@@ -52,6 +60,8 @@
         var course_level = $("#course_level").val();
         var subject_template_id = $("#subject_template_id").val();
         var program_id = $("#program_id").val();
+        var pre_req_subject_title = $("#pre_req_subject_title").val();
+        var department_name = $("#department_name").val();
         
 
         // console.log(subject_template_id)
@@ -68,7 +78,8 @@
                 semester: semester,
                 course_level: course_level,
                 subject_template_id: subject_template_id,
-                program_id
+                program_id,
+                pre_req_subject_title,department_name
             },
             // dataType: 'json',
 

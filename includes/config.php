@@ -25,6 +25,7 @@
         $server_root = str_replace ('config/config.php' ,'', $this_file);
         
         define ('web_root' , $web_root);
+        define('LOCAL_BASE_URL', 'http://localhost/school-system-dcbt');
 
         $currentURL = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https://" : "http://";
         $currentURL .= $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];

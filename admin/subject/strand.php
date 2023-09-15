@@ -1,6 +1,7 @@
 <?php 
 
     include_once('../../includes/admin_header.php');
+    include_once('../../includes/classes/SubjectProgram.php');
 
     $createUrl = directoryPath . "create.php";
     $templateUrl = directoryPath . "template.php";
@@ -10,6 +11,11 @@
     $department_name = "";
     $department_type = "";
     $back_url = "";
+
+
+    $subject_program = new SubjectProgram($con);
+
+
 
     if(isset($_SESSION['department_type'])){
 
@@ -69,15 +75,17 @@
                             }else if($department_name == "Tertiary"){
                                 
                                 $query = $con->prepare("SELECT * FROM program as t1
+
                                     INNER JOIN department as t2 ON t2.department_id = t1.department_id
+
                                     WHERE t2.department_name!=:department_name
+
                                     ");
 
                                 $query->bindValue(":department_name", "Senior High School");
                                 $query->execute();
                             }
 
-                            
 
                             if($query->rowCount() > 0){
                             
@@ -96,15 +104,17 @@
                                     
                                     $strand_url = "subject_program_list_view.php?id=$program_id";
 
+                                    $totalUnits =  $subject_program->GetSubjectProgramTotalUnit($program_id);
+
                                     echo "
                                         <tr class='text-center'>
                                             <td>$track</td>
                                             <td>
-                                                <a href='$strand_url'>
+                                                <a style='color: inherit;' href='$strand_url'>
                                                     $acronym
                                                 </a>
                                             </td>
-                                            <td>10</td>
+                                            <td>$totalUnits</td>
                                         </tr>
                                     ";
                                 }

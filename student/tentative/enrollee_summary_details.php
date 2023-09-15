@@ -61,12 +61,20 @@
         $mother_contact_number = $parent->GetMotherContactNumber();
         $mother_email = $parent->GetMotherEmail();
         $mother_occupation = $parent->GetMotherOccupation();
+        // echo $mother_middle;
 
+        // $check = $pending->PendingProgramLevelSectionAvailable(
+        //     3, 11, $current_term, $current_semester
+        // );
+        // if($check){
+        //     echo "yey";
+        // }else{
+        //     echo "not";
+        // }
 
         ?>
 
             <div class="content">
-                    
                     
                 <main>
                     <div class="floating noBorder">
@@ -119,7 +127,7 @@
                                         <small>Middle name</small>
                                     </div>
                                     <div>
-                                        <input class="read_only form-control" type="text" name="suffix" id="suffixName" value="<?php echo ($suffix != "") ? $suffix : ''; ?>" placeholder="Suffix name">
+                                        <input class="read_only form-control" type="text" name="suffix" id="suffixName" value="<?php echo ($suffix != "") ? $suffix : ''; ?>" placeholder="">
 
                                         <small>Suffix name</small>
                                     </div>
@@ -250,18 +258,18 @@
 
                                     <div class="row">
                                         <span>
-                                        <label for="phone">Phone no.</label>
-                                        <div>
-                                            <input type="tel" id="father_contact_number" name="father_contact_number" class="form-control" required value="<?php echo ($father_contact_number != "") ? $father_contact_number : ''; ?>">
-                                        </div>
+                                            <label for="phone">Phone no.</label>
+                                            <div>
+                                                <input type="tel" id="father_contact_number" name="father_contact_number" class="form-control" required value="<?php echo ($father_contact_number != "") ? $father_contact_number : ''; ?>">
+                                            </div>
                                         </span>
-                                        <span>
-                                        <label for="email">Email</label>
-                                        <div>
-                                            <input type="text" id="father_email" name="father_email" class="read_only form-control" value="<?php echo ($father_email != "") ? $father_email : ''; ?>">
+                                        <!-- <span>
+                                            <label for="email">Email</label>
+                                            <div>
+                                                <input type="text" id="father_email" name="father_email" class="read_only form-control" value="<?php echo ($father_email != "") ? $father_email : ''; ?>">
 
-                                        </div>
-                                        </span>
+                                            </div>
+                                        </span> -->
                                         <span>
                                         <label for="occupation">Occupation</label>
                                         <div>
@@ -296,36 +304,36 @@
                                             
                                             <small>Middle name</small>
                                         </div>
-                                        <div>
+                                        <!-- <div>
                                             <input type="text" name="mother_suffix" class="read_only read_only form-control" value="<?php echo $mother_suffix; ?>">
                                             
                                             <small>Suffix name</small>
-                                        </div>
+                                        </div> -->
                                         </span>
                                     </div>
                                     <div class="row">
                                         <span>
-                                        <label for="phone">Phone no.</label>
-                                        <div>
-                                            <input type="tel" id="mother_contact_number" name="mother_contact_number" class="read_only form-control" required value="<?php echo ($mother_contact_number != "") ? $mother_contact_number : '0915151515123'; ?>">
-                                            
-                                        </div>
-                                        </span>
-                                        <span>
-                                        <label for="email">Email</label>
-                                        <div>
-                                            <input type="text" id="mother_email" name="mother_email" class="read_only form-control" value="<?php echo ($mother_email != "") ? $mother_email : ''; ?>">
+                                            <label for="phone">Phone no.</label>
+                                            <div>
+                                                <input type="tel" id="mother_contact_number" name="mother_contact_number" class="read_only form-control"
+                                                    value="<?php echo $mother_contact_number; ?>">
+                                            </div>
 
-                                        </div>
                                         </span>
+                                        <!-- <span>
+                                            <label for="email">Email</label>
+                                            <div>
+                                                <input type="text" id="mother_email" name="mother_email" class="read_only form-control" value="<?php echo ($mother_email != "") ? $mother_email : ''; ?>">
+                                            </div>
+                                        </span> -->
+
                                         <span>
-                                        <label for="occupation">Occupation</label>
-                                        <div>
-                                            <input type="text" id="mother_occupation" name="mother_occupation" class="read_only form-control" value="<?php echo ($mother_occupation != "") ? $mother_occupation : ''; ?>">
-                                        </div>
+                                            <label for="occupation">Occupation</label>
+                                            <div>
+                                                <input type="text" id="mother_occupation" name="mother_occupation" class="read_only form-control" value="<?php echo ($mother_occupation != "") ? $mother_occupation : ''; ?>">
+                                            </div>
                                         </span>
                                     </div>
-
                                 </div>
 
 
@@ -365,10 +373,10 @@
                                                 <input type="tel" id="parent_contact_number" name="parent_contact_number" class="read_only form-control" required value="<?php echo ($parent_contact_number != "") ? $parent_contact_number : ''; ?>">
                                             </div>
 
-                                            <label for="email">Email</label>
+                                            <!-- <label for="email">Email</label>
                                             <div>
                                                 <input type="text" id="parent_email" name="parent_email" class="read_only form-control" value="<?php echo ($parent_email != "") ? $parent_email : ''; ?>">
-                                            </div>
+                                            </div> -->
 
                                             <label for="occupation">Occupation</label>
                                             <div>
@@ -400,19 +408,13 @@
                                 </button>
                                 <button
                                     class="default success large"
-                                    onclick="<?php echo "MarkAsValidated($pending_enrollees_id)" ?>"
-                                    
-                                    type="button"
-                                >
+                                    onclick="MarkAsValidated(<?php echo $pending_enrollees_id; ?>, <?php echo $school_year_id; ?>, '<?php echo $current_term; ?>', '<?php echo $current_semester; ?>')"
+                                    type="button">
                                     Validate
                                 </button>
                             </div>
-
                         </form>
                                     <!-- onclick="window.location.href ='process.php?new_student=true&step=4'" -->
-
-
-                        
                     </div>
                 </main>
             </div>
@@ -421,7 +423,8 @@
 ?>
 
 <script>
-    function MarkAsValidated(pending_enrollees_id){
+    function MarkAsValidated(pending_enrollees_id,
+        current_school_year_id, current_term, current_period){
 
         // pending_enrollees_id = parseInt(pending_enrollees_id);
 
@@ -439,7 +442,10 @@
                 url: '../../ajax/tentative/markAsValidated.php',
                 type: 'POST',
                 data: {
-                    pending_enrollees_id
+                    pending_enrollees_id,
+                    current_school_year_id,
+                    current_term,
+                    current_period,
                 },
             // dataType: 'json',
                 success: function (response) {

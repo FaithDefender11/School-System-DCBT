@@ -36,12 +36,14 @@
 
     <main>
         <div class="floating" id="shs-sy">
+            
             <header>
 
                 <div class="title">
                     <h3 style="font-weight: bold;">Strand <a href="to_remove.php">Section</a></h3>
                 </div>
             </header>
+
             <main>
                 <table id="shs_program_table"
                     class="a" style="margin: 0">

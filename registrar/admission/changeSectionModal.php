@@ -17,24 +17,46 @@
 
                         
                         <div class='form-group mb-2'>
+
+                            <?php 
+                            
+                                // echo $student_enrollment_program_id;
+                                // echo "<br>";
+                                
+                                // echo $student_enrollment_course_id;
+                                // echo "<br>";
+
+                                // echo $enrollment_course_section_level;
+                                // echo "<br>";
+ 
+                           
+                            ?>
                             <label for="" class="mb-2">Available Section</label>
                             <select class='form-control' id="course_id" name='course_id'>
                                 <?php 
+
                                     $query = $con->prepare("SELECT * FROM course
                                         WHERE program_id=:program_id
-                                        AND course_level = :course_level
                                         AND course_id != :course_id
+                                        AND program_section != :program_section
+                                        AND course_level = :course_level
                                         AND active = 'yes'
                                         AND is_full = 'no'
+                                        AND school_year_term = :school_year_term
 
-                                    ");
-
-                                    $query->bindParam(":course_level", $enrollment_course_section_level);
+                                    "); 
                                     $query->bindParam(":program_id", $student_enrollment_program_id);
                                     $query->bindParam(":course_id", $student_enrollment_course_id);
+                                    $query->bindParam(":program_section", $student_program_section);
+                                    $query->bindParam(":course_level", $enrollment_course_section_level);
+                                    $query->bindParam(":school_year_term", $current_school_year_term);
                                     $query->execute();
 
-                                    echo "<option value='' disabled selected>Select-Section</option>";
+                                    $section = new Section($con, $student_enrollment_course_id);
+
+                                    $sectonName = $section->GetSectionName();
+
+                                    echo "<option value='' disabled selected>$sectonName - Current section</option>";
 
                                     if ($query->rowCount() > 0) {
                                         while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
@@ -45,15 +67,15 @@
                                             echo "<option value='".$row['course_id']."' $selected>".$row['program_section']."</option>";
                                         }
                                     }else{
-                                        echo "not";
-
+                                        
                                     }
                                 ?>
-                            <input type="hidden" id="enrollment_id" name="enrollment_id" value="<?php echo $enrollment_id; ?>">
-                            <input type="hidden" id="student_id" name="student_id" value="<?php echo $student_id; ?>">
-                            <input type="hidden" id="current_school_year_id" name="current_school_year_id" value="<?php echo $current_school_year_id; ?>">
-                            <input type="hidden" id="student_enrollment_course_id" name="student_enrollment_course_id" value="<?php echo $student_enrollment_course_id; ?>">
-                            <input type="hidden" id="current_school_year_period" name="current_school_year_period" value="<?php echo $current_school_year_period; ?>">
+
+                                <input type="hidden" id="enrollment_id" name="enrollment_id" value="<?php echo $enrollment_id; ?>">
+                                <input type="hidden" id="student_id" name="student_id" value="<?php echo $student_id; ?>">
+                                <input type="hidden" id="current_school_year_id" name="current_school_year_id" value="<?php echo $current_school_year_id; ?>">
+                                <input type="hidden" id="student_enrollment_course_id" name="student_enrollment_course_id" value="<?php echo $student_enrollment_course_id; ?>">
+                                <input type="hidden" id="current_school_year_period" name="current_school_year_period" value="<?php echo $current_school_year_period; ?>">
                             
                             </select>
                         </div>
@@ -86,11 +108,14 @@
         var current_school_year_period = $("#current_school_year_period").val();
  
         $.ajax({
-            url: "../../ajax/admission/changeSection.php",
+            // url: "../../ajax/admission/changeSection.php",
+            url: "../../ajax/admission/changeSectioWaitinglist.php",
             type: "POST",
             data: {
-                course_id,current_school_year_id,
-                enrollment_id,student_id,
+                course_id,
+                current_school_year_id,
+                enrollment_id,
+                student_id,
                 student_enrollment_course_id,
                 current_school_year_period
             },
@@ -102,9 +127,10 @@
 
                 var output = response.trim();
 
-                console.log(output)
- 
-                if(output == "update_success"){
+                console.log(output);
+
+                // if(output == "update_success"){
+                if(output == "update_success_form_enrolled"){
 
                     Swal.fire({
                         icon: 'success',
@@ -122,6 +148,7 @@
                     // $('#subjectLoadTablex').load(location.href + " #subjectLoadTablex");
                 }
 
+                
                 // if(output == "already_registered"){
 
                 //     Swal.fire({

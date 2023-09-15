@@ -31,8 +31,6 @@
     // $period_acronym = $current_school_year_period === "First" ? "S1" : $current_school_year_period === "Second" ? "S2" : "";
     $period_acronym = ($current_school_year_period === "First") ? "S1" : (($current_school_year_period === "Second") ? "S2" : "");
 
-
-
     if (isset($_GET['id']) && $_GET['term']) {
 
         // $school_year_id = $_GET['id'];
@@ -52,234 +50,179 @@
         }
         
         $_SESSION['section_term'] = $term;
+
+        $recordsPerPageOptions = $school_year->GetAllSchoolYearTerm();
+
+        $selectedTerm = isset($_GET['term']) 
+            ? $_GET['term'] : $recordsPerPageOptions[0];
+
+        $recordsPerPageDropdown = '<select class="ml-2 form-control" 
+            name="term" onchange="this.form.submit()">';
+
+        foreach ($recordsPerPageOptions as $option) {
+
+            $recordsPerPageDropdown .= "<option value=$option";
+
+            if ($option == $selectedTerm) {
+                $recordsPerPageDropdown .= ' selected';
+            }
+
+            $recordsPerPageDropdown .= ">S.Y " . $option . "</option>";
+        }
+
+        $recordsPerPageDropdown .= '</select>';
+
+        $term = $selectedTerm;
+
+        // echo $term;
+
+
+        ?>
+
+            <div class="content">
+                
+                <nav>
+                    <a href="shs_index.php">
+                        <i class="bi bi-arrow-return-left fa-1x"></i>
+                        <h3>Back</h3>
+                    </a>
+                </nav>
+                <main>
+
+                    <div>
+                        <h6 class="text-right"><?php echo $current_school_year_term;?> <?php echo $period_acronym;?></h6>
+                        <h4 class="text-center"><?php echo $program->GetProgramName();?></h4>
+                    </div>
+
+                    <div style="display: flex;justify-content: center;" class="text-center mb-3">
+                        <form method="GET" class="form-inline" action="<?php echo $_SERVER['REQUEST_URI']; ?>">
+                            <!-- Hidden input field to preserve the 'id' parameter -->
+                            <input type="hidden" name="id" value="<?php echo $_GET['id']; ?>">
+                            <label for="term">Choose Term:</label>
+                            <?php echo $recordsPerPageDropdown; ?>
+                        </form>
+                    </div>
+
+                    <div class="floating" id="shs-sy">
+                        
+
+                        <header>
+                            <div class="title">
+                                <h3 style="font-weight: bold;">Grade 11</h3>
+                            </div>
+
+                            <div class="action">
+                                <a href="add_section.php?id=<?php echo $program_id;?>&level=<?php echo $GRADE_ELEVEN;?>&term=<?php echo $term;?>">
+                                    <button type="button" class="clean large success">+ Add new</button>
+                                </a>
+
+                            </div>
+                        </header>
+                        <main>
+                            <table id="section_table_11"  class="a"
+                                style="margin: 0">
+                                <thead>
+                                    <tr>
+                                        <th>Section ID</th>
+                                        <th>Section Name</th>
+                                        <th>Room</th>
+                                        <th>Students / Capacity</th>
+                                        <th>Active</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+
+                                        if($current_school_year_period == "First"){
+
+                                            echo $section->CreateSHSSectionLevelSemesterContent($program_id,
+                                                $term, "first_period_room_id",
+                                                $GRADE_ELEVEN, $enrollment, $current_school_year_period, $current_school_year_term);
+                                        }
+
+                                        else if($current_school_year_period == "Second"){
+
+                                            echo $section->CreateSHSSectionLevelSemesterContent($program_id,
+                                                $term, "second_period_room_id",
+                                                $GRADE_ELEVEN, $enrollment,$current_school_year_period, $current_school_year_term);
+                                        }
+
+                                        // if($current_school_year_period == "Second"){
+
+                                        //     echo $section->CreateSHSSectionLevelSecondSemesterContent($program_id, $term,
+                                        //         $GRADE_ELEVEN, $enrollment,);
+                                        // }
+                                    
+                                        // echo $section->CreateSectionLevelContent($program_id, $term,
+                                        //     $GRADE_ELEVEN, $enrollment, $current_school_year_id);
+                                    ?>
+                                </tbody>
+                                    
+                            </table>
+
+                        </main>
+
+                    </div>
+
+                    <div class="floating" >
+                        <header>
+                            <div class="title">
+                                <h3 style="font-weight: bold;">Grade 12</h3>
+                            </div>
+
+                            <div class="action">
+                                <a href="add_section.php?id=<?php echo $program_id;?>&level=<?php echo $GRADE_TWELVE;?>&term=<?php echo $term;?>">
+                                    <button type="button" class="clean large success">+ Add new</button>
+                                </a>
+                            </div>
+                        </header>
+
+                        <main>
+                            <table id="section_table_12" 
+                                class="a"
+                                style="margin: 0">
+                                <thead>
+                                    <tr>
+                                        <th>Section ID</th>
+                                        <th>Section Name</th>
+                                        <th>Room</th>
+                                        <th>Students / Capacity</th>
+                                        <th>Active</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+
+                                        if($current_school_year_period == "First"){
+                                            echo $section->CreateSHSSectionLevelSemesterContent($program_id,
+                                                $term, "first_period_room_id",
+                                                $GRADE_TWELVE, $enrollment,$current_school_year_period, $current_school_year_term);
+                                        }
+                                        else if($current_school_year_period == "Second"){
+                                            echo $section->CreateSHSSectionLevelSemesterContent($program_id,
+                                                $term, "second_period_room_id",
+                                                $GRADE_TWELVE, $enrollment,$current_school_year_period, $current_school_year_term);
+                                        }
+
+                                        // echo $section->CreateSectionLevelContent($program_id, $term,
+                                        //     $GRADE_TWELVE, $enrollment, $current_school_year_id);
+                                    ?>
+                                    
+                                </tbody>
+                            </table>
+                        </main>
+                    </div>
+
+                </main>
+            </div>
+
+        <?php
     }
+
 ?>
 
-<div class="content">
-    <main>
-        <div class="floating" id="shs-sy">
-            <div>
-                <a href='shs_index.php'>
-                    <button class="text-left btn btn-primary">
-                        <i class="fas fa-arrow-left"></i>
-                    </button>
-                </a>
-                <h5 class="text-right"><?php echo $current_school_year_term;?> <?php echo $period_acronym;?></h5>
-                <h4 class="text-center"><?php echo $program->GetProgramSectionName();?> Sections</h4>
-
-            </div>
-            <header>
-                <div class="title">
-                    <h3 style="font-weight: bold;">Grade 11</h3>
-                </div>
-
-                <div class="action">
-                    <a href="add_section.php?id=<?php echo $program_id;?>&level=<?php echo $GRADE_ELEVEN;?>">
-                        <button type="button" class="clean large success">+ Add new</button>
-                    </a>
-
-                </div>
-            </header>
-            <main>
-                <table id="section_table_11" 
-                    class="a"
-                    style="margin: 0">
-                    <thead>
-                        <tr>
-                            <th>Section ID</th>
-                            <th>Section Name</th>
-                            <th>Room</th>
-                            <th>Students / Capacity</th>
-                            <th>Active</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-
-                            // $current_school_year_period = "Second";
-
-                            if($current_school_year_period == "First"){
-
-                                echo $section->CreateSHSSectionLevelFirstSemesterContent($program_id,
-                                    $term, "first_period_room_id",
-                                    $GRADE_ELEVEN, $enrollment,);
-                            }
-                            else if($current_school_year_period == "Second"){
-
-                                echo $section->CreateSHSSectionLevelFirstSemesterContent($program_id,
-                                    $term, "second_period_room_id",
-                                    $GRADE_ELEVEN, $enrollment,);
-                            }
-
-                            // if($current_school_year_period == "Second"){
-
-                            //     echo $section->CreateSHSSectionLevelSecondSemesterContent($program_id, $term,
-                            //         $GRADE_ELEVEN, $enrollment,);
-                            // }
-                          
-                            // echo $section->CreateSectionLevelContent($program_id, $term,
-                            //     $GRADE_ELEVEN, $enrollment, $current_school_year_id);
-                        ?>
-                    </tbody>
-                        
-                </table>
-
-            </main>
-
-
-        </div>
-
-        <div class="floating" >
-            <header>
-                <div class="title">
-                    <h3 style="font-weight: bold;">Grade 12</h3>
-                </div>
-
-                <div class="action">
-                    <a href="add_section.php?id=<?php echo $program_id;?>&level=<?php echo $GRADE_TWELVE;?>">
-                        <button type="button" class="clean large success">+ Add new</button>
-                    </a>
-                </div>
-            </header>
-
-            <main>
-                <table id="section_table_12" 
-                    class="a"
-                    style="margin: 0">
-                    <thead>
-                        <tr>
-                            <th>Section ID</th>
-                            <th>Section Name</th>
-                            <th>Room</th>
-                            <th>Students / Capacity</th>
-                            <th>Active</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-
-                            if($current_school_year_period == "First"){
-
-                                echo $section->CreateSHSSectionLevelFirstSemesterContent($program_id,
-                                    $term, "first_period_room_id",
-                                    $GRADE_TWELVE, $enrollment,);
-                            }
-                            else if($current_school_year_period == "Second"){
-
-                                echo $section->CreateSHSSectionLevelFirstSemesterContent($program_id,
-                                    $term, "second_period_room_id",
-                                    $GRADE_TWELVE, $enrollment,);
-                            }
-
-                            // echo $section->CreateSectionLevelContent($program_id, $term,
-                            //     $GRADE_TWELVE, $enrollment, $current_school_year_id);
-                        ?>
-
-                        
-                    </tbody>
-                        
-                </table>
-
-            </main>
-        </div>
-
-
-    </main>
-</div>
-
-
-
-<!--  -->
-<!--  -->
-<div style="display: none;" class="col-md-12 row">
-    <div class="content">
-        <a href="shs_index.php">
-            <button class="btn  btn-primary">
-                <i class="fas fa-arrow-left"></i>
-            </button>
-        </a>
-
-        <header>
-            <div class="title">
-                <h3><?php echo $program->GetProgramSectionName();?> Sections</h3>
-                <span><?php echo $current_school_year_term;?> <?php echo $current_school_year_period;?> Semester </span>
-            </div>
-        </header>
-
-        <div class="floating" id="college-teachers">
-            <header>
-                <div class="title">
-                    <h3>Grade 11</h3>
-                    <span><?php echo $current_school_year_term;?></span>
-                </div>
-                <div>
-                    <a href="add_section.php?id=<?php echo $program_id;?>&level=<?php echo $GRADE_ELEVEN;?>">
-                        <button class="btn btn-success">
-                            <i class="fas fa-plus"></i>
-                        </button>
-                    </a>
-                </div>
-            </header>
-            <main>
-                <table class="ws-table-all cw3-striped cw3-bordered" style="margin: 0">
-                    <thead>
-                        <tr>
-                            <th>Section ID</th>
-                            <th>Section Name</th>
-                            <th>Students / Capacity</th>
-                            <th>Active</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                            echo $section->CreateSectionLevelContent($program_id, $term,
-                                $GRADE_ELEVEN, $enrollment, $current_school_year_id);
-                        ?>
-                    </tbody>
-                </table>
-            </main>
-        </div>
-
-        <hr>
-
-        <div class="floating" id="college-teachers">
-            <header>
-                <div class="title">
-                    <h3>Grade 12</h3>
-                    <span><?php echo $current_school_year_term;?></span>
-                </div>
-                <div>
-                    <a href="add_section.php?id=<?php echo $program_id;?>&level=<?php echo $GRADE_TWELVE;?>">
-                        <button class="btn btn-success">
-                            <i class="fas fa-plus"></i>
-                        </button>
-                    </a>
-                </div>
-            </header>
-            <main>
-                <table class="ws-table-all cw3-striped cw3-bordered" style="margin: 0">
-                    <thead>
-                        <tr>
-                            <th>Section ID</th>
-                            <th>Section Name</th>
-                            <th>Students / Capacity</th>
-                            <th>Active</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                            echo $section->CreateSectionLevelContent($program_id, $term,
-                                $GRADE_TWELVE, $enrollment, $current_school_year_id);
-                        ?>
-                    </tbody>
-                </table>
-            </main>
-        </div>
-    </div>
-
-</div>
 
 
 <script>

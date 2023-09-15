@@ -1,6 +1,8 @@
 <?php 
 
-    include_once('../../includes/student_header.php');
+    // include_once('../../includes/student_header.php');
+    include_once('../../includes/pending_enrollee_header.php');
+    
     include_once('../../includes/classes/Pending.php');
     include_once('../../includes/classes/PendingParent.php');
     include_once('../../includes/classes/Section.php');
@@ -11,16 +13,22 @@
             <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
         </head>
     <?php
+    // echo Helper::RemoveSidebar();
+
 
     if(isset($_SESSION['username'])
         && isset($_SESSION['enrollee_id'])
         && isset($_SESSION['status']) 
+        // && isset($_SESSION['email']) 
+
         && $_SESSION['status'] == 'pending'
-        && $_SESSION['status'] != 'enrolled'
-    ){
+        // && $_SESSION['status'] != 'enrolled'
+        )
+        {
         # Pending firstname;
 
         $username = $_SESSION['username'];
+        $enrollee_id = $_SESSION['enrollee_id'];
         $enrollee_id = $_SESSION['enrollee_id'];
 
         $school_year = new SchoolYear($con);
@@ -48,42 +56,19 @@
         $isFinished = $pending->GetPendingIsFinished();
         $pending_enrollees_id = $pending->GetPendingID();
 
-
         // if($sql->rowCount() > 0){
+
         if($isFinished != null && $isFinished == 1){
 
             $row = $sql->fetch(PDO::FETCH_ASSOC);
 
             $enrollee_id = $_SESSION['enrollee_id'];
-
-            // # STEP 1
-            // $pending_enrollees_id = empty($row['pending_enrollees_id']) ? null : $row['pending_enrollees_id'];
-            // $program_id = empty($row['program_id']) ? 0 : $row['program_id'];
-            // $type = empty($row['type']) ? '' : $row['type'];
-            // $student_status = empty($row['student_status']) ? '' : $row['student_status'];
-
-            // // STEP 2
-            // $firstname = empty($row['firstname']) ? '' : $row['firstname'];
-            // $middle_name = empty($row['middle_name']) ? '' : $row['middle_name'];
-            // $lastname = empty($row['lastname']) ? '' : $row['lastname'];
-            // $civil_status = empty($row['civil_status']) ? '' : $row['civil_status'];
-            // $nationality = empty($row['nationality']) ? '' : $row['nationality'];
-            // $sex = empty($row['sex']) ? '' : $row['sex'];
-            // $birthday = empty($row['birthday']) ? '' : $row['birthday'];
-            // $religion = empty($row['religion']) ? '' : $row['religion'];
-            // $address = empty($row['address']) ? '' : $row['address'];
-            // $contact_number = empty($row['contact_number']) ? '' : $row['contact_number'];
-            // $email = empty($row['email']) ? '' : $row['email'];
-            // $birthplace = empty($row['birthplace']) ? '' : $row['birthplace'];
-
+ 
             if(isset($_GET['fill_up_state']) && $_GET['fill_up_state'] == "finished"){
 
                 $isFinishedForm = $pending->CheckStudentFinishedForm($pending_enrollees_id);
-                // echo Helper::RemoveSidebar();
-
                 // include_once('./enrollee_summary_details.php');
-
-                 ?>
+                ?>
                     <div class="row col-md-12">
                         <div class="row">
 
@@ -91,11 +76,11 @@
                                 if($isFinishedForm == false){
 
                                     echo "
-                                    <div class='col-md-6'>
-                                        <a href='process.php?new_student=true&step=1'>
-                                            <button class='btn btn-outline-primary'>New Student Process</button>
-                                        </a>
-                                    </div>
+                                        <div class='col-md-6'>
+                                            <a href='process.php?new_student=true&step=1'>
+                                                <button class='btn btn-outline-primary'>New Student Process</button>
+                                            </a>
+                                        </div>
                                     ";
 
                                 }
@@ -131,123 +116,11 @@
                     </div>
                 <?php
             }
-
-            if(isset($_GET['view_form']) && $_GET['view_form'] == "true"
-                && isset($_GET['id'])){
-
-
-                    
-
-                    ?>
-                        <div class="row col-md-12">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h3 class="text-center text-primary">My Submission Form</h3>
-                                </div>
-                                <div class="card-body">
-                                        <div class="container mb-4">
-                                                <div class="form-group">
-                                                    <label for="firstname">First Name</label>
-                                                    <!-- <input type="text" id="firstname" name="firstname" class="form-control"> -->
-                                                    <input type="firstname" name="firstname" class="form-control" 
-                                                        value="<?php echo ($firstname != "") ? $firstname : ''; ?>">
-                                                </div>
-
-                                                <div class="form-group">
-                                                    <label for="middlename">Middle Name</label>
-                                                    <input type="middle_name" name="middle_name" class="form-control" 
-                                                        value="<?php echo ($middle_name != "") ? $middle_name : ''; ?>">
-                                                </div>
-
-                                                <div class="form-group">
-                                                    <label for="lastname">Last Name</label>
-                                                    <input type="lastname" name="lastname" class="form-control" 
-                                                        value="<?php echo ($lastname != "") ? $lastname : ''; ?>">
-                                                </div>
-
-                                                <div class="form-group">
-                                                    <label for="status">Status</label>
-                                                    <select id="status" name="civil_status" class="form-control">
-                                                        <option value="Single"<?php echo ($civil_status == "Single") ? " selected" : ""; ?>>Single</option>
-                                                        <option value="Married"<?php echo ($civil_status == "Married") ? " selected" : ""; ?>>Married</option>
-                                                        <option value="Divorced"<?php echo ($civil_status == "Divorced") ? " selected" : ""; ?>>Divorced</option>
-                                                        <option value="Widowed"<?php echo ($civil_status == "Widowed") ? " selected" : ""; ?>>Widowed</option>
-                                                    </select>
-                                                </div>
-
-                                                <div class="form-group">
-                                                    <label for="citizenship">Citizenship</label>
-                                                    <input type="nationality" name="nationality" class="form-control" 
-                                                        value="<?php echo ($nationality != "") ? $nationality : ''; ?>">
-                                                </div>
-
-                                                <div class="form-group">
-                                                    <label for="sex">Gender</label>
-                                                    <div>
-                                                        <!-- <input type="radio" id="male" name="sex" value="Male"> -->
-                                                        <input type="radio" name="sex"
-                                                            value="Male" <?php echo ($sex == "Male") ? ' checked' : ''; ?>>
-                                                        <label for="male">Male</label>
-                                                    </div>
-                                                    <div>
-                                                        <input type="radio" name="sex"
-                                                            value="Female" <?php echo ($sex == "Female") ? ' checked' : ''; ?>>
-                                                        <label for="female">Female</label>
-                                                    </div>
-                                                </div>
-
-                                                <div class="form-group">
-                                                    <label for="birthday">Birth Date</label>
-
-                                                    <!-- <input type="date" id="birthday" name="birthday" class="form-control"> -->
-                                                    <input type="date" id="birthday" name="birthday" class="form-control" value="<?php echo ($birthday != "") ? $birthday : ""; ?>">
-                                                </div>
-
-                                                <div class="form-group">
-                                                    <label for="birthplace">Birth Place</label>
-                                                    <input type="text" id="birthplace" name="birthplace" class="form-control" value="<?php echo ($birthplace != "") ? $birthplace : ""; ?>">
-
-                                                </div>
-
-                                                <div class="form-group">
-                                                    <label for="religion">Religion</label>
-                                                    <input type="text" id="religion" name="religion" class="form-control" value="<?php echo ($religion != "") ? $religion : ""; ?>">
-
-                                                </div>
-
-                                                <div class="form-group">
-                                                    <label for="address">Address</label>
-                                                    
-                                                    <input type="text" id="address" name="address" class="form-control" value="<?php echo ($address != "") ? $address : ""; ?>">
-                                                
-                                                </div>
-
-                                                <div class="form-group">
-                                                    <label for="contact_number">Phone Number</label>
-                                                
-                                                    <input type="tel" id="contact_number" name="contact_number" class="form-control" value="<?php echo ($contact_number != "") ? $contact_number : ""; ?>">
-                                                </div>
-
-                                                <div class="form-group">
-                                                    <label for="email">Email</label>
-                                                    <!-- <input type="email" id="email" name="email" class="form-control"> -->
-                                                    <input type="email" name="email" class="form-control" 
-                                                        value="<?php echo ($email != "") ? $email : ''; ?>">
-                                                </div>
-
-                                                <button name="new_step3_btn" type="submit" 
-                                                    class="btn btn-primary">Go back</button>
-
-                                        </div>
-                                    </div>
-                                </div>
-                        </div>
-                    <?php
-            }
-        }else{
-            header("Location: process.php?new_student=true&step=preferred_course");
-            exit();
         }
+        // else  if($isFinished != null && $isFinished == 0){
+        //     header("Location: process.php?new_student=true&step=preferred_course");
+        //     exit();
+        // }
     }
 
 ?>

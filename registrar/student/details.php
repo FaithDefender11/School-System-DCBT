@@ -2,125 +2,101 @@
 <?php 
 
 
-  if(isset($_POST['student_details_btn'])){
+    $pending = new Pending($con);
+    $pending_enrollee_id = $pending->GetPendingAccountByStudentTable(
+        $email, $firstname, $lastname);
+
+    if(isset($_POST['student_details_btn'])){
 
 
-    $firstname = $_POST['firstname'];
-    $lastname = $_POST['lastname'];
-    $middle_name = $_POST['middle_name'];
-    $suffix = $_POST['suffix'];
+        $firstname = $_POST['firstname'];
+        $lastname = $_POST['lastname'];
+        $middle_name = $_POST['middle_name'];
+        $suffix = $_POST['suffix'];
 
-    $civil_status = $_POST['civil_status'];
-    $nationality = $_POST['nationality'];
-    $sex = $_POST['sex'];
-    $birthday = $_POST['birthday'];
-    $birthplace = $_POST['birthplace'];
-    $religion = $_POST['religion'];
-    $address = $_POST['address'];
+        $civil_status = $_POST['civil_status'];
+        $nationality = $_POST['nationality'];
+        $sex = $_POST['sex'];
+        $birthday = $_POST['birthday'];
+        $birthplace = $_POST['birthplace'];
+        $religion = $_POST['religion'];
+        $address = $_POST['address'];
 
-    $contact_number = $_POST['contact_number'];
-    $email = $_POST['email'];
+        $contact_number = $_POST['contact_number'];
+        $email = $_POST['email'];
 
-    $guardian_firstname = $_POST['guardian_firstname'];
-    $guardian_lastname = $_POST['guardian_lastname'];
-    $guardian_middle_name = $_POST['guardian_middle_name'];
-    $guardian_suffix = $_POST['guardian_suffix'];
+        $guardian_firstname = $_POST['guardian_firstname'];
+        $guardian_lastname = $_POST['guardian_lastname'];
+        $guardian_middle_name = $_POST['guardian_middle_name'];
+        $guardian_suffix = $_POST['guardian_suffix'];
 
-    $guardian_contact = $_POST['guardian_contact'];
-    $guardian_email = $_POST['guardian_email'];
-    $guardian_occupation = $_POST['guardian_occupation'];
-    $guardian_relationship = $_POST['guardian_relationship'];
+        $guardian_contact = $_POST['guardian_contact'];
+        $guardian_email = $_POST['guardian_email'];
+        $guardian_occupation = $_POST['guardian_occupation'];
+        $guardian_relationship = $_POST['guardian_relationship'];
 
 
-    // Father
-    $father_firstname = $_POST['father_firstname'];
-    $father_lastname = $_POST['father_lastname'];
-    $father_middle = $_POST['father_middle'];
-    $father_suffix = $_POST['father_suffix'];
-    $father_contact_number = $_POST['father_contact_number'];
-    $father_email = $_POST['father_email'];
-    $father_occupation = $_POST['father_occupation'];
+        // Father
+        $father_firstname = $_POST['father_firstname'];
+        $father_lastname = $_POST['father_lastname'];
+        $father_middle = $_POST['father_middle'];
+        $father_suffix = $_POST['father_suffix'];
+        $father_contact_number = $_POST['father_contact_number'];
+        $father_email = $_POST['father_email'];
+        $father_occupation = $_POST['father_occupation'];
 
-    $mother_firstname = $_POST['mother_firstname'];
-    $mother_lastname = $_POST['mother_lastname'];
-    $mother_middle = $_POST['mother_middle'];
-    $mother_suffix = $_POST['mother_suffix'];
-    $mother_contact_number = $_POST['mother_contact_number'];
-    $mother_email = $_POST['mother_email'];
-    $mother_occupation = $_POST['mother_occupation'];
- 
-    # Update
-    $editStudentExec = $student->UpdateStudentDetails(
-      $student_id, $firstname, $lastname,
-      $middle_name, $suffix, $civil_status, $nationality, $sex,
-      $birthday, $birthplace, $religion, $address, $contact_number,
-      $email
-    );
+        $mother_firstname = $_POST['mother_firstname'];
+        $mother_lastname = $_POST['mother_lastname'];
+        $mother_middle = $_POST['mother_middle'];
+        $mother_suffix = $_POST['mother_suffix'];
+        $mother_contact_number = $_POST['mother_contact_number'];
+        $mother_email = $_POST['mother_email'];
+        $mother_occupation = $_POST['mother_occupation'];
+    
+        # Update
+        $editStudentExec = $student->UpdateStudentDetails(
+        $student_id, $firstname, $lastname,
+        $middle_name, $suffix, $civil_status, $nationality, $sex,
+        $birthday, $birthplace, $religion, $address, $contact_number,
+        $email
+        );
 
-    $editParentExec = $parent->UpdateStudentParent(
-      $student_id, $parent_id, $guardian_firstname, $guardian_lastname,
-      $guardian_middle_name, $guardian_suffix, $guardian_contact,
-        $guardian_email, $guardian_occupation, $guardian_relationship,
+        $editParentExec = $parent->UpdateStudentParent(
+        $student_id, $parent_id, $guardian_firstname, $guardian_lastname,
+        $guardian_middle_name, $guardian_suffix, $guardian_contact,
+            $guardian_email, $guardian_occupation, $guardian_relationship,
 
-        $father_firstname,
-        $father_lastname,
-        $father_middle,
-        $father_suffix,
-        $father_contact_number,
-        $father_email,
-        $father_occupation,
-        $mother_firstname,
-        $mother_lastname,
-        $mother_middle,
-        $mother_suffix,
-        $mother_contact_number,
-        $mother_email,
-        $mother_occupation
-    );
+            $father_firstname,
+            $father_lastname,
+            $father_middle,
+            $father_suffix,
+            $father_contact_number,
+            $father_email,
+            $father_occupation,
+            $mother_firstname,
+            $mother_lastname,
+            $mother_middle,
+            $mother_suffix,
+            $mother_contact_number,
+            $mother_email,
+            $mother_occupation
+        );
 
-    if($editStudentExec || $editParentExec){
-      Alert::success("Successfully save Changes", "");
-      exit();
+        if($editStudentExec || $editParentExec){
+        Alert::success("Successfully save Changes", "");
+        exit();
 
+        }
     }
 
-    // if($editParentExec){
-    //   Alert::success("Successfully save Changes", "");
-    //   exit();
 
-    // }
-
-    // echo "First Name: " . $firstname . "<br>";
-    // echo "Last Name: " . $lastname . "<br>";
-    // echo "Middle Name: " . $middle_name . "<br>";
-    // echo "Suffix: " . $suffix . "<br>";
-    // echo "Civil Status: " . $civil_status . "<br>";
-    // echo "Nationality: " . $nationality . "<br>";
-    // echo "Sex: " . $sex . "<br>";
-    // echo "Birthday: " . $birthday . "<br>";
-    // echo "Birthplace: " . $birthplace . "<br>";
-    // echo "Religion: " . $religion . "<br>";
-    // echo "Address: " . $address . "<br>";
-    // echo "Contact Number: " . $contact_number . "<br>";
-    // echo "Email: " . $email . "<br>";
-    // echo "Guardian First Name: " . $guardian_firstname . "<br>";
-    // echo "Guardian Last Name: " . $guardian_lastname . "<br>";
-    // echo "Guardian Middle Name: " . $guardian_middle_name . "<br>";
-    // echo "Guardian Suffix: " . $guardian_suffix . "<br>";
-    // echo "Guardian Contact: " . $guardian_contact . "<br>";
-    // echo "Guardian Relationship: " . $guardian_relationship . "<br>";
-    // echo "Guardian Email: " . $guardian_email . "<br>";
-    // echo "Guardian Occupation: " . $guardian_occupation . "<br>";
-
-
-  }
+    $firstname = ucwords($firstname);
 ?>
 
 <div class="content">
-    <nav>
-        <a href="SHS-find-form-evaluation.html"
-        ><i class="bi bi-arrow-return-left fa-1x"></i>
-        <h3>Back</h3>
+     <nav>
+        <a href="index.php"><i class="bi bi-arrow-return-left fa-1x"></i>
+            <h3>Back</h3>
         </a>
     </nav>
     <div class="content-header">
@@ -128,7 +104,7 @@
 
         <header>
             <div class="title">
-                <h2><?php echo $lastname;?>, <?php echo $firstname;?>, <?php echo $middle_name;?>, <?php echo $suffix;?></h2>
+                <h2><?php echo $lastname;?>, <?php echo $firstname;?>, <?php echo $middle_name;?> <?php echo $suffix;?></h2>
             </div>
             <div class="action">
                 <div class="dropdown">
@@ -136,21 +112,63 @@
                     <i class="bi bi-three-dots-vertical"></i>
                 </button>
                     <div class="dropdown-menu">
-                        <a href="#" class="dropdown-item" style="color: red"
-                        ><i class="bi bi-file-earmark-x"></i>Delete form</a
-                        >
+
+                        <?php
+                            if($student_active_status == 0) {
+                                ?>
+                                <a 
+                                    onclick="setAsActive(<?php echo $student_id; ?>)"
+                                    class="dropdown-item" 
+                                    style="cursor: pointer;
+                                    color: green">
+                                        <i class="bi bi-file-earmark-x"></i>
+                                    Set as active
+                                </a>
+                                <?php
+                            }
+
+                            // Has student table but doesnt have a previous form
+                            if($studentHasForm) {
+                                ?>
+                                <a 
+                                    href="../admission/process_enrollment.php?enrollee_find_section=true&id=<?php echo $pending_enrollee_id;?>'" 
+                                    class="dropdown-item" style="color: blue">
+                                        <i class="bi bi-file-earmark-x"></i>
+                                    Create Form
+                                </a>
+                                <?php
+                            }
+                            if($student_admission_status == "withdraw" 
+                                && $student_active_status == 0
+                                ){
+                                    ?>
+                                        <a 
+                                            onclick="window.location.href='../admission/process_enrollment.php?enrollee_find_section=true&id=<?php echo $pending_enrollee_id;?>'"
+                                            class="dropdown-item" style="cursor:pointer;color: yellow">
+                                            <i class="bi bi-file-earmark-x"></i>
+                                            Create Form
+                                        </a>
+                                    <?php
+                                }
+                        ?>
+
+
                     </div>
                 </div>
             </div>
         </header>
 
-        <?php echo Helper::CreateStudentTabs($student_unique_id, $student_level,
-            $type, $section_acronym, $payment_status,
-            $enrollment_date);?>
+        <?php 
+            echo Helper::CreateStudentTabs($student_unique_id, $student_level,
+                $type, $section_acronym, $student_active_status,
+                $enrollment_date);
+            
+        ?>
+
+            
     </div>
 
     <div class="tabs">
-
         <?php
             echo "
                 <button class='tab' 
@@ -198,7 +216,7 @@
              
             <header class="mt-4">
                 <div class="title">
-                <h3>Student Information</h3>
+                <h4>Student Information</h4>
                 </div>
             </header>
 
@@ -206,28 +224,28 @@
 
                 <main>
                     <div class="row">
-                      <span>
-                          <label for="name">Name</label>
-                          <div>
-                          <input type="text" name="lastname" id="lastname" value="<?php echo $firstname;?>" class="form-control" />
-                          <small>Last name</small>
-                          </div>
-                          <div>
-                          <input type="text" name="firstname" id="firstname" value="<?php echo $firstname;?>" class="form-control" />
-                          <small>First name</small>
-                          </div>
-                          <div>
-                          <input type="text" name="middle_name" id="middle_name" value="<?php echo $middle_name;?>" class="form-control" />
-                          <small>Middle name</small>
-                          </div>
-                          <div>
-                          <input type="text" name="suffix" id="suffix" value="<?php echo $suffix;?>" class="form-control" />
-                          <small>Suffix name</small>
-                          </div>
-                      </span>
-                      </div>
+                        <span>
+                            <label for="name">Name</label>
+                            <div>
+                            <input type="text" name="lastname" id="lastname" value="<?php echo $lastname;?>" class="form-control" />
+                            <small>Last name</small>
+                            </div>
+                            <div>
+                            <input type="text" name="firstname" id="firstname" value="<?php echo $firstname;?>" class="form-control" />
+                            <small>First name</small>
+                            </div>
+                            <div>
+                            <input type="text" name="middle_name" id="middle_name" value="<?php echo $middle_name;?>" class="form-control" />
+                            <small>Middle name</small>
+                            </div>
+                            <div>
+                            <input type="text" name="suffix" id="suffix" value="<?php echo $suffix;?>" class="form-control" />
+                            <small>Suffix name</small>
+                            </div>
+                        </span>
+                    </div>
 
-                      <div class="row">
+                    <div class="row">
                       <span>
                           <label for="status">Status</label>
                           <div>
@@ -307,7 +325,7 @@
                 <hr>
                 <header>
                     <div class="title">
-                        <h3>Father's Information</h3>
+                        <h4>Father's Information</h4>
                     </div>
                 </header>
 
@@ -358,7 +376,7 @@
                 <hr>
                 <header>
                     <div class="title">
-                        <h3>Mother's Information</h3>
+                        <h4>Mother's Information</h4>
                     </div>
                 </header>
 
@@ -416,11 +434,11 @@
                       <span>
                         <label for="name">Name</label>
                         <div>
-                          <input type="text" name="guardian_firstname" id="guardian_firstname" value="<?php echo $parent_lastname;?>" class="form-control" />
+                          <input type="text" name="guardian_firstname" id="guardian_firstname" value="<?php echo $parent_firstname;?>" class="form-control" />
                           <small>Last name</small>
                         </div>
                         <div>
-                          <input type="text" name="guardian_lastname" id="guardian_lastname" value="<?php echo $parent_firstname;?>" class="form-control" />
+                          <input type="text" name="guardian_lastname" id="guardian_lastname" value="<?php echo $parent_lastname;?>" class="form-control" />
                           <small>First name</small>
                         </div>
                         <div>
@@ -463,6 +481,7 @@
                         </div>
                       </span>
                     </div>
+                    
                 </main>
 
                 <div class="action modal-footer">
@@ -474,7 +493,115 @@
                 </div>
 
             </form>
-
         </div>
     </main>
 </div>
+
+<script>
+    var dropBtns = document.querySelectorAll(".icon");
+
+    dropBtns.forEach(btn => {
+        btn.addEventListener("click", (e) => {
+            const dropMenu = e.currentTarget.nextElementSibling;
+            if (dropMenu.classList.contains("show")) {
+                dropMenu.classList.toggle("show");
+            } else {
+                document.querySelectorAll(".dropdown-menu").forEach(item => item.classList.remove("show"));
+                dropMenu.classList.add("show");
+            }
+        });
+    });
+    function setAsActive(student_id, enrollment_id, school_year_id){
+
+        var student_id = parseInt(student_id);
+         
+        Swal.fire({
+            icon: 'question',
+            title: `Are you sure to activate student account?`,
+            text: 'Note: This action cannot be undone.',
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // REFX
+                $.ajax({
+                    url: '../../ajax/student/setAsActive.php',
+                    type: 'POST',
+                    data: {
+                        student_id
+                    },
+                    success: function(response) {
+
+                        response = response.trim();
+
+                        console.log(response);
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: `Student is now activated`,
+                        });
+
+                        setTimeout(() => {
+                            Swal.close();
+                            location.reload();
+                            // window.location.href = "evaluation.php";
+                        }, 1000);
+                    },
+
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.log('AJAX Error:', textStatus, errorThrown);
+                    }
+                });
+            }
+        });
+    }
+    // function studentRemoveForm(student_id, enrollment_id, school_year_id){
+
+    //     var student_id = parseInt(student_id);
+    //     var enrollment_id = parseInt(enrollment_id);
+    //     var school_year_id = parseInt(school_year_id);
+
+    //     Swal.fire({
+    //         icon: 'question',
+    //         title: `Are you sure to un-enroll this enrollment form?`,
+    //         text: 'Note: This action cannot be undone.',
+    //         showCancelButton: true,
+    //         confirmButtonText: 'Yes',
+    //         cancelButtonText: 'Cancel'
+    //     }).then((result) => {
+    //         if (result.isConfirmed) {
+    //             // REFX
+    //             $.ajax({
+    //                 url: '../../ajax/admission/unEnrollEnrolledForm.php',
+    //                 type: 'POST',
+    //                 data: {
+    //                     student_id, enrollment_id, school_year_id
+    //                 },
+    //                 success: function(response) {
+
+    //                     response = response.trim();
+
+    //                     console.log(response);
+
+    //                     // Swal.fire({
+    //                     //     icon: 'success',
+    //                     //     title: `Enrollment Form has been removed..`,
+    //                     // });
+
+    //                     // setTimeout(() => {
+    //                     //     Swal.close();
+    //                     //     // location.reload();
+    //                     //     window.location.href = "evaluation.php";
+    //                     // }, 1000);
+    //                 },
+
+    //                 error: function(jqXHR, textStatus, errorThrown) {
+    //                     console.log('AJAX Error:', textStatus, errorThrown);
+    //                 }
+    //             });
+    //         }
+    //     });
+    // }
+
+</script>

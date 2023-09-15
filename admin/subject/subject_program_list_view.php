@@ -41,7 +41,6 @@
         $subject = new Subject($con, null);
         $subject_program = new SubjectProgram($con);
 
-        
 
         $selectSubjectTitle = $subject->SelectTemplateSubjectTitle(
             $department_name, $program_id);
@@ -86,9 +85,11 @@
                             <table id="strand_subject_view_table" class="a" style="margin: 0"> 
                                 <thead>
                                     <tr class="text-center"> 
-                                        <th rowspan="2">Template ID</th>
+                                        <!-- <th rowspan="2">Subject ID</th> -->
                                         <th rowspan="2">Subject</th>
                                         <th rowspan="2">Code</th>
+                                        <th rowspan="2">Unit</th>
+                                        <th rowspan="2">Pre-Requisite</th>
                                         <th rowspan="2">Grade Level</th>
                                         <th rowspan="2">Semester</th>
                                         <th rowspan="2">Action</th>
@@ -115,16 +116,21 @@
                                                 $course_level = $row['course_level'];
                                                 $semester = $row['semester'];
                                                 $subject_code = $row['subject_code'];
+                                                $pre_req_subject_title = $row['pre_req_subject_title'];
                                                 $subject_template_id = $row['subject_template_id'];
+                                                $unit = $row['unit'];
 
 
                                                 $removeSubjectProgramBtn = "removeSubjectProgramBtn($subject_program_id)";
 
+                                                        // <td>$subject_template_id</td>
+
                                                 echo "
                                                     <tr class='text-center'>
-                                                        <td>$subject_template_id</td>
                                                         <td>$subject_title</td>
                                                         <td>$subject_code</td>
+                                                        <td>$unit</td>
+                                                        <td>$pre_req_subject_title</td>
                                                         <td>$course_level</td>
                                                         <td>$semester</td>
                                                         <td>

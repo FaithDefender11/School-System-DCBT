@@ -83,7 +83,7 @@
 
 
         $checkIfChosenSubjectAlreadyCredited = $student_subject->CheckIfChosenSubjectAlreadyCredited(
-            $student_id, $pre_requisite_code); 
+            $student_id, $subject_code); 
             
         $checkIfPreRequisiteIsNotTaken = $student_subject->CheckIfPreRequisiteIsNotTaken(
             $student_id, $pre_requisite_code,
@@ -93,12 +93,11 @@
         $hasError = false;
         $hasErrorArr = [];
 
-        if($checkIfSubjectCodeRetaken == true){
-            echo "taken_failed";
-            array_push($hasErrorArr, "taken_failed");
-            $hasError = true;
-
-        }
+        // if($checkIfSubjectCodeRetaken == true){
+        //     echo "taken_failed";
+        //     array_push($hasErrorArr, "taken_failed");
+        //     $hasError = true;
+        // }
 
         if($checkIfChosenSubjectAlreadyCredited == true){
             echo "already_credited";
@@ -106,23 +105,20 @@
             array_push($hasErrorArr, "already_credited");
         }
 
-        
-        if($checkIfSubjectAlreadyCredited == true){
-            echo "already_credited";
-            $hasError = true;
-            array_push($hasErrorArr, "already_credited");
-        }
-
+        // if($checkIfSubjectAlreadyCredited == true){
+        //     echo "already_credited";
+        //     $hasError = true;
+        //     array_push($hasErrorArr, "already_credited");
+        // }
 
         if($checkIfSubjectAlreadyTaken == true){
-            echo "taken_different_strand";
+            echo "subject_already_taken";
             // echo "already taken by different strand/course";
             $hasError = true;
-            array_push($hasErrorArr, "taken_different_strand");
+            array_push($hasErrorArr, "subject_already_taken");
 
         }
         if($checkIfSubjectAlreadyPassed == true){
-            // echo "taken_different_strand";
             echo "already_passed";
             $hasError = true;
             array_push($hasErrorArr, "already_passed");
@@ -145,17 +141,25 @@
         // Chosen subject pre_requisite is not taken
         // And subject pre_requisite is not credited
 
-        if($checkIfPreRequisiteIsNotTaken != NULL &&
-            $checkIfPreRequisiteIsNotTaken == true
-            && $checkIfChosenSubjectAlreadyCredited == false
+        // if($checkIfPreRequisiteIsNotTaken == true
+        //     && $checkIfChosenSubjectAlreadyCredited == false
 
-            // && $checkIfChosenSubjectAlreadyCredited == false
-            ){
+        //     ){
 
-            echo "subject_prerequisite_not_taken";
-            array_push($hasErrorArr, "subject_prerequisite_not_taken");
-            $hasError = true;
-        }
+        //     echo "subject_prerequisite_not_taken";
+        //     array_push($hasErrorArr, "subject_prerequisite_not_taken");
+        //     $hasError = true;
+        // }
+
+
+        // $subjectPrerequisiteNotTtaken = $student_subject->CheckIfPreRequisiteIsNotTakenEitherPassedOrCredited(
+        //     $student_id, $pre_requisite_code);
+
+        // if($subjectPrerequisiteNotTtaken == true){
+        //     echo "subject_prerequisite_not_taken";
+        //     array_push($hasErrorArr, "subject_prerequisite_not_taken");
+        //     $hasError = true;
+        // }
 
         if(empty($hasErrorArr) == true){
             // echo $hasError;

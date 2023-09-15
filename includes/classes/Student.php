@@ -32,6 +32,19 @@ class Student{
 
             $this->sqlData = $query->fetch(PDO::FETCH_ASSOC);
         }
+
+        if($this->sqlData == null){
+
+            $student_unique_id = $student_id;
+
+            $query = $this->con->prepare("SELECT * FROM student
+                WHERE student_unique_id=:student_unique_id");
+
+            $query->bindValue(":student_unique_id", $student_unique_id);
+            $query->execute();
+
+            $this->sqlData = $query->fetch(PDO::FETCH_ASSOC);
+        }
     }
 
     public function CheckIdExists($student_id) {
@@ -79,7 +92,7 @@ class Student{
         return isset($this->sqlData['email']) ? $this->sqlData["email"] : ""; 
     }
     public function GetFirstName() {
-        return isset($this->sqlData['firstname']) ? $this->sqlData["firstname"] : ""; 
+        return isset($this->sqlData['firstname']) ? ucwords($this->sqlData["firstname"]) : ""; 
     }
 
     public function GetStudentLevel($student_id) {
@@ -101,7 +114,7 @@ class Student{
     }
 
     public function GetLastName() {
-        return isset($this->sqlData['lastname']) ? $this->sqlData["lastname"] : ""; 
+        return isset($this->sqlData['lastname']) ? ucfirst($this->sqlData["lastname"]) : ""; 
     }
 
     public function GetFullName() {
@@ -114,15 +127,12 @@ class Student{
 
     }
 
-  
-
-
     public function GetMiddleName() {
-        return isset($this->sqlData['middle_name']) ? $this->sqlData["middle_name"] : ""; 
+        return isset($this->sqlData['middle_name']) ? ucfirst($this->sqlData["middle_name"]) : ""; 
     }
 
     public function GetSuffix() {
-        return isset($this->sqlData['suffix']) ? $this->sqlData["suffix"] : ""; 
+        return isset($this->sqlData['suffix']) ? ucfirst($this->sqlData["suffix"]) : ""; 
     }
 
 
@@ -131,7 +141,7 @@ class Student{
     }
 
     public function GetAdmissionStatus() {
-        return isset($this->sqlData['admission_status']) ? $this->sqlData["admission_status"] : "N/A"; 
+        return isset($this->sqlData['admission_status']) ? $this->sqlData["admission_status"] : ""; 
     }
 
 
@@ -186,9 +196,9 @@ class Student{
 
     } 
 
+  
     public function GetNationality() {
         return isset($this->sqlData['nationality']) ? $this->sqlData["nationality"] : "N/A"; 
-
     } 
     public function GetReligion() {
         return isset($this->sqlData['religion']) ? $this->sqlData["religion"] : "N/A"; 
@@ -280,6 +290,24 @@ class Student{
         return $query->execute();
     }
 
+    public function UpdateStudentAcademicType($student_id, $academic_type){
+
+        $query = $this->con->prepare("UPDATE student 
+            SET is_tertiary=:change_is_tertiary
+
+            WHERE student_id=:student_id");
+
+        $query->bindParam(":change_is_tertiary", $academic_type);
+        $query->bindParam(":student_id", $student_id);
+        $query->execute();
+
+        if($query->rowCount() > 0){
+            return true;
+        }
+        
+        return false;
+    }
+
     public function UpdateStudentDetails($student_id, $firstname, $lastname,
         $middle_name, $suffix, $civil_status, $nationality, $sex,
         $birthday, $birthplace, $religion, $address, $contact_number,
@@ -332,22 +360,30 @@ class Student{
 
     public function UpdateStudentEnrollmentFormBased($student_id,
         $student_enrollment_course_level, $to_change_course_id, 
-        $student_enrollment_student_status){
+        $student_enrollment_student_status,
+        $created_student_unique_id = null,
+        $created_student_username = null){
 
         // Update the student's password in the database
 
         $query = $this->con->prepare("UPDATE student 
             SET course_id=:change_course_id,
                 student_statusv2=:change_student_statusv2,
-                course_level=:change_course_level
+                course_level=:change_course_level,
+                student_unique_id=:change_student_unique_id,
+                username=:change_username
 
             WHERE student_id=:student_id
+            AND student_unique_id IS NULL
             -- AND course_id=:course_id
             ");
 
         $query->bindParam(":change_course_id", $to_change_course_id);
         $query->bindParam(":change_student_statusv2", $student_enrollment_student_status);
         $query->bindParam(":change_course_level", $student_enrollment_course_level);
+        $query->bindParam(":change_student_unique_id", $created_student_unique_id);
+        $query->bindParam(":change_username", $created_student_username);
+
         $query->bindParam(":student_id", $student_id);
         // $query->bindParam(":course_id", $coursen_level);
         
@@ -381,9 +417,12 @@ class Student{
     public function UpdateStudentAdmissionStatusToOld($student_id){
 
         $old = 0;
+        $oldStatus = "Old";
 
         $query = $this->con->prepare("UPDATE student 
-            SET new_enrollee=:change_new_enrollee
+
+            SET new_enrollee=:change_new_enrollee,
+                admission_status=:change_admission_status
 
             WHERE student_id=:student_id
             AND new_enrollee = 1
@@ -391,6 +430,7 @@ class Student{
             ");
 
         $query->bindParam(":change_new_enrollee", $old);
+        $query->bindParam(":change_admission_status", $oldStatus);
         $query->bindParam(":student_id", $student_id);
 
         return $query->execute();  
@@ -415,9 +455,9 @@ class Student{
         $query->bindValue(":username", $student_username);
 
         if($query->execute()){
-            echo "<br>";
-            echo "Temporary Password: $new_password";
-            echo "<br>";
+            // echo "<br>";
+            // echo "Temporary Password: $new_password";
+            // echo "<br>";
 
             // Sent via email
             // return $new_password;
@@ -468,7 +508,7 @@ class Student{
 
         $query_student = $this->con->prepare("SELECT 
 
-            student_unique_id, username, password 
+            student_unique_id, username, password, student_id
 
             FROM student
             WHERE username=:username
@@ -483,18 +523,17 @@ class Student{
         if($query_student->rowCount() > 0){
             
             $user = $query_student->fetch(PDO::FETCH_ASSOC);    
+
+            $student_id = $user['student_id'];
+
             // echo $user['password'];
             if($user['password'] == $password){
-                // echo "<br>";
-                // echo "equal";
-                // echo "<br>";
             }
             if ($user && password_verify($password, $user['password'])) {
-                // echo "we";
-                // Password is correct, log in the user
-                array_push($arr, $username);
+                array_push($arr, $username); // [0]
                 array_push($arr, true);
                 array_push($arr, "enrolled");
+                array_push($arr, $student_id); // [3]
             }
 
             else{
@@ -502,50 +541,98 @@ class Student{
             }
         }
         
-        if($query_student->rowCount() == 0){
+        // if($query_student->rowCount() == 0){
 
-            $activated = 1;
-            $query = $this->con->prepare("SELECT 
-                pending_enrollees_id,
-                firstname, password 
+        //     $activated = 1;
+        //     $query = $this->con->prepare("SELECT 
+        //         pending_enrollees_id,
+        //         firstname, password 
             
-                FROM pending_enrollees
+        //         FROM pending_enrollees
 
-                WHERE student_status !=:student_status
-                AND firstname=:firstname
-                AND activated=:activated
-                LIMIT 1");
+        //         WHERE student_status !=:student_status
+        //         AND firstname=:firstname
+        //         AND activated=:activated
+        //         LIMIT 1");
         
-            $query->bindValue(":student_status", "APPROVED");
-            $query->bindParam(":firstname", $username);
-            $query->bindParam(":activated", $activated);
-            $query->execute();
+        //     $query->bindValue(":student_status", "APPROVED");
+        //     $query->bindParam(":firstname", $username);
+        //     $query->bindParam(":activated", $activated);
+        //     $query->execute();
 
-            if($query->rowCount() > 0){
-                // echo "wee";
+        //     if($query->rowCount() > 0){
 
-                $userPending = $query->fetch(PDO::FETCH_ASSOC);    
-                echo $userPending['password'];
-                if($userPending && password_verify($password, $userPending['password'])) {
+        //         $userPending = $query->fetch(PDO::FETCH_ASSOC);  
+
+        //         // echo $userPending['password'];
+                
+        //         if($userPending && password_verify($password, $userPending['password'])) {
                     
-                    // Password is correct, log in the user
-                    array_push($arr, $username);
-                    array_push($arr, true);
-                    array_push($arr, "pending");
-                    array_push($arr,  $userPending['pending_enrollees_id']);
-                }else{
-                    echo "not cocrrect pending";
-                }
+        //             // Password is correct, log in the user
+        //             array_push($arr, $username);
+        //             array_push($arr, true);
+        //             array_push($arr, "pending");
+        //             array_push($arr,  $userPending['pending_enrollees_id']);
+        //         }else{
+        //             echo "not cocrrect pending";
+        //         }
+        //     }
+        //     else{
+               
+        //         echo "Credentials Error";
+
+        //     }
+        // }
+
+        return $arr;
+
+    }
+
+    # Student LMS Login Verification
+    public function ELMSVerifyStudentLoginCredentials($username, $password){
+
+        $in_active = 0;
+
+        $arr = [];
+
+        $username = strtolower($username);
+
+        $query_student = $this->con->prepare("SELECT 
+
+            student_unique_id, username, password, student_id
+
+            FROM student
+            WHERE username=:username
+            AND active !=:inactive
+
+            LIMIT 1");
+     
+        $query_student->bindParam(":username", $username);
+        $query_student->bindParam(":inactive", $in_active);
+        $query_student->execute();
+
+        if($query_student->rowCount() > 0){
+            
+            $user = $query_student->fetch(PDO::FETCH_ASSOC);    
+
+            $student_id = $user['student_id'];
+
+            // echo $user['password'];
+            if($user['password'] == $password){
+            }
+            if ($user && password_verify($password, $user['password'])) {
+                array_push($arr, $username); // [0]
+                array_push($arr, true);
+                array_push($arr, "enrolled");
+                array_push($arr, $student_id); // [3]
             }
             else{
-                // Display alert box with two options
-                // Constants::error("Credentials Error", "");
-
-                echo "Credentials Error";
-
+                // echo "not cocrrect";
             }
+        }else{
+            return "Username or Password is Incorrect.";
         }
-
+        
         return $arr;
 
     }
@@ -553,6 +640,7 @@ class Student{
     public function GenerateUniqueStudentNumber(){
 
         // Get the last student_unique_id
+
 
         $result = $this->con->prepare("SELECT student_unique_id FROM student
             ORDER BY student_id DESC 
@@ -593,6 +681,29 @@ class Student{
 
     }
 
+    public function GenerateUniqueStudentHexaDecimalNumber(){
+
+        $byteCount = 2;
+        $min = 100000;
+        $max = 999999;
+        
+        do {
+            // Generate a new random number
+            $randomBytes = random_bytes($byteCount);
+            $randomNumber = hexdec(bin2hex($randomBytes));
+            $randomNumber = $min + ($randomNumber % ($max - $min + 1));
+
+            // Check if the generated number already exists
+            $checkIfHas = $this->con->prepare("SELECT student_unique_id FROM student WHERE student_unique_id=:student_unique_id");
+            $checkIfHas->bindValue(":student_unique_id", $randomNumber);
+            $checkIfHas->execute();
+
+        } while ($checkIfHas->rowCount() > 0);
+
+        // At this point, $randomNumber is guaranteed to be unique
+        return $randomNumber;
+    }
+
     public function GenerateStudentUsername($lastname, $generateStudentUniqueId){
                         
         $username = strtolower($lastname) . '.' . $generateStudentUniqueId . '@dcbt.ph';
@@ -629,62 +740,156 @@ class Student{
 
     public function InsertStudentFromPendingTable($firstname, $lastname, $middle_name, $password, $civil_status, $nationality, $contact_number, $birthday, $age, $sex, $course_id, $student_unique_id, $course_level, $username, $address, $lrn, $religion, $birthplace, $email, $type, $new_enrollee) {
 
-        $stmt_insert = $this->con->prepare("INSERT INTO student 
-            (firstname, lastname, middle_name, password, civil_status, nationality,
-            contact_number, birthday, age, sex, course_id, student_unique_id,
-            course_level, username, address, lrn, religion, birthplace, email,
-            student_statusv2, is_tertiary, new_enrollee) 
-            
-            VALUES (:firstname, :lastname, :middle_name, :password, :civil_status, 
-            :nationality, :contact_number, :birthday, :age, :sex, :course_id,
-            :student_unique_id, :course_level, :username, :address, :lrn, :religion,
-            :birthplace, :email, :student_statusv2, :is_tertiary,:new_enrollee)");
+        // $checkIfUniqueCredentials = $this->CheckStudentCredentialsUnique(
+        //     $firstname, $lastname, $middle_name,
+        //     $birthday, $email, $username, $lrn
+        // );
 
-        $stmt_insert->bindParam(':firstname', $firstname);
-        $stmt_insert->bindParam(':lastname', $lastname);
-        $stmt_insert->bindParam(':middle_name', $middle_name);
-        $stmt_insert->bindParam(':password', $password);
-        $stmt_insert->bindParam(':civil_status', $civil_status);
-        $stmt_insert->bindParam(':nationality', $nationality);
-        $stmt_insert->bindParam(':contact_number', $contact_number);
-        $stmt_insert->bindParam(':birthday', $birthday);
-        $stmt_insert->bindParam(':age', $age);
-        $stmt_insert->bindParam(':sex', $sex);
-        $stmt_insert->bindParam(':course_id', $course_id);
-        $stmt_insert->bindParam(':student_unique_id', $student_unique_id);
-        $stmt_insert->bindParam(':course_level', $course_level);
-        $stmt_insert->bindParam(':username', $username);
-        $stmt_insert->bindParam(':address', $address);
-        $stmt_insert->bindParam(':lrn', $lrn);
-        $stmt_insert->bindParam(':religion', $religion);
-        $stmt_insert->bindParam(':birthplace', $birthplace);
-        $stmt_insert->bindParam(':email', $email);
-        $stmt_insert->bindValue(':student_statusv2', "");
-        $stmt_insert->bindValue(':is_tertiary', $type == "Tertiary" ? 1 : 0);
-        // $stmt_insert->bindParam(':citizenship', $nationality);
-        $stmt_insert->bindValue(':new_enrollee', $new_enrollee);
+        # Pending Email should be unique in student data.
+        # (Registrar provided or Student)
+        # Pending LRN should be unique in student data LRN.
 
-        // Execute the prepared statement
-        return $stmt_insert->execute();
+        if(true){
+        // if($checkIfUniqueCredentials == true){
+
+            $wasNewStudentInserted = $this->InsertNewStudentTable(
+                $firstname,
+                $lastname,
+                $middle_name,
+                $password,
+                $civil_status,
+                $nationality,
+                $contact_number,
+                $birthday, $age, $sex, $course_id, $student_unique_id,
+                $course_level,
+                $username,
+                $address,
+                $lrn,
+                $religion,
+                $birthplace,
+                $email,
+                $type,
+                $new_enrollee);
+
+            if($wasNewStudentInserted == true){
+                 return true;
+            }
+
+        }else{
+
+            Alert::error("Student email or username is already used.", "");
+            return false;
+        }
+
+        
+        return false;
     }
 
-    public function InsertStudentFromEnrollmentForm($firstname, $lastname, $middle_name, $password, $civil_status, $nationality, $contact_number, $birthday, $age, $sex, $course_id, $student_unique_id, $course_level, $username, $address, $lrn, $religion, $birthplace, $email, $type, $new_enrollee) {
+    public function InsertStudentFromEnrollmentForm($firstname, $lastname,
+        $middle_name, $password, $civil_status, $nationality,
+        $contact_number, $birthday, $age, $sex, $course_id,
+        $student_unique_id, $course_level, $username, $address, $lrn,
+        $religion, $birthplace, $email, $is_tertiary, $new_enrollee) {
 
-
+        $lrn = $lrn ?? "";
         $hash_password = password_hash($password, PASSWORD_BCRYPT);
 
         $student_statusv2 = "";
+
+        $firstname = strtolower($firstname);
+        $lastname = strtolower($lastname);
+        $username = strtolower($username);
+        $email = strtolower($email);
+        $nationality = strtolower($nationality);
+
+        # Check student firstname, lastname and email to be unique
+
+        $checkIfUniqueCredentials = $this->CheckStudentCredentialsUnique(
+            $firstname, $lastname, $middle_name,
+            $birthday, $email, $username, $lrn
+        );
+
+        if($checkIfUniqueCredentials == true){
+
+            $stmt_insert = $this->con->prepare("INSERT INTO student 
+                (firstname, lastname, middle_name, password, civil_status, nationality,
+                contact_number, birthday, age, sex, course_id, student_unique_id,
+                course_level, username, address, lrn, religion, birthplace, email,
+                student_statusv2, is_tertiary, new_enrollee, active_search, admission_status) 
+                
+                VALUES (:firstname, :lastname, :middle_name, :password, :civil_status, 
+                :nationality, :contact_number, :birthday, :age, :sex, :course_id,
+                :student_unique_id, :course_level, :username, :address, :lrn, :religion,
+                :birthplace, :email, :student_statusv2, :is_tertiary,:new_enrollee, :active_search, :admission_status)");
+
+            $stmt_insert->bindParam(':firstname', $firstname);
+            $stmt_insert->bindParam(':lastname', $lastname);
+            $stmt_insert->bindParam(':middle_name', $middle_name);
+            $stmt_insert->bindParam(':password', $hash_password);
+            $stmt_insert->bindParam(':civil_status', $civil_status);
+            $stmt_insert->bindParam(':nationality', $nationality);
+            $stmt_insert->bindParam(':contact_number', $contact_number);
+            $stmt_insert->bindParam(':birthday', $birthday);
+            $stmt_insert->bindParam(':age', $age);
+            $stmt_insert->bindParam(':sex', $sex);
+            $stmt_insert->bindParam(':course_id', $course_id);
+            $stmt_insert->bindParam(':student_unique_id', $student_unique_id);
+            $stmt_insert->bindParam(':course_level', $course_level);
+            $stmt_insert->bindParam(':username', $username);
+            $stmt_insert->bindParam(':address', $address);
+            $stmt_insert->bindValue(':lrn', $lrn);
+            $stmt_insert->bindParam(':religion', $religion);
+            $stmt_insert->bindParam(':birthplace', $birthplace);
+            $stmt_insert->bindParam(':email', $email);
+            $stmt_insert->bindValue(':student_statusv2', $student_statusv2);
+            $stmt_insert->bindValue(':is_tertiary', $is_tertiary);
+            $stmt_insert->bindValue(':new_enrollee', $new_enrollee);
+            $stmt_insert->bindValue(':active_search', "Active");
+            $stmt_insert->bindValue(':admission_status', "New");
+
+            // Execute the prepared statement
+            $stmt_insert->execute();
+
+            if($stmt_insert->rowCount() > 0){
+                return true;
+            }
+        }
         
+        return false;
+    }
+
+    public function InsertNewStudentTable(
+        $firstname,
+        $lastname,
+        $middle_name,
+        $hash_password,
+        $civil_status,
+        $nationality,
+        $contact_number,
+        $birthday,
+        $age,
+        $sex,
+        $course_id,
+        $student_unique_id,
+        $course_level,
+        $username,
+        $address,
+        $lrn,
+        $religion,
+        $birthplace,
+        $email,
+        $type,
+        $new_enrollee) {
+
         $stmt_insert = $this->con->prepare("INSERT INTO student 
             (firstname, lastname, middle_name, password, civil_status, nationality,
             contact_number, birthday, age, sex, course_id, student_unique_id,
             course_level, username, address, lrn, religion, birthplace, email,
-            student_statusv2, is_tertiary, new_enrollee) 
-            
+            student_statusv2, is_tertiary, new_enrollee, active_search, admission_status) 
             VALUES (:firstname, :lastname, :middle_name, :password, :civil_status, 
             :nationality, :contact_number, :birthday, :age, :sex, :course_id,
             :student_unique_id, :course_level, :username, :address, :lrn, :religion,
-            :birthplace, :email, :student_statusv2, :is_tertiary,:new_enrollee)");
+            :birthplace, :email, :student_statusv2, :is_tertiary, :new_enrollee, :active_search, :admission_status)");
 
         $stmt_insert->bindParam(':firstname', $firstname);
         $stmt_insert->bindParam(':lastname', $lastname);
@@ -701,16 +906,16 @@ class Student{
         $stmt_insert->bindParam(':course_level', $course_level);
         $stmt_insert->bindParam(':username', $username);
         $stmt_insert->bindParam(':address', $address);
-        $stmt_insert->bindParam(':lrn', $lrn);
+        $stmt_insert->bindValue(':lrn', $lrn);
         $stmt_insert->bindParam(':religion', $religion);
         $stmt_insert->bindParam(':birthplace', $birthplace);
         $stmt_insert->bindParam(':email', $email);
-        $stmt_insert->bindValue(':student_statusv2', $student_statusv2);
+        $stmt_insert->bindValue(':student_statusv2', "");
         $stmt_insert->bindValue(':is_tertiary', $type == "Tertiary" ? 1 : 0);
-        // $stmt_insert->bindParam(':citizenship', $nationality);
         $stmt_insert->bindValue(':new_enrollee', $new_enrollee);
+        $stmt_insert->bindValue(':active_search', "Active");
+        $stmt_insert->bindValue(':admission_status', "New");
 
-        // Execute the prepared statement
         $stmt_insert->execute();
 
         if($stmt_insert->rowCount() > 0){
@@ -718,6 +923,370 @@ class Student{
         }
         return false;
     }
+  
+    public function CheckStudentCredentialsUnique($firstname, $lastname, $middle_name,
+         $birthday, $email, $username, $lrn){
+
+        $boolReturn = false;
+
+        $firstLastMiddleBirthdayEmailUnique = $this->CheckStudentFirstLastMiddleBirthdayEmailUnique(
+            $firstname, $lastname, $middle_name,$birthday, $email
+        );
+
+        // $checkUniqueStudentUsername = $this->CheckUniqueStudentUsername($username);
+        $checkUniqueStudentEmail = $this->CheckUniqueStudentEmail($email);
+        $checkUniqueStudentLRN = $this->CheckUniqueStudentLRN($lrn);
+
+        // if($firstLastMiddleBirthdayEmailUnique == false) return false;
+        // if($checkUniqueStudentUsername == false) return false;
+        // if($checkUniqueStudentEmail == false) return false;
+        // if($checkUniqueStudentLRN == false) return false;
+        
+
+        if(
+            // $checkUniqueStudentUsername === true 
+            // && $firstLastMiddleBirthdayEmailUnique === true
+            $checkUniqueStudentEmail === true
+            && $checkUniqueStudentLRN === true
+            ){
+            return true;
+        }
+
+        return $boolReturn;
+    }
+
+    public function CheckStudentFirstLastMiddleBirthdayEmailUnique($firstname, $lastname, $middle_name,
+         $birthday, $email){
+
+        $query = $this->con->prepare("SELECT * FROM student
+            WHERE firstname = :firstname
+            AND lastname = :lastname
+            AND middle_name = :middle_name
+            AND email = :email
+            AND birthday = :birthday");
+
+        $query->bindValue(":firstname", $firstname);
+        $query->bindValue(":lastname", $lastname);
+        $query->bindValue(":middle_name", $middle_name);
+        $query->bindValue(":email", $email);
+        $query->bindValue(":birthday", $birthday);
+        $query->execute();
+        
+        if($query->rowCount() > 0){
+            return false;
+        }
+        return true;
+    }
+
+    public function CheckUniqueStudentUsername($username){
+
+        $query = $this->con->prepare("SELECT * FROM student
+            WHERE username = :username");
+
+        $query->bindValue(":username", $username);
+     
+        $query->execute();
+        
+        if($query->rowCount() > 0){
+            // echo "false CheckUniqueStudentUsername";
+
+            return false;
+        }
+        return true;
+    }
+
+    public function CheckUniqueStudentEmail($email){
+
+        $query = $this->con->prepare("SELECT * FROM student
+            WHERE email = :email
+            
+            ");
+
+        $query->bindParam(":email", $email);
+        $query->execute();
+        
+        if($query->rowCount() > 0){
+            // echo "false CheckUniqueStudentEmail";
+
+            return false;
+
+        }
+
+        return true;
+    }
+
+    public function CheckUniqueStudentLRN($lrn){
+
+        $query = $this->con->prepare("SELECT * FROM student
+            WHERE lrn = :lrn");
+
+        $query->bindParam(":lrn", $lrn);
+        $query->execute();
+        
+        if($query->rowCount() > 0){
+            // echo "false CheckUniqueStudentLRN";
+            return false;
+        }
+
+        return true;
+    }
+
+    public function ValidateIfOngoingStudent($student_unique_id){
+
+        $new_enrollee = 0;
+
+        $query = $this->con->prepare("SELECT * FROM student
+            WHERE student_unique_id = :student_unique_id
+            AND new_enrollee = :new_enrollee
+            AND course_id != 0
+            AND active = 1
+            ");
+
+        $query->bindParam(":student_unique_id", $student_unique_id);
+        $query->bindParam(":new_enrollee", $new_enrollee);
+        $query->execute();
+        
+        if($query->rowCount() > 0){
+            return true;
+        }
+
+        return false;
+    }
+
+    public function GetAllOngoingActive(){
+
+        $new_enrollee = 0;
+
+        $query = $this->con->prepare("SELECT 
+            t1.*,
+            t2.program_section
+            FROM student as t1
+            LEFT JOIN course as t2 ON t2.course_id = t1.course_id
+
+            WHERE new_enrollee = :new_enrollee
+            AND t1.course_id != 0
+            AND t1.active = 1
+
+        ");
+
+        // $query->bindParam(":student_id", $student_id);
+        $query->bindParam(":new_enrollee", $new_enrollee);
+        $query->execute();
+        
+        if($query->rowCount() > 0){
+            return $query->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        return [];
+    }
+
+
+    public function CheckUnEnrolledStudentDoesntHavePrevForm($student_id,
+        $current_school_year_id){
+
+
+        $query = $this->con->prepare("SELECT *
+
+            FROM enrollment as t1
+            WHERE t1.student_id=:student_id
+            AND t1.school_year_id=:school_year_id
+        ");
+
+        $query->bindParam(":student_id", $student_id);
+        $query->bindParam(":school_year_id", $current_school_year_id);
+        $query->execute();
+        
+        if($query->rowCount() == 0){
+            // echo "true";
+            return true;
+        }
+
+        return false;
+    }
+
+    public function RemovingNewStudentFromEnrollmentForm($student_id){
+
+        $new_enrollee = 1;
+
+        $delete = $this->con->prepare("DELETE FROM student 
+            WHERE student_id = :student_id
+            AND new_enrollee = :new_enrollee
+            AND course_id = :course_id
+            ");
+
+        $delete->bindParam(":student_id", $student_id);
+        $delete->bindParam(":new_enrollee", $new_enrollee);
+        $delete->bindValue(":course_id", 0);
+        $delete->execute();
+
+        if($delete->rowCount() > 0){
+           return true;
+        }
+        return false;
+    }
+
+    public function RemovingNewEnrolledStudent($student_id){
+
+        $new_enrollee = 1;
+
+        $delete = $this->con->prepare("DELETE FROM student 
+            WHERE student_id = :student_id
+            AND new_enrollee = :new_enrollee
+            ");
+
+        $delete->bindParam(":student_id", $student_id);
+        $delete->bindParam(":new_enrollee", $new_enrollee);
+        $delete->execute();
+
+        if($delete->rowCount() > 0){
+           return true;
+        }
+        return false;
+    }
+
+    public function WithdrawingNewEnrolledStudent($student_id){
+
+        $update = $this->con->prepare("UPDATE student 
+            SET active=:active,
+                active_search=:active_search,
+                admission_status=:admission_status,
+                student_statusv2=:student_statusv2,
+                course_id=:course_id,
+                course_level=:course_level
+
+            WHERE student_id = :student_id
+            ");
+
+        $update->bindValue(":active", 0);
+        $update->bindValue(":active_search", "Inactive");
+        $update->bindValue(":admission_status", "withdraw");
+        $update->bindParam(":student_id", $student_id);
+        $update->bindValue(":student_statusv2", "");
+        $update->bindValue(":course_id", 0);
+        $update->bindValue(":course_level", 0);
+        $update->execute();
+
+        if($update->rowCount() > 0){
+           return true;
+        }
+        return false;
+    }
+
+    
+
+    public function UpdateStudentAsActive($student_id,
+        $student_admission_status = null){
+
+        if($student_admission_status == null){
+
+            $update = $this->con->prepare("UPDATE student 
+                SET active=:active,
+                    active_search=:active_search
+
+                WHERE student_id = :student_id
+                ");
+
+            $update->bindValue(":active", 1);
+            $update->bindValue(":active_search", "Active");
+            $update->bindValue(":student_id", $student_id);
+            $update->execute();
+
+            if($update->rowCount() > 0){
+                return true;
+            }
+        }
+
+        if($student_admission_status != null){
+
+            $update = $this->con->prepare("UPDATE student 
+                SET active=:active,
+                    active_search=:active_search,
+                    admission_status=:admission_status
+
+                WHERE student_id = :student_id
+                ");
+
+            $update->bindValue(":active", 1);
+            $update->bindValue(":active_search", "Active");
+            $update->bindValue(":admission_status", $student_admission_status == 1 ? "New" : "Old");
+            $update->bindValue(":student_id", $student_id);
+
+            $update->execute();
+
+            if($update->rowCount() > 0){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function UpdateStudentAsInActive($student_id){
+
+
+        $update = $this->con->prepare("UPDATE student 
+            SET active=:active,
+                active_search=:active_search
+
+            WHERE student_id = :student_id
+            ");
+
+        $update->bindValue(":active", 0);
+        $update->bindValue(":active_search", "InActive");
+        $update->bindValue(":student_id", $student_id);
+
+        $update->execute();
+
+        if($update->rowCount() > 0){
+           return true;
+        }
+        return false;
+    }
+    public function UpdateStudentCourseFromWaitlistForm($student_id, 
+        $selected_course_id, $sectionLevel){
+
+        $update_student_course = $this->con->prepare("UPDATE student 
+
+                SET course_id=:change_course_id,
+                    course_level=:change_course_level
+
+                WHERE student_id=:student_id
+                AND active = 1
+                ");
+
+        $update_student_course->bindParam(":change_course_id", $selected_course_id);
+        $update_student_course->bindParam(":change_course_level", $sectionLevel);
+        $update_student_course->bindParam(":student_id", $student_id);
+        $update_student_course->execute();
+
+        if($update_student_course->rowCount() > 0){
+           return true;
+        }
+        
+        return false;
+    }
+
+    // public function UpdateWithDrawNewStudent($student_id){
+
+    //     // Update the student's password in the database
+
+    //     $query = $this->con->prepare("UPDATE student 
+    //         SET course_id=:change_course_id,
+    //             student_statusv2=:change_student_statusv2,
+    //             course_level=:change_course_level
+
+    //         WHERE student_id=:student_id
+    //         AND course_id=:course_id
+    //         ");
+
+    //     $query->bindParam(":student_id", $student_id);
+    //     $query->bindParam(":change_student_statusv2", $student_enrollment_student_status);
+    //     $query->bindParam(":change_course_level", $student_enrollment_student_status);
+    //     $query->bindParam(":course_id", $coursen_level);
+    //     $query->bindParam(":change_course_id", $to_change_course_id);
+        
+    //     return $query->execute();
+    // }
 
 }
 ?>

@@ -27,7 +27,7 @@
             exit();
         }
 
-        echo " My Form ID: $enrollment_form_id";
+        echo "You have successfully apply for this semester. My Form ID: $enrollment_form_id";
     }
 
 ?>

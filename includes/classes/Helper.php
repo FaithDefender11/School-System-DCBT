@@ -1,74 +1,180 @@
 <?php
 class Helper {
 
-   public static $errorArray = array();
+    public static $errorArray = array();
+
+    public static function ValidateDepartment($department) {
+
+        $trimmed = trim($department);
 
 
+        $trimmed = strtoupper($trimmed);
+        
+        $validDepartment = array("SENIOR HIGH SCHOOL", "TERTIARY");
 
-    // public static function ValidateFirstname($text) {
+        // Valid
+        if (!empty($trimmed) 
+            && in_array($trimmed, $validDepartment)
+            ) {
 
-    //     $trimmed = trim($text);
+            $trimmed = ucwords(strtolower($trimmed));
 
-    //     if (empty($text)) {
-    //         array_push(self::$errorArray, Constants::$firstNameRequired);
-    //         return;
-    //     } 
-    //     else if (!preg_match("/^[a-zA-Z ]+$/", $text)) {
-    //         array_push(self::$errorArray, Constants::$invalidFirstNameCharacters);
-    //         return;
-    //     }
-    //     else if (( strlen($trimmed) > 0 && strlen($trimmed) <= 2)) {
-    //         array_push(self::$errorArray, Constants::$firstNameIsTooShort);
-    //         return;
-    //     } 
-    //     else if (strlen($trimmed) > 25) {
-    //         array_push(self::$errorArray, Constants::$firstNameIsTooLong);
-    //         return;
-    //     } 
+            // echo $trimmed;
 
-    //     if(empty(self::$errorArray)) {
-    //         $output = self::sanitizeFormString($text);
-    //         return $output;
-    //     }
+            return $trimmed;
+        }
+        // Rest are Invalid
+        else if(empty($trimmed)){
 
-    // }
+            array_push(self::$errorArray, Constants::$requiredDepartment);
+            return;
+        }
+        else if ((!empty($trimmed) 
+            && !in_array($trimmed, $validDepartment))
+            || !preg_match("/^[a-zA-Z ]+$/", $trimmed)) 
+            {
 
-    // public static function ValidateLastname($text) {
+            // /: Delimiter to mark the start and end of the regular expression pattern.
+            // ^: Asserts the start of the string.
+            // [a-zA-Z ]+: Matches one or more occurrences of alphabetic characters (both lowercase and uppercase) and spaces.
+            // $: Asserts the end of the string.
 
-    //     $trimmed = trim($text);
+            //  echo $trimmed;
 
-    //     if (empty($text)) {
-    //         array_push(self::$errorArray, Constants::$lastNameRequired);
-    //         return;
-    //     } 
-    //     else if (!preg_match("/^[a-zA-Z ]+$/", $text)) {
-    //         array_push(self::$errorArray, Constants::$invalidLastNameCharacters);
-    //         return;
-    //     }
-    //     else if (( strlen($trimmed) > 0 && strlen($trimmed) <= 2)) {
-    //         array_push(self::$errorArray, Constants::$lastNameIsTooShort);
-    //         return;
-    //     } 
-    //     else if (strlen($trimmed) > 25) {
-    //         array_push(self::$errorArray, Constants::$lastNameIsTooLong);
-    //         return;
-    //     } 
+            array_push(self::$errorArray, Constants::$invalidDepartment);
+            return $trimmed;
+        }
 
-    //     if(empty(self::$errorArray)) {
-    //         $output = self::sanitizeFormString($text);
-    //         return $output;
-    //     }
-
-    // }
-
-    public static function ValidateLastname($text) {
-
-        return self::FormNameValidation($text,
-            Constants::$lastNameRequired,
-            Constants::$invalidLastNameCharacters,
-            Constants::$lastNameIsTooShort,
-            Constants::$lastNameIsTooLong);
+        // echo $trimmed;
     }
+
+    public static function ValidateAdmissionType($text) {
+
+        $trimmed = trim($text);
+
+        $trimmed = strtoupper($trimmed);
+        
+        $validAdmissionType = array("NEW", "TRANSFEREE");
+
+        // Valid
+        if (!empty($trimmed) 
+            && in_array($trimmed, $validAdmissionType)
+            ) {
+
+            $trimmed = ucwords(strtolower($trimmed));
+
+            return $trimmed;
+        }
+        // Rest are Invalid
+        else if(empty($trimmed)){
+
+            array_push(self::$errorArray, Constants::$requiredAdmissionType);
+            return;
+        }
+        else if ((!empty($trimmed) 
+            && !in_array($trimmed, $validAdmissionType))
+            || !preg_match("/^[a-zA-Z ]+$/", $trimmed)) 
+            {
+
+            // /: Delimiter to mark the start and end of the regular expression pattern.
+            // ^: Asserts the start of the string.
+            // [a-zA-Z ]+: Matches one or more occurrences of alphabetic characters (both lowercase and uppercase) and spaces.
+            // $: Asserts the end of the string.
+
+            //  echo $trimmed;
+
+            array_push(self::$errorArray, Constants::$invalidAdmissionType);
+            return $trimmed;
+        }
+
+        // echo $trimmed;
+    }
+
+    public static function ValidateCourseLevel($level) {
+        
+        $validCourseLevel = array(
+            // Tertiary
+            1, 2, 3, 4,
+            // SHS
+            11, 12
+        );
+
+        // $level = "5";
+        $level = intval($level);
+
+        if(empty($level)){
+            echo "empty $level";
+            array_push(self::$errorArray, Constants::$requiredGradeLevel);
+            return;
+        }
+        if (!is_int($level)) {
+            // echo $level;
+            echo "is not int";
+            array_push(self::$errorArray, Constants::$invalidGradeLevel);
+            return;
+        }
+        // Valid
+
+        if (!empty($level) 
+            && is_int($level)
+            && in_array($level, $validCourseLevel)
+            ) {
+            // echo "in array";
+
+            // $level = ucwords(strtolower($level));
+            return $level;
+        }
+        
+        if ((!empty($level) 
+            && !in_array($level, $validCourseLevel))) 
+            {
+                // echo "not in array";
+            array_push(self::$errorArray, Constants::$invalidGradeLevel);
+            return $level;
+        }
+
+        // echo $trimmed;
+    }
+
+    public static function ValidateLastName($text) {
+
+        $trimmed = trim($text);
+
+        $pattern = '/^[A-Za-z]+$/';
+
+        // echo $text;
+
+        if (empty($text)) {
+            array_push(self::$errorArray, Constants::$lastNameRequired);
+            return;
+        } 
+        else if (!preg_match($pattern, $trimmed)) {
+            array_push(self::$errorArray, Constants::$invalidLastNameCharacters);
+            return;
+        }
+        // John doe -> John Doe
+        // Exclamation Marks and others are not valid here. (!@#$%^&*()<>)
+        else if (!preg_match("/^[a-zA-Z ]+$/", $trimmed)) {
+            array_push(self::$errorArray, Constants::$invalidLastNameCharacters);
+            return;
+        }
+        else if ((strlen($trimmed) > 0 && strlen($trimmed) <= 1)) {
+            array_push(self::$errorArray, Constants::$lastNameIsTooShort);
+            return;
+        } 
+        else if (strlen($trimmed) > 25) {
+            array_push(self::$errorArray, Constants::$lastNameIsTooLong);
+            return;
+        } 
+
+        if(empty(self::$errorArray)) {
+
+            $output = self::sanitizeFormString($text);
+            return $output;
+        }
+
+    }
+ 
 
     public static function ValidateMotherLastname($text) {
 
@@ -76,7 +182,7 @@ class Helper {
             Constants::$motherLastNameRequired,
             Constants::$invalidMotherLastNameCharacters,
             Constants::$motherLastNameIsTooShort,
-            Constants::$motherLastNameIsTooLong);
+            Constants::$motherLastNameIsTooLong, true);
     }
 
     public static function ValidateMotherFirstname($text) {
@@ -85,7 +191,7 @@ class Helper {
             Constants::$motherFirstNameRequired,
             Constants::$invalidMotherFirstNameCharacters,
             Constants::$motherFirstNameIsTooShort,
-            Constants::$motherFirstNameIsTooLong);
+            Constants::$motherFirstNameIsTooLong, true);
     }
 
     public static function ValidateMotherMiddlename($text) {
@@ -93,7 +199,7 @@ class Helper {
             Constants::$motherMiddleNameRequired,
             Constants::$invalidMotherMiddleNameCharacters,
             Constants::$motherMiddleNameIsTooShort,
-            Constants::$motherMiddleNameIsTooLong);
+            Constants::$motherMiddleNameIsTooLong, true);
     }
 
     
@@ -104,7 +210,7 @@ class Helper {
             Constants::$firstNameRequired,
             Constants::$invalidFirstNameCharacters,
             Constants::$firstNameIsTooShort,
-            Constants::$firstNameIsTooLong);
+            Constants::$firstNameIsTooLong, true);
         
     }
 
@@ -113,7 +219,7 @@ class Helper {
             Constants::$middleNameRequired,
             Constants::$invalidMiddleNameCharacters,
             Constants::$middleNameIsTooShort,
-            Constants::$middleNameIsTooLong);
+            Constants::$middleNameIsTooLong, true);
         
     }
 
@@ -122,7 +228,7 @@ class Helper {
             Constants::$birthPlaceRequired,
             Constants::$invalidBirthPlaceCharacters,
             Constants::$birthPlaceIsTooShort,
-            Constants::$birthPlaceIsTooLong);
+            Constants::$birthPlaceIsTooLong, true);
     }
 
     public static function ValidateAddressv2($text) {
@@ -130,10 +236,10 @@ class Helper {
             Constants::$addressRequired,
             Constants::$invalidAddressCharacters,
             Constants::$addressIsTooShort,
-            Constants::$addressIsTooLong);
+            Constants::$addressIsTooLong, true);
     }
 
-    public static function ValidateOccupation($text) {
+    public static function ValidateFatherOccupation($text) {
 
         $trimmed = trim($text);
 
@@ -149,7 +255,7 @@ class Helper {
 
         if(empty(self::$errorArray)) {
 
-            echo $trimmed;
+            // echo $trimmed;
             $output = self::sanitizeFormString($trimmed);
             return $output;
         }
@@ -170,11 +276,11 @@ class Helper {
             array_push(self::$errorArray, Constants::$invalidAddressCharacters);
             return;
         }
-        else if (( strlen($trimmed) > 0 && strlen($trimmed) <= 2)) {
+        else if ((strlen($trimmed) > 0 && strlen($trimmed) <= 2)) {
             array_push(self::$errorArray, Constants::$addressIsTooShort);
             return;
         } 
-        else if (strlen($trimmed) > 25) {
+        else if (strlen($trimmed) > 50) {
             array_push(self::$errorArray, Constants::$addressIsTooLong);
             return;
         } 
@@ -226,10 +332,30 @@ class Helper {
         }
     }
 
-    public static function ValidateEmail($userEmail, $optional = false) {
+
+    public static function ValidateEmailNewEnrollee(
+        $pending_enrollees_id, 
+        $userEmail, 
+        $optional = false, $con = null) {
 
         // If optional the email verfication should working
         // Only the required email will be disabled.
+
+        // echo $userEmail;
+        $pending = new Pending($con);
+            
+        $pending_unique_email = $pending->CheckUniqueEnrolleeEmail(
+            $userEmail, $pending_enrollees_id);
+        
+        // var_dump($pending_unique_email);
+
+        // echo "qwe";
+        // echo "<br>";
+
+        if($pending_unique_email == false){
+            array_push(self::$errorArray, Constants::$EmailUnique);
+            return;
+        }
 
         if($optional === false){
 
@@ -250,18 +376,13 @@ class Helper {
                 } else {
                     array_push(self::$errorArray, Constants::$invalidEmailCharacters);
                     return;
-                    // Uncomment the lines below if you want to handle invalid domain separately
-                    // array_push(self::$errorArray, Constants::$invalidEmailDomain);
-                    // return;
                 }
             } else {
-
                 // Email is not in a valid format
                 array_push(self::$errorArray, Constants::$invalidEmailCharacters);
                 return;
-                // array_push(self::$errorArray, Constants::$invalidEmailFormat);
-                // return;
             }
+
 
         }
             
@@ -291,8 +412,202 @@ class Helper {
             }
 
         }
-        
 
+    }
+ 
+    public static function ValidateEmail($userEmail, 
+        $optional = false, $con = null) {
+
+        // If optional the email verfication should working
+        // Only the required email will be disabled.
+
+        // echo $userEmail;
+        $student = new Student($con);
+            
+        $student_unique_email = $student->CheckUniqueStudentEmail($userEmail);
+        
+        // var_dump($student_unique_email);
+
+        // echo "qwe";
+        // echo "<br>";
+
+        if($student_unique_email == false){
+            array_push(self::$errorArray, Constants::$EmailUnique);
+            return;
+        }
+
+        if($optional === false){
+
+            if (empty($userEmail)) {
+                array_push(self::$errorArray, Constants::$EmailRequired);
+                return;
+            }  
+
+            if (!empty($userEmail) 
+                    && filter_var($userEmail, FILTER_VALIDATE_EMAIL)) {
+
+                // Email is in a valid format
+                $domain = substr(strrchr($userEmail, "@"), 1);
+                if (strtolower($domain) === 'gmail.com') {
+                    // Email has the correct domain (Gmail)
+                    $userEmail = strtolower($userEmail); // Convert the email to lowercase
+                    return trim($userEmail);
+                } else {
+                    array_push(self::$errorArray, Constants::$invalidEmailCharacters);
+                    return;
+                }
+            } else {
+                // Email is not in a valid format
+                array_push(self::$errorArray, Constants::$invalidEmailCharacters);
+                return;
+            }
+
+
+        }
+            
+        if($optional === true && !empty($userEmail)){
+
+            if (filter_var($userEmail, FILTER_VALIDATE_EMAIL)) {
+                // Email is in a valid format
+                $domain = substr(strrchr($userEmail, "@"), 1);
+                if (strtolower($domain) === 'gmail.com') {
+                    // Email has the correct domain (Gmail)
+                    $userEmail = strtolower($userEmail); // Convert the email to lowercase
+                    return trim($userEmail);
+                } else {
+                    array_push(self::$errorArray, Constants::$invalidEmailCharacters);
+                    return;
+                    // Uncomment the lines below if you want to handle invalid domain separately
+                    // array_push(self::$errorArray, Constants::$invalidEmailDomain);
+                    // return;
+                }
+            } else {
+
+                // Email is not in a valid format
+                array_push(self::$errorArray, Constants::$invalidEmailCharacters);
+                return;
+                // array_push(self::$errorArray, Constants::$invalidEmailFormat);
+                // return;
+            }
+
+        }
+
+    }
+
+    public static function ValidateEnrolleeEmail($userEmail, 
+        $optional = false, $con = null) {
+
+        // If optional the email verfication should working
+        // Only the required email will be disabled.
+
+        // echo $userEmail;
+        $enrollee = new Pending($con);
+            
+        $enrollee_unique_email = $enrollee->CheckUniqueEnrolleesEmail($userEmail);
+        
+        // var_dump($student_unique_email);
+
+        // echo "qwe";
+        // echo "<br>";
+
+        if($enrollee_unique_email == false){
+            array_push(self::$errorArray, Constants::$EmailUnique);
+            return;
+        }
+
+        if($optional === false){
+
+            if (empty($userEmail)) {
+                array_push(self::$errorArray, Constants::$EmailRequired);
+                return;
+            }  
+
+            if (!empty($userEmail) 
+                    && filter_var($userEmail, FILTER_VALIDATE_EMAIL)) {
+
+                // Email is in a valid format
+                $domain = substr(strrchr($userEmail, "@"), 1);
+                if (strtolower($domain) === 'gmail.com') {
+                    // Email has the correct domain (Gmail)
+                    $userEmail = strtolower($userEmail); // Convert the email to lowercase
+                    return trim($userEmail);
+                } else {
+                    array_push(self::$errorArray, Constants::$invalidEmailCharacters);
+                    return;
+                }
+            } else {
+                // Email is not in a valid format
+                array_push(self::$errorArray, Constants::$invalidEmailCharacters);
+                return;
+            }
+
+
+        }
+            
+        if($optional === true && !empty($userEmail)){
+
+            if (filter_var($userEmail, FILTER_VALIDATE_EMAIL)) {
+                // Email is in a valid format
+                $domain = substr(strrchr($userEmail, "@"), 1);
+                if (strtolower($domain) === 'gmail.com') {
+                    // Email has the correct domain (Gmail)
+                    $userEmail = strtolower($userEmail); // Convert the email to lowercase
+                    return trim($userEmail);
+                } else {
+                    array_push(self::$errorArray, Constants::$invalidEmailCharacters);
+                    return;
+                    // Uncomment the lines below if you want to handle invalid domain separately
+                    // array_push(self::$errorArray, Constants::$invalidEmailDomain);
+                    // return;
+                }
+            } else {
+
+                // Email is not in a valid format
+                array_push(self::$errorArray, Constants::$invalidEmailCharacters);
+                return;
+                // array_push(self::$errorArray, Constants::$invalidEmailFormat);
+                // return;
+            }
+
+        }
+
+    }
+
+    public static function ValidateLRN($lrn, $optional = false, $con = null) {
+        
+        $lrn = trim($lrn);
+
+        $student = new Student($con);
+
+        $student_unique_lrn = $student->CheckUniqueStudentLRN($lrn);
+        
+        if($student_unique_lrn == false){
+            array_push(self::$errorArray, Constants::$LRNUnique);
+            return;
+        }else{
+
+            return $lrn;
+        }
+
+        if($optional === false){
+
+            // if (empty($lrn)) {
+            //     array_push(self::$errorArray, Constants::$LRNRequired);
+            //     return;
+            // }  
+
+            // LRN is not in a valid format
+
+        }
+
+        // if($optional === true && !empty($userEmail)){
+
+        //     // Email is not in a valid format
+        //     array_push(self::$errorArray, Constants::$invalidEmailCharacters);
+        //     return;
+        //     // array_push(self::$errorArray, Constants::$invalidEmailFormat);
+        //     // return;
+        // }
 
     }
 
@@ -346,10 +661,11 @@ class Helper {
         if (!empty($trimmed) 
             && in_array($trimmed, $validSuffixes)
             ) {
+            $trimmed = ucwords(strtolower($trimmed));
             return $trimmed;
         }
         else if(empty($trimmed)){
-            return "N/A";
+            return "";
         }
         else if (!empty($trimmed) 
             && !in_array($trimmed, $validSuffixes)
@@ -493,6 +809,8 @@ class Helper {
         }
     }
 
+
+
     // public static function FormSuffixValidation($suffix) {
 
     //     $trimmedSuffix = trim($suffix);
@@ -512,8 +830,9 @@ class Helper {
     // }
 
  
-    public static function FormNameValidation($text, $required,
-        $invalidChar, $textShort, $textLong) {
+    public static function FormNameValidationReal($text, $required,
+        $invalidChar, $textShort, $textLong, $isRequired = null) {
+
         $trimmed = trim($text);
 
         // if (empty($text)) {
@@ -535,28 +854,63 @@ class Helper {
 
         //   var_dump(self::$errorArray);
 
-        if (empty($text)) {
-            array_push(self::$errorArray, $required);
-            // echo $text;
-            return;
-        } 
-        // John doe -> John Doe
-        // Exclamation Marks and others are not valid here. (!@#$%^&*()<>)
-        else if (!preg_match("/^[a-zA-Z ]+$/", $text)) {
-            array_push(self::$errorArray, $invalidChar);
-            // echo $text;
-            return;
+        // If required = true -> Field is required
+        // Else field doesnt required, but will validate if user has entered data
+
+        if($isRequired === true){
+
+            if (empty($text)) {
+                array_push(self::$errorArray, $required);
+                // echo $text;
+                return;
+            } 
+
+            // John doe -> John Doe
+            // Exclamation Marks and others are not valid here. (!@#$%^&*()<>)
+            if (!preg_match("/^[a-zA-Z ]+$/", $text)) {
+                array_push(self::$errorArray, $invalidChar);
+                // echo $text;
+                return;
+            }
+            else if ((strlen($trimmed) > 0 && strlen($trimmed) <= 1)) {
+                array_push(self::$errorArray, $textShort);
+                // echo $text;
+                return;
+            } 
+            else if (strlen($trimmed) > 25) {
+                array_push(self::$errorArray, $textLong);
+                // echo $text;
+                return;
+            } 
         }
-        else if ((strlen($trimmed) > 0 && strlen($trimmed) <= 1)) {
-            array_push(self::$errorArray, $textShort);
-            // echo $text;
-            return;
-        } 
-        else if (strlen($trimmed) > 25) {
-            array_push(self::$errorArray, $textLong);
-            // echo $text;
-            return;
-        } 
+
+        if($isRequired === false){
+            // echo "false";
+            // John doe -> John Doe
+            // Exclamation Marks and others are not valid here. (!@#$%^&*()<>)
+            if(!empty($text)){
+
+                if (!preg_match("/^[a-zA-Z ]+$/", $text)) {
+                    echo $text . " is false";
+                    array_push(self::$errorArray, $invalidChar);
+                    // echo $text;
+                    return;
+                }
+                else if ((strlen($trimmed) > 0 && strlen($trimmed) <= 1)) {
+                    array_push(self::$errorArray, $textShort);
+                    // echo $text;
+                    return;
+                } 
+                else if (strlen($trimmed) > 25) {
+                    array_push(self::$errorArray, $textLong);
+                    // echo $text;
+                    return;
+                } 
+            }
+
+        }
+
+        
 
         // print_r(self::$errorArray);
 
@@ -566,6 +920,56 @@ class Helper {
             return $output;
         }
 
+    }
+
+    public static function FormNameValidation($text, $required, $invalidChar,
+        $textShort, $textLong, $isRequired = false) {
+
+        $trimmed = trim($text);
+        $length = strlen($trimmed);
+
+        // Check if the field is required and the text is empty
+        if ($isRequired && empty($trimmed)) {
+            array_push(self::$errorArray, $required);
+            return;
+        }
+
+        // Check if the text contains only letters and spaces
+        if(!(empty($text))){
+
+            if (!preg_match("/^[a-zA-Z ]+$/", $text)) {
+                array_push(self::$errorArray, $invalidChar);
+                return;
+            }
+
+            // Check the text length
+            if ($length > 0 && $length <= 1) {
+                array_push(self::$errorArray, $textShort);
+                return;
+            } elseif ($length > 25) {
+                array_push(self::$errorArray, $textLong);
+                return;
+            }
+
+            // if (empty(self::$errorArray)) {
+                $output = self::sanitizeFormString($trimmed);
+                return $output;
+            // }
+
+        }
+        return "";
+        
+        // If there are no errors, sanitize the input and return the output
+        // if (empty(self::$errorArray)) {
+        //     $output = self::sanitizeFormString($text);
+        //     return $output;
+        // }
+
+        // if(empty(Helper::$errorArray)) {
+        //     // echo $trimmed;
+        //     $output = Helper::sanitizeFormString($trimmed);
+        //     return $output;
+        // }
     }
 
     public static function getInputValue($name) {
@@ -614,7 +1018,6 @@ class Helper {
         return $trimmed;
     }
 
-
     public static function sanitizeFormString($inputText) {
     
         $inputText = self::removeControlCharacters($inputText);
@@ -637,7 +1040,6 @@ class Helper {
         return $inputText;
     }
  
-
     // public static function validateFirstNamxe($firstname) {
 
     //     $trimmedFirstname = trim($firstname);
@@ -670,13 +1072,19 @@ class Helper {
             $output = $db_text;
         }
         return $output;
-
     }
 
     public static function getError($error) {
         
         if(in_array($error, self::$errorArray)) {
             return "<span class='errorMessage'>$error</span>";
+        }
+    }
+
+    public static function getError2($error) {
+        
+        if(in_array($error, self::$errorArray)) {
+            return $error;
         }
     }
 
@@ -700,16 +1108,16 @@ class Helper {
 
 
     // Helper function to remove control characters and newlines
-    private static function removeControlCharacters($input) {
+    public static function removeControlCharacters($input) {
         return preg_replace('/[\x00-\x1F\x7F]/u', '', $input);
     }
 
     // Helper function to remove null bytes
-    private static function removeNullBytes($input) {
+    public static function removeNullBytes($input) {
         return str_replace("\0", '', $input);
     }
     // Helper function to remove common HTML entities
-    private static function removeHtmlEntities($input) {
+    public static function removeHtmlEntities($input) {
         // Customize this list based on your requirements
         $html_entities = [
             '&amp;'  => '&',
@@ -871,6 +1279,44 @@ class Helper {
         ";
     }
 
+
+    public static function RegistrarDepartmentSection($isTertiary,
+        $shs_url = null, $tertiary_url = null){
+
+        $buttonTop = "
+            <div id='btn' style='left: 0px'></div>
+        ";
+
+        if($isTertiary == true){
+            $buttonTop = "
+                <div id='btn' style='left: 129px'></div>
+            ";
+        }
+
+        $button_default_style = " style='border:none; outline:0;'";
+        
+        return "
+            <nav>
+                <h3>Department</h3>
+                <div class='form-box'>
+                    <div class='button-box'>
+                        $buttonTop
+                        <a style='color: white;' href='$shs_url.php'>
+                            <button $button_default_style type='button' class='toggle-btn'>
+                                SHS
+                            </button>
+                        </a>
+                        <a style='color: white;' href='$tertiary_url.php'>
+                            <button $button_default_style type='button' class='toggle-btn'>
+                                Tertiary
+                            </button>
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        ";
+    }
+
     public static function CreateTwoTabs($first_url,$first_tab_name,
         $second_url, $second_tab_name){
 
@@ -914,6 +1360,7 @@ class Helper {
         ";
     }
 
+   
     public static function RevealStudentTypeStudent($is_tertiary){
 
         $output = "";
@@ -933,9 +1380,12 @@ class Helper {
     }
 
     public static function CreateStudentTabs($student_unique_id,
-        $student_level, $type, $section_acronym, $payment_status, $enrollment_date){
+        $student_level, $type, $section_acronym, $student_status, $enrollment_date){
 
         $formattedDate = "";
+
+        $student_status = $student_status == 1 ? "Active" 
+            : ($student_status == 0 ? "Inactive" : "");
 
         $date = new DateTime($enrollment_date);
         $formattedDate = $date->format('m/d/Y');
@@ -959,7 +1409,7 @@ class Helper {
                 </div>
                 <div class='card'>
                     <p class='text-center mb-0'>Status</p>
-                    <p class='text-center'>$payment_status</p>
+                    <p class='text-center'>$student_status</p>
                 </div>
                 <div class='card'>
                     <p class='text-center mb-0'>Added on</p>
@@ -970,6 +1420,41 @@ class Helper {
             </div>
         ";
     }
+
+    public static function CreateTeacherTabs($school_teacher_id,
+        $department_type, $status, $creation_date){
+
+        $formattedDate = "";
+
+        $date = new DateTime($creation_date);
+        $formattedDate = $date->format('m/d/Y');
+        // echo $formattedDate;
+
+        return "
+            <div class='cards'>
+                <div class='card'>
+                    <p class='text-center mb-0'>Teacher ID.</p>
+                    <p class='text-center'>$school_teacher_id</p>
+                </div>
+                <div class='card'>
+                    <p class='text-center mb-0'>Department</p>
+                    <p class='text-center'>$department_type</p>
+                </div>
+                <div class='card'>
+                    <p class='text-center mb-0'>Status</p>
+                    <p class='text-center'>$status</p>
+                </div>
+                <div class='card'>
+                    <p class='text-center mb-0'>Added on</p>
+                    <p class='text-center'>
+                        $formattedDate
+                    </p>
+                </div>
+            </div>
+        ";
+    }
+
+
     public static function SectionHeaderCards($section_id,
         $school_year_term, $school_year_period,
         $acronym, $level, $totalStudents){
@@ -1114,7 +1599,7 @@ class Helper {
                 </div>
                 <div class='card'>
                     <p class='text-center mb-0'>Student no.</p>
-                    <a style='color: #333' href='$link'class='text-center'>$student_unique_id</a>
+                    <a style='color: #333' target='_blank' href='$link'class='text-center'>$student_unique_id</a>
                 </div>
                 <div class='card'>
                     <p class='text-center mb-0'>Status</p>
@@ -1215,7 +1700,8 @@ class Helper {
         ";
     }
 
-    public static function renderGradeRecordHeader($enrollment_school_year, $default_text)
+    public static function renderGradeRecordHeader(
+        $enrollment_school_year, $default_text)
     {
         if ($enrollment_school_year !== null) {
             $term = $enrollment_school_year['term'];

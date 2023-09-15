@@ -2,19 +2,30 @@
 require_once("includes/config.php");
 require_once("includes/classes/Account.php");
 require_once("includes/classes/Student.php");
+require_once("includes/classes/SchoolYear.php");
+require_once("includes/classes/Pending.php");
+
 require_once("includes/classes/Constants.php"); 
 require_once("includes/classes/FormSanitizer.php"); 
 
 $account = new Account($con);
 $student = new Student($con);
+$pending = new Pending($con);
+
+$school_year = new SchoolYear($con, null);
+$school_year_obj = $school_year->GetActiveSchoolYearAndSemester();
+
+$current_school_year_term = $school_year_obj['term'];
+$current_school_year_period = $school_year_obj['period'];
+$current_school_year_id = $school_year_obj['school_year_id'];
+
 
 if(isset($_POST["student_log_in_btn"])) {
     
     $username = FormSanitizer::sanitizeFormUsername($_POST["username"]);
     $password = FormSanitizer::sanitizeFormPassword($_POST["password"]);
 
-    // $wasSuccessful = $account->studentLogIn($username, $password);
-
+    // $asd = $pending->CheckEnrolleeAccountVerified($username, $password);
     
     // if(sizeof($wasSuccessful) > 0 
     //     && $wasSuccessful[0] == true 
@@ -39,23 +50,21 @@ if(isset($_POST["student_log_in_btn"])) {
 
         $_SESSION["studentLoggedIn"] = $username;
 
-
         header("Location: student/dashboard/index.php");
-        
+        exit();
     }
+    
     
     if(sizeof($wasSuccess) > 0 && $wasSuccess[1] == true 
         && $wasSuccess[2] != "enrolled"){
         
         $_SESSION['username'] = $wasSuccess[0];
         $_SESSION['enrollee_id'] = $wasSuccess[3];
-
-        // echo $_SESSION['enrollee_id'];
-
         $_SESSION['status'] = "pending";
         $_SESSION["studentLoggedIn"] = $username;
 
         header("Location: student/tentative/profile.php?fill_up_state=finished");
+        exit();
     }
 
 }
@@ -65,6 +74,7 @@ function getInputValue($name) {
         echo $_POST[$name];
     }
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -103,10 +113,11 @@ function getInputValue($name) {
 
                     <input type="submit" name="student_log_in_btn" 
                         value="SUBMIT">
+                    <!-- <a hre-+f="pre_enrollment_register.php">Register here</a> -->
 
                 </form>
             </div>
-            <!-- <a class="signInMessage" href="signUp.php">Need an account? Sign up here!</a> -->
+            <a class="signInMessage" href="pre_enrollment_register.php">Need an account? Sign up here!</a>
         </div>
     </div>
 </body>

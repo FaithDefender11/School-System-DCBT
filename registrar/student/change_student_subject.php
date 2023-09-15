@@ -67,10 +67,13 @@
             $selected_course_id = intval($_POST['selected_subject_code']);
 
             $changesSuccess = $student_subject->ChangingStudentSubjectCourseId(
-                $student_subject_enrollment_id, $student_subject_course_id,
-                $student_subject_student_id, $current_school_year_id,
-                $selected_course_id, $student_subject_id,
-                $student_subject_program_id, $student_enrollment_status
+                $student_subject_enrollment_id,
+                $student_subject_course_id,
+                $student_subject_student_id,
+                $current_school_year_id,
+                $selected_course_id,
+                $student_subject_id,
+                $student_subject_program_id
             );
 
             if($changesSuccess){
@@ -127,6 +130,7 @@
                                                 FROM subject_program AS t2 
                                                 
                                                 LEFT JOIN course AS t3 ON t3.program_id = t2.program_id
+                                                AND t2.course_level = t3.course_level
 
                                                 WHERE t2.semester = :semester
                                                 AND t2.subject_code = :subject_code
@@ -149,7 +153,6 @@
                                                     $subject_code = $row['subject_code'];
 
                                                     $program = new Program($con, $program_id);
-
                                             
                                                     // Remove Current Section Subject Code
                                                     if($course_id == $student_subject_course_id) continue;
@@ -159,10 +162,6 @@
                                                     $sec = new Section($con, $course_id);
                                                     $section_code = $sec->CreateSectionSubjectCode($program_section,
                                                         $subject_code);
-
-                                                    // echo $subject_code . " is with $program_acronym";
-                                                    // echo $section_code;
-                                                    // echo "<br>";
 
                                                     $capacity = "";
 

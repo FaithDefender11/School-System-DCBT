@@ -17,17 +17,10 @@
 
     ?>
         <head>
-        
-            <!-- Include Bootstrap CDN -->
-            <!-- <link href=
-                "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
-                rel="stylesheet"> -->
+     
             <script src=
                 "https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js">
             </script>
-            <!-- <script src=
-                "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js">
-            </script> -->
         
             <!-- Include Moment.js CDN -->
             <script type="text/javascript" src=
@@ -65,20 +58,20 @@
 
         $teacher = new Teacher($con, $schedule_teacher_id);
 
-
         $section_subject_code = $schedule->GetScheduleScheduleSubjectCode();
 
-        $back_url = "show.php?id=$schedule_course_id";
+        $back_url = "show.php?id=$schedule_course_id&per_semester=$current_school_year_period&term=$current_school_year_term";
 
         if (isset($_POST['edit_subject_code_schedule_' . $schedule_id]) &&
             isset($_POST['teacher_id']) &&
             // isset($_POST['course_id']) &&
-            isset($_POST['room']) &&
+            // isset($_POST['room']) &&
             isset($_POST['schedule_day']) &&
             isset($_POST['time_from']) &&
             isset($_POST['time_to'])) {
 
-            $room = $_POST['room'];
+            // $room = $_POST['room'];
+
             $schedule_day = $_POST['schedule_day'];
             $time_from_meridian = $_POST['time_from'];
 
@@ -127,14 +120,6 @@
                 $teacher = new Teacher($con, $teacher_id);
                 $new_teacher_fullname = $teacher->GetTeacherFullName();
 
-                $section_query = $con->prepare("SELECT program_section, 
-                    room FROM course
-                    WHERE course_id=:course_id
-                    LIMIT 1");
-
-                $section_query->bindValue(":course_id", $schedule_course_id);
-                $section_query->execute();
-
                 // Check if  teacher has already scheduled in the subject.
 
                 // if($schedule->CheckIfTeacherAlreadyScheduleToTheSubject(
@@ -146,8 +131,8 @@
                 // }
 
                 // $subject_program_id = 0;
-                $scheduleUpdateSuccess = $schedule->updateScheduleCodeBase(
-                    $schedule_id, $room, $time_from_meridian, $time_to_meridian,
+                $scheduleUpdateSuccess = $schedule->UpdateScheduleCodeBase(
+                    $schedule_id, $time_from_meridian, $time_to_meridian,
                     $schedule_day, $time_from_meridian_military, $time_to_meridian_military,
                     $schedule_time, $current_school_year_id,
                     $teacher_id, $section_subject_code
@@ -181,10 +166,10 @@
 
                     <form method='POST'>
 
-                            <div class="mb-3">
+                            <!-- <div class="mb-3">
                                 <label for="">* Room Number</label>
                                 <input value='<?php echo $schedule_room; ?>' required type="text" placeholder="Input Room" name="room" id="room" class="form-control" />
-                            </div>
+                            </div> -->
 
                             <div class="mb-3" style="position: relative">
                                 <label for="">* Time From</label>

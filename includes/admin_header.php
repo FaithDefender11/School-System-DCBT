@@ -7,26 +7,51 @@
     require_once('../../includes/classes/Helper.php');
     require_once('../../includes/classes/Constants.php');
     require_once('../../includes/classes/Alert.php');
+    require_once('../../includes/classes/Account.php');
 
     $adminLoggedIn = isset($_SESSION["adminLoggedIn"]) 
         ? $_SESSION["adminLoggedIn"] : "";
+
+    $adminUserId = isset($_SESSION["adminUserId"]) 
+        ? $_SESSION["adminUserId"] : "";
+
     
     $adminLoggedInObj = new User($con, $adminLoggedIn);
+    $account = new Account($con);
 
-    if (!isset($_SESSION['adminLoggedIn']) || $_SESSION['adminLoggedIn'] == '') {
+    if (!isset($_SESSION['adminLoggedIn']) 
+        ||  $_SESSION['adminLoggedIn'] == ''
+
+        || !isset($_SESSION['adminUserId']) 
+        || $_SESSION['adminUserId'] == '') {
+
+        // if (isset($_COOKIE['rememberMeToken'])) {
+
+        //     $token = $_COOKIE['rememberMeToken'];
+
+        //     // Find the user with the matching hashed token
+        //     $userId = $account->GetUserIdByRememberMeToken($token);
+
+        //     if ($userId !== false) {
+
+        //         $_SESSION['adminUserId'] = $userId; // Log in the user via session
+
+        //     } else {
+        //         header("Location: /school-system-dcbt/enrollment_login.php");
+        //         exit();
+        //     }
+        // }
+
         header("Location: /school-system-dcbt/enrollment_login.php");
         exit();
     }
- 
     $page = Helper::GetUrlPath();
     $document_title = Helper::DocumentTitlePage($page);
 
 ?>
 
 <!DOCTYPE html>
-
-<!--  -->
-
+ 
 <html>
         
     <head>
@@ -51,12 +76,13 @@
 
         <!-- Custom CSS -->
         <link rel="stylesheet" type="text/css" href="../../assets/css/main_style.css">
-        <link rel="stylesheet" type="text/css" href="../../assets/css/content.css" />
-        <link rel="stylesheet" type="text/css" href="../../assets/css/buttons.css" />
-        <link rel="stylesheet" type="text/css" href="../../assets/css/fonts.css" />
-        <link rel="stylesheet" type="text/css" href="../../assets/css/table.css" />
-        <link rel="stylesheet" type="text/css" href="../../assets/css/scheduler.css" />
-        <link rel="stylesheet" href="../../assets/css/others/toggle-switch.css" />
+        <link rel="stylesheet" type="text/css" href="../../assets/css/content.css">
+        <link rel="stylesheet" type="text/css" href="../../assets/css/forms.css">
+        <link rel="stylesheet" type="text/css" href="../../assets/css/buttons.css">
+        <link rel="stylesheet" type="text/css" href="../../assets/css/fonts.css">
+        <link rel="stylesheet" type="text/css" href="../../assets/css/table.css">
+        <link rel="stylesheet" type="text/css" href="../../assets/css/scheduler.css">
+        <link rel="stylesheet" href="../../assets/css/others/toggle-switch.css">
 
         <!-- Google Fonts -->
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato" />

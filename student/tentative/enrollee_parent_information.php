@@ -63,143 +63,523 @@
     $mother_email = $parent->GetMotherEmail();
     $mother_occupation = $parent->GetMotherOccupation();
 
-    if(
-        $_SERVER["REQUEST_METHOD"] === "POST"
+
+    // No father and mother 
+    // - No guardian -> Error
+    // - Yes guardian -> Correct 
+
+    // Yes father and no mother -> Valid
+    // Nofather and Yes mother -> Valid
+
+    // Yes father and yes mother 
+    // - No guardian -> Correct
+    // - Yes guardian -> Correct
+
+    if($_SERVER["REQUEST_METHOD"] === "POST"
         && isset($_POST['parent_details_btn_' . $pending_enrollees_id])
-        && isset($_POST['father_firstname'])
-        && isset($_POST['father_lastname'])
+        // && isset($_POST['father_firstname'])
+        // && isset($_POST['father_lastname'])
+        // && isset($_POST['father_middle'])
+        // && isset($_POST['father_contact_number'])
+        // && isset($_POST['father_occupation'])
+        // && isset($_POST['father_email'])
+
+        // && isset($_POST['mother_firstname'])
+        // && isset($_POST['mother_lastname'])
+        // && isset($_POST['mother_middle'])
+        // && isset($_POST['mother_contact_number'])
+        // && isset($_POST['mother_occupation'])
+        // && isset($_POST['mother_email'])
+
         ){
+            
+        $father_lastname = $parent->ValidateFatherLastName($_POST['father_lastname']);
+
+        
+        $father_firstname_bool = $father_lastname !== "" 
+            ? true : false;
+
+        $father_firstname = $parent->ValidateFatherFirstName(
+            $_POST['father_firstname'], $father_firstname_bool);
+
+        if($father_firstname !== "" && $father_lastname === ""){
+            $father_lastname = $parent->ValidateFatherLastName(
+                $_POST['father_lastname'], true);
+        }
+
+        // FATHER MIDDLENAME
+        $father_middle = $parent->ValidateFatherMiddlename($_POST['father_middle']);
+
+        if($father_middle !== ""){
+
+            if($father_contact_number === NULL){
+
+                $father_contact_number = $parent->ValidateFatherContactNumber(
+                    $_POST['father_contact_number'], true);
+            }
+
+            if($father_firstname === ""){
+
+                $father_firstname = $parent->ValidateFatherFirstname(
+                    $_POST['father_firstname'], true);
+            }
+
+            if($father_lastname === ""){
+
+                $father_lastname = $parent->ValidateFatherLastname(
+                    $_POST['father_lastname'], true);
+            }
+        }
+
+        // FATHER SUFFIX
+        $father_suffix = $parent->ValidateFatherSuffix($_POST['father_suffix']);
+
+        // var_dump($father_suffix);
+
+        if($father_suffix !== ""){
+
+            if($father_contact_number === NULL){
+
+                $father_contact_number = $parent->ValidateFatherContactNumber(
+                    $_POST['father_contact_number'], true);
+            }
+
+            if($father_firstname === ""){
+
+                $father_firstname = $parent->ValidateFatherFirstname(
+                    $_POST['father_firstname'], true);
+            }
+
+            if($father_lastname === ""){
+
+                $father_lastname = $parent->ValidateFatherLastname(
+                    $_POST['father_lastname'], true);
+            }
+
+        }
 
 
-        $father_lastname = Helper::ValidateLastname($_POST['father_lastname']);
-        $father_firstname = Helper::ValidateFirstname($_POST['father_firstname']);
-        $father_middle_name = Helper::ValidateMiddlename($_POST['father_middle']);
-        $father_suffix = Helper::ValidateSuffix($_POST['father_suffix']);
-        $father_contact_number = Helper::ValidateContactNumber($_POST['father_contact_number']);
-        $father_occupation = Helper::ValidateOccupation($_POST['father_occupation']);
-        $father_email = isset($_POST['father_email']) ?  Helper::ValidateEmail($_POST['father_email'], true) : '';
+        $father_contact_bool = $father_lastname !== ""
+            || $father_firstname !== "" ? true : false;
+
+        $father_contact_number = $parent->ValidateFatherContactNumber(
+            $_POST['father_contact_number'], $father_contact_bool);
+
+
+        if($father_contact_number !== NULL){
+
+            if($father_lastname === ""
+                ){
+                $father_lastname = $parent->ValidateFatherLastName(
+                    $_POST['father_lastname'], true);
+            }
+            if($father_firstname === ""
+                ){
+                $father_firstname = $parent->ValidateFatherFirstName(
+                    $_POST['father_firstname'], true);
+            }
+        }
+
+
+        // FATHER MIDDLE NAME 
+        if($father_middle !== ""){
+
+            if($father_contact_number === NULL){
+                $father_contact_number = $parent->ValidateFatherContactNumber(
+                    $_POST['father_contact_number'], true);
+            }
+
+            if($father_firstname === ""){
+                $father_firstname = $parent->ValidateFatherFirstname(
+                    $_POST['father_firstname'], true);
+            }
+
+            if($father_lastname === ""){
+                $father_lastname = $parent->ValidateFatherLastname(
+                    $_POST['father_lastname'], true);
+            }
+
+        }
+
+
+        # FATHER OCCUPATION.
+        $father_occupation = $parent->ValidateFatherOccupation($_POST['father_occupation']);
+
+        if($father_occupation !== ""){
+
+            if($father_contact_number === NULL){
+
+                $father_contact_number = $parent->ValidateFatherContactNumber(
+                    $_POST['father_contact_number'], true);
+            }
+
+            if($father_firstname === ""){
+
+                $father_firstname = $parent->ValidateFatherFirstname(
+                    $_POST['father_firstname'], true);
+            }
+
+            if($father_lastname === ""){
+
+                $father_lastname = $parent->ValidateFatherLastname(
+                    $_POST['father_lastname'], true);
+            }
+
+        }
+         
+        // $father_email = isset($_POST['father_email']) ?
+        //     $parent->ValidateFatherEmail($_POST['father_email'], true) : '';
+
+
+        $mother_lastname = $parent->ValidateMotherLastName(
+            $_POST['mother_lastname']);
+
+       
+        $mother_firstname_bool = $mother_lastname !== "" ? true : false;
+
+        $mother_firstname = $parent->ValidateMotherFirstname(
+            $_POST['mother_firstname'], $mother_firstname_bool);
+
+        if($mother_firstname !== "" && $mother_lastname === ""){
+            $mother_lastname = $parent->ValidateMotherLastName(
+                $_POST['mother_lastname'], true);
+        }
+   
+        $mother_contact_bool = $mother_lastname !== ""
+            || $mother_firstname !== "" ? true : false;
+
+
+        $mother_contact_number = $parent->ValidateMotherContactNumber(
+            $_POST['mother_contact_number'], $mother_contact_bool);
         
 
-        $mother_firstname = Helper::ValidateMotherLastname($_POST['mother_firstname']);
-        $mother_lastname = Helper::ValidateMotherFirstname($_POST['mother_lastname']);
-        $mother_middle_name = Helper::ValidateMotherMiddlename($_POST['mother_middle']);
+        if($mother_contact_number !== NULL){
+            if($mother_lastname === ""){
 
-        // $mother_suffix = Helper::ValidateSuffix($_POST['mother_suffix']);
+                $mother_lastname = $parent->ValidateMotherLastName(
+                    $_POST['mother_lastname'], true);
+            }
+            if($mother_firstname === ""){
 
-        $mother_contact_number = Helper::ValidateContactNumber($_POST['mother_contact_number']);
-        $mother_occupation = Helper::ValidateOccupation($_POST['mother_occupation']);
-        $mother_email = isset($_POST['mother_email']) ?  Helper::ValidateEmail($_POST['mother_email'], true) : '';
+                $mother_firstname = $parent->ValidateMotherFirstName(
+                    $_POST['mother_firstname'], true);
+            }
+        }
+        
+        $mother_middle = $parent->ValidateMotherMiddlename($_POST['mother_middle']);
 
-        // $mother_firstname = $_POST['mother_firstname'];
-        // $mother_lastname = $_POST['mother_lastname'];
-        // $mother_middle_name = $_POST['mother_middle'];
-        // $mother_suffix = $_POST['mother_suffix'];
-        // $mother_contact_number = $_POST['mother_contact_number'];
-        // $mother_occupation = isset($_POST['mother_occupation']) ? $_POST['mother_occupation'] : '';
-        // $mother_email = isset($_POST['mother_email']) ? $_POST['mother_email'] : '';
+        # If mother middle has user input, all mother required field should be provided.
+        if($mother_middle !== ""){
 
-        $parent_firstname = $_POST['parent_firstname'];
-        $parent_middle_name = $_POST['parent_middle_name'];
-        $parent_lastname = $_POST['parent_lastname'];
-        $parent_suffix = isset($_POST['parent_suffix']) ? $_POST['parent_suffix'] : '';
+            if($mother_contact_number === NULL){
 
-        $parent_contact_number = $_POST['parent_contact_number'];
-        $parent_email = isset($_POST['parent_email']) ? $_POST['parent_email'] : '';
-        $parent_suffix = isset($_POST['parent_suffix']) ? $_POST['parent_suffix'] : '';
-        $parent_occupation = isset($_POST['parent_occupation']) ? $_POST['parent_occupation'] : '';
-        $parent_relationship = isset($_POST['parent_relationship']) ? $_POST['parent_relationship'] : '';
+                $mother_contact_number = $parent->ValidateMotherContactNumber(
+                    $_POST['mother_contact_number'], true);
+            }
 
-        $defaultRedirect = true;
+            if($mother_firstname === ""){
 
+                $mother_firstname = $parent->ValidateMotherFirstname(
+                    $_POST['mother_firstname'], true);
+            }
+
+            if($mother_lastname === ""){
+
+                $mother_lastname = $parent->ValidateMotherLastname(
+                    $_POST['mother_lastname'], true);
+            }
+        }
+        
+
+        $mother_occupation = $parent->ValidateMotherOccupation($_POST['mother_occupation']);
+
+        # If mother occupation has user input, all mother required field should be provided.
+        
+        if($mother_occupation !== ""){
+
+            if($mother_contact_number === NULL){
+                    
+                $mother_contact_number = $parent->ValidateMotherContactNumber(
+                    $_POST['mother_contact_number'], true);
+            }
+            if($mother_firstname === ""){
+
+                $mother_firstname = $parent->ValidateMotherFirstname(
+                    $_POST['mother_firstname'], true);
+            }
+            if($mother_lastname === ""){
+
+                $mother_lastname = $parent->ValidateMotherLastname(
+                    $_POST['mother_lastname'], true);
+            }
+        }
+        
+        # GUARDIAN SIDE.
+        $parent_lastname = $parent->ValidateGuardianLastName($_POST['parent_lastname'],
+            false);
+
+        $guardian_lastname_bool = $parent_lastname !== "" ? true : false;
+
+        $parent_firstname = $parent->ValidateGuardianFirstname($_POST['parent_firstname'],
+            $guardian_lastname_bool);
+
+        $parent_middle_name = $parent->ValidateGuardianMiddlename($_POST['parent_middle_name']);
+
+        if($parent_middle_name !== ""){
+
+            if($parent_contact_number === NULL){
+
+                $parent_contact_number = $parent->ValidateGuardianContactNumber(
+                    $_POST['parent_contact_number'], true);
+            }
+            
+            if($parent_firstname === ""){
+
+                $parent_firstname = $parent->ValidateGuardianFirstname(
+                    $_POST['parent_firstname'], true);
+            }
+
+            if($parent_lastname === ""){
+
+                $parent_lastname = $parent->ValidateGuardianLastname(
+                    $_POST['parent_lastname'], true);
+            }
+        }
+
+        $guardian_contact_bool = $parent_lastname !== ""
+            || $parent_firstname !== "" ? true : false;
+
+        $parent_contact_number = $parent->ValidateGuardianContactNumber(
+            $_POST['parent_contact_number'], $guardian_contact_bool);
+
+        # GUARDIAN SUFFIX.
+        $parent_suffix = isset($_POST['parent_suffix']) ? $parent->ValidateGuardianSuffix($_POST['parent_suffix']
+            ,false) : '';
+
+        if($parent_suffix !== ""){
+
+            if($parent_contact_number === NULL){
+
+                $parent_contact_number = $parent->ValidateGuardianContactNumber(
+                    $_POST['parent_contact_number'], true);
+            }
+            
+            if($parent_firstname === ""){
+
+                $parent_firstname = $parent->ValidateGuardianFirstname(
+                    $_POST['parent_firstname'], true);
+            }
+
+            if($parent_lastname === ""){
+
+                $parent_lastname = $parent->ValidateGuardianLastname(
+                    $_POST['parent_lastname'], true);
+            }
+        }
+
+
+        $parent_email = isset($_POST['parent_email']) 
+            ? $parent->ValidateGuardianEmail($_POST['parent_email'],
+            false) : '';
+
+        $parent_occupation = isset($_POST['parent_occupation']) 
+            ? $parent->ValidateGuardianOccupation($_POST['parent_occupation'],
+            false) : '';
+
+        if($parent_occupation !== ""){
+
+            if($parent_contact_number === NULL){
+
+                $parent_contact_number = $parent->ValidateGuardianContactNumber(
+                    $_POST['parent_contact_number'], true);
+            }
+            
+            if($parent_firstname === ""){
+
+                $parent_firstname = $parent->ValidateGuardianFirstname(
+                    $_POST['parent_firstname'], true);
+            }
+
+            if($parent_lastname === ""){
+
+                $parent_lastname = $parent->ValidateGuardianLastname(
+                    $_POST['parent_lastname'], true);
+            }
+        }
+
+        $relationship_bool = $parent_lastname !== ""
+            || $parent_firstname !== ""
+            || $parent_occupation !== ""
+             ? true : false;
+ 
+
+        $parent_relationship = isset($_POST['parent_relationship']) ?
+            $parent->ValidateGuardianRelationship($_POST['parent_relationship']
+            , $relationship_bool) : '';
+
+
+        $hasErrorInGuardian = false;
+        $guardianEmptyError = false;
+
+        // if(empty(Helper::$errorArray)){
+        //     // if($parent_suffix !== ""
+        //     //     && ($parent_firstname === "" || $parent_lastname === ""
+        //     //         || $parent_middle_name === "" || $parent_contact_number === "")){
+        //     //     Alert::errorNoRedirect("If you input any of Guardian fields. Please kindly fill-up all required fields.",
+        //     //     ""); 
+        //     // }
+        //     if($parent->DoesGuardianNonRequiredFieldsValid($parent_suffix,
+        //         $parent_firstname, $parent_lastname,
+        //         $parent_middle_name, $parent_contact_number) === false){
+        //             Alert::errorNoRedirect("1If you input any of Guardian fields. Please kindly fill-up all required fields.",
+        //                 ""); 
+        //         $hasErrorInGuardian = true;
+                    
+        //     }
+
+        //     if($parent->DoesGuardianNonRequiredFieldsValid($parent_occupation,
+        //         $parent_firstname, $parent_lastname,
+        //         $parent_middle_name, $parent_contact_number) === false){
+        //             Alert::errorNoRedirect("2If you input any of Guardian fields. Please kindly fill-up all required fields.",
+        //                 ""); 
+        //         $hasErrorInGuardian = true;
+
+        //     }
+
+        //     if($parent->DoesGuardianNonRequiredFieldsValid($parent_middle_name,
+        //         $parent_firstname, $parent_lastname,
+        //         $parent_middle_name, $parent_contact_number) === false){
+        //             Alert::errorNoRedirect("3If you input any of Guardian fields. Please kindly fill-up all required fields.",
+        //                 ""); 
+        //         $hasErrorInGuardian = true;
+
+        //     }
+
+        //     if($parent->DoesGuardianNonRequiredFieldsValid(
+        //         $parent_relationship,
+        //         $parent_firstname, $parent_lastname,
+        //         $parent_middle_name, $parent_contact_number) === false){
+
+        //         Alert::errorNoRedirect("4If you input any of Guardian fields. Please kindly fill-up all required fields.",
+        //             ""); 
+        //         $hasErrorInGuardian = true;
+        //     }
+
+        //     $guardianEmptyError = true;
+        // }
+
+        $guardianError = false;
+        // if($hasErrorInGuardian == false && $guardianEmptyError == true){
         if(empty(Helper::$errorArray)){
-            echo "empty error";
+            
+            if($father_lastname == "" && $father_firstname == ""
+
+                && $mother_lastname == "" && $mother_firstname == ""
+
+                && $parent_firstname == "" && $parent_lastname == ""
+                && $parent_relationship == ""){
+
+                # Student Should fill-up the guardian.
+
+                $guardianError = true;
+                Alert::errorNoRedirect("If you dont have father or mother. Please kindly fill-up guardian required input fields.",
+                    "");
+                // exit();
+
+            }
+        }
+        
+        $defaultRedirect = true;
+        # If error above has arised, the add/updating function will not work.
+        if(empty(Helper::$errorArray) && $guardianError == false){
+
             if($parent->CheckEnrolleeHasParent($pending_enrollees_id)){
 
-
                 $mother_suffix = "";
-
+                $mother_email = "";
+                $father_email = "";
                 // UPDATE
-
-                // $updateEnroleeParent = $parent->UpdatePendingParent(
-                //     $pending_enrollees_id, $parent_id, $parent_firstname, $parent_lastname,
-                //     $parent_middle_name, $parent_suffix, $parent_contact_number,
-                //     $parent_email, $parent_occupation, $parent_relationship,
+                $updateEnroleeParent = $parent->UpdatePendingParent(
+                    $pending_enrollees_id, $parent_id, $parent_firstname, $parent_lastname,
+                    $parent_middle_name, $parent_suffix, $parent_contact_number,
+                    $parent_email, $parent_occupation, $parent_relationship,
                     
-                //     $father_firstname,
-                //     $father_lastname,
-                //     $father_middle_name,
-                //     $father_suffix,
-                //     $father_contact_number,
-                //     $father_email,
-                //     $father_occupation,
-                //     $mother_firstname,
-                //     $mother_lastname,
-                //     $mother_middle,
-                //     $mother_suffix,
-                //     $mother_contact_number,
-                //     $mother_email,
-                //     $mother_occupation
-                // );
+                    $father_firstname,
+                    $father_lastname,
+                    $father_middle,
+                    $father_suffix,
+                    $father_contact_number,
+                    $father_email,
+                    $father_occupation,
+                    $mother_firstname,
 
-                // if($updateEnroleeParent){
-                //     $defaultRedirect = false;
-                    
-                //     Alert::success("Success Update", "process.php?new_student=true&step=enrollee_summary_details");
-                //     // Alert::success("Success Update", "enrollee_summary_details.php?id=$pending_enrollees_id&details=show");
-                //     exit();
+                    $mother_lastname,
+                    $mother_middle,
+                    $mother_suffix,
+                    $mother_contact_number,
+                    $mother_email,
+                    $mother_occupation
+                );
 
-                // }else{
-                // }
+                if($updateEnroleeParent){
+                    $defaultRedirect = false;
+                    Alert::success("Parent data has been successfully changed", "process.php?new_student=true&step=enrollee_summary_details");
+                    // Alert::success("Success Update", "enrollee_summary_details.php?id=$pending_enrollees_id&details=show");
+                    exit();
+
+                }else{
+                }
 
             }else if($parent->CheckEnrolleeHasParent($pending_enrollees_id) == false){
                 
                 $mother_suffix = "";
+                $mother_email = "";
+                $father_email = "";
                 
                 // Create
-                // $createEnroleeParent = $parent->InsertParentInformation(
-                //     $pending_enrollees_id,
-                //     $parent_firstname,
-                //     $parent_lastname,
-                //     $parent_middle_name,
-                //     $parent_suffix,
-                //     $parent_contact_number,
-                //     $parent_email,
-                //     $parent_occupation,
-                //     $parent_relationship,
+                $createEnroleeParent = $parent->InsertParentInformation(
+                    $pending_enrollees_id,
+                    $parent_firstname,
+                    $parent_lastname,
+                    $parent_middle_name,
+                    $parent_suffix,
+                    $parent_contact_number,
+                    $parent_email,
+                    $parent_occupation,
+                    $parent_relationship,
 
-                //     $father_firstname,
-                //     $father_lastname,
-                //     $father_middle_name,
-                //     $father_suffix,
-                //     $father_contact_number,
-                //     $father_email,
-                //     $father_occupation,
+                    $father_firstname,
+                    $father_lastname,
+                    $father_middle,
+                    $father_suffix,
+                    $father_contact_number,
+                    $father_email,
+                    $father_occupation,
 
-                //     $mother_firstname,
-                //     $mother_lastname,
-                //     $mother_middle_name,
-                //     $mother_suffix,
-                //     $mother_contact_number,
-                //     $mother_email,
-                //     $mother_occupation);
+                    $mother_firstname,
+                    $mother_lastname,
+                    $mother_middle,
+                    $mother_suffix,
+                    $mother_contact_number,
+                    $mother_email,
+                    $mother_occupation);
 
-                // if($createEnroleeParent){
+                if($createEnroleeParent){
 
-                //     $defaultRedirect = false;
-                //     // echo "success create";
-                //     Alert::success("Success Creation", "process.php?new_student=true&step=enrollee_summary_details");
-                //     exit();
-                // }
+                    $defaultRedirect = false;
+                    // echo "success create";
+                    Alert::success("Parent data has been successfully created", "process.php?new_student=true&step=enrollee_summary_details");
+                    exit();
+                }
             } 
         }else{
-            echo "has error";
+            $defaultRedirect = false;
         }
-
-        // if($defaultRedirect == true){
-        //     // header("Location: enrollee_summary_details.php?id=$pending_enrollees_id&details=show");
-        //     header("Location: process.php?new_student=true&step=enrollee_summary_details");
-        //     exit(); 
-        // }
+        if($defaultRedirect == true){
+            // header("Location: enrollee_summary_details.php?id=$pending_enrollees_id&details=show");
+            header("Location: process.php?new_student=true&step=enrollee_summary_details");
+            exit(); 
+        }
 
         // Echo each variable with its value
 
@@ -231,18 +611,12 @@
 
     <div class="content">
 
-        <nav>
-            <a href="">
-                <i class="bi bi-arrow-return-left fa-10x"></i>
-                <h3>Logout</h3>
-            </a>
-        </nav>
-
         <main>
             <div class="floating noBorder">
+
                 <header>
                     <div class="title">
-                    <h2 style="color: var(--titleTheme)">New Enrollment Form</h2>
+                    <h2 style="color: var(--titleTheme)">Enrollee Enrollment Form</h2>
                         <small>SY <?php echo $current_term; ?> &nbsp; <?php echo $current_semester; ?> Semester </small>
 
                     </div>
@@ -281,53 +655,53 @@
                                     <div>
                                         <?php 
                                             Helper::EchoErrorField(
-                                                Constants::$lastNameRequired,
-                                                Constants::$invalidLastNameCharacters,
-                                                Constants::$lastNameIsTooShort,
-                                                Constants::$lastNameIsTooLong
+                                                Constants::$fatherLastNameRequired,
+                                                Constants::$invalidFatherLastNameCharacters,
+                                                Constants::$fatherLastNameIsTooShort,
+                                                Constants::$fatherLastNameIsTooLong
                                             );
                                         ?>
                                         <input type="text" name="father_lastname" class="form-control" 
                                             value="<?php 
                                                     echo Helper::DisplayText('father_lastname', $father_lastname);  
                                                 ?>">
-                                        <small>Last name</small>
+                                        <small>Last name *</small>
                                     </div>
                                     <div>
                                         <?php 
                                             Helper::EchoErrorField(
-                                                Constants::$firstNameRequired,
-                                                Constants::$invalidFirstNameCharacters,
-                                                Constants::$firstNameIsTooShort,
-                                                Constants::$firstNameIsTooLong
+                                                Constants::$fatherFirstNameRequired,
+                                                Constants::$invalidFatherFirstNameCharacters,
+                                                Constants::$fatherFirstNameIsTooShort,
+                                                Constants::$fatherFirstNameIsTooLong
                                             );
                                         ?>
                                         <input type="text" name="father_firstname" class="form-control"
                                             value="<?php 
                                                 echo Helper::DisplayText('father_firstname', $father_firstname);  
                                             ?>">
-                                        <small>First name</small>
+                                        <small>First name *</small>
                                     </div>
                                     <div>
                                         <?php 
                                             Helper::EchoErrorField(
-                                                Constants::$middleNameRequired,
-                                                Constants::$invalidMiddleNameCharacters,
-                                                Constants::$middleNameIsTooShort,
-                                                Constants::$middleNameIsTooLong
+                                                Constants::$fatherMiddleNameRequired,
+                                                Constants::$invalidFatherMiddleNameCharacters,
+                                                Constants::$fatherMiddleNameIsTooShort,
+                                                Constants::$fatherMiddleNameIsTooLong
                                             );
                                         ?>
                                         <input type="text" name="father_middle" class="form-control" 
                                             value="<?php 
                                                 echo Helper::DisplayText('father_middle', $father_middle);  
                                             ?>">
-                                        <small>Middle name</small>
+                                        <small>Middle name *</small>
                                     </div>
                                     <div>
                                         <?php
-                                            echo Helper::getError(Constants::$invalidSuffixNameCharacters);
+                                            echo Helper::getError(Constants::$invalidFatherSuffixNameCharacters);
                                         ?>
-                                        <input type="text" name="father_suffix" maxlength="3" class="form-control"
+                                        <input type="text" placeholder="e.g. Jr, Sr, II" name="father_suffix" maxlength="3" class="form-control"
                                             value="<?php 
                                                 echo Helper::DisplayText('father_suffix', $father_suffix);;
                                             ?>">
@@ -339,11 +713,11 @@
                             <div class="row">
                                 <span>
                                     <?php
-                                            echo Helper::getError(Constants::$ContactNumberRequired);
-                                            echo Helper::getError(Constants::$invalidContactNumberCharacters);
-                                            echo Helper::getError(Constants::$invalidContactNumber2Characters);
-                                        ?>
-                                    <label for="phone">Phone no.</label>
+                                        echo Helper::getError(Constants::$fatherContactNumberRequired);
+                                        echo Helper::getError(Constants::$invalidFatherContactNumberCharacters);
+                                        echo Helper::getError(Constants::$invalidFatherContactNumber2Characters);
+                                    ?>
+                                    <label for="phone">Phone no  *</label>
                                     <div>
                                         <input type="tel" id="father_contact_number" name="father_contact_number" class="form-control" 
                                             value="<?php 
@@ -352,9 +726,9 @@
                                     </div>
                                 </span>
                                 <span>
-                                    <?php
-                                        echo Helper::getError(Constants::$EmailRequired);
-                                        echo Helper::getError(Constants::$invalidEmailCharacters);
+                                    <!-- <?php
+                                        echo Helper::getError(Constants::$fatherEmailRequired);
+                                        echo Helper::getError(Constants::$invalidFatherEmailCharacters);
                                     ?>
                                     <label for="email">Email</label>
                                     <div>
@@ -362,16 +736,19 @@
                                             value="<?php 
                                                 echo Helper::DisplayText('father_email', $father_email);;
                                             ?>">
-                                    </div>
+                                    </div> -->
                                 </span>
                                 <span>
                                     <?php 
                                         echo Helper::getError(Constants::$fatherOccupationRequired);
                                         echo Helper::getError(Constants::$invalidFatherOccupationCharacters);
+                                        echo Helper::getError(Constants::$fatherOccupationIsTooShort);
+                                        echo Helper::getError(Constants::$fatherOccupationIsTooLong);
                                     ?>
                                     <label for="occupation">Occupation</label>
                                     <div>
-                                        <input type="text" id="father_occupation" name="father_occupation" class="form-control" 
+                                        <input type="text" id="father_occupation" name="father_occupation"
+                                            class="form-control" 
                                             value="<?php 
                                                 echo Helper::DisplayText('father_occupation', $father_occupation);;
                                             ?>">
@@ -391,79 +768,106 @@
                             <div class="row">
                                 <span>
                                     
-                                <label for="name">Name</label>
-                                <div>
+                                    <label for="name">Name</label>
+                                    <div>
+                                        <?php 
+                                            echo Helper::getError(Constants::$motherLastNameRequired);
+                                            echo Helper::getError(Constants::$invalidMotherLastNameCharacters);
+                                            echo Helper::getError(Constants::$motherLastNameIsTooShort);
+                                            echo Helper::getError(Constants::$motherLastNameIsTooLong);
+                                        ?>
 
-                                    <?php 
-                                        Helper::EchoErrorField(
-                                            Constants::$motherLastNameRequired,
-                                            Constants::$invalidMotherLastNameCharacters,
-                                            Constants::$motherLastNameIsTooShort,
-                                            Constants::$motherLastNameIsTooLong
-                                        );
-                                    ?>
+                                        <input type="text" name="mother_lastname" class="form-control"\
+                                            value="<?php 
+                                                echo Helper::DisplayText('mother_lastname', $mother_lastname); 
+                                            ?>">
 
-                                    <input type="text" name="mother_lastname" class="form-control"\
-                                        value="<?php 
-                                            echo Helper::DisplayText('mother_lastname', $mother_lastname); 
-                                        ?>">
+                                        <small>Last name *</small>
+                                    </div>
 
-                                    <small>Last name</small>
-                                </div>
+                                    <div>
+                                        <?php 
+                                            echo Helper::getError(Constants::$motherFirstNameRequired);
+                                            echo Helper::getError(Constants::$invalidMotherFirstNameCharacters);
+                                            echo Helper::getError(Constants::$motherFirstNameIsTooShort);
+                                            echo Helper::getError(Constants::$motherFirstNameIsTooLong);
+                                        ?>
+                                        <input type="text" name="mother_firstname" class="form-control"
+                                            value="<?php 
+                                                echo Helper::DisplayText('mother_firstname', $mother_firstname); 
+                                            ?>">
+                                        <small>First name *</small>
+                                    </div>
 
-                                <div>
-                                    <?php 
-                                        Helper::EchoErrorField(
-                                            Constants::$motherFirstNameRequired,
-                                            Constants::$invalidMotherFirstNameCharacters,
-                                            Constants::$motherFirstNameIsTooShort,
-                                            Constants::$motherFirstNameIsTooLong
-                                        );
-                                    ?>
-                                    <input type="text" name="mother_firstname" class="form-control"
-                                        value="<?php 
-                                            echo Helper::DisplayText('mother_firstname', $mother_firstname); 
-                                        ?>">
-                                    <small>First name</small>
-                                </div>
-
-                                <div>
-                                    <input type="text" name="mother_middle" class="form-control"  value="<?php echo $mother_middle; ?>">
-                                    
-                                    <small>Middle name</small>
-                                </div>
-                                <!-- <div>
-                                    <input type="text" name="mother_suffix" class="form-control" maxlength="3" value="<?php echo $mother_suffix; ?>">
-                                    
-                                    <small>Suffix name</small>
-                                </div> -->
+                                    <div>
+                                        <?php 
+                                            echo Helper::getError(Constants::$motherMiddleNameRequired);
+                                            echo Helper::getError(Constants::$invalidMotherMiddleNameCharacters);
+                                            echo Helper::getError(Constants::$motherMiddleNameIsTooShort);
+                                            echo Helper::getError(Constants::$motherMiddleNameIsTooLong);
+                                        ?>
+                                        <input type="text" name="mother_middle" class="form-control" 
+                                            value="<?php 
+                                                echo Helper::DisplayText('mother_middle', $mother_middle); 
+                                            ?>">
+                                        
+                                        <small>Middle name *</small>
+                                    </div>
+                                    <!-- <div>
+                                        <input type="text" name="mother_suffix" class="form-control" maxlength="3" value="<?php echo $mother_suffix; ?>">
+                                        
+                                        <small>Suffix name</small>
+                                    </div> -->
                                 </span>
                             </div>
                             <div class="row">
                                 <span>
-                                <label for="phone">Phone no.</label>
-                                <div>
-                                    <input type="tel" id="mother_contact_number" name="mother_contact_number" class="form-control"  value="<?php echo ($mother_contact_number != "") ? $mother_contact_number : '0915151515123'; ?>">
-                                    
-                                </div>
+                                    <?php 
+                                        echo Helper::getError(Constants::$motherContactNumberRequired);
+                                        echo Helper::getError(Constants::$invalidMotherContactNumberCharacters);
+                                        echo Helper::getError(Constants::$invalidMotherContactNumber2Characters);
+                                    ?>
+                                    <label for="phone">Phone no  *</label>
+                                    <div>
+                                        <input type="tel" id="mother_contact_number" name="mother_contact_number" class="form-control" 
+                                            value="<?php
+                                                echo Helper::DisplayText('mother_contact_number', $mother_contact_number); 
+                                            ?>">
+                                    </div>
                                 </span>
                                 <span>
-                                <label for="email">Email</label>
-                                <div>
-                                    <input type="text" id="mother_email" name="mother_email" class="form-control" value="<?php echo ($mother_email != "") ? $mother_email : ''; ?>">
 
-                                </div>
+                                    <!-- <?php 
+                                        echo Helper::getError(Constants::$motherEmailRequired);
+                                        echo Helper::getError(Constants::$invalidMotherEmailCharacters);
+                                    ?>
+                                    <label for="email">Email</label>
+                                    <div>
+                                        <input type="text" id="mother_email" name="mother_email" class="form-control" 
+                                            value="<?php 
+                                                echo Helper::DisplayText('mother_email', $mother_email); 
+                                            ?>">
+                                    </div> -->
                                 </span>
+
                                 <span>
-                                <label for="occupation">Occupation</label>
-                                <div>
-                                    <input type="text" id="mother_occupation" name="mother_occupation" class="form-control" value="<?php echo ($mother_occupation != "") ? $mother_occupation : ''; ?>">
-                                </div>
+                                    <?php 
+                                        echo Helper::getError(Constants::$motherOccupationRequired);
+                                        echo Helper::getError(Constants::$invalidMotherOccupationCharacters);
+                                        echo Helper::getError(Constants::$motherOccupationIsTooShort);
+                                        echo Helper::getError(Constants::$motherOccupationIsTooLong);
+                                    ?>
+                                    <label for="occupation">Occupation</label>
+                                    <div>
+                                        <input type="text" id="mother_occupation" name="mother_occupation" class="form-control"
+                                            value="<?php 
+                                                echo Helper::DisplayText('mother_occupation', $mother_occupation); 
+                                            ?>">
+                                    </div>
                                 </span>
                             </div>
 
                         </div>
-
 
                         <div class="guardian_info">
                             <header>
@@ -476,46 +880,123 @@
                                 <span>
                                 <label for="name">Name</label>
                                 <div>
-                                    <input type="text" name="parent_lastname" class="form-control"  value="<?php echo $parent_lastname; ?>">
-                                    <small>Last name</small>
+                                    <?php 
+                                        echo Helper::getError(Constants::$guardianLastNameRequired);
+                                        echo Helper::getError(Constants::$invalidGuardianLastNameCharacters);
+                                        echo Helper::getError(Constants::$guardianLastNameIsTooShort);
+                                        echo Helper::getError(Constants::$guardianLastNameIsTooLong);
+                                    ?>
+                                    <input type="text" name="parent_lastname" class="form-control"
+                                        value="<?php 
+                                            echo Helper::DisplayText('parent_lastname', $parent_lastname); 
+                                        ?>">
+                                    <small>Last name *</small>
                                 </div>
                                 <div>
-                                    <input type="text" name="parent_firstname" class="form-control"  value="<?php echo $parent_firstname; ?>">
+                                    <?php 
+                                        echo Helper::getError(Constants::$guardianFirstNameRequired);
+                                        echo Helper::getError(Constants::$invalidGuardianFirstNameCharacters);
+                                        echo Helper::getError(Constants::$guardianFirstNameIsTooShort);
+                                        echo Helper::getError(Constants::$guardianFirstNameIsTooLong);
+                                    ?>
+                                    <input type="text" name="parent_firstname" class="form-control" 
+                                        value="<?php 
+                                            echo Helper::DisplayText('parent_firstname', $parent_firstname); 
+                                        ?>">
 
-                                    <small>First name</small>
+                                    <small>First name *</small>
                                 </div>
                                 <div>
-                                    <input type="text" name="parent_middle_name" class="form-control"  value="<?php echo $parent_middle_name; ?>">
+                                    <?php 
+                                        echo Helper::getError(Constants::$guardianMiddleNameRequired);
+                                        echo Helper::getError(Constants::$invalidGuardianMiddleNameCharacters);
+                                        echo Helper::getError(Constants::$guardianMiddleNameIsTooShort);
+                                        echo Helper::getError(Constants::$guardianMiddleNameIsTooLong);
+                                    ?>
+                                    <input type="text" name="parent_middle_name" class="form-control" 
+                                        value="<?php 
+                                            echo Helper::DisplayText('parent_middle_name', $parent_middle_name); 
+                                        ?>">
                                     <small>Middle name</small>
                                 </div>
                                 <div>
-                                    <input type="text" name="parent_suffix" class="form-control" maxlength="3" value="<?php echo $parent_suffix; ?>">
+                                    <?php
+                                        echo Helper::getError(Constants::$invalidGuardianSuffixNameCharacters);
+                                    ?>
+                                    <input type="text" name="parent_suffix" class="form-control"
+                                        maxlength="3"  placeholder="e.g. Jr, Sr, II" 
+                                        value="<?php 
+                                            echo Helper::DisplayText('parent_suffix', $parent_suffix); 
+                                        ?>">
                                     <small>Suffix name</small>
                                 </div>
                                 </span>
                             </div>
                             <div class="row">
                                 <span>
-                                    <label for="phone">Phone no.</label>
+                                    <label for="phone">Phone no *</label>
+                                    <?php
+                                        echo Helper::getError(Constants::$guardianContactNumberRequired);
+                                        echo Helper::getError(Constants::$invalidGuardianContactNumberCharacters);
+                                        echo Helper::getError(Constants::$invalidGuardianContactNumber2Characters);
+                                    ?>
+                                    
                                     <div>
-                                        <input type="tel" id="parent_contact_number" name="parent_contact_number" class="form-control"  value="<?php echo ($parent_contact_number != "") ? $parent_contact_number : ''; ?>">
-
+                                        <input type="tel" id="parent_contact_number" name="parent_contact_number" class="form-control"
+                                            value="<?php 
+                                                echo Helper::DisplayText('parent_contact_number', $parent_contact_number); 
+                                            ?>">
                                     </div>
-                                    <label for="email">Email</label>
+
+                                    <!-- <label for="email">Email</label>
+                                    <?php
+                                        echo Helper::getError(Constants::$guardianEmailRequired);
+                                        echo Helper::getError(Constants::$invalidGuardianEmailCharacters);
+                                    ?>
                                     <div>
-                                        <input type="text" id="parent_email" name="parent_email" class="form-control" value="<?php echo ($parent_email != "") ? $parent_email : ''; ?>">
+                                        <input type="text" id="parent_email" name="parent_email" class="form-control"
+                                            value="<?php 
+                                                echo Helper::DisplayText('parent_email', $parent_email); 
+                                            ?>">
 
-                                    </div>
+                                    </div> -->
+
+                                    <!-- <input type="text" name="father_firstname" class="form-control">
+                                    <input type="text" name="father_lastname" class="form-control">
+
+                                    <input type="text" name="mother_firstname" class="form-control">
+                                    <input type="text" name="mother_lastname" class="form-control"> -->
+
                                     <label for="occupation">Occupation</label>
+
+                                       <?php 
+                                            echo Helper::getError(Constants::$guardianOccupationRequired);
+                                            echo Helper::getError(Constants::$invalidGuardianOccupationCharacters);
+                                            echo Helper::getError(Constants::$guardianOccupationIsTooShort);
+                                            echo Helper::getError(Constants::$guardianOccupationIsTooLong);
+                                        ?>
                                     <div>
-                                        <input type="text" id="parent_occupation" name="parent_occupation" class="form-control" value="<?php echo ($parent_occupation != "") ? $parent_occupation : ''; ?>">
+                                        <input type="text" id="parent_occupation" name="parent_occupation" class="form-control"
+                                            value="<?php 
+                                                echo Helper::DisplayText('parent_occupation', $parent_occupation); 
+
+                                            ?>">
                                     </div>
-                                    <label for="relationship">Relationship</label>
+                                    <label for="relationship">Relationship *</label>
                                     <div>
+                                        <?php 
+                                            echo Helper::EchoErrorField(
+                                                Constants::$guardianRelationshipRequired,
+                                                Constants::$invalidGuardianRelationshipCharacters,
+                                                Constants::$guardianRelationshipIsTooShort,
+                                                Constants::$guardianRelationshipIsTooLong
+                                            );
+                                        ?>
                                         <input class="form-control"
                                         type="text"
                                         name="parent_relationship"
                                         id="parent_relationship"
+                                        placeholder="e.g. Auntie, Uncle"
                                         value="<?php echo $parent_relationship;?>"
                                         />
                                     </div>
@@ -543,8 +1024,10 @@
                 </form>
 
             </div>
+
         </main>
     </div>
+    
 <?php
 
 ?>

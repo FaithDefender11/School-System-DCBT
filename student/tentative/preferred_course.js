@@ -197,10 +197,10 @@ function PreferredBtn(pending_enrollees_id) {
     selected_program_id = parseInt(selected_program_id);
     selected_choose_level = parseInt(selected_choose_level);
 
-    console.log(selected_admission_type);
-    console.log(selected_department_type);
-    console.log(selected_choose_level);
-    console.log(selected_program_id);
+    // console.log(selected_admission_type);
+    // console.log(selected_department_type);
+    // console.log(selected_choose_level);
+    // console.log(selected_program_id);
 
     // console.log(pending_enrollees_id);
 
@@ -214,13 +214,15 @@ function PreferredBtn(pending_enrollees_id) {
         selected_program_id,
         pending_enrollees_id,
       },
-      // dataType: 'json',
+      dataType: 'json',
       success: function (response) {
-        response = response.trim();
+        // response = response.trim();
+
+        // if(response)
 
         console.log(response);
 
-        if (response == 'preferred_update_success') {
+        if (response[0].output == 'preferred_update_success') {
           Swal.fire({
             icon: 'success',
             title: 'Successfully Save Changes',
@@ -232,14 +234,71 @@ function PreferredBtn(pending_enrollees_id) {
             window.location.href = url;
             // location.reload();
           });
-        } else if (response == '') {
+        } else if (response[0].output == '') {
           var url = 'process.php?new_student=true&step=enrollee_information';
-          window.location.href = url;
+            window.location.href = url;
         }
-      },
 
+        if (response[0].departmentRequiredError) {
+          // console.log(response[0].departmentRequiredError);
+          $('.department_error').text(
+            `* ${response[0].departmentRequiredError}`
+          );
+        }
+
+        if (response[0].departmentInvalidError) {
+          $('.department_error').text(
+            `* ${response[0].departmentInvalidError}`
+          );
+        }
+
+        if (response[0].admissionTypeRequiredError) {
+          $('.admission_error').text(
+            `* ${response[0].admissionTypeRequiredError}`
+          );
+        }
+
+        if (response[0].admissionTypeInvalidError) {
+          $('.admission_error').text(
+            `* ${response[0].admissionTypeInvalidError}`
+          );
+        }
+
+        if (response[0].courseLevelRequiredError) {
+          console.log(response[0].courseLevelRequiredError);
+
+          $('.course_level_error').text(
+            `* ${response[0].courseLevelRequiredError}`
+          );
+        }
+
+        if (response[0].courseLevelInvalidError) {
+          console.log(response[0].courseLevelInvalidError);
+          $('.course_level_error').text(
+            `* ${response[0].courseLevelInvalidError}`
+          );
+        }
+
+        // if (response == 'preferred_update_success') {
+        //   Swal.fire({
+        //     icon: 'success',
+        //     title: 'Successfully Save Changes',
+        //     timer: 1200,
+        //     showCancelButton: false,
+        //     confirmButtonText: 'Wait',
+        //   }).then(() => {
+        //     var url = 'process.php?new_student=true&step=enrollee_information';
+        //     window.location.href = url;
+        //     // location.reload();
+        //   });
+        // }
+        // else if (response == '') {
+        //   var url = 'process.php?new_student=true&step=enrollee_information';
+        //   window.location.href = url;
+        // }
+        // 
+      },
     });
-    
   }
 }
 

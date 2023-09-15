@@ -6,33 +6,51 @@ require_once("includes/classes/FormSanitizer.php");
 
 $account = new Account($con);
 
+ 
+
+if (isset($_SESSION['adminLoggedIn']) 
+        || isset($_SESSION['adminUserId'])) {
+        
+    header("Location: admin/dashboard/index.php");
+    exit();
+}
+
+if (isset($_SESSION['registrarLoggedIn']) 
+        || isset($_SESSION['registrarUserId'])) {
+    
+    header("Location: registrar/dashboard/index.php");
+    exit();
+}
+
 if(isset($_POST["enrollment_log_in_btn"])) {
     
     $username = FormSanitizer::sanitizeFormUsername($_POST["username"]);
     $password = FormSanitizer::sanitizeFormPassword($_POST["password"]);
 
+    $rememberMe = isset($_POST["remember_me"]) ? $_POST["remember_me"] : false;
+
     $wasSuccessful = $account->enrollmentLogIn($username, $password);
-    
-    // print_r($wasSuccessful);
-    # Check user role.
 
     if(sizeof($wasSuccessful) > 0 
         && $wasSuccessful[0] == true 
-        && strtolower($wasSuccessful[1]) == "administrator"){
+        && trim(strtolower($wasSuccessful[1])) == "administrator"){
 
         // echo "true admin";
         $_SESSION["adminLoggedIn"] = $username;
+        $_SESSION["adminUserId"] = $wasSuccessful[2];
+
         header("Location: admin/dashboard/index.php");
         exit();
         
     } 
     else if(sizeof($wasSuccessful) > 0 
         && $wasSuccessful[0] == true 
-        && strtolower($wasSuccessful[1]) == "registrar"){
+        && trim(strtolower($wasSuccessful[1])) == "registrar"){
 
         // echo "true registrar";
         $_SESSION["registrarLoggedIn"] = $username;
-        // header("Location: registrar_dashboard.php");
+        $_SESSION["registrarUserId"] = $wasSuccessful[2];
+
         header("Location: registrar/dashboard/index.php");
 
         exit();
@@ -40,7 +58,7 @@ if(isset($_POST["enrollment_log_in_btn"])) {
     }
     else if(sizeof($wasSuccessful) > 0 
         && $wasSuccessful[0] == true 
-        && strtolower($wasSuccessful[1]) == "cashier"){
+        && trim(strtolower($wasSuccessful[1])) == "cashier"){
 
         // echo "true cashier";
         $_SESSION["cashierLoggedIn"] = $username;
@@ -48,7 +66,18 @@ if(isset($_POST["enrollment_log_in_btn"])) {
         header("Location: cashier/dashboard/index.php");
 
         exit();
+    }
 
+    else if(sizeof($wasSuccessful) > 0 
+        && $wasSuccessful[0] == true 
+        && trim(strtolower($wasSuccessful[1])) == "super administrator"){
+
+        $_SESSION["superAdminLoggedIn"] = $username;
+        $_SESSION["superAdminUserId"] = $wasSuccessful[2];
+
+        header("Location: super_admin/dashboard/index.php");
+
+        exit();
     }
 
 }
@@ -95,7 +124,12 @@ function getInputValue($name) {
                         required autocomplete="off">
                     
                     <input type="password" value="123456" name="password" placeholder="Password" required>
-                    
+ 
+                    <div class="form-group">
+                        <label for="remember_me">Remember me</label>
+                        <input type="checkbox" name="remember_me" id="remember_me">
+                    </div>
+                 
                     <input type="submit" 
                         name="enrollment_log_in_btn" value="SUBMIT">
                         

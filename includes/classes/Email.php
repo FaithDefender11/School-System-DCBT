@@ -1,8 +1,5 @@
 <?php 
-    // require 'path/to/PHPMailer/src/PHPMailer.php';
-    // require 'path/to/PHPMailer/src/SMTP.php';
-    // require 'path/to/PHPMailer/src/Exception.php';
-
+ 
     use PHPMailer\PHPMailer\PHPMailer;
 
 class Email {
@@ -26,6 +23,7 @@ class Email {
     
     public function sendVerificationEmail($email_address, $token) {
 
+        
         $link = domainName . "verify_student.php?token=$token";
        
         $email_message = "(Verification) click if it was you. $link (The token will lasts only 5 minutes)";
@@ -42,6 +40,9 @@ class Email {
     }
 
     public function SendTemporaryPassword($email_address, $token) {
+
+
+        // return false;
 
         $link = "http://localhost/dcbt/enrollment/verify_student.php?token=" 
             . $token;
@@ -61,24 +62,30 @@ class Email {
 
     public function ReSendVerificationEmail($email_address, $token) {
 
-        $link = "http://localhost/dcbt/enrollment/verify_student.php?token=" 
-            . $token;
+        // $link = "http://localhost/dcbt/enrollment/verify_student.php?token=" 
+        //     . $token;
 
-        // $image_path = '../admin/assets/images/mypeace.png';
-        // $image_path = 'https://images.pexels.com/photos/15499750/pexels-photo-15499750.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1';
-        // // Get the contents of the image file
-        // $image_data = file_get_contents($image_path);
-        // // Encode the image data using base64 encoding
-        // $image_data = base64_encode($image_data);
-        // // Add the image as an inline attachment
-        // $this->mailer->addStringEmbeddedImage($image_data, 'image.png', 'image.png', 'base64', 'image/png');
-        // // Add the image to the email body
-        // $email_message = '<html><body><img src="cid:image.png"><br>(Verification) click if it was you. '.$link.' (The token will lasts only 5 minutes)</body></html>';
-       
+        return false;
+
+        $url = dirname("http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]");
+        // $baseUrl = dirname("http://$_SERVER[HTTP_HOST]");
+        
+
+        // $parsedUrl = parse_url($url);
+        // $baseUrl = $parsedUrl['scheme'] . '://' . $parsedUrl['host'] . dirname($parsedUrl['path']);
+
+        // echo $baseUrl;
+
+        // $url = "http://localhost/school-system-dcbt//verify_student.php?token=$token";
+
+        $link = LOCAL_BASE_URL . "//" . "verify_student.php?token=$token";
+        // echo $link;
+
         $email_message = "(Resend-Verification) click if it was you. $link (The token will lasts only 5 minutes)";
 
         $this->mailer->addAddress($email_address);
-        $this->mailer->Subject = "DCBT Enrollment Verification";
+        $this->mailer->Subject = "Daehan College of Business Technology Enrollment Verification";
+
         $this->mailer->Body = $email_message;
 
         if ($this->mailer->send()) {
@@ -91,6 +98,7 @@ class Email {
     public function generateToken() {
         return bin2hex(random_bytes(16));
     }
+
 
 
 

@@ -5,9 +5,8 @@
         <div class="content">
 
             <nav>
-                <a href="SHS-find-form-evaluation.html"
-                ><i class="bi bi-arrow-return-left fa-1x"></i>
-                <h3>Back</h3>
+                <a href="index.php"><i class="bi bi-arrow-return-left fa-1x"></i>
+                    <h3>Back</h3>
                 </a>
             </nav>
 
@@ -15,9 +14,11 @@
                 <?php echo Helper::RevealStudentTypePending($type); ?>
 
                 <header>
+                    
                     <div class="title">
                         <h2><?php echo $student->GetLastName();?>, <?php echo $student->GetFirstName();?>, <?php echo $student->GetMiddleName();?>, <?php echo $student->GetSuffix();?></h2>
                     </div>
+
                     <div class="action">
                         <div class="dropdown">
 
@@ -35,10 +36,13 @@
                     </div>
                 </header>
 
-                <?php echo Helper::CreateStudentTabs($student_unique_id, $student_level,
-                    $type, $section_acronym, $payment_status,
-                    $enrollment_date);?>
                 
+                <?php 
+                    echo Helper::CreateStudentTabs($student_unique_id, $student_level,
+                        $type, $section_acronym, $student_active_status,
+                        $enrollment_date);
+                ?>
+
             </div>
 
             <div class="tabs">

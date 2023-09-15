@@ -1,8 +1,7 @@
 <?php
-
+ 
 class Alert{
 
-             // allowEscapeKey: false,
 
     public static function success($text, $redirectUrl) {
         echo "<script>
@@ -11,6 +10,7 @@ class Alert{
                 title: 'Success!',
                 text: '$text',
                 backdrop: false,
+                allowEscapeKey: false,
 
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -33,7 +33,7 @@ class Alert{
         });
             setTimeout(() => {
                 window.location.href = '$redirectUrl';
-            }, 1000);
+            }, 1500);
         </script>";
     }
 
@@ -48,6 +48,16 @@ class Alert{
                 if (result.isConfirmed) {
                     window.location.href = '$redirectUrl';
                 }
+            });
+        </script>";
+    }
+
+    public static function errorNoRedirect($text, $redirectUrl) {
+        echo "<script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Oh no!',
+                text: '$text'
             });
         </script>";
     }

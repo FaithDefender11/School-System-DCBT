@@ -32,7 +32,6 @@
     }
     $_SESSION['department_type_section'] = "Tertiary";
 
-    // echo $_SESSION['department_type_section'];
 ?>
 
 
@@ -51,7 +50,7 @@
             </header>
             <main>
                 <table id="shs_program_table"
-                    class="ws-table-all cw3-striped cw3-bordered" style="margin: 0">
+                    class="a" style="margin: 0">
                     <thead>
                         <tr>
                             <th>Program ID</th>

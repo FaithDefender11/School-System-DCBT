@@ -1,57 +1,64 @@
 
+
 <?php 
 
-        $enrollmentRecordDetails1 = $enrollment->getEnrollmentSectionDetails($student_id,
-            $GRADE_ELEVEN, $FIRST_SEMESTER);
+    echo Helper::RemoveSidebar();
+    
+    $enrollmentRecordDetails1 = $enrollment->getEnrollmentSectionDetails($student_id,
+        $GRADE_ELEVEN, $FIRST_SEMESTER);
 
-        if($enrollmentRecordDetails1 != null){
+    if($enrollmentRecordDetails1 != null){
 
-            $enrollment_date_approved11_1st = $enrollmentRecordDetails1['enrollment_date_approved'];
-            $enrollment_section_acronym11_1st = $enrollmentRecordDetails1['enrollment_section_acronym'];
-            $enrollment_section_level11_1st = $enrollmentRecordDetails1['enrollment_section_level'];
-            $enrollment_period11_1st = $enrollmentRecordDetails1['enrollment_period'];
-            $enrollment_student_status11_1st = $enrollmentRecordDetails1['enrollment_student_status'];
-        }
+        $enrollment_date_approved11_1st = $enrollmentRecordDetails1['enrollment_date_approved'];
+        $enrollment_section_acronym11_1st = $enrollmentRecordDetails1['enrollment_section_acronym'];
+        $enrollment_section_level11_1st = $enrollmentRecordDetails1['enrollment_section_level'];
+        $enrollment_period11_1st = $enrollmentRecordDetails1['enrollment_period'];
+        $enrollment_student_status11_1st = $enrollmentRecordDetails1['enrollment_student_status'];
+        $enrollment_course_idx = $enrollmentRecordDetails1['enrollment_course_id'];
 
-        $enrollmentRecordDetails2 = $enrollment->getEnrollmentSectionDetails($student_id,
-            $GRADE_ELEVEN, $SECOND_SEMESTER);
+        // echo $enrollment_course_idx;
         
-        if($enrollmentRecordDetails2 != null){
+    }
 
-            $enrollment_date_approved11_2nd = $enrollmentRecordDetails2['enrollment_date_approved'];
-            $enrollment_section_acronym11_2nd = $enrollmentRecordDetails2['enrollment_section_acronym'];
-            $enrollment_section_level11_2nd = $enrollmentRecordDetails2['enrollment_section_level'];
-            $enrollment_period11_2nd = $enrollmentRecordDetails2['enrollment_period'];
-            $enrollment_student_status11_2nd = $enrollmentRecordDetails2['enrollment_student_status'];
-        }
+    $enrollmentRecordDetails2 = $enrollment->getEnrollmentSectionDetails($student_id,
+        $GRADE_ELEVEN, $SECOND_SEMESTER);
+    
+    if($enrollmentRecordDetails2 != null){
 
-
-        $enrollmentRecordDetails3 = $enrollment->getEnrollmentSectionDetails($student_id,
-            $GRADE_TWELVE, $FIRST_SEMESTER);
-        
-        
-        if($enrollmentRecordDetails3 != null){
-
-            $enrollment_date_approved12_1st = $enrollmentRecordDetails3['enrollment_date_approved'];
-            $enrollment_section_acronym12_1st = $enrollmentRecordDetails3['enrollment_section_acronym'];
-            $enrollment_section_level12_1st = $enrollmentRecordDetails3['enrollment_section_level'];
-            $enrollment_period12_1st = $enrollmentRecordDetails3['enrollment_period'];
-            $enrollment_student_status12_1st = $enrollmentRecordDetails3['enrollment_student_status'];
-        }
+        $enrollment_date_approved11_2nd = $enrollmentRecordDetails2['enrollment_date_approved'];
+        $enrollment_section_acronym11_2nd = $enrollmentRecordDetails2['enrollment_section_acronym'];
+        $enrollment_section_level11_2nd = $enrollmentRecordDetails2['enrollment_section_level'];
+        $enrollment_period11_2nd = $enrollmentRecordDetails2['enrollment_period'];
+        $enrollment_student_status11_2nd = $enrollmentRecordDetails2['enrollment_student_status'];
+    }
 
 
-        $enrollmentRecordDetails4 = $enrollment->getEnrollmentSectionDetails($student_id,
-            $GRADE_TWELVE, $SECOND_SEMESTER);
-        
-        
-        if($enrollmentRecordDetails4 != null){
+    $enrollmentRecordDetails3 = $enrollment->getEnrollmentSectionDetails($student_id,
+        $GRADE_TWELVE, $FIRST_SEMESTER);
+    
+    
+    if($enrollmentRecordDetails3 != null){
 
-            $enrollment_date_approved12_2nd = $enrollmentRecordDetails4['enrollment_date_approved'];
-            $enrollment_section_acronym12_2nd = $enrollmentRecordDetails4['enrollment_section_acronym'];
-            $enrollment_section_level12_2nd = $enrollmentRecordDetails4['enrollment_section_level'];
-            $enrollment_period12_2nd = $enrollmentRecordDetails4['enrollment_period'];
-            $enrollment_student_status12_2nd = $enrollmentRecordDetails4['enrollment_student_status'];
-        }
+        $enrollment_date_approved12_1st = $enrollmentRecordDetails3['enrollment_date_approved'];
+        $enrollment_section_acronym12_1st = $enrollmentRecordDetails3['enrollment_section_acronym'];
+        $enrollment_section_level12_1st = $enrollmentRecordDetails3['enrollment_section_level'];
+        $enrollment_period12_1st = $enrollmentRecordDetails3['enrollment_period'];
+        $enrollment_student_status12_1st = $enrollmentRecordDetails3['enrollment_student_status'];
+    }
+
+
+    $enrollmentRecordDetails4 = $enrollment->getEnrollmentSectionDetails($student_id,
+        $GRADE_TWELVE, $SECOND_SEMESTER);
+    
+    
+    if($enrollmentRecordDetails4 != null){
+
+        $enrollment_date_approved12_2nd = $enrollmentRecordDetails4['enrollment_date_approved'];
+        $enrollment_section_acronym12_2nd = $enrollmentRecordDetails4['enrollment_section_acronym'];
+        $enrollment_section_level12_2nd = $enrollmentRecordDetails4['enrollment_section_level'];
+        $enrollment_period12_2nd = $enrollmentRecordDetails4['enrollment_period'];
+        $enrollment_student_status12_2nd = $enrollmentRecordDetails4['enrollment_student_status'];
+    }
 
 ?>
 
@@ -62,6 +69,16 @@
     <!-- Some of subjects were passed, but some were fao;  -->
 
     <!-- GR GRADE 11 1st Semester -->
+    <!-- <button style='display: block;' id='savePDF' class='btn btn-sm'>PDF</button> -->
+
+    <!-- <form  action='pdf_sample.php' method='POST'>
+
+        <button  name='pdf_sample' type='submit'
+            class='btn btn-outline-primary btn-sm'>
+            Generate PDF
+        </button>
+    </form> -->
+
     <div class="floating" id="firstSemCapture">
 
         <?php 
@@ -83,19 +100,14 @@
                 $enrollment_section_name = $section->GetSectionName();
                 
                 // Grade 11 $enrollment_section_name $period Semester (SY $term)
-                
                 echo "
                     <header>
-                    <button id='savePDF' class='btn btn-sm'>PDF</button>
-
                         <div class='title'>
-
                             <h4 class='text-info'>
                                 SY $term
                             </h4>
                         </div>
                     </header>
-                    
                 ";
             }else{
                 echo "
@@ -141,9 +153,9 @@
                 </div>
             </div>
             
-            <table class="a">
+            <table  class="a">
                 <thead>
-                    <tr> 
+                    <tr style="font-size: 14.5px;"> 
                         <th>Subject</th>  
                         <th>Code</th>
                         <th>Type</th>
@@ -157,7 +169,7 @@
                         <th >Remarks</th>  
                     </tr>
                 </thead> 	
-                <tbody>
+                <tbody style="font-size: 13.8px;">
                     <?php 
                         $enrolledSubjectsGradeLevelSemesterBased = $subject_program->GetStudentEnrolledSubjectCodeBase($student_program_id, $student_id,
                             $GRADE_ELEVEN, $FIRST_SEMESTER);
@@ -719,13 +731,51 @@
 <script>
     var saveBtn = document.querySelector('#savePDF');
 
+    // saveBtn.addEventListener('click', function () {
+    //     // Capture the HTML element you want to convert to PDF
+    //     var element = document.querySelector('#firstSemCapture');
+
+    //     // Create options for the PDF generation
+    //     var opt = {
+    //         margin: 0,
+    //         filename: '123456.pdf', // Set the filename for the generated PDF
+    //         image: { type: 'png', quality: 1 },
+    //         html2canvas: { scale: 2 },
+    //         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+    //     };
+
+    //     // Generate the PDF from the HTML element
+    //     html2pdf().from(element).set(opt).save();
+    // });
+
+    const pdfForm = document.getElementById('pdfForm');
+        
+    pdfForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        
+        // Open a new browser window or tab when the form is submitted
+        // window.open('new_page.html', '_blank');
+        
+        // Submit the form after opening the new window
+        pdfForm.submit();
+    });
+
     saveBtn.addEventListener('click', function () {
     // Capture the HTML element you want to convert to PDF
     var element = document.querySelector('#firstSemCapture');
 
+    // Define the font size you want for the table tbody content
+    var fontSize = '10px'; // You can adjust this value as needed
+
+    // Apply the font size to the table tbody content using CSS
+    var tbodyElements = element.querySelectorAll('table tbody *');
+    tbodyElements.forEach(function (el) {
+        el.style.fontSize = fontSize;
+    });
+
     // Create options for the PDF generation
     var opt = {
-        margin: 10,
+        margin: 0,
         filename: '123456.pdf', // Set the filename for the generated PDF
         image: { type: 'png', quality: 1 },
         html2canvas: { scale: 2 },
@@ -734,6 +784,19 @@
 
     // Generate the PDF from the HTML element
     html2pdf().from(element).set(opt).save();
+
+    // Reset font size after generating the PDF (optional)
+    tbodyElements.forEach(function (el) {
+        el.style.fontSize = ''; // Reset to default
     });
+});
+
+
+
+
+
+
+
+
 
 </script>

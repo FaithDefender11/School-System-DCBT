@@ -17,13 +17,14 @@
     ?>
 
     <head>
-        <script src="../../assets/js/enrollment/manual_create,js"></script>
+        <script src="../../assets/js/enrollment/manual_create.js"></script>
+        <script src="./ongoing_manual_search.js"></script>
+
     </head>
 
     <?php
 
         // echo $registrarLoggedIn;
-
 
         $school_year = new SchoolYear($con);
         $department = new Department($con);
@@ -45,8 +46,8 @@
         }
 
         $enrollment_manual_session = "new";
+
         if (!isset($_SESSION['enrollment_manual_session'])) {
-            
             $_SESSION['enrollment_manual_session'] = $enrollment_manual_session;
         }
 
@@ -70,39 +71,35 @@
                 array_push($recordsPerPageOptions, $value['department_id']);
             }
         }
-        
-
-        // if( $_SERVER['REQUEST_METHOD'] === 'POST' &&
-        //     isset($_POST['ongoing_enrollment_btn'])
-        //     // && isset($_POST['program_id'])
-        //     // && isset($_POST['selected_department_id'])
-        //     // && isset($_POST['admission_type'])
-        //     // && isset($_POST['course_id'])
-
-
-        // ){
-        //     $admission_type = intval($_POST['admission_type']);
-        //     echo $admission_type;
-        // }
-
-
-        // if(false)
 
         if($_SERVER['REQUEST_METHOD'] === 'POST' &&
-            isset($_POST['ongoing_enrollment_btn'])
+            isset($_POST['ongoing_enrollment_btn_' . $enrollment_form_id])
             && isset($_POST['admission_type'])
-            && isset($_POST['course_id'])
-            ){
-
-
-            $course_id = intval($_POST['course_id']);
-            $admission_type = intval($_POST['admission_type']);
-            $student_id = intval($_POST['student_id']);
+            // && isset($_POST['course_id'])
+            // && isset($_POST['selected_department_id'])
             
+            && isset($_POST['student_unique_id_val'])
+            && $_POST['student_unique_id_val'] !== ""){
+
+            // $course_id = intval($_POST['course_id']);
+
+            // $selected_department_id = intval($_POST['selected_department_id']);
+            // echo $selected_department_id;
+            
+            return;
+
+            $course_id = 0;
+            $admission_type = intval($_POST['admission_type']);
+
+            $student = new Student($con, $_POST['student_unique_id_val']);
+
+            // $student_id = intval($_POST['student_unique_id_val']);
+            $student_id = intval($student->GetStudentId());
+
+            // echo $course_id;
+
+            // Equals to Ongoing Student
             if($admission_type == 3){
-
-                $student = new Student($con, $student_id);
-
 
                 $is_new_enrollee = 0;
                 $is_tertiary = $student->GetIsTertiary();
@@ -127,27 +124,33 @@
 
                     $student_subject = new StudentSubject($con);
 
-                    $wasStudentSubjectPopulated = $student_subject
-                        ->AddNonFinalDefaultEnrolledSubject($student_id, 
-                            $student_enrollment_id, $course_id, $current_school_year_id,
-                            $current_school_year_period);
+                    // $url = "../admission/process_enrollment.php?subject_review=show&st_id=$student_id&selected_course_id=$course_id";
+                    $url = "../admission/process_enrollment.php?find_section=show&st_id=$student_id&c_id=$course_id";
+                    Alert::successAutoRedirect("Proceeding to Finding Section", 
+                            $url);
 
-                    if($wasStudentSubjectPopulated){
-                        // header("Location: ../admission/process_enrollment.php?find_section=show&st_id=$student_id&c_id=$course_id");
+                    exit();
 
-                        $url = "../admission/process_enrollment.php?subject_review=show&st_id=$student_id&selected_course_id=$course_id";
-                        Alert::successAutoRedirect("Proceeding to Subject Review", 
-                            "$url");
-                        // header("Location: ../admission/process_enrollment.php?subject_review=show&st_id=$student_id&selected_course_id=$course_id");
-                        exit();
-                    }
+                    // $wasStudentSubjectPopulated = $student_subject
+                    //     ->AddNonFinalDefaultEnrolledSubject($student_id, 
+                    //         $student_enrollment_id, $course_id, $current_school_year_id,
+                    //         $current_school_year_period);
+
+                    // if($wasStudentSubjectPopulated){
+                    //     // header("Location: ../admission/process_enrollment.php?find_section=show&st_id=$student_id&c_id=$course_id");
+
+                    //     $url = "../admission/process_enrollment.php?subject_review=show&st_id=$student_id&selected_course_id=$course_id";
+                    //     Alert::successAutoRedirect("Proceeding to Subject Review", 
+                    //         "$url");
+                    //     // header("Location: ../admission/process_enrollment.php?subject_review=show&st_id=$student_id&selected_course_id=$course_id");
+                    //     exit();
+                    // }
 
                 }else if($enrollment_student_status != "Regular"){
 
-                    $url = "../admission/process_enrollment.php?subject_review=show&st_id=$student_id&selected_course_id=$course_id";
-
-                    Alert::successAutoRedirect("Proceeding to Subject Review", 
-                        "$url");
+                    $url = "../admission/process_enrollment.php?find_section=show&st_id=$student_id&c_id=$course_id";
+                    Alert::successAutoRedirect("Proceeding to Finding Section", 
+                            "$url");
 
                     exit();
                 }
@@ -193,6 +196,11 @@
             // }
             
         }
+        else if(isset($_POST['student_unique_id_val']) &&
+            $_POST['student_unique_id_val'] === ""){
+            Alert::error("You forgot to put Student ID on the search box.", "");
+            exit();
+        }
 
     ?>
 
@@ -212,6 +220,7 @@
                         <h2 style="color: var(--titleTheme)">Enrollment Form # <?php echo $enrollment_form_id;?></h2> 
                         <small class="mt-1">SY <?php echo $current_school_year_term ?> &nbsp; <?php echo $current_school_year_period?> Semester</small>
                     </div>
+
                     <p class="text-primary" id="student_status_attach"></p>
                     <h3 class="text-warning" id="non_fetch"></h3>
 
@@ -220,7 +229,6 @@
                 <form method="POST">
 
                     <main>
-
                         <header>
                             <div class="title">
                             <h3>Admission Type</h3>
@@ -264,7 +272,7 @@
                                 
                                  
                                 <div class="form-element">
-                                    <label for="Old">Ongoing Student2</label>
+                                    <label for="Old">Ongoing Student</label>
                                     <div>
                                         <!-- <a href="page.php" onclick="document.getElementById('radioButton').click(); return false;"> -->
                                         <!-- </a> -->
@@ -288,23 +296,25 @@
                             </span>
                         </div>
 
-                        <!-- GRADE LEVEL  -->
                         <?php 
                             include_once('./old_student_type.php');
                         ?>
+
                         <?php 
                             include_once('./old_student_form.php');
                         ?>
 
+
                     <div class="modal-footer">
                         <div class="action">
                             <button type="submit"
-                                name="ongoing_enrollment_btn"
+                                name="ongoing_enrollment_btn_<?php echo $enrollment_form_id;?>"
                                 class="default large" >
                                 Proceed
                             </button>
                         </div>
                     </div>
+
                 </form>
             </div>
         </main>

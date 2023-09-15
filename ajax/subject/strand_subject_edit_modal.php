@@ -33,13 +33,14 @@
 
     // TODO. Validation -> Specify first the Specification.
     
-    if(
-        isset($_POST['course_level'])
+    if(isset($_POST['course_level'])
         && isset($_POST['semester'])
         && isset($_POST['subject_program_id'])
         && isset($_POST['edit_subject_template_id'])
+        && isset($_POST['pre_req_subject_title'])
         
-    ){
+        
+        ){
 
         $subject_program = new SubjectProgram($con);
 
@@ -48,6 +49,7 @@
         $semester = $_POST['semester'];
         $subject_program_id = $_POST['subject_program_id'];
         $subject_template_id = $_POST['edit_subject_template_id'];
+        $pre_req_subject_title = $_POST['pre_req_subject_title'];
 
         # GET
         $get_subject_template  = $con->prepare("SELECT * FROM subject_template
@@ -92,7 +94,6 @@
                 if($subject_title === $sb_subject_title){
 
                     // echo "Equal";
-
                     //  EDIT
                     $query = $con->prepare("UPDATE subject_program
                         SET subject_code=:subject_code,
@@ -114,13 +115,14 @@
                     $query->bindValue(":subject_template_id", $subject_template_id);
 
                     $query->bindValue(":subject_title", $subject_title);
-                    $query->bindValue(":pre_req_subject_title", $pre_requisite_title);
+                    $query->bindValue(":pre_req_subject_title", $pre_req_subject_title);
                     $query->bindValue(":unit", $unit);
                     $query->bindValue(":subject_type", $subject_type);
                     $query->bindValue(":subject_code", $subject_code);
                     $query->bindValue(":description", $description);
 
                     $query->bindValue(":subject_program_id", $subject_program_id);
+                    // $query->bindValue(":subject_program_id", $subject_program_id);
 
                     if($query->execute()){
                         echo "success";
@@ -188,45 +190,6 @@
                     }
                 }
             }
-
-            // if($subject_program->CheckIfSubjectProgramExists($subject_title) == true){
-            //     echo "already_registered";
-            // }
-
-            // else if($subject_program->CheckIfSubjectProgramExists($subject_title) == false){
-
-            //     $query = $con->prepare("UPDATE subject_program
-            //         SET subject_code=:subject_code,
-            //             course_level=:course_level,
-            //             semester=:semester,
-            //             subject_template_id=:subject_template_id,
-            //             subject_title=:subject_title,
-            //             pre_req_subject_title=:pre_req_subject_title,
-            //             unit=:unit,
-            //             subject_type=:subject_type,
-            //             subject_code=:subject_code,
-            //             description=:description
-
-            //         WHERE subject_program_id=:subject_program_id");
-
-            //     $query->bindValue(":subject_code", $subject_code);
-            //     $query->bindValue(":course_level", $course_level);
-            //     $query->bindValue(":semester", $semester);
-            //     $query->bindValue(":subject_template_id", $subject_template_id);
-
-            //     $query->bindValue(":subject_title", $subject_title);
-            //     $query->bindValue(":pre_req_subject_title", $pre_requisite_title);
-            //     $query->bindValue(":unit", $unit);
-            //     $query->bindValue(":subject_type", $subject_type);
-            //     $query->bindValue(":subject_code", $subject_code);
-            //     $query->bindValue(":description", $description);
-
-            //     $query->bindValue(":subject_program_id", $subject_program_id);
-
-            //     if($query->execute()){
-            //         echo "success";
-            //     }
-            // }
             
         }
     }

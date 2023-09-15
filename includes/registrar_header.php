@@ -73,6 +73,7 @@
 
          <!-- Bootstrap 4 JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        
     </head>
 
 <body>
@@ -89,14 +90,11 @@
                 $nav = new RegistrarNavigationMenuProvider($con, $registrarLoggedInObj);
                 echo $nav->create($page);
             ?>
-
         </div>
 
         <div class="mainSectionContainer">
             <div class="mainContentContainer">
-                <?php
-                    // echo $registrarLoggedInObj->MarkStudentAsApplicable();
-                ?>
+                 
 
 <script>
     $(document).ready(function() {

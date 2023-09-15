@@ -10,7 +10,7 @@
     <main>
         <header>
             <div class="title">
-                <h3>Student Information</h3>
+                <h4 style="font-weight:bold;">Student Information</h4>
                 <div class="row">
                     <span style="margin-left: 680px;">
                         <div>
@@ -117,160 +117,173 @@
         </div>
 
 
-        <header>
-            <div class="title">
-                <h3>Father's Information</h3>
+        <!-- <div id="father_info">
+
+            <header>
+                <div class="title">
+                    <h3>Father's Information</h3>
+                </div>
+            </header>
+
+            <div class="row">
+                <span>
+                    <label for="name">Name</label>
+                    <div>
+                        <input type="text" name="father_lastname" class="form-control">
+                        <small>Last name</small>
+                    </div>
+                    <div>
+                        <input type="text" name="father_firstname" class="form-control">
+                        <small>First name</small>
+                    </div>
+                    <div>
+                        <input type="text" name="father_middle" class="form-control">
+                        <small>Middle name</small>
+                    </div>
+                    <div>
+                        <input type="text" name="father_suffix" class="form-control">
+                        <small>Father suffix</small>
+                    </div>
+                </span>
             </div>
-        </header>
 
-        <div class="row">
-            <span>
-                <label for="name">Name</label>
-                <div>
-                    <input type="text" name="father_lastname" class="form-control">
-                    <small>Last name</small>
-                </div>
-                <div>
-                    <input type="text" name="father_firstname" class="form-control">
-                    <small>First name</small>
-                </div>
-                <div>
-                    <input type="text" name="father_middle" class="form-control">
-                    <small>Middle name</small>
-                </div>
-                <div>
-                    <input type="text" name="father_suffix" class="form-control">
-                    <small>Father suffix</small>
-                </div>
-            </span>
-        </div>
-
-        <div class="row">
-            <span>
-                <label for="phone">Phone no.</label>
-                <div>
-                    <input type="tel" id="father_contact_number" name="father_contact_number" class="form-control">
-                </div>
-            </span>
-            <span>
-                <label for="email">Email</label>
-                <div>
-                    <input type="text" id="father_email" name="father_email" class="form-control">
-                </div>
-            </span>
-            <span>
-                <label for="occupation">Occupation</label>
-                <div>
-                    <input type="text" id="father_occupation" name="father_occupation" class="form-control">
-                </div>
-            </span>
-        </div>
-
-
-        <header>
-            <div class="title">
-                <h3>Mother's Information</h3>
+            <div class="row">
+                <span>
+                    <label for="phone">Phone no.</label>
+                    <div>
+                        <input type="tel" id="father_contact_number" name="father_contact_number" class="form-control">
+                    </div>
+                </span>
+                <span>
+                    <label for="email">Email</label>
+                    <div>
+                        <input type="text" id="father_email" name="father_email" class="form-control">
+                    </div>
+                </span>
+                <span>
+                    <label for="occupation">Occupation</label>
+                    <div>
+                        <input type="text" id="father_occupation" name="father_occupation" class="form-control">
+                    </div>
+                </span>
             </div>
-        </header>
+        </div> -->
+        
 
-        <div class="row">
-            <span>
-                <label for="name">Name</label>
-                <div>
-                    <input type="text" name="mother_lastname" class="form-control">
-                    <small>Last name</small>
-                </div>
-                <div>
-                    <input type="text" name="mother_firstname" class="form-control">
-                    <small>First name</small>
-                </div>
-                <div>
-                    <input type="text" name="mother_middle" class="form-control">
-                    <small>Middle name</small>
-                </div>
-                <div>
-                    <input type="text" name="mother_suffix" class="form-control">
-                    <small>Mother suffix</small>
-                </div>
-            </span>
-        </div>
-        <div class="row">
-            <span>
-                <label for="phone">Phone no.</label>
-                <div>
-                    <input type="tel" id="mother_contact_number" name="mother_contact_number" class="form-control">
-                </div>
-            </span>
-            <span>
-                <label for="email">Email</label>
-                <div>
-                    <input type="text" id="mother_email" name="mother_email" class="form-control">
-                </div>
-            </span>
-            <span>
-                <label for="occupation">Occupation</label>
-                <div>
-                    <input type="text" id="mother_occupation" name="mother_occupation" class="form-control">
-                </div>
-            </span>
-        </div>
 
-        <header>
-            <div class="title">
-                <h3>Guardian's Information</h3>
+        <!-- <div id="mother_info">
+            <header>
+                <div class="title">
+                    <h3>Mother's Information</h3>
+                </div>
+            </header>
+
+            <div class="row">
+                <span>
+                    <label for="name">Name</label>
+                    <div>
+                        <input type="text" name="mother_lastname" class="form-control">
+                        <small>Last name</small>
+                    </div>
+                    <div>
+                        <input type="text" name="mother_firstname" class="form-control">
+                        <small>First name</small>
+                    </div>
+                    <div>
+                        <input type="text" name="mother_middle" class="form-control">
+                        <small>Middle name</small>
+                    </div>
+                    <div>
+                        <input type="text" name="mother_suffix" class="form-control">
+                        <small>Mother suffix</small>
+                    </div>
+                </span>
             </div>
-        </header>
+            <div class="row">
+                <span>
+                    <label for="phone">Phone no.</label>
+                    <div>
+                        <input type="tel" id="mother_contact_number" name="mother_contact_number" class="form-control">
+                    </div>
+                </span>
+                <span>
+                    <label for="email">Email</label>
+                    <div>
+                        <input type="text" id="mother_email" name="mother_email" class="form-control">
+                    </div>
+                </span>
+                <span>
+                    <label for="occupation">Occupation</label>
+                    <div>
+                        <input type="text" id="mother_occupation" name="mother_occupation" class="form-control">
+                    </div>
+                </span>
+            </div>
 
-        <div class="row">
-            <span>
-                <label for="name">Name</label>
-                <div>
-                    <input type="text" name="parent_lastname" class="form-control">
-                    <small>Last name</small>
-                </div>
-                <div>
-                    <input type="text" name="parent_firstname" class="form-control">
-                    <small>First name</small>
-                </div>
+        </div> -->
+        
 
-                <div>
-                    <input type="text" name="parent_middle_name" class="form-control">
-                    <small>Middle name</small>
+        <!-- <div id="guardian_info">
+        
+            <header>
+                <div class="title">
+                    <h3>Guardian's Information</h3>
                 </div>
+            </header>
 
-                <div>
-                    <input type="text" name="parent_suffix" class="form-control">
-                    <small>Guardian suffix</small>
-                </div>
-            </span>
-        </div>
-        <div class="row">
-            <span>
-                <label for="phone">Phone no.</label>
-                <div>
-                    <input type="tel" id="parent_contact_number" name="parent_contact_number" class="form-control">
-                </div>
-            </span>
-            <span>
-                <label for="email">Email</label>
-                <div>
-                    <input type="text" id="parent_email" name="parent_email" class="form-control">
-                </div>
-            </span>
-            <span>
-                <label for="occupation">Occupation</label>
-                <div>
-                    <input type="text" id="parent_occupation" name="parent_occupation" class="form-control">
-                </div>
-            </span>
+            <div class="row">
+                <span>
+                    <label for="name">Name</label>
+                    <div>
+                        <input type="text" name="parent_lastname" class="form-control">
+                        <small>Last name</small>
+                    </div>
+                    <div>
+                        <input type="text" name="parent_firstname" class="form-control">
+                        <small>First name</small>
+                    </div>
 
-            <span>
-                <label for="relationship">Relationship</label>
-                <div>
-                    <input class="form-control" type="text" name="relationship" id="relationship">
-                </div>
-            </span>
-        </div>
+                    <div>
+                        <input type="text" name="parent_middle_name" class="form-control">
+                        <small>Middle name</small>
+                    </div>
+
+                    <div>
+                        <input type="text" name="parent_suffix" class="form-control">
+                        <small>Guardian suffix</small>
+                    </div>
+                </span>
+            </div>
+            <div class="row">
+                <span>
+                    <label for="phone">Phone no.</label>
+                    <div>
+                        <input type="tel" id="parent_contact_number" name="parent_contact_number" class="form-control">
+                    </div>
+                </span>
+                <span>
+                    <label for="email">Email</label>
+                    <div>
+                        <input type="text" id="parent_email" name="parent_email" class="form-control">
+                    </div>
+                </span>
+                <span>
+                    <label for="occupation">Occupation</label>
+                    <div>
+                        <input type="text" id="parent_occupation" name="parent_occupation" class="form-control">
+                    </div>
+                </span>
+
+                <span>
+                    <label for="relationship">Relationship</label>
+                    <div>
+                        <input class="form-control" type="text" name="relationship" id="relationship">
+                    </div>
+                </span>
+            </div>
+
+        </div> -->
+
     </main>
 </div>
 

@@ -7,6 +7,7 @@
     include_once('../../includes/classes/Schedule.php');
     include_once('../../includes/classes/Teacher.php');
     include_once('../../includes/classes/Room.php');
+    include_once('../../includes/classes/SubjectPeriodCode.php');
 
     $school_year = new SchoolYear($con, null);
     $schedule = new Schedule($con);
@@ -18,17 +19,10 @@
 
     ?>
         <head>
-        
-            <!-- Include Bootstrap CDN -->
-            <!-- <link href=
-                "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
-                rel="stylesheet"> -->
+ 
             <script src=
                 "https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js">
             </script>
-            <!-- <script src=
-                "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js">
-            </script> -->
         
             <!-- Include Moment.js CDN -->
             <script type="text/javascript" src=
@@ -49,8 +43,7 @@
     <?php
 
     if(isset($_GET['sp_id'])
-        && isset($_GET['id'])
-    ){
+        && isset($_GET['id'])){
 
         $subject_program_id = $_GET['sp_id'];
         $course_id = $_GET['id'];
@@ -62,6 +55,8 @@
         $first_period_room_id = $section->GetSectionFirstPeriodRoomId();
         $second_period_room_id = $section->GetSectionSecondPeriodRoomId();
 
+        $subject_period_code = new SubjectPeriodCode($con);
+
 
         // $current_school_year_period = "Second";
 
@@ -70,30 +65,30 @@
 
         $room_number = $room->GetRoomNumber();
 
-        // echo $room_number;
 
         $sp_subject_code = $subject_program->GetSubjectProgramRawCode();
 
+
         $section_subject_code = $section->CreateSectionSubjectCode($sectionName, $sp_subject_code);
 
-        $back_url = "show.php?id=$course_id";
+        $back_url = "show.php?id=$course_id&per_semester=$current_school_year_period&term=$current_school_year_term";
 
         $teacher = new Teacher($con);
+
+        $subject_period_name = "";
+        $program_code = $sp_subject_code;
 
     // $fullname = $teacher->GetTeacherFullName();
 
     if (isset($_POST['create_teacher_schedule']) &&
         isset($_POST['teacher_id']) &&
         // isset($_POST['course_id']) &&
-        isset($_POST['room']) &&
+        // isset($_POST['room']) &&
         isset($_POST['schedule_day']) &&
         isset($_POST['time_from']) &&
-        isset($_POST['time_to'])
-        // isset($_POST['time_from_am_pm']) &&
-        // isset($_POST['time_to_am_pm'])
-        ) {
+        isset($_POST['time_to'])) {
 
-        $room = $_POST['room'];
+        // $room = $_POST['room'];
         $schedule_day = $_POST['schedule_day'];
         $time_from_meridian = $_POST['time_from'];
 
@@ -161,15 +156,21 @@
             //     exit();
             //     return;
             // }
+            
             $scheduleAddedSuccess = $schedule->AddScheduleCodeBase(
-                $room, $time_from_meridian, $time_to_meridian,
+                $time_from_meridian, $time_to_meridian,
                 $schedule_day, $time_from_meridian_military, $time_to_meridian_military,
                 $schedule_time, $current_school_year_id, $course_id,
                 $teacher_id, $section_subject_code, $subject_program_id
             );
 
             if($scheduleAddedSuccess){
-                Alert::success("Subject Code: $section_subject_code has been placed to $new_teacher_fullname", $back_url);
+
+                // $attachTeaching = $subject_period_code->AttachTeacherTeachingCode($teacher_id,
+                //     $subject_period_name, $current_school_year_id, $section_subject_code, $program_code);
+
+                Alert::success("Subject Code: $section_subject_code has been placed to $new_teacher_fullname",
+                    $back_url);
                 exit();
             }
         }
@@ -188,7 +189,7 @@
                     <div class="floating">
                         <header>
                             <div class="title">
-                                <h3 style="font-weight: bold;" class="text-center text-primary">Add Schedule To: <?php echo $section_subject_code;?></h3>
+                                <h4 style="font-weight: bold;" class="text-center text-muted">Add Schedule to: <?php echo $section_subject_code;?></h4>
                             </div>
                         </header>
                     </div>
@@ -210,38 +211,24 @@
                                 </div>
                             </div> -->
 
-                            <div class="mb-3">
+                            <!-- <div class="mb-3">
                                 <label for="">* Room Number</label>
                                 <input value='<?php echo $room_number;?>' type="text" placeholder="Input Room" name="room" id="room" class="form-control" />
-                            </div>
+                            </div> -->
 
                             
 
                             <div class="mb-3" style="position: relative">
                                 <label for="">* Time From</label>
-                                <input id="datetime" type="text" required value="8:00" placeholder="" name="time_from" id="time_from" class="form-control" />
+                                <input id="datetime" type="text" required value="8:00" placeholder=""
+                                    name="time_from" id="time_from" class="form-control" />
                             </div>
-
-                            <!-- <div class="mb-3">
-                                <label for="">Time From AM/PM</label>
-                                <select required name="time_from_am_pm" id="time_from_am_pm" class="form-control">
-                                    <option value="AM">AM</option>
-                                    <option value="PM">PM</option>
-                                </select>
-                            </div> -->
+ 
 
                             <div class="mb-3" style="position: relative">
                                 <label for="">* Time To</label>
                                 <input id="datetimex" required type="text" value="9:30" placeholder="(7:00)" name="time_to" id="time_to" class="form-control" />
                             </div>
-
-                            <!-- <div class="mb-3">
-                                <label for="">Time to AM/PM</label>
-                                <select required name="time_to_am_pm" id="time_to_am_pm" class="form-control">
-                                    <option value="AM">AM</option>
-                                    <option selected value="PM">PM</option>
-                                </select>
-                            </div> -->
 
                             <div class="mb-3">
                                 <label for="">* Instructor</label>

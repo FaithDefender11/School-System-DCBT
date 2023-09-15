@@ -16,7 +16,7 @@
 
                     <?php echo $selectSubjectEdit; ?>
 
-                     <div class='form-group mb-2'>
+                    <div class='form-group mb-2'>
                         <label for="" class="mb-2">Grade Level</label>
                         <select class='form-control' id='edit_course_level' name='edit_course_level'>
 
@@ -51,6 +51,12 @@
                         </select>
                     </div>
 
+                    <div class='form-group mb-2'>
+                        <label for="" class="mb-2">Pre Requisite</label>
+                        <input type="text" id="edit_pre_req_subject_title" name="edit_pre_req_subject_title" 
+                            class="form-control">
+                    </div>
+
                 </div>
 
                 <div class="modal-footer">
@@ -74,6 +80,7 @@
         $("#edit_course_level").val("");
         $("#edit_semester").val("");
         $("#edit_subject_template_id").val("");
+        $("#edit_pre_req_subject_title").val("");
 
         $.ajax({
             type: "GET",
@@ -86,7 +93,7 @@
 
                 var res = JSON.parse(response)
 
-                // console.log(res);
+                console.log(res);
 
                 $("#edit_course_level").val(res.course_level);
                 $("#edit_semester").val(res.semester);
@@ -94,6 +101,7 @@
                 $("#edit_subject_template_id").val(res.subject_template_id);
 
                 $("#to_subject_program_id").val(res.subject_program_id);
+                $("#edit_pre_req_subject_title").val(res.pre_req_subject_title);
 
                 $('#subjectStrandEditModal').modal('show');
                 
@@ -114,6 +122,7 @@
         var semester = $("#edit_semester").val();
         var subject_program_id  = $("#to_subject_program_id").val();
         var edit_subject_template_id  = $("#edit_subject_template_id").val();
+        var pre_req_subject_title  = $("#edit_pre_req_subject_title").val();
 
         $.ajax({
             url: "../../ajax/subject/strand_subject_edit_modal.php",
@@ -123,7 +132,8 @@
                 course_level,
                 semester,
                 subject_program_id,
-                edit_subject_template_id
+                edit_subject_template_id,
+                pre_req_subject_title
             },
             // dataType: 'json',
             success: function (response) {

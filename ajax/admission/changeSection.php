@@ -22,52 +22,30 @@
         $student_id = $_POST['student_id'];   
         $student_enrollment_course_id = $_POST['student_enrollment_course_id'];   
      
-        // echo $course_id;
-        // echo "    ";
-        // echo $enrollment_id;
-        // echo "    ";
-        // echo $current_school_year_id;
-        // echo "    ";
-        // echo $student_id;
-        // echo "    ";
-        // echo $current_school_year_period;
-        // echo "    ";
+    
 
         $enrollment = new Enrollment($con);
         $student_subject = new StudentSubject($con);
 
         // If Form Enrolled, Mark Student Subject as final 1.
 
-        // $checkFormEnrolled = $enrollment->CheckEnrollmentEnrolled($student_id,
-        //     $student_enrollment_course_id, $current_school_year_id,
-        //     $enrollment_id);
+        $doesStudentFormEnrolled = false;
 
-        $checkFormEnrolled = $enrollment->CheckEnrollmentEnrolledStatus($student_id,
-            $current_school_year_id, $enrollment_id);
 
+        $checkFormEnrolled = $enrollment->CheckEnrollmentEnrolled($student_id,
+            $student_enrollment_course_id, $current_school_year_id,
+            $enrollment_id);
+
+        $doesStudentFormEnrolled = $checkFormEnrolled;
          
         $wasSuccess = $enrollment->FormUpdateCourseId($current_school_year_id,
-            $student_id, $enrollment_id, $course_id);
+            $student_id, $enrollment_id, $course_id, $student_enrollment_course_id);
         
         // Update the student subject load.
         if($wasSuccess){
 
-            // $update_subject = $student_subject->UpdateStudentSubjectCourseIdApprove(
-            //     $student_id, $student_enrollment_course_id, $course_id,
-            //     $enrollment_id, $current_school_year_id,
-            //     $current_school_year_period, $checkFormEnrolled
-            // );
-
-            // if($update_subject){
-            //     echo "update_success";
-            // }
-
             echo "update_success";
         }
-        
-        // if($wasSuccess){
-        //     echo "update_success";
-        // }
         
     }
  

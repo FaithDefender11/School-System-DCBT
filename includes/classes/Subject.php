@@ -196,7 +196,7 @@
             if($query->rowCount() > 0){
 
                 $html = "<div class='form-group mb-2'>
-                    <label   class='mb-2'>Template</label>
+                    <label   class='mb-2'>Subject Title</label>
                     <select id='subject_template_id' class='form-control' name='subject_template_id'>";
 
                 while($row = $query->fetch(PDO::FETCH_ASSOC)){
@@ -204,9 +204,11 @@
                         <option value='".$row['subject_template_id']."'>".$row['subject_title']."</option>
                     ";
                 }
+
                 $html .= "</select>
                         </div>";
                 return $html;
+                
             }
         }
 
@@ -230,7 +232,7 @@
             if($query->rowCount() > 0){
 
                 $html = "<div class='form-group mb-2'>
-                    <label   class='mb-2'>Template</label>
+                    <label   class='mb-2'>Subject Title</label>
                     <select id='subject_template_id' class='form-control' name='subject_template_id'>";
 
                 while($row = $query->fetch(PDO::FETCH_ASSOC)){

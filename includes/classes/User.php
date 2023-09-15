@@ -3,7 +3,7 @@ class User {
 
     private $con, $sqlData;
 
-    public function __construct($con, $username) {
+    public function __construct($con, $username = null) {
         
         $this->con = $con;
 
@@ -14,6 +14,18 @@ class User {
         $query->execute();
 
         $this->sqlData = $query->fetch(PDO::FETCH_ASSOC);
+
+        if($this->sqlData == null){
+
+            $user_id = $username;
+
+            $query = $this->con->prepare("SELECT * FROM users
+                WHERE user_id=:user_id");
+
+            $query->bindValue(":user_id", $user_id);
+            $query->execute();
+            $this->sqlData = $query->fetch(PDO::FETCH_ASSOC);
+        }
     }
 
     public static function isCashierLoggedIn(){
@@ -33,6 +45,21 @@ class User {
             && $_SESSION['applicaton_status'] == "ongoing";
     }
 
+    public static function IsStudentEnrolledAuthenticatedLMS(){
+        return isset($_SESSION['studentLoggedIn'])
+            && isset($_SESSION['status']) 
+            && isset($_SESSION['role']) 
+            && $_SESSION['status'] == "enrolled"
+            && $_SESSION['role'] == "student";
+            
+    }
+
+    public static function IsTeacherAuthenticated(){
+        return isset($_SESSION['teacherLoggedIn'])
+            && isset($_SESSION['role']) 
+            && $_SESSION['role'] == "teacher";
+    }
+
     public static function IsStudentPendingAuthenticated(){
         return isset($_SESSION['studentLoggedIn']) 
             && isset($_SESSION['status']) && $_SESSION['status'] == "pending";
@@ -41,6 +68,11 @@ class User {
     public static function isAdminLoggedIn(){
         return isset($_SESSION['adminLoggedIn']);
     }
+
+        public static function isSuperAdminLoggedIn(){
+        return isset($_SESSION['superAdminLoggedIn']);
+    }
+
 
     public function getUsername() {
         return isset($this->sqlData['username']) ? $this->sqlData["username"] : ""; 
@@ -58,6 +90,77 @@ class User {
 
     public function getLastName() {
         return $this->sqlData["lastName"];
+    }
+
+    public function GetEmail() {
+        return isset($this->sqlData['email']) ? $this->sqlData["email"] : ""; 
+    }
+
+    public function GetPhoto() {
+        return isset($this->sqlData['photo']) ? $this->sqlData["photo"] : null; 
+    }
+
+        public function GetRole() {
+        return isset($this->sqlData['role']) ? $this->sqlData["role"] : ""; 
+    }
+    
+
+    public function CreateUserAccount($firstName, $lastName, $email,
+        $role, $password, $imagePath) {
+
+
+        $hashed_password = password_hash($password, PASSWORD_BCRYPT);
+
+
+        $create = $this->con->prepare("INSERT INTO users
+            (firstName, lastName, email, role, password, photo)
+            VALUES(:firstName, :lastName, :email, :role, :password, :photo)");
+
+        $create->bindParam(":firstName", $firstName);
+        $create->bindParam(":lastName", $lastName);
+        $create->bindParam(":email", $email);
+        $create->bindParam(":role", $role);
+        $create->bindParam(":password", $hashed_password);
+        $create->bindParam(":photo", $imagePath);
+        $create->execute();
+
+        if($create->rowCount() > 0){
+            return true;
+        }
+        return false;
+
+    }
+
+    public function EditUserAccount($firstName, $lastName, $email,
+        $role, $user_id, $imagePath) {
+
+
+
+        $create = $this->con->prepare("UPDATE users
+        
+            SET firstName=:firstName,
+                lastName=:lastName,
+                email=:email,
+                role=:role,
+                photo=:photo
+
+                WHERE user_id=:user_id
+            ");
+
+        $create->bindParam(":firstName", $firstName);
+        $create->bindParam(":lastName", $lastName);
+        $create->bindParam(":email", $email);
+        $create->bindParam(":role", $role);
+        $create->bindParam(":photo", $imagePath);
+        $create->bindParam(":user_id", $user_id);
+        $create->execute();
+
+        if($create->rowCount() > 0){
+            return true;
+        }
+        
+        return false;
+
     }
 
     public function MarkStudentAsApplicable() {

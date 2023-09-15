@@ -6,11 +6,36 @@
     include_once('../../includes/classes/SchoolYear.php');
 
     ?>  
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <link rel="stylesheet" href="./admission.css">
-        </head>
+      <head>
+
+        <style>
+            .show_search{
+                position: relative;
+                /* margin-top: -38px;
+                margin-left: 215px; */
+            }
+            div.dataTables_length {
+                display: none;
+            }
+
+            #waiting_payment_table_filter{
+              margin-top: 12px;
+              width: 100%;
+              display: flex;
+              flex-direction: row;
+              justify-content: start;
+            }
+
+            #waiting_payment_table_filter input{
+              width: 250px;
+            }
+        </style>
+
+        <link href='https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css' rel='stylesheet' type='text/css'>
+        <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+
+      </head>
+
     <?php
 
     $school_year = new SchoolYear($con, null);
@@ -24,11 +49,10 @@
     $section = new Section($con, null);
 
     // O.S Irregular, Pending New Standard, New Transferee
-    $unionEnrollment = $enrollment->UnionEnrollment();
+    $unionEnrollment = $enrollment->UnionEnrollment($current_school_year_id);
     $waitingPaymentEnrollment = $enrollment->WaitingPaymentEnrollment($current_school_year_id);
     $waitingApprovalEnrollment = $enrollment->WaitingApprovalEnrollment($current_school_year_id);
     $enrolledStudentsEnrollment = $enrollment->EnrolledStudentsWithinSYSemester($current_school_year_id);
-
 
     $pendingEnrollmentCount = 0;
     $unionEnrollmentCount = 0;
@@ -45,12 +69,7 @@
 ?>
 
     <div class="content">
-      <nav>
-        <a href="registrar_admission.html"
-          ><i class="bi bi-arrow-return-left fa-1x"></i>
-          <span>Back</span>
-        </a>
-      </nav>
+     
       <div class="content-header">
         <header>
           <div class="title">
@@ -121,198 +140,78 @@
               </div>
             </div>
           </header>
+
           <main>
             <table>
               <tr>
                 <th style="border-right: 2px solid black">Search by</th>
-                <td><button>Name</button></td>
-                <td><button>Email</button></td>
                 <td><button>Student ID</button></td>
+                <td><button>Form ID</button></td>
+                <td><button>Name</button></td>
               </tr>
             </table>
-            <input type="search" name="search" id="search" />
-            <button><i class="bi bi-search icon"></i>Search</button>
 
-            <table class="a">
+            
+            <table style="width: 100%" id="waiting_payment_table" class="a">
                 <thead>
-                    <tr class="text-center"> 
-                        <th rowspan="2">Name</th>
-                        <th rowspan="2">Student No.</th>
-                        <th rowspan="2">Type</th>
-                        <th rowspan="2">Strand</th>
-                        <th rowspan="2">Date Submitted</th>
-                        <th rowspan="2">Action</th>
-                    </tr>	
+                    <tr>
+                        <th>Student No</th>  
+                        <th>Form</th>
+                        <th>Name</th>
+                        <!-- <th>Email</th> -->
+                        <th>Type</th>  
+                        <th>Strand</th>
+                        <th>Date Submitted</th>
+                        <th>Action</th>
+                    </tr>
                 </thead>
-
-                <tbody>
-                    <?php
-                        // Generate a random alphanumeric string as the enrollment form ID
-
-                      $waitingPaymentEnrollment = $enrollment->WaitingPaymentEnrollment($current_school_year_id);
-                  
-                      $transResult = "";
-                      $createUrl = "";
-
-                      foreach ($waitingPaymentEnrollment as $key => $row) {
-
-                        $enrollement_student_id = $row['student_id'];
-                        $fullname = ucfirst($row['firstname']) . " " . ucfirst($row['lastname']);
-                        $enrollment_date = $row['enrollment_date'];
-                        $standing = $row['course_level'];
-                        $course_id = $row['course_id'];
-                        $enrollment_course_id = $row['enrollment_course_id'];
-                        $registrar_confirmation_date = $row['registrar_confirmation_date'];
-                        
-                        $dateTime = new DateTime($registrar_confirmation_date);
-                        // Format the DateTime object as desired
-                        $registrar_confirmation_date = $dateTime->format('Y-m-d g:i A');
-
-                        $username = $row['username'];
-                        $student_unique_id = $row['student_unique_id'];
-                        $student_id = $row['t2_student_id'];
-                        $program_section = $row['program_section'];
-                        $cashier_evaluated = $row['cashier_evaluated'];
-                        $registrar_evaluated = $row['registrar_evaluated'];
-                        $course_level = $row['course_level'];
-
-                        $student_status = $row['student_statusv2'];
-                        $student_statusv2 = $row['student_statusv2'];
-                        // $admission_status = $row['admission_status'];
-
-
-                        $new_enrollee = $row['new_enrollee'];
-                        $enrollment_student_status = $row['enrollment_student_status'];
-                        $enrollment_is_new_enrollee = $row['enrollment_is_new_enrollee'];
-                        $enrollment_is_transferee = $row['enrollment_is_transferee'];
-
-
-                        $new_enrollee = $row['new_enrollee'];
-                        $is_tertiary = $row['is_tertiary'];
-                        // $is_transferee = $row['is_transferee'];
-
-
-                        $process_url = "";
-                        $waiting_payment_url = "subject_insertion_summary.php?id=$enrollement_student_id&enrolled_subject=show";
-
-                        $student_status_pending = "";
-
-                        $updated_type = "";
-                        $button_url = "";
-                        $strand = "";
-
-
-                        $section = new Section($con, $enrollment_course_id);
-
-                        $sectionProgramId = $section->GetSectionProgramId($enrollment_course_id);
-                        $sectionAcronym = $section->GetAcronymByProgramId($sectionProgramId);
-
-                        if($new_enrollee == 0
-                            && $enrollment_is_new_enrollee == 0 
-                            && $enrollment_is_transferee == 0
-                            && $student_statusv2 == "Irregular"
-                            && ($enrollment_student_status == "" || $enrollment_student_status == "Irregular")
-                            ){
-
-                            $updated_type = "Old Irregular";
-
-                            $button_url = "
-                                <button class='default success'
-                                    onclick=\"window.location.href = '" . $waiting_payment_url . "subject_insertion_summary.php?id=560&enrolled_subject=show'\">
-                                    Evaluate
-                                </button>
-                            ";
-                        }
-                        else if($new_enrollee == 0
-                            && $enrollment_is_new_enrollee == 0 
-                            && $enrollment_is_transferee == 0
-                            && $student_statusv2 == "Regular"
-                            && $enrollment_student_status == "Regular"
-                            ){
-
-                            $updated_type = "Old Regular";
-
-                            $button_url = "
-                                <button class='default success'
-                                  onclick=\"window.location.href = '" . $waiting_payment_url . "subject_insertion_summary.php?id=560&enrolled_subject=show'\">
-                                    Evaluate
-                                </button>
-                            ";
-                        }
-
-                        else if($new_enrollee == 1
-                          && $enrollment_is_new_enrollee == 1 
-                          && $enrollment_is_transferee == 0
-                          && $student_statusv2 == "Regular"
-                          // && $enrollment_student_status == "Regular"
-                          ){
-
-                          $updated_type = "New Regular";
-
-                          $button_url = "
-                              <button class='default clean'
-                                onclick=\"window.location.href = '" . $waiting_payment_url . "subject_insertion_summary.php?id=560&enrolled_subject=show'\">
-                                  Evaluate
-                              </button>
-                          ";
-                        }
-                        // 
-                        else if($new_enrollee == 1
-                          && $enrollment_is_new_enrollee == 1 
-                          && $enrollment_is_transferee == 1
-                          && $student_statusv2 == ""
-                          // && ($enrollment_student_status == "Irregular" || $enrollment_student_status == "Regular")
-                          ){
-
-                          $updated_type = "New Transferee";
-
-                          $button_url = "
-                              <button class='default clean'
-                                onclick=\"window.location.href = '" . $waiting_payment_url . "subject_insertion_summary.php?id=560&enrolled_subject=show'\">
-                                  Evaluate
-                              </button>
-                          ";
-                        }
-                    
-                        $createUrl = "http://localhost/dcbt/admin/student/edit.php?id=$student_id";
-
-                        // $transferee_insertion_url = "http://localhost/dcbt/admin/student/transferee_insertion.php?id=$student_id";
-                        $transferee_insertion_url = "../student/transferee_insertion.php?enrolled_subjects=true&id=$student_id";
-
-                        $regular_insertion_url = "./subject_insertion_summary.php?id=$student_id&student_details=show";
-
-                        $confirmButton  = "
-                            <button onclick='confirmValidation(" . $course_id . ", " . $enrollement_student_id . ")' name='confirm_validation_btn' class='btn btn-primary btn-sm'>Confirm</button>
-                        ";
-
-                        $evaluateBtn = "";
-
-                        $student_type_status = "";
-
-
-                        echo "
-                            <tr class='text-center'>
-                                <td>$fullname</td>
-                                <td>$student_unique_id</td>
-                                <td>$updated_type</td>
-                                <td>$sectionAcronym</td>
-                                <td>$registrar_confirmation_date</td>
-                                
-                                <td>
-                                    $button_url
-                                </td>
-                            </tr>
-                        ";
-                      }
-                    ?>
-                </tbody>
             </table>
+
           </main>
         </div>
-
       </main>
-      
     </div>
+
+<script>
+
+    $(document).ready(function() {
+
+        var table = $('#waiting_payment_table').DataTable({
+            'processing': true,
+            'serverSide': true,
+            'serverMethod': 'POST',
+            'ajax': {
+                'url': 'waitingPaymentListData.php',
+                'error': function(xhr, status, error) {
+                    // Handle error response here
+                    console.error('Error:', error);
+                    console.log('Status:', status);
+                    console.log('Response Text:', xhr.responseText);
+                    console.log('Response Code:', xhr.status);
+                }
+            },
+
+            'pageLength': 5,
+            'language': {
+                'infoFiltered': '',
+                'processing': '<i class="fas fa-spinner fa-spin"></i> Processing...',
+                'emptyTable': "No available data for waiting payment.",
+            
+            },
+            'columns': [
+              { data: 'student_id', orderable: true },  
+              { data: 'form_id', orderable: false },  
+              { data: 'name', orderable: false },  
+              // { data: 'email', orderable: true },
+              { data: 'type', orderable: false },
+              { data: 'acronym', orderable: false },  
+              { data: 'registrar_confirmation_date', orderable: true },
+              { data: 'button_url', orderable: false }
+            ],
+            'ordering': true
+        });
+    });
+</script>
 
 
 

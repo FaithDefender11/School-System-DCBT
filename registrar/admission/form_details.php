@@ -1,3 +1,39 @@
+
+<?php
+
+    $parent = new StudentParent($con, $student_id);
+
+    $parent_firstname = $parent->GetFirstName();
+    $parent_lastname = $parent->GetLastName();
+    $parent_middle_name = $parent->GetMiddleName();
+    $parent_suffix = $parent->GetSuffix();
+    $parent_contact_number = $parent->GetContactNumber();
+    $parent_email = $parent->GetEmail();
+    $parent_occupation = $parent->GetOccupation();
+    $parent_relationship = $parent->GetGuardianRelationship();
+    // 
+
+    // Father
+    $father_firstname = $parent->GetFatherFirstName();
+    $father_lastname = $parent->GetFatherLastName();
+    $father_middle = $parent->GetFatherMiddleName();
+    $father_suffix = $parent->GetFatherSuffix();
+    $father_contact_number = $parent->GetFatherContactNumber();
+    $father_email = $parent->GetFatherEmail();
+    $father_occupation = $parent->GetFatherOccupation();
+
+
+    // Mother
+    $mother_firstname = $parent->GetMotherFirstName();
+    $mother_lastname = $parent->GetMotherLastName();
+    $mother_middle = $parent->GetMotherMiddleName();
+    $mother_suffix = $parent->GetMotherSuffix();
+    $mother_contact_number = $parent->GetMotherContactNumber();
+    $mother_email = $parent->GetMotherEmail();
+    $mother_occupation = $parent->GetMotherOccupation();
+
+
+?>
 <!-- STEP 1 -->
 
 <div class="content">
@@ -54,452 +90,348 @@
             
             <header>
                 <div class="title">
-                <h3>Student Information</h3>
+                <h4>Student Information</h4>
                 </div>
             </header>
 
             <main>
                 <form action="">
-                <div class="row">
-                    <span>
-                    <label for="name">Name</label>
-                    <div>
-                        <input type="text" name="lastName" 
-                            id="lastName" value="<?php echo $student_lastname;?>" />
-                        <small></small>
+                    <div class="row">
+                        <span>
+                            <label for="name">Name</label>
+                            <div>
+                                <input type="text" name="lastName" id="lastName" value="<?php echo $student_lastname; ?>" class="form-control" />
+                                <small></small>
+                            </div>
+                            <div>
+                                <input type="text" name="firstName" id="firstName" value="<?php echo $student_firstname; ?>" class="form-control" />
+                                <small>First name</small>
+                            </div>
+                            <div>
+                                <input type="text" name="middleName" id="middleName" value="<?php echo $student_middle_name; ?>" class="form-control" />
+                                <small>Middle name</small>
+                            </div>
+                            <div>
+                                <input type="text" name="suffixName" id="suffixName" value="<?php echo $student_suffix; ?>" class="form-control" />
+                                <small>Suffix name</small>
+                            </div>
+                        </span>
                     </div>
-                    <div>
-                        <input
-                        type="text"
-                        name="firstName"
-                        id="firstName"
-                        value="<?php echo $student_firstname;?>"
-                        />
-                        <small>First name</small>
+                    <div class="row">
+                        <span>
+                            <label for="status">Status</label>
+                            <div>
+                                <select name="status" id="status" class="form-control">
+                                    <option value="Single"<?php echo ($student_civil_status == "Single") ? " selected" : ""; ?>>Single</option>
+                                    <option value="Married"<?php echo ($student_civil_status == "Married") ? " selected" : ""; ?>>Married</option>
+                                    <option value="Divorced"<?php echo ($student_civil_status == "Divorced") ? " selected" : ""; ?>>Divorced</option>
+                                    <option value="Widowed"<?php echo ($student_civil_status == "Widowed") ? " selected" : ""; ?>>Widowed</option>
+                                </select>
+                            </div>
+                        </span>
+                        <span>
+                            <label for="citizenship">Citizenship</label>
+                            <div>
+                                <input type="text" name="citizenship" id="citizenship" value="<?php echo $student_nationality; ?>" class="form-control" />
+                            </div>
+                        </span>
+                        <span>
+                            <label for="gender">Gender</label>
+                            <div>
+                                <select name="gender" id="gender" class="form-control">
+                                    <option value="Male"<?php echo ($student_gender == "Male") ? " selected" : ""; ?>>Male</option>
+                                    <option value="Female"<?php echo ($student_gender == "Female") ? " selected" : ""; ?>>Female</option>
+                                </select>
+                            </div>
+                        </span>
                     </div>
-                    <div>
-                        <input
-                        type="text"
-                        name="middleName"
-                        id="middleName"
-                        value="<?php echo $student_middle_name;?>"
-                        />
-                        <small>Middle name</small>
+                    <div class="row">
+                        <span>
+                            <label for="birthdate">Birthdate</label>
+                            <div>
+                                <input type="date" name="birthdate" id="birthdate" value="<?php echo $student_birthday; ?>" class="form-control" />
+                            </div>
+                        </span>
+                        <span>
+                            <label for="birthplace">Birthplace</label>
+                            <div>
+                                <input type="text" name="birthplace" id="birthplace" value="<?php echo $student_birthplace; ?>" class="form-control" />
+                            </div>
+                        </span>
+                        <span>
+                            <label for="religion">Religion</label>
+                            <div>
+                                <input type="text" name="religion" id="religion" value="<?php echo $student_religion; ?>" class="form-control" />
+                            </div>
+                        </span>
                     </div>
-                    <div>
-                        <input
-                        type="text"
-                        name="suffixName"
-                        id="suffixName"
-                        value="<?php echo $student_suffix;?>"
-                        />
-                        <small>Suffix name</small>
+                    <div class="row">
+                        <span>
+                            <label for="address">Address</label>
+                            <div>
+                                <input type="text" name="address" id="address" value="<?php echo $student_address; ?>" class="form-control" />
+                            </div>
+                        </span>
                     </div>
-                    </span>
-                </div>
-                <div class="row">
-                    <span>
-                    <label for="status">Status</label>
-                    <div>
-                        <select name="status" id="status">
-                            <option value="Single"<?php echo ($student_civil_status == "Single") ? " selected" : ""; ?>>Single</option>
-                            <option value="Married"<?php echo ($student_civil_status == "Married") ? " selected" : ""; ?>>Married</option>
-                            <option value="Divorced"<?php echo ($student_civil_status == "Divorced") ? " selected" : ""; ?>>Divorced</option>
-                            <option value="Widowed"<?php echo ($student_civil_status == "Widowed") ? " selected" : ""; ?>>Widowed</option>
-                        </select>
+                    <div class="row">
+                        <span>
+                            <label for="phoneNo">Phone no.</label>
+                            <div>
+                                <input type="text" name="phone" id="phone" value="<?php echo $student_contact_number; ?>" class="form-control" />
+                            </div>
+                        </span>
+                        <span>
+                            <label for="email">Email</label>
+                            <div>
+                                <input type="email" name="email" id="email" value="<?php echo $student_email; ?>" class="form-control" />
+                            </div>
+                        </span>
                     </div>
-                    </span>
-
-                    <span>
-                    <label for="citizenship">Citizenship</label>
-                    <div>
-                        <input
-                        type="text"
-                        name="citizenship"
-                        id="citizenship"
-                        value="<?php echo $student_nationality;?>"
-                        />
-                    </div>
-                    </span>
-                    <span>
-                    <label for="gender">Gender</label>
-                    <div>
-                        <select name="gender" id="gender">
-                        <option value="Male"<?php echo ($student_gender == "Male") ? " selected" : ""; ?>>Male</option>
-                        <option value="Female"<?php echo ($student_gender == "Female") ? " selected" : ""; ?>>Female</option>
-                        </select>
-                    </div>
-                    </span>
-                </div>
-                <div class="row">
-                    <span>
-                    <label for="birthdate">Birthdate</label>
-                    <div>
-                        <input
-                        type="date"
-                        name="birthdate"
-                        id="birthdate"
-                        value="<?php echo $student_birthday;?>"
-                        />
-                    </div>
-                    </span>
-                    <span>
-                    <label for="birthplace">Birthplace</label>
-                    <div>
-                        <input
-                        type="text"
-                        name="birthplace"
-                        id="birthplace"
-                        value="<?php echo $student_birthplace;?>"
-                        />
-                    </div>
-                    </span>
-                    <span>
-                    <label for="religion">Religion</label>
-                    <div>
-                        <input type="text" name="religion" id="religion" value="<?php echo $student_religion;?>" />
-                    </div>
-                    </span>
-                </div>
-                <div class="row">
-                    <span>
-                    <label for="address">Address</label>
-                    <div>
-                        <input type="text" name="address" id="address" value="<?php echo $student_address;?>" />
-                    </div>
-                    </span>
-                </div>
-                <div class="row">
-                    <span>
-                    <label for="phoneNo">Phone no.</label>
-                    <div>
-                        <input type="text" name="phone" id="phone" value="<?php echo $student_contact_number;?>" />
-                    </div>
-                    </span>
-                    <span>
-                    <label for="email">Email</label>
-                    <div>
-                        <input type="email" name="email" id="email" value="<?php echo $student_email;?>" />
-                    </div>
-                    </span>
-                </div>
                 </form>
             </main>
 
-            <header>
-                <div class="title">
-                <h3>Current/Last School Attended</h3>
-                </div>
-            </header>
+            <div id="school_attended">
+                <header>
+                    <div class="title">
+                    <h4>Last School Attended</h4>
+                    </div>
+                </header>
 
-            <main >
-                <form action="">
-                <div class="row">
-                    <span>
-                    <label for="schoolType">School type</label>
-                    <div>
-                        <select name="schoolType" id="schoolType">
-                            <option value="">SHS</option>
-                            <option value="">College</option>
-                        </select>
-                    </div>
-                    </span>
-                    <span>
-                    <label for="schoolName">School name</label>
-                    <div>
-                        <input
-                        type="text"
-                        name="schoolName"
-                        id="schoolName"
-                        value=""
-                        />
-                    </div>
-                    </span>
-                </div>
-                <div class="row">
-                    <span>
-                    <label for="graduationDate">Graduation date</label>
-                    <div>
-                        <input
-                        type="date"
-                        name="graduationDate"
-                        id="graduationDate"
-                        value=""
-                        />
-                    </div>
-                    </span>
-                    <span>
-                    <label for="schoolYear">School year</label>
-                    <div>
-                        <input
-                        type="text"
-                        name="schoolYear"
-                        id="schoolYear"
-                        placeholder="2022-2023"
-                        value=""
-                        />
-                    </div>
-                    </span>
-                    <span>
-                    <label for="term">Term</label>
-                    <div>
-                        <select name="term" id="term">
-                        <option value="">First term</option>
-                        <option value="">Second term</option>
-                        </select>
-                    </div>
-                    </span>
-                </div>
-                <div class="row">
-                    <span>
-                    <label for="schoolAddress">School address</label>
-                    <div>
-                        <input
-                        type="text"
-                        name="schoolAddress"
-                        id="schoolAddress"
-                        value=""
-                        />
-                    </div>
-                    </span>
-                </div>
-                </form>
-            </main>
+                <main>
+                    <form action="">
+                        <div class="row">
+                            <span>
+                                <label for="schoolType">School type</label>
+                                <div>
+                                    <select name="schoolType" id="schoolType" class="form-control">
+                                        <option value="">SHS</option>
+                                        <option value="">College</option>
+                                    </select>
+                                </div>
+                            </span>
+                            <span>
+                                <label for="schoolName">School name</label>
+                                <div>
+                                    <input type="text" name="schoolName" id="schoolName" value="" class="form-control" />
+                                </div>
+                            </span>
+                        </div>
+                        <div class="row">
+                            <span>
+                                <label for="graduationDate">Graduation date</label>
+                                <div>
+                                    <input type="date" name="graduationDate" id="graduationDate" value="" class="form-control" />
+                                </div>
+                            </span>
+                            <span>
+                                <label for="schoolYear">School year</label>
+                                <div>
+                                    <input type="text" name="schoolYear" id="schoolYear" placeholder="2022-2023" value="" class="form-control" />
+                                </div>
+                            </span>
+                            <span>
+                                <label for="term">Term</label>
+                                <div>
+                                    <select name="term" id="term" class="form-control">
+                                        <option value="">First term</option>
+                                        <option value="">Second term</option>
+                                    </select>
+                                </div>
+                            </span>
+                        </div>
+                        <div class="row">
+                            <span>
+                                <label for="schoolAddress">School address</label>
+                                <div>
+                                    <input type="text" name="schoolAddress" id="schoolAddress" value="" class="form-control" />
+                                </div>
+                            </span>
+                        </div>
+                    </form>
+                </main>
 
-            <header>
-                <div class="title">
-                <h3>Parent/Guardian's Information</h3>
-                <h4>Father's Information</h4>
-                </div>
-            </header>
+            </div>
 
-            <main>
-                <form action="">
-                <div class="row">
-                    <span>
-                    <label for="name">Name</label>
-                    <div>
-                        <input type="text" name="fatherLN" id="fatherLN" value="" />
-                        <small>Last name</small>
-                    </div>
-                    <div>
-                        <input type="text" name="fatherFN" id="fatherFN" value="" />
-                        <small>First name</small>
-                    </div>
-                    <div>
-                        <input type="text" name="fatherMN" id="fatherMN" value="" />
-                        <small>Middle name</small>
-                    </div>
-                    <div>
-                        <input type="text" name="fatherSN" id="fatherSN" value="" />
-                        <small>Suffix name</small>
-                    </div>
-                    </span>
-                </div>
-                <div class="row">
-                    <span>
-                    <label for="phoneNo">Phone no.</label>
-                    <div>
-                        <input
-                        type="text"
-                        name="fatherPhone"
-                        id="fatherPhone"
-                        value=""
-                        />
-                    </div>
-                    </span>
-                    <span>
-                    <label for="email">Email</label>
-                    <div>
-                        <input
-                        type="email"
-                        name="fatherEmail"
-                        id="fatherEmal"
-                        value=""
-                        />
-                    </div>
-                    </span>
-                    <span>
-                    <label for="occupation">Occupation</label>
-                    <div>
-                        <input
-                        type="text"
-                        name="fatherOccupation"
-                        id="fatherOccupation"
-                        value=""
-                        />
-                    </div>
-                    </span>
-                </div>
-                </form>
-            </main>
 
-            <header>
-                <div class="title">
-                <h4>Mother's Information</h4>
-                </div>
-            </header>
+            <div id="father_info">
+                <header>
+                    <div class="title">
+                        <h4>Father's Information</h4>
+                    </div>
+                </header>
+                
+                <main>
+                    <form action="">
+                        <div class="row">
+                            <span>
+                                <label for="name">Name</label>
+                                <div>
+                                    <input  value="<?php echo $father_lastname?>" type="text" name="father_lastname" class="form-control">
+                                    <small>Last name</small>
+                                </div>
+                                <div>
+                                    <input value="<?php echo $father_firstname?>" type="text" name="father_firstname" class="form-control">
+                                    <small>First name</small>
+                                </div>
+                                <div>
+                                    <input value="<?php echo $father_middle?>" type="text" name="father_middle" class="form-control">
+                                    <small>Middle name</small>
+                                </div>
+                                <div>
+                                    <input value="<?php echo $father_suffix?>" type="text" name="father_suffix" class="form-control">
+                                    <small>Father suffix</small>
+                                </div>
+                            </span>
+                        </div>
 
-            <main>
-                <form action="">
-                <div class="row">
-                    <span>
-                    <label for="name">Name</label>
-                    <div>
-                        <input type="text" name="motherLN" id="motherLN" value="" />
-                        <small>Last name</small>
-                    </div>
-                    <div>
-                        <input type="text" name="motherFN" id="motherFN" value="" />
-                        <small>First name</small>
-                    </div>
-                    <div>
-                        <input type="text" name="motherMN" id="motherMN" value="" />
-                        <small>Middle name</small>
-                    </div>
-                    <div>
-                        <input type="text" name="motherSN" id="motherSN" value="" />
-                        <small>Suffix name</small>
-                    </div>
-                    </span>
-                </div>
-                <div class="row">
-                    <span>
-                    <label for="phoneNo">Phone no.</label>
-                    <div>
-                        <input
-                        type="text"
-                        name="motherPhone"
-                        id="motherPhone"
-                        value=""
-                        />
-                    </div>
-                    </span>
-                    <span>
-                    <label for="email">Email</label>
-                    <div>
-                        <input
-                        type="email"
-                        name="motherEmail"
-                        id="motherEmal"
-                        value=""
-                        />
-                    </div>
-                    </span>
-                    <span>
-                    <label for="occupation">Occupation</label>
-                    <div>
-                        <input
-                        type="text"
-                        name="motherOccupation"
-                        id="motherOccupation"
-                        value=""
-                        />
-                    </div>
-                    </span>
-                </div>
-                </form>
-            </main>
+                        <div class="row">
+                            <span>
+                                <label for="phone">Phone no.</label>
+                                <div>
+                                    <input value="<?php echo $father_contact_number?>" type="tel" id="father_contact_number" name="father_contact_number" class="form-control">
+                                </div>
+                            </span>
+                            <span>
+                                <label for="email">Email</label>
+                                <div>
+                                    <input value="<?php echo $father_email?>" type="text" id="father_email" name="father_email" class="form-control">
+                                </div>
+                            </span>
+                            <span>
+                                <label for="occupation">Occupation</label>
+                                <div>
+                                    <input value="<?php echo $father_occupation?>" type="text" id="father_occupation" name="father_occupation" class="form-control">
+                                </div>
+                            </span>
+                        </div>
+                    </form>
+                </main>
+            </div>
 
-            <header>
-                <div class="title">
-                <h4>Guardian's Information</h4>
-                </div>
-            </header>
+            <div id="mother_info">
+                <header>
+                    <div class="title">
+                    <h4>Mother's Information</h4>
+                    </div>
+                </header>
 
-            <main>
-                <form action="">
-                <div class="row">
-                    <span>
-                    <label for="name">Name</label>
-                    <div>
-                        <input
-                        type="text"
-                        name="guardianLN"
-                        id="guardianLN"
-                        value="<?php echo $parent_lastname;?>"
-                        />
-                        <small>Last name</small>
+                <main>
+                    <form action="">
+                        <div class="row">
+                            <span>
+                                <label for="name">Name</label>
+                                <div>
+                                    <input value="<?php echo $mother_lastname;?>" type="text" name="mother_lastname" class="form-control">
+                                    <small>Last name</small>
+                                </div>
+                                <div>
+                                    <input value="<?php echo $mother_firstname;?>" type="text" name="mother_firstname" class="form-control">
+                                    <small>First name</small>
+                                </div>
+                                <div>
+                                    <input value="<?php echo $mother_middle;?>" type="text" name="mother_middle" class="form-control">
+                                    <small>Middle name</small>
+                                </div>
+                                <div>
+                                    <input value="<?php echo $mother_suffix;?>" type="text" name="mother_suffix" class="form-control">
+                                    <small>Mother suffix</small>
+                                </div>
+                            </span>
+                        </div>
+                        
+                        <div class="row">
+                            <span>
+                                <label for="phone">Phone no.</label>
+                                <div>
+                                    <input value="<?php echo $mother_contact_number;?>" type="tel" id="mother_contact_number" name="mother_contact_number" class="form-control">
+                                </div>
+                            </span>
+                            <span>
+                                <label for="email">Email</label>
+                                <div>
+                                    <input value="<?php echo $mother_email;?>" type="text" id="mother_email" name="mother_email" class="form-control">
+                                </div>
+                            </span>
+                            <span>
+                                <label for="occupation">Occupation</label>
+                                <div>
+                                    <input value="<?php echo $mother_occupation;?>" type="text" id="mother_occupation" name="mother_occupation" class="form-control">
+                                </div>
+                            </span>
+                        </div>
+                    </form>
+                </main>
+
+            </div>
+
+
+            <div id="guardian_info">
+
+                <header>
+                    <div class="title">
+                    <h4>Guardian's Information</h4>
                     </div>
-                    <div>
-                        <input
-                        type="text"
-                        name="guardianFN"
-                        id="guardianFN"
-                        value="<?php echo $parent_firstname;?>"
-                        />
-                        <small>First name</small>
-                    </div>
-                    <div>
-                        <input
-                        type="text"
-                        name="guardianMN"
-                        id="guardianMN"
-                        value="<?php echo $parent_middle_name;?>"
-                        />
-                        <small>Middle name</small>
-                    </div>
-                    <div>
-                        <input
-                        type="text"
-                        name="guardianSN"
-                        id="guardianSN"
-                        value="<?php echo $parent_suffix;?>"
-                        />
-                        <small>Suffix name</small>
-                    </div>
-                    </span>
-                </div>
-                <div class="row">
-                    <span>
-                    <label for="phoneNo">Phone no.</label>
-                    <div>
-                        <input
-                        type="text"
-                        name="guardianPhone"
-                        id="guardianPhone"
-                        value="<?php echo $parent_contact_number;?>"
-                        />
-                    </div>
-                    </span>
-                    <span>
-                    <label for="email">Email</label>
-                    <div>
-                        <input
-                        type="email"
-                        name="guardianEmail"
-                        id="guardianEmal"
-                        value="<?php echo $parent_email;?>"
-                        />
-                    </div>
-                    </span>
-                </div>
-                <div class="row">
-                    <span>
-                    <label for="relationship">Relationship</label>
-                    <div>
-                        <input
-                        type="text"
-                        name="guardianRelation"
-                        id="guardianRelation"
-                        value="<?php echo $parent_relationship;?>"
-                        />
-                    </div>
-                    </span>
-                    <span>
-                    <label for="occupation">Occupation</label>
-                    <div>
-                        <input
-                        type="text"
-                        name="guardianOccupation"
-                        id="guardianOccupation"
-                        value="<?php echo $parent_occupation;?>"
-                        />
-                    </div>
-                    </span>
-                </div>
-                </form>
-            </main>
+                </header>
+
+                <main>
+                    <form action="">
+                        <div class="row">
+                        <span>
+                            <label for="name">Name</label>
+                            <div>
+                            <input type="text" name="guardian_firstname" id="guardian_firstname" value="<?php echo $parent_lastname;?>" class="form-control" />
+                            <small>Last name</small>
+                            </div>
+                            <div>
+                            <input type="text" name="guardian_lastname" id="guardian_lastname" value="<?php echo $parent_firstname;?>" class="form-control" />
+                            <small>First name</small>
+                            </div>
+                            <div>
+                            <input type="text" name="guardian_middle_name" id="guardian_middle_name" value="<?php echo $parent_middle_name;?>" class="form-control" />
+                            <small>Middle name</small>
+                            </div>
+                            <div>
+                            <input type="text" name="guardian_suffix" id="guardian_suffix" value="<?php echo $parent_suffix;?>" class="form-control" />
+                            <small>Suffix name</small>
+                            </div>
+                        </span>
+                        </div>
+
+                        <div class="row">
+                        <span>
+                            <label for="phoneNo">Phone no.</label>
+                            <div>
+                            <input type="text" name="guardian_contact" id="guardian_contact" value="<?php echo $parent_contact_number;?>" class="form-control" />
+                            </div>
+                        </span>
+                        <span>
+                            <label for="email">Email</label>
+                            <div>
+                            <input type="email" name="guardian_email" id="guardian_email" value="<?php echo $parent_email;?>" class="form-control" />
+                            </div>
+                        </span>
+                        </div>
+
+                        <div class="row">
+                        <span>
+                            <label for="relationship">Relationship</label>
+                            <div>
+                            <input type="text" name="guardian_relationship" id="guardian_relationship" value="<?php echo $parent_relationship;?>" class="form-control" />
+                            </div>
+                        </span>
+                        <span>
+                            <label for="occupation">Occupation</label>
+                            <div>
+                            <input type="text" name="guardian_occupation" id="guardian_occupation" value="<?php echo $parent_occupation;?>" class="form-control" />
+                            </div>
+                        </span>
+                        </div>
+                    </form>
+                </main>
+            
+
+            </div>
+
 
         </div>
 

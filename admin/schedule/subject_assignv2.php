@@ -86,7 +86,6 @@
                     (room, schedule_day, time_from, time_to, schedule_time, school_year_id, teacher_id, subject_code, subject_program_id, course_id)
                     VALUES(:room, :schedule_day, :time_from, :time_to, :schedule_time, :school_year_id, :teacher_id, :subject_code, :subject_program_id, :course_id)");
                 
-
                 $schedule_time = $time_from . ' '. $time_from_am_pm . ' - ' . $time_to. ' ' . $time_to_am_pm;
 
                 $sql->bindParam(":room", $room);

@@ -12,7 +12,6 @@
 
     public function create($page){
 
-
         $base_url = 'http://localhost/school-system-dcbt/admin';
 
         $dashboard_url = $base_url .  "/dashboard/index.php";
@@ -22,6 +21,8 @@
         $program_url = $base_url .  "/program/shs_index.php";
         $teacher_url = $base_url .  "/teacher/index.php";
         $course_url = $base_url .  "/course/index.php";
+        $grade_module_url = $base_url .  "/grade/index.php";
+        $class_module_url = $base_url .  "/classlist/index.php";
         $user_log_url = $base_url .  "/log/index.php";
         $admin_users_url = $base_url .  "/admin_users/index.php";
 
@@ -50,6 +51,13 @@
 
         $sideBarNavigationItem .= Helper::createNavByIcon("Teacher", 
             "bi bi-person icon ", $teacher_url, Constants::$navigationClass . Helper::GetActiveClass($page, "teacher"));
+
+        $sideBarNavigationItem .= Helper::createNavByIcon("Grades", 
+            "bi bi-collection", $grade_module_url, Constants::$navigationClass . Helper::GetActiveClass($page, "grade"));
+
+        $sideBarNavigationItem .= Helper::createNavByIcon("Classlist", 
+            "bi bi-collection", $class_module_url, Constants::$navigationClass . Helper::GetActiveClass($page, "classlist"));
+
 
         // $sideBarNavigationItem .= Helper::createNavByIcon("Courses", 
         //     "bi bi-book icon ", $course_url, Constants::$navigationClass . Helper::GetActiveClass($page, "course"));

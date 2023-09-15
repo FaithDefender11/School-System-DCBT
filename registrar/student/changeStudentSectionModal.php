@@ -14,24 +14,37 @@
                     <div class="modal-body">
 
                         <div id="errorMessage" class="alert alert-warning d-none"></div>
-
                         
                         <div class='form-group mb-2'>
+                            <?php 
+                            
+                                // echo $student_enrollment_program_id;
+                                // echo "<br>";
+                                
+                                // echo $student_enrollment_course_id;
+                                // echo "<br>";
+
+                                // echo $student_enrollment_course_level;
+                                // echo "<br>";
+                            ?>
                             <label for="" class="mb-2">Available Section</label>
                             <select class='form-control' id="course_id" name='course_id'>
                                 <?php 
+
+
                                     $query = $con->prepare("SELECT * FROM course
                                         WHERE program_id=:program_id
                                         AND course_id != :course_id
                                         AND course_level = :course_level
                                         AND active = 'yes'
                                         AND is_full = 'no'
+                                        AND school_year_term = :school_year_term
 
-                                    ");
-
+                                    "); 
                                     $query->bindParam(":program_id", $student_enrollment_program_id);
                                     $query->bindParam(":course_level", $student_enrollment_course_level);
                                     $query->bindParam(":course_id", $student_enrollment_course_id);
+                                    $query->bindParam(":school_year_term", $current_school_year_term);
                                     $query->execute();
 
                                     $section = new Section($con, $student_enrollment_course_id);
@@ -49,8 +62,7 @@
                                             echo "<option value='".$row['course_id']."' $selected>".$row['program_section']."</option>";
                                         }
                                     }else{
-                                        echo "not";
-
+                                        
                                     }
                                 ?>
                             <input type="hidden" id="enrollment_id" name="enrollment_id" value="<?php echo $student_enrollment_id; ?>">
@@ -110,12 +122,16 @@
 
                 console.log(output)
  
+                // if(false){
                 if(output == "update_success"){
 
                     Swal.fire({
                         icon: 'success',
                         title: 'Success',
                         text: 'Section successfully changed.',
+                        backdrop: false,
+                        allowEscapeKey: false
+                        
                         }).then((result) => {
                       
                         if (result.isConfirmed) {

@@ -2,6 +2,7 @@
 
     include_once('../../includes/registrar_header.php');
     include_once('../../includes/classes/Student.php');
+    include_once('../../includes/classes/Pending.php');
     include_once('../../includes/classes/StudentParent.php');
     include_once('../../includes/classes/Section.php');
     include_once('../../includes/classes/Enrollment.php');
@@ -10,8 +11,10 @@
     include_once('../../includes/classes/SchoolYear.php');
     include_once('../../includes/classes/Schedule.php');
 
+    // echo Helper::RemoveSidebar();
+
     ?>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
     <?php
 
     $school_year = new SchoolYear($con, null);
@@ -25,6 +28,7 @@
 
         $student_id = $_GET['id'];
 
+        
         $GRADE_TWELVE = 12;
         $GRADE_ELEVEN = 11;
 
@@ -73,14 +77,22 @@
         $sex = $student->GetStudentSex();
         $contact_number = $student->GetContactNumber();
         $student_unique_id = $student->GetStudentUniqueId();
+        $student_admission_status = $student->GetAdmissionStatus();
+        $student_active_status = $student->CheckIfActive();
 
+        // echo $student_active_status;
+        
         $email = $student->GetEmail();
         $birthplace = $student->GetStudentBirthPlace();
         $religion = $student->GetReligion();
         $civil_status = $student->GetCivilStatus();
         $nationality = $student->GetNationality();
 
+        $studentHasForm = $student->CheckUnEnrolledStudentDoesntHavePrevForm($student_id,
+            $current_school_year_id);
+
         $parent_id = $parent->GetParentID();
+
 
         // Guardian
         $parent_firstname = $parent->GetFirstName();
@@ -93,7 +105,6 @@
         $parent_relationship = $parent->GetGuardianRelationship();
         // 
 
-
         // Father
         $father_firstname = $parent->GetFatherFirstName();
         $father_lastname = $parent->GetFatherLastName();
@@ -104,7 +115,7 @@
         $father_occupation = $parent->GetFatherOccupation();
 
 
-        // Father
+        // Mother
         $mother_firstname = $parent->GetMotherFirstName();
         $mother_lastname = $parent->GetMotherLastName();
         $mother_middle = $parent->GetMotherMiddleName();
@@ -114,9 +125,7 @@
         $mother_occupation = $parent->GetMotherOccupation();
 
         // 
-        
-        $student_program_id = $section->GetSectionProgramId($student_course_id);
-        
+
         $student_enrollment_id = $enrollment->GetEnrollmentIdNonDependent($student_id,
             $current_school_year_id);
 
@@ -126,8 +135,12 @@
         $student_enrollment_program_id = $section->
             GetSectionProgramId($student_enrollment_course_id);
 
-            // echo $student_enrollment_id;
+            // echo $student_enrollment_course_id;
         // echo $student_enrollment_id;
+
+
+        $student_program_id = $section->GetSectionProgramId($student_course_id == 0 ? $student_enrollment_course_id : $student_course_id);
+
 
         $enrollment_date = $enrollment->GetStudentEnrollmentDateWithinSemester($student_id, $student_course_id, $current_school_year_id);
 
@@ -138,6 +151,8 @@
 
         $checkEnrollmentEnrolled = $enrollment->CheckEnrollmentEnrolled($student_id,
                 $student_course_id, $current_school_year_id, $student_enrollment_id);
+
+                // var_dump($checkEnrollmentEnrolled);
 
         $cashierEvaluated = $enrollment->CheckEnrollmentCashierApproved($student_id,
                 $student_course_id, $current_school_year_id);
@@ -195,7 +210,7 @@
 
         if(isset($_GET['enrolled_subject']) && $_GET['enrolled_subject'] == "show"){
 
-            include_once('./enrolled_subjectv2.php');
+            include_once('./enrolled_subject.php');
 
         }
     }

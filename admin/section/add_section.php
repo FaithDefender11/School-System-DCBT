@@ -22,10 +22,13 @@
 
     // $current_school_year_period = "Second";
 
-    if(isset($_GET['id']) && isset($_GET['level'])){
+    if(isset($_GET['id']) 
+        && isset($_GET['level'])
+        && isset($_GET['term'])){
 
         $course_level = $_GET['level'];
         $program_id = $_GET['id'];
+        $selected_term = $_GET['term'];
 
         $program = new Program($con, $program_id);
 
@@ -46,6 +49,7 @@
         $department_type_section = $_SESSION['department_type_section'];
 
         $back_url = "";
+
         if($department_type_section === "Senior High School"){
             $back_url = "shs_list.php?id=$program_id&term=$section_term";
 
@@ -57,11 +61,13 @@
             CreateCourseLevelDropdownDepartmentBased($department_type_section,
                 $course_level);
  
-        if(isset($_POST['create_section_btn']) &&
+        if($_SERVER['REQUEST_METHOD'] === "POST" &&
+            isset($_POST['create_section_btn']) &&
             isset($_POST['program_section']) && 
             isset($_POST['program_id']) &&
             isset($_POST['capacity']) &&
-            isset($_POST['adviser_teacher_id'])
+            isset($_POST['min_student']) 
+            // && isset($_POST['adviser_teacher_id'])
             // isset($_POST['room'])
             // isset($_POST['room_id'])
             // isset($_POST['course_level'])
@@ -73,13 +79,16 @@
             $program_section = $_POST['program_section'];
             $program_id = $_POST['program_id'];
             $capacity = $_POST['capacity'];
-            $adviser_teacher_id = $_POST['adviser_teacher_id'];
+
+            $min_student = $_POST['min_student'];
+
+            $adviser_teacher_id = $_POST['adviser_teacher_id'] ?? NULL;
             // $room = $_POST['room'];
 
             // $room_id = $_POST['room_id'];
 
-            $first_period_room_id = isset($_POST['first_period_room_id']) ? $_POST['first_period_room_id'] : 0;
-            $second_period_room_id = isset($_POST['second_period_room_id']) ? $_POST['second_period_room_id'] : 0;
+            $first_period_room_id = isset($_POST['first_period_room_id']) ? $_POST['first_period_room_id'] : NULL;
+            $second_period_room_id = isset($_POST['second_period_room_id']) ? $_POST['second_period_room_id'] : NULL;
 
             // echo $first_period_room_id;
             // echo "<br>";
@@ -91,19 +100,18 @@
             $not_full = "no";
 
             if($first_period_room_id != 0 && $current_school_year_period == "First"
-                && $section->CheckSHSRoomIsTaken($first_period_room_id,
+                && $section->CheckRoomIsTakenCurrentSemester($first_period_room_id,
                 "first_period_room_id",
                 $current_school_year_term)){
 
                 Alert::error("The chosen Room already has been taken. Please choose an available one.",
                     "");
-                    // "shs_list.php?id=$program_id&term=$current_school_year_term");
                 return;
             }
 
             if($second_period_room_id != 0 && 
                 $current_school_year_period == "Second"
-                && $section->CheckSHSRoomIsTaken($second_period_room_id,
+                && $section->CheckRoomIsTakenCurrentSemester($second_period_room_id,
                     "second_period_room_id",
                     $current_school_year_term)){
                     
@@ -113,56 +121,9 @@
             }
 
             if($section->CheckSetionExistsWithinCurrentSY($program_section,
-                $current_school_year_term) == true){
-                Alert::error("$program_section already exists within $current_school_year_term term", "add_section.php?id=$program_id&level=$course_level");
+                $selected_term) == true){
+                Alert::error("$program_section already exists within $term term", "add_section.php?id=$program_id&level=$course_level&term=$selected_term");
                 exit();
-            }
-
-            if(false){
-            // if($current_school_year_period == "First"){
-
-                $insert = $con->prepare("INSERT INTO course
-                    (program_section, program_id, capacity, adviser_teacher_id, 
-                        school_year_term, first_period_room_id, active, is_full, course_level, is_tertiary)
-
-                    VALUES(:program_section, :program_id, :capacity, :adviser_teacher_id,
-                        :school_year_term, :first_period_room_id, :active, :is_full, :course_level, :is_tertiary)");
-                
-                $insert->bindParam(":program_section", $program_section);
-                $insert->bindParam(":program_id", $program_id);
-                $insert->bindParam(":capacity", $capacity);
-                $insert->bindParam(":adviser_teacher_id", $adviser_teacher_id);
-                // $insert->bindParam(":room", $room);
-                $insert->bindParam(":school_year_term", $current_school_year_term);
-                $insert->bindParam(":first_period_room_id", $room_id);
-                $insert->bindParam(":active", $is_active);
-                $insert->bindParam(":is_full", $not_full);
-                $insert->bindParam(":course_level", $course_level, PDO::PARAM_INT);
-                $insert->bindParam(":is_tertiary", $is_tertiary, PDO::PARAM_INT);
-                $insert->execute();
-
-                if($insert->rowCount() > 0){
-
-                    $recently_created_course_id = $con->lastInsertId();
-
-                    $sectionExec = new Section($con, $recently_created_course_id);
-                    $section_type = $sectionExec->GetSectionType();
-
-                    if($recently_created_course_id != 0){
-
-                        $room = new Room($con);
-
-                        $wasSuccess = $room->RoomTypeUpdate(
-                            $room_id, $section_type);
-
-                        if($wasSuccess){
-                            Alert::success("Successfully created $program_section section (S.Y $current_school_year_term).",
-                                    "$back_url");
-                            exit();
-                        }
-                    }
-                }
-                
             }
 
             $insert = "";
@@ -171,23 +132,22 @@
 
                 $insert = $con->prepare("INSERT INTO course
                     (program_section, program_id, capacity, adviser_teacher_id, 
-                    school_year_term, first_period_room_id, active, is_full, course_level, is_tertiary)
+                    school_year_term, first_period_room_id, active, is_full, course_level, is_tertiary, min_student)
 
                     VALUES(:program_section, :program_id, :capacity, :adviser_teacher_id,
-                    :school_year_term, :first_period_room_id, :active, :is_full, :course_level, :is_tertiary)");
+                    :school_year_term, :first_period_room_id, :active, :is_full, :course_level, :is_tertiary, :min_student)");
 
                 $insert->bindParam(":first_period_room_id", $first_period_room_id);
-
             } 
             // else if (false) {
             else if ($current_school_year_period == "Second") {
 
                 $insert = $con->prepare("INSERT INTO course
                     (program_section, program_id, capacity, adviser_teacher_id, 
-                    school_year_term, second_period_room_id, active, is_full, course_level, is_tertiary)
+                    school_year_term, second_period_room_id, active, is_full, course_level, is_tertiary, min_student)
 
                     VALUES(:program_section, :program_id, :capacity, :adviser_teacher_id,
-                    :school_year_term, :second_period_room_id, :active, :is_full, :course_level, :is_tertiary)");
+                    :school_year_term, :second_period_room_id, :active, :is_full, :course_level, :is_tertiary, :min_student)");
 
                 $insert->bindParam(":second_period_room_id", $second_period_room_id);
             }
@@ -196,11 +156,13 @@
             $insert->bindParam(":program_id", $program_id);
             $insert->bindParam(":capacity", $capacity);
             $insert->bindParam(":adviser_teacher_id", $adviser_teacher_id);
-            $insert->bindParam(":school_year_term", $current_school_year_term);
+            $insert->bindParam(":school_year_term", $selected_term);
             $insert->bindParam(":active", $is_active);
             $insert->bindParam(":is_full", $not_full);
             $insert->bindParam(":course_level", $course_level, PDO::PARAM_INT);
             $insert->bindParam(":is_tertiary", $is_tertiary, PDO::PARAM_INT);
+            $insert->bindParam(":min_student", $min_student, PDO::PARAM_INT);
+            
             $insert->execute();
 
             // if(false){
@@ -214,7 +176,7 @@
                 if($recently_created_course_id != 0
                     && ($first_period_room_id == 0 || $second_period_room_id == 0)){
 
-                    Alert::success("Successfully created $program_section section (S.Y $current_school_year_term).",
+                    Alert::success("Successfully created1 $program_section section (S.Y $current_school_year_term).",
                         "$back_url");
                     exit();
                 }
@@ -224,8 +186,6 @@
 
                     $room = new Room($con);
 
-                    // $current_school_year_period = "Second";
-
                     $room_id = $current_school_year_period == "First" ? $first_period_room_id
                         : ($current_school_year_period == "Second" ? $second_period_room_id : 0);
 
@@ -233,9 +193,8 @@
                         $room_id, $section_type);
 
                     if($wasSuccess){
-                        Alert::success("Successfully created $program_section section (S.Y $current_school_year_term).",
+                        Alert::success("Successfully created2 $program_section section (S.Y $current_school_year_term).",
                             "$back_url");
-
                         exit();
                     }
                 }
@@ -244,15 +203,18 @@
         }
 
         ?>
-            <div class='col-md-12 row'>
+            <div class='content'>
+
+                <nav>
+                    <a href="<?php echo $back_url;?>">
+                        <i class="bi bi-arrow-return-left fa-1x"></i>
+                        <h3>Back</h3>
+                    </a>
+                </nav>
+
                 <div class='col-md-10 offset-md-1'>
                     <div class='card'>
-                        <hr>
-                        <a style="margin-left: 10px;" href="<?php echo $back_url;?>">
-                            <button class="btn btn-primary">
-                                <i class="fas fa-arrow-left"></i>
-                            </button>
-                        </a>
+                        
                         <div class='card-header'>
                             <h4 class='text-center mb-3'><?php echo $program->GetProgramSectionName();?><?php echo $course_level;?> Add Section</h4>
                         </div>
@@ -269,10 +231,13 @@
                                         value="<?php echo $program->GetProgramSectionName();?><?php echo $course_level;?>-" placeholder='e.g: STEM11-A, ABM11-A' name='program_section'>
                                 </div>
     
-                                <!-- <?php echo $courseLevelDropdown;?> -->
+                                <div class='form-group mb-2'>
+                                    <label class='mb-2'>* Minimum Capacity</label>
+                                    <input required class='form-control' value="<?php echo $db_min_capacity; ?>" type='number' placeholder='Minimum Capacity' name='min_student'>
+                                </div>
 
                                 <div class='form-group mb-2'>
-                                    <label class='mb-2'>Capacity</label>
+                                    <label class='mb-2'>* Maximum Capacity</label>
                                     <input required class='form-control' value="30" type='number' placeholder='Room Capacity' name='capacity'>
                                 </div>
 
@@ -283,7 +248,7 @@
                                 <div class='form-group mb-2'>
                                     <label class='mb-2'>Adviser Name</label>
 
-                                    <select required class="form-control" name="adviser_teacher_id" id="adviser_teacher_id">
+                                    <select class="form-control" name="adviser_teacher_id" id="adviser_teacher_id">
                                         <?php
                                             $query = $con->prepare("SELECT * FROM teacher");
                                             $query->execute();

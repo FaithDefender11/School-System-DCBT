@@ -41,6 +41,22 @@ class Program{
         return isset($this->sqlData['program_name']) ? ucfirst($this->sqlData["program_name"]) : ""; 
     }
 
+    public function GetProgramNamev2($program_id) {
+
+        $query = $this->con->prepare("SELECT program_name FROM program
+                WHERE program_id=:program_id");
+
+        $query->bindParam(":program_id", $program_id);
+        $query->execute();
+        
+        if($query->rowCount() > 0){
+            return $query->fetchColumn();
+        }
+
+        return "";
+    }
+
+
     public function GetProgramDean() {
         return isset($this->sqlData['dean']) ? ucfirst($this->sqlData["dean"]) : ""; 
     }
@@ -181,7 +197,7 @@ class Program{
 
             INNER JOIN department as t2 ON t2.department_id = t1.department_id
             
-            -- WHERE t1.department_id=:department_id
+            WHERE t1.auto_create= 'yes'
             ");
             
         // $sql->bindParam(":");

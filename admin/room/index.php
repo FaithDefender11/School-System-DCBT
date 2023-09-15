@@ -1,17 +1,26 @@
 
-
 <?php 
 
     include_once('../../includes/admin_header.php');
-?>
+    include_once('../../includes/classes/SchoolYear.php');
+    include_once('../../includes/classes/Room.php');
 
+    $school_year = new SchoolYear($con, null);
+    $school_year_obj = $school_year->GetActiveSchoolYearAndSemester();
+
+    $current_school_year_term = $school_year_obj['term'];
+    $current_school_year_period = $school_year_obj['period'];
+    $current_school_year_id = $school_year_obj['school_year_id'];
+
+
+?>
 
 <div class="content">
     <main>
         <div class="floating" id="shs-sy">
             <header>
                 <div class="title">
-                    <h3>Room</h3>
+                    <h3>Available Room for <?php echo $current_school_year_term;?> <?php echo $current_school_year_period;?> Semester</h3>
                 </div>
 
                 <div class="action">
@@ -53,12 +62,19 @@
                                     $program_section = $row['program_section'] ?? "-";
 
                                     $removeRoomBtn = "removeRoomBtn($room_id)";
+
+
+                                    $room = new Room($con, $room_id);
+
+                                    $room_assigned = $room->GetRoomSectionFilled($room_id, $current_school_year_period);
+
+                                    $room_assigned = $room_assigned ?? "-";
                                     
                                     echo "
                                         <tr>
                                             <td>$room_id</td>
                                             <td>$room_name</td>
-                                            <td>$program_section</td>
+                                            <td>$room_assigned</td>
                                             <td>$room_capacity</td>
                                             <td>
                                                 <a href='edit.php?id=$room_id'>

@@ -40,10 +40,10 @@ a {
 }
 
 .mainContentContainer {
-
   /* display: flex; */
   flex: 1;
-  padding: 10px 15px;
+  /* padding: 10px 15px; */
+  padding: 7px 0px;
 }
 
 .sidebar-nav h3 {
@@ -122,8 +122,6 @@ a {
   height: 40px;
   display: flex;
 }
-
- 
 
 .sidebar-nav .navigationItem img {
   height: 18px;

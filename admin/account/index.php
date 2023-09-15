@@ -7,36 +7,55 @@
 
     require "../../vendor/autoload.php";
 
+    if(isset($_POST['reset_student_password']) 
+        && isset($_POST['student_username'])){
 
-    if(isset($_POST['reset_student_password']) && isset($_POST['student_username'])){
+        try {
 
-        $student_username = $_POST['student_username'];
+            $student_username = $_POST['student_username'];
 
-        // $enroll = new StudentEnroll($con);
-        $student = new Student($con, $student_username);
+            // $enroll = new StudentEnroll($con);
+            $student = new Student($con, $student_username);
 
-        $email = new Email();
+            $email = new Email();
 
-        $student_email = $student->GetEmail();
-        $b = $student->GenerateBirthdayAsPassword();
+            $student_email = $student->GetEmail();
+            $b = $student->GenerateBirthdayAsPassword();
 
-        // echo $b;
-        $temporaryPassword = $student->ResetPassword($student_username);
+            // echo $b;
+            $temporaryPassword = $student->ResetPassword($student_username);
 
-        if(count($temporaryPassword) > 0 && $temporaryPassword[1] == true){
+            if(count($temporaryPassword) > 0 && $temporaryPassword[1] == true){
 
-            $isEmailSent = $email->SendTemporaryPassword($student_email,
-                $temporaryPassword[0]);
+                $isEmailSent = $email->SendTemporaryPassword($student_email,
+                    $temporaryPassword[0]);
 
-            if($isEmailSent == true){
-                echo "Email reset password has been sent to: $student_email";
+                if($isEmailSent == true){
+                // if(true){
+                    Alert::success("Email reset password has been sent to: $student_email", "");
+                }else{
+                    echo "Sending reset password via email went wrong";
+                }
+
             }else{
-                echo "Sending reset password via email went wrong";
+                echo "Password did not reset";
             }
 
-        }else{;
-            echo "Password did not reset";
+            //code...
+        } catch (Exception $e) {
+
+            // Handle PHPMailer exceptions
+            echo 'Message could not be sent. PHPMailer Error: ' . $e->getMessage();
+            //  echo 'SMTP Error Code: ' . $mail->smtp->getError()['error'];
+            // Check for specific errors and provide alternative messages
+            if (strpos($e->getMessage(), 'Maximum execution time') !== false) {
+                echo 'Email sending timed out. Please try again later or contact support.';
+            }
         }
+
+        
+
+        
 
     }
 
@@ -55,7 +74,7 @@
             </div>
           </header>
           <div class="filters">
-            <table>
+            <table class="a">
               <tr>
                 <th rowspan="2" style="border-right: 2px solid black">
                   Search by
@@ -73,6 +92,7 @@
             <input type="text" />
             <button type="submit"><i class="bi bi-search"></i>Search</button>
           </main>
+
         </div>
 
         <div class="floating" id="shs-sy">
@@ -84,7 +104,7 @@
                
             </header>
             <main>
-                <table id="department_table" class="ws-table-all cw3-striped cw3-bordered" style="margin: 0">
+                <table id="department_table" class="a" style="margin: 0">
                     <thead>
                         <tr class="text-center"> 
                             <th rowspan="2" >Student Id</th>  

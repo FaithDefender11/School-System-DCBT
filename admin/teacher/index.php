@@ -2,16 +2,7 @@
 
   include_once('../../includes/admin_header.php');
   include_once('../../includes/classes/Teacher.php');
-
-    ?>
-        <head>
-            <meta charset="UTF-8">
-            <meta http-equiv="X-UA-Compatible" content="IE=edge">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <link rel="stylesheet" href="../subject/subject.css">
-        </head>
-    <?php
-
+ 
   $teacher = new Teacher($con, null);
 
 ?>
@@ -19,13 +10,32 @@
 
 <div class="content">
  
-  <?php echo Helper::CreateTopDepartmentTab(false, "index.php"); ?>
-
-  <div class="content-header"></div>
-  
-  <?php echo Helper::CreateTwoTabs("index.php", "Teacher List",
-    "subject_load.php", "Subject Load");?>
  
+  <div class="tabs">
+    <?php
+        echo "
+            <button class='tab' 
+                style='background-color: var(--them)'
+                onclick=\"window.location.href = 'index.php';\">
+                <i class='bi bi-clipboard-check'></i>
+                Teacher List
+            </button>
+        ";
+
+        echo "
+            <button class='tab' 
+                id='shsPayment'
+                style='background-color: var(--mainContentBG); color: white'
+                onclick=\"window.location.href = 'subject_schedule.php';\">
+                <i class='bi bi-book'></i>
+                Teacher Schedule
+            </button>
+        ";
+    ?>
+  </div>
+
+
+  
 
   <!--SHS-TEACHERS-->
   <main>

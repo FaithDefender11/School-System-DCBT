@@ -18,7 +18,7 @@
                 </div>
             </header>
             <main>
-                <table id="department_table" class="ws-table-all cw3-striped cw3-bordered" style="margin: 0">
+                <table id="department_table" class="a" style="margin: 0">
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -30,7 +30,6 @@
                     </thead>
                     <tbody>
                         <?php
-                        
 
                             $query = $con->prepare("SELECT * FROM users
                             ");
@@ -47,6 +46,7 @@
                                 $user_id = $row['user_id'];
 
                                 $removeDepartmentBtn = "removeAdminBtn($user_id)";
+                                
                                 echo "
                                 <tr>
                                     <td>$user_id</td>

@@ -6,10 +6,15 @@
     include_once('../../includes/classes/SchoolYear.php');
     include_once('../../includes/classes/Schedule.php');
     include_once('../../includes/classes/Program.php');
+    include_once('../../includes/classes/Room.php');
+    include_once('../../includes/classes/SubjectProgram.php');
+    include_once('../../includes/classes/StudentSubject.php');
 
     $school_year = new SchoolYear($con, null);
-    $section = new Section($con, null);
     $enrollment = new Enrollment($con);
+    
+    $room = new Room($con);
+
     $school_year_obj = $school_year->GetActiveSchoolYearAndSemester();
 
     $current_school_year_term = $school_year_obj['term'];
@@ -22,34 +27,47 @@
     // $period_acronym = $current_school_year_period === "First" ? "S1" : $current_school_year_period === "Second" ? "S2" : "";
     $period_acronym = ($current_school_year_period === "First") ? "S1" : (($current_school_year_period === "Second") ? "S2" : "");
 
-
     if (isset($_GET['id'])
-        || isset($_GET['per_semester'])) {
+        && isset($_GET['per_semester'])
+        && isset($_GET['term'])
+        
+        ) {
 
         $course_id = $_GET['id'];
+        $term = $_GET['term'];
+
 
         $section = new Section($con, $course_id);
+        $student_subject = new StudentSubject($con);
 
         $promptIfIdNotExists = $section->CheckIdExists($course_id);
         $section_name = $section->GetSectionName($course_id);
         $section_level = $section->GetSectionGradeLevel($course_id);
         $section_program_id = $section->GetSectionProgramId($course_id);
         $section_acronym = $section->GetAcronymByProgramId($section_program_id);
- 
+
+
+
         $recordsPerPageOptions = ["First", "Second"]; 
 
-
+        $schedule = new Schedule($con);
+        $subject_program = new SubjectProgram($con);
 
         $selectedSemester = isset($_GET['per_semester']) 
-            ? $_GET['per_semester'] : $recordsPerPageOptions[0];
+            ? ucfirst($_GET['per_semester']) : $recordsPerPageOptions[0];
+
         
-        $db_school_year_id = $school_year->GetSchoolYearIdBySyID($selectedSemester,
-            $current_school_year_term);
+        $sectionRoomFirstSemester = $section->GetSectionRoomNumberBySemester(
+            $selectedSemester, $course_id, $term) ?? NULL;
+        
+        $sectionRoomOutput = "N/A";
 
-        $totalStudent = $section->GetTotalNumberOfStudentInSection($course_id, 
-            $db_school_year_id);
+        if($sectionRoomFirstSemester != NULL){
+            $sectionRoomOutput = "RM $sectionRoomFirstSemester";
 
-        $recordsPerPageDropdown = '<select class="form-control" 
+        }
+
+        $recordsPerPageDropdown = '<select class="ml-2 form-control" 
             name="per_semester" onchange="this.form.submit()">';
 
         foreach ($recordsPerPageOptions as $option) {
@@ -70,12 +88,22 @@
         $back_url = "";
 
         $section_term = "";
-
         if(isset($_SESSION['section_term'])){
             $section_term = $_SESSION['section_term'];
         }
 
+        $db_school_year_id = $school_year->GetSchoolYearIdBySyID($selectedSemester,
+            $section_term);
+
+        $totalStudent = $section->GetTotalNumberOfStudentInSection($course_id, 
+            $db_school_year_id);
+
+
+            // echo $db_school_year_id;
+            // echo "<br>";
         $department_type_section = "";
+
+        // echo $section_term;
 
         if(isset($_SESSION['department_type_section'])){
             $department_type_section = $_SESSION['department_type_section'];
@@ -94,6 +122,7 @@
         $admission_status= "";
         $type = "";
 
+        // $room_number = $room->GetR
 
         if(isset($_POST['deleteScheduleBtn'])
             && isset($_POST['subject_schedule_id'])
@@ -128,6 +157,7 @@
                         <form method="GET" class="form-inline" action="<?php echo $_SERVER['REQUEST_URI']; ?>">
                             <!-- Hidden input field to preserve the 'id' parameter -->
                             <input type="hidden" name="id" value="<?php echo $_GET['id']; ?>">
+                            <input type="hidden" name="term" value="<?php echo $_GET['term']; ?>">
                             <label for="per_semester">Choose Semester:</label>
                             <?php echo $recordsPerPageDropdown; ?>
                         </form>
@@ -138,6 +168,7 @@
                         <div class="title">
                             <h1><?php echo $section_name?></h1> 
                         </div>
+                        <span >Room No. <span class="text-primary"><?php echo $sectionRoomOutput; ?></span></span>
                         
                         <!-- <div class="action">
                             <div class="dropdown">
@@ -161,7 +192,7 @@
                     </header>
 
                     <?php echo Helper::SectionHeaderCards($course_id,
-                        $current_school_year_term, $selectedSemester, $section_acronym, $section_level,
+                        $term, $selectedSemester, $section_acronym, $section_level,
                         $totalStudent); ?>
                     
                 </div>
@@ -177,6 +208,7 @@
 
                                 <div class="action">
                                     <a href="students_enrolled.php?course_id=<?php echo $course_id?>&sy_id=<?php echo $db_school_year_id;?>">
+
                                         <button type="button" class="default large">Show Student</button>
                                     </a>
                                 </div>
@@ -191,8 +223,8 @@
                                             <th>Code</th>
                                             <th>Days</th>
                                             <th>Time</th>
-                                            <th>Room</th>
                                             <th>Enrolled</th>
+                                            <th>Room</th>
                                             <th>Instructor</th>
                                             <th>Action</th>
                                         </tr>
@@ -220,13 +252,17 @@
                                                 t4.time_from,
                                                 t4.schedule_time,
                                                 t4.schedule_day,
-                                                t4.room,
+                                                t4.room_id,
                                                 t4.subject_schedule_id,
                                                 t4.course_id AS schedule_course_id,
 
                                                 t5.teacher_id,
                                                 t5.firstname,
                                                 t5.lastname
+
+                                                -- ,t6.student_subject_id
+
+                                                ,t6.room_number
 
 
                                                 FROM subject_program as t1
@@ -244,6 +280,10 @@
                                                 LEFT JOIN teacher as t5 ON t5.teacher_id = t4.teacher_id
 
 
+                                                LEFT JOIN room as t6 ON t6.room_id = t4.room_id
+                                                -- LEFT JOIN student_subject as t6 ON t6.subject_program_id = t1.subject_program_id
+
+
                                                 WHERE t2.course_id=:course_id
                                                 AND t1.semester=:semester
                                                 AND t1.program_id=:program_id
@@ -256,43 +296,6 @@
                                                 ORDER BY t1.subject_title DESC
                                                 
                                             ");
-
-                                            // $sql = $con->prepare("SELECT 
-                                            //     t1.subject_title,
-                                            //     t1.subject_program_id,
-                                            //     t1.pre_req_subject_title,
-                                            //     t1.subject_type,
-                                            //     t1.course_level,
-                                            //     t1.semester,
-                                            //     t1.unit,
-                                            //     t1.subject_code,
-                                            //     t2.program_section,
-                                            //     t2.course_id,
-                                            //     t4.subject_code AS schedule_code,
-                                            //     t4.time_to,
-                                            //     t4.time_from,
-                                            //     t4.schedule_time,
-                                            //     t4.schedule_day,
-                                            //     t4.room,
-                                            //     t4.subject_schedule_id,
-                                            //     t4.course_id AS schedule_course_id
-
-                                            //     FROM subject_program as t1
-
-                                            //     INNER JOIN course as t2 ON t2.program_id = t1.program_id
-                                            //     LEFT JOIN subject_schedule as t4 ON t4.course_id = t2.course_id
-                                            //         AND t4.subject_program_id = t1.subject_program_id
-
-                                            //     WHERE t2.course_id = :course_id
-                                            //         AND t1.semester = :semester
-                                            //         AND t1.program_id = :program_id
-                                            //         AND t1.course_level = :course_level
-
-                                            //     GROUP BY t1.subject_title -- Distinct on t1.subject_title
-
-                                            //     ORDER BY t1.course_level DESC, t1.semester
-                                            // ");
-
                                             
                                             $sql->bindParam(":program_id", $section_program_id);
                                             $sql->bindParam(":course_level", $section_level);
@@ -313,7 +316,7 @@
 
                                                 while($row = $sql->fetch(PDO::FETCH_ASSOC)){
                                                     
-                                                    $schedule = new Schedule($con);
+
                                                     
                                                     $course_id = $row['course_id'];
                                                     $section = new Section($con, $course_id);
@@ -326,8 +329,13 @@
 
                                                     $subject_title = $row['subject_title'];
 
-                                                    $room = $row['room'] ?? "-";
+                                                    // $room = $row['room'] ?? "-";
+                                                    // $room = $row['room'] == 0 ? "-" : $row['room'];
+
                                                     $schedule_day = $row['schedule_day'] ?? "-";
+                                                    $room_number = $row['room_number'] ?? "-";
+
+
 
                                                     $add_teacher_url = "
                                                         <button class='btn btn-sm btn-primary'>
@@ -342,6 +350,9 @@
                                                     // $schedule->filterSubsequentOccurrences($room_occurrences, $room);
                                                     // $schedule->filterSubsequentOccurrences($teacher_fullname_occurrences, $teacherFullName);
                                                     // $schedule->filterSubsequentOccurrences($days_occurrences, $schedule_day);
+
+                                                    // $student_subject_id = $row['student_subject_id'];
+                                                    // echo $student_subject_id;
 
                                                     $subject_program_id = $row['subject_program_id'];
                                                     $course_level = $row['course_level'];
@@ -402,11 +413,27 @@
                                                         "; 
                                                     }
 
-                                                    // <td>$schedule_day</td>
-                                                    // <td>$schedule_time</td>
-                                                    // <td>$room</td>
+
+                                                    $subject_enrolled_url = "";
 
 
+                                                    $student_subject_enrolled = $subject_program->GetSectionSubjectEnrolledStudents($subject_program_id,
+                                                        $course_id, $section_subject_code);
+
+                                                    $student_subject_enrolled = $student_subject_enrolled == 0 ? "" : $student_subject_enrolled;
+                                                    
+
+                                                    $subject_enrolled_url = "
+                                                        <a style='color: inherit' href='subject_code_enrolled.php?id=$current_school_year_id&cd=$section_subject_code'>
+                                                            $student_subject_enrolled
+                                                        </a>
+                                                    ";
+
+                                                    // $asd = $student_subject->GetIdBySubjectCode($section_subject_code,
+                                                    //     $current_school_year_id);
+                                                    
+                                                    // echo $asd;
+                                                    
                                                     echo "
                                                         <tr class='text-center'>
                                                             <td>$subject_title</td>
@@ -417,8 +444,9 @@
                                                             </td>
                                                             <td>$schedule_day</td>
                                                             <td>$schedule_time</td>
-                                                            <td>$room</td>
-                                                            <td></td>
+                                                            <td>$subject_enrolled_url</td>
+                                                            <td>$room_number</td>
+                                                            
                                                             <td>$teacherFullName</td>
                                                             <td>
                                                                 <div style='display: flex;'>

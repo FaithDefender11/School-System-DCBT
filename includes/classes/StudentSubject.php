@@ -28,6 +28,7 @@
         return isset($this->sqlData['course_id']) ? $this->sqlData["course_id"] : 0; 
     }
 
+ 
 
     public function GetStudentSubjectEnrollmentId() {
         return isset($this->sqlData['enrollment_id']) ? $this->sqlData["enrollment_id"] : 0; 
@@ -65,19 +66,26 @@
         $sql->bindParam("subject_title", $subject_title);
         $sql->execute();
 
-        $isThere = false;
-
-        // if($sql->rowCount() > 0){
-        //     // echo "Subject ID: $subject_id already there";
-        //     // exit();
-        //     $isThere = true;
-
-        // }else{
-        //     // echo "not there";
-        //     $isThere = false;
-        // }
-
         return $sql->rowCount() > 0;
+    }
+
+    public function GetStudentSubjectCourseIdByYearAndCode($subject_code, $school_year_id){
+
+        $sql = $this->con->prepare("SELECT t1.course_id FROM student_subject as t1
+
+            WHERE t1.subject_code=:subject_code
+            AND t1.school_year_id=:school_year_id
+            LIMIT 1
+            ");
+
+        $sql->bindParam("subject_code", $subject_code);
+        $sql->bindParam("school_year_id", $school_year_id);
+        $sql->execute();
+
+        if($sql->rowCount() > 0){
+            return $sql->fetchColumn();
+        }
+        return NULL;
     }
 
     public function AddNonFinalDefaultEnrolledSubject($student_id, 
@@ -148,10 +156,12 @@
                     continue;
                 }
 
-                // if($checkIfSubjectNotPassedForPreRequisite == true){
-                //     // $hasError = true;
-                //     continue;
-                // }
+                // responsible for filtering-out the failed pre-requisite subjects
+                // of current target subject
+                if($checkIfSubjectNotPassedForPreRequisite == true){
+                    // $hasError = true;
+                    continue;
+                }
 
                 // echo $subject_code;
 
@@ -557,54 +567,7 @@
 
     }
 
-
-    public function ChangingStudentSubjectCourseId($enrollment_id, $student_course_id,
-        $student_id, $current_school_year_id, $chosen_course_id,
-        $student_subject_id, $student_subject_program_id,
-        $student_enrollment_status = null){
-
-        $is_final = 0;
-
-        $section = new Section($this->con, $chosen_course_id);
-        $subject_program = new SubjectProgram($this->con, $student_subject_program_id);
-
-        $program_section = $section->GetSectionName();
-
-        $subject_code = $subject_program->GetSubjectProgramRawCode();
-
-        $section_subject_code = $section->CreateSectionSubjectCode($program_section,
-            $subject_code);
-
-        // echo $student_enrollment_status;
-        
-        $update = $this->con->prepare("UPDATE student_subject as t1
-            SET course_id=:chosen_course_id,
-                subject_code=:section_subject_code
-                -- is_final = :set_is_final
-
-            WHERE t1.enrollment_id = :enrollment_id
-            AND t1.course_id = :course_id
-            AND t1.student_id = :student_id
-            AND t1.school_year_id = :school_year_id
-            -- AND t1.is_final = :is_final
-            AND t1.student_subject_id = :student_subject_id
-            
-            ");
-        
-        $update->bindParam(":chosen_course_id", $chosen_course_id);
-        $update->bindParam(":section_subject_code", $section_subject_code);
-        // $update->bindValue(":set_is_final", $student_enrollment_status == "enrolled" ? 1 : 0);
-        $update->bindParam(":enrollment_id", $enrollment_id);
-        $update->bindParam(":course_id", $student_course_id);
-        $update->bindParam(":student_id", $student_id);
-        $update->bindParam(":school_year_id", $current_school_year_id);
-        // $update->bindParam(":is_final", $is_final);
-        $update->bindParam(":student_subject_id", $student_subject_id);
-
-        return $update->execute();
-
-    }
-
+ 
     public function ChangingStudentSubjectCourseIdInApprove($enrollment_id,
         $student_enrollment_course_id, $student_id, 
         $current_school_year_id, $chosen_course_id,
@@ -738,6 +701,7 @@
             t1.enrollment_id, t1.is_transferee,
             t1.student_id, t1.student_subject_id,
             t1.subject_code as ss_subject_code,
+            t1.course_id as enrolled_course_id,
             t2.*, t3.program_section,t3.course_id
             
             FROM student_subject as t1
@@ -1023,8 +987,9 @@
         $add_student_subject->bindParam(':program_code', $subject_code);
         $add_student_subject->bindValue(':overlap', $student_enrollment_course_level != $subject_code_course_level ? 1 : 0);
         $add_student_subject->bindValue(':retake', $checkIfSubjectCodeRetaken == true ? 1 : 0);
-
-        if($add_student_subject->execute()){
+        $add_student_subject->execute();
+        
+        if($add_student_subject->rowCount() > 0){
             return true;
         }
         return false;
@@ -1228,29 +1193,28 @@
 
             // echo $pre_requisite_code;
 
-        $isPreRequisiteNotTaken = NULL;
+        $isPreRequisiteNotTaken = false;
 
-        if($pre_requisite_code == "None" ) return true;
+        if($pre_requisite_code == "None" ) return false;
 
         if($pre_requisite_code != "None"){
 
             $sql = $this->con->prepare("SELECT t2.remarks
 
-            FROM student_subject AS t1
+                FROM student_subject AS t1
 
-            LEFT JOIN student_subject_grade as t2 
-            ON t2.student_subject_id = t1.student_subject_id
+                LEFT JOIN student_subject_grade as t2 
+                ON t2.student_subject_id = t1.student_subject_id
 
-            WHERE t1.student_id=:student_id
-            AND t1.program_code = :program_code
-            AND t1.is_final = 1
-            AND t1.is_transferee = 0
-            AND t1.school_year_id != :current_school_year_id
-            
-            ORDER BY t1.student_subject_id DESC
-            LIMIT 1
-
-        ");
+                WHERE t1.student_id=:student_id
+                AND t1.program_code = :program_code
+                AND t1.is_final = 1
+                AND t1.is_transferee = 0
+                AND t1.school_year_id != :current_school_year_id
+                
+                ORDER BY t1.student_subject_id DESC
+                LIMIT 1
+            ");
 
             $sql->bindParam(":student_id", $student_id);
             $sql->bindParam(":program_code", $pre_requisite_code);
@@ -1279,11 +1243,58 @@
         return $isPreRequisiteNotTaken;
     }
 
-    public function CheckIfChosenSubjectAlreadyCredited($student_id,
-        $pre_requisite_code_of_chosen_subject
-        ){
+
+    # Check if Pre requisite is NOT TAKEN
+
+    # 1. Taken by normal -> Not credited and passed
+    # 2. Taken by credited -> Credited.
+    
+    public function CheckIfPreRequisiteIsNotTakenEitherPassedOrCredited($student_id,
+        $pre_requisite_code){
+
+            // echo $pre_requisite_code;
+            // return;
+
+        $isPreRequisiteNotTaken = true;
+
+        if($pre_requisite_code == "None" ) return true;
+
         
-            // echo $pre_requisite_code_of_chosen_subject;
+        if($pre_requisite_code != "None"){
+
+            if(
+                $this->CheckIfSubjectAlreadyPassed(
+                    $student_id, $pre_requisite_code) == true
+                || 
+                
+                $this->CheckIfChosenSubjectAlreadyCredited(
+                    $student_id, $pre_requisite_code) == true){
+
+                $isPreRequisiteNotTaken = false;
+            }
+             
+        }
+
+        
+        // return $$sql->rowCount() > 0;
+        return $isPreRequisiteNotTaken;
+    }
+
+    public function CheckProgramCoreSubject($student_id,
+        $pre_requisite_code, $current_school_year_id,
+        $subject_code){
+
+        // Check if core subject has pre-requisite
+        // Check if that pre-requisite has passed the student
+        $isValidCoreSubject = false;
+        
+        return $isValidCoreSubject;
+    }
+
+    public function CheckIfChosenSubjectAlreadyCredited($student_id,
+        $program_code){
+        
+            // echo $program_code;
         $sql = $this->con->prepare("SELECT t1.student_subject_id
 
             FROM student_subject AS t1
@@ -1306,12 +1317,12 @@
 
                 
         $sql->bindParam(":student_id", $student_id);
-        $sql->bindParam(":program_code", $pre_requisite_code_of_chosen_subject);
+        $sql->bindParam(":program_code", $program_code);
         $sql->execute();
 
         return $sql->rowCount() > 0;
     }
-     
+ 
     public function CheckIfSubjectCodeRetaken($student_id,
         $pre_requisite_code, $current_school_year_id,
         $subject_code){
@@ -1441,7 +1452,6 @@
     }
 
     public function GetStudentSubjectCodeByEnrollmentId($enrollment_id){
-
         
         $code = "";
         $sql = $this->con->prepare("SELECT subject_code
@@ -1459,6 +1469,284 @@
 
         return $code;
     }
+
+    public function GetAEnrolledSubjectByEnrollmentId($student_id,
+        $enrollment_id){
+
+        $query = $this->con->prepare("SELECT 
+            t4.subject_code AS student_subject_code,
+            t4.is_final,
+            t4.enrollment_id,
+            t4.is_transferee,
+            t4.student_subject_id,
+            t4.retake AS ss_retake,
+            t4.overlap AS ss_overlap,
+            
+
+            t5.subject_code AS sp_subjectCode,
+            t5.subject_type,
+            t5.subject_title,
+            t5.unit,
+
+            t6.program_section,
+
+            t7.student_subject_id as graded_student_subject_id,
+            t7.remarks,
+
+            t8.subject_schedule_id,
+            t8.course_id AS subject_schedule_course_id,
+            t8.subject_program_id AS subject_subject_program_id,
+            t8.time_from,
+            t8.time_to,
+            t8.schedule_day,
+            t8.schedule_time,
+            t8.room,
+
+            t9.firstname,
+            t9.lastname
+
+            FROM student_subject AS t4 
+
+            LEFT JOIN subject_program AS t5 ON t5.subject_program_id = t4.subject_program_id
+            LEFT JOIN course AS t6 ON t6.course_id = t4.course_id
+            LEFT JOIN student_subject_grade AS t7 ON t7.student_subject_id = t4.student_subject_id
+
+            LEFT JOIN subject_schedule AS t8 ON t8.subject_code = t4.subject_code
+            AND t8.course_id = t4.course_id
+
+            LEFT JOIN teacher as t9 ON t9.teacher_id = t8.teacher_id
+
+            WHERE t4.student_id=:student_id
+            AND t4.enrollment_id=:enrollment_id
+
+            ORDER BY t5.subject_title DESC
+        ");
+
+        $query->bindValue(":student_id", $student_id); 
+        $query->bindValue(":enrollment_id", $enrollment_id); 
+        $query->execute(); 
+
+        if($query->rowCount() > 0){
+            return $query->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        return [];
+    }
+
+    public function GetIdBySubjectCode($section_subject_code,
+        $school_year_id
+        ){
+
+        $sql = $this->con->prepare("SELECT student_subject_id 
+        
+            FROM student_subject
+
+            WHERE school_year_id=:school_year_id
+            AND subject_code=:subject_code");
+
+        $sql->bindParam(":school_year_id", $school_year_id);
+        $sql->bindParam(":subject_code", $section_subject_code);
+        $sql->execute();
+
+        if($sql->rowCount() > 0){
+            
+            return $sql->fetchColumn();
+        }
+        return null;
+    }
+
+    public function ChangingStudentSubjectCourseId($enrollment_id,
+        $student_course_id,
+        $student_id, $current_school_year_id, $chosen_course_id,
+        $student_subject_id, $student_subject_program_id){
+
+        $section = new Section($this->con, $chosen_course_id);
+        $subject_program = new SubjectProgram($this->con, $student_subject_program_id);
+
+        $program_section = $section->GetSectionName();
+
+        $subject_code = $subject_program->GetSubjectProgramRawCode();
+
+        $chosen_section_subject_code = $section->CreateSectionSubjectCode($program_section,
+            $subject_code);
+
+        $update = $this->con->prepare("UPDATE student_subject as t1
+            SET course_id=:chosen_course_id,
+                subject_code=:section_subject_code
+
+            WHERE t1.enrollment_id = :enrollment_id
+            AND t1.course_id = :course_id
+            AND t1.student_id = :student_id
+            AND t1.school_year_id = :school_year_id
+            AND t1.student_subject_id = :student_subject_id
+            
+            ");
+        
+        $update->bindParam(":chosen_course_id", $chosen_course_id);
+        $update->bindParam(":section_subject_code", $chosen_section_subject_code);
+        $update->bindParam(":enrollment_id", $enrollment_id);
+        $update->bindParam(":course_id", $student_course_id);
+        $update->bindParam(":student_id", $student_id);
+        $update->bindParam(":school_year_id", $current_school_year_id);
+        $update->bindParam(":student_subject_id", $student_subject_id);
+
+        return $update->execute();
+
+    }
+
+    public function UpdateCurrentCodeToSelectedSectionCode(
+        $student_enrollment_id,
+        $student_enrollment_course_id,
+        $student_subject_program_id,
+        $selected_course_id){
+
+
+        $section = new Section($this->con, $selected_course_id);
+        $sectionLevel = $section->GetSectionGradeLevel();
+        $program_section = $section->GetSectionName();
+        
+        $selected_section_program_id = $section->GetSectionProgramId($selected_course_id);
+        
+        $subject_program = new SubjectProgram($this->con, $student_subject_program_id);
+
+        $subject_code = $subject_program->GetSubjectProgramRawCode();
+
+        $section_subject_code = $section->CreateSectionSubjectCode($program_section,
+            $subject_code);
+
+        $array = [];
+
+        # Get all subject code of selected course.
+        $query = $this->con->prepare("SELECT *
+
+            FROM subject_program  
+
+            WHERE program_id = :program_id
+            AND course_level = :course_level
+            ");
+                
+        $query->bindParam(":program_id", $selected_section_program_id);
+        $query->bindParam(":course_level", $sectionLevel);
+        $query->execute();
+
+        $isUpdateFinished = false;
+
+        if($query->rowCount() > 0){
+
+            while($row = $query->fetch(PDO::FETCH_ASSOC)){
+
+                $subject_code = $row['subject_code'];
+                // $chosen_course_id = $row['course_id'];
+
+                $chosen_section_subject_code = $section->CreateSectionSubjectCode($program_section,
+                    $subject_code);
+                
+                # Check if selected subject code is 
+                # equal to student_subject subject code
+
+                $my_subject = $this->con->prepare("SELECT program_code
+
+                    FROM student_subject  
+
+                    WHERE program_code = :program_code
+                    AND enrollment_id = :enrollment_id
+                    AND course_id = :course_id
+                    LIMIT 1
+                    ");
+                        
+                $my_subject->bindParam(":program_code", $subject_code);
+                $my_subject->bindParam(":enrollment_id", $student_enrollment_id);
+                $my_subject->bindParam(":course_id", $student_enrollment_course_id);
+                $my_subject->execute();
+
+                if($my_subject->rowCount() > 0){
+
+                    $current_subject_row = $my_subject->fetch(PDO::FETCH_ASSOC);
+
+                    $current_subject_code = $current_subject_row['program_code'];
+
+
+                    // array_push($array, $my_subject->fetchColumn());
+                    // array_push($array, $chosen_section_subject_code);
+
+                    $update_current_subject = $this->con->prepare("UPDATE student_subject
+                        SET subject_code = :subject_code,
+                            course_id = :to_change_course_id
+                        
+                        WHERE program_code = :program_code
+                        AND enrollment_id = :enrollment_id
+                        AND course_id = :course_id
+                    ");
+
+                    $update_current_subject->bindParam(":subject_code", $chosen_section_subject_code);
+                    $update_current_subject->bindParam(":to_change_course_id", $selected_course_id);
+                    $update_current_subject->bindParam(":program_code", $subject_code);
+                    $update_current_subject->bindParam(":enrollment_id", $student_enrollment_id);
+                    $update_current_subject->bindParam(":course_id", $student_enrollment_course_id);
+                    $update_current_subject->execute();
+
+                    $isUpdateFinished = true;
+                }
+
+            }
+        }
+        
+        return $isUpdateFinished;
+    }
+
+    public function RemovingSubjectLoads($student_id, $enrollment_id,
+        $current_school_year_id){
+
+ 
+        // REMOVE AND ADD CHOSEN course id
+        $remove = $this->con->prepare("DELETE FROM student_subject
+             
+            WHERE student_id=:student_id
+            AND enrollment_id=:enrollment_id
+            AND school_year_id=:current_school_year_id
+            ");
+
+        $remove->bindParam(":student_id", $student_id);
+        $remove->bindParam(":enrollment_id", $enrollment_id);
+        $remove->bindParam(":current_school_year_id", $current_school_year_id);
+        $remove->execute();
+
+        if($remove->rowCount() > 0){
+            return true;
+        }
+
+        return false;
+    }
+
+    public function GetAllEnrolledSubjectCode($student_id,
+        $current_school_year_id, $enrollment_id){
+        
+            // echo $program_code;
+        $sql = $this->con->prepare("SELECT t1.subject_code
+
+            FROM student_subject AS t1
+
+            WHERE t1.student_id = :student_id
+            AND t1.school_year_id = :school_year_id
+            AND t1.enrollment_id = :enrollment_id
+
+        ");
+
+                
+        $sql->bindParam(":student_id", $student_id);
+        $sql->bindParam(":school_year_id", $current_school_year_id);
+        $sql->bindParam(":enrollment_id", $enrollment_id);
+        $sql->execute();
+
+        if($sql->rowCount() > 0){
+            return $sql->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        return [];
+
+    }
+
+
 }
 
 ?>

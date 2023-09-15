@@ -1,73 +1,89 @@
 <?php
 
     include('includes/config.php');
+    include('includes/classes/Pending.php');
 
     if(isset($_GET['token'])){
 
+        $pending = new Pending($con);
+
         $token = $_GET['token'];
 
-        $sql = $con->prepare("SELECT * FROM pending_enrollees
-            WHERE token=:token");
+        // echo $token;
 
-        $sql->bindParam(":token", $token);
-        $sql->execute();
+        // $check = $pending->PromptToken($token);
+        
+        $checkValidEnrollees = $pending->CheckValidTokenEnrolleeNonActivated($token);
 
-        if($sql->rowCount() > 0){
-            
-            $row = $sql->fetch(PDO::FETCH_ASSOC);
+        // if($checkValidEnrollees){
+        //     echo "valid";
+        // }else{
+        //     echo "not valid";
+        // }
+        // var_dump($checkValidEnrollees);
+        // echo $token;
+
+        if($checkValidEnrollees !== null){
+
             // Check if the record exists and if the expiration time has passed
-            if ($row && strtotime($row['expiration_time']) < time()) {
+            $pending_enrollees_id = $checkValidEnrollees['pending_enrollees_id'];
+
+            // echo $pending_enrollees_id;
+            $firstname = $checkValidEnrollees['firstname'];
+            $expiration_time = $checkValidEnrollees['expiration_time'];
+
+            // echo $pending_enrollees_id;
+
+            if (strtotime($expiration_time) < time()) {
+                
+                # If new enrollee reached expiries time (5mins) from the date of
+                # triggering the register. It will removed their enrollee account.
                 
                 // Remove the record from the pending_enrollees table
-                $sql = $con->prepare("DELETE FROM pending_enrollees 
-                    WHERE token=:token");
+                $removeInactiveExpires = $pending->RemoveInActivatedEnrollee($token);
 
-                $sql->bindParam(':token', $token);
 
-                if($sql->execute()){
-                    // Redirect the user to the enrollment form
+                if($removeInactiveExpires){
 
-                    header('Location: enrollment/index.php');
+                    $url = LOCAL_BASE_URL . "/home.php";
+                    // header("Location: /school-system-dcbt/student_enrollment.php");
+                    header("Location: $url");
                     exit();
                 }
             }
             
-            $_SESSION['authenticated'] = true;
-            $_SESSION['username'] = $row['firstname'];
-            $_SESSION['enrollee_id'] = $row['pending_enrollees_id'];
-            $_SESSION['studentLoggedIn'] = $row['firstname'];
-            $_SESSION['status'] = "pending";
+            else if(strtotime($expiration_time) >= time()){
 
-            $update = $con->prepare("UPDATE pending_enrollees
-                SET activated=:activated
-                WHERE firstname=:firstname
-                AND activated=:not_active
-                AND token=:token");
+                $_SESSION['studentLoggedIn'] = $firstname;
+                $_SESSION['username'] = $firstname;
+                $_SESSION['enrollee_id'] = $pending_enrollees_id;
+                $_SESSION['status'] = "pending";
+                $_SESSION['authenticated'] = true;
 
-            $update->bindValue(":activated", 1);
-            $update->bindValue(":firstname", $row['firstname']);
-            $update->bindValue(":not_active", 0);
-            $update->bindValue(":token", $token);
+                $doesActivated = $pending->ActivateEnrolleeAccount($token, $pending_enrollees_id);
 
-            if($update->execute()){
+                if($doesActivated == true){
 
-                $url = "/school-system-dcbt/student/tentative/process.php?new_student=true&step=preferred_course";
-                
-                header("Location: $url");
-                // header("Location: profile.php");
-                // header("Location: process.php");
+                    $url = "/school-system-dcbt/student/tentative/process.php?new_student=true&step=preferred_course";
+                    header("Location: $url");
+                    exit();
 
-                exit();
-            }else{
-                echo "Updating token went wrong";
+                }else{
+
+                    // echo "Updating token went wrong";
+                    echo "Something went wrong.";
+                }
             }
 
         }
         else{
             echo "
-                <h3>Wrong Token. If you have multiple requests of token, Please Click the latest email from us.</h3>
+                <h3>Token credentials was wrong. If you have multiple requests of token coming from us, Please Click the latest one.</h3>
             ";
+            exit();
         }
+
+
     }
 
 

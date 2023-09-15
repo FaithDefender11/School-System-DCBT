@@ -15,17 +15,18 @@
             // HARD-CODED
             $base_url = 'http://localhost/school-system-dcbt/student/';
             $logout_url = 'http://localhost/school-system-dcbt/logout.php';
+            $logout_url = 'http://localhost/school-system-dcbt/enrollee_logout.php';
 
             // Set the dynamic part of the URL using a global variable
                 
             $student_profile = $base_url . 'tentative/process.php?new_student=true&step=1';
 
             $sql = $this->con->prepare("SELECT * FROM pending_enrollees
-                WHERE firstname=:firstname
+                WHERE pending_enrollees_id=:pending_enrollees_id
                 AND is_finished=:is_finished
                 ");
 
-            $sql->bindValue(":firstname", $this->userLoggedInObj);
+            $sql->bindValue(":pending_enrollees_id", $this->userLoggedInObj);
             $sql->bindValue(":is_finished", 1);
             $sql->execute();
 

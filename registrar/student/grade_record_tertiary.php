@@ -1,4 +1,6 @@
 <?php 
+    
+    echo Helper::RemoveSidebar();
 
 
     $FIRST_YEAR = 1;
@@ -13,6 +15,7 @@
     $enrollmentRecordDetails1_1st = $enrollment->getEnrollmentSectionDetails($student_id,
             $FIRST_YEAR, $FIRST_SEMESTER);
 
+    # 1st Year 1st Sem
     if($enrollmentRecordDetails1_1st != null){
 
         $enrollment_date_approved1_1st = $enrollmentRecordDetails1_1st['enrollment_date_approved'];
@@ -22,6 +25,7 @@
         $enrollment_student_status1_1st = $enrollmentRecordDetails1_1st['enrollment_student_status'];
     }
 
+    # 1st Year 2nd Sem
     $enrollmentRecordDetails1_2nd = $enrollment->getEnrollmentSectionDetails($student_id,
             $FIRST_YEAR, $SECOND_SEMESTER);
 
@@ -86,6 +90,7 @@
     }
 
 
+    # 4th Year 1st Sem
     $enrollmentRecordDetails4_1st = $enrollment->getEnrollmentSectionDetails($student_id,
             $FIRST_YEAR, $FIRST_SEMESTER);
 
@@ -98,6 +103,7 @@
         $enrollment_student_status4_1st = $enrollmentRecordDetails4_1st['enrollment_student_status'];
     }
 
+    # 4th Year 2nd Sem
     $enrollmentRecordDetails4_2nd = $enrollment->getEnrollmentSectionDetails($student_id,
             $FIRST_YEAR, $FIRST_SEMESTER);
 
@@ -111,6 +117,8 @@
     }
 
 
+    // $student_program_id = 2;
+    
 ?>
 
 
@@ -119,8 +127,9 @@
         <!-- GR First Year 1st Semester -->
         <div class="floating">
 
+            
             <?php 
-
+    
                 $enrollment_school_year = $enrollment->GetStudentSectionGradeLevelSemester(
                     $student_id, $FIRST_YEAR, $FIRST_SEMESTER);
 
@@ -129,20 +138,20 @@
             ?>
             
             <main>
-                <div style="
+                <!-- <div style="
                     display: flex;
                     justify-content: space-around;
                     gap: 10px;
                     flex-wrap: wrap;
                     text-align: center" class="cards">
                     <?php
-                        Helper::renderCard('Semester', $enrollment_period1_1st);
-                        Helper::renderCard('Grade level', $enrollment_section_level1_1st);
-                        Helper::renderCard('Strand', $enrollment_section_acronym1_1st);
-                        Helper::renderCard('Scholastic Status', $enrollment_student_status1_1st);
-                        Helper::renderCard('Added', $enrollment_date_approved1_1st);
+                        Helper::renderCard('Semester', $enrollment_period1_1st ?? "");
+                        Helper::renderCard('Grade level', $enrollment_section_level1_1st ?? "");
+                        Helper::renderCard('Strand', $enrollment_section_acronym1_1st ?? "");
+                        Helper::renderCard('Scholastic Status', $enrollment_student_status1_1st ?? "");
+                        Helper::renderCard('Added', $enrollment_date_approved1_1st ?? "");
                     ?>
-                </div>
+                </div> -->
                 
                 <table class="a">
                     <thead>
@@ -162,7 +171,8 @@
                     </thead> 	
                     <tbody>
                         <?php 
-                            $enrolledSubjectsGradeLevelSemesterBased = $subject_program->GetStudentEnrolledSubjectCodeBase($student_program_id, $student_id,
+                            $enrolledSubjectsGradeLevelSemesterBased = $subject_program->GetStudentEnrolledSubjectCodeBase(
+                                $student_program_id, $student_id,
                                 $FIRST_YEAR, $FIRST_SEMESTER);
 
                             $subject_program->GradeRecordsSHSBody($enrolledSubjectsGradeLevelSemesterBased,

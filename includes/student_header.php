@@ -11,17 +11,28 @@
 
     $studentLoggedIn = isset($_SESSION["studentLoggedIn"]) 
         ? $_SESSION["studentLoggedIn"] : "";
-    
-    $studentLoggedInObj = new Student($con, $studentLoggedIn);
 
-    if (!isset($_SESSION['studentLoggedIn']) 
-            || $_SESSION['studentLoggedIn'] == '') {
-        header("Location: /school-system-dcbt/enrollment_login.php");
+    $studentLoggedInId = isset($_SESSION["studentLoggedInId"]) 
+        ? $_SESSION["studentLoggedInId"] : "";
+
+    
+    $studentLoggedInObj = new Student($con, $studentLoggedInId);
+
+    if ((!isset($_SESSION['studentLoggedIn']) 
+        || $_SESSION['studentLoggedIn'] == '')
+        
+        && (!isset($_SESSION['studentLoggedInId']) 
+        || $_SESSION['studentLoggedInId'] == '')
+        ) {
+
+        header("Location: /school-system-dcbt/home.php");
         exit();
+
     }
 
     $page = Helper::GetUrlPath();
     $document_title = Helper::DocumentTitlePage($page);
+
 
 ?>
 
@@ -29,11 +40,22 @@
 
 <html>
     <head>
+        
+        <title><?php echo "Student " . $document_title; ?></title>
+
+        <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-        <link
-            rel="stylesheet"
-            href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
-        />
+
+        <!-- Bootstrap Icons CSS -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+        <!-- Font Awesome CSS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+        <!-- jQuery -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+        <!-- Popper.js and Bootstrap JS -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
         <!-- Custom CSS -->
         <link rel="stylesheet" type="text/css" href="../../assets/css/main_style.css">
@@ -45,25 +67,19 @@
         <link rel="stylesheet" type="text/css" href="../../assets/css/scheduler.css">
         <link rel="stylesheet" href="../../assets/css/others/toggle-switch.css">
 
-        <link
-        href="https://fonts.googleapis.com/css2?family=IM+Fell+Double+Pica&display=swap"
-        rel="stylesheet"
-        />
-        <link
-        href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400&display=swap"
-        rel="stylesheet"
-        />
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-        
-        <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>  -->
-        <title><?php echo "Student " . $document_title; ?></title>
+        <!-- Google Fonts -->
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Arimo">
 
-        <!-- Mododify the Logo of DCBT Here and Please apply some styling. -->
-        <link rel="icon" href="../../assets/images/icons/DCBT-Logo.jpg" type="image/png">
-
+        <!-- SweetAlert -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.24/sweetalert2.all.js"></script>
 
+        <!-- Modify the Logo of DCBT Here and Please apply some styling -->
+        <link rel="icon" href="../../assets/images/icons/DCBT-Logo.jpg" type="image/png">
+
+         <!-- Bootstrap 4 JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        
     </head>
 <body>
     <div class="pageContainer">
@@ -79,20 +95,18 @@
 
                 $nav = new StudentNavigationMenuProvider($con, $studentLoggedInObj);
 
-                $pendingNav = new PendingStudentNavigationMenu($con, $studentLoggedIn);
-
+                // $pendingNav = new PendingStudentNavigationMenu($con, $studentLoggedIn);
                 // Pending Application Procedure
-                if(isset($_SESSION['status']) 
-                    && $_SESSION['status'] == "pending"){
+                // if(isset($_SESSION['status']) 
+                //     && $_SESSION['status'] == "pending"){
+                //     echo $pendingNav->create($page);
+                // }
 
-                    echo $pendingNav->create($page);
-
-                }
                 // Ongoing Application Procedure
-                else if(isset($_SESSION['status']) 
+                if(isset($_SESSION['status']) 
                     && $_SESSION['status'] == "enrolled"
-                    && isset($_SESSION['applicaton_status'])
-                    && $_SESSION['applicaton_status'] == "ongoing"
+                    // && isset($_SESSION['applicaton_status'])
+                    // && $_SESSION['applicaton_status'] == "ongoing"
                     ){
                         // echo "qwe";
                     echo $nav->create($page);

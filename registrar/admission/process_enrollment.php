@@ -8,9 +8,18 @@
     include_once('../../includes/classes/Student.php');
     include_once('../../includes/classes/Pending.php');
     include_once('../../includes/classes/StudentSubject.php');
+    include_once('../../includes/classes/StudentParent.php');
     include_once('../../includes/classes/Program.php');
     include_once('../../includes/classes/PendingParent.php');
 
+
+    ?>
+    <style>
+        .dropdown-menu.show{
+            margin-left: -120px;
+        }
+    </style>
+    <?php
 
     $department = new Department($con);
     $school_year = new SchoolYear($con, null);
@@ -127,7 +136,10 @@
             $email = $row['email'];
             $type = $row['type'];
             $admission_status = $row['admission_status'];
+            $student_status = $row['student_status'];
             $pending_course_level = $row['course_level'];
+
+            // echo $student_status;    
 
             $program = $con->prepare("SELECT acronym FROM program
                 WHERE program_id=:program_id
@@ -148,388 +160,14 @@
             $strand_name = $section->GetAcronymByProgramId($program_id);
             $track_name = $section->GetTrackByProgramId($program_id);
     
-            if(isset($_GET['id']) && isset($_GET['step1'])){
-                include("./process_step_1.php");
+            if(isset($_GET['id']) && isset($_GET['enrollee_details'])){
+                include("./enrollee_details.php");
             }
 
-            if(isset($_GET['id']) && isset($_GET['step2'])){
+            if(isset($_GET['id']) && isset($_GET['enrollee_find_section'])){
 
-                $student_subject = new StudentSubject($con);
+                include("./enrollee_find_section.php");
 
-                if(isset($_POST['pending_choose_section'])
-                    && isset($_POST['selected_course_id'])
-                    ){
-
-                    // New (Standard start from the beginning of DCBT). 
-                    // Make sure it is First Semester
-
-                    if($admission_status == "Standard" 
-                        // && $current_school_year_period == "First"
-                        ){
-                            
-                        $selected_course_id_value = $_POST['selected_course_id'];
-
-                        $section_url = "process_enrollment.php?step3=true&id=$pending_enrollees_id&selected_course_id=$selected_course_id_value";
-
-                        // Pending Info to Student
-                        $generateStudentUniqueId = $student->GenerateUniqueStudentNumber();
-                        
-                        // $username = strtolower($lastname) . '.' . $generateStudentUniqueId . '@dcbt.ph';
-                        $username = $student->GenerateStudentUsername($lastname, $generateStudentUniqueId);
-
-                        $selected_course_id_value = $_POST['selected_course_id'];
-
-                        $stmt_insert = $con->prepare("INSERT INTO student (firstname, lastname, middle_name, password, civil_status, nationality, contact_number, birthday, age, sex,
-                            course_id, student_unique_id, course_level, username,
-                            address, lrn, religion, birthplace, email, student_statusv2, is_tertiary, new_enrollee) 
-
-                            VALUES (:firstname, :lastname, :middle_name, :password, :civil_status, :nationality, :contact_number, :birthday, :age, :sex,
-                                :course_id, :student_unique_id, :course_level, :username,
-                                :address, :lrn, :religion, :birthplace, :email, :student_statusv2, :is_tertiary , :new_enrollee)");
-
-                        $stmt_insert->bindParam(':firstname', $firstname);
-                        $stmt_insert->bindParam(':lastname', $lastname);
-                        $stmt_insert->bindParam(':middle_name', $middle_name);
-                        $stmt_insert->bindParam(':password', $password);
-                        $stmt_insert->bindParam(':civil_status', $civil_status);
-                        $stmt_insert->bindParam(':nationality', $nationality);
-                        $stmt_insert->bindParam(':contact_number', $contact_number);
-                        $stmt_insert->bindParam(':birthday', $birthday);
-                        $stmt_insert->bindParam(':age', $age);
-                        $stmt_insert->bindParam(':sex', $sex);
-                        // 
-                        // SHOULD BE NULL FIRST If Irregular.
-                        $stmt_insert->bindValue(':course_id', 0);
-                        $stmt_insert->bindParam(':student_unique_id', $generateStudentUniqueId);
-                        $stmt_insert->bindValue(':course_level', 0);
-                        $stmt_insert->bindParam(':username', $username);
-                        $stmt_insert->bindParam(':address', $address);
-                        $stmt_insert->bindParam(':lrn', $lrn);
-                        $stmt_insert->bindParam(':religion', $religion);
-                        $stmt_insert->bindParam(':birthplace', $birthplace);
-                        $stmt_insert->bindParam(':email', $email);
-                        // $stmt_insert->bindValue(':student_statusv2', "Regular");
-                        $stmt_insert->bindValue(':student_statusv2', "");
-                        // replaced by new_enrollee
-                        // $stmt_insert->bindValue(':admission_status', "");
-                        $stmt_insert->bindValue(':is_tertiary', $type == "Tertiary" ? 1 : 0);
-                        $stmt_insert->bindValue(':new_enrollee', 1);
-
-                        if($stmt_insert->execute()){
-
-                            $generated_student_id = $con->lastInsertId();
-
-                            # CHECK FIRST IF STUDENT HAS A PARENT.
-                            # UPDATE IF YES.
-                            $update_parent = $pending->GetParentMatchPendingStudentId($pending_enrollees_id,
-                                $generated_student_id);
-
-                            if($update_parent == false){
-                                Alert::error("Attaching Parent has failed. Please contact admin for this.", "");
-                                exit();
-                            }
- 
-                            // Enrollment - r.e=no
-                            $insert_enrollment = $con->prepare("INSERT INTO enrollment
-                                (student_id, course_id, school_year_id, enrollment_status, is_new_enrollee,
-                                    registrar_evaluated, is_transferee, enrollment_form_id,
-                                    is_tertiary, enrollment_date, student_status)
-
-                                VALUES (:student_id, :course_id, :school_year_id, :enrollment_status,
-                                    :is_new_enrollee, :registrar_evaluated, :is_transferee, :enrollment_form_id, :is_tertiary,
-                                    :enrollment_date, :student_status)");
-
-                            $insert_enrollment->bindValue(':student_id', $generated_student_id);
-                            $insert_enrollment->bindValue(':course_id', $selected_course_id_value);
-                            $insert_enrollment->bindValue(':enrollment_date', $now);
-                            $insert_enrollment->bindValue(':school_year_id', $current_school_year_id);
-                            $insert_enrollment->bindValue(':enrollment_status', "tentative");
-                            $insert_enrollment->bindValue(':is_new_enrollee', 1);
-
-                            # Modified
-                            $insert_enrollment->bindValue(':registrar_evaluated', "no");
-                            $insert_enrollment->bindValue(':is_transferee', $admission_status == "Transferee" ? 1 : 0);
-                            $insert_enrollment->bindValue(':enrollment_form_id', $enrollment_form_id);
-                            $insert_enrollment->bindValue(':is_tertiary', $type == "Tertiary" ? 1 : 0);
-                            // New Student From Online
-                            $insert_enrollment->bindValue(':student_status', "Regular");
-
-                            if($insert_enrollment->execute()){
-
-                                $generated_enrollment_id = $con->lastInsertId();
-
-
-                                # Adding Student_Subject base on Section
-                                $wasSuccessStudentSubject = $student_subject->AddNonFinalDefaultEnrolledSubject($generated_student_id,
-                                    $generated_enrollment_id, $selected_course_id_value, $current_school_year_id,
-                                    $current_school_year_period, $admission_status);
-
-                                if($wasSuccessStudentSubject){
-
-                                    // Approved Request
-                                    $pendingSuccess = $pending->SetPendingApprove($pending_enrollees_id);
-
-                                    if($pendingSuccess == true){
-
-                                        // $url = "process_enrollment.php?subject_evaluation=show&selected_course_id=$selected_course_id_value";
-                                        // $xd = "process_enrollment.php?step3=show&st_id=$generated_student_id&c_id=$selected_course_id_value";
-
-                                        $student_table_subject_review = "process_enrollment.php?subject_review=show&st_id=$generated_student_id&selected_course_id=$selected_course_id_value";
-
-                                        Alert::success("Success Up to Pending (5steps)",
-                                            $student_table_subject_review);
-
-                                        exit();
-                                    }
-                                }
-                               
-                            }
-                        }
-                    }
-
-                    // New Transferee
-                    // If student is New and second Semester, then it should be New Transferee
-
-                    if($admission_status == "Transferee" 
-                        // && $current_school_year_period == "Second"
-                        ){
-
-                        $selected_course_id_value = $_POST['selected_course_id'];
-
-                        // echo $selected_course_id_value;
-
-                        $section_url = "process_enrollment.php?step3=true&id=$pending_enrollees_id&selected_course_id=$selected_course_id_value";
-                        // Pending Info to Student
-                        $generateStudentUniqueId = $student->GenerateUniqueStudentNumber();
-                        $username = strtolower($lastname) . '.' . $generateStudentUniqueId . '@dcbt.ph';
-
-                        $selected_course_id_value = $_POST['selected_course_id'];
- 
-                        $new_enrollee = 1;
-
-                        // Course Id of New Transferee should be 0 
-                        if($student->InsertStudentFromPendingTable($firstname, $lastname, $middle_name, $password, $civil_status, $nationality,
-                            $contact_number, $birthday, $age, $sex, 0, $generateStudentUniqueId,
-                            0, $username, $address, $lrn, $religion, $birthplace, $email,
-                            $type, $new_enrollee)){
-
-                            $generated_student_id = $con->lastInsertId();
-
-                            # CHECK FIRST IF STUDENT HAS A PARENT.
-                            # UPDATE IF YES.
-                            $update_parent = $pending->GetParentMatchPendingStudentId($pending_enrollees_id,
-                                $generated_student_id);
-
-                            if($update_parent == false){
-                                Alert::error("Attaching Parent has failed", "");
-                                exit();
-                            }
-
-                            // if($insert_enrollment->execute()){ fadd
-                            // it should follow the enrollment course id into student table.
-                            if($enrollment->InsertPendingRequestToEnrollment($generated_student_id,
-                                $selected_course_id_value, $now, $current_school_year_id,
-                                $admission_status, $enrollment_form_id, $type)){
-
-                                // Approved Request
-                                $pendingSuccess = $pending->SetPendingApprove($pending_enrollees_id);
-
-                                if($pendingSuccess == true){
-
-                                    $student_table_subject_review = "process_enrollment.php?subject_review=show&st_id=$generated_student_id&selected_course_id=$selected_course_id_value";
-
-                                    Alert::success("Success Up to Pending (5steps)",
-                                        $student_table_subject_review);
-                                    exit();
-                                }
-
-                                # Note. Transferee did not generate its semester subject
-                                # As it is Transferee, so Registrar should populate its subjeect accordingly.
-                                # Adding Student_Subject base on Section
-                                // $wasSuccessStudentSubject = $student_subject->AddNonFinalDefaultEnrolledSubject($generated_student_id,
-                                //     $generated_enrollment_id, $selected_course_id_value, $current_school_year_id,
-                                //     $current_school_year_period, $admission_status);
-
-                                // if($wasSuccessStudentSubject){
-
-                                //     // Approved Request
-                                //     $pendingSuccess = $pending->SetPendingApprove($pending_enrollees_id);
-
-                                //     if($pendingSuccess == true){
-
-                                //         $student_table_subject_review = "process_enrollment.php?subject_review=show&st_id=$generated_student_id&selected_course_id=$selected_course_id_value";
-
-                                //         Alert::success("Success Up to Pending (5steps)",
-                                //             $student_table_subject_review);
-                                //         exit();
-                                //     }
-                                // }
-                               
-                            }
-                        }
-                    }
-
-                }
-
-                ?>
-                    <!-- STEP 2 -->
-                    <div class="content">
-                        <nav>
-                            <a href="#">
-                                <i class="bi bi-arrow-return-left fa-1x"></i>
-                                <h3>Back</h3>
-                            </a>
-                        </nav>
-                        <div class="content-header">
-                            
-                            <?php echo Helper::RevealStudentTypePending($type); ?>
-
-                            <?php echo Helper::PendingEnrollmentDetailsTop(null, $pending_enrollees_id); ?>
- 
-                            <?php echo Helper::ProcessPendingCards($enrollment_form_id,
-                                $date_creation, $admission_status); ?>
-                            
-                        </div>
-                        <main>
-                            <div class="progress">
-                                <span class="dot active"><p>Check form details</p></span>
-                                <span class="line active"></span>
-                                <span class="dot active"><p>Find section</p></span>
-                                <span class="line inactive"></span>
-                                <span class="dot inactive"><p>Subject confirmation</p></span>
-                                
-                            </div>
-
-                            <?php 
-                                include_once('./pending_enrollment_details.php');
-                            ?>
-                            
-                            <div id="pending_available_section" class="floating">
-
-                                <header>
-                                    <div class="title">
-                                    <h3>Available sections</h3>
-                                    </div>
-                                </header>
-                                
-                                <?php 
-                                
-                                    $availableSection = $section->GetAvailableFindSection($program_id, $current_school_year_term,
-                                        $pending_course_level);
-
-                                    if(count($availableSection) > 0){
-                                        ?>
-                                            <form method="post">
-                                                <main>
-                                                    <table class="a">
-                                                        <thead>
-                                                            <tr class="text-center"> 
-                                                                <th rowspan="2">Section Id</th>
-                                                                <th rowspan="2">Section Name</th>
-                                                                <th rowspan="2">Student</th>
-                                                                <th rowspan="2">Capacity</th>
-                                                                <th rowspan="2">Term</th>
-                                                                <th rowspan="2"></th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <?php
-                                
-
-                                                                # Only Available now.
-                                                                $sql = $con->prepare("SELECT * FROM course
-
-                                                                    WHERE program_id=:program_id
-                                                                    AND active=:active
-                                                                    AND school_year_term =:school_year_term
-                                                                    AND course_level =:course_level
-                                                                    AND is_full ='no'
-                                                                    AND is_remove = 0
-
-                                                                    ");
-
-                                                                $sql->bindParam(":program_id", $program_id);
-                                                                $sql->bindValue(":active", "yes");
-                                                                $sql->bindParam(":school_year_term", $current_school_year_term);
-                                                                $sql->bindParam(":course_level", $pending_course_level);
-
-                                                                $sql->execute();
-                                                            
-
-                                                                foreach ($availableSection as $key => $get_course) {
-                                                                    
-                                                                    $course_id = $get_course['course_id'];
-
-                                                                    $program_section = $get_course['program_section'];
-                                                                    $capacity = $get_course['capacity'];
-                                                                    $school_year_term = $get_course['school_year_term'];
-
-                                                                    $section = new Section($con, $course_id);
-
-                                                                    $totalStudent = $section->GetTotalNumberOfStudentInSection($course_id, $current_school_year_id);
-
-                                                                    $capacity = $section->GetSectionCapacity();
-
-                                                                    $program_id = $section->GetSectionProgramId($course_id);
-                                                                    $course_level = $section->GetSectionGradeLevel();
-                    
-                                                                    if($totalStudent == $capacity){
-
-                                                                    }
-                                                                    echo "
-                                                                        <tr class='text-center'>
-                                                                            <td>$course_id</td>
-                                                                            <td>$program_section</td>
-                                                                            <td>$totalStudent</td>
-                                                                            <td>$capacity</td>
-                                                                            <td>$school_year_term</td>
-                                                                            <td>
-                                                                                <input name='selected_course_id' class='radio' value='$course_id' type='radio' " . (($totalStudent == $capacity) ? "disabled" : "") . ">
-                                                                            </td>
-                                                                        </tr>
-                                                                    ";
-                                                                }
-                                                                    
-
-                                                                // else{
-                                                                //     echo "
-                                                                //         <div class='col-md-12'>
-                                                                //             <h4 class='text-center text-muted'>No currently available section for $program_acronym</h4>
-                                                                //         </div>
-                                                                //     ";
-                                                                // }
-                                                            ?>
-                                                        </tbody>
-                                                    </table>
-                                                </main>
-
-                                                <div style="margin-top: 20px;" class="action">
-                                                    <button
-                                                    type="button"
-                                                        class="default large "
-                                                        onclick="window.location.href = 'process_enrollment.php?step1=true&id=<?php echo $pending_enrollees_id; ?>'">
-                                                        Return
-                                                    </button>
-                                                    <button class="default large success"
-                                                        name="pending_choose_section" type="submit">
-                                                        Proceed
-                                                    </button>
-                                                </div>
-                                            </form>
-                                        <?php
-                                    }
-                                    else if(count($availableSection)  == 0){
-                                        echo "
-                                            <div class='col-md-12'>
-                                                <h4 class='text-center text-muted'>No currently available section for $program_acronym</h4>
-                                            </div>
-                                        ";
-                                    }
-                                ?>
-                            </div>
-                        </main>
-                    </div>
-                <?php
             }
 
             if(isset($_GET['step3']) && isset($_GET['st_id']) 
@@ -1066,13 +704,25 @@
     if(isset($_GET['st_id'])){
 
         $student_id = $_GET['st_id'];
-        
+
         $student = new Student($con, $student_id);
         $student_subject = new StudentSubject($con);
         $enrollment = new Enrollment($con);
 
-        $student_course_id = $student->GetStudentCurrentCourseId();
 
+        $generated_enrollment_form_id = $enrollment->GenerateEnrollmentFormId();
+
+        if (!isset($_SESSION['enrollment_form_id'])) {
+            $generated_enrollment_form_id = $enrollment->GenerateEnrollmentFormId();
+            $_SESSION['enrollment_form_id'] = $generated_enrollment_form_id;
+            
+        } else {
+            $generated_enrollment_form_id = $_SESSION['enrollment_form_id'];
+        }
+
+        // echo $generated_enrollment_form_id;
+
+        $student_course_id = $student->GetStudentCurrentCourseId();
 
         $promptIDIfDoesntExists = $student->CheckIdExists($student_id);
 
@@ -1094,6 +744,13 @@
         $student_religion = $student->GetReligion();
         $student_email = $student->GetEmail();
         $student_status_st = $student->GetStudentStatus();
+        $student_current_course_id = $student->GetStudentCurrentCourseId();
+        $student_contact_number = $student->GetContactNumber();
+
+        $student_admission_status = $student->GetAdmissionStatus();
+        $student_active_status= $student->CheckIfActive();
+
+        // echo $student_admission_status;
 
         // echo $student_status_st;
 
@@ -1103,19 +760,20 @@
 
         $student_unique_id = $student->GetStudentUniqueId();
 
-        // $student_program_section = $section->GetSectionName();
-
-        // $student_enrollment_id = $enrollment->GetEnrollmentId($student_id,
-        //     $student_course_id, $current_school_year_id);
-
         $student_enrollment_id = $enrollment->GetEnrollmentIdNonDependent($student_id,
             $current_school_year_id);
+        
 
-            // echo $student_enrollment_id;
+        $student_non_enrolled_enrollment_id = $enrollment->GetEnrollmentIdNonEnrolled($student_id,
+            $current_school_year_id);
 
+        // echo $student_enrollment_id;
+        // $student_enrollment_id = 1183;
         
        $student_enrollment_course_id = $enrollment->GetEnrollmentFormCourseId($student_id,
             $student_enrollment_id, $current_school_year_id);
+
+
 
         // echo $student_enrollment_course_id;
 
@@ -1134,32 +792,57 @@
         $student_evaluated_by_registrar = $enrollment->CheckEnrollmentFormRegistrarEvaluated($student_id,
             $student_enrollment_id, $current_school_year_id);
 
-
-        $student_enrollment_form_id = $enrollment->GetEnrollmentFormId($student_id,
+        $student_enrollment_form_id = $enrollment->GetEnrollmentFormId($student_enrollment_id,
             $student_enrollment_course_id, $current_school_year_id);
+
+        $student_enrollment_form_id = $student_enrollment_form_id == 0 
+            ? $generated_enrollment_form_id : $student_enrollment_form_id;
+        
+        // echo $student_enrollment_form_id;
         
         $section = new Section($con, $student_enrollment_course_id);
+        // Enrollment form course Based
         $student_program_section = $section->GetSectionName();
         $section_capacity = $section->GetSectionCapacity();
+        $section_level = $section->GetSectionGradeLevel();
+        $section_program_id = $section->GetSectionProgramId($student_enrollment_course_id);
+        $section_department_id = $section->GetDepartmentIdByProgramId($section_program_id);
 
-        $student_program_id = $section->GetSectionProgramId($student_enrollment_course_id === 0 ? $student_course_id : $student_enrollment_course_id);
+        // echo $section_department_id;
 
-        $student_enrollment_course_level = $section->GetSectionGradeLevel($student_enrollment_course_id === 0 ? $student_course_id : $student_enrollment_course_id);
 
-        // echo $student_program_id;
+        $prev_section = new Section($con, $student_current_course_id);
+        // Student course Based
+        $student_current_program_section = $prev_section->GetSectionName();
+        $student_current_program_id = $prev_section->GetSectionProgramId($student_current_course_id);
+
+        
+        $student_program_id = $section->GetSectionProgramId(
+            $student_enrollment_course_id === 0 
+            ? $student_course_id : $student_enrollment_course_id);
+
+        # If student enrollment form course id is 0,
+        # It should reflected his latest student course id
+        # else should reflected in his enrollment forn course id
+        $student_enrollment_course_level = $section->GetSectionGradeLevel(
+            $student_enrollment_course_id === 0 
+            ? $student_course_id : $student_enrollment_course_id);
 
         $program = new Program($con, $student_program_id);
 
         $student_program_acronym = $program->GetProgramAcronym();
+        $student_current_department_id = $program->GetProgramDepartmentId();
 
+        // echo $student_current_department_id ;
+        
         $enrollment_creation = $enrollment->GetEnrollmentDate($student_id,
             $student_course_id, $current_school_year_id);
 
         $enrollment_is_new_enrollee = $enrollment->GetEnrollmentIsNewEnrollee($student_id,
-            $student_course_id, $current_school_year_id);
+            $student_current_course_id, $current_school_year_id);
 
         $enrollment_is_transferee = $enrollment->GetEnrollmentIsTransferee($student_id,
-            $student_course_id, $current_school_year_id);
+            $student_current_course_id, $current_school_year_id);
 
         // echo $student_enrollment_is_new;
 
@@ -1275,7 +958,8 @@
 
                             setTimeout(() => {
                                 Swal.close();
-                                location.reload();
+                                // location.reload();
+                                window.location.href = "evaluation.php";
                             }, 1000);
 
 
@@ -1300,4 +984,55 @@
             }
         });
     }
+
+    
+    function studentRemoveForm(student_id, enrollment_id, school_year_id){
+
+        var student_id = parseInt(student_id);
+        var enrollment_id = parseInt(enrollment_id);
+        var school_year_id = parseInt(school_year_id);
+
+        Swal.fire({
+            icon: 'question',
+            title: `Are you sure to remove this enrollment form?`,
+            text: 'Note: This action cannot be undone.',
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // REFX
+                $.ajax({
+                    url: '../../ajax/admission/removeEnrollmentForm.php',
+                    type: 'POST',
+                    data: {
+                        student_id, enrollment_id, school_year_id
+                    },
+                    success: function(response) {
+
+                        response = response.trim();
+
+                        console.log(response);
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: `Enrollment Form has been removed..`,
+                        });
+
+                        setTimeout(() => {
+                            Swal.close();
+                            // location.reload();
+                            window.location.href = "evaluation.php";
+                        }, 1000);
+                    },
+
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.log('AJAX Error:', textStatus, errorThrown);
+                    }
+                });
+            }
+        });
+    }
+
+
 </script>

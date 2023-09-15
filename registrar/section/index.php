@@ -24,8 +24,8 @@
 
 <div class="content">
 
-    <?php echo Helper::CreateTopDepartmentTab(false);?>
-
+    <?php echo Helper::RegistrarDepartmentSection(false,
+        "index", "tertiary_index");?>
 
     <main>
         <div class="floating" id="shs-sy">
