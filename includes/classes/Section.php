@@ -1125,7 +1125,8 @@
 
         public function DeactiveCurrentActiveSections($school_year_term){
 
-            $activeSection = $this->GetAllActiveSectionWithinYear($school_year_term);
+            $activeSection = $this->GetAllActiveSectionWithinYear(
+                $school_year_term);
 
             $sql = $this->con->prepare("UPDATE course
                 SET active = :change_to
@@ -1219,7 +1220,6 @@
             $update_course = $this->con->prepare("UPDATE course
                 SET active=:active,
                     is_full=:is_full
-                    -- capacity=:capacity
 
                 WHERE course_id=:course_id
                 AND school_year_term=:school_year_term");
@@ -1245,7 +1245,7 @@
         }
 
         public function CreateEachSectionStrandCourse($school_year_term){
-
+            
             $program = new Program($this->con);
 
             $offeredPrograms = $program->GetAllOfferedPrograms();
@@ -1372,7 +1372,7 @@
 
             $activeSection = [];
 
-            $sql = $this->con->prepare("SELECT t1.course
+            $sql = $this->con->prepare("SELECT t1.*
 
                 FROM course as t1
                

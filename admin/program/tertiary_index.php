@@ -61,7 +61,7 @@
         </header>
             <main>
                 <table id="tertiary_program_table"
-                    class="ws-table-all cw3-striped cw3-bordered"
+                    class="a"
                     style="margin: 0"
                 >
                     <thead>

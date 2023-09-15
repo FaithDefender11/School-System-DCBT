@@ -1120,12 +1120,36 @@
             WHERE enrollment_id = :enrollment_id
             AND student_id = :student_id
             AND school_year_id = :school_year_id
-            
         ");
  
         $sql->bindValue(":enrollment_id", $enrollment_id);
         $sql->bindValue(":student_id", $student_id);
         $sql->bindValue(":school_year_id", $school_year_id);
+        $sql->execute();
+
+        if($sql->rowCount() > 0){
+            $student_status = $sql->fetchColumn();
+        }
+
+        return $student_status;
+
+    }
+
+    public function GetEnrollmentSchoolYearByIdForm(
+        $student_id, $enrollment_id) {
+
+        $student_status = "";
+
+        // Check if the enrollment form ID already exists in the database
+
+        $sql = $this->con->prepare("SELECT school_year_id FROM enrollment 
+
+            WHERE enrollment_id = :enrollment_id
+            AND student_id = :student_id
+        ");
+ 
+        $sql->bindValue(":enrollment_id", $enrollment_id);
+        $sql->bindValue(":student_id", $student_id);
         $sql->execute();
 
         if($sql->rowCount() > 0){

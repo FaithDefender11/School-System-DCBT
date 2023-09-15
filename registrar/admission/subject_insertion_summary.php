@@ -100,20 +100,12 @@
         # By Enrollment ID
         $enrollment_id = $enrollment->GetEnrollmentIdByForm($enrollment_form_id_url,
             $current_school_year_id);
-
-        // echo "qweqwe";
-        // echo $enrollment_id;
-
-
-        // $student_enrollment_form_id = $enrollment->GetEnrollmentFormId($student_id,
-        //     $student_course_id, $current_school_year_id);
-
+            
         $student_enrollment_student_status = $enrollment->GetEnrollmentFormStudentStatus($student_id,
             $enrollment_id, $current_school_year_id);
 
         $student_enrollment_status = $enrollment->GetEnrollmentFormEnrollmentStatus($student_id,
             $enrollment_id, $current_school_year_id);
-
 
 
         $student_enrollment_made_date = $enrollment->GetEnrollmentMadeDateForm($student_id,
@@ -123,6 +115,15 @@
         $student_enrollment_course_id = $enrollment->GetEnrollmentFormCourseId($student_id,
             $enrollment_id, $current_school_year_id);
 
+        $student_enrollment_school_year_id = $enrollment->GetEnrollmentSchoolYearByIdForm(
+            $student_id,
+            $enrollment_id);
+        
+        $history_year = new SchoolYear($con, $student_enrollment_school_year_id);
+
+        $enrollment_sy_term = $history_year->GetTerm();
+        $enrollment_sy_period = $history_year->GetPeriod();
+            
         // $student_enrollment_form_id = $enrollment->GetEnrollmentFormId($student_id,
         //     $student_enrollment_course_id, $current_school_year_id);
 
@@ -651,7 +652,7 @@
                                         <span>
                                             <label for="sy">S.Y.</label>
                                             <div>
-                                                <input style="pointer-events: none;" class="text-center form-control" type="text" name="sy" id="sy" value="<?php echo $current_school_year_term; ?>" />
+                                                <input style="pointer-events: none;" class="text-center form-control" type="text" name="sy" id="sy" value="<?php echo $enrollment_sy_term; ?>" />
                                             </div>
                                         </span>
 
@@ -665,8 +666,6 @@
                                                         <div>
                                                             <select id="inputTrack" class="form-control form-select">
                                                                 <?php 
-
-                                                                    // $SHS_DEPARTMENT = 4;
                                                                 
                                                                     $track_sql = $con->prepare("SELECT 
                                                                         program_id, track, acronym 
@@ -829,8 +828,8 @@
                                             <label for="semester">Semester</label>
                                             <div>
                                                 <select class=" form-control" style="pointer-events: none;" name="semester" id="semester">
-                                                    <option class="text-center" value=""<?php echo ($current_school_year_period == "First") ? " selected" : ""; ?>>1st</option>
-                                                    <option class="text-center" value=""<?php echo ($current_school_year_period == "Second") ? " selected" : ""; ?>>2nd</option>
+                                                    <option class="text-center" value=""<?php echo ($enrollment_sy_period == "First") ? " selected" : ""; ?>>1st</option>
+                                                    <option class="text-center" value=""<?php echo ($enrollment_sy_period == "Second") ? " selected" : ""; ?>>2nd</option>
                                                 </select>
                                             </div>
                                         </span>
@@ -857,7 +856,7 @@
                                     <span 
                                         style="font-size: 13px; font-weight: bold;" class="mt-0 mb-0 text-right">
                                         <?php 
-                                            echo $student_enrollment_status != "withdraw" ? "Capacity: $studentNumberInSection / $section_capacity" : "";
+                                            echo $student_enrollment_school_year_id == $current_school_year_id ? "Capacity: $studentNumberInSection / $section_capacity" : "";
                                         ?>
                                     </span>
                                     <h4>
@@ -909,9 +908,13 @@
 
                             <?php 
                             
-                                $assignSubjects = $student_subject->GetStudentAssignSubjects($enrollment_id,
-                                                        $student_id, $current_school_year_id);
-                                if(count($assignSubjects) == 0){
+                                $assignSubjects = $student_subject->GetStudentAssignSubjects(
+                                    $enrollment_id,
+                                    $student_id);
+
+                                    // echo $enrollment_id;
+
+                                if(count($assignSubjects) === 0){
                                     echo "
                                         <h4 class='text-center text-info'>No Subject given in this Form</h4>
                                     ";

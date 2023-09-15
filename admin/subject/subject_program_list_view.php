@@ -1,7 +1,8 @@
 <?php 
 
     include_once('../../includes/admin_header.php');
-    include_once('../../includes/classes/Subject.php');
+    // include_once('../../includes/classes/Subject.php');
+    include_once('../../includes/classes/SubjectTemplate.php');
     include_once('../../includes/classes/Section.php');
     include_once('../../includes/classes/SubjectProgram.php');
 
@@ -38,14 +39,16 @@
 
         $strand_name = $section->GetAcronymByProgramId($program_id);
 
-        $subject = new Subject($con, null);
+        // $subject = new Subject($con);
+
+        $subject_template = new SubjectTemplate($con);
+        
         $subject_program = new SubjectProgram($con);
 
-
-        $selectSubjectTitle = $subject->SelectTemplateSubjectTitle(
+        $selectSubjectTitle = $subject_template->SelectTemplateSubjectTitle(
             $department_name, $program_id);
 
-        $selectSubjectEdit = $subject->SelectSubjectTitleEdit(
+        $selectSubjectEdit = $subject_template->SelectSubjectTitleEdit(
             $department_name, $program_id);
 
         $dynamicCourseLevelDropdown = $section->CreateCourseLevelDropdownDepartmentBased($department_name);
@@ -86,10 +89,10 @@
                                 <thead>
                                     <tr class="text-center"> 
                                         <!-- <th rowspan="2">Subject ID</th> -->
-                                        <th rowspan="2">Subject</th>
+                                        <th rowspan="2">Course Description</th>
                                         <th rowspan="2">Code</th>
                                         <th rowspan="2">Unit</th>
-                                        <th rowspan="2">Pre-Requisite</th>
+                                        <th rowspan="2">Requisite</th>
                                         <th rowspan="2">Grade Level</th>
                                         <th rowspan="2">Semester</th>
                                         <th rowspan="2">Action</th>

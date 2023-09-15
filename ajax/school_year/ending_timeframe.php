@@ -44,16 +44,14 @@
             if($school_year_period == "First"){
                 
                 // Check if student in Grade Records has failed atleast one subject
-                // 
-                // If Regular, Mark them as Irregular. TODO In Irregular Enrollment
 
                 // TODO. All IsFull In First Semester Sections should be reset.
                 
                 $resetSection = $section->ResetCurrentActiveSections($school_year_term);
                 
                 $currentNewEnrolled = $enrollment->GetEnrolledNewStudentWithinSemester($school_year_id);
+                
                 foreach ($currentNewEnrolled as $key => $student_ids) {
-
                     // All new enrolled student in the enrollment form will update as OLD
                     $toOld = $student->UpdateStudentAdmissionStatusToOld($student_ids);
                 }
@@ -81,11 +79,14 @@
                 $createEachNewSection = $section->CreateEachSectionStrandCourse($school_year_term);
 
                 $currentNewEnrolled = $enrollment->GetEnrolledNewStudentWithinSemester($school_year_id);
+                
                 foreach ($currentNewEnrolled as $key => $student_ids) {
                     // All new enrolled student in the enrollment form will update as OLD
                     $toOld = $student->UpdateStudentAdmissionStatusToOld($student_ids);
                 }
+
                 echo "success_update"; 
+
                 return;
             }
         }

@@ -422,7 +422,7 @@
                                                 <tr> 
                                                     <th>Subject</th>  
                                                     <th>Code</th>
-                                                    <th>Type</th>
+                                                    <!-- <th>Type</th> -->
                                                     <th>Unit</th>
                                                     <th>Section</th>  
                                                     <th>Days</th>  
@@ -463,10 +463,12 @@
                                                         t8.time_to,
                                                         t8.schedule_day,
                                                         t8.schedule_time,
-                                                        t8.room,
+                                                        t8.room_id,
 
                                                         t9.firstname,
-                                                        t9.lastname
+                                                        t9.lastname,
+
+                                                        t10.room_number
 
                                                         FROM student_subject AS t4 
 
@@ -478,6 +480,8 @@
                                                         AND t8.course_id = t4.course_id
 
                                                         LEFT JOIN teacher as t9 ON t9.teacher_id = t8.teacher_id
+
+                                                        LEFT JOIN room as t10 ON t10.room_id = t8.room_id
 
                                                         WHERE t4.student_id=:student_id
                                                         AND t4.enrollment_id=:enrollment_id
@@ -570,7 +574,11 @@
 
                                                             $time_to = $row_inner['time_to'];
 
-                                                            $room = $row_inner['room'] != "" ? $row_inner['room'] : "-";
+                                                            // $room = $row_inner['room'] != "" ? $row_inner['room'] : "-";
+
+                                                            $room_number = $row_inner['room_number'] != "" ? $row_inner['room_number'] : "-";
+
+                                                            
                                                             $schedule_day = $row_inner['schedule_day'] != "" ? $row_inner['schedule_day'] : "-";
 
                                                             $teacher_firstname = $row_inner['firstname'];
@@ -590,7 +598,6 @@
                                                                     <td>
                                                                         $sp_subjectCode
                                                                     </td>
-                                                                    <td>$subject_type</td>
                                                                     <td>$unit</td>
                                                                     <td>
                                                                         <a style='all:unset; cursor: pointer' href='$changingSectionSubjectUrl'>
@@ -599,7 +606,7 @@
                                                                     </td>
                                                                     <td>$schedule_day</td>
                                                                     <td>$schedule_time</td>
-                                                                    <td>$room</td>
+                                                                    <td>$room_number</td>
                                                                     <td>$instructor_name</td>
                                                                     <td>$icon $ss_overlap_msg $ss_retake_msg</td>
                                                                 </tr>

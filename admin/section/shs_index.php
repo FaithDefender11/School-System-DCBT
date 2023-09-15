@@ -19,8 +19,13 @@
     $school_year = new SchoolYear($con);
     $school_year_obj = $school_year->GetActiveSchoolYearAndSemester();
 
-    $current_school_year_term = $school_year_obj['term'];
-    $current_school_year_period = $school_year_obj['period'];
+    // $current_school_year_term = $school_year_obj['term'];
+    // $current_school_year_period = $school_year_obj['period'];
+
+    $current_school_year_term = $school_year->getSchoolYearValue($school_year_obj, 'term');
+    $current_school_year_period = $school_year->getSchoolYearValue($school_year_obj, 'period');
+    $current_school_year_id = $school_year->getSchoolYearValue($school_year_obj, 'school_year_id');
+
 
     if(isset($_SESSION['department_type_section'])){
         unset($_SESSION['department_type_section']);

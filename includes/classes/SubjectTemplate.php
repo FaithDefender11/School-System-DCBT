@@ -1,75 +1,14 @@
 <?php
 
-    class Subject{
+    class SubjectTemplate{
 
     private $con, $subject_id, $sqlData;
 
     public function __construct($con, $subject_id = null)
     {
         $this->con = $con;
-        // $this->userLoggedIn = $userLoggedIn;
-        // $this->subject_id = $subject_id;
-
-        // $query = $this->con->prepare("SELECT t1.*, t2.program_section 
-        
-        //         FROM subject as t1
-
-        //         INNER JOIN course as t2 ON t2.course_id = t1.course_id
-        //         WHERE t1.subject_id=:subject_id
-
-        //         ");
-
-        // $query->bindParam(":subject_id", $subject_id);
-        // $query->execute();
-
-        // $this->sqlData = $query->fetch(PDO::FETCH_ASSOC);
     }
     
-    public function GetSubjectSection() {
-        return isset($this->sqlData['program_section']) ? $this->sqlData["program_section"] : ""; 
-    }
-
-    public function GetSubjectTitle() {
-        return isset($this->sqlData['subject_title']) ? $this->sqlData["subject_title"] : ""; 
-    }
-
-    public function GetPreRequisite() {
-        return isset($this->sqlData['pre_requisite']) ? $this->sqlData["pre_requisite"] : ""; 
-    }
-
-    public function GetUnit() {
-        return isset($this->sqlData['unit']) ? ucfirst($this->sqlData["unit"]) : ""; 
-    }
-
-    public function GetTitle() {
-        return isset($this->sqlData['subject_title']) ? ucfirst($this->sqlData["subject_title"]) : ""; 
-    }
-    public function GetDescription() {
-        return isset($this->sqlData['description']) ? ucfirst($this->sqlData["description"]) : ""; 
-    }
-
-    public function GetSemester() {
-        return isset($this->sqlData['semester']) ? ucfirst($this->sqlData["semester"]) : ""; 
-    }
-
-    public function GetSubjectCode() {
-        return isset($this->sqlData['subject_code']) ? ucfirst($this->sqlData["subject_code"]) : ""; 
-    }
-
-    public function GetSubjectType() {
-        return isset($this->sqlData['subject_type']) ? ucfirst($this->sqlData["subject_type"]) : ""; 
-    }
-
-    public function GetSubjectLevel() {
-        return isset($this->sqlData['course_level']) ? ucfirst($this->sqlData["course_level"]) : ""; 
-    }
-    public function GetSubjectCourseId() {
-        return isset($this->sqlData['course_id']) ? ucfirst($this->sqlData["course_id"]) : ""; 
-    }
-    public function GetCourseLevel() {
-        return isset($this->sqlData['course_level']) ? ucfirst($this->sqlData["course_level"]) : ""; 
-    }
-
     public function createFormModified($type, $programDropdown){
 
         if(isset($_POST['create_subject_template'])){
@@ -168,7 +107,6 @@
             </div>
         ";
     }
-
 
     public function SelectTemplateSubjectTitle($department_name,
         $program_id){

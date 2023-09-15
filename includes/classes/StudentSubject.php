@@ -691,9 +691,9 @@
 
     }
 
-    public function GetStudentAssignSubjects($enrollment_id,
-            // $course_id, 
-            $student_id, $school_year_id){
+    public function GetSchoolYearIdByEnrollmentId($enrollment_id,
+            $student_id
+        ){
 
         $is_final = 0;
 
@@ -711,18 +711,11 @@
             LEFT JOIN course as t3 ON t3.course_id = t1.course_id
 
             WHERE (t1.enrollment_id = :enrollment_id OR t1.enrollment_id IS NULL)
-
-            -- Rest AND LOGIC APPLIES
             AND t1.student_id = :student_id
-            AND t1.school_year_id = :school_year_id
-            -- AND t1.is_final = :is_final
         ");
                 
         $sql->bindParam(":enrollment_id", $enrollment_id);
-        // $sql->bindParam(":course_id", $course_id);
         $sql->bindParam(":student_id", $student_id);
-        $sql->bindParam(":school_year_id", $school_year_id);
-        // $sql->bindParam(":is_final", $is_final);
         $sql->execute();
 
         if($sql->rowCount() > 0){
@@ -733,6 +726,77 @@
         return [];
 
     }
+
+    public function GetStudentAssignSubjects($enrollment_id,
+            $student_id
+            ){
+
+        $is_final = 0;
+
+        $sql = $this->con->prepare("SELECT 
+            t1.enrollment_id, t1.is_transferee,
+            t1.student_id, t1.student_subject_id,
+            t1.subject_code as ss_subject_code,
+            t1.course_id as enrolled_course_id,
+            t2.*, t3.program_section,t3.course_id
+            
+            FROM student_subject as t1
+
+            INNER JOIN subject_program as t2 ON t2.subject_program_id = t1.subject_program_id
+
+            LEFT JOIN course as t3 ON t3.course_id = t1.course_id
+
+            WHERE (t1.enrollment_id = :enrollment_id OR t1.enrollment_id IS NULL)
+            AND t1.student_id = :student_id
+        ");
+                
+        $sql->bindParam(":enrollment_id", $enrollment_id);
+        $sql->bindParam(":student_id", $student_id);
+        $sql->execute();
+
+        if($sql->rowCount() > 0){
+
+            return $sql->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        return [];
+
+    }
+
+    // public function GetStudentAssignSubjects2($enrollment_id,
+    //         $student_id){
+
+    //     $sql = $this->con->prepare("SELECT 
+    //         t1.enrollment_id, t1.is_transferee,
+    //         t1.student_id, t1.student_subject_id,
+    //         t1.subject_code as ss_subject_code,
+    //         t1.course_id as enrolled_course_id,
+    //         t2.*, t3.program_section,t3.course_id
+            
+    //         FROM student_subject as t1
+
+    //         INNER JOIN subject_program as t2 ON t2.subject_program_id = t1.subject_program_id
+
+    //         LEFT JOIN course as t3 ON t3.course_id = t1.course_id
+
+    //         WHERE (t1.enrollment_id = :enrollment_id 
+    //             OR t1.enrollment_id IS NULL)
+
+    //         AND t1.student_id = :student_id
+    //     ");
+                
+    //     $sql->bindParam(":enrollment_id", $enrollment_id);
+    //     $sql->bindParam(":student_id", $student_id);
+    //     $sql->execute();
+
+    //     if($sql->rowCount() > 0){
+
+    //         return $sql->fetchAll(PDO::FETCH_ASSOC);
+    //     }
+
+    //     return [];
+
+    // }
 
     public function GetTotalEnrolledStudentInSectionSubjectCode($enrollment_id,
         $course_id, $student_id, $school_year_id, $subject_program_id){

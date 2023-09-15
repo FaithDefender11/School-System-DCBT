@@ -85,10 +85,13 @@
                                             t8.time_to,
                                             t8.schedule_day,
                                             t8.schedule_time,
-                                            t8.room,
+                                            t8.room_id,
 
                                             t9.firstname,
-                                            t9.lastname
+                                            t9.lastname,
+
+                                            t10.room_number
+
 
                                             FROM student_subject AS t4 
 
@@ -100,6 +103,8 @@
                                             AND t8.course_id = t4.course_id
 
                                             LEFT JOIN teacher as t9 ON t9.teacher_id = t8.teacher_id
+
+                                            LEFT JOIN room as t10 ON t10.room_id = t8.room_id
 
                                             WHERE t4.student_id=:student_id
                                             AND t4.enrollment_id=:enrollment_id
@@ -123,113 +128,118 @@
                                             $sched_arr = [];
 
                                             while($row_inner = $query->fetch(PDO::FETCH_ASSOC)){
-                                                            $subject_title = $row_inner['subject_title'];
+                                                $subject_title = $row_inner['subject_title'];
 
-                                                            $schedule = new Schedule($con);
+                                                $schedule = new Schedule($con);
 
-                                                            $student_subject_code = $row_inner['student_subject_code'];
-                                                            $sp_subjectCode = $row_inner['sp_subjectCode'];
-                                                            $subject_schedule_id = $row_inner['subject_schedule_id'];
+                                                $student_subject_code = $row_inner['student_subject_code'];
+                                                $sp_subjectCode = $row_inner['sp_subjectCode'];
+                                                $subject_schedule_id = $row_inner['subject_schedule_id'];
 
-                                                            $subject_schedule_course_id = $row_inner['subject_schedule_course_id'];
-                                                            $subject_subject_program_id = $row_inner['subject_subject_program_id'];
+                                                $subject_schedule_course_id = $row_inner['subject_schedule_course_id'];
+                                                $subject_subject_program_id = $row_inner['subject_subject_program_id'];
 
-                                                            $subject_type = $row_inner['subject_type'];
-                                                            $unit = $row_inner['unit'];
-                                                            $program_section = $row_inner['program_section'];
-                                                            $remarks = $row_inner['remarks'];
-                                                            $ss_retake = $row_inner['ss_retake'];
-                                                            $ss_overlap = $row_inner['ss_overlap'];
+                                                $subject_type = $row_inner['subject_type'];
+                                                $unit = $row_inner['unit'];
+                                                $program_section = $row_inner['program_section'];
+                                                $remarks = $row_inner['remarks'];
+                                                $ss_retake = $row_inner['ss_retake'];
+                                                $ss_overlap = $row_inner['ss_overlap'];
 
-                                                            $schedule_time = $row_inner['schedule_time'] != "" ? $row_inner['schedule_time'] : "-";
-                                                            
-                                                            $schedule->filterSubsequentOccurrencesSa($subject_titles_occurrences,
-                                                                $subject_title, $subject_schedule_course_id, $subject_subject_program_id);
+                                                $room_number = $row_inner['room_number'];
 
-                                                            $schedule->filterSubsequentOccurrencesSa($subject_code_occurrences,
-                                                                $sp_subjectCode, $subject_schedule_course_id, $subject_subject_program_id);
+                                                
 
-                                                            $schedule->filterSubsequentOccurrencesSa($subject_type_occurrences,
-                                                                $subject_type, $subject_schedule_course_id, $subject_subject_program_id);
+                                                $schedule_time = $row_inner['schedule_time'] != "" ? $row_inner['schedule_time'] : "-";
+                                                
+                                                $schedule->filterSubsequentOccurrencesSa($subject_titles_occurrences,
+                                                    $subject_title, $subject_schedule_course_id, $subject_subject_program_id);
 
-                                                            // $schedule->filterSubsequentOccurrencesSa($section_occurrences,
-                                                            //     $program_section, $subject_schedule_course_id, $subject_subject_program_id);
+                                                $schedule->filterSubsequentOccurrencesSa($subject_code_occurrences,
+                                                    $sp_subjectCode, $subject_schedule_course_id, $subject_subject_program_id);
 
-                                                            // $schedule->filterSubsequentOccurrencesSa($subject_unit_occurrences,
-                                                            //     $unit, $subject_schedule_course_id, $subject_subject_program_id);
+                                                $schedule->filterSubsequentOccurrencesSa($subject_type_occurrences,
+                                                    $subject_type, $subject_schedule_course_id, $subject_subject_program_id);
 
+                                                // $schedule->filterSubsequentOccurrencesSa($section_occurrences,
+                                                //     $program_section, $subject_schedule_course_id, $subject_subject_program_id);
 
-
-                                                            // $schedule->filterSubsequentOccurrences($subject_code_occurrences, $sp_subjectCode);
-                                                            // $schedule->filterSubsequentOccurrences($subject_type_occurrences, $subject_type);
-                                                            // $schedule->filterSubsequentOccurrences($section_occurrences, $schedule_time);
-
-                                                            // $ss_retake_msg = $ss_retake == 1 ? "RT" : " &nbsp&nbsp&nbsp&nbsp";
-                                                            // $ss_overlap_msg = $ss_overlap == 1 ? "OL" : "";
-
-                                                            $enrollment_status = "enrolled";
-
-                                                            // $icon =  $remarks == "Passed" && $enrollment_status == "enrolled" ? "
-                                                            //     <i style='color: green;' class='fas fa-check-circle'></i>
-                                                            // " : ($remarks == "Failed"
-                                                            //     ? "<i style='color: orange;' class='fas fa-times-circle'></i>" 
-                                                            //     : ( $remarks == null && $enrollment_status == "enrolled" ? "<i style='color: blue;' class='bi bi-hourglass-top'></i>" : "<i style='color: blue;' class='bi bi-airplane'></i>"));
-
-                                                            $student_subject_code = $row_inner['student_subject_code'];
+                                                // $schedule->filterSubsequentOccurrencesSa($subject_unit_occurrences,
+                                                //     $unit, $subject_schedule_course_id, $subject_subject_program_id);
 
 
-                                                            $student_subject_id = $row_inner['student_subject_id'];
-                                                            $is_final = $row_inner['is_final'];
 
-                                                            
-                                                            $graded_student_subject_id = $row_inner['graded_student_subject_id'];
+                                                // $schedule->filterSubsequentOccurrences($subject_code_occurrences, $sp_subjectCode);
+                                                // $schedule->filterSubsequentOccurrences($subject_type_occurrences, $subject_type);
+                                                // $schedule->filterSubsequentOccurrences($section_occurrences, $schedule_time);
 
-                                                            $remarks_url = "";
-  
-                                                            $db_enrollment_id = $row_inner['enrollment_id'];
-                                                            $db_is_transferee = $row_inner['is_transferee'];
+                                                // $ss_retake_msg = $ss_retake == 1 ? "RT" : " &nbsp&nbsp&nbsp&nbsp";
+                                                // $ss_overlap_msg = $ss_overlap == 1 ? "OL" : "";
 
-                                                            $time_from = $row_inner['time_from'];
+                                                $enrollment_status = "enrolled";
 
-                                                            $time_to = $row_inner['time_to'];
+                                                // $icon =  $remarks == "Passed" && $enrollment_status == "enrolled" ? "
+                                                //     <i style='color: green;' class='fas fa-check-circle'></i>
+                                                // " : ($remarks == "Failed"
+                                                //     ? "<i style='color: orange;' class='fas fa-times-circle'></i>" 
+                                                //     : ( $remarks == null && $enrollment_status == "enrolled" ? "<i style='color: blue;' class='bi bi-hourglass-top'></i>" : "<i style='color: blue;' class='bi bi-airplane'></i>"));
 
-                                                            $room = $row_inner['room'] != "" ? $row_inner['room'] : "-";
-                                                            $schedule_day = $row_inner['schedule_day'] != "" ? $row_inner['schedule_day'] : "-";
-
-                                                            $teacher_firstname = $row_inner['firstname'];
-                                                            $teacher_lastname = $row_inner['lastname'];
-
-                                                            $instructor_name = "-";
-
-                                                            if($teacher_firstname != null){
-                                                                $instructor_name = $teacher_firstname . " " . $teacher_lastname;
-                                                            }
-
-                                                            $changingSectionSubjectUrl = "./change_student_subject.php?id=$student_subject_id";
+                                                $student_subject_code = $row_inner['student_subject_code'];
 
 
-                                                                    // <td>$icon $ss_overlap_msg $ss_retake_msg</td>
+                                                $student_subject_id = $row_inner['student_subject_id'];
+                                                $is_final = $row_inner['is_final'];
 
-                                                            echo "
-                                                                <tr class='text-center'>
-                                                                    <td>$subject_title</td>
-                                                                    <td>
-                                                                        $sp_subjectCode
-                                                                    </td>
-                                                                    <td>$subject_type</td>
-                                                                    <td>$unit</td>
-                                                                    <td>
-                                                                        <a style='all:unset; cursor: pointer' href='$changingSectionSubjectUrl'>
-                                                                            $program_section
-                                                                        </a>
-                                                                    </td>
-                                                                    <td>$schedule_day</td>
-                                                                    <td>$schedule_time</td>
-                                                                    <td>$room</td>
-                                                                    <td>$instructor_name</td>
-                                                                </tr>
-                                                            ";
-                                                        }
+                                                
+                                                $graded_student_subject_id = $row_inner['graded_student_subject_id'];
+
+                                                $remarks_url = "";
+
+                                                $db_enrollment_id = $row_inner['enrollment_id'];
+                                                $db_is_transferee = $row_inner['is_transferee'];
+
+                                                $time_from = $row_inner['time_from'];
+
+                                                $time_to = $row_inner['time_to'];
+
+                                                // $room = $row_inner['room'] != "" ? $row_inner['room'] : "-";
+
+                                                $schedule_day = $row_inner['schedule_day'] != "" ? $row_inner['schedule_day'] : "-";
+
+                                                $teacher_firstname = $row_inner['firstname'];
+                                                $teacher_lastname = $row_inner['lastname'];
+
+                                                $instructor_name = "-";
+
+                                                if($teacher_firstname != null){
+                                                    $instructor_name = $teacher_firstname . " " . $teacher_lastname;
+                                                }
+
+                                                $changingSectionSubjectUrl = "./change_student_subject.php?id=$student_subject_id";
+
+
+                                                        // <td>$icon $ss_overlap_msg $ss_retake_msg</td>
+
+                                                echo "
+                                                    <tr class='text-center'>
+                                                        <td>$subject_title</td>
+                                                        <td>
+                                                            $sp_subjectCode
+                                                        </td>
+                                                        <td>$subject_type</td>
+                                                        <td>$unit</td>
+                                                        <td>
+                                                            <a style='all:unset; cursor: pointer' href='$changingSectionSubjectUrl'>
+                                                                $program_section
+                                                            </a>
+                                                        </td>
+                                                        <td>$schedule_day</td>
+                                                        <td>$schedule_time</td>
+                                                        <td>$room_number</td>
+                                                        <td>$instructor_name</td>
+                                                    </tr>
+                                                ";
+                                            }
                                         }
 
                                     ?>

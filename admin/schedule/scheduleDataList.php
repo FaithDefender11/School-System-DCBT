@@ -178,6 +178,7 @@ if ($row != null) {
 
         t4.firstname,
         t4.lastname,
+        t4.teacher_id,
 
         t5.department_type,
         t6.room_number,
@@ -239,8 +240,19 @@ if ($row != null) {
         $firstname = $row['firstname'];
         $lastname = $row['lastname'];
 
-        $teacherName = ucwords($firstname) . " " . ucwords($lastname);
+        
+        $teacher_id = $row['teacher_id'];
 
+        // var_dump($teacher_id);
+        $teacherName = "";
+        if($teacher_id !== NULL){
+            $teacherName = ucwords($firstname) . " " . ucwords($lastname);
+        }else if($teacher_id === NULL){
+            $teacherName = "TBA";
+        }
+
+
+         
         $department_type = $row['department_type'];
 
 

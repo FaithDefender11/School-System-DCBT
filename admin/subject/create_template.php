@@ -85,29 +85,29 @@
                         <form method='POST'>
 
                             <div class='form-group mb-2'>
-                                <label for=''>Subject Code</label>
-                                <input class='form-control' type='text' placeholder='Subject Code' name='subject_code'>
+                                <label for=''>* Subject Code</label>
+                                <input required class='form-control' type='text' placeholder='Subject Code' name='subject_code'>
                             </div>
 
                             <div class='form-group mb-2'>
-                                <label for=''>Title</label>
-                                <input class='form-control' type='text' placeholder='Subject Title' name='subject_title'>
+                                <label for=''>* Title</label>
+                                <input  required class='form-control' type='text' placeholder='Subject Title' name='subject_title'>
                             </div>
 
                             <div class='form-group mb-2'>
-                                <label for=''>Description</label>
-                                <textarea class='form-control' placeholder='Subject Description' name='description'></textarea>
+                                <label for=''>* Description</label>
+                                <textarea  required class='form-control' placeholder='Subject Description' name='description'></textarea>
                             </div>
                     
                             <div class='form-group mb-2'>
                                 <label for=''>Pre-requisite</label>
-                                <input class='form-control' type='text' placeholder='Pre-Requisite' name='pre_requisite_title'>
+                                <input  required class='form-control' type='text' placeholder='Pre-Requisite' name='pre_requisite_title'>
                             </div>
         
                             <div class='form-group mb-2'>
                                 
                                 <label for=''>Choose Subject Type</label>
-                                <select class='form-control' id="subject_type" name="subject_type">
+                                <select  required class='form-control' id="subject_type" name="subject_type">
 
                                     <option value='' disabled selected>Select Type</option>
                                     <option value='Core'>Core</option>
@@ -122,13 +122,13 @@
                             <div class='form-group mb-2'>
                                 <label class='mb-2'>Program</label>
 
-                                <select class="form-select" name="program_id" id="program_id">
+                                <select  class="form-select" name="program_id" id="program_id">
                                     <option value="" selected>Core is not included</option>
                                 </select>
                             </div>
                             <div class='form-group mb-2'>
                                 <label for=''>Units</label>
-                                <input class='form-control' value='3' type='text' 
+                                <input  required class='form-control' value='3' type='text' 
                                     placeholder='Unit' name='unit'>
                             </div>
 
@@ -212,29 +212,29 @@
                         <form method='POST'>
 
                             <div class='form-group mb-2'>
-                                <label for=''>Subject Code</label>
-                                <input class='form-control' type='text' placeholder='Subject Code' name='subject_code'>
+                                <label for='subject_code'>* Subject Code</label>
+                                <input required class='form-control' id="subject_code" type='text' placeholder='Subject Code' name='subject_code'>
                             </div>
 
                             <div class='form-group mb-2'>
-                                <label for=''>Title</label>
-                                <input class='form-control' type='text' placeholder='Subject Title' name='subject_title'>
+                                <label for='subject_title'>* Title</label>
+                                <input required class='form-control' id="subject_title" type='text' placeholder='Subject Title' name='subject_title'>
                             </div>
 
                             <div class='form-group mb-2'>
-                                <label for=''>Description</label>
-                                <textarea class='form-control' placeholder='Subject Description' name='description'></textarea>
+                                <label for=''>* Description</label>
+                                <textarea required class='form-control' placeholder='Subject Description' name='description'></textarea>
                             </div>
                     
                             <div class='form-group mb-2'>
                                 <label for=''>Pre-requisite</label>
-                                <input class='form-control' type='text' placeholder='Pre-Requisite' name='pre_requisite_title'>
+                                <input required class='form-control' type='text' placeholder='Pre-Requisite' name='pre_requisite_title'>
                             </div>
         
                             <div class='form-group mb-2'>
                                 
-                                <label for=''>Choose Subject Type</label>
-                                <select class='form-control' id="subject_type" name="subject_type">
+                                <label for=''>* Choose Subject Type</label>
+                                <select required class='form-control' id="subject_type" name="subject_type">
 
                                     <option value='' disabled selected>Select Type</option>
                                     <option value='Core'>Core</option>
@@ -247,15 +247,15 @@
                                 id="department_type" name="department_type">
 
                             <div class='form-group mb-2'>
-                                <label class='mb-2'>Program</label>
+                                <label class='mb-2'>* Program</label>
 
                                 <select class="form-select" name="program_id" id="program_id">
                                     <option value="" selected>Core is not included</option>
                                 </select>
                             </div>
                             <div class='form-group mb-2'>
-                                <label for=''>Units</label>
-                                <input class='form-control' value='3' type='text' 
+                                <label for=''>* Units</label>
+                                <input required class='form-control' value='3' type='text' 
                                     placeholder='Unit' name='unit'>
                             </div>
 

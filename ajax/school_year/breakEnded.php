@@ -38,9 +38,7 @@
 
                 // Current Year Period Should be InActive.
                 $currentYearPeriodInActive = $school_year->SetCurrentYearPeriodInActive($school_year_id);
-
                 if($currentYearPeriodInActive){
-
                     echo "success_update";
                     return;
                 }
