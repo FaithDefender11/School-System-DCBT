@@ -91,7 +91,12 @@
 
                     <header>
                         <div class="title">
-                            <h3><?php echo $term;?> 2nd Semester</h3>
+                            <h3> 
+                                <a style="all:unset;" href="edit.php?term=<?php echo $term; ?>&period=second">
+                                        <?php echo $term;?> 2nd Semester
+                                </a>
+                            </h3>
+                            
                         </div>
                         <span><?php echo $current_school_year_period == "Second" 
                             && $current_school_year_term == $term

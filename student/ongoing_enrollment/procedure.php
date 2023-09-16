@@ -12,12 +12,16 @@
 
     $school_year_obj = $school_year->GetActiveSchoolYearAndSemester();
 
-    $school_year_id = $school_year_obj['school_year_id'];
-    $current_semester = $school_year_obj['period'];
-    $current_term = $school_year_obj['term'];
+    // $school_year_id = $school_year_obj['school_year_id'];
+    // $current_semester = $school_year_obj['period'];
+    // $current_term = $school_year_obj['term'];
 
-            // header("Location: procedure.php?information=show");
-            // exit();
+    $current_term = $school_year->getSchoolYearValue($school_year_obj, 'term');
+    $current_semester = $school_year->getSchoolYearValue($school_year_obj, 'period');
+    $school_year_id = $school_year->getSchoolYearValue($school_year_obj, 'school_year_id');
+
+    // header("Location: procedure.php?information=show");
+    // exit();
 
     $school_year_exec = new SchoolYear($con, $school_year_id);
 
@@ -30,8 +34,24 @@
     // echo $enrollment_status;
     // echo $endEnrollment;
 
-    if($enrollment_status == 0 || ($endEnrollment != null 
-        && $endEnrollment < $now)){
+    if($now > $endEnrollment){
+        echo "endEnrollment > now";
+    }
+    
+    // if($now >= $startEnrollment){
+    //     echo "now > startEnrollment";
+    // }
+
+
+    # 1. Start Enrollment Date is Greater than to NOW = START ENROLLMENT
+    # 2. IF now is Greater than end enrollment = OVER ENROLLMENT
+
+    if($startEnrollment !== NULL && $now >= $startEnrollment
+        && $endEnrollment !== NULL
+        &&  $now > $endEnrollment){
+
+    // if($enrollment_status == 0 || ($endEnrollment != null 
+    //     && $endEnrollment < $now)){
 
         # STart of Enrollment is not yet set now.
         echo "

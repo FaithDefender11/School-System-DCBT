@@ -125,10 +125,10 @@ function getInputValue($name) {
                     
                     <input type="password" value="123456" name="password" placeholder="Password" required>
  
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label for="remember_me">Remember me</label>
                         <input type="checkbox" name="remember_me" id="remember_me">
-                    </div>
+                    </div> -->
                  
                     <input type="submit" 
                         name="enrollment_log_in_btn" value="SUBMIT">

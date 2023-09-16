@@ -1144,7 +1144,7 @@
 
                 $sql->bindValue(":change_to", "no");
                 $sql->bindParam(":course_id", $course_id);
-                $$sql->execute();
+                $sql->execute();
 
                 if($sql->rowCount() > 0){
                     $isDone = true;
@@ -1218,8 +1218,8 @@
             $activeSection = $this->GetAllActiveSection($school_year_term);
 
             $update_course = $this->con->prepare("UPDATE course
-                SET active=:active,
-                    is_full=:is_full
+                SET is_full=:is_full
+                    -- active=:active
 
                 WHERE course_id=:course_id
                 AND school_year_term=:school_year_term");
@@ -1230,9 +1230,8 @@
                 # code...
                 $course_id = $value['course_id'];
 
-                $update_course->bindValue(":active", "yes");
+                // $update_course->bindValue(":active", "yes");
                 $update_course->bindValue(":is_full", "no");
-                // $update_course->bindValue(":capacity", 30);
                 $update_course->bindParam(":course_id", $course_id);
                 $update_course->bindParam(":school_year_term", $school_year_term);
 
@@ -1350,7 +1349,7 @@
                 FROM course as t1
                
                 WHERE t1.school_year_term = :school_year_term
-                AND t1.second_period_room_id IS NOT NULL
+                -- AND t1.second_period_room_id IS NOT NULL
                 AND t1.active = :active
                 ");
                 

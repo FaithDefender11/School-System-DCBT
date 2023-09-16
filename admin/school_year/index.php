@@ -3,10 +3,12 @@
   include_once('../../includes/admin_header.php');
 
 
+  include_once('../../includes/classes/Section.php');
   include_once('../../includes/classes/Subject.php');
   include_once('../../includes/classes/SchoolYear.php');
 
-  $school_year = new SchoolYear($con, 30);
+  $school_year = new SchoolYear($con);
+  $section = new Section($con);
   $school_year_obj = $school_year->GetActiveSchoolYearAndSemester();
 
   // $current_school_year_term = $school_year_obj !== NULL ? $school_year_obj['term'] : "";
@@ -18,10 +20,13 @@
   $current_school_year_period = $school_year->getSchoolYearValue($school_year_obj, 'period');
   $current_school_year_id = $school_year->getSchoolYearValue($school_year_obj, 'school_year_id');
 
-  // echo $current_school_year_term;
 
   # VALUE = 2023-08-09 00:00:00
   $startDate = $school_year->GetStartEnrollment();
+
+
+  $asd = $section->GetAllActiveSectionWithinYear($current_school_year_term);
+  // print_r($asd);
 
 ?>
 
@@ -98,20 +103,20 @@
       </header>
       <table id="school_year_table" class="a" style="margin: 0">
           <thead>
+
               <tr>
                 <th><?php echo "
-                  <i class='fas fa-wrench'></i>
-                " ?></th>
+                  <i class='fas fa-wrench'></i>" ?></th>
                 <th>School Term</th>
                 <th>Academic Period</th>
                 <th>Status</th>
               </tr>
+
           </thead>
           <tbody>
               <?php
               
-                $query = $con->prepare("SELECT * FROM school_year
-                ");
+                $query = $con->prepare("SELECT * FROM school_year ");
 
                 $query->execute();
 
@@ -153,7 +158,7 @@
 
                       }else if($statuses === "InActive"){
 
-                        $changeSchoolYear = "changeSchoolYear($school_year_id)";
+                        $changeSchoolYear = "changeSchoolYear($school_year_id, $current_school_year_id)";
 
                         $setting_btn = "
                            
@@ -194,8 +199,9 @@
 
 
 <script>
-  function changeSchoolYear(school_year_id) {
-    var school_year_id = parseInt(school_year_id);
+  function changeSchoolYear(selected_school_year_id, current_school_year_id) {
+
+    var selected_school_year_id = parseInt(selected_school_year_id);
 
     Swal.fire({
         icon: 'question',
@@ -206,48 +212,49 @@
         cancelButtonText: 'Cancel'
     }).then((result) => {
         if (result.isConfirmed) {
-            console.log('qwe');
-            // $.ajax({
-            //     url: "../../ajax/school_year/breakEnded.php",
-            //     type: 'POST',
-            //     data: {
-            //         school_year_id,
-            //         school_year_period,
-            //         name_period,
-            //         school_year_term
-            //     },
-            //     success: function (response) {
-            //         response = response.trim();
-            //         // console.log(response);
 
-            //         if (response == "success_update") {
-            //             Swal.fire({
-            //                 icon: 'success',
-            //                 title: `Successfully Updated`,
-            //                 showConfirmButton: false,
-            //                 timer: 1000, // Adjust the duration of the toast message in milliseconds (e.g., 3000 = 3 seconds)
-            //                 toast: true,
-            //                 position: 'top-end',
-            //                 showClass: {
-            //                     popup: 'swal2-noanimation',
-            //                     backdrop: 'swal2-noanimation'
-            //                 },
-            //                 hideClass: {
-            //                     popup: '',
-            //                     backdrop: ''
-            //                 }
-            //             }).then((result) => {
-            //                 // $('#shs_program_table').load(
-            //                 //     location.href + ' #shs_program_table'
-            //                 // );
-            //                 location.reload();
-            //             });
-            //         }
-            //     },
-            //     error: function (xhr, status, error) {
-            //         // handle any errors here
-            //     }
-            // });
+           
+
+            $.ajax({
+                url: "../../ajax/school_year/school_year_maintenance.php",
+                type: 'POST',
+                data: {
+                    selected_school_year_id,
+                    current_school_year_id
+                },
+                success: function (response) {
+                    response = response.trim();
+
+                    console.log(response);
+
+                    if (response == "success_update") {
+                        Swal.fire({
+                            icon: 'success',
+                            title: `Successfully Updated`,
+                            showConfirmButton: false,
+                            timer: 1000, // Adjust the duration of the toast message in milliseconds (e.g., 3000 = 3 seconds)
+                            toast: true,
+                            position: 'top-end',
+                            showClass: {
+                                popup: 'swal2-noanimation',
+                                backdrop: 'swal2-noanimation'
+                            },
+                            hideClass: {
+                                popup: '',
+                                backdrop: ''
+                            }
+                        }).then((result) => {
+                            // $('#shs_program_table').load(
+                            //     location.href + ' #shs_program_table'
+                            // );
+                            location.reload();
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    // handle any errors here
+                }
+            });
         }
     });
 }

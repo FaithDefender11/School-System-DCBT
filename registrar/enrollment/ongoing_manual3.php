@@ -14,37 +14,14 @@
 
     echo Helper::RemoveSidebar();
 
-
     ?>
-        <head>
 
-            <style>
-                .show_search{
-                    position: relative;
-                    /* margin-top: -38px;
-                    margin-left: 215px; */
-                }
-                div.dataTables_length {
-                    display: none;
-                }
+    <head>
+        <script src="../../assets/js/enrollment/manual_create.js"></script>
+        <script src="./ongoing_manual_search.js"></script>
 
-                #enrolled_students_table_filter{
-                margin-top: 12px;
-                width: 100%;
-                display: flex;
-                flex-direction: row;
-                justify-content: start;
-                }
+    </head>
 
-                #enrolled_students_table_filter input{
-                width: 250px;
-                }
-            </style>
-
-            <link href='https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css' rel='stylesheet' type='text/css'>
-            <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-
-        </head>
     <?php
 
         // echo $registrarLoggedIn;
@@ -99,22 +76,30 @@
             isset($_POST['ongoing_enrollment_btn_' . $enrollment_form_id])
             && isset($_POST['admission_type'])
             // && isset($_POST['course_id'])
+            // && isset($_POST['selected_department_id'])
+            
             && isset($_POST['student_unique_id_val'])
             && $_POST['student_unique_id_val'] !== ""){
 
             // $course_id = intval($_POST['course_id']);
+
+            // $selected_department_id = intval($_POST['selected_department_id']);
+            // echo $selected_department_id;
+            
+            return;
+
             $course_id = 0;
             $admission_type = intval($_POST['admission_type']);
 
             $student = new Student($con, $_POST['student_unique_id_val']);
 
+            // $student_id = intval($_POST['student_unique_id_val']);
             $student_id = intval($student->GetStudentId());
 
             // echo $course_id;
 
             // Equals to Ongoing Student
             if($admission_type == 3){
-
 
                 $is_new_enrollee = 0;
                 $is_tertiary = $student->GetIsTertiary();
@@ -146,9 +131,23 @@
 
                     exit();
 
+                    // $wasStudentSubjectPopulated = $student_subject
+                    //     ->AddNonFinalDefaultEnrolledSubject($student_id, 
+                    //         $student_enrollment_id, $course_id, $current_school_year_id,
+                    //         $current_school_year_period);
+
+                    // if($wasStudentSubjectPopulated){
+                    //     // header("Location: ../admission/process_enrollment.php?find_section=show&st_id=$student_id&c_id=$course_id");
+
+                    //     $url = "../admission/process_enrollment.php?subject_review=show&st_id=$student_id&selected_course_id=$course_id";
+                    //     Alert::successAutoRedirect("Proceeding to Subject Review", 
+                    //         "$url");
+                    //     // header("Location: ../admission/process_enrollment.php?subject_review=show&st_id=$student_id&selected_course_id=$course_id");
+                    //     exit();
+                    // }
+
                 }else if($enrollment_student_status != "Regular"){
 
-                    // $url = "../admission/process_enrollment.php?subject_review=show&st_id=$student_id&selected_course_id=$course_id";
                     $url = "../admission/process_enrollment.php?find_section=show&st_id=$student_id&c_id=$course_id";
                     Alert::successAutoRedirect("Proceeding to Finding Section", 
                             "$url");
@@ -203,9 +202,6 @@
             exit();
         }
 
-
-        $allOngoingActive = $student->GetAllOngoingActive();
-
     ?>
 
     <div class="content">
@@ -232,7 +228,6 @@
 
                 <form method="POST">
 
-                    <br>
                     <main>
                         <header>
                             <div class="title">
@@ -300,125 +295,25 @@
                                 </div>
                             </span>
                         </div>
-                        <br>
 
-                        <div class="floating" id="shs-sy">
-                        
-                            <header class="mb-2">
-                                <div class="title">
-                                    <h4 style="font-weight: bold;">Ongoing Enrollment Process</h4>
-                                </div>
-                            </header>
+                        <?php 
+                            include_once('./old_student_type.php');
+                        ?>
 
-                            <main>
+                        <?php 
+                            include_once('./old_student_form.php');
+                        ?>
 
-                                <?php 
-                                
-                                    if(count($allOngoingActive) > 0){
 
-                                        ?>
-                                            <table class="a" style="margin: 0">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Student ID</th>
-                                                        <th>Name</th>
-                                                        <th>Section</th>
-                                                        <th>Status</th>
-                                                        <th>Action</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <?php
-                                                    
-
-                                                        foreach ($allOngoingActive as $key => $row) {
-                                                        
-                                                            $student_unique_id = $row['student_unique_id'];
-                                                            $student_id = $row['student_id'];
-                                                            $program_section = $row['program_section'];
-                                                            $admission_status = $row['admission_status'];
-                                                            $name = ucfirst($row['firstname']) . " " . ucfirst($row['lastname']);
-
-                                                            
-                                                            $processForm = "processForm(\"$enrollment_form_id\", $student_id, $school_year_id)";
-
-                                                            echo "
-                                                                <tr>
-                                                                    <td>$student_unique_id</td>
-                                                                    <td>$name</td>
-                                                                    <td>$program_section</td>
-                                                                    <td>$admission_status</td>
-                                                                    <td>
-                                                                        <button type='button' onclick='$processForm' class='btn btn-primary'>
-                                                                            Create form
-                                                                        </button>
-                                                                    </td>
-                                                                </tr>
-                                                            ";
-
-                                                        }
-
-                                                    ?>
-                                                </tbody>
-                                            </table>
-                                        <?php
-                                
-                                    }
-                                ?>
-                            </main>
-
+                    <div class="modal-footer">
+                        <div class="action">
+                            <button type="submit"
+                                name="ongoing_enrollment_btn_<?php echo $enrollment_form_id;?>"
+                                class="default large" >
+                                Proceed
+                            </button>
                         </div>
-
-
-
-
-
-                    </main>
-
-                    <br>
-                    <main>
-
-                        <div class="floating" id="shs-sy">
-                        
-                            <header class="mb-2">
-                                <div class="title">
-                                    <h4 style="font-weight: bold;">Ongoing Enrollment Process</h4>
-                                </div>
-                            </header>
-
-                            <main>
-
-                                <?php 
-                                
-                                    if(count($allOngoingActive) > 0){
-
-                                        ?>
-                                            <table id="ongoing_table" class="a" style="margin: 0">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Student ID</th>
-                                                        <th>Name</th>
-                                                        <th>Section</th>
-                                                        <th>Status</th>
-                                                        <th>Action</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                </tbody>
-                                            </table>
-
-                                            
-
-
-                                        <?php
-                                
-                                    }
-                                ?>
-                            </main>
-
-                        </div>
-
-                    </main>
+                    </div>
 
                 </form>
             </div>
@@ -428,80 +323,7 @@
 ?>
  
 
-<script>
-
-
-
-
-    function processForm(enrollment_form_id, student_id, school_year_id) {
-
-        Swal.fire({
-            icon: 'question',
-            title: `This will create Student ID: ${student_id} an enrollment form: ${enrollment_form_id} ?`,
-            showCancelButton: true,
-            confirmButtonText: 'Yes',
-            cancelButtonText: 'Cancel'
-        }).then((result) => {
-            if (result.isConfirmed) {
-
-                // REFX
-
-                $.ajax({
-                    url: '../../ajax/enrollment/os_form_creation.php',
-                    type: 'POST',
-                    data: {
-                        enrollment_form_id, student_id, school_year_id
-                    },
-                    // dataType: 'json',
-                    success: function(response) {
-
-                        response = response.trim();
-
-                        console.log(response);
-
-                        if(response == "has_already_enrollment_form"){
-                            Swal.fire({
-                                icon: 'error',
-                                title: `Student had enrollment form already`,
-                                showCancelButton: true,
-                                confirmButtonText: 'Ok',
-                                cancelButtonText: 'Cancel'
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-
-                                }
-                            });
-                        }
-
-                        if(response == "os_create_form_success"){
-
-                            // var enrollment_id = parseInt(response.student_enrollment_id);
-
-                            Swal.fire({
-                                icon: 'success',
-                                title: `Enrollment Form has been created..`,
-                            });
-
-                            setTimeout(() => {
-                                Swal.close();
-                                window.location.href = `../admission/process_enrollment.php?find_section=show&st_id=${student_id}&c_id=0`;
-                            }, 1300);
-                        }
-                        
-                    },
-
-                    error: function(xhr, status, error) {
-                        // Handle error response here
-                        console.error('Error:', error);
-                        console.log('Status:', status);
-                        console.log('Response Text:', xhr.responseText);
-                        console.log('Response Code:', xhr.status);
-                    }
-                });
-            }
-        });
-    }    
-                            
+ <script>
     function handleRadioButtonClick() {
 
         // var radioValue = $('#admission_type').val(); // If you want to get the value of the radio button
@@ -509,40 +331,4 @@
         window.location.href = 'manual_create.php?admission_type=' + encodeURIComponent(radioValue);
         return;
     }
-
-
-    $(document).ready(function() {
-
-        var table = $('#ongoing_table').DataTable({
-            'processing': true,
-            'serverSide': true,
-            'serverMethod': 'POST',
-            'ajax': {
-                'url': 'ongoingManualDataList.php',
-                'error': function(xhr, status, error) {
-                    // Handle error response here
-                    console.error('Error:', error);
-                    console.log('Status:', status);
-                    console.log('Response Text:', xhr.responseText);
-                    console.log('Response Code:', xhr.status);
-                }
-            },
-            // 'pageLength': 2,
-            'language': {
-                'infoFiltered': '',
-                'processing': '<i class="fas fa-spinner fa-spin"></i> Processing...',
-                'emptyTable': "No available data for enrolled students."
-            },
-            'columns': [
-                { data: 'student_id', orderable: false },  
-                { data: 'name', orderable: false },  
-                { data: 'section_name', orderable: false },  
-                { data: 'status', orderable: false },  
-                { data: 'button_url', orderable: false }
-            ],
-            'ordering': true
-        });
-    });
-
-    
  </script>

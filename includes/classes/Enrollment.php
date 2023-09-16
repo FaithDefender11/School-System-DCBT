@@ -1348,7 +1348,7 @@
     }
 
     public function GetEnrollmentIsNewEnrollee($enrollment_id, 
-        $course_id, $school_year_id) {
+        $course_id, $school_year_id = null) {
         
         $sql = $this->con->prepare("SELECT is_new_enrollee FROM enrollment 
             WHERE course_id = :course_id
@@ -1363,6 +1363,8 @@
 
         return $sql->fetchColumn();
     }
+
+    
 
     public function GetEnrollmentIsTransferee($student_id, 
         $course_id, $school_year_id) {

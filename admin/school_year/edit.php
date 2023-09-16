@@ -50,24 +50,43 @@
 
 
     $start_enrollment_date = $school_year_exec->GetStartEnrollment();
-    $end_enrollment_date = $school_year_exec->GetEndEnrollment();
+    $start_enrollment_date = date('Y-m-d\TH:i', strtotime($start_enrollment_date));
 
+    $end_enrollment_date = $school_year_exec->GetEndEnrollment();
+    $end_enrollment_date = date('Y-m-d\TH:i', strtotime($end_enrollment_date));
+
+    // echo $start_enrollment_date;
 
     $prelim_exam_startdate = $school_year_exec->GetprelimStartDate();
+    $prelim_exam_startdate = date('Y-m-d\TH:i', strtotime($prelim_exam_startdate));
+
     $prelim_exam_enddate = $school_year_exec->GetprelimEndDate();
+    $prelim_exam_enddate = date('Y-m-d\TH:i', strtotime($prelim_exam_enddate));
 
     $midterm_exam_startdate = $school_year_exec->GetmidtermStartDate();
+    $midterm_exam_startdate = date('Y-m-d\TH:i', strtotime($midterm_exam_startdate));
+    
     $midterm_exam_enddate = $school_year_exec->GetmidtermEndDate();
+    $midterm_exam_enddate = date('Y-m-d\TH:i', strtotime($midterm_exam_enddate));
 
     $prefinal_exam_startdate = $school_year_exec->GetprefinalStartDate();
+    $prefinal_exam_startdate = date('Y-m-d\TH:i', strtotime($prefinal_exam_startdate));
+    
     $prefinal_exam_enddate = $school_year_exec->GetprefinalEndDate();
+    $prefinal_exam_enddate = date('Y-m-d\TH:i', strtotime($prefinal_exam_enddate));
 
     $final_exam_startdate = $school_year_exec->GetfinalStartDate();
+    $final_exam_startdate = date('Y-m-d\TH:i', strtotime($final_exam_startdate));
+    
     $final_exam_enddate = $school_year_exec->GetfinalEndDate();
+    $final_exam_enddate = date('Y-m-d\TH:i', strtotime($final_exam_enddate));
 
     
     $break_startdate = $school_year_exec->GetbreakStartDate();
+    $break_startdate = date('Y-m-d\TH:i', strtotime($break_startdate));
+    
     $break_enddate = $school_year_exec->GetbreakEndDate();
+    $break_enddate = date('Y-m-d\TH:i', strtotime($break_enddate));
 
  if($_SERVER['REQUEST_METHOD'] === "POST" 
         && isset($_POST['save_edit_school_year_' . $school_year_id])
@@ -259,13 +278,21 @@
                         </header>
                         <div class='form-group mb-2'>
                             <label for=''>* Start Date</label>
-                            <input class='form-control' value="<?php echo date('Y-m-d', strtotime($start_enrollment_date)); ?>" required type='date' placeholder='' name='start_enrollment_date'>
-                        
+                            <!-- <input class='form-control' value="<?php echo date('Y-m-d', strtotime($start_enrollment_date)); ?>" required type='datetime-local' placeholder='' name='start_enrollment_date'> -->
+                            
+                            <input class='form-control' value="<?php echo $start_enrollment_date; ?>"
+                                required type='datetime-local' placeholder='' 
+                                name='start_enrollment_date'>
                         </div>
 
                         <div class='form-group mb-2'>
                             <label for=''>* End Date</label>
-                            <input class='form-control' value="<?php echo date('Y-m-d', strtotime($end_enrollment_date)); ?>" required type='date' placeholder='' name='end_enrollment_date'>
+
+                            <!-- <input class='form-control' value="<?php echo date('Y-m-d', strtotime($end_enrollment_date)); ?>" required type='date' placeholder='' name='end_enrollment_date'> -->
+                            
+                            <input class='form-control' value="<?php echo $end_enrollment_date; ?>"
+                                required type='datetime-local' placeholder='' 
+                                name='end_enrollment_date'>
 
                         </div>
 
@@ -278,15 +305,19 @@
                         <div class='form-group mb-2'>
                             <label for=''>* Start Date</label>
                           
-                            <input class='form-control' value="<?php echo date('Y-m-d', strtotime($prelim_exam_startdate)); ?>" required type='date' placeholder='' name='prelim_exam_startdate'>
-                        
+                            <!-- <input class='form-control' value="<?php echo date('Y-m-d', strtotime($prelim_exam_startdate)); ?>" required type='date' placeholder='' name='prelim_exam_startdate'> -->
+                            <input class='form-control' value="<?php echo $prelim_exam_startdate; ?>"
+                                required type='datetime-local' placeholder='' 
+                                name='prelim_exam_startdate'>
                         </div>
 
                         <div class='form-group mb-2'>
                             <label for=''>* End Date</label>
 
-                           <input class='form-control' value="<?php echo date('Y-m-d', strtotime($prelim_exam_enddate)); ?>" required type='date' placeholder='' name='prelim_exam_enddate'>
-                        
+                           <!-- <input class='form-control' value="<?php echo date('Y-m-d', strtotime($prelim_exam_enddate)); ?>" required type='date' placeholder='' name='prelim_exam_enddate'> -->
+                            <input class='form-control' value="<?php echo $prelim_exam_enddate; ?>"
+                                    required type='datetime-local' placeholder='' 
+                                    name='prelim_exam_enddate'>
                         </div>
 
 
@@ -299,13 +330,19 @@
                         <div class='form-group mb-2'>
                             <label for=''>* Start Date</label>
                          
-                               <input class='form-control' value="<?php echo date('Y-m-d', strtotime($midterm_exam_startdate)); ?>" required type='date' placeholder='' name='midterm_exam_startdate'>
+                            <!-- <input class='form-control' value="<?php echo date('Y-m-d', strtotime($midterm_exam_startdate)); ?>" required type='date' placeholder='' name='midterm_exam_startdate'> -->
+                            <input class='form-control' value="<?php echo $midterm_exam_startdate; ?>"
+                                    required type='datetime-local' placeholder='' 
+                                    name='midterm_exam_startdate'>
                         </div>
 
                         <div class='form-group mb-2'>
                             <label for=''>* End Date</label>
                       
-                                 <input class='form-control' value="<?php echo date('Y-m-d', strtotime($midterm_exam_enddate)); ?>" required type='date' placeholder='' name='midterm_exam_enddate'>
+                            <!-- <input class='form-control' value="<?php echo date('Y-m-d', strtotime($midterm_exam_enddate)); ?>" required type='date' placeholder='' name='midterm_exam_enddate'> -->
+                            <input class='form-control' value="<?php echo $midterm_exam_enddate; ?>"
+                                    required type='datetime-local' placeholder='' 
+                                    name='midterm_exam_enddate'>
                         </div>
 
 
@@ -318,15 +355,20 @@
                         <div class='form-group mb-2'>
                             <label for=''>* Start Date</label>
                          
-                            <input class='form-control' value="<?php echo date('Y-m-d', strtotime($prefinal_exam_startdate)); ?>" required type='date' placeholder='' name='prefinal_exam_startdate'>
+                            <!-- <input class='form-control' value="<?php echo date('Y-m-d', strtotime($prefinal_exam_startdate)); ?>" required type='date' placeholder='' name='prefinal_exam_startdate'> -->
+                            <input class='form-control' value="<?php echo $prefinal_exam_startdate; ?>"
+                                    required type='datetime-local' placeholder='' 
+                                    name='prefinal_exam_startdate'>
                         </div>
 
                         <div class='form-group mb-2'>
                             <label for=''>* End Date</label>
                           
 
-                            <input class='form-control' value="<?php echo date('Y-m-d', strtotime($prefinal_exam_enddate)); ?>" required type='date' placeholder='' name='prefinal_exam_enddate'>
-                            
+                            <!-- <input class='form-control' value="<?php echo date('Y-m-d', strtotime($prefinal_exam_enddate)); ?>" required type='date' placeholder='' name='prefinal_exam_enddate'> -->
+                            <input class='form-control' value="<?php echo $prefinal_exam_enddate; ?>"
+                                    required type='datetime-local' placeholder='' 
+                                    name='prefinal_exam_enddate'>
                         </div>
 
 
@@ -339,13 +381,19 @@
                         <div class='form-group mb-2'>
                             <label for=''>* Start Date</label>
                           
-                            <input class='form-control' value="<?php echo date('Y-m-d', strtotime($final_exam_startdate)); ?>" required type='date' placeholder='' name='final_exam_startdate'>
+                            <!-- <input class='form-control' value="<?php echo date('Y-m-d', strtotime($final_exam_startdate)); ?>" required type='date' placeholder='' name='final_exam_startdate'> -->
+                            <input class='form-control' value="<?php echo $final_exam_startdate; ?>"
+                                    required type='datetime-local' placeholder='' 
+                                    name='final_exam_startdate'>
                         </div>
 
                         <div class='form-group mb-2'>
                             <label for=''>* End Date</label>
                          
-                            <input class='form-control' value="<?php echo date('Y-m-d', strtotime($final_exam_enddate)); ?>" required type='date' placeholder='' name='final_exam_enddate'>
+                            <!-- <input class='form-control' value="<?php echo date('Y-m-d', strtotime($final_exam_enddate)); ?>" required type='date' placeholder='' name='final_exam_enddate'> -->
+                            <input class='form-control' value="<?php echo $final_exam_enddate; ?>"
+                                    required type='datetime-local' placeholder='' 
+                                    name='final_exam_enddate'>
                         </div>
 
                         <!-- Break Period  -->
@@ -357,16 +405,20 @@
                         <div class='form-group mb-2'>
                             <label for=''>* Start Date</label>
                             
-                            <input class='form-control' value="<?php echo date('Y-m-d', strtotime($break_startdate)); ?>" required type='date' placeholder='' name='break_startdate'>
+                            <!-- <input class='form-control' value="<?php echo date('Y-m-d', strtotime($break_startdate)); ?>" required type='date' placeholder='' name='break_startdate'> -->
+                            <input class='form-control' value="<?php echo $break_startdate; ?>"
+                                    required type='datetime-local' placeholder='' 
+                                    name='break_startdate'>
                         </div>
 
                         <div class='form-group mb-2'>
                             <label for=''>* End Date</label>
                             
-                            <input class='form-control' value="<?php echo date('Y-m-d', strtotime($break_enddate)); ?>" required type='date' placeholder='' name='break_enddate'>
+                            <!-- <input class='form-control' value="<?php echo date('Y-m-d', strtotime($break_enddate)); ?>" required type='date' placeholder='' name='break_enddate'> -->
+                            <input class='form-control' value="<?php echo $break_enddate; ?>"
+                                    required type='datetime-local' placeholder='' 
+                                    name='break_enddate'>
                         </div>
-
-
 
                     </main>
                     <div style="margin-bottom: -20px; margin-top: 20px;" class="action modal-footer">

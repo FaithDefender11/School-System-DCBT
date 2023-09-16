@@ -393,6 +393,33 @@ class Student{
         return false;
     }
 
+    public function UpdateOldStudentEnrollmentForm($student_id,
+        $student_enrollment_course_level, $to_change_course_id){
+
+        // Update the student's password in the database
+
+        $query = $this->con->prepare("UPDATE student 
+            SET course_id=:change_course_id,
+                course_level=:change_course_level
+
+            WHERE student_id=:student_id
+            AND student_unique_id IS NOT NULL
+
+            ");
+
+        $query->bindParam(":change_course_id", $to_change_course_id);
+        $query->bindParam(":change_course_level", $student_enrollment_course_level);
+
+        $query->bindParam(":student_id", $student_id);
+        $query->execute();
+
+        if($query->rowCount() > 0){
+            return true;
+        }
+
+        return false;
+    }
+
     public function UpdateStudentApplicableApplyNextSY($student_id){
 
         // Update the student's password in the database
