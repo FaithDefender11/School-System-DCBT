@@ -57,17 +57,17 @@ class SubjectPeriodCodeTopic{
 
     public function AddTopic($course_id,$teacher_id, $school_year_id,
         $topic, $description,$subject_period_name,
-        $subject_code, $program_code, $period_order) {
+        $subject_code, $program_code, $subject_program_id) {
 
         $teacher_id = $teacher_id == 0 ? NULL : $teacher_id;
 
         $add = $this->con->prepare("INSERT INTO subject_period_code_topic
             (course_id,teacher_id, school_year_id,
                 topic, description,subject_period_name,
-                subject_code, program_code, period_order)
+                subject_code, program_code, subject_program_id)
             VALUES(:course_id,:teacher_id, :school_year_id,
                 :topic, :description,:subject_period_name,
-                :subject_code, :program_code, :period_order)");
+                :subject_code, :program_code, :subject_program_id)");
         
         $add->bindValue(":course_id", $course_id);
         $add->bindValue(":teacher_id", $teacher_id);
@@ -77,7 +77,8 @@ class SubjectPeriodCodeTopic{
         $add->bindValue(":subject_period_name", $subject_period_name);
         $add->bindValue(":subject_code", $subject_code);
         $add->bindValue(":program_code", $program_code);
-        $add->bindValue(":period_order", $period_order);
+        $add->bindValue(":subject_program_id", $subject_program_id);
+        // $add->bindValue(":period_order", $period_order);
 
         $add->execute();
 

@@ -65,7 +65,7 @@
                                         <th>Topics</th>
                                         <th>Description</th>
                                         <th>Period</th>
-                                        <th>Status</th>
+                                        <th>Given</th>
                                     </tr>
                                 </thead>
 

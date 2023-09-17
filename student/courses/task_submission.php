@@ -462,13 +462,16 @@
                                                 
                                             } 
 
-                                            ?>
-                                                <div class='form-group mb-2'>
-                                                    <label for="assignment_images" class='mb-2'> Upload Image, PDF, Word, .txt</label>
-                                                    <input class='form-control' type='file' id="assignment_images" 
-                                                        multiple name='assignment_images[]'>
-                                                </div>
-                                            <?php
+                                            if($assignment_type === "upload"){
+                                                ?>
+                                                    <div class='form-group mb-2'>
+                                                        <label for="assignment_images" class='mb-2'> Upload Image, PDF, Word, .txt</label>
+                                                        <input class='form-control' type='file' id="assignment_images" 
+                                                            multiple name='assignment_images[]'>
+                                                    </div>
+                                                <?php
+                                            }
+
                                         }
                                     ?>
                                 

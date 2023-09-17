@@ -34,6 +34,7 @@
     // print_r($allEnrolledSubjectCode);
 
     $subjectPeriodCodeTopic = new SubjectPeriodCodeTopic($con);
+    // $subjectAssignmentSubmission = new SubjectAssignmentSubmission($con);
 
     $subjectTopicAssignmentsArray = [];
     $subjectCodeAssignmentsArray = [];
@@ -44,32 +45,79 @@
     );
 
     // print_r($getSubjectTopicAssignments);
+    // echo "<br>";
 
     $subjectCodeAssignment = new SubjectCodeAssignment($con);
 
+
+    $submissionCodeAssignmentArr = [];
+
     foreach ($getSubjectTopicAssignments as $key => $subject_period_code_topic_id) {
         
-        $assignmentList =  $subjectCodeAssignment->GetAllAssignmentOnTopicBased(
-            $subject_period_code_topic_id);
+        $assignmentList =  $subjectCodeAssignment->
+            GetAllAssignmentOnTopicBased($subject_period_code_topic_id);
         
+        $subjectPeriodCodeTopic = new SubjectPeriodCodeTopic($con, $subject_period_code_topic_id);
+
+        $topicSubjectCode =  $subjectPeriodCodeTopic->GetSubjectCode();
+
+        $mySubmissionWithinSemester = $subjectCodeAssignment->GetAllStudentAssignmentsSubmission(
+            $studentLoggedInId, $school_year_id, $topicSubjectCode);
+
+        foreach ($mySubmissionWithinSemester as $key => $submission) {
+            # code...
+            $submission_subject_code_assignment_id = $submission['subject_code_assignment_id'];
+
+            if (!in_array($submission_subject_code_assignment_id,
+                    $submissionCodeAssignmentArr)) {
+                        
+                array_push($submissionCodeAssignmentArr,
+                    $submission_subject_code_assignment_id);
+            }
+        }
+        
+
+        // echo "<br>";
+        // var_dump($mySubmissionWithinSemester);
+        // echo "<br>";
+
+        // echo $topicSubjectCode;
+        // echo "<br>";
+        
+        // $subject_period_codeTopic_id =  $subjectCodeAssignment->
+        //     GetSubjectPeriodCodeTopicId($subject_period_code_topic_id);
+        
+
+        // $assignmentList = 
         if (!empty($assignmentList)) {
 
             foreach ($assignmentList as $key => $value) {
-                if (!empty($value)) {
-                    array_push($subjectCodeAssignmentsArray, $value['subject_code_assignment_id']);
-                    // array_push($subjectCodeAssignmentsArray, $value['assignment_name']);
+
+                // if($value['subject_code_assignment_id'] !==)
+                $subjectCodeAssignment_id = $value['subject_code_assignment_id'];
+
+                if (!in_array($subjectCodeAssignment_id, $submissionCodeAssignmentArr)) {
+                    
+                    // # Get all NOT DUE Subject Code Assignment Given by your Teacher
+                    //  # Based on your Enrolled Subject Code
+
+                    // Only push if it's not in $submissionCodeAssignmentArr
+                    array_push($subjectCodeAssignmentsArray, 
+                        $subjectCodeAssignment_id);
+
                 }
+                // if (!empty($value)) {
+
+                //     array_push($subjectCodeAssignmentsArray, $subjectCodeAssignment_id);
+                //     // array_push($subjectCodeAssignmentsArray, $value['assignment_name']);
+                // }
             }
         }
         
     }
-    // print_r($subjectCodeAssignmentsArray);
+    // print_r($submissionCodeAssignmentArr);
+    print_r($subjectCodeAssignmentsArray);
 
-    // $getSubjectTopicAssignments = [34,35,36,37,38];
-    // $assignmentArray = [36,37];
-    // $matching_elements = array_intersect($getSubjectTopicAssignments, $assignmentArray);
-    // print_r($matching_elements);
- 
 ?>
 <div class="content">
 
@@ -137,15 +185,6 @@
                         } else {
                             $assignmentCounts[$subjectTitle]['count']++;
                         }
-
-                        // if (!in_array($subjectTitle, $arrSubjectTitle)) {
-
-                        //     array_push($arrSubjectTitle, $subjectTitle);
-                            
-                        //     // echo "SubjectTitle: $subjectTitle (subjectTitleCount: $count)";
-                        //     // echo "<br>";
-                        // }
-                     
                     }
 
                     foreach ($assignmentCounts as $assignmentTitle => $data) {
@@ -156,9 +195,8 @@
                         $topic_subject_code = $data['topic_subject_code'];
 
                         echo "<a style='color:inherit' href='assignment_due.php?c=$topic_subject_code'
-                            class='m-0 text-right'>Assignment Title: $assignmentTitle (Count: $count) ID: $topic_subject_code</a>";
+                            class='m-0 text-right'>Assignment Title: $assignmentTitle ($count) Code: $topic_subject_code</a>";
 
-                        // echo "<br>";
                     }
 
 

@@ -41,7 +41,7 @@
         $period_shortcut = $current_school_year_period === "First" ? "S1" : ($current_school_year_period === "Second" ? "S2" : "");
 
         $back_url = "student_dashboard.php";
-        
+
         ?>
 
             <div class="content">
@@ -89,9 +89,14 @@
                                                 $assignment_due = date("M d, g:i a", strtotime($assignment_due));
                                                 $max_score = $subject_code_assignment->GetMaxScore();
 
+                                                $assignment_url = "../courses/task_submission.php?sc_id=$subjectCodeAssignmentId";
                                                 echo "
                                                     <tr class='text-center'>
-                                                        <td>$assignment_name</td>
+                                                        <td >
+                                                            <a style='color: inherit' href='$assignment_url'>
+                                                                $assignment_name
+                                                            </a>
+                                                        </td>
                                                         <td>$max_score</td>
                                                         <td>$assignment_due</td>
 
@@ -106,7 +111,6 @@
                                     <h5 style="margin-bottom: 7px;">No assignments</h5>
 
                             <?php endif; ?>
-
                         </main>
                     </div>
                 </main>

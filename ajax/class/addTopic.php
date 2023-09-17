@@ -3,6 +3,7 @@
     require_once("../../includes/config.php");
     require_once("../../includes/classes/SubjectPeriodCodeTopic.php");
     require_once("../../includes/classes/Section.php");
+    require_once("../../includes/classes/SubjectProgram.php");
  
 
                             
@@ -16,9 +17,8 @@
         && isset($_POST['topic'])
         && isset($_POST['description'])
         && isset($_POST['subject_period_name'])
-        && isset($_POST['period_order'])
-        
-        ) {
+        && isset($_POST['period_order'])) {
+
 
 
         $teacher_id = $_POST['teacher_id'];
@@ -35,20 +35,23 @@
 
         $subject_code = $section->CreateSectionSubjectCode($sectionName, $program_code);
 
-            // echo $subject_period_name;
-
         $current_school_year_id = $_POST['current_school_year_id'];
         $subject_period_code_topic_template_id = $_POST['subject_period_code_topic_template_id'];
 
         $subjectPeriodCodeTopic = new SubjectPeriodCodeTopic($con); 
+        $subjectProgram = new SubjectProgram($con); 
 
+
+        $subject_program_id = $subjectProgram->GetSubjectProgramIdByProgramCode($program_code);
+
+        // echo $subject_program_id;
+        // return;
 
         $create = $subjectPeriodCodeTopic->AddTopic($course_id,
                 $teacher_id, $current_school_year_id, $topic, $description,
-                $subject_period_name, $subject_code, $program_code, $period_order);
+                $subject_period_name, $subject_code, $program_code, $subject_program_id);
 
         if($create == true){
-
             echo "success";
             return;
         }
