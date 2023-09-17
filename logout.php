@@ -44,8 +44,10 @@
     session_start();
     session_destroy();
 
-    $url = LOCAL_BASE_URL . "/enrollment_login.php";
-    header("Location: $url");
+    // $url = LOCAL_BASE_URL . "/enrollment_login.php";
+    $url = web_root . "/enrollment_login.php";
+
+    header("Location: /index.php");
 
 ?>
 
