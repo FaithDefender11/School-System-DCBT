@@ -24,7 +24,7 @@
         || $_SESSION['teacherLoggedInId'] == '')
         ) {
 
-        header("Location: /school-system-dcbt/home.php");
+        header("Location: /school-system-dcbt/index.php");
         exit();
 
     }

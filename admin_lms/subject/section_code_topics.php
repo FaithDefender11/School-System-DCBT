@@ -320,7 +320,7 @@
                             if(response == "success"){
                                 Swal.fire({
                                 icon: 'success',
-                                title: `Successfully Deleted`,
+                                title: `Successfully Added`,
                                 showConfirmButton: false,
                                 timer: 1000, // Adjust the duration of the toast message in milliseconds (e.g., 3000 = 3 seconds)
                                 toast: true,

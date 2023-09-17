@@ -45,7 +45,7 @@
 
                 if($removeInactiveExpires){
 
-                    $url = LOCAL_BASE_URL . "/home.php";
+                    $url = LOCAL_BASE_URL . "/index.php";
                     // header("Location: /school-system-dcbt/student_enrollment.php");
                     header("Location: $url");
                     exit();

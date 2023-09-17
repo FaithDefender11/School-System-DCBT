@@ -1564,7 +1564,7 @@
             t8.time_to,
             t8.schedule_day,
             t8.schedule_time,
-            t8.room,
+            -- t8.room,
 
             t9.firstname,
             t9.lastname

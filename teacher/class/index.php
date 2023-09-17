@@ -211,7 +211,7 @@
                                                                                     <i class='fas fa-trash'></i>
                                                                                 </button>
                                                                             ";
-                                                                            $student_submitted_total = "7 / 10";
+                                                                            $student_submitted_total = "? / ?";
                                                                         }
 
                                                                         echo "

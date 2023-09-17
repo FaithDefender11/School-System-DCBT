@@ -19,7 +19,9 @@
                         <button type="button" class="clean large success">+ Add new</button>
                     </a>
                 </div>
+
             </header>
+            
             <main>
 
                 <table id="department_table" class="a" style="margin: 0">

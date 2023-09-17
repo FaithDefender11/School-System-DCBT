@@ -27,11 +27,17 @@
 
         $type = $_GET['type'];
 
-        if(isset($_POST['create_subject_template'])){
+        if(isset($_POST['create_subject_template'])
+            && isset($_POST['subject_title'])
+            && isset($_POST['subject_type'])
+            && isset($_POST['unit'])
+            && isset($_POST['description'])
+            && isset($_POST['subject_code'])
+        ){
 
             $program_type = $type === "shs" ? 0 : ($type === "tertiary" ? 1 : "");
 
-            $pre_requisite_title = $_POST['pre_requisite_title'];
+            // $pre_requisite_title = $_POST['pre_requisite_title'];
             $subject_title = $_POST['subject_title'];
             $subject_type = $_POST['subject_type'];
             $unit = $_POST['unit'];
@@ -41,13 +47,13 @@
 
             $create = $con->prepare("INSERT INTO subject_template
                 (subject_title, unit, subject_type,
-                pre_requisite_title, description, subject_code, program_type, program_id)
+                description, subject_code, program_type, program_id)
 
                 VALUES(:subject_title, :unit, :subject_type,
-                :pre_requisite_title, :description, :subject_code, :program_type, :program_id)");
+                :description, :subject_code, :program_type, :program_id)");
                 
             $create->bindParam(':subject_title', $subject_title);
-            $create->bindParam(':pre_requisite_title', $pre_requisite_title);
+            // $create->bindParam(':pre_requisite_title', $pre_requisite_title);
             $create->bindParam(':subject_type', $subject_type);
             $create->bindParam(':unit', $unit);
             $create->bindParam(':description', $description);
@@ -99,14 +105,14 @@
                                 <textarea  required class='form-control' placeholder='Subject Description' name='description'></textarea>
                             </div>
                     
-                            <div class='form-group mb-2'>
+                            <!-- <div class='form-group mb-2'>
                                 <label for=''>Pre-requisite</label>
                                 <input  required class='form-control' type='text' placeholder='Pre-Requisite' name='pre_requisite_title'>
                             </div>
-        
+         -->
                             <div class='form-group mb-2'>
                                 
-                                <label for=''>Choose Subject Type</label>
+                                <label for=''>* Choose Subject Type</label>
                                 <select  required class='form-control' id="subject_type" name="subject_type">
 
                                     <option value='' disabled selected>Select Type</option>
@@ -153,11 +159,18 @@
 
         // $form = $subject->createFormModified($type, $programDropdown);
 
-        if(isset($_POST['create_subject_template'])){
+        if(isset($_POST['create_subject_template'])
+            && isset($_POST['subject_title'])
+            && isset($_POST['subject_type'])
+            && isset($_POST['unit'])
+            && isset($_POST['description'])
+            && isset($_POST['subject_code'])
+            // && isset($_POST['program_id'])
+        ){
 
             $program_type = $type === "shs" ? 0 : ($type === "tertiary" ? 1 : "");
 
-            $pre_requisite_title = $_POST['pre_requisite_title'];
+            // $pre_requisite_title = $_POST['pre_requisite_title'];
             $subject_title = $_POST['subject_title'];
             $subject_type = $_POST['subject_type'];
             $unit = $_POST['unit'];
@@ -167,13 +180,13 @@
 
             $create = $con->prepare("INSERT INTO subject_template
                 (subject_title, unit, subject_type,
-                pre_requisite_title, description, subject_code, program_type, program_id)
+                description, subject_code, program_type, program_id)
 
                 VALUES(:subject_title, :unit, :subject_type,
-                :pre_requisite_title, :description, :subject_code, :program_type, :program_id)");
+                :description, :subject_code, :program_type, :program_id)");
                 
             $create->bindParam(':subject_title', $subject_title);
-            $create->bindParam(':pre_requisite_title', $pre_requisite_title);
+            // $create->bindParam(':pre_requisite_title', $pre_requisite_title);
             $create->bindParam(':subject_type', $subject_type);
             $create->bindParam(':unit', $unit);
             $create->bindParam(':description', $description);
@@ -226,10 +239,10 @@
                                 <textarea required class='form-control' placeholder='Subject Description' name='description'></textarea>
                             </div>
                     
-                            <div class='form-group mb-2'>
+                            <!-- <div class='form-group mb-2'>
                                 <label for=''>Pre-requisite</label>
                                 <input required class='form-control' type='text' placeholder='Pre-Requisite' name='pre_requisite_title'>
-                            </div>
+                            </div> -->
         
                             <div class='form-group mb-2'>
                                 

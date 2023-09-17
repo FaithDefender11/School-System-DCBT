@@ -442,7 +442,7 @@
 
         public function CreateSHSSectionLevelSemesterContent($program_id,
             $term, $period_room_id, $course_level, $enrollment,
-            $school_year_period, $school_year_term){
+            $school_year_period, $school_year_term, $current_school_year_id =  null){
 
             $output = "";
             
@@ -479,11 +479,12 @@
                         ? "<i style='color: green;' class='fas fa-check'></i>" 
                         : "<i style='color: orange;' class='fas fa-times'></i>";
                         
-                    $students_enrolled = $enrollment->GetStudentEnrolled($course_id);
+                    $students_enrolled = $enrollment->GetStudentEnrolled(
+                        $course_id, $current_school_year_id);
 
                     
                     $totalStudent = $this->GetTotalNumberOfStudentInSection($course_id, 
-                        3);
+                        $current_school_year_id);
 
                     $removeSection=  "removeSection($course_id, $course_level)";
 

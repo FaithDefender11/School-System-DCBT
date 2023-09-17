@@ -28,6 +28,10 @@ class SubjectPeriodCodeTopic{
     public function GetTeacherId() {
         return isset($this->sqlData['teacher_id']) ? $this->sqlData["teacher_id"] : NULL; 
     }
+
+    public function GetSubjectProgramId() {
+        return isset($this->sqlData['subject_program_id']) ? $this->sqlData["subject_program_id"] : NULL; 
+    }
     public function GetCourseId() {
         return isset($this->sqlData['course_id']) ? $this->sqlData["course_id"] : NULL; 
     }
@@ -129,5 +133,80 @@ class SubjectPeriodCodeTopic{
         return [];
 
     }
+
+    public function GetAllSubjectTopicEnrolledBased(
+        $school_year_id,
+        $student_id,
+        $enrollment_id) {
+
+        $studentSubject = new StudentSubject($this->con);
+
+        $allEnrolledSubjectCode = $studentSubject->GetAllEnrolledSubjectCode($student_id,
+            $school_year_id, $enrollment_id);
+
+
+            // echo count($allEnrolledSubjectCode);
+
+            $arr = [];
+
+        foreach ($allEnrolledSubjectCode as $key => $value) {
+
+            # code...
+            $enrolledSubjectCode = $value['subject_code'];
+
+            // echo $enrolledSubjectCode;
+            // echo "<br>";
+
+            $getSubjectTopicAssignments = $this->con->prepare("SELECT 
+
+                t1.subject_period_code_topic_id
+
+                FROM subject_period_code_topic as t1
+
+                WHERE t1.school_year_id=:school_year_id
+                AND t1.subject_code=:subject_code
+                ORDER BY subject_period_code_topic_id DESC
+            ");
+
+            $getSubjectTopicAssignments->bindValue(":school_year_id", $school_year_id);
+            $getSubjectTopicAssignments->bindValue(":subject_code", $enrolledSubjectCode);
+            $getSubjectTopicAssignments->execute();
+
+            if($getSubjectTopicAssignments->rowCount() > 0){
+
+                while($row = $getSubjectTopicAssignments->fetch(PDO::FETCH_ASSOC)){
+                    array_push($arr, $row['subject_period_code_topic_id']);
+                }
+               
+            }
+        }
+
+        return $arr;
+    }
+
+    public function GetSubjectPeriodCodeTopicRawCodeBySubjectCode(
+        $subject_code, $school_year_id) {
+
+        $sql = $this->con->prepare("SELECT program_code
+            FROM subject_period_code_topic
+            
+            WHERE subject_code=:subject_code
+            AND school_year_id=:school_year_id
+            ");
+                
+        $sql->bindValue(":subject_code", $subject_code);
+        $sql->bindValue(":school_year_id", $school_year_id);
+        $sql->execute();
+
+        if($sql->rowCount() > 0){
+            return $sql->fetchColumn();
+        }
+
+        return NULL;
+    }
+
+
+
+
      
 }

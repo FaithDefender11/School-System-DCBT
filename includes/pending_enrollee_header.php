@@ -19,7 +19,7 @@
     if (!isset($_SESSION['enrollee_id']) 
         || $_SESSION['enrollee_id'] == '') {
 
-        header("Location: /school-system-dcbt/home.php");
+        header("Location: /school-system-dcbt/index.php");
         exit();
     }
 

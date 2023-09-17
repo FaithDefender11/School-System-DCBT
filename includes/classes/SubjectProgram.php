@@ -506,6 +506,7 @@ class SubjectProgram{
 
     }
 
+
     public function GetAvailableSubjectCodeWithinSemester($department_type,
         $current_school_year_period, $current_school_year_term,
         $student_id, $student_program_id, $selected_subject_program_id = null){
@@ -789,6 +790,29 @@ class SubjectProgram{
         }
 
         return "";
+
+    }
+
+    public function GetSubjectProgramTitleByRawCode($subject_code){
+     
+        $sql = $this->con->prepare("SELECT t1.subject_title 
+        
+            FROM subject_program AS t1
+ 
+            WHERE t1.subject_code=:subject_code
+            LIMIT 1
+        ");
+
+        $sql->bindParam(":subject_code", $subject_code);
+        $sql->execute();
+
+        if($sql->rowCount() > 0){
+
+        //    return $sql->fetchAll(PDO::FETCH_ASSOC);
+           return $sql->fetchColumn();
+        }
+
+        return [];
 
     }
 }

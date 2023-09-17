@@ -32,7 +32,7 @@
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-light">
-      <a class="navbar-brand" href="<?php echo domainName . "home.php"?>">
+      <a class="navbar-brand" href="<?php echo domainName . "index.php"?>">
         <img src="assets/images/home/DCBT-Logo.jpg" alt="DCBT-Logo" />
       </a>
       <button

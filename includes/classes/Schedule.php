@@ -349,6 +349,28 @@
         // return NULL;
         return [];
     }
+
+    public function GetTeacherScheduleSchoolYear($teacher_id){
+
+        $query = $this->con->prepare("SELECT school_year_id
+
+            FROM subject_schedule
+
+            WHERE teacher_id=:teacher_id
+
+            GROUP BY school_year_id
+        ");
+
+        $query->bindValue(":teacher_id", $teacher_id);
+        $query->execute();
+        
+        if($query->rowCount() > 0){
+            return $query->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        return null;
+    }
+
 }
 
  

@@ -4,7 +4,7 @@ require_once('includes/config.php');
 session_start();
 
 $url_student = LOCAL_BASE_URL . "/student_lms.php";
-$home = LOCAL_BASE_URL . "/home.php";
+$home = LOCAL_BASE_URL . "/index.php";
 $url_users = LOCAL_BASE_URL . "/teacher_lms.php";
 
 if (isset($_SESSION['role'])) {

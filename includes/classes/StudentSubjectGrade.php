@@ -36,7 +36,7 @@
         return isset($this->sqlData['fourth']) ? $this->sqlData["fourth"] : ""; 
     }
 
-    public function GerRemarks() {
+    public function GetRemarks() {
         return isset($this->sqlData['remarks']) ? $this->sqlData["remarks"] : ""; 
     }
 
@@ -101,7 +101,8 @@
         $first_quarter_input,
         $second_quarter_input,
         $third_quarter_input,
-        $fourth_quarter_input
+        $fourth_quarter_input,
+        $remarks
     ) {
         // Prepare the SQL query
         $updateGrade = $this->con->prepare("UPDATE student_subject_grade
@@ -109,10 +110,12 @@
                 first = :first,
                 second = :second,
                 third = :third,
-                fourth = :fourth
+                fourth = :fourth,
+                remarks = :remarks
 
             WHERE student_subject_grade_id = :student_subject_grade_id
             AND student_id = :student_id
+
             ");
 
         // Bind parameters
@@ -122,6 +125,8 @@
         $updateGrade->bindParam(":second", $second_quarter_input);
         $updateGrade->bindParam(":third", $third_quarter_input);
         $updateGrade->bindParam(":fourth", $fourth_quarter_input);
+        $updateGrade->bindParam(":remarks", $remarks);
+
         // Execute the query
         $updateGrade->execute();
         // Check if the query was successful

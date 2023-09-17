@@ -179,6 +179,22 @@
         return null;
     }
 
+    public function GetAllSchoolYear(){
+
+        $query = $this->con->prepare("SELECT *
+
+            FROM school_year
+        ");
+
+        $query->execute();
+        
+        if($query->rowCount() > 0){
+            return $query->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        return null;
+    }
+
     public function GetActiveSchoolYearAndSemester(){
 
         $query = $this->con->prepare("SELECT school_year_id,

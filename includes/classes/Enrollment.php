@@ -37,16 +37,16 @@
             AND t2.enrollment_status=:enrollment_status
 
             -- TO MAKE SURE enrollment student id is not a dummy.
-            -- INNER JOIN student as t3 ON t3.student_id = t2.student_id
+            INNER JOIN student as t3 ON t3.student_id = t2.student_id
 
 
             WHERE t2.course_id=:course_id
-            -- AND t2.school_year_id=:school_year_id
+            AND t2.school_year_id=:school_year_id
         ");
                 
         $sql->bindValue(":enrollment_status", "enrolled");
         $sql->bindParam(":course_id", $course_id);
-        // $sql->bindParam(":school_year_id", $school_year_id);
+        $sql->bindParam(":school_year_id", $school_year_id);
         $sql->execute();
 
         if($sql->rowCount() > 0){

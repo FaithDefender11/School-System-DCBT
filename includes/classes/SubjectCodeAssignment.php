@@ -411,4 +411,89 @@ class SubjectCodeAssignment{
 
     }
 
+    public function GetAllAssignmentOnTopicBased2(
+        $subject_period_code_topic_id) : array {
+
+        $arr = [];
+
+        $now = date("Y-m-d H:i:s");
+
+        $getSubjectTopicAssignments = $this->con->prepare("SELECT 
+
+            t1.subject_code_assignment_id,
+            t1.assignment_name
+
+            FROM subject_code_assignment as t1
+
+            WHERE t1.subject_period_code_topic_id=:subject_period_code_topic_id
+            AND t1.due_date > :now_date
+
+        ");
+
+        $getSubjectTopicAssignments->bindValue(":subject_period_code_topic_id",
+            $subject_period_code_topic_id);
+
+        $getSubjectTopicAssignments->bindValue(":now_date", $now);
+
+        $getSubjectTopicAssignments->execute();
+
+        if($getSubjectTopicAssignments->rowCount() > 0){
+
+            //    while($row = $getSubjectTopicAssignments->fetch(PDO::FETCH_ASSOC)){
+            //         array_push($arr, $row['subject_code_assignment_id']);
+            //    }
+
+            $arr = $getSubjectTopicAssignments->fetchAll(PDO::FETCH_ASSOC);
+
+        }
+ 
+        return $arr;
+    }
+
+    public function GetAllAssignmentOnTopicBased(
+        $subject_period_code_topic_id)  {
+
+        $arr = [];
+
+        $now = date("Y-m-d H:i:s");
+
+        $getSubjectTopicAssignments = $this->con->prepare("SELECT 
+
+            t1.subject_code_assignment_id
+            -- ,  t1.assignment_name
+
+            FROM subject_code_assignment as t1
+
+            WHERE t1.subject_period_code_topic_id=:subject_period_code_topic_id
+            AND t1.due_date > :now_date
+
+            ORDER BY subject_code_assignment_id DESC
+            -- LIMIT 1
+        ");
+
+        $getSubjectTopicAssignments->bindValue(":subject_period_code_topic_id",
+            $subject_period_code_topic_id);
+
+        $getSubjectTopicAssignments->bindValue(":now_date", $now);
+
+        $getSubjectTopicAssignments->execute();
+
+        if($getSubjectTopicAssignments->rowCount() > 0){
+
+            // return $getSubjectTopicAssignments->fetchColumn();
+
+            $arr = $getSubjectTopicAssignments->fetchAll(PDO::FETCH_ASSOC);
+
+            // while($row = $getSubjectTopicAssignments->fetch(PDO::FETCH_ASSOC)){
+
+                
+            // }
+
+        }
+ 
+        return $arr;
+    }
+
+    
+
 }

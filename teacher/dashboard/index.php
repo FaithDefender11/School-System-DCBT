@@ -11,6 +11,9 @@
     $current_school_year_term = $school_year_obj['term'];
 
     $teacher_id = $_SESSION['teacherLoggedInId'];
+
+
+    // echo $current_school_year_id;
 ?>
 
 
