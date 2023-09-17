@@ -19,6 +19,9 @@
     // $studentQuery = $con->prepare("SELECT *
         
 
+    echo web_root;
+    echo "Qweqwe";
+
     //     FROM student as t1
 
     //     INNER JOIN enrollment as t2 ON t2.student_id = t1.student_id

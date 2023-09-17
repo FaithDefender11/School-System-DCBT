@@ -12,9 +12,11 @@
 
     public function create($page){
 
+
         $base_url = 'http://localhost/school-system-dcbt/registrar/';
         $logout_url = 'http://localhost/school-system-dcbt/logout.php';
 
+        
         $dashboard_url = $base_url .  "dashboard/index.php";
         $admission_url = $base_url .  "admission/evaluation.php";
         $students_url = $base_url .  "student/index.php";
