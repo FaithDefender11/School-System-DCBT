@@ -1219,6 +1219,16 @@ class Helper {
         $page = $components[3];
         return $page;
     }
+
+    public static function GetUrlPathOnline() : string{
+
+        $directoryURI = $_SERVER['REQUEST_URI'];
+        $path = parse_url($directoryURI, PHP_URL_PATH);
+        $components = explode('/', $path);
+        var_dump($components);
+        $page = $components[3];
+        return $page;
+    }
     
     public static function DocumentTitlePage($page) : string{
 

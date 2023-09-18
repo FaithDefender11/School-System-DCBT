@@ -29,7 +29,7 @@
         exit();
     }
 
-    $page = Helper::GetUrlPath();
+    $page = Helper::GetUrlPathOnline();
     $document_title = Helper::DocumentTitlePage($page);
 
     // $registrarLoggedInObj->MarkStudentAsApplicable();
