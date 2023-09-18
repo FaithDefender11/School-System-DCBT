@@ -25,6 +25,7 @@
         $base_url = 'http://' . $_SERVER['HTTP_HOST'];
 
         header("Location: /enrollment_login.php");
+        session_destroy();
         exit();
     }
 
