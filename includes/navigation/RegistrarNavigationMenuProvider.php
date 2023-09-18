@@ -14,7 +14,6 @@
 
 
         // $base_url = 'http://localhost/school-system-dcbt/registrar/';
-
         // $base_url = 'http://' . web_root . '/registrar/';
 
         if ($_SERVER['SERVER_NAME'] === 'localhost') {
@@ -28,9 +27,12 @@
         }
         
         $logout_url = "";
+
         if ($_SERVER['SERVER_NAME'] !== 'localhost') {
+
             $new_url = str_replace("/registrar/", "", $base_url);
             $logout_url = "$new_url/logout.php";
+
         }else{
             $logout_url = 'http://localhost/school-system-dcbt/logout.php';
         }
