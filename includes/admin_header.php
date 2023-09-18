@@ -42,7 +42,8 @@
         //     }
         // }
 
-        header("Location: /school-system-dcbt/enrollment_login.php");
+        header("Location: /enrollment_login.php");
+        session_destroy();
         exit();
     }
     $page = Helper::GetUrlPath();
