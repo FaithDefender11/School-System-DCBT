@@ -1226,7 +1226,7 @@ class Helper {
         $path = parse_url($directoryURI, PHP_URL_PATH);
         $components = explode('/', $path);
         var_dump($components);
-        $page = $components[3];
+        $page = $components[2];
         return $page;
     }
     
