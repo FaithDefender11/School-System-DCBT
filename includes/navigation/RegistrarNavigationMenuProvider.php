@@ -24,11 +24,15 @@
             // Running on web hosting
             $base_url = 'https://sub.dcbt.online/registrar/';
         }
-
         
-        // $logout_url = 'http://localhost/school-system-dcbt/logout.php';
-        $new_url = str_replace("/registrar/", "", $base_url);
-        $logout_url = "$new_url/logout.php";
+        $logout_url = "";
+        if ($_SERVER['SERVER_NAME'] !== 'localhost') {
+            $new_url = str_replace("/registrar/", "", $base_url);
+            $logout_url = "$new_url/logout.php";
+        }else{
+            $logout_url = 'http://localhost/school-system-dcbt/logout.php';
+        }
+     
 
         
         $dashboard_url = $base_url .  "dashboard/index.php";
