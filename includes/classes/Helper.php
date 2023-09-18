@@ -1225,8 +1225,18 @@ class Helper {
         $directoryURI = $_SERVER['REQUEST_URI'];
         $path = parse_url($directoryURI, PHP_URL_PATH);
         $components = explode('/', $path);
-        var_dump($components);
-        $page = $components[2];
+        // var_dump($components);
+
+        $page = NULL;
+
+        if ($_SERVER['SERVER_NAME'] === 'localhost') {
+        
+            $page = $components[3];
+        } else {
+            $page = $components[2];
+
+        }
+        // $page = $components[2];
         return $page;
     }
     
