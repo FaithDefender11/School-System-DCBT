@@ -26,7 +26,9 @@
         }
 
         
-        $logout_url = 'http://localhost/school-system-dcbt/logout.php';
+        // $logout_url = 'http://localhost/school-system-dcbt/logout.php';
+        $new_url = str_replace("/registrar/", "", $base_url);
+        $logout_url = "$new_url/logout.php";
 
         
         $dashboard_url = $base_url .  "dashboard/index.php";
