@@ -14,8 +14,16 @@
 
 
         // $base_url = 'http://localhost/school-system-dcbt/registrar/';
-        
-        $base_url = 'http://' . web_root . '/registrar/';
+
+        // $base_url = 'http://' . web_root . '/registrar/';
+
+        if ($_SERVER['SERVER_NAME'] === 'localhost') {
+            // Running on localhost
+            $base_url = 'http://localhost/school-system-dcbt/registrar/';
+        } else {
+            // Running on web hosting
+            $base_url = 'https://sub.dcbt.online/registrar/';
+        }
 
         
         $logout_url = 'http://localhost/school-system-dcbt/logout.php';
