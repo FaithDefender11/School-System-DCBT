@@ -44,19 +44,19 @@
     // session_start();
 
     // $url = LOCAL_BASE_URL . "/enrollment_login.php";
-    $url = web_root . "/enrollment_login.php";
     
     $logout = "";
 
     // echo $url;
     // session_destroy();
     // return;
+    
+    $url = web_root . "/enrollment_login.php";
 
     if ($_SERVER['SERVER_NAME'] !== 'localhost') {
         // header("Location: /index.php");
 
         $base_url2 = 'http://' . $_SERVER['HTTP_HOST'] . '/enrollment_login.php';
-
         header("Location: $base_url2");
     }
 
