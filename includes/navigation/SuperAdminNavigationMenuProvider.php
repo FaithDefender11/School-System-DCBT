@@ -12,14 +12,27 @@
 
     public function create($page){
 
-        $base_url = 'http://localhost/school-system-dcbt/super_admin';
+        // $base_url = 'http://localhost/school-system-dcbt/super_admin';
+        $base_url = 'http://' . $_SERVER['HTTP_HOST'] . '/super_admin/';
+       
 
-        $dashboard_url = $base_url .  "/dashboard/index.php";
-        $account_url = $base_url .  "/users/index.php";
-        $logout_url = 'http://localhost/school-system-dcbt/logout.php';
+        if ($_SERVER['SERVER_NAME'] === 'localhost') {
+            // Running on localhost
+            $base_url = 'http://localhost/school-system-dcbt/super_admin/';
+        }
+
+        $logout_url = "http://localhost/school-system-dcbt/logout.php";
+        if ($_SERVER['SERVER_NAME'] !== 'localhost') {
+
+            $new_url = str_replace("/super_admin/", "", $base_url);
+            $logout_url = "$new_url/logout.php";
+        }
 
         // $class = "navigationItem ";
-  
+
+        $dashboard_url = $base_url .  "dashboard/index.php";
+        $account_url = $base_url .  "users/index.php";
+
         $sideBarNavigationItem = Helper::createNavByIcon("Dashboard", 
             "bi bi-clipboard-data icon ", $dashboard_url, Constants::$navigationClass . Helper::GetActiveClass($page, "dashboard"));
   
