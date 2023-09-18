@@ -41,14 +41,28 @@
     // }
 
 
-    session_start();
-    session_destroy();
+    // session_start();
 
     // $url = LOCAL_BASE_URL . "/enrollment_login.php";
     $url = web_root . "/enrollment_login.php";
+    
+    $logout = "";
 
-    header("Location: /index.php");
+    // echo $url;
+    // session_destroy();
+    // return;
 
+    if ($_SERVER['SERVER_NAME'] !== 'localhost') {
+        // header("Location: /index.php");
+        header("Location: $url");
+    }
+
+    else if ($_SERVER['SERVER_NAME'] === 'localhost') {
+        header("Location: $url");
+    }
+    
+    session_destroy();
+    exit();
 ?>
 
 
