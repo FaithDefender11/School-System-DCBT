@@ -24,9 +24,18 @@
     // echo currentURL;
 
     
-    $currentURL = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https://" : "http://";
-    echo web_root;
+    // $currentURL = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https://" : "http://";
+    // echo web_root;
 
+    $url = "https://sub.dcbt.online/registrar/dashboard/index.php";
+
+    // Parse the URL
+    $parsedUrl = parse_url($url);
+
+    // Reconstruct the base URL
+    $base_url = $parsedUrl['scheme'] . '://' . $parsedUrl['host'] . '/';
+
+    echo $base_url;
 
     //     FROM student as t1
 
