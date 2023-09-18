@@ -19,7 +19,7 @@
     
     $registrarLoggedInObj = new User($con, $registrarLoggedIn);
 
-    if (!isset($_SESSION['registrarLoggedIn']) || $_SESSION['registrarLoggedIn'] == '') {
+    if (isset($_SESSION['registrarLoggedIn']) || $_SESSION['registrarLoggedIn'] == '') {
 
         // header("Location: /school-system-dcbt/enrollment_login.php");
         $base_url = 'http://' . $_SERVER['HTTP_HOST'];
