@@ -13,7 +13,10 @@
     $cashierLoggedInObj = new User($con, $cashierLoggedIn);
 
     if (!isset($_SESSION['cashierLoggedIn']) || $_SESSION['cashierLoggedIn'] == '') {
-        header("Location: /school-system-dcbt/enrollment_login.php");
+    
+        header("Location: /enrollment_login.php");
+        session_destroy();
+        // header("Location: /school-system-dcbt/enrollment_login.php");
         exit();
     }
 

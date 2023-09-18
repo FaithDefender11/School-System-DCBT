@@ -23,21 +23,20 @@
             // Running on web hosting
             // $base_url = 'https://sub.dcbt.online/registrar/';
             $base_url = 'http://' . $_SERVER['HTTP_HOST'] . '/registrar/';
-
         }
         
-        $logout_url = "";
+        $logout_url = "http://localhost/school-system-dcbt/logout.php";
 
         if ($_SERVER['SERVER_NAME'] !== 'localhost') {
 
             $new_url = str_replace("/registrar/", "", $base_url);
             $logout_url = "$new_url/logout.php";
 
-        }else{
-            $logout_url = 'http://localhost/school-system-dcbt/logout.php';
         }
+        // else{
+        //     $logout_url = 'http://localhost/school-system-dcbt/logout.php';
+        // }
 
-        
         $dashboard_url = $base_url .  "dashboard/index.php";
         $admission_url = $base_url .  "admission/evaluation.php";
         $students_url = $base_url .  "student/index.php";

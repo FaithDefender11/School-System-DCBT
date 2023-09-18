@@ -13,12 +13,33 @@
     public function create($page){
 
         // $base_url = 'http://localhost/school-system-dcbt';
-        $base_url = 'http://localhost/school-system-dcbt/cashier';
-        $logout_url = 'http://localhost/school-system-dcbt/logout.php';
+        // $base_url = 'http://localhost/school-system-dcbt/cashier';
+        // $logout_url = 'http://localhost/school-system-dcbt/logout.php';
 
-        $dashboard_url = $base_url .  "/dashboard/index.php";
-        $payments_url = $base_url .  "/payment/index.php";
-        $payment_history_url = $base_url .  "/payment_history/index.php";
+        $base_url = "";
+        if ($_SERVER['SERVER_NAME'] === 'localhost') {
+            // Running on localhost
+            $base_url = 'http://localhost/school-system-dcbt/cashier/';
+        } else {
+            // Running on web hosting
+            // $base_url = 'https://sub.dcbt.online/cashier/';
+            $base_url = 'http://' . $_SERVER['HTTP_HOST'] . '/cashier/';
+        }
+
+
+        $logout_url = "http://localhost/school-system-dcbt/logout.php";
+        if ($_SERVER['SERVER_NAME'] !== 'localhost') {
+
+            $new_url = str_replace("/cashier/", "", $base_url);
+            $logout_url = "$new_url/logout.php";
+        }
+        // else{
+        //     $logout_url = 'http://localhost/school-system-dcbt/logout.php';
+        // }
+
+        $dashboard_url = $base_url .  "dashboard/index.php";
+        $payments_url = $base_url .  "payment/index.php";
+        $payment_history_url = $base_url .  "payment_history/index.php";
 
         $sideBarNavigationItem = Helper::createNavByIcon("Dashboard", 
             "bi bi-clipboard-data icon", $dashboard_url, Constants::$navigationClass . Helper::GetActiveClass($page, "dashboard"));

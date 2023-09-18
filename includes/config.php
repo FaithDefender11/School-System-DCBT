@@ -65,11 +65,14 @@
         } else {
 
             # We have diferent roles:
+            # super_admin, admin, registrar, teacher, student
+            
             $role = "";
             if(isset($_SESSION['role'])){
                 $role = $_SESSION['role'];
             }
-            # super_admin, admin, registrar, teacher, student
+
+            
             $base_url = 'http://' . $_SERVER['HTTP_HOST'] . "$role";
             // $base_url2 = 'https://sub.dcbt.online/registrar'; // Adjust this URL accordingly
 
@@ -77,8 +80,6 @@
             define('directoryPath', $directoryPath . '/');
             define('ROOT_DIR', basename(__DIR__));
         }
-
-
 
     }
     catch (PDOException $e) {
