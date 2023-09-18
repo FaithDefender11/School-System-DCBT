@@ -46,13 +46,23 @@
 
         // FIX THE URL. WILL REDIRECT PROPERLY ESPECIALLY IN THE PRODUCTION
 
-        if ($_SERVER['SERVER_NAME'] === 'localhost') {
+        // if ($_SERVER['SERVER_NAME'] === 'localhost') {
 
+        //     define('directoryPath', $directoryPath . '/');
+        //     define('ROOT_DIR', basename(__DIR__));
+        // } else {
+        //     $base_url2 = 'http://www.example.com/elms/admin';
+        //     define ('base_url2' , $base_url2);
+        //     define('directoryPath', $directoryPath . '/');
+        //     define('ROOT_DIR', basename(__DIR__));
+        // }
+
+        if ($_SERVER['SERVER_NAME'] === 'localhost') {
             define('directoryPath', $directoryPath . '/');
             define('ROOT_DIR', basename(__DIR__));
         } else {
-            $base_url2 = 'http://www.example.com/elms/admin';
-            define ('base_url2' , $base_url2);
+            $base_url2 = 'https://sub.dcbt.online/registrar'; // Adjust this URL accordingly
+            define('base_url2', $base_url2);
             define('directoryPath', $directoryPath . '/');
             define('ROOT_DIR', basename(__DIR__));
         }
