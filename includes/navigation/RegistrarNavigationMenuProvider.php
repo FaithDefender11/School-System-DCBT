@@ -36,7 +36,6 @@
         }else{
             $logout_url = 'http://localhost/school-system-dcbt/logout.php';
         }
-     
 
         
         $dashboard_url = $base_url .  "dashboard/index.php";

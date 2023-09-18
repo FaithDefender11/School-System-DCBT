@@ -30,29 +30,28 @@
 
             $new_url = str_replace("/admin/", "", $base_url);
             $logout_url = "$new_url/logout.php";
-
         }else{
             $logout_url = 'http://localhost/school-system-dcbt/logout.php';
         }
 
-        $dashboard_url = $base_url .  "/dashboard/index.php";
-        $school_year_url = $base_url .  "/school_year/index.php";
-        $room_url = $base_url .  "/room/index.php";
-        $department_url = $base_url .  "/department/index.php";
-        $program_url = $base_url .  "/program/shs_index.php";
-        $teacher_url = $base_url .  "/teacher/index.php";
-        $course_url = $base_url .  "/course/index.php";
-        $grade_module_url = $base_url .  "/grade/index.php";
-        $class_module_url = $base_url .  "/classlist/index.php";
-        $user_log_url = $base_url .  "/log/index.php";
-        $admin_users_url = $base_url .  "/admin_users/index.php";
+        $dashboard_url = $base_url .  "dashboard/index.php";
+        $school_year_url = $base_url .  "school_year/index.php";
+        $room_url = $base_url .  "room/index.php";
+        $department_url = $base_url .  "department/index.php";
+        $program_url = $base_url .  "program/shs_index.php";
+        $teacher_url = $base_url .  "teacher/index.php";
+        $course_url = $base_url .  "course/index.php";
+        $grade_module_url = $base_url .  "grade/index.php";
+        $class_module_url = $base_url .  "classlist/index.php";
+        $user_log_url = $base_url .  "log/index.php";
+        $admin_users_url = $base_url .  "admin_users/index.php";
 
         // SHS Default -> More SHS Students than Tertiary.
-        $subject_url = $base_url .  "/subject/shs_index.php";
+        $subject_url = $base_url .  "subject/shs_index.php";
 
-        $section_url = $base_url .  "/section/shs_index.php";
-        $schedule_url = $base_url .  "/schedule/index.php";
-        $account_url = $base_url .  "/account/index.php";
+        $section_url = $base_url .  "section/shs_index.php";
+        $schedule_url = $base_url .  "schedule/index.php";
+        $account_url = $base_url .  "account/index.php";
 
         // $class = "navigationItem ";
   
