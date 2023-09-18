@@ -6,6 +6,7 @@
     include_once('../../includes/classes/SchoolYear.php');
     include_once('../../includes/classes/Schedule.php');
     include_once('../../includes/classes/SubjectCodeAssignment.php');
+    include_once('../../includes/classes/SubjectAssignmentSubmission.php');
 
     if(isset($_GET['c'])){
 
@@ -150,6 +151,15 @@
                                                                         $assignment_name = isset($row_ass['assignment_name']) ? $row_ass['assignment_name'] : "";
                                                                         $subject_code_assignment_id = isset($row_ass['subject_code_assignment_id']) ? $row_ass['subject_code_assignment_id'] : "";
                                                                         $due_date = isset($row_ass['due_date']) ? $row_ass['due_date'] : "";
+
+                                                                        if($due_date != ""){
+                                                                            $due_date = date("M d",
+                                                                                strtotime($due_date));
+                                                                        }
+                                                                        // $due_date = isset($row_ass['due_date']) ? $row_ass['due_date'] : "";
+
+
+
                                                                         $assignment_picture = "";
                                                                         $max_score = isset($row_ass['max_score']) ? $row_ass['max_score'] : "";
 
@@ -158,6 +168,11 @@
                                                                         $task_view_url = "task_submission.php?sc_id=$subject_code_assignment_id";
                                                                         $handout_name = isset($row_ass['handout_name']) ? $row_ass['handout_name'] : "";
                                                                         $subject_code_handout_id = isset($row_ass['subject_code_handout_id']) ? $row_ass['subject_code_handout_id'] : NULL;
+
+                                                                        $subjectAssignmentSubmission = new SubjectAssignmentSubmission($con);
+                                                                        
+                                                                        $statusSubmission = $subjectAssignmentSubmission->CheckStatusSubmission($subject_code_assignment_id,
+                                                                            $studentLoggedInId, $current_school_year_id);
 
                                                                         if($assignment_name !== ""){
                                                                             $section_output = "
@@ -173,20 +188,60 @@
                                                                             ";
 
                                                                         }
+
+                                                                        // $submitted_status = "
+                                                                        //     <i style='color: orange;' class='fas fa-times'></i>
+                                                                        // ";
+
+                                                                        $submitted_status = "-";
+
+                                                                        $submission_grade = NULL;
+                                                                        $submitted_grade = NULL;
+                                                                        $score_output = "";
+
+                                                                        $submitted_graded_status = "
+                                                                            <i class='fas fa-arrow-right'></i>
+                                                                        ";
+
+                                                                        if($statusSubmission !== NULL){
+
+                                                                            $submitted_status = "
+                                                                                <i style='color: green;' class='fas fa-check'></i>
+                                                                            ";
+
+                                                                            // var_dump($statusSubmission);
+
+                                                                            $submitted_grade =  $statusSubmission['subject_grade'];
+                                                                            $date_graded =  $statusSubmission['date_graded'];
+
+                                                                            if($submitted_grade != NULL && $date_graded != NULL){
+
+                                                                                $submitted_graded_status =  $submitted_status;
+                                                                                $submission_grade =  $submitted_grade;
+                                                                            }
+
+                                                                            if($submitted_grade == NULL && $date_graded == NULL){
+                                                                                $score_output = "? / $max_score";
+                                                                            }
+                                                                            
+
+                                                                        }
+
+
+                                                                        
+                                                                        if($submission_grade !== NULL){
+                                                                            $score_output = "$submission_grade  / $max_score";
+                                                                        } 
+
+
                                                                         echo "
                                                                             <tr class='text-center'>
-                                                                                <td>
-                                                                                    $section_output
-                                                                                </td>
-                                                                                <td>
-                                                                                    
-                                                                                </td>
+                                                                                <td>$section_output</td>
 
-                                                                                <td>$max_score</td>
+                                                                                <td>$submitted_status</td>
+                                                                                <td>$score_output</td>
                                                                                 <td>$due_date</td>
-                                                                                <td>
-
-                                                                                </td>
+                                                                                <td>$submitted_graded_status</td>
                                                                             </tr>
                                                                         ";
                                                                     }
@@ -206,12 +261,19 @@
                                                                     while($row_ass = $assignment->fetch(PDO::FETCH_ASSOC)){
 
                                                                         $assignment_name = $row_ass['assignment_name'];
+                                                                        
                                                                         $subject_code_assignment_id = $row_ass['subject_code_assignment_id'];
                                                                         $due_date = $row_ass['due_date'];
+
                                                                         $assignment_picture = "";
                                                                         $max_score = $row_ass['max_score'];
 
                                                                         $task_view_url = "task_submission.php?sc_id=$subject_code_assignment_id";
+
+                                                                        $submitted_status = "
+                                                                            <i class='fas fa-arrow-right'></i>
+                                                                        ";
+
 
                                                                         echo "
                                                                             <tr class='text-center'>
@@ -226,9 +288,7 @@
 
                                                                                 <td>$max_score</td>
                                                                                 <td>$due_date</td>
-                                                                                <td>
-
-                                                                                </td>
+                                                                                <td>$submitted_status</td>
                                                                             </tr>
                                                                         ";
                                                                     }
@@ -255,6 +315,7 @@
                         ?>
                     </div>
                 </div>
+
                 <br>
                 <hr>
 

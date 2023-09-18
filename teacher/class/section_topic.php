@@ -92,11 +92,13 @@
                                     </button>
                                     <div class="dropdown-menu">
 
-                                       <a href="#" class="dropdown-item" style="color: green">
+                                       <a 
+                                        href="module_create.php?id=<?php echo $subject_period_code_topic_id;?>"
+                                        class="dropdown-item" style="color: green">
                                             <i class="bi bi-file-earmark-x"></i>
                                             Add Handout
                                         </a>
-                                        <a href="#" class="dropdown-item" style="color: blue">
+                                        <a href="create_assignment.php?id=<?php echo $subject_period_code_topic_id;?>" class="dropdown-item" style="color: blue">
                                             <i class="bi bi-file-earmark-x"></i>
                                             Add Assignment
                                         </a>

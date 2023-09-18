@@ -30,7 +30,6 @@
 
     // $allEnrolledSubjectCode = $studentSubject->GetAllEnrolledSubjectCode($student_id,
     //     $school_year_id, $enrollment_id);
-
     // print_r($allEnrolledSubjectCode);
 
     $subjectPeriodCodeTopic = new SubjectPeriodCodeTopic($con);
@@ -40,11 +39,11 @@
     $subjectCodeAssignmentsArray = [];
 
     # List of all Enrolled Subject subject_period_code_topic_id(s)
-    $getSubjectTopicAssignments = $subjectPeriodCodeTopic->GetAllSubjectTopicEnrolledBased(
+    $getEnrolledSubjects = $subjectPeriodCodeTopic->GetAllSubjectTopicEnrolledBased(
         $school_year_id, $student_id, $enrollment_id
     );
 
-    // print_r($getSubjectTopicAssignments);
+    // print_r($getEnrolledSubjects);
     // echo "<br>";
 
     $subjectCodeAssignment = new SubjectCodeAssignment($con);
@@ -52,8 +51,9 @@
 
     $submissionCodeAssignmentArr = [];
 
-    foreach ($getSubjectTopicAssignments as $key => $subject_period_code_topic_id) {
+    foreach ($getEnrolledSubjects as $key => $subject_period_code_topic_id) {
         
+        # All assignments based on enrolled subjects (Not Due assignment)
         $assignmentList =  $subjectCodeAssignment->
             GetAllAssignmentOnTopicBased($subject_period_code_topic_id);
         
@@ -61,6 +61,7 @@
 
         $topicSubjectCode =  $subjectPeriodCodeTopic->GetSubjectCode();
 
+        # All submitted assignment
         $mySubmissionWithinSemester = $subjectCodeAssignment->GetAllStudentAssignmentsSubmission(
             $studentLoggedInId, $school_year_id, $topicSubjectCode);
 
@@ -116,7 +117,7 @@
         
     }
     // print_r($submissionCodeAssignmentArr);
-    print_r($subjectCodeAssignmentsArray);
+    // print_r($subjectCodeAssignmentsArray);
 
 ?>
 <div class="content">
@@ -177,7 +178,9 @@
                         if (!isset($assignmentCounts[$subjectTitle])) {
                             $assignmentCounts[$subjectTitle] = [
                                 'count' => 1,
+
                                 // 'subject_code_assignment_id' => $subjectCodeAssignmentIds
+                                
                                 'subject_code_topic_id' => $subjectPeriodCodeTopicId,
                                 'topic_subject_code' => $topic_subject_code,
                                 

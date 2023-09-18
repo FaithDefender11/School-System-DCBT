@@ -9,6 +9,8 @@
     include_once('../../includes/classes/SubjectPeriodCodeTopic.php');
     include_once('../../includes/classes/SubjectPeriodCodeTopicTemplate.php');
     include_once('../../includes/classes/SubjectCodeAssignment.php');
+    include_once('../../includes/classes/SubjectPeriodCodeTopic.php');
+    include_once('../../includes/classes/SubjectAssignmentSubmission.php');
  
 
     if(
@@ -36,18 +38,85 @@
             
         
         $subjectCodeAssignment = new SubjectCodeAssignment($con);
+        $subjectPeriodCodeTopic = new SubjectPeriodCodeTopic($con);
+        $subjectAssignmentSubmission = new SubjectAssignmentSubmission($con);
 
+        $back_url = "";
+
+        $assignmentTodoIds = [];
+
+        $allTeachingTopicIds = $subjectPeriodCodeTopic->GetAllsubjectPeriodCodeTopics($subject_code,
+            $current_school_year_id);
+
+        // print_r($allTeachingTopicIds);
+
+        $subjectCodeAssignmentIdsArr = [];
+        foreach ($allTeachingTopicIds as $key => $topicIds) {
+            # code...
+            // $assignmentsBasedFromSubjectTopic = $subjectCodeAssignment->GetAllAssignmentsBasedFromSubjectTopic($topicIds);
+            $assignmentsBasedFromSubjectTopicList = $subjectCodeAssignment->GetAllAssignmentsBasedFromSubjectTopic($topicIds);
+
+            if(count($assignmentsBasedFromSubjectTopicList) > 0){
+
+                
+                foreach ($assignmentsBasedFromSubjectTopicList as $key => $assignmentList) {
+                    # code...
+                    $subject_code_assignment_ids = $assignmentList['subject_code_assignment_id'];
+                    // echo $topicIds;
+                    // echo "<br>";
+                    array_push($subjectCodeAssignmentIdsArr,
+                        $subject_code_assignment_ids);
+
+                    // echo "hey";
+                    // echo "<br>";
+                }
+            }
+
+            // $subject_code_assignment_ids = $assignmentsBasedFromSubjectTopicList['subject_code_assignment_id'];
+            // var_dump($subject_code_assignment_ids);
+        }
+
+
+        // print_r($subjectCodeAssignmentIdsArr);
+
+        $submissionAssArr = [];
+
+        if(count($subjectCodeAssignmentIdsArr) > 0){
+
+            foreach ($subjectCodeAssignmentIdsArr as $key => $codeAssignmentId) {
+                
+                // echo $codeAssignmentId;
+                // echo "<br>";
+                $submissionList = $subjectAssignmentSubmission->GetSubmittedUngradedSubmission($codeAssignmentId);
+                foreach ($submissionList as $key => $submissions) {
+                    # code...
+                    $subject_assignment_submission_id = $submissions['subject_assignment_submission_id'];
+                    array_push($submissionAssArr,
+                        $subject_assignment_submission_id);
+                }
+                
+            }
+
+            print_r($submissionAssArr);
+
+        }
 
         ?>
 
-            <div class="row">
+            <div class="row content col-md-12">
 
-                <div class="col-md-12">
+                <nav>
+                    <a href="<?php echo $back_url;?>">
+                        <i class="bi bi-arrow-return-left fa-1x"></i>
+                        <h3>Back</h3>
+                    </a>
+                </nav>
+
+                <div class="col-md-9">
 
                     <div class="card">
                         <div class="card-header">
                             <h3 class="text-center text-muted"><?php echo "$subject_code $current_school_year_term $current_school_year_period Semester";?></h3>
-                        
                             <!-- <button onclick="PopulateDefaultTopics('<?php echo $program_code; ?>', <?php echo $course_id?>, <?php echo $teacher_id?>, <?php echo $current_school_year_id; ?>)"
                                 class="btn btn-success"
                                 type="submit">
@@ -69,7 +138,7 @@
                                 AND t1.teacher_id=:teacher_id
 
                                 ORDER BY t1.period_order ASC
-                                ");
+                            ");
 
                             $sql->bindValue(":subject_code", $subject_code);
                             $sql->bindValue(":school_year_id", $current_school_year_id);
@@ -92,6 +161,9 @@
 
                                     ?>
                                         <div class='col-md-12 mb-3'>
+
+                                        
+
                                             <div style='border: 2px solid green;' class='card'>
                                                 <div class='card-body'>
                                                     <div class='card-block'>
@@ -99,7 +171,8 @@
                                                         <h6 class='card-subtitle text-muted'><?php echo $description?></h6>
                                                         <p class='card-text p-y-1'>Some quick example text to build on the card title.</p>
                                                         <div class='row'>
-                                                            <div class='col-md-2'>
+
+                                                            <!-- <div class='col-md-2'>
                                                                 <a href="create_assignment.php?id=<?php echo $subject_period_code_topic_id;?>">
                                                                     <button class='btn btn-info btn-sm'><i class="fas fa-plus"></i> Assignment</button>
                                                                 </a>
@@ -108,7 +181,8 @@
                                                                 <a href="module_create.php?id=<?php echo $subject_period_code_topic_id;?>">
                                                                     <button class='btn btn-sm'><i class="fas fa-plus"></i> Handout</button>
                                                                 </a>
-                                                            </div>
+                                                            </div> -->
+
                                                             <div class='col-md-3'>
                                                                 <?php
 
@@ -121,7 +195,7 @@
 
                                                                 ?>
                                                                 <a href="section_topic.php?id=<?php echo $subject_period_code_topic_template_id;?>&ct_id=<?php echo $subject_period_code_topic_id; ?>">
-                                                                    <button class='btn btn-sm btn-success'><i class="fas fa-plus"></i> Template</button>
+                                                                    <button class='btn btn-sm btn-success'><i class="fas fa-plus"></i> View</button>
                                                                 </a>
                                                             </div>
                                                         </div>
@@ -196,6 +270,7 @@
                                                                             ";
                                                                             $student_submitted_total = "";
                                                                         }
+
                                                                         else if($assignment_name != "" && $subject_code_assignment_id != 0){
 
                                                                             $removeAssignment = "removeAssignment($subject_code_assignment_id, $current_school_year_id, $teacher_id)";
@@ -256,6 +331,103 @@
                         ?>
                     </div>
                 </div>
+
+                <div class="col-md-3">
+                    <br>
+                    <br>
+                    <div class='card'>
+                        <div class='card-header'>
+                            <?php if(count($submissionAssArr) > 0):?>
+                                
+
+                                <?php 
+                                    $topicCount = [];
+
+                                    echo "<h5 style='margin-bottom: 7px;'>(".count($submissionAssArr).") To Check</h5>";
+
+
+                                    foreach ($submissionAssArr as $key => $submission_id) {
+
+                                        # code...
+                                        $subjectAssignmentSubmission = new SubjectAssignmentSubmission($con, $submission_id);
+                                        
+                                        $subjectCodeAssignmentId = $subjectAssignmentSubmission->GetSubjectCodeAssignmentId();
+
+                                        $subjectCodeAssignment = new SubjectCodeAssignment($con, $subjectCodeAssignmentId);
+                                        
+                                        $assignment_title = $subjectCodeAssignment->GetAssignmentName();
+                                        $topicId = $subjectCodeAssignment->GetSubjectPeriodCodeTopicId();
+
+                                        $subjectPeriodCodeTopic = new SubjectPeriodCodeTopic($con, $topicId);
+                                        $topicName = $subjectPeriodCodeTopic->GetTopic();
+                                        $topicName = $subjectPeriodCodeTopic->GetTopic();
+
+
+                                        // echo "Topic Name: $topicName";
+                                        // echo "<br>";
+                                        // echo "<br>";
+
+                                        if (!isset($topicCount[$topicName])) {
+                                            $topicCount[$topicName] = [
+                                                'count' => 1,
+
+                                                // 'subject_code_assignment_id' => $subjectCodeAssignmentIds
+                                                
+                                                'subject_period_code_topic_id' => $topicId,
+                                                // 'topic_subject_code' => $topic_subject_code,
+                                            ];
+                                        } else {
+                                            $topicCount[$topicName]['count']++;
+                                        }
+                                    }
+
+                                    foreach ($topicCount as $topicName => $data) {
+
+                                        $count = $data['count'];
+
+                                        //$subject_code_assignment_id = $data['subject_code_assignment_id'];
+                                        $subject_period_code_topic_id = $data['subject_period_code_topic_id'];
+
+                                        // $subjectPeriodCodeTopic = 
+
+            
+                                        $url_overview = "section_topic_grading.php?ct_id=$subject_period_code_topic_id";
+                                        echo "
+                                            <p style='margin:0'>Topic name:
+                                                <a style='color:inherit' href='$url_overview'
+                                                class='m-0 text-right'> $topicName ($count)</a>
+                                            </p>
+                                        ";
+                                        echo "<br>";
+
+                                    }
+
+                                    // foreach ($assignmentCounts as $assignmentTitle => $data) {
+
+                                    //     $count = $data['count'];
+                                    //     // $subject_code_assignment_id = $data['subject_code_assignment_id'];
+                                    //     $subject_code_topic_id = $data['subject_code_topic_id'];
+                                    //     $topic_subject_code = $data['topic_subject_code'];
+
+                                    //     echo "<a style='color:inherit' href='assignment_due.php?c=$topic_subject_code'
+                                    //         class='m-0 text-right'>Assignment Title: $assignmentTitle ($count) Code: $topic_subject_code</a>";
+
+                                    // }
+                                
+                                
+                                ?>
+
+                            <?php else:?>
+
+                                <h5 style="margin-bottom: 7px;">No to check assignments</h5>
+
+                            <?php endif;?>
+
+                            
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
         <?php

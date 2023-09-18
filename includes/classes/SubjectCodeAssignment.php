@@ -279,6 +279,7 @@ class SubjectCodeAssignment{
 
         $handout->bindValue(":subject_period_code_topic_id", $subject_period_code_topic_id);
         $handout->execute();
+
         if($handout->rowCount() > 0){
             return $handout->fetchAll(PDO::FETCH_ASSOC);
         }
@@ -355,6 +356,33 @@ class SubjectCodeAssignment{
 
         if($sql->rowCount() > 0){
             return $sql->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        return [];
+
+    }
+
+    public function GetAllAssignmentsBasedFromSubjectTopic(
+        $subject_period_code_topic_id){
+        
+            // echo $subject_code;
+
+        $sql = $this->con->prepare("SELECT t1.*
+
+            FROM subject_code_assignment AS t1
+            WHERE t1.subject_period_code_topic_id = :subject_period_code_topic_id
+            -- LIMIT 1
+        ");
+
+                
+        $sql->bindParam(":subject_period_code_topic_id", $subject_period_code_topic_id);
+        $sql->execute();
+
+        if($sql->rowCount() > 0){
+            return $sql->fetchAll(PDO::FETCH_ASSOC);
+            // return $sql->fetch(PDO::FETCH_ASSOC);
+            // return $sql->fetchAll(PDO::FETCH_COLUMN);
+
         }
 
         return [];

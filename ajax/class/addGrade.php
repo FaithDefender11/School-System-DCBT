@@ -14,6 +14,12 @@
         $grade_input = $_POST['grade_input'];
         $subject_assignment_submission_id = $_POST['subject_assignment_submission_id'];
         
+        if($grade_input > $max_score){
+            // Alert::error("Given grade has reached the established max score.", "");
+            // exit();
+            echo "invalid";
+            return false;
+        }
         
         $subjectAssignmentSubmission = new SubjectAssignmentSubmission($con,
             $subject_assignment_submission_id);

@@ -59,6 +59,12 @@
 
         $getAnsweredAssignmentList = $subjectAssignmentSubmission->GetAssignmentList(
             $subject_assignment_submission_id);
+
+        $totalSubmissionCount = $subjectAssignmentSubmission->GetSubmissionCountOnAssignment(
+            $subject_code_assignment_id, $studentLoggedInId, $current_school_year_id);
+
+
+        var_dump($totalSubmissionCount);
         
         $doesLatestAssigntmentGraded = $subjectAssignmentSubmission->DoesStudentGradedSubmissionAssignment(
             $subject_assignment_submission_id, $current_school_year_id, $studentLoggedInId);
@@ -106,18 +112,18 @@
                                         <?php
                                     }
                                 ?>
-
                                 
+                                <?php 
                                 
-                                    <?php 
-                                        if(count($getAnsweredAssignmentList) > 1){
-                                            ?>
-                                                <button onclick="window.location.href = 'student_submission_list.php?id=<?php echo $subject_code_assignment_id; ?>' "
-                                                    style="width: 120px;"
-                                                    class="btn btn-sm btn-dark" >History</button>
-                                            <?php
-                                        }
-                                    ?>
+                                    // if(count($getAnsweredAssignmentList) > 1){
+                                    if($totalSubmissionCount > 1){
+                                        ?>
+                                            <button onclick="window.location.href = 'student_submission_list.php?id=<?php echo $subject_code_assignment_id; ?>' "
+                                                style="width: 120px;"
+                                                class="btn btn-sm btn-dark" >History</button>
+                                        <?php
+                                    }
+                                ?>
                                 
                                 
                             </div>

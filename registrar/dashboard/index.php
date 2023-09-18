@@ -18,9 +18,15 @@
 
     // $studentQuery = $con->prepare("SELECT *
         
+    // echo web_root;
+    // echo "Qweqwe";
 
+    // echo currentURL;
+
+    
+    $currentURL = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https://" : "http://";
     echo web_root;
-    echo "Qweqwe";
+
 
     //     FROM student as t1
 

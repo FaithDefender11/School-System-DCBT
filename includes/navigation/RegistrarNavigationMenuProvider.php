@@ -13,7 +13,11 @@
     public function create($page){
 
 
-        $base_url = 'http://localhost/school-system-dcbt/registrar/';
+        // $base_url = 'http://localhost/school-system-dcbt/registrar/';
+        
+        $base_url = 'http://' . web_root . '/registrar/';
+
+        
         $logout_url = 'http://localhost/school-system-dcbt/logout.php';
 
         

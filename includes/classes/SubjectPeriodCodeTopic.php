@@ -206,6 +206,27 @@ class SubjectPeriodCodeTopic{
         return NULL;
     }
 
+    public function GetAllsubjectPeriodCodeTopics(
+        $subject_code, $school_year_id) {
+
+        $sql = $this->con->prepare("SELECT subject_period_code_topic_id
+            FROM subject_period_code_topic
+            
+            WHERE subject_code=:subject_code
+            AND school_year_id=:school_year_id
+            ");
+                
+        $sql->bindValue(":subject_code", $subject_code);
+        $sql->bindValue(":school_year_id", $school_year_id);
+        $sql->execute();
+
+        if($sql->rowCount() > 0){
+            return $sql->fetchAll(PDO::FETCH_COLUMN);
+        }
+
+        return [];
+    }
+
 
 
 

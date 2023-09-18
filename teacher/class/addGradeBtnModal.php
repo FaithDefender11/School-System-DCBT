@@ -80,8 +80,31 @@
 
                 var output = response.trim();
 
-                console.log(output)
- 
+                console.log(output);
+
+            // Alert::error("Given grade has reached the established max score.", "");
+            // exit();
+
+                if(output == "invalid"){
+                    // Alert::error("Given grade has reached the established max score.", "");
+                    // exit();
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oh no!',
+                        text: 'Invalid Grade Input',
+                        }).then((result) => {
+                      
+                        if (result.isConfirmed) {
+                            // window.location.href = 'another-page.php';
+
+                            // $('#addGradeBtn').modal('hide');
+                            // $('#saveAddGradeBtn')[0].reset();
+                            // location.reload();
+                            // window.location.href = `process_enrollment.php?subject_review=show&st_id=${student_id}&selected_course_id=${chosen_course_id}`;
+                        }
+                    });
+                }
                 if(output == "success"){
 
                     Swal.fire({

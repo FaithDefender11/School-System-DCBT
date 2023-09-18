@@ -329,10 +329,10 @@ class SubjectAssignmentSubmission{
 
         // The record exists, so update it
 
-        if($subject_grade > $max_score){
-            Alert::error("Given grade has reached the established max score.", "");
-            exit();
-        }
+        // if($subject_grade > $max_score){
+        //     Alert::error("Given grade has reached the established max score.", "");
+        //     exit();
+        // }
 
         $date_graded = date("Y-m-d H:i:s");
 
@@ -460,6 +460,8 @@ class SubjectAssignmentSubmission{
             AND t1.student_id=:student_id
             AND t1.school_year_id=:school_year_id
             LIMIT 1
+
+            -- ORDER BY
         ");
 
         $checkSubmission->bindParam(":subject_code_assignment_id", $subject_code_assignment_id);
@@ -479,5 +481,81 @@ class SubjectAssignmentSubmission{
         return NULL;
     }
 
+    public function GetSubmissionCountOnAssignment(
+        $subject_code_assignment_id,
+        $student_id, $school_year_id) {
+            
+
+        $submission = $this->con->prepare("SELECT 
+                                                                
+            t1.*
+            
+            FROM subject_assignment_submission  as t1
+
+            WHERE subject_code_assignment_id=:subject_code_assignment_id
+            AND student_id=:student_id
+            AND school_year_id=:school_year_id
+
+        ");
+
+        $submission->bindValue(":subject_code_assignment_id", $subject_code_assignment_id);
+        $submission->bindValue(":student_id", $student_id);
+        $submission->bindValue(":school_year_id", $school_year_id);
+        $submission->execute();
+         
+        return $submission->rowCount();
+    }
+
+    public function GetSubmittedUngradedSubmission(
+        $subject_code_assignment_id) {
+            
+        # This query will give you the rows of data for each student_id
+        # where there are multiple rows with the same student_id
+        # and it will select the row with the latest date_creation.
+
+        # If two student has two answers, always get the latest one
+        # We GROUP BY student_id -> to get only one student
+        # SELECT student_id, MAX(date_creation) to retrieve the latest submitted of this multiple submission.
+        
+        $submission = $this->con->prepare("SELECT t1.*
+
+            FROM subject_assignment_submission AS t1
+            INNER JOIN (
+                SELECT student_id, MAX(date_creation) AS latest_date_creation
+                FROM subject_assignment_submission
+                WHERE subject_code_assignment_id = :subject_code_assignment_id
+                AND subject_grade IS NULL
+                AND date_graded IS NULL
+                GROUP BY student_id
+            ) AS t2 ON t1.student_id = t2.student_id AND t1.date_creation = t2.latest_date_creation
+            
+            WHERE t1.subject_code_assignment_id = :subject_code_assignment_id
+            AND t1.subject_grade IS NULL
+            AND t1.date_graded IS NULL
+        ");
+
+        // $submission = $this->con->prepare("SELECT 
+        //     t1.*, MAX(t1.date_creation) AS latest_date_creation
+
+        //     FROM subject_assignment_submission AS t1
+        //     WHERE subject_code_assignment_id = :subject_code_assignment_id
+        //     AND subject_grade IS NULL
+        //     AND date_graded IS NULL
+        //     GROUP BY t1.student_id
+        // ");
+
+        $submission->bindValue(":subject_code_assignment_id", $subject_code_assignment_id);
+        $submission->execute();
+         
+        if($submission->rowCount() > 0){
+
+            return $submission->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        return [];
+    }
+
+
 }
+
 ?>

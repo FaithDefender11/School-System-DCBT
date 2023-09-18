@@ -156,6 +156,10 @@
 
                                             WHERE t1.student_id =:student_id
                                             AND t1.school_year_id =:school_year_id
+
+                                            ORDER BY t1.subject_assignment_submission_id DESC
+
+                                            LIMIT 1 
                                         ");
 
                                         // $query->bindParam(":subject_assignment_submission_id", $subject_assignment_submission_id);
