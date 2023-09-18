@@ -393,6 +393,8 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             subject_insertion_summary.php?id=$enrollment_id&enrolled_subject=show
         ";
     }
+    // Trying to decide
+    $enrollment_url = "";
     if($enrollment_form_id != "-"){
         $enrollment_form_id = "
             <a style='all:unset' href='$enrollment_url'>

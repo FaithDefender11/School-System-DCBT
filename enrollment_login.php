@@ -6,10 +6,9 @@ require_once("includes/classes/FormSanitizer.php");
 
 $account = new Account($con);
 
- 
 
 if (isset($_SESSION['adminLoggedIn']) 
-        || isset($_SESSION['adminUserId'])) {
+    || isset($_SESSION['adminUserId'])) {
         
     header("Location: admin/dashboard/index.php");
     exit();
@@ -35,9 +34,9 @@ if(isset($_POST["enrollment_log_in_btn"])) {
         && $wasSuccessful[0] == true 
         && trim(strtolower($wasSuccessful[1])) == "administrator"){
 
-        // echo "true admin";
         $_SESSION["adminLoggedIn"] = $username;
         $_SESSION["adminUserId"] = $wasSuccessful[2];
+        $_SESSION["role"] = "admin";
 
         header("Location: admin/dashboard/index.php");
         exit();
@@ -50,9 +49,9 @@ if(isset($_POST["enrollment_log_in_btn"])) {
         // echo "true registrar";
         $_SESSION["registrarLoggedIn"] = $username;
         $_SESSION["registrarUserId"] = $wasSuccessful[2];
+        $_SESSION["role"] = "registrar";
 
         header("Location: registrar/dashboard/index.php");
-
         exit();
 
     }
@@ -62,6 +61,8 @@ if(isset($_POST["enrollment_log_in_btn"])) {
 
         // echo "true cashier";
         $_SESSION["cashierLoggedIn"] = $username;
+        $_SESSION["role"] = "cashier";
+
         // header("Location: cashier_dashboard.php");
         header("Location: cashier/dashboard/index.php");
 
@@ -74,6 +75,7 @@ if(isset($_POST["enrollment_log_in_btn"])) {
 
         $_SESSION["superAdminLoggedIn"] = $username;
         $_SESSION["superAdminUserId"] = $wasSuccessful[2];
+        $_SESSION["role"] = "super_admin";
 
         header("Location: super_admin/dashboard/index.php");
 

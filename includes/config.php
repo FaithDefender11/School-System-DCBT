@@ -65,9 +65,12 @@
         } else {
 
             # We have diferent roles:
-
+            $role = "";
+            if(isset($_SESSION['role'])){
+                $role = $_SESSION['role'];
+            }
             # super_admin, admin, registrar, teacher, student
-            $base_url = 'http://' . $_SERVER['HTTP_HOST'] . '/registrar/';
+            $base_url = 'http://' . $_SERVER['HTTP_HOST'] . "$role";
             // $base_url2 = 'https://sub.dcbt.online/registrar'; // Adjust this URL accordingly
 
             define('base_url2', $base_url);
