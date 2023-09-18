@@ -54,7 +54,10 @@
 
     if ($_SERVER['SERVER_NAME'] !== 'localhost') {
         // header("Location: /index.php");
-        header("Location: $url");
+
+        $base_url2 = 'http://' . $_SERVER['HTTP_HOST'] . '/enrollment_login.php';
+
+        header("Location: $base_url2");
     }
 
     else if ($_SERVER['SERVER_NAME'] === 'localhost') {
