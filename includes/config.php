@@ -63,8 +63,14 @@
             define('directoryPath', $directoryPath . '/');
             define('ROOT_DIR', basename(__DIR__));
         } else {
-            $base_url2 = 'https://sub.dcbt.online/registrar'; // Adjust this URL accordingly
-            define('base_url2', $base_url2);
+
+            # We have diferent roles:
+
+            # super_admin, admin, registrar, teacher, student
+            $base_url = 'http://' . $_SERVER['HTTP_HOST'] . '/registrar/';
+            // $base_url2 = 'https://sub.dcbt.online/registrar'; // Adjust this URL accordingly
+
+            define('base_url2', $base_url);
             define('directoryPath', $directoryPath . '/');
             define('ROOT_DIR', basename(__DIR__));
         }
