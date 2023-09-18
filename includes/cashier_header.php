@@ -14,9 +14,14 @@
 
     if (!isset($_SESSION['cashierLoggedIn']) || $_SESSION['cashierLoggedIn'] == '') {
     
+        if ($_SERVER['SERVER_NAME'] === 'localhost') {
+            header("Location: /school-system-dcbt/enrollment_login.php");
+            session_destroy();
+            exit();
+        }
+        # If Online,
         header("Location: /enrollment_login.php");
         session_destroy();
-        // header("Location: /school-system-dcbt/enrollment_login.php");
         exit();
     }
 

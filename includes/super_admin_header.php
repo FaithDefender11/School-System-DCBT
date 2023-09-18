@@ -23,8 +23,12 @@
         || !isset($_SESSION['superAdminUserId']) 
         || $_SESSION['superAdminUserId'] == '') {
 
-        $base_url = 'http://' . $_SERVER['HTTP_HOST'];
-
+        if ($_SERVER['SERVER_NAME'] === 'localhost') {
+            header("Location: /school-system-dcbt/enrollment_login.php");
+            session_destroy();
+            exit();
+        }
+        # If Online,
         header("Location: /enrollment_login.php");
         session_destroy();
         exit();
