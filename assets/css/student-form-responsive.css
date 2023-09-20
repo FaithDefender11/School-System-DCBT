@@ -1,15 +1,15 @@
 @media (max-width: 800px) {
-    .floating.noBorder>header>.title>h2 {
-        font-size: 26px;
-    }
+  .floating.noBorder > header > .title > h2 {
+    font-size: 26px;
+  }
 
-    .content .progress>.dot p {
-        font-size: 10px;
-    }
+  .content .progress > .dot p {
+    font-size: 10px;
+  }
 }
 
 @media (max-width: 560px) {
-    .content .progress>.dot p {
-        display: none;
-    }
+  .content .progress > .dot p {
+    display: none;
+  }
 }

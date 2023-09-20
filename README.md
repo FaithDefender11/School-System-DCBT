@@ -1,6 +1,6 @@
 # School-System-DCBT
 
-School System for completion of THESIS @ STI ORTIGAS CAINTA
+School System for completion of THESIS @ STI ORTIGAS CAINTA (BACKEND SIDE)
 
 Floders
 

@@ -8,32 +8,32 @@
 }
 
 /* colors for nav */
-.drop.gas,
-.drop.bcm {
+.dropdown.gas,
+.dropdown.bcm {
   background-color: var(--1);
 }
 
-.drop.ict,
-.drop.bpe {
+.dropdown.ict,
+.dropdown.bpe {
   background-color: var(--2);
 }
 
-.drop.humss,
-.drop.bae {
+.dropdown.humss,
+.dropdown.bae {
   background-color: var(--3);
 }
 
-.drop.abm,
-.drop.bse {
+.dropdown.abm,
+.dropdown.bse {
   background-color: var(--4);
 }
 
-.drop.ia,
-.drop.btte {
+.dropdown.ia,
+.dropdown.btte {
   background-color: var(--5);
 }
 
-.drop.he {
+.dropdown.he {
   background-color: var(--6);
 }
 
