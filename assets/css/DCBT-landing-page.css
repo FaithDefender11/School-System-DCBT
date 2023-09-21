@@ -7,10 +7,6 @@
     list-style: none;
 }
 
-html>body {
-    min-height: 100%;
-}
-
 :root {
     --mainTheme: #440203;
     --colorTheme: #BB4444;
@@ -121,7 +117,7 @@ nav>ul>li>a:hover {
 
 /* CONTENT */
 .content {
-    height: auto;
+    height: 100%;
     flex-direction: column;
     align-items: stretch;
 }
