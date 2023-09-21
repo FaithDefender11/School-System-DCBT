@@ -28,101 +28,11 @@ class Account {
         }
     }
 
-    public function enrollmentLogIn($username, $password,
-        $rememberMe = null){
+    public function enrollmentLogIn($username, $password){
 
         $array = [];
-
-// echo $username;
-//             echo "<br>";
-
-//             echo $password;
-//             echo "<br>";
 
         $query = $this->con->prepare("SELECT * FROM users
-            WHERE username=:username
-            LIMIT 1");
-
-        $query->bindParam(":username", $username);
-        // $query->bindParam(":password", $password);
-
-        $query->execute();
-
-        if($query->rowCount() > 0){
-            
-            $row = $query->fetch(PDO::FETCH_ASSOC);
-
-            $user_id = $row['user_id'];
-            $username = $row['username'];
-
-            // echo $username;
-            // echo "<br>";
-
-            // echo $password;
-            // echo "<br>";
-
-
-            if ($row && password_verify($password, $row['password'])) {
-                
-                $role = $row['role'];
-                $user_id = $row['user_id'];
-
-                array_push($array, true);
-                array_push($array, $role);
-                array_push($array, $user_id);
-            }
-
-        }else{
-            array_push($this->errorArray, Constants::$loginFailed);
-        }
-
-        return $array;
-    }
-
-    public function GetUserIdByRememberMeToken($remember_me_token) {
-        $query = $this->con->prepare("SELECT user_id 
-            FROM users 
-            WHERE remember_me_token = :remember_me_token");
-
-        $query->bindParam(":remember_me_token", $remember_me_token);
-        $query->execute();
-
-        if ($query->rowCount() > 0) {
-            $row = $query->fetch(PDO::FETCH_ASSOC);
-            return $row['user_id'];
-        }
-
-        return false; // Token not found
-    }
-
-    function generateUniqueToken() {
-        return bin2hex(random_bytes(32)); // Generates a 64-character hexadecimal token
-    }
-
-    public function clearRememberMeToken($user_id) {
-        $query = $this->con->prepare("UPDATE users 
-            SET remember_me_token = NULL WHERE user_id = :user_id");
-        $query->bindParam(":user_id", $user_id);
-        $query->execute();
-    }
-
-    private function storeTokenInDatabase($user_id, $token) {
-
-        $query = $this->con->prepare("UPDATE users 
-            SET remember_me_token=:token WHERE user_id=:user_id");
-
-        $query->bindParam(":token", $token);
-        $query->bindParam(":user_id", $user_id);
-        $query->execute();
-
-    }
-
-
-    public function studentLogIn($username, $password){
-
-        $array = [];
-
-        $query = $this->con->prepare("SELECT * FROM student
             WHERE username=:username AND password=:password
             LIMIT 1");
 
@@ -134,7 +44,7 @@ class Account {
         if($query->rowCount() > 0){
             $row = $query->fetch(PDO::FETCH_ASSOC);
 
-            $role = "student";
+            $role = $row['role'];
 
             array_push($array, true);
             array_push($array, $role);
@@ -243,12 +153,10 @@ class Account {
 
         if(strlen($pw) > 30 || strlen($pw) < 5) {
             array_push($this->errorArray, Constants::$passwordLength);
-            return;
         }
     }
     
     public function getError($error) {
-        
         if(in_array($error, $this->errorArray)) {
             return "<span class='errorMessage'>$error</span>";
         }
