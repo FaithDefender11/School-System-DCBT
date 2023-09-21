@@ -74,7 +74,7 @@
             sit obcaecati ducimus ratione?
           </p>
           <div class="action">
-            <button class="enroll" onclick="window.location.href = 'Online-enrollment-page.html';">
+            <button class="enroll" onclick="enroll()">
               Enroll now!
             </button>
           </div>

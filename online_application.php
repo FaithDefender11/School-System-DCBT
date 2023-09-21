@@ -1,0 +1,108 @@
+<?php
+    include('includes/config.php');
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, inital-scale=1" />
+    <title>Daehan College of Business & Technology</title>
+    <!--Link stylesheets-->
+    <link rel="stylesheet" href="assets/css/DCBT-landing-page.css" />
+    <link rel="stylesheet" href="assets/css/fonts.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+    />
+    <!--Link fonts-->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IM+Fell+Double+Pica&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background-color: #efefef;
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <input type="checkbox" id="check" />
+      <label for="check" class="check-btn">
+        <i class="bi bi-list"></i>
+      </label>
+      <label class="logo">
+        <a href="index.php">
+          <img src="assets/images/DCBT-Logo.jpg" alt="DCBT" />
+        </a>
+      </label>
+      <ul>
+        <li><a href="#">ADMISSIONS</a></li>
+        <li><a href="#">ACADEMICS</a></li>
+        <li><a href="#">ABOUT</a></li>
+        <li><a href="login.html">LOGIN</a></li>
+      </ul>
+    </nav>
+
+    <div class="content">
+      <div class="slide-3">
+        <header>
+          <div class="title">
+            <h2>Online Application</h2>
+            <small
+              >Lorem ipsum dolor sit amet consectetur adipisicing elit.
+              Consequatur quam optio explicabo asperiores eius qui? Itaque, nemo
+              autem optio iure obcaecati ipsa animi harum inventore, possimus
+              neque rerum quod deserunt.</small
+            >
+          </div>
+        </header>
+        <header>
+          <div class="title">
+            <h3>Choose enrollment type</h3>
+          </div>
+        </header>
+        <main>
+          <div class="action">
+            <a href="New-student-form-1.html">New student</a>
+          </div>
+          <div class="action">
+            <a href="Old-student-authentication-1.html">Old student</a>
+          </div>
+        </main>
+        <header>
+          <div class="title">
+            <h3>Or</h3>
+          </div>
+        </header>
+        <main>
+          <div class="action">
+            <a href="#">Check/edit submitted form</a>
+          </div>
+        </main>
+      </div>
+      <main>
+        <div class="footer">
+          <div class="contact">
+            <h4>DAEHAN COLLEGE OF BUSINESS AND TECHNOLOGY</h4>
+            <p>
+              Nicanor Reyes Street, Sampaloc, Manila Tel No: +63 (2)-87777-338
+              (trunkline)
+            </p>
+            <p>Terms and condition | Privacy Policy</p>
+          </div>
+          <div class="copyright">
+            <h4>Copyright © 2019. All Rights Reserved</h4>
+          </div>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>
