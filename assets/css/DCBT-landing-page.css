@@ -7,6 +7,10 @@
     list-style: none;
 }
 
+html>body {
+    min-height: 100%;
+}
+
 :root {
     --mainTheme: #440203;
     --colorTheme: #BB4444;
