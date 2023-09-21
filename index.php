@@ -1,3 +1,19 @@
+<?php
+  include('includes/config.php');
+
+  $currentURL = "http://$_SERVER[HTTP_HOST]$_SERVER[SCRIPT_NAME]";
+  $baseURL = dirname($currentURL);
+
+  if(isset($_POST['samp_btn'])
+    && isset($_POST['username'])
+    && isset($_POST['password'])
+    ){
+
+    $username =  $_POST['username'];
+    $password =  $_POST['password'];
+  }
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -242,6 +258,16 @@
       </div>
     </main>
   </div>
+
+  <script>
+    function enroll(){
+      var root = `<?php
+        echo $baseURL;
+          ?>`;
+      // REFF
+      window.location.href = `${root}/online_application.php`
+    }
+  </script>
 </body>
 
 </html>
