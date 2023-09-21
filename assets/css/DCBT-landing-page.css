@@ -117,7 +117,7 @@ nav>ul>li>a:hover {
 
 /* CONTENT */
 .content {
-    height: 100%;
+    height: auto;
     flex-direction: column;
     align-items: stretch;
 }
@@ -186,6 +186,7 @@ nav>ul>li>a:hover {
 .slide-3 {
     display: flex;
     padding: 100px 60px;
+    min-height: 90vh;
     flex-direction: column;
     align-items: flex-start;
     gap: 20px;
