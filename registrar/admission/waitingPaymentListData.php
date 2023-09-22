@@ -20,7 +20,13 @@ $columnIndex = $_POST['order'][0]['column'] ?? null;
 $columnName = $_POST['columns'][$columnIndex]['data'] ?? null;
 $columnSortOrder = $_POST['order'][0]['dir'] ?? null;
 $searchValue = $_POST['search']['value'] ?? null;
- 
+
+$admission_type_filter = $_GET['admission_type_filter'] ?? NULL;
+
+
+// echo $admission_type_filter;
+// return;
+
 $columnNames = array(
     'student_id',
     'name',
@@ -37,7 +43,9 @@ $sortOrder = strtoupper($columnSortOrder) === 'DESC' ? 'DESC' : 'ASC';
 
 ## Search
 $searchQuery = "";
+
 if ($searchValue != '') {
+
     $searchValue = trim(strtolower($searchValue)); // Convert search value to lowercase
    
     $names = explode(" ", $searchValue);
@@ -105,6 +113,12 @@ $records = $stmt->fetch(PDO::FETCH_ASSOC);
 $totalRecords = $records['allcount'];
 
 
+$student_admission_status_filtering = "";
+
+if($admission_type_filter !== ""){
+    $student_admission_status_filtering = "AND t1.admission_status=:admission_status";
+}
+
 
 ## Total number of records with filtering
 $stmt = $con->prepare("SELECT COUNT(*) AS allcount 
@@ -125,20 +139,23 @@ $stmt = $con->prepare("SELECT COUNT(*) AS allcount
     AND t2.cashier_evaluated = :cashier_evaluated
 
     AND t2.school_year_id = :school_year_id
+    $student_admission_status_filtering
     ");
 
-    $stmt->bindValue(":is_new_enrollee", $is_new_enrollee);
+    $stmt->bindValue(":is_new_enrollee", 1);
     $stmt->bindValue(":is_new_enrollee2", 0);
     $stmt->bindValue(":is_transferee", $is_transferee);
     $stmt->bindValue(":is_transferee2", "0");
     $stmt->bindValue(":enrollment_status", $enrollment_status);
     $stmt->bindValue(":school_year_id", $current_school_year_id);
-    $stmt->bindValue(":registrar_evaluated", $registrar_evaluated);
+    $stmt->bindValue(":registrar_evaluated", "ues");
     $stmt->bindValue(":cashier_evaluated", "no");
 
+    if($student_admission_status_filtering !== ""){
+        $stmt->bindValue(":admission_status", $admission_type_filter);
+    }
+
     $stmt->execute();
-
-
 
     $records = $stmt->fetch(PDO::FETCH_ASSOC);
     $totalRecordwithFilter = $records['allcount'];
@@ -205,6 +222,7 @@ $stmt = $con->prepare("SELECT COUNT(*) AS allcount
             AND t2.cashier_evaluated = :cashier_evaluated
 
             AND t2.school_year_id = :school_year_id
+            $student_admission_status_filtering
 
             ORDER BY $sortBy $sortOrder
             
@@ -222,6 +240,9 @@ $stmt = $con->prepare("SELECT COUNT(*) AS allcount
         $stmt->bindValue(":registrar_evaluated", $registrar_evaluated);
         $stmt->bindValue(":cashier_evaluated", "no");
 
+        if($student_admission_status_filtering !== ""){
+            $stmt->bindValue(":admission_status", $admission_type_filter);
+        }
         $stmt->execute();
 
         $data = array();

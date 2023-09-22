@@ -60,7 +60,7 @@
         // $removedNewEnrollmentList = $enrollment->RemovingTentativeNewEnrollmentForm(
             // $current_school_year_id);
 
-        $newEnrollmentList = $enrollment->GetNewEnrollmentID(
+        $newEnrollmentList = $enrollment->GetNewEnrollmentTentativeIDs(
             $current_school_year_id);
 
         // $allEnrolleeInSemester = $pending->GetNewEnrolleeWithinSemester(

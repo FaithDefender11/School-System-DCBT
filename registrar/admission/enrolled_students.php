@@ -81,11 +81,9 @@
           $selected_student_filter = $selected_filter;
 
         }
-
-
     }
 
-    // echo $selected_student_filter;
+    echo $selected_student_filter;
 ?>
 
 <div class="content">
@@ -149,6 +147,19 @@
                 <div class="title">
                     <h3>Form details</h3>
                 </div>
+
+                <div class="action">
+                    <form style="display: flex;" method="POST" id="student_filter_form">
+                        <div style="margin-right: 15px;" class="form-group">
+                            <label for="new">New</label>
+                            <input type="checkbox" id="new" name="student_filter[]" value="New" class="form-control" onchange="handleCheckboxChange('new')" <?php if (isset($_POST["student_filter"]) && in_array("New", $_POST["student_filter"])) echo "checked"; ?>>
+                        </div>
+                        <div class="form-group">
+                            <label for="old">Old</label>
+                            <input type="checkbox" id="old" name="student_filter[]" value="Old" class="form-control" onchange="handleCheckboxChange('old')" <?php if (isset($_POST["student_filter"]) && in_array("Old", $_POST["student_filter"])) echo "checked"; ?>>
+                        </div>
+                    </form>
+                </div>
             
                 <!-- <div class="action">
                     <form style="display: flex;" method="POST" id="student_filter_form">
@@ -204,17 +215,17 @@
 <script>
 
     function submitForm() {
-        document.getElementById("student_filter_form").submit();
+      document.getElementById("student_filter_form").submit();
     }
 
     function handleCheckboxChange(checkboxId) {
-        if (checkboxId === "active") {
-            if (document.getElementById("active").checked) {
-                document.getElementById("inactive").checked = false;
+        if (checkboxId === "new") {
+            if (document.getElementById("old").checked) {
+                document.getElementById("old").checked = false;
             }
-        } else if (checkboxId === "inactive") {
-            if (document.getElementById("inactive").checked) {
-                document.getElementById("active").checked = false;
+        } else if (checkboxId === "old") {
+            if (document.getElementById("new").checked) {
+                document.getElementById("new").checked = false;
             }
         }
         document.getElementById("student_filter_form").submit();
@@ -235,7 +246,7 @@
             'serverMethod': 'POST',
             'ajax': {
                 // 'url': `enrolledStudentListData.php?status=${selected_student_filter}`,
-                'url': 'enrolledStudentListData.php',
+                'url': `enrolledStudentListData.php?admission_type_filter=${selected_student_filter}`,
                 // 'success': function(data) {
                 //     // Handle success response here
                 //     console.log('Success:', data);

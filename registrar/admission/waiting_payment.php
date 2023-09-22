@@ -65,6 +65,21 @@
     $waitingApprovalEnrollmentCount = count($waitingApprovalEnrollment);
     $enrolledStudentsEnrollmentCount = count($enrolledStudentsEnrollment);
 
+    $selected_student_filter = "";
+
+    if ($_SERVER["REQUEST_METHOD"] === "POST" 
+        && isset($_POST["student_filter"])) {
+
+        $selected_student_filters = $_POST["student_filter"];
+
+        foreach ($selected_student_filters as $selected_filter) {
+            // echo $selected_filter . "<br>";
+
+          $selected_student_filter = $selected_filter;
+        }
+    }
+
+      // echo "selected_student_filter: $selected_student_filter";
 
 ?>
 
@@ -126,18 +141,16 @@
               <h3>Form details</h3>
             </div>
             <div class="action">
-              <button class="default">Select all</button>
-              <button class="default">Un-select all</button>
-              <div class="dropdown">
-                <button class="icon">
-                  <i class="bi bi-three-dots-vertical"></i>
-                </button>
-                <div class="dropdown-menu">
-                  <a href="#" class="dropdown-item" style="color: red"
-                    ><i class="bi bi-file-earmark-x"></i>Delete form</a
-                  >
-                </div>
-              </div>
+              <form style="display: flex;" method="POST" id="student_filter_form">
+                  <div style="margin-right: 15px;" class="form-group">
+                      <label for="new">New</label>
+                      <input type="checkbox" id="new" name="student_filter[]" value="New" class="form-control" onchange="handleCheckboxChange('new')" <?php if (isset($_POST["student_filter"]) && in_array("New", $_POST["student_filter"])) echo "checked"; ?>>
+                  </div>
+                  <div class="form-group">
+                      <label for="old">Old</label>
+                      <input type="checkbox" id="old" name="student_filter[]" value="Old" class="form-control" onchange="handleCheckboxChange('old')" <?php if (isset($_POST["student_filter"]) && in_array("Old", $_POST["student_filter"])) echo "checked"; ?>>
+                  </div>
+              </form>
             </div>
           </header>
 
@@ -174,43 +187,67 @@
 
 <script>
 
-    $(document).ready(function() {
+  function submitForm() {
+      document.getElementById("student_filter_form").submit();
+  }
 
-        var table = $('#waiting_payment_table').DataTable({
-            'processing': true,
-            'serverSide': true,
-            'serverMethod': 'POST',
-            'ajax': {
-                'url': 'waitingPaymentListData.php',
-                'error': function(xhr, status, error) {
-                    // Handle error response here
-                    console.error('Error:', error);
-                    console.log('Status:', status);
-                    console.log('Response Text:', xhr.responseText);
-                    console.log('Response Code:', xhr.status);
-                }
-            },
+  function handleCheckboxChange(checkboxId) {
+      if (checkboxId === "new") {
+          if (document.getElementById("old").checked) {
+              document.getElementById("old").checked = false;
+          }
+      } else if (checkboxId === "old") {
+          if (document.getElementById("new").checked) {
+              document.getElementById("new").checked = false;
+          }
+      }
+      document.getElementById("student_filter_form").submit();
+  }
 
-            'pageLength': 5,
-            'language': {
-                'infoFiltered': '',
-                'processing': '<i class="fas fa-spinner fa-spin"></i> Processing...',
-                'emptyTable': "No available data for waiting payment.",
-            
-            },
-            'columns': [
-              { data: 'student_id', orderable: true },  
-              { data: 'form_id', orderable: false },  
-              { data: 'name', orderable: false },  
-              // { data: 'email', orderable: true },
-              { data: 'type', orderable: false },
-              { data: 'acronym', orderable: false },  
-              { data: 'registrar_confirmation_date', orderable: true },
-              { data: 'button_url', orderable: false }
-            ],
-            'ordering': true
-        });
-    });
+  $(document).ready(function() {
+
+      var selected_student_filter = `
+        <?php echo $selected_student_filter; ?>
+      `;
+
+      selected_student_filter = selected_student_filter.trim();
+
+      var table = $('#waiting_payment_table').DataTable({
+          'processing': true,
+          'serverSide': true,
+          'serverMethod': 'POST',
+          'ajax': {
+              'url': `waitingPaymentListData.php?admission_type_filter=${selected_student_filter}`,
+              'error': function(xhr, status, error) {
+                  // Handle error response here
+                  console.error('Error:', error);
+                  console.log('Status:', status);
+                  console.log('Response Text:', xhr.responseText);
+                  console.log('Response Code:', xhr.status);
+              }
+          },
+
+          'pageLength': 5,
+          'language': {
+              'infoFiltered': '',
+              'processing': '<i class="fas fa-spinner fa-spin"></i> Processing...',
+              'emptyTable': "No available data for waiting payment.",
+          
+          },
+          'columns': [
+            { data: 'student_id', orderable: true },  
+            { data: 'form_id', orderable: false },  
+            { data: 'name', orderable: false },  
+            // { data: 'email', orderable: true },
+            { data: 'type', orderable: false },
+            { data: 'acronym', orderable: false },  
+            { data: 'registrar_confirmation_date', orderable: true },
+            { data: 'button_url', orderable: false }
+          ],
+          'ordering': true
+      });
+  });
+
 </script>
 
 

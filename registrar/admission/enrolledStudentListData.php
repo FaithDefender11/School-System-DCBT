@@ -24,6 +24,8 @@ $searchValue = $_POST['search']['value'] ?? null;
  
 // $status_filter = $_GET['status'] ?? NULL;
 // $status_filter = trim($status_filter);
+
+$admission_type_filter = $_GET['admission_type_filter'] ?? NULL;
  
 $columnNames = array(
     'student_id',
@@ -43,6 +45,7 @@ $sortOrder = strtoupper($columnSortOrder) === 'DESC' ? 'DESC' : 'ASC'; // Ensure
 
 ## Search
 $searchQuery = "";
+
 if ($searchValue != '') {
 
     $searchValue = trim(strtolower($searchValue)); // Convert search value to lowercase
@@ -114,6 +117,14 @@ $totalRecords = $records['allcount'];
 
 ## Total number of records with filtering
 
+
+$student_admission_status_filtering = "";
+
+if($admission_type_filter !== ""){
+    $student_admission_status_filtering = "AND t2.admission_status=:admission_status";
+}
+
+
 $stmt = $con->prepare("SELECT COUNT(*) AS allcount 
 
     FROM enrollment as t1
@@ -125,6 +136,7 @@ $stmt = $con->prepare("SELECT COUNT(*) AS allcount
     AND enrollment_status=:enrollment_status
     AND registrar_evaluated=:registrar_evaluated
     AND cashier_evaluated=:cashier_evaluated
+    $student_admission_status_filtering
 ");
 
 
@@ -132,6 +144,11 @@ $stmt->bindValue(":school_year_id", $current_school_year_id);
 $stmt->bindValue(":enrollment_status", $enrollment_status);
 $stmt->bindValue(":registrar_evaluated", $registrar_evaluated);
 $stmt->bindValue(":cashier_evaluated", $cashier_evaluated);
+
+if($student_admission_status_filtering !== ""){
+    $stmt->bindValue(":admission_status", $admission_type_filter);
+}
+
 $stmt->execute();
 
 
@@ -186,11 +203,12 @@ if ($row != null) {
 
         WHERE 1 " . $searchQuery . " 
 
-        AND school_year_id=:school_year_id
-        AND enrollment_status=:enrollment_status
-        AND registrar_evaluated=:registrar_evaluated
-        AND cashier_evaluated=:cashier_evaluated
+        AND t1.school_year_id=:school_year_id
+        AND t1.enrollment_status=:enrollment_status
+        AND t1.registrar_evaluated=:registrar_evaluated
+        AND t1.cashier_evaluated=:cashier_evaluated
 
+        $student_admission_status_filtering
         ORDER BY $sortBy $sortOrder
 
         LIMIT " . $row . "," . $rowperpage;
@@ -203,9 +221,9 @@ if ($row != null) {
     $stmt->bindValue(":registrar_evaluated", $registrar_evaluated);
     $stmt->bindValue(":cashier_evaluated", $cashier_evaluated);
 
-    // if($status_filter !== ""){
-    //     $stmt->bindValue(":active", $status_filter);
-    // }
+    if($student_admission_status_filtering !== ""){
+        $stmt->bindValue(":admission_status", $admission_type_filter);
+    }
 
     $stmt->execute();
 

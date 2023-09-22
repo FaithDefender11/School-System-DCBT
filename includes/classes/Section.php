@@ -442,7 +442,8 @@
 
         public function CreateSHSSectionLevelSemesterContent($program_id,
             $term, $period_room_id, $course_level, $enrollment,
-            $school_year_period, $school_year_term, $current_school_year_id =  null){
+            $school_year_period, $school_year_term, $current_school_year_id =  null,
+            $type = null){
 
             $output = "";
             
@@ -466,6 +467,8 @@
             if($query->rowCount() > 0){
 
                 while($row = $query->fetch(PDO::FETCH_ASSOC)){
+
+                    // echo "heyllo $type";
 
                     $program_section = $row['program_section'];
                     $course_id = $row['course_id'];
@@ -494,6 +497,20 @@
                     $show_url = "show.php?id=$course_id&per_semester=$school_year_period&term=$school_year_term";
 
                     //  <td>".$room_number."</td>
+
+                    $removeButton = "";
+                    
+                    if($type == "admin"){
+                        $removeButton = "
+                            <button onclick='$removeSection'class='btn btn-sm btn-danger'  >
+                                <i class='fas fa-times-circle'></i>
+                            </button>
+                        ";
+                    }
+
+                    // echo $type;
+                    // echo "<br>";
+
                     $output .= "
                         <tr>
                             <td>$course_id</td>
@@ -510,9 +527,7 @@
                                     <i class='bi bi-pencil-square'></i>
                                 </button>
 
-                                <button onclick='$removeSection'class='btn btn-sm btn-danger'  >
-                                    <i class='fas fa-times-circle'></i>
-                                </button>
+                                $removeButton
 
                                 <button onclick=\"window.location.href='$show_url'\"  class='btn btn-sm btn-info'    >
                                     <i class='bi bi-eye-fill '></i>
@@ -1616,9 +1631,11 @@
                         # If it has, continue/exclude from the array
                         if($this->CheckSectionIDHasEnrolledForm(
                             $row_course_id, $school_year_id) === true){
+
                             continue;
                         }else if($this->CheckSectionIDHasEnrolledForm(
                             $row_course_id, $school_year_id) == false){
+
                             array_push($arr, $row_course_id);
                         }
                     }

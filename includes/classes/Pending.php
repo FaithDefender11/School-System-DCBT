@@ -1328,6 +1328,9 @@
             $pending_enrollees_id = $value['pending_enrollees_id'];
 
             $successRemoved = $this->RemoveNewEnrollee($pending_enrollees_id);
+            if($successRemoved){
+                $isDone = true;
+            }
         }
 
         return $isDone;

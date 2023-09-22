@@ -10,19 +10,17 @@
     require_once("../../includes/classes/Student.php");
 
 
-    if(isset($_POST['school_year_id'])
-        && isset($_POST['school_year_period'])
-        && isset($_POST['name_period'])
-        && $_POST['name_period'] == "endEnrollmentDate"
-        && isset($_POST['school_year_term'])){
+    if(isset($_POST['current_school_year_id'])){
+
+        $school_year_id = $_POST['current_school_year_id'];
+        // echo $school_year_id;
+
+        $school_year = new SchoolYear($con, $school_year_id);
 
         $school_year_id = $_POST['school_year_id'];
-        $school_year_period = $_POST['school_year_period'];
-        $school_year_term = $_POST['school_year_term'];
+        $school_year_period = $school_year->GetPeriod();
+        $school_year_term = $school_year->GetTerm();
 
-        $name_period = $_POST['name_period'];
-
-        // echo $name_period;
 
         $enrollment = new Enrollment($con);
         $section = new Section($con);
@@ -32,24 +30,6 @@
 
         # Once Clicked. It should current date >= startEnrollmentDate
         $enrollment_status_inactive = 0;
-
-        $wasSuccess = $school_year->SetEndEnrollmentDate(
-            $school_year_id, $enrollment_status_inactive,
-            "end_enrollment_date");
-
-        # All section who havent room in the First Semester will be removed.
-        # Registrar should unenroll the enrolled student in the section
-        # Knowing that the room is now all taken
-
-        // if($school_year_period == "First"){
-        //     $firstSemExcessRoomRemove = $section->RemoveUnEnrolledSectionInFirstSemester(
-        //         $school_year_term,
-        //         $school_year_id);
-        // }
-
-        // if($school_year_period == "Second"){
-        //     $secondSemExcessRoomRemove = $section->RemoveUnEnrolledSectionInSecondSemester(
-        //         $school_year_term, "Second");
 
         $removeCreatedSectionHasNoEnrolled = $section->RemoveUnEnrolledSectionWithinSemester(
             $school_year_term, $school_year_period, $school_year_id
@@ -78,5 +58,4 @@
             return;
         }
     }
-
 ?>

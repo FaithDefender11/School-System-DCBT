@@ -12,6 +12,7 @@ $enrollment = new Enrollment($con);
 $school_year_obj = $school_year->GetActiveSchoolYearAndSemester();
 
 $current_school_year_term = $school_year_obj['term'];
+$current_school_year_id = $school_year_obj['school_year_id'];
 
 
 $current_school_year_period = $school_year_obj['period'];
@@ -133,14 +134,14 @@ if (isset($_GET['id']) && $_GET['term']) {
 
                                     echo $section->CreateSHSSectionLevelSemesterContent($program_id,
                                         $term, "first_period_room_id",
-                                        $FIRST_YEAR, $enrollment, $current_school_year_period, $current_school_year_term);
+                                        $FIRST_YEAR, $enrollment, $current_school_year_period, $current_school_year_term, $current_school_year_id, "admin");
                                 }
 
                                 else if($current_school_year_period == "Second"){
 
                                     echo $section->CreateSHSSectionLevelSemesterContent($program_id,
                                         $term, "second_period_room_id",
-                                        $FIRST_YEAR, $enrollment, $current_school_year_period, $current_school_year_term);
+                                        $FIRST_YEAR, $enrollment, $current_school_year_period, $current_school_year_term, $current_school_year_id, "admin");
                                 }
                             ?>
                         </tbody>
@@ -186,14 +187,14 @@ if (isset($_GET['id']) && $_GET['term']) {
 
                                     echo $section->CreateSHSSectionLevelSemesterContent($program_id,
                                         $term, "first_period_room_id",
-                                        $SECOND_YEAR, $enrollment,$current_school_year_period, $current_school_year_term);
+                                        $SECOND_YEAR, $enrollment,$current_school_year_period, $current_school_year_term, $current_school_year_id, "admin");
                                 }
 
                                 else if($current_school_year_period == "Second"){
 
                                     echo $section->CreateSHSSectionLevelSemesterContent($program_id,
                                         $term, "second_period_room_id",
-                                        $SECOND_YEAR, $enrollment,$current_school_year_period, $current_school_year_term);
+                                        $SECOND_YEAR, $enrollment,$current_school_year_period, $current_school_year_term, $current_school_year_id, "admin");
                                 }
                             ?>
                         </tbody>
@@ -240,14 +241,14 @@ if (isset($_GET['id']) && $_GET['term']) {
 
                                     echo $section->CreateSHSSectionLevelSemesterContent($program_id,
                                         $term, "first_period_room_id",
-                                        $THIRD_YEAR, $enrollment,$current_school_year_period, $current_school_year_term);
+                                        $THIRD_YEAR, $enrollment,$current_school_year_period, $current_school_year_term, $current_school_year_id, "admin");
                                 }
 
                                 else if($current_school_year_period == "Second"){
 
                                     echo $section->CreateSHSSectionLevelSemesterContent($program_id,
                                         $term, "second_period_room_id",
-                                        $THIRD_YEAR, $enrollment,$current_school_year_period, $current_school_year_term);
+                                        $THIRD_YEAR, $enrollment,$current_school_year_period, $current_school_year_term, $current_school_year_id, "admin");
                                 }
 
 
@@ -296,14 +297,14 @@ if (isset($_GET['id']) && $_GET['term']) {
 
                                     echo $section->CreateSHSSectionLevelSemesterContent($program_id,
                                         $term, "first_period_room_id",
-                                        $FOURTH_YEAR, $enrollment,$current_school_year_period, $current_school_year_term);
+                                        $FOURTH_YEAR, $enrollment,$current_school_year_period, $current_school_year_term, $current_school_year_id, "admin");
                                 }
 
                                 else if($current_school_year_period == "Second"){
 
                                     echo $section->CreateSHSSectionLevelSemesterContent($program_id,
                                         $term, "second_period_room_id",
-                                        $FOURTH_YEAR, $enrollment,$current_school_year_period, $current_school_year_term);
+                                        $FOURTH_YEAR, $enrollment,$current_school_year_period, $current_school_year_term, $current_school_year_id, "admin");
                                 }
                             ?>
                         </tbody>

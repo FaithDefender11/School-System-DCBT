@@ -20,7 +20,10 @@ $columnIndex = $_POST['order'][0]['column'] ?? null;
 $columnName = $_POST['columns'][$columnIndex]['data'] ?? null;
 $columnSortOrder = $_POST['order'][0]['dir'] ?? null;
 $searchValue = $_POST['search']['value'] ?? null;
- 
+
+$admission_type_filter = $_GET['admission_type_filter'] ?? NULL;
+
+
 $columnNames = array(
     'student_id',
     'form_id',
@@ -114,6 +117,11 @@ $records = $stmt->fetch(PDO::FETCH_ASSOC);
 $totalRecords = $records['allcount'];
 
 
+$student_admission_status_filtering = "";
+
+if($admission_type_filter !== ""){
+    $student_admission_status_filtering = "AND t1.admission_status=:admission_status";
+}
 
 ## Total number of records with filtering
 $stmt = $con->prepare("SELECT COUNT(*) AS allcount 
@@ -132,6 +140,7 @@ $stmt = $con->prepare("SELECT COUNT(*) AS allcount
     AND t2.registrar_evaluated = :registrar_evaluated
     AND t2.cashier_evaluated = :cashier_evaluated
     AND t2.school_year_id = :school_year_id
+    $student_admission_status_filtering
 
     ");
 
@@ -144,6 +153,10 @@ $stmt->bindValue(":school_year_id", $current_school_year_id);
 $stmt->bindValue(":registrar_evaluated", $registrar_evaluated);
 $stmt->bindValue(":cashier_evaluated", "yes");
 $stmt->bindValue(":school_year_id", $current_school_year_id);
+
+if($student_admission_status_filtering !== ""){
+    $stmt->bindValue(":admission_status", $admission_type_filter);
+}
 
 $stmt->execute();
 
@@ -160,6 +173,8 @@ if ($row != null) {
     // $regular_Status = "Regular";
     // $enrollment_status = "tentative";
     // $registrar_evaluated = "yes";
+
+
 
     $empQuery = "SELECT 
         t2.student_id,
@@ -211,6 +226,7 @@ if ($row != null) {
         AND t2.registrar_evaluated = :registrar_evaluated
         AND t2.cashier_evaluated = :cashier_evaluated
         AND t2.school_year_id = :school_year_id
+        $student_admission_status_filtering
 
         ORDER BY t2.cashier_confirmation_date ASC
         
@@ -231,6 +247,9 @@ if ($row != null) {
     $stmt->bindValue(":cashier_evaluated", "yes");
     $stmt->bindValue(":school_year_id", $current_school_year_id);
 
+    if($student_admission_status_filtering !== ""){
+        $stmt->bindValue(":admission_status", $admission_type_filter);
+    }
     $stmt->execute();
 
     $data = array();

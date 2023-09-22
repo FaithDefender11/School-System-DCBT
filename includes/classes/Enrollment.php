@@ -2494,7 +2494,7 @@
         return [];
     }
 
-    public function GetNewEnrollmentID($school_year_id) {
+    public function GetNewEnrollmentTentativeIDs($school_year_id) {
         
         $sql = $this->con->prepare("SELECT t1.enrollment_id, t1.student_id 
         
@@ -2819,7 +2819,7 @@
     public function RemovingTentativeNewEnrollmentForm(
         $current_school_year_id){
         
-        $newEnrollmentList = $this->GetNewEnrollmentID(
+        $newEnrollmentList = $this->GetNewEnrollmentTentativeIDs(
             $current_school_year_id);
 
         $pending = new Pending($this->con);

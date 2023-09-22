@@ -135,14 +135,13 @@
                                     <?php
 
                                         if($current_school_year_period == "First"){
-
                                             echo $section->CreateSHSSectionLevelSemesterContent($program_id,
                                                 $term, "first_period_room_id",
-                                                $GRADE_ELEVEN, $enrollment, $current_school_year_period, $current_school_year_term, $current_school_year_id);
+                                                $GRADE_ELEVEN, $enrollment, $current_school_year_period,
+                                                $current_school_year_term, $current_school_year_id);
                                         }
 
                                         else if($current_school_year_period == "Second"){
-
                                             echo $section->CreateSHSSectionLevelSemesterContent($program_id,
                                                 $term, "second_period_room_id",
                                                 $GRADE_ELEVEN, $enrollment,$current_school_year_period, $current_school_year_term, $current_school_year_id);

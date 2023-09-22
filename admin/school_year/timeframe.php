@@ -39,6 +39,15 @@
         $SECOND_SEMESTER = "Second";
         $current = "";
 
+
+        //     if(isset($_POST['school_year_id'])
+        // && isset($_POST['school_year_period'])
+        // && isset($_POST['name_period'])
+        // && $_POST['name_period'] == "endEnrollmentDate"
+        // && isset($_POST['school_year_term'])){
+
+        $endEnrollmentAction = "endEnrollmentAction($current_school_year_id)";
+
     ?>
         <div class="content">
 
@@ -48,6 +57,7 @@
                     <h3>Back</h3>
                 </a>
             </nav>
+
             <main>
 
                 <div class="floating" id="first_semester">
@@ -60,9 +70,12 @@
                                 </a>
                             </h3>
                         </div>
-                        <span><?php echo $current_school_year_period == "First"
-                            && $current_school_year_term == $term
-                            ? "Current" : "";?></span>
+
+                        <?php if($current_school_year_period == "First" && $current_school_year_term == $term): ?>
+
+                            <button onclick="<?php echo $endEnrollmentAction; ?>" class="mr-2 btn btn-sm btn-info">Clean</button>
+                            <span>Current</span>
+                        <?php endif;?>
                         
                     </header>
 
@@ -462,5 +475,80 @@
                 }
         });
     }
+
+    function endEnrollmentAction(current_school_year_id){
+
+        var current_school_year_id = parseInt(current_school_year_id);
+
+        // # 1. Remove All new Enrollee Table.
+        // # 2. Remove all form from new student tentative and its created student table
+        // # 3. Remove all form from old student tentative and will de-activate the student account.
+
+            Swal.fire({
+                icon: 'question',
+                title: `This action will do the following:`,
+                html: `
+                    <p>1. Remove all new enrollees data.</p>
+                    <p>2. Remove all form from new student tentative and its created student data.</p>
+                    <p>3. Remove all form from old student tentative and will de-activate the student account.</p>
+                    <h5>Important! Please note that this action cannot be undone.</h5>
+                `,
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'Cancel'
+
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    $.ajax({
+                        url: "../../ajax/school_year/endEnrollmentAction.php",
+                        type: 'POST',
+                        data: {
+                            current_school_year_id
+                        },
+                        success: function(response) {
+
+                            response = response.trim();
+
+                            console.log(response);
+
+                            if(response == "success_update"){
+                                Swal.fire({
+                                icon: 'success',
+                                title: `Successfully Updated`,
+                                showConfirmButton: false,
+                                timer: 1000, // Adjust the duration of the toast message in milliseconds (e.g., 3000 = 3 seconds)
+                                toast: true,
+                                position: 'top-end',
+                                showClass: {
+                                popup: 'swal2-noanimation',
+                                backdrop: 'swal2-noanimation'
+                                },
+                                hideClass: {
+                                popup: '',
+                                backdrop: ''
+                                }
+                            }).then((result) => {
+
+                                // $('#shs_program_table').load(
+                                //     location.href + ' #shs_program_table'
+                                // );
+
+                                location.reload();
+                            });}
+
+                        },
+                        error: function(xhr, status, error) {
+                            // handle any errors here
+                        }
+                    });
+                } else {
+                    // User clicked "No," perform alternative action or do nothing
+                }
+        });
+    }
+
+
+    
 
 </script>

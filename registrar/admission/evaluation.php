@@ -16,7 +16,6 @@
   
   $selected_new_enrollee = "";
   $selected_old_enrollee = "";
-  $selected_student_filter = "";
 
   if (
       $_SERVER["REQUEST_METHOD"] === "POST"
@@ -43,6 +42,8 @@
     //     echo $student_filter;
     // }
 
+    $selected_student_filter = "";
+
     if ($_SERVER["REQUEST_METHOD"] === "POST" 
         && isset($_POST["student_filter"])) {
 
@@ -52,11 +53,9 @@
             // echo $selected_filter . "<br>";
 
           $selected_student_filter = $selected_filter;
-
         }
-
-
     }
+    
   ?>
 
   <head>
@@ -201,10 +200,7 @@
           </div>
           <div class="action">
 
-              <!-- <button class="default" name="enrollee_type" 
-                value="new">Select all</button>
-              <button class="default" name="enrollee_type" 
-                value="old">Un-select all</button> -->
+             
 
             <form style="display: flex;" method="POST" id="student_filter_form">
                 <div style="margin-right: 15px;" class="form-group">
@@ -217,16 +213,7 @@
                 </div>
             </form>
 
-            <div class="dropdown">
-              <button class="icon">
-                <i class="bi bi-three-dots-vertical"></i>
-              </button>
-              <div class="dropdown-menu">
-                <a href="#" class="dropdown-item" style="color: red"
-                  ><i class="bi bi-file-earmark-x"></i>Delete form</a
-                >
-              </div>
-            </div>
+            
           </div>
         </header>
 
