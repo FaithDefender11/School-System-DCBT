@@ -749,7 +749,6 @@
     // });
 
     const pdfForm = document.getElementById('pdfForm');
-        
     pdfForm.addEventListener('submit', (event) => {
         event.preventDefault();
         

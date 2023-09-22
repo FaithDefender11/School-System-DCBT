@@ -392,10 +392,14 @@ class SubjectProgram{
             $db_is_transferee = $value['is_transferee'];
 
 
-            $first = $value['first'];
-            $second = $value['second'];
-            $third = $value['third'];
-            $fourth = $value['fourth'];
+            $first = $value['first'] == 0 ? "-" : $value['first'];
+            $second = $value['second'] == 0 ? "-" : $value['second'];
+            $third = $value['third'] == 0 ? "-" : $value['third'];
+            $fourth = $value['fourth'] == 0 ? "-" : $value['fourth'];
+
+            // $second = $value['second'];
+            // $third = $value['third'];
+            // $fourth = $value['fourth'];
 
             $doesEnrollmentRetakeIsZero = $this->DoesEnrollmentRetakeIsZero($db_enrollment_id);
             
@@ -473,6 +477,8 @@ class SubjectProgram{
 
                 $average = $this->calculateAverage($first, $second, $third, $fourth);
             }
+
+
 
 
             echo '<tr class="text-center">';
