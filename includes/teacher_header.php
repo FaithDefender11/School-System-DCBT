@@ -45,6 +45,7 @@
 <!DOCTYPE html>
 
 <html>
+    
     <head>
         
         <title><?php echo "Student " . $document_title; ?></title>
