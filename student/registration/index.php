@@ -96,8 +96,10 @@
                                     $program_section = $row['program_section'];
                                     
                                     $enrollment_approve = $row['enrollment_approve'];
-                                    $enrollment_approve = date("F d, Y h:i a", strtotime($enrollment_approve));
-                                    
+                                    if($enrollment_approve !== NULL)
+                                        $enrollment_approve = date("F d, Y h:i a", strtotime($enrollment_approve));
+                                    else
+                                        $enrollment_approve = "-";
 
                                     $name = ucfirst($row['firstname']) . " " . ucfirst($row['lastname']);
 
