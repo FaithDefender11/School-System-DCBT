@@ -53,7 +53,7 @@
     // if($enrollment_status == 0 || ($endEnrollment != null 
     //     && $endEnrollment < $now)){
 
-        # STart of Enrollment is not yet set now.
+        # Start of Enrollment is not yet set now.
         echo "
             <div class='container'>
                 <div class='alert alert-warning mt-4'>
@@ -139,6 +139,14 @@
 
             // echo $programName;
 
+            $checkHasEnrollment = $enrollment->CheckStudentHasEnrollmentWithinSemester(
+                $school_year_id, $student_id);
+
+
+            // var_dump($checkHasEnrollment);
+
+            // echo "qweqwe";
+
             if(isset($_GET['information']) && $_GET['information'] == "show"){
                 include_once("./os_information.php");
             }
@@ -165,6 +173,7 @@
                     // is now deactivated and had moved-up to new section.
                     
                     if($current_semester == "First"){
+
                         $enrollment_request_success = $enrollment->ApplyEnrollmentOS($student_id, 0, $school_year_id,
                             $enrollment_form_id, $student_status, $type);
                         
@@ -175,6 +184,7 @@
                             exit();
                             
                         }
+
                     }
                     else if($current_semester == "Second"){
                         $enrollment_request_success = $enrollment->ApplyEnrollmentOS($student_id, $student_course_id,
@@ -191,6 +201,7 @@
                     
 
                 }
+
                 ?>
 
                     <div class="content">
@@ -299,17 +310,21 @@
 
                                                             <div style="margin-top: 20px;" class="action">
                                                                 <button
-                                                                type="button"
+                                                                    type="button"
                                                                     class="default large"
                                                                     onclick="window.location.href = 'procedure.php?validate_details=show'">
                                                                     Return
                                                                 </button>
-                                                                <button
-                                                                    class="default large success"
-                                                                    name="apply_next_semester_os_<?php echo $student_id;?>"
-                                                                    type="submit">
-                                                                    Apply for Next Semester
-                                                                </button>
+
+                                                                <?php if($checkHasEnrollment == false):?>
+                                                                    <button
+                                                                        class="default large success"
+                                                                        name="apply_next_semester_os_<?php echo $student_id;?>"
+                                                                        type="submit">
+                                                                        Apply for Next Semester
+                                                                    </button>
+                                                                <?php endif ?>
+                                                                
                                                             </div>
                                                         </form>
 

@@ -3040,6 +3040,25 @@
         return false;
     }
 
+    public function CheckStudentHasEnrollmentWithinSemester($school_year_id,
+        $student_id) {
+
+        $sql = $this->con->prepare("SELECT t1.enrollment_id
+        
+            FROM enrollment AS t1
+
+            WHERE t1.school_year_id = :school_year_id
+            AND t1.student_id = :student_id
+            ");
+        
+        $sql->bindParam(":school_year_id", $school_year_id);
+        $sql->bindParam(":student_id", $student_id);
+
+        $sql->execute();
+
+        return $sql->rowCount() > 0;
+    }
+
     public function CheckTentativeEnrollment($school_year_id,
         $enrollment_id) {
 
