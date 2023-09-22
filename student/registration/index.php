@@ -108,7 +108,9 @@
                                     }
                                     else{
                                         $enrollment_approve = "-";
-
+                                        $url = "
+                                            $enrollment_form_id
+                                        ";
                                     }
 
                                     $name = ucfirst($row['firstname']) . " " . ucfirst($row['lastname']);
