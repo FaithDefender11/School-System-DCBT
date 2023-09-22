@@ -13,7 +13,6 @@
     public function create($page){
 
 
-        // $base_url = 'http://localhost/school-system-dcbt/registrar/';
         // $base_url = 'http://' . web_root . '/registrar/';
 
         if ($_SERVER['SERVER_NAME'] === 'localhost') {
@@ -39,7 +38,7 @@
         $dashboard_url = $base_url .  "dashboard/index.php";
         $admission_url = $base_url .  "admission/evaluation.php";
         $students_url = $base_url .  "student/index.php";
-        $section_url = $base_url .  "section/index.php";
+        $section_url = $base_url .  "section/shs_index.php";
         $enrollment_url = $base_url .  "enrollment/index.php";
         $requirement_url = $base_url .  "requirements/index.php";
         $room_url = $base_url .  "room/index.php";

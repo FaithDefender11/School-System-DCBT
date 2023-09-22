@@ -33,13 +33,11 @@
         $topic_name = $subjectPeriodCodeTopic->GetTopic();
 
 
+        // $subjectPeriodCodeTopicTemplateId = new SubjectPeriodCodeTopic($con, $subject_period_code_topic_id);
         $subjectPeriodCodeTopicTemplateId = $subjectPeriodCodeTopicTemplate->GetTopicTemplateIdByTopicName($topic_name);
 
         $codeAssignmentTemplateList = $subjectCodeAssignmentTemplate->GetCodeAssignmentTopicTemplateList($subjectPeriodCodeTopicTemplateId);
 
-        
-
-        // echo $topic_assigned_teacher_id;
         $school_year_obj = $school_year->GetActiveSchoolYearAndSemester();
 
         $current_school_year_id = $school_year_obj['school_year_id'];
@@ -48,8 +46,12 @@
 
         $teacher_id = $_SESSION['teacherLoggedInId'];
 
-        $back_url = "index.php?c_id=$topic_course_id&c=$topic_subject_code";
-        
+        // $back_url = "index.php?c_id=$topic_course_id&c=$topic_subject_code";
+
+        // $subject_period_code_topic_template_id = $_GET['id'];
+        // $subject_period_code_topic_id = $_GET['ct_id'];
+
+        $back_url = "section_topic.php?id=$subjectPeriodCodeTopicTemplateId&ct_id=$subject_period_code_topic_id";
 
         if($_SERVER['REQUEST_METHOD'] === "POST"
             && isset($_POST['add_handout_topic_'. $subject_period_code_topic_id])
@@ -79,54 +81,13 @@
 
                 $subject_code_assignment_id = 0;
 
-                // $successCreate = $subjectCodeAssignment->InsertAssignment(
-                //     $subject_period_code_topic_id,
-                //     $assignment_name, $description, $max_score, 
-                //     $allow_late_submission, $due_date, $type, $max_attempt);
-
-                // if($successCreate){
-                //     $subject_code_assignment_id = $con->lastInsertId();
-
-                // }
-
-                // if ($assignment_images
-                //     && $subject_code_assignment_id !== 0
-                //     && is_array($assignment_images['tmp_name'])) {
-
-                //     $uploadDirectory = '../../assets/images/handout/';
-
-                //     for ($i = 0; $i < count($assignment_images['tmp_name']); $i++) {
-                //         //
-                //         $originalFilename = $assignment_images['name'][$i];
-
-                //         // Generate a unique filename
-                //         $uniqueFilename = uniqid() . '_' . time() . '_' . $originalFilename;
-                //         $targetPath = $uploadDirectory . $uniqueFilename;
-
-                //         if (move_uploaded_file($assignment_images['tmp_name'][$i], $targetPath)) {
-                //             $imagePath = $targetPath;
-
-                //             // Remove Directory Path in the Database.
-                //             $imagePath = str_replace('../../', '', $imagePath);
-
-                //             $fileUpload = $subjectCodeAssignment->UploadAssignmentFiles(
-                //                 $subject_code_assignment_id, $imagePath
-                //             );
-
-                //         } else {
-
-                //             echo "Error uploading file: " . $originalFilename . "<br>";
-                //         }
-                //     }
-                // } 
-
                 if ($image && $image['tmp_name']) {
 
                     $uploadDirectory = '../../assets/images/handout/';
 
                     $originalFilename = $image['name'];
 
-                    $uniqueFilename = uniqid() . '_' . time() . '_' . $originalFilename;
+                    $uniqueFilename = uniqid() . '_' . time() . '_img_' . $originalFilename;
                     $targetPath = $uploadDirectory . $uniqueFilename;
 
                     move_uploaded_file($image['tmp_name'], $targetPath);

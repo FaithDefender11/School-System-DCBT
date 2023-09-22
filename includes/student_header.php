@@ -30,6 +30,7 @@
             session_destroy();
             exit();
         }
+
         # If Online,
         header("Location: /enrollment_login.php");
         session_destroy();
@@ -101,13 +102,6 @@
             <?php
 
                 $nav = new StudentNavigationMenuProvider($con, $studentLoggedInObj);
-
-                // $pendingNav = new PendingStudentNavigationMenu($con, $studentLoggedIn);
-                // Pending Application Procedure
-                // if(isset($_SESSION['status']) 
-                //     && $_SESSION['status'] == "pending"){
-                //     echo $pendingNav->create($page);
-                // }
 
                 // Ongoing Application Procedure
                 if(isset($_SESSION['status']) 

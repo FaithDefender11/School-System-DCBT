@@ -86,7 +86,7 @@
                         $originalFilename = $assignment_images['name'][$i];
 
                         // Generate a unique filename
-                        $uniqueFilename = uniqid() . '_' . time() . '_' . $originalFilename;
+                        $uniqueFilename = uniqid() . '_' . time() . '_img_' . $originalFilename;
                         $targetPath = $uploadDirectory . $uniqueFilename;
 
                         if (move_uploaded_file($assignment_images['tmp_name'][$i], $targetPath)) {

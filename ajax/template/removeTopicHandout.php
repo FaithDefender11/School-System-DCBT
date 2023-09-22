@@ -33,9 +33,8 @@
                 // $hasRemoved = true;
             }
         }
-                $hasRemoved = true;
-
-        // $hasRemoved = false;
+        
+        $hasRemoved = true;
         if($hasRemoved == true){
 
             $successRemove = $subjectCodeHandoutTemplate->RemovingHandoutTemplateFile(

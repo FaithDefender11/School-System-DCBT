@@ -734,11 +734,16 @@
         $is_final = 0;
 
         $sql = $this->con->prepare("SELECT 
-            t1.enrollment_id, t1.is_transferee,
-            t1.student_id, t1.student_subject_id,
-            t1.subject_code as ss_subject_code,
-            t1.course_id as enrolled_course_id,
-            t2.*, t3.program_section,t3.course_id
+            t1.enrollment_id,
+            t1.is_transferee,
+            t1.student_id,
+            t1.student_subject_id,
+            t1.subject_code AS ss_subject_code,
+            t1.course_id AS enrolled_course_id,
+            t2.*,
+            
+            t3.program_section,
+            t3.course_id
             
             FROM student_subject as t1
 

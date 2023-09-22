@@ -561,6 +561,7 @@ class Student{
                 array_push($arr, true);
                 array_push($arr, "enrolled");
                 array_push($arr, $student_id); // [3]
+                array_push($arr, "student"); // [4]
             }
 
             else{

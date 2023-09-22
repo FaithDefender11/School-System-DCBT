@@ -53,7 +53,7 @@
 
                     $originalFilename = $image['name'];
 
-                    $uniqueFilename = uniqid() . '_' . time() . '_' . $originalFilename;
+                    $uniqueFilename = uniqid() . '_' . time() . '_img_' . $originalFilename;
                     $targetPath = $uploadDirectory . $uniqueFilename;
 
                     move_uploaded_file($image['tmp_name'], $targetPath);

@@ -23,7 +23,7 @@
     }
 
     public function GetRoom() {
-        return isset($this->sqlData['room']) ? $this->sqlData["room"] : ""; 
+        return isset($this->sqlData['room_id']) ? $this->sqlData["room_id"] : NULL; 
     }
 
     public function GetSubjectCode() {
@@ -105,7 +105,8 @@
         return $sql->rowCount() > 0;
     }
 
-    public function AddScheduleCodeBase( 
+    public function AddScheduleCodeBase(
+        $room_id,
         $time_from_meridian, $time_to_meridian,
         $schedule_day, $time_from_meridian_military, $time_to_meridian_military,
         $schedule_time, $current_school_year_id, $course_id,
@@ -127,15 +128,15 @@
         }
 
         $sql = $this->con->prepare("INSERT INTO subject_schedule
-                (schedule_day, time_from, time_to, schedule_time,
+                (room_id, schedule_day, time_from, time_to, schedule_time,
                     school_year_id, course_id, teacher_id, subject_code, subject_program_id, day_count)
 
-                VALUES(:schedule_day, :time_from, :time_to, :schedule_time,
+                VALUES(:room_id, :schedule_day, :time_from, :time_to, :schedule_time,
                     :school_year_id, :course_id, :teacher_id, :subject_code, :subject_program_id, :day_count)");
 
         $schedule_time = $time_from_meridian . ' - ' . $time_to_meridian;
 
-        // $sql->bindParam(":room", $room);
+        $sql->bindParam(":room_id", $room_id);
         $sql->bindParam(":schedule_day", $schedule_day);
         $sql->bindParam(":time_from", $time_from_meridian_military);
         $sql->bindParam(":time_to", $time_to_meridian_military);
@@ -206,7 +207,9 @@
         return false;
     }
 
-    public function UpdateScheduleCodeBase($subject_schedule_id, $time_from_meridian, $time_to_meridian,
+    public function UpdateScheduleCodeBase(
+        $room_id,
+        $subject_schedule_id, $time_from_meridian, $time_to_meridian,
         $schedule_day, $time_from_meridian_military, $time_to_meridian_military,
         $schedule_time, $current_school_year_id,
         $teacher_id, $section_subject_code, $current_teacher_id = null){
@@ -220,16 +223,16 @@
             if($selected_teacher_id != $current_teacher_id){
 
                 # Update the Teaching Code.
-                $subjectPeriodCode = new SubjectPeriodCode($this->con);
+                // $subjectPeriodCode = new SubjectPeriodCode($this->con);
                 
-                $adjustTeacherOnSubjectCode = $subjectPeriodCode->AdjustTeacherOnTeachingSubjectCode(
-                    $current_teacher_id, $selected_teacher_id,
-                    $current_school_year_id, $section_subject_code
-                );
+                // $adjustTeacherOnSubjectCode = $subjectPeriodCode->AdjustTeacherOnTeachingSubjectCode(
+                //     $current_teacher_id, $selected_teacher_id,
+                //     $current_school_year_id, $section_subject_code
+                // );
             }
             
             $sql = $this->con->prepare("UPDATE subject_schedule SET
-                -- room = :room,
+                room_id = :room_id,
                 schedule_day = :schedule_day,
                 time_from = :time_from,
                 time_to = :time_to,
@@ -243,7 +246,7 @@
             $schedule_time = $time_from_meridian . ' - ' . $time_to_meridian;
 
             $sql->bindParam(":subject_schedule_id", $subject_schedule_id);
-            // $sql->bindParam(":room", $room);
+            $sql->bindParam(":room_id", $room_id);
             $sql->bindParam(":schedule_day", $schedule_day);
             $sql->bindParam(":time_from", $time_from_meridian_military);
             $sql->bindParam(":time_to", $time_to_meridian_military);
@@ -330,12 +333,23 @@
     public function GetSameSubjectCode($course_id, $subject_code,
         $school_year_id) {
 
-        $query = $this->con->prepare("SELECT * FROM subject_schedule
-                WHERE course_id=:course_id
-                AND subject_code=:subject_code
-                AND school_year_id=:school_year_id
-                -- LIMIT 1
-                ");
+        $query = $this->con->prepare("SELECT 
+
+            t1.*,
+            t2.room_number,
+            t2.room_name
+
+            FROM subject_schedule AS t1
+
+            LEFT JOIN room AS t2 ON t2.room_id = t1.room_id
+
+            WHERE t1.course_id=:course_id
+            AND t1.subject_code=:subject_code
+            AND t1.school_year_id=:school_year_id
+
+
+            -- LIMIT 1
+            ");
 
         $query->bindParam(":course_id", $course_id);
         $query->bindParam(":subject_code", $subject_code);
@@ -349,6 +363,8 @@
         // return NULL;
         return [];
     }
+
+     
 
     public function GetTeacherScheduleSchoolYear($teacher_id){
 

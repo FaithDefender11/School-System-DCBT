@@ -7,6 +7,7 @@
     include_once('../../includes/classes/SubjectAssignmentSubmission.php');
     include_once('../../includes/classes/SubjectCodeAssignment.php');
     
+    echo Helper::RemoveSidebar();
 
     if(isset($_GET['id'])
         // && isset($_GET['c'])
@@ -76,14 +77,15 @@
                     <div class="floating" id="shs-sy">
 
                         <header>
-                            <div>
+
+                            <!-- <div>
                                 <button>
                                     <i class="fas fa-arrow-left"></i>
                                 </button>
                                  <button>
                                     <i class="fas fa-arrow-right"></i>
                                 </button>
-                            </div> 
+                            </div>  -->
 
                             <div class="title">
                                 <span>Submitted by: <?php echo $student_name; ?></span>
@@ -95,7 +97,6 @@
                                 <?php 
                                 
                                     if($get_grade !== NULL){
-
                                         
                                         $get_grade = "
                                             <a style='color: inherit' href='edit_given_grade.php?id=$subject_assignment_submission_id&c=$subject_code'>$get_grade</a>
@@ -116,7 +117,6 @@
                                                 + Add Grade
                                             </a>
                                         <?php
-
                                     }
                                 ?>
                             </div>
@@ -149,6 +149,7 @@
 
 
                                             INNER JOIN subject_assignment_submission_list as t2 ON t2.subject_assignment_submission_id = t1.subject_assignment_submission_id
+                                            
                                             -- AND t1.subject_assignment_submission_id=:subject_assignment_submission_id
                                             AND t1.subject_code_assignment_id=:subject_code_assignment_id
                                             
@@ -159,7 +160,7 @@
 
                                             ORDER BY t1.subject_assignment_submission_id DESC
 
-                                            LIMIT 1 
+                                            -- LIMIT 1 
                                         ");
 
                                         // $query->bindParam(":subject_assignment_submission_id", $subject_assignment_submission_id);
@@ -191,8 +192,17 @@
 
                                                 $file_path = "../../$output_file";
 
-                                                $parts = explode('_', $output_file);
-                                                $original_file_name = end($parts);
+                                                // $parts = explode('_', $output_file);
+                                                // $original_file_name = end($parts);
+
+                                                $pos = strpos($output_file, "img_");
+
+                                                $original_file_name = "";
+
+                                                // Check if "img_" was found
+                                                if ($pos !== false) {
+                                                    $original_file_name = substr($output_file, $pos + strlen("img_"));
+                                                }
 
                                                 $output_assignment = "";
 
@@ -202,7 +212,6 @@
                                                 if($assignment_type == "text"){
 
                                                     $output_assignment = "$output_text";
-                                                
                                                 }else if($assignment_type == "upload"){
  
 

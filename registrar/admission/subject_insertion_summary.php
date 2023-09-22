@@ -12,6 +12,7 @@
     include_once('../../includes/classes/Room.php');
     include_once('../../includes/classes/Program.php');
     include_once('../../includes/classes/Pending.php');
+    include_once('../../includes/classes/Schedule.php');
  
     ?>
         <style>
@@ -302,7 +303,6 @@
         }
 
         if(isset($_GET['enrolled_subject']) && $_GET['enrolled_subject'] == "show"){
-
 
             if(isset($_POST['subject_load_btn']) && isset($_POST['unique_enrollment_form_id']) ){
             
@@ -906,19 +906,14 @@
                         <div class="floating">
 
                             <header>
-
                                 <div class="title">
                                     <span 
                                         style="font-size: 13px; font-weight: bold;" class="mt-0 mb-0 text-right">
                                         <?php 
                                             if($student_enrollment_school_year_id == $current_school_year_id
-                                                && $student_enrollment_status !== "enrolled"
-                                                ){
+                                                && $student_enrollment_status !== "enrolled"){
 
                                                 echo "Capacity: $studentNumberInSection / $section_capacity";
-
-                                                // echo $student_enrollment_school_year_id == $current_school_year_id ? "Capacity: $studentNumberInSection / $section_capacity" : "";
-
                                             }
                                         ?>
                                     </span>
@@ -987,10 +982,12 @@
                                             <thead>
                                                 <tr>
                                                     <th>Course Description</th>
-                                                    <th>Code</th>
+                                                    <!-- <th>Code</th> -->
                                                     <th>Unit</th>
                                                     <th>Section</th>
                                                     <th>Type</th>
+                                                    <th>Time</th>
+                                                    <th>Room</th>
                                                     <th>Status</th>
                                                 </tr>
                                             </thead>
@@ -1054,12 +1051,58 @@
                                                             $section_exec = new Section($con, $enrolled_course_id);
                                                             $enrolled_section_name = $section_exec->GetSectionName();
 
+                                                            $allTime  = "";
+                                                            $allDays  = "";
+
+                                                            $schedule = new Schedule($con);
+
+                                                            // echo $section_subject_code;
+                                                            // echo "<br>";
+
+                                                            $hasSubjectCode = $schedule->GetSameSubjectCode(
+                                                                $enrolled_course_id,
+                                                                $ss_subject_code, $current_school_year_id);
+
+                                                            
+                                                            $scheduleOutput = "";
+                                                            $roomOutput = "";
+
+                                                            if($hasSubjectCode !== []){
+
+                                                                foreach ($hasSubjectCode as $key => $value) {
+
+                                                                    // $schedule_subject_code = $value['subject_code'];
+                                                                    
+                                                                    $schedule_day = $value['schedule_day'];
+                                                                    $schedule_time = $value['schedule_time'];
+                
+                                                                    $allDays .= $schedule_day;
+                                                                    $allTime .= $schedule_time;
+
+                                                                    $scheduleOutput .= "$schedule_day - $schedule_time <br>";
+                                                                    // echo "<br>";
+
+                                                                    $room = $value['room_number'];
+
+                                                                    if($value['room_number'] != NULL){
+                                                                        $roomOutput .= "$room <br>";
+                                                                    }else{
+                                                                        $roomOutput .= "TBA";
+                                                                    }
+                                                                }
+                                                            }else{
+                                                                $scheduleOutput = "TBA";
+                                                                $roomOutput = "TBA";
+                                                            }
+
                                                             echo '<tr>'; 
                                                                 echo '<td>'.$subject_title.'</td>';
-                                                                echo '<td>'.$subject_code.'</td>';
+                                                                // echo '<td>'.$subject_code.'</td>';
                                                                 echo '<td>'.$unit.'</td>';
                                                                 echo '<td>'.$enrolled_section_name.'</td>';
                                                                 echo '<td>'.$subject_type.'</td>';
+                                                                echo '<td>'.$scheduleOutput.'</td>';
+                                                                echo '<td>'.$roomOutput.'</td>';
                                                                 echo '<td>'.$subject_status.'</td>';
                                                             echo '</tr>';
                                                         }
@@ -1071,6 +1114,7 @@
                                 }
 
                             ?>
+
                             <form method="POST">
 
                                 <input type="hidden" name="unique_enrollment_form_id" value="<?php echo $student_enrollment_form_id;?>">
@@ -1224,13 +1268,12 @@
                                 ?>
 
                             </form>
+
                         </div>
                     </main>
                 </div>
-
             <?php
         }
-
     }
 ?>
 

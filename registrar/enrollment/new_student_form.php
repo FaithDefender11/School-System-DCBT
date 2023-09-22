@@ -23,7 +23,7 @@
                             echo Helper::getError(Constants::$LRNUnique);
                         ?>
                         <input class="form-control" style="width: 250px;"
-                            type="text" name="lrn" required id="lrn"    
+                            type="text" name="lrn" id="lrn"    
                             value="<?php  
                             echo Helper::DisplayText('lrn', $lrn);
                             ?>">

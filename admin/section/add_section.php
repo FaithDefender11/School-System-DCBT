@@ -275,7 +275,7 @@
                                     <input required class='form-control' type='number' placeholder='Room' name='room'>
                                 </div> -->
 
-                                <div class='form-group mb-2'>
+                                <!-- <div class='form-group mb-2'>
 
                                     <label class='mb-2'>* Room for 1st Semester</label>
                                             
@@ -311,53 +311,6 @@
                                                 ");
 
                                             // $query->bindParam(":school_year_id", $current_school_year_id);
-                                            $query->execute();
-                                            
-                                            echo "<option value='' disabled selected>Choose Room</option>";
-                                            if ($query->rowCount() > 0) {
-                                                while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
-                                                    $selected = "";  
-                                                    echo "<option value='" . $row['room_id'] . "' $selected>" . $row['room_number'] ."</option>";
-                                                }
-                                            }
-                                        ?>
-                                    </select>
-                                </div>
-
-                                <!-- <div class='form-group mb-2'>
-
-                                    <label class='mb-2'>* Room for 2nd Semester</label>
-
-                                    <select required class="form-control" name="room_id" id="room_id">
-                                        <?php
-                                            $query = $con->prepare("SELECT * FROM room
-                                                -- WHERE school_year_id=:school_year_id
-                                                ");
-
-                                            // $query->bindParam(":school_year_id", $current_school_year_id);
-                                            $query->execute();
-                                            
-                                            echo "<option value='' disabled selected>Choose Room</option>";
-                                            if ($query->rowCount() > 0) {
-                                                while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
-                                                    $selected = "";  
-                                                    echo "<option value='" . $row['room_id'] . "' $selected>" . $row['room_number'] ."</option>";
-                                                }
-                                            }
-                                        ?>
-                                    </select>
-                                </div> -->
-
-
-
-                                <!-- <div class='form-group mb-2'>
-                                    <label class='mb-2'>* Room</label>
-
-                                    <select required class="form-control" name="room_id" id="room_id">
-                                        <?php
-                                            $query = $con->prepare("SELECT * FROM room
-                                                WHERE school_year_id=:school_year_id");
-                                            $query->bindParam(":school_year_id", $current_school_year_id);
                                             $query->execute();
                                             
                                             echo "<option value='' disabled selected>Choose Room</option>";

@@ -82,7 +82,7 @@
                                 class="a" style="margin: 0">
                                 <thead>
                                    <tr class="text-center"> 
-                                        <th rowspan="2">ID</th>
+                                        <!-- <th rowspan="2">ID</th> -->
                                         <th rowspan="2">Name</th>
                                         <th rowspan="2">Code</th>
                                         <th rowspan="2">Units</th>
@@ -90,6 +90,7 @@
                                         <th rowspan="2">Midterm</th>
                                         <th rowspan="2">Pre-Final</th>
                                         <th rowspan="2">Final</th>
+                                        <th rowspan="2">Average</th>
                                         <th rowspan="2">Remarks</th>
                                         <th rowspan="2">Action</th>
                                     </tr>	
@@ -110,7 +111,7 @@
                                             ,t5.second
                                             ,t5.third
                                             ,t5.fourth
-                                            ,t5.average
+                                            
                                             ,t5.remarks
                                             ,t5.student_subject_grade_id
 
@@ -196,7 +197,7 @@
                                                 
                                                 echo '<tr class="text-center">'; 
 
-                                                        echo '<td>'.$student_id.'</td>';
+                                                        // echo '<td>'.$student_id.'</td>';
                                                         echo '<td>'.$fullName.'</td>';
                                                         echo '<td>'.$program_code.'</td>';
                                                        
@@ -205,6 +206,7 @@
                                                         echo '<td>'.$second.'</td>';
                                                         echo '<td>'.$third.'</td>';
                                                         echo '<td>'.$fourth.'</td>';
+                                                        echo '<td></td>';
                                                         echo '<td>'.$remarks.'</td>';
                                                         echo '<td>
 

@@ -53,7 +53,7 @@
 
                     <div class='form-group mb-2'>
                         <label for="" class="mb-2">Pre Requisite</label>
-                        <input type="text" id="edit_pre_req_subject_title" name="edit_pre_req_subject_title" 
+                        <input style="pointer-events: none;" type="text" id="edit_pre_req_subject_title" name="edit_pre_req_subject_title" 
                             class="form-control">
                     </div>
 

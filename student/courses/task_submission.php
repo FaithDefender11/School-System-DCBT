@@ -30,9 +30,18 @@
 
         $subject_code_assignment_id = $_GET['sc_id'];
 
+
+
         $subjectAssignmentSubmission = new SubjectAssignmentSubmission($con);
 
         $subjectCodeAssignment = new SubjectCodeAssignment($con, $subject_code_assignment_id);
+        
+        $doesAssignmentGiven = $subjectCodeAssignment->GetIsGiven();
+
+        # This will prompt student if he had accesed the ungiven assignment.
+        $prompt = $subjectCodeAssignment->PromptAssignmentIsNotGiven();
+ 
+        
         $subjectCodeAssignmentTemplate = new SubjectCodeAssignmentTemplate($con);
         
         $subject_period_code_topic_id = $subjectCodeAssignment->GetSubjectPeriodCodeTopicId();
@@ -106,8 +115,23 @@
             $subject_code_assignment_id, $current_school_year_id,
             $studentLoggedInId);
 
-        $submission_date = $subjectAssignmentSubmission->GetDateCreation();
+        $submission_data = $subjectAssignmentSubmission->GetSubmission(
+            $subject_code_assignment_id,
+            $current_school_year_id,
+            $studentLoggedInId);
 
+        // var_dump($submission_data);
+
+        $submission_remarks = NULL;
+        $submission_remark_percentage = NULL;
+
+        if($submission_data != NULL){
+            $submission_remarks = $submission_data['subject_grade'];
+            $submission_remark_percentage = $subjectAssignmentSubmission->calculatePercentage($submission_remarks,
+                $assignment_max_score);
+        }
+
+        // $submission_date = $subjectAssignmentSubmission->GetDateCreation();
 
         // echo $assignmentAttempts;
         $issetLogic = "";
@@ -153,12 +177,9 @@
                 mkdir('../../assets/images/student_assignment_images');
             }
 
-
             $subject_assignment_submission_id = NULL;
         
-
             $hasInserted = false;
-
 
             if($output_text != NULL && $assignment_type === "text"){
 
@@ -177,10 +198,7 @@
                         $hasInserted = true;
                     }
                 }
-                
-
             }
-
 
             if ($assignment_images 
                 && $assignment_type === "upload"
@@ -202,7 +220,7 @@
                         $originalFilename = $assignment_images['name'][$i];
 
                         // Generate a unique filename
-                        $uniqueFilename = uniqid() . '_' . time() . '_' . $originalFilename;
+                        $uniqueFilename = uniqid() . '_' . time() . '_img_' . $originalFilename;
                         $targetPath = $uploadDirectory . $uniqueFilename;
 
                         if (move_uploaded_file($assignment_images['tmp_name'][$i], $targetPath)) {
@@ -244,8 +262,6 @@
         $doesAvailabeToAnswer = $assignment_max_attempt > $assignmentAttempts;
         $doesNotAvailableToAnswer = $assignment_max_attempt == $assignmentAttempts;
         
-        // var_dump($doesSubmittedAndGraded);
-
         $buttontext = "";
         $button_type = "";
         $button_name = "";
@@ -254,7 +270,6 @@
             $buttontext = "Prepare answer";
             $button_type = "submit";
             $button_name = "insert_assignment_btn_$subject_code_assignment_id" . '_user_' . $studentLoggedInId;
-            // echo "he2y";
 
         } 
         else if ($doesNotAvailableToAnswer == false
@@ -288,7 +303,7 @@
                             <div class='card-header'>
                                 <h4 class='text-left text-muted mb-3'><?php echo $topic_name; ?> : <span style="font-size: 19px;"><?php echo $assignment_name ?></span></h4>
                             
-                                <button onclick="window.location.href = 'task_submission.php?sc_id=<?php echo $subject_code_assignment_id; ?>' "
+                                <button style="pointer-events: none;" type="button" "
                                     class="btn btn-sm btn-primary" >Instructions</button>
                                 <?php 
                                     if($assignmentAttempts > 0){
@@ -301,7 +316,7 @@
                                         
                                         ?>
                                             <button onclick="location.href= 'submission_view.php?id=<?php echo $subject_code_assignment_id; ?>&s_id=<?php echo $get_subject_assignment_submission_id; ?>'" 
-                                                class="btn btn-sm btn-outline-primary">View Submission</button>
+                                                class="btn btn-sm btn-outline-primary">Submissions</button>
                                         <?php
                                     }
                                 ?>
@@ -317,8 +332,6 @@
                                         <textarea class="form-control summernote_disable" type='text' 
                                             id="description" name='description'><?php echo $assignment_description; ?></textarea>
                                     </div>
-
-
 
                                     <?php 
 
@@ -347,7 +360,6 @@
 
                                                 foreach ($assignment_upload_files as $key => $photo) {
 
-
                                                     $uploadFile = $photo['image'];
 
                                                     $extension = pathinfo($uploadFile, PATHINFO_EXTENSION);
@@ -358,6 +370,8 @@
 
                                                         // Get the last part of the resulting array (the original file name)
                                                         $original_file_name = end($parts);
+
+                                                        
 
                                                         ?>
                                                             <a title="View File" href='<?php echo "../../".  $photo['image'] ?>' target='__blank' rel='noopener noreferrer'>
@@ -505,13 +519,27 @@
                         <hr>
 
                         <div class='card'>
+                            <div class='card-header'>
+                                <h5 style="margin-bottom: 7px;">Score</h5>
+                                <?php if($submission_remarks !== NULL && $submission_remark_percentage !== NULL) :?>
+                                   <p><?php echo "$submission_remarks / $assignment_max_score ($submission_remark_percentage%)" ?></p>
+                                
+                                <?php else: ?>
+                                    <p>Waiting for Grade</p>
+                                <?php endif;?>
+                            </div>
+                        </div>
+
+                        <hr>
+
+
+                        <div class='card'>
                             
                             <div class='card-header'>
                                 <h5 style="margin-bottom: 7px;">Submission</h5>
 
                                 <?php if($get_subject_assignment_submission_date !== NULL) :?>
                                     <p class="mb-1">Submitted: <?php 
-
                                     $get_subject_assignment_submission_date =  $get_subject_assignment_submission_date; 
                                         echo $submission_creation = date("M d, h:i a", strtotime($get_subject_assignment_submission_date));
                                 ?> </p>

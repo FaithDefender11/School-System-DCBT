@@ -25,7 +25,7 @@
 <div class="content">
 
     <?php echo Helper::RegistrarDepartmentSection(false,
-        "index", "tertiary_index");?>
+        "shs_index", "tertiary_index");?>
 
     <main>
         <div class="floating" id="shs-sy">

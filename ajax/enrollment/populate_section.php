@@ -84,10 +84,12 @@
             WHERE program_id=:program_id
             AND active= 'yes'
             AND school_year_term=:school_year_term
+            AND is_full=:is_full
         ");
 
         $query->bindParam(":program_id", $student_program_id);
         $query->bindParam(":school_year_term", $current_school_year_term);
+        $query->bindValue(":is_full", "no");
         $query->execute();
 
         if($query->rowCount() > 0){
@@ -135,10 +137,12 @@
             WHERE program_id=:program_id
             AND active= 'yes'
             AND school_year_term=:school_year_term
+            AND is_full=:is_full
         ");
 
         $query->bindParam(":program_id", $program_id);
         $query->bindParam(":school_year_term", $current_school_year_term);
+        $query->bindValue(":is_full", "no");
         $query->execute();
 
         if($query->rowCount() > 0){

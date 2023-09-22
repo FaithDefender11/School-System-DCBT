@@ -425,7 +425,7 @@
             // url: '../../ajax/teacher/get_schedule_program_section.php',
             url: '../../ajax/teacher/populate_teaching_section.php',
             type: 'POST',
-
+            
             data: {
                 school_year_id,
                 teacher_id

@@ -11,6 +11,7 @@
     include_once('../../includes/classes/StudentParent.php');
     include_once('../../includes/classes/Program.php');
     include_once('../../includes/classes/PendingParent.php');
+    include_once('../../includes/classes/Schedule.php');
 
 
     ?>

@@ -16,12 +16,17 @@
         $max_score = $_POST['max_score'];
         $school_year_id = $_POST['school_year_id'];
         
-        // echo "hey";
+        // echo "grade_input_value: $grade_input_value";
+        // echo "<br>";
+
+        // echo "max_score: $max_score";
+        // echo "<br>";
+
         // return;
         
         $subjectAssignmentSubmission = new SubjectAssignmentSubmission($con);
         
-        if($grade_input_value > $max_score){
+        if($grade_input_value > $max_score || $grade_input_value < 0 || $grade_input_value == ""){
             echo "invalid_graded_value";
             return;
         }

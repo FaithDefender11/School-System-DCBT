@@ -42,8 +42,7 @@
         </head>
     <?php
 
-    if(isset($_GET['sp_id'])
-        && isset($_GET['id'])){
+    if(isset($_GET['sp_id']) && isset($_GET['id'])){
 
         $subject_program_id = $_GET['sp_id'];
         $course_id = $_GET['id'];
@@ -88,7 +87,12 @@
         isset($_POST['time_from']) &&
         isset($_POST['time_to'])) {
 
-        // $room = $_POST['room'];
+        $room_id = isset($_POST['room_id']) ? intval($_POST['room_id']) : NULL;
+
+
+        // var_dump($room_id);
+        // return;
+
         $schedule_day = $_POST['schedule_day'];
         $time_from_meridian = $_POST['time_from'];
 
@@ -123,29 +127,11 @@
         // $time_from_am_pm = $_POST['time_from_am_pm'];
         // $time_to_am_pm = $_POST['time_to_am_pm'];
 
-
-        // echo "Room: " . $room . "<br>";
-        // echo "Schedule Day: " . $schedule_day . "<br>";
-        // echo "Time From: " . $time_from . "<br>";
-        // echo "Time To: " . $time_to . "<br>";
-        // echo "Schedule Time: " . $schedule_time . "<br>";
-        // echo "Course ID: " . $course_id . "<br>";
-        // echo "Time From AM/PM: " . $time_from_am_pm . "<br>";
-        // echo "Time To AM/PM: " . $time_to_am_pm . "<br>";
-
         // if(false){
         if($course_id != 0){
 
             $teacher = new Teacher($con, $teacher_id);
             $new_teacher_fullname = $teacher->GetTeacherFullName();
-
-            $section_query = $con->prepare("SELECT program_section, 
-                room FROM course
-                WHERE course_id=:course_id
-                LIMIT 1");
-
-            $section_query->bindValue(":course_id", $course_id);
-            $section_query->execute();
 
             // Check if  teacher has already scheduled in the subject.
 
@@ -158,7 +144,7 @@
             // }
             
             $scheduleAddedSuccess = $schedule->AddScheduleCodeBase(
-                $time_from_meridian, $time_to_meridian,
+                $room_id,$time_from_meridian, $time_to_meridian,
                 $schedule_day, $time_from_meridian_military, $time_to_meridian_military,
                 $schedule_time, $current_school_year_id, $course_id,
                 $teacher_id, $section_subject_code, $subject_program_id
@@ -211,10 +197,34 @@
                                 </div>
                             </div> -->
 
-                            <!-- <div class="mb-3">
-                                <label for="">* Room Number</label>
-                                <input value='<?php echo $room_number;?>' type="text" placeholder="Input Room" name="room" id="room" class="form-control" />
-                            </div> -->
+                            <div class="mb-3">
+                                <label for="room_id">Room Number</label>
+                                <select required class="form-control" name="room_id" id="room_id">
+                                    <?php
+                                        $query = $con->prepare("SELECT * FROM room
+                                        ");
+                                        $query->execute();
+                                        if($query->rowCount() > 0){
+                                        
+
+                                            echo "<option value='' disabled selected>Choose Room</option>";
+
+                                            while($row = $query->fetch(PDO::FETCH_ASSOC)) {
+
+                                                $room_id = $row['room_id'];
+
+                                                $room = new Room($con, $room_id);
+
+                                                $number = $room->GetRoomNumber();
+
+                                                echo "<option value='$room_id'>$number</option>";
+                                            }
+                                        }else{
+                                            echo "<option value=''>No Available Room. Please Contact the Admin.</option>";
+                                        }
+                                    ?>
+                                </select>
+                            </div>
 
                             
 

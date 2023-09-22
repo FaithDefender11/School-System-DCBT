@@ -29,7 +29,6 @@
             $_SESSION['username'] = $wasSuccess[0];
             $_SESSION['status'] = "enrolled";
             $_SESSION['role'] = "student";
-            // $_SESSION['applicaton_status'] = "ongoing";
 
             $_SESSION["studentLoggedIn"] = $username;
             $_SESSION["studentLoggedInId"] = $wasSuccess[3];

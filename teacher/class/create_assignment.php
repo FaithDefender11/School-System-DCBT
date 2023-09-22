@@ -41,9 +41,8 @@
         // $subjectPeriodCodeTopicTemplate = new SubjectPeriodCodeTopicTemplate($con,
         //     $subjectPeriodCodeTopicTemplateId);
 
-        
-
         // echo $topic_assigned_teacher_id;
+
         $school_year_obj = $school_year->GetActiveSchoolYearAndSemester();
 
         $current_school_year_id = $school_year_obj['school_year_id'];
@@ -52,9 +51,9 @@
 
         $teacher_id = $_SESSION['teacherLoggedInId'];
 
-        $back_url = "index.php?c_id=$topic_course_id&c=$topic_subject_code";
+        // $back_url = "index.php?c_id=$topic_course_id&c=$topic_subject_code";
+        $back_url = "section_topic.php?id=$subjectPeriodCodeTopicTemplateId&ct_id=$subject_period_code_topic_id";
         
-
         if($_SERVER['REQUEST_METHOD'] === "POST"
             && isset($_POST['add_assignment_topic_'. $subject_period_code_topic_id])
             && isset($_POST['assignment_name'])
@@ -105,9 +104,6 @@
                     $subject_code_assignment_id = $con->lastInsertId();
 
                 }
-
-
-
                 // var_dump($assignment_images);
 
                 // if (false) {
@@ -123,7 +119,7 @@
                         $originalFilename = $assignment_images['name'][$i];
 
                         // Generate a unique filename
-                        $uniqueFilename = uniqid() . '_' . time() . '_' . $originalFilename;
+                        $uniqueFilename = uniqid() . '_' . time() . '_img_' . $originalFilename;
                         $targetPath = $uploadDirectory . $uniqueFilename;
 
                         if (move_uploaded_file($assignment_images['tmp_name'][$i], $targetPath)) {
@@ -137,9 +133,10 @@
                             );
 
                             // Process $imagePath as needed (e.g., store in a database).
-                        } else {
+                        }
+                        else {
                             // Handle the case where file upload failed.
-                            echo "Error uploading file: " . $originalFilename . "<br>";
+                            // echo "Error uploading file: " . $originalFilename . "<br>";
                         }
                     }
                 } 
@@ -156,26 +153,7 @@
                         $back_url);
                     exit();
                 }
-                
-
-
-
-
-                // if ($assignment_image && $assignment_image['tmp_name']) {
-
-                //     $uploadDirectory = '../../assets/images/assignments_images/';
-                //     $originalFilename = $image['name'];
-
-                //     $uniqueFilename = uniqid() . '_' . time() . '_' . $originalFilename;
-                //     $targetPath = $uploadDirectory . $uniqueFilename;
-
-                //     move_uploaded_file($image['tmp_name'], $targetPath);
-
-                //     $imagePath = $targetPath;
-
-                //     // Remove Directory Path in the Database.
-                //     $imagePath = str_replace('../../', '', $imagePath);
-                // }
+ 
             }
 
         ?>
@@ -192,16 +170,22 @@
                 <div class='col-md-10 offset-md-1'>
                     <div class='card'>
 
-                        <div class="text-center">
-                            <button onclick="window.location.href = 'create_with_template.php?id=<?php echo $subject_period_code_topic_id; ?>' " style="width: 250px;" class="btn btn-sm">Create with template</button>
-                        </div>
-
                         <div class='card-header'>
                             <h4 class='text-center mb-3'>Add Assignment to: <?php echo $subjectPeriodCodeTopic->GetTopic(); ?></h4>
                         </div>
 
                         <div class="card-body">
                             <form method='POST' enctype="multipart/form-data">
+
+                                <div class='form-group mb-2'>
+                                    <label for="type" class='mb-2'>* Type</label>
+                                    <select required class='form-control' name="type" id="type">
+                                        <option value="" disabled selected>Choose Type</option>
+                                        <option value="text">Text</option>
+                                        <option value="upload">Upload</option>
+                                    </select>
+
+                                </div>
 
                                 <div class='form-group mb-2'>
                                     <label for="assignment_name" class='mb-2'>* Assignment Name</label>
@@ -251,15 +235,7 @@
                                     <label for="late_submission_no">No</label><br>
                                 </div>
 
-                                <div class='form-group mb-2'>
-                                    <label for="type" class='mb-2'>* Type</label>
-                                    <select required class='form-control' name="type" id="type">
-                                        <option value="" disabled selected>Choose Type</option>
-                                        <option value="text">Text</option>
-                                        <option value="upload">Upload</option>
-                                    </select>
-
-                                </div>
+                                
 
                                 <div class='form-group mb-2'>
                                     <label for="max_attempt" class='mb-2'>* Submission Count</label>

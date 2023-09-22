@@ -10,7 +10,6 @@
     if(
         isset($_GET['id'])
         && isset($_GET['ct_id'])
-        
         ){
 
 
@@ -98,6 +97,15 @@
                                                 $parts = explode('_', $file);
 
                                                 $original_file_name = end($parts);
+
+                                                $pos = strpos($file, "img_");
+
+                                                // Check if "img_" was found
+                                                if ($pos !== false) {
+                                                    // Extract the filename portion
+                                                    $original_file_name = substr($file, $pos + strlen("img_"));
+                                                    // echo $filename; // Output: 01_Laboratory_Exercise_12.pdf
+                                                }
 
                                                 $file_output = "";
 

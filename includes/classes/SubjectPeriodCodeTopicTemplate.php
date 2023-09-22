@@ -70,6 +70,30 @@ class SubjectPeriodCodeTopicTemplate{
 
     }
 
+    public function UpdateTopicTemplate($subject_period_code_topic_template_id,
+        $topic, $description, $subject_period_name, $program_code) {
+        try {
+            $stmt = $this->con->prepare("UPDATE subject_period_code_topic_template
+                SET topic = :topic, description = :description, subject_period_name = :subject_period_name, program_code = :program_code
+                WHERE subject_period_code_topic_template_id = :subject_period_code_topic_template_id");
+
+            $stmt->bindParam(":subject_period_code_topic_template_id", $subject_period_code_topic_template_id);
+            $stmt->bindParam(":topic", $topic);
+            $stmt->bindParam(":description", $description);
+            $stmt->bindParam(":subject_period_name", $subject_period_name);
+            $stmt->bindParam(":program_code", $program_code);
+
+            if ($stmt->execute()) {
+                return true;
+            } else {
+                return false; // Return false in case of an error
+            }
+        } catch (PDOException $e) {
+            // Handle any exceptions that occur during the database operation
+            // You might log the error, return an error message, or take other actions.
+            return false;
+        }
+    }
     
 
 }

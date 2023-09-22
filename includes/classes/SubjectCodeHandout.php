@@ -75,7 +75,129 @@ class SubjectCodeHandout{
         return false;
     }
 
+    public function GetNonTemplateHandoutBasedOnSubjectTopic(
+        $subject_period_code_topic_id) {
+            
+        $submission = $this->con->prepare("SELECT 
 
+            t1.subject_code_handout_id AS nonTemplateSubjectCodeHandoutId,
+            t1.file AS nonTemplateFile,
+            t1.handout_name AS nonTemplateHandoutName,
+            t1.is_given AS nonTemplateSubjectHandoutIsGiven
+
+
+            FROM subject_code_handout AS t1
+             
+            WHERE t1.subject_period_code_topic_id = :subject_period_code_topic_id
+            AND subject_code_handout_template_id IS NULL
+        ");
+
+        $submission->bindValue(":subject_period_code_topic_id", $subject_period_code_topic_id);
+        $submission->execute();
+         
+        if($submission->rowCount() > 0){
+            return $submission->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        return [];
+    }
+
+    public function GiveHandout(
+        $subject_period_code_topic_id,
+        $teacher_id,
+        $subject_code_handout_id) {
+
+        $subjectPeriodCodeTopic = new SubjectPeriodCodeTopic($this->con);
+
+        $doesOwnedByAuthorizedTeacher = $subjectPeriodCodeTopic->CheckTeacherOwnedTheSubjectTopic(
+            $subject_period_code_topic_id, $teacher_id
+        );
+        
+        if($doesOwnedByAuthorizedTeacher === true){
+
+            $update = $this->con->prepare("UPDATE subject_code_handout
+                SET is_given = :is_given
+                WHERE subject_code_handout_id = :subject_code_handout_id");
+
+            $update->bindValue(":subject_code_handout_id", $subject_code_handout_id);
+            $update->bindValue(":is_given", 1);
+            $update->execute();
+
+
+            if ($update->rowCount() > 0) {
+                return true;
+            }
+        }
+
+
+        return false;
+    }
+
+    public function UnGiveHandout(
+        $subject_period_code_topic_id,
+        $teacher_id,
+        $subject_code_handout_id) {
+        
+        if($this->CheckTeacherOwnedTheSubjectTopic($subject_period_code_topic_id,
+            $teacher_id) == true){
+
+            $update = $this->con->prepare("UPDATE subject_code_handout
+                SET is_given = :is_given
+                WHERE subject_code_handout_id = :subject_code_handout_id");
+
+            $update->bindValue(":subject_code_handout_id", $subject_code_handout_id);
+            $update->bindValue(":is_given", 0);
+            $update->execute();
+
+            if ($update->rowCount() > 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function CheckTeacherOwnedTheSubjectTopic($subject_period_code_topic_id,
+        $teacher_id){
+
+        $check = $this->con->prepare("SELECT * FROM subject_period_code_topic
+            WHERE subject_period_code_topic_id=:subject_period_code_topic_id
+            AND teacher_id=:teacher_id");
+
+        $check->bindValue(":subject_period_code_topic_id", $subject_period_code_topic_id);
+        $check->bindValue(":teacher_id", $teacher_id);
+        $check->execute();
+
+        return $check->rowCount() > 0;
+    }
  
+    public function RemoveHandout(
+        $subject_period_code_topic_id,
+        $teacher_id,
+        $subject_code_handout_id) {
+
+        $subjectPeriodCodeTopic = new SubjectPeriodCodeTopic($this->con);
+
+        $doesOwnedByAuthorizedTeacher = $subjectPeriodCodeTopic->CheckTeacherOwnedTheSubjectTopic(
+            $subject_period_code_topic_id, $teacher_id
+        );
+        
+        if($doesOwnedByAuthorizedTeacher === true){
+
+            $update = $this->con->prepare("DELETE FROM subject_code_handout
+                WHERE subject_code_handout_id = :subject_code_handout_id");
+
+            $update->bindValue(":subject_code_handout_id", $subject_code_handout_id);
+            $update->execute();
+
+            if ($update->rowCount() > 0) {
+                return true;
+            }
+            
+        }
+
+        return false;
+    }
+
+    
 }
 ?>

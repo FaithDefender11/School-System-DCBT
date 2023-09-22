@@ -43,7 +43,7 @@
                     Alert::success("Program Code: $program_code Template Creation has made.", $back_url);
                     exit();
                 }
-            }
+        }
 
         ?>
             <div class='content'>

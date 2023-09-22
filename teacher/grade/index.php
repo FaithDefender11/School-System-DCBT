@@ -109,6 +109,7 @@
                                 <th>Section</th>  
                             </tr>
                         </thead>
+
                         <tbody>
                             <?php
                             
@@ -123,9 +124,10 @@
                                     LEFT JOIN subject_program as t2 ON t2.subject_program_id = t1.subject_program_id
                                     LEFT JOIN course as t3 ON t3.course_id = t1.course_id
 
-
                                     WHERE t1.teacher_id=:teacher_id
                                     AND t1.school_year_id=:school_year_id
+
+                                    GROUP BY t1.subject_code
                                 ");
 
                                 $query->bindValue(":teacher_id", $teacher_id); 

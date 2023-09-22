@@ -271,6 +271,43 @@ class SubjectAssignmentSubmission{
         return $query->rowCount();
     }
 
+    public function GetSubmission(
+        $subject_code_assignment_id,
+        $school_year_id,
+        $student_id) {
+
+        $query = $this->con->prepare("SELECT * 
+
+                FROM subject_assignment_submission
+                WHERE subject_code_assignment_id=:subject_code_assignment_id
+                AND school_year_id=:school_year_id
+                AND student_id=:student_id
+
+                ");
+
+        $query->bindValue(":subject_code_assignment_id", $subject_code_assignment_id);
+        $query->bindValue(":school_year_id", $school_year_id);
+        $query->bindValue(":student_id", $student_id);
+        $query->execute();
+
+        if($query->rowCount() > 0){
+            return $query->fetch(PDO::FETCH_ASSOC);
+        }
+
+        return NULL;
+    }
+
+
+   function calculatePercentage($completedTasks, $totalTasks) {
+        if ($totalTasks == 0) {
+            return 0; // Avoid division by zero
+        }
+    
+        $percentage = ($completedTasks / $totalTasks) * 100;
+        // return floor($percentage); // 95.99 -> 95 Round down to the nearest integer
+        return round($percentage); // 95.99 -> 96 Round normally to the nearest integer
+    }
+
     public function DoesStudentGradedSubmissionAssignment(
         $subject_assignment_submission_id,
         $school_year_id, $student_id) {
@@ -555,6 +592,42 @@ class SubjectAssignmentSubmission{
         return [];
     }
 
+    public function GetTotalSubmittedOnAssignment(
+        $subject_code_assignment_id) {
+            
+        # This query will give you the rows of data for each student_id
+        # where there are multiple rows with the same student_id
+        # and it will select the row with the latest date_creation.
+
+        # If two student has two answers, always get the latest one
+        # We GROUP BY student_id -> to get only one student
+        # SELECT student_id, MAX(date_creation) to retrieve the latest submitted of this multiple submission.
+        
+        $submission = $this->con->prepare("SELECT t1.*
+
+            FROM subject_assignment_submission AS t1
+            INNER JOIN (
+                SELECT student_id, MAX(date_creation) AS latest_date_creation
+                FROM subject_assignment_submission
+                WHERE subject_code_assignment_id = :subject_code_assignment_id
+                
+                GROUP BY student_id
+            ) AS t2 ON t1.student_id = t2.student_id AND t1.date_creation = t2.latest_date_creation
+            
+            WHERE t1.subject_code_assignment_id = :subject_code_assignment_id
+        ");
+ 
+
+        $submission->bindValue(":subject_code_assignment_id", $subject_code_assignment_id);
+        $submission->execute();
+         
+        if($submission->rowCount() > 0){
+
+            return $submission->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        return [];
+    }
 
 }
 

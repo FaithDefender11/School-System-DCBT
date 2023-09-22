@@ -130,9 +130,12 @@
 
             if($query->rowCount() > 0){
 
-                $html = "<div class='form-group mb-2'>
-                    <label   class='mb-2'>Subject Title</label>
-                    <select id='subject_template_id' class='form-control' name='subject_template_id'>";
+                $html = "
+                    <div class='form-group mb-2'>
+                        <label  class='mb-2'>* Subject Title</label>
+                        <select id='subject_template_id' class='form-control' name='subject_template_id'>
+                        <option value='' disabled selected>Choose Subject</option>
+                ";
 
                 while($row = $query->fetch(PDO::FETCH_ASSOC)){
                     $html .= "
@@ -166,9 +169,12 @@
 
             if($query->rowCount() > 0){
 
-                $html = "<div class='form-group mb-2'>
-                    <label   class='mb-2'>Subject Title</label>
-                    <select id='subject_template_id' class='form-control' name='subject_template_id'>";
+                $html = "
+                <div class='form-group mb-2'>
+                    <label class='mb-2'>* Subject Title</label>
+                    <select required id='subject_template_id' class='form-control' name='subject_template_id'>
+                    <option value='' disabled selected>Choose Subject</option>
+                ";
 
                 while($row = $query->fetch(PDO::FETCH_ASSOC)){
                     $html .= "
@@ -213,8 +219,8 @@
             if($query->rowCount() > 0){
 
                 $html = "<div class='form-group mb-2'>
-                    <label   class='mb-2'>Template</label>
-                    <select id='edit_subject_template_id' class='form-control'
+                    <label class='mb-2'>* Template</label>
+                    <select required id='edit_subject_template_id' class='form-control'
                         name='edit_subject_template_id'>";
 
                 while($row = $query->fetch(PDO::FETCH_ASSOC)){
@@ -250,8 +256,8 @@
             if($tertiary_query->rowCount() > 0){
 
                 $html = "<div class='form-group mb-2'>
-                    <label   class='mb-2'>Template</label>
-                    <select id='edit_subject_template_id' class='form-control'
+                    <label class='mb-2'>Template</label>
+                    <select required id='edit_subject_template_id' class='form-control'
                         name='edit_subject_template_id'>";
 
                 while($row = $tertiary_query->fetch(PDO::FETCH_ASSOC)){

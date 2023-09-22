@@ -41,13 +41,15 @@
         $subjectPeriodCodeTopic = new SubjectPeriodCodeTopic($con);
         $subjectAssignmentSubmission = new SubjectAssignmentSubmission($con);
 
-        $back_url = "";
+        $back_url = "../dashboard/index.php";
 
         $assignmentTodoIds = [];
 
         $allTeachingTopicIds = $subjectPeriodCodeTopic->GetAllsubjectPeriodCodeTopics($subject_code,
             $current_school_year_id);
 
+        $studentList = $subjectCodeAssignment->GetStudentGradeBookOnTeachingSubject($subject_code, $current_school_year_id);
+        $totalStudents = count($studentList);
         // print_r($allTeachingTopicIds);
 
         $subjectCodeAssignmentIdsArr = [];
@@ -58,7 +60,6 @@
 
             if(count($assignmentsBasedFromSubjectTopicList) > 0){
 
-                
                 foreach ($assignmentsBasedFromSubjectTopicList as $key => $assignmentList) {
                     # code...
                     $subject_code_assignment_ids = $assignmentList['subject_code_assignment_id'];
@@ -79,7 +80,7 @@
 
         // print_r($subjectCodeAssignmentIdsArr);
 
-        $submissionAssArr = [];
+        $ungradedSubmissionArr = [];
 
         if(count($subjectCodeAssignmentIdsArr) > 0){
 
@@ -91,14 +92,12 @@
                 foreach ($submissionList as $key => $submissions) {
                     # code...
                     $subject_assignment_submission_id = $submissions['subject_assignment_submission_id'];
-                    array_push($submissionAssArr,
+                    array_push($ungradedSubmissionArr,
                         $subject_assignment_submission_id);
                 }
                 
             }
-
-            print_r($submissionAssArr);
-
+            // print_r($ungradedSubmissionArr);
         }
 
         ?>
@@ -137,7 +136,6 @@
                                 AND t1.school_year_id=:school_year_id
                                 AND t1.teacher_id=:teacher_id
 
-                                ORDER BY t1.period_order ASC
                             ");
 
                             $sql->bindValue(":subject_code", $subject_code);
@@ -148,22 +146,18 @@
                             if($sql->rowCount() > 0){
 
                                 $i = 0;
+                                
                                 while($row = $sql->fetch(PDO::FETCH_ASSOC)){
 
                                     $subject_period_code_topic_id = $row['subject_period_code_topic_id'];
                                     $subject_period_name = $row['subject_period_name'];
 
-                                    $period_order = $row['period_order'];
                                     $topic = $row['topic'];
                                     $description = $row['description'];
 
                                     $i++;
-
                                     ?>
                                         <div class='col-md-12 mb-3'>
-
-                                        
-
                                             <div style='border: 2px solid green;' class='card'>
                                                 <div class='card-body'>
                                                     <div class='card-block'>
@@ -205,7 +199,6 @@
 
                                             <div class="row">
                                                 <div class="col-md-12">
-
                                                     <table id="my_class_table" class='a'>
                                                         <thead>
                                                             <tr class='bg-dark text-center'>
@@ -228,6 +221,7 @@
                                                                 
                                                                 $mergedList = array_merge($handoutList, $subjectTopicAssignmentList);
 
+                                                                $submission = new SubjectAssignmentSubmission($con);
 
                                                                 // print_r($mergedList);
 
@@ -252,6 +246,18 @@
                                                                         $subject_code_handout_id = isset($row_ass['subject_code_handout_id']) ? $row_ass['subject_code_handout_id'] : NULL;
                                                                         
                                                                         $student_submitted_total = "";
+
+                                                                        $total = $submission->GetTotalSubmittedOnAssignment($subject_code_assignment_id);
+
+                                                                        $totalCount = count($total);
+
+                                                                        // echo count($total);
+
+                                                                        $student_submitted_total = $subject_code_assignment_id !== "" ? $totalCount . " / $totalStudents" : "~";
+
+                                                                        // echo var_dump($subject_code_assignment_id);
+                                                                        // echo "<br>";
+
                                                                         $remove_btn = "";
 
                                                                         if($assignment_name === "" && $subject_code_handout_id !== NULL){
@@ -268,7 +274,6 @@
                                                                                     <i class='fas fa-times'></i>
                                                                                 </button>
                                                                             ";
-                                                                            $student_submitted_total = "";
                                                                         }
 
                                                                         else if($assignment_name != "" && $subject_code_assignment_id != 0){
@@ -286,8 +291,10 @@
                                                                                     <i class='fas fa-trash'></i>
                                                                                 </button>
                                                                             ";
-                                                                            $student_submitted_total = "? / ?";
                                                                         }
+
+                                                                            // $student_submitted_total = "? / ?";
+
 
                                                                         echo "
                                                                             <tr class='text-center'>
@@ -337,16 +344,15 @@
                     <br>
                     <div class='card'>
                         <div class='card-header'>
-                            <?php if(count($submissionAssArr) > 0):?>
+                            <?php if(count($ungradedSubmissionArr) > 0):?>
                                 
 
                                 <?php 
                                     $topicCount = [];
 
-                                    echo "<h5 style='margin-bottom: 7px;'>(".count($submissionAssArr).") To Check</h5>";
+                                    echo "<h5 style='margin-bottom: 7px;'>(".count($ungradedSubmissionArr).") To Check</h5>";
 
-
-                                    foreach ($submissionAssArr as $key => $submission_id) {
+                                    foreach ($ungradedSubmissionArr as $key => $submission_id) {
 
                                         # code...
                                         $subjectAssignmentSubmission = new SubjectAssignmentSubmission($con, $submission_id);
@@ -370,11 +376,7 @@
                                         if (!isset($topicCount[$topicName])) {
                                             $topicCount[$topicName] = [
                                                 'count' => 1,
-
-                                                // 'subject_code_assignment_id' => $subjectCodeAssignmentIds
-                                                
                                                 'subject_period_code_topic_id' => $topicId,
-                                                // 'topic_subject_code' => $topic_subject_code,
                                             ];
                                         } else {
                                             $topicCount[$topicName]['count']++;
@@ -389,9 +391,8 @@
                                         $subject_period_code_topic_id = $data['subject_period_code_topic_id'];
 
                                         // $subjectPeriodCodeTopic = 
-
-            
                                         $url_overview = "section_topic_grading.php?ct_id=$subject_period_code_topic_id";
+                                        
                                         echo "
                                             <p style='margin:0'>Topic name:
                                                 <a style='color:inherit' href='$url_overview'

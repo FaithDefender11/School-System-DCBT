@@ -57,7 +57,15 @@
 
         // echo $assignment_type;
 
-        $back_url = "section_topics.php?id=$subject_period_code_topic_template_id&ct_id=$subject_period_code_topic_id";
+        // $back_url = "section_topics.php?id=$subject_period_code_topic_template_id&ct_id=$subject_period_code_topic_id";
+        
+        $back_url = "section_topic.php?id=9&ct_id=36";
+
+        $subjectPeriodCodeTopicTemplate = new SubjectPeriodCodeTopicTemplate($con);
+        $subjectPeriodCodeTopicTemplateId = $subjectPeriodCodeTopicTemplate->GetTopicTemplateIdByTopicName($topic);
+
+
+        $back_url = "section_topic.php?id=$subjectPeriodCodeTopicTemplateId&ct_id=$subject_period_code_topic_id";
 
         $getAllTemplateUploadFiles = $subjectCodeAssignmentTemplate->GetTemplateUploadAssignmentFiles(
             $subject_code_assignment_template_id);
@@ -124,47 +132,8 @@
                     $subject_code_assignment_template_id,
                     $assignment_name, $description, $max_score, 
                     $allow_late_submission, $due_date, $type, $max_attempt);
-
-                // if($successCreate){
-                //     $subject_code_assignment_id = $con->lastInsertId();
-
-                // }
-
-                if (false) {
-                // if ($assignment_images && $subject_code_assignment_id !== 0 && is_array($assignment_images['tmp_name'])) {
-                    $uploadDirectory = '../../assets/images/assignments_images/';
-
-                    for ($i = 0; $i < count($assignment_images['tmp_name']); $i++) {
-                        //
-                        $originalFilename = $assignment_images['name'][$i];
-
-                        // Generate a unique filename
-                        $uniqueFilename = uniqid() . '_' . time() . '_' . $originalFilename;
-                        $targetPath = $uploadDirectory . $uniqueFilename;
-
-                        if (move_uploaded_file($assignment_images['tmp_name'][$i], $targetPath)) {
-                            $imagePath = $targetPath;
-
-                            // Remove Directory Path in the Database.
-                            $imagePath = str_replace('../../', '', $imagePath);
-
-                            $fileUpload = $subjectCodeAssignment->UploadAssignmentFiles(
-                                $subject_code_assignment_id, $imagePath
-                            );
-
-                            // Process $imagePath as needed (e.g., store in a database).
-                        } else {
-                            // Handle the case where file upload failed.
-                            echo "Error uploading file: " . $originalFilename . "<br>";
-                        }
-                    }
-                } 
-               
-
+ 
                 if($successCreate){
-
-                    $back_url = "index.php?c_id=$topic_course_id&c=$topic_subject_code";
-
                     Alert::success("Assignment has been successfully Inserted",
                         $back_url);
                     exit();

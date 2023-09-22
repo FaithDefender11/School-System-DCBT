@@ -113,7 +113,6 @@
                                             ,t5.second
                                             ,t5.third
                                             ,t5.fourth
-                                            ,t5.average
                                             ,t5.remarks
                                             ,t5.student_subject_grade_id
 

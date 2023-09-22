@@ -422,7 +422,6 @@
                                                 <tr> 
                                                     <th>Subject</th>  
                                                     <th>Code</th>
-                                                    <!-- <th>Type</th> -->
                                                     <th>Unit</th>
                                                     <th>Section</th>  
                                                     <th>Days</th>  

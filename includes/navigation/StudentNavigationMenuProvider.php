@@ -12,20 +12,36 @@
 
     public function create($page){
 
-        $base_url = 'http://localhost/school-system-dcbt/student/';
-        $logout_url = 'http://localhost/school-system-dcbt/logout.php';
+        // $base_url = 'http://localhost/school-system-dcbt/student/';
+        // $logout_url = 'http://localhost/school-system-dcbt/logout.php';
+
+
+        if ($_SERVER['SERVER_NAME'] === 'localhost') {
+            // Running on localhost
+            $base_url = 'http://localhost/school-system-dcbt/student/';
+        } else {
+            // Running on web hosting
+            // $base_url = 'https://sub.dcbt.online/registrar/';
+            $base_url = 'http://' . $_SERVER['HTTP_HOST'] . '/student/';
+        }
+        
+        $logout_url = "http://localhost/school-system-dcbt/logout.php";
+
+        if ($_SERVER['SERVER_NAME'] !== 'localhost') {
+
+            $new_url = str_replace("/student/", "", $base_url);
+            $logout_url = "$new_url/logout.php";
+        }
+
 
         $ongoing_enrollment_url = $base_url .  "ongoing_enrollment/procedure.php?information=show";
         $registration_enrollment_url = $base_url .  "registration/index.php";
         $pending_enrollment_url = $base_url .  "tentative/process.php";
         $dashboard_url = $base_url .  "dashboard/index.php";
-
-        // $class = "navigationItem ";
         
         $sideBarNavigationItem = "";
 
         if(User::IsStudentEnrolledAuthenticated()) {
-
 
             $sideBarNavigationItem .= Helper::createNavByIcon("Registration", 
                 "bi bi-clipboard-data icon",

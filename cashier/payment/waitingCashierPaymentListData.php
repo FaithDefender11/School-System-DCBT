@@ -11,7 +11,6 @@ $current_school_year_term = $school_year_obj['term'];
 $current_school_year_period = $school_year_obj['period'];
 $current_school_year_id = $school_year_obj['school_year_id'];
 
-
 $section = new Section($con, null);
 
 $draw = $_POST['draw'] ?? null;
@@ -259,7 +258,7 @@ if ($row != null) {
 
             $button_url = "
                 <button class='default success'
-                    onclick=\"window.location.href = '" . $waiting_payment_url . "subject_insertion_summary.php?id=560&enrolled_subject=show'\">
+                    onclick=\"window.location.href = '" . $waiting_payment_url . "'\">
                     Evaluate
                 </button>
             ";
@@ -276,7 +275,7 @@ if ($row != null) {
 
             $button_url = "
                 <button class='default success'
-                    onclick=\"window.location.href = '" . $waiting_payment_url . "subject_insertion_summary.php?id=560&enrolled_subject=show'\">
+                    onclick=\"window.location.href = '" . $waiting_payment_url . "'\">
                     Evaluate
                 </button>
             ";
@@ -293,7 +292,7 @@ if ($row != null) {
 
             $button_url = "
                 <button class='default'
-                onclick=\"window.location.href = '" . $waiting_payment_url . "subject_insertion_summary.php?id=560&enrolled_subject=show'\">
+                onclick=\"window.location.href = '" . $waiting_payment_url . "'\">
                     Evaluate
                 </button>
             ";
@@ -310,7 +309,7 @@ if ($row != null) {
 
             $button_url = "
                 <button class='default'
-                onclick=\"window.location.href = '" . $waiting_payment_url . "subject_insertion_summary.php?id=560&enrolled_subject=show'\">
+                onclick=\"window.location.href = '" . $waiting_payment_url . "'\">
                     Evaluate
                 </button>
             ";

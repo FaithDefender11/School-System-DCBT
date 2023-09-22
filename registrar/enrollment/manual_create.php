@@ -621,7 +621,6 @@
 
                         $student_id = $con->lastInsertId();
 
-
                         $father_email = "";
                         $mother_email = "";
                         $parent_email = "";

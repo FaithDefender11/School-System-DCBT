@@ -102,7 +102,7 @@
                         $originalFilename = $assignment_images['name'][$i];
 
                         // Generate a unique filename
-                        $uniqueFilename = uniqid() . '_' . time() . '_' . $originalFilename;
+                        $uniqueFilename = uniqid() . '_' . time() . '_img_' . $originalFilename;
                         $targetPath = $uploadDirectory . $uniqueFilename;
 
                         if (move_uploaded_file($assignment_images['tmp_name'][$i], $targetPath)) {
@@ -201,25 +201,37 @@
                                                 $uploadFile = $photo['image'];
                                                 $extension = pathinfo($uploadFile, PATHINFO_EXTENSION);
 
-                                                $parts = explode('_', $uploadFile);
+                                                // $parts = explode('_', $uploadFile);
+                                                // $original_file_name = end($parts);
 
-                                                $original_file_name = end($parts);
+                                                $pos = strpos($uploadFile, "img_");
+
+                                                $original_file_name = "";
+
+                                                // Check if "img_" was found
+                                                if ($pos !== false) {
+                                                    $original_file_name = substr($uploadFile, $pos + strlen("img_"));
+                                                }
 
                                                 if (in_array(strtolower($extension), ['jpg', 'jpeg', 'png'])) {
                                                     ?>
                                                         <span onclick="uploadImageRemoval(<?php echo $photo['subject_code_assignment_template_list_id'] ?>, <?php echo $photo['subject_code_assignment_template_id'] ?>)" style="cursor: pointer;">
-                                                                <i class="fas fa-times"></i>
+                                                                <i style="color: orange;" class="fas fa-times"></i>
                                                         </span>
-                                                        <a title="View File" href='<?php echo "../../".  $photo['image'] ?>' target='__blank' rel='noopener noreferrer'>
+                                                        <!-- <a title="View File" href='<?php echo "../../".  $photo['image'] ?>' target='__blank' rel='noopener noreferrer'>
                                                             <img style="margin-left:8px; width: 120px;" 
                                                                 src='<?php echo "../../".$photo['image']; ?>' alt='Given Photo' class='preview-image'>
+                                                        </a> -->
+
+                                                        <a title="View File" href='<?php echo "../../".  $photo['image'] ?>' target='__blank' rel='noopener noreferrer'>
+                                                            <?php echo $original_file_name; ?>
                                                         </a>
                                                         <br>
                                                     <?php
                                                 } elseif (in_array(strtolower($extension), ['pdf', 'docx', 'doc'])) {
                                                     ?>
                                                         <span onclick="uploadImageRemoval(<?php echo $photo['subject_code_assignment_template_list_id'] ?>, <?php echo $photo['subject_code_assignment_template_id'] ?>)" style="cursor: pointer;">
-                                                                <i class="fas fa-times"></i>
+                                                            <i style="color: orange;" class="fas fa-times"></i>
                                                         </span>
                                                         <a title="View File" href='<?php echo "../../".  $photo['image'] ?>' target='__blank' rel='noopener noreferrer'>
                                                             <?php echo $original_file_name; ?>

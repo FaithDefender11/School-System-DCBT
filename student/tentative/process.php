@@ -40,6 +40,24 @@
     // echo $_SESSION['enrollee_id'];
 
 
+    $base_url = "";
+
+    // $logout_url = 'http://localhost/school-system-dcbt/logout.php';
+
+    if ($_SERVER['SERVER_NAME'] === 'localhost')
+        $base_url = 'http://localhost/school-system-dcbt/student/';
+    else 
+        $base_url = 'http://' . $_SERVER['HTTP_HOST'] . '/student/';
+    
+
+    $logout_url = 'http://localhost/school-system-dcbt/enrollee_logout.php';
+
+    if ($_SERVER['SERVER_NAME'] !== 'localhost') {
+        $new_url = str_replace("/student/", "", $base_url);
+        $logout_url = "$new_url/enrollee_logout.php";
+    }
+
+
     if(isset($_SESSION['username'])
         && isset($_SESSION['enrollee_id'])
         && isset($_SESSION['status']) 

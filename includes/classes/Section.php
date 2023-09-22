@@ -493,13 +493,14 @@
 
                     $show_url = "show.php?id=$course_id&per_semester=$school_year_period&term=$school_year_term";
 
+                    //  <td>".$room_number."</td>
                     $output .= "
                         <tr>
                             <td>$course_id</td>
                             <td>
                                 $program_section
                             </td>
-                            <td>$room_number</td>
+                           
                             <td>$students_enrolled / $capacity</td>
                             <td>$active_status</td>
                             <td>
@@ -674,10 +675,10 @@
             $html = "";
             if($department_name == "Senior High School"){
 
-                $html = "<div class='form-group mb-2'>
-                    <label class='mb-2'>Course Level</label>
-
-                <select id='course_level' class='form-control' name='course_level'>";
+                $html = "
+                <div class='form-group mb-2'>
+                    <label class='mb-2'>* Course Level</label>
+                    <select required id='course_level' class='form-control' name='course_level'>";
 
                 // $html .= "<option value='Course-Section' disabled selected>Select-Program</option>";
                 
@@ -692,12 +693,11 @@
 
             }
             else if($department_name == "Tertiary"){
-                $html = "<div class='form-group mb-2'>
-                    <label class='mb-2'>Course Level</label>
-
-                <select required id='course_level' class='form-control' name='course_level'>";
-
-                 $html .= "<option value='0' disabled selected>Choose Level</option>";
+                $html = "
+                <div class='form-group mb-2'>
+                    <label class='mb-2'>* Course Level</label>
+                    <select required id='course_level' class='form-control' name='course_level'>
+                        <option value='' disabled selected>Choose Level</option>";
 
                 $html .= "
                     <option value='1'" . ($course_level == 1 ? " selected" : "") . ">1st Year</option>

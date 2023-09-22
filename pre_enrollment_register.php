@@ -11,6 +11,7 @@
     require_once('includes/classes/Student.php');
 
     $currentURL = "http://$_SERVER[HTTP_HOST]$_SERVER[SCRIPT_NAME]";
+
     $baseURL = dirname($currentURL);
 
     require "vendor/autoload.php";
@@ -26,7 +27,6 @@
     $current_school_year_term = $school_year_obj['term'];
     $current_school_year_period = $school_year_obj['period'];
     $current_school_year_id = $school_year_obj['school_year_id'];
-
 
     ?>
         <!-- Include jQuery -->
@@ -113,7 +113,7 @@
                                 backdrop: false,
                             }).then((result) => {
                                 if (result.isConfirmed) {
-                                    window.location.href = 'student_login';
+                                    window.location.href = 'pre_enrollment_register.php';
                                 }
                             });
                         });
@@ -134,7 +134,7 @@
                         backdrop: false,
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            window.location.href = '';
+                            window.locaPre Enrollment Formtion.href = '';
                         }
                     });
                 });
@@ -191,7 +191,7 @@
             <div style="width: 520px;" class="column">
                 <div class="header">
                     <!-- <img src="assets/images/icons/VideoTubeLogo.png" title="logo" alt="Site logo"> -->
-                    <h3 class="text-center text-muted">Pre Enrollment Form</h3>
+                    <h3 class="text-center text-muted">Pre-enrollment registration</h3>
                     <span style="font-size: 15px;">Note: To create an applicant account, provide your basic information first which we`ll be used to verify your Email Address.</span>
                 </div>
              

@@ -77,7 +77,7 @@ $stmt = $con->prepare("SELECT COUNT(*) AS allcount
         INNER JOIN enrollment AS t2 ON t1.student_id = t2.student_id
         INNER JOIN course AS t3 ON t3.course_id = t2.course_id
 
-        AND t2.enrollment_status = 'enrolled'
+        -- AND t2.enrollment_status = 'enrolled'
         AND t2.cashier_evaluated = 'yes'
 
         WHERE 1 $searchQuery
@@ -137,7 +137,7 @@ if ($row != null) {
         INNER JOIN enrollment AS t2 ON t1.student_id = t2.student_id
         INNER JOIN course AS t3 ON t3.course_id = t2.course_id
 
-        AND t2.enrollment_status = 'enrolled'
+        -- AND t2.enrollment_status = 'enrolled'
         AND t2.cashier_evaluated = 'yes'
 
         WHERE 1 $searchQuery

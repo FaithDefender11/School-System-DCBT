@@ -13,12 +13,32 @@
         public function create($page){
       
             // HARD-CODED
-            $base_url = 'http://localhost/school-system-dcbt/student/';
-            $logout_url = 'http://localhost/school-system-dcbt/logout.php';
+            // $base_url = 'http://localhost/school-system-dcbt/student/';
+
+            $base_url = "";
+
+            // $logout_url = 'http://localhost/school-system-dcbt/logout.php';
+
+            if ($_SERVER['SERVER_NAME'] === 'localhost') {
+                // Running on localhost
+                // $base_url = 'http://localhost/school-system-dcbt/registrar/';
+                $base_url = 'http://localhost/school-system-dcbt/student/';
+
+            } else {
+                // Running on web hosting
+                $base_url = 'http://' . $_SERVER['HTTP_HOST'] . '/student/';
+            }
+
             $logout_url = 'http://localhost/school-system-dcbt/enrollee_logout.php';
+            // $logout_url = "http://localhost/school-system-dcbt/logout.php";
+
+            if ($_SERVER['SERVER_NAME'] !== 'localhost') {
+                $new_url = str_replace("/student/", "", $base_url);
+                $logout_url = "$new_url/enrollee_logout.php";
+
+            }
 
             // Set the dynamic part of the URL using a global variable
-                
             $student_profile = $base_url . 'tentative/process.php?new_student=true&step=1';
 
             $sql = $this->con->prepare("SELECT * FROM pending_enrollees

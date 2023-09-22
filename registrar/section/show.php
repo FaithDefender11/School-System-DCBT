@@ -274,7 +274,6 @@
                                                 t4.time_from,
                                                 t4.schedule_time,
                                                 t4.schedule_day,
-                                                t4.room,
                                                 t4.subject_schedule_id,
                                                 t4.teacher_id,
                                                 t4.course_id AS schedule_course_id,
@@ -347,8 +346,7 @@
 
                                                     $subject_title = $row['subject_title'];
 
-                                                    $room = $row['room'] ?? "-";
-                                                    $room = $row['room'] == 0 ? "-" : $row['room'];
+                                            
                                                     $schedule_day = $row['schedule_day'] ?? "-";
 
                                                     $schedule_code = $row['schedule_code'];

@@ -3,12 +3,19 @@
 
 <div class="content">
 
+    <nav>
+        <a href="<?php echo $logout_url;?>">
+            <i class="fas fa-sign-out-alt"></i>
+            <h3>Logout</h3>
+        </a>
+    </nav>
+
     <main>
         <div class="floating noBorder">
             <header>
                 <div class="title">
-                <h2 style="color: var(--titleTheme)">New Student Form</h2>
-                <small>SY <?php echo $current_term; ?> &nbsp; <?php echo $current_semester;?> Semester</small>
+                    <h2 style="color: var(--titleTheme)">New Student Form</h2>
+                    <small>SY <?php echo $current_term; ?> &nbsp; <?php echo $current_semester;?> Semester</small>
                 </div>
             </header>
             <div class="progress">

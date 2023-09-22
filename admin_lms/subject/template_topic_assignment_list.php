@@ -6,6 +6,16 @@
     include_once('../../includes/classes/SubjectPeriodCodeTopicTemplate.php');
     include_once('../../includes/classes/SubjectCodeAssignmentTemplate.php');
 
+    ?>
+        <style>
+            tr td {
+                text-decoration: underline;
+                color: inherit; /* To maintain the link color */
+                white-space: nowrap; /* Prevent text from wrapping */
+                  overflow-x: auto; 
+            }
+        </style>
+    <?php
 
     if(
         isset($_GET['id'])
@@ -105,6 +115,7 @@
                                                         <td>$description</td>
                                                         <td>$max_score</td>
                                                         <td>$type</td>
+                                                        
                                                         <td>
 
                                                             <a href='edit_template_assignment.php?id=$subject_program_id&t_id=$subject_code_assignment_template_id'>

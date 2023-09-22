@@ -22,6 +22,10 @@ class SubjectPeriodCodeTopic{
         return isset($this->sqlData['topic']) ? $this->sqlData["topic"] : ""; 
     }
 
+    public function GetSubjectPeriodCodeTopicTemplateId() {
+        return isset($this->sqlData['subject_period_code_topic_template_id']) ? $this->sqlData["subject_period_code_topic_template_id"] : NULL; 
+    }
+
     public function GetDescription() {
         return isset($this->sqlData['description']) ? $this->sqlData["description"] : ""; 
     }
@@ -90,32 +94,35 @@ class SubjectPeriodCodeTopic{
 
     }
 
+    public function AddTopicTemplate($topic, $description,
+        $subject_period_name, $program_code) {
+        try {
+            $stmt = $this->con->prepare("INSERT INTO subject_period_code_topic_template
+                (topic, description, subject_period_name, program_code)
+                VALUES(:topic, :description, :subject_period_name, :program_code)");
 
-    public function AddTopicTemplate(
-        $topic, $description,$subject_period_name,
-        $program_code) {
+            $stmt->bindParam(":topic", $topic);
+            $stmt->bindParam(":description", $description);
+            $stmt->bindParam(":subject_period_name", $subject_period_name);
+            $stmt->bindParam(":program_code", $program_code);
 
-
-        $add = $this->con->prepare("INSERT INTO subject_period_code_topic_template
-            (topic, description,subject_period_name,
-                program_code)
-            VALUES(:topic, :description,:subject_period_name,
-                :program_code)");
-        
-        $add->bindValue(":topic", $topic);
-        $add->bindValue(":description", $description);
-        $add->bindValue(":subject_period_name", $subject_period_name);
-        $add->bindValue(":program_code", $program_code);
-
-        $add->execute();
-
-        if($add->rowCount() > 0){
-            return true;
+            if ($stmt->execute()) {
+                return true;
+            } else {
+                return false; // Return false in case of an error
+            }
+        } catch (PDOException $e) {
+            // Handle any exceptions that occur during the database operation
+            // You might log the error, return an error message, or take other actions.
+            return false;
         }
-
-        return false;
-
     }
+
+
+
+
+
+ 
 
     public function GetDefaultTopicTemplate($program_code) {
 
@@ -206,6 +213,8 @@ class SubjectPeriodCodeTopic{
         return NULL;
     }
 
+
+
     public function GetAllsubjectPeriodCodeTopics(
         $subject_code, $school_year_id) {
 
@@ -228,7 +237,37 @@ class SubjectPeriodCodeTopic{
     }
 
 
+    public function GetSubjectCodeAssignmentIdByTopicId(
+        $subject_period_code_topic_id) {
 
+        $sql = $this->con->prepare("SELECT subject_code_assignment_id
+            FROM subject_code_assignment
+            
+            WHERE subject_period_code_topic_id=:subject_period_code_topic_id
+            ");
+                
+        $sql->bindValue(":subject_period_code_topic_id", $subject_period_code_topic_id);
+        $sql->execute();
 
+        if($sql->rowCount() > 0){
+            return $sql->fetchColumn();
+        }
+
+        return NULL;
+    }
+
+    public function CheckTeacherOwnedTheSubjectTopic($subject_period_code_topic_id,
+        $teacher_id){
+
+        $check = $this->con->prepare("SELECT * FROM subject_period_code_topic
+            WHERE subject_period_code_topic_id=:subject_period_code_topic_id
+            AND teacher_id=:teacher_id");
+
+        $check->bindValue(":subject_period_code_topic_id", $subject_period_code_topic_id);
+        $check->bindValue(":teacher_id", $teacher_id);
+        $check->execute();
+
+        return $check->rowCount() > 0;
+    }
      
 }

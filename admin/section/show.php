@@ -46,8 +46,6 @@
         $section_program_id = $section->GetSectionProgramId($course_id);
         $section_acronym = $section->GetAcronymByProgramId($section_program_id);
 
-
-
         $recordsPerPageOptions = ["First", "Second"]; 
 
         $schedule = new Schedule($con);
@@ -60,12 +58,11 @@
         $sectionRoomFirstSemester = $section->GetSectionRoomNumberBySemester(
             $selectedSemester, $course_id, $term) ?? NULL;
         
-        $sectionRoomOutput = "N/A";
+        // $sectionRoomOutput = "N/A";
 
-        if($sectionRoomFirstSemester != NULL){
-            $sectionRoomOutput = "RM $sectionRoomFirstSemester";
-
-        }
+        // if($sectionRoomFirstSemester != NULL){
+        //     $sectionRoomOutput = "RM $sectionRoomFirstSemester";
+        // }
 
         $recordsPerPageDropdown = '<select class="ml-2 form-control" 
             name="per_semester" onchange="this.form.submit()">';
@@ -168,7 +165,7 @@
                         <div class="title">
                             <h1><?php echo $section_name?></h1> 
                         </div>
-                        <span >Room No. <span class="text-primary"><?php echo $sectionRoomOutput; ?></span></span>
+                        <!-- <span >Room No. <span class="text-primary"><?php echo $sectionRoomOutput; ?></span></span> -->
                         
                         <!-- <div class="action">
                             <div class="dropdown">
@@ -289,10 +286,6 @@
                                                 AND t1.program_id=:program_id
                                                 AND t1.course_level=:course_level
 
-                                                -- ORDER BY t1.course_level DESC,
-                                                -- t1.semester
-
-                                                -- ORDER BY t4.day_count ASC
                                                 ORDER BY t1.subject_title DESC
                                                 
                                             ");

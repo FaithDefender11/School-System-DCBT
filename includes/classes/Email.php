@@ -23,8 +23,24 @@ class Email {
     
     public function sendVerificationEmail($email_address, $token) {
 
-        
-        $link = domainName . "verify_student.php?token=$token";
+        $link = "";
+
+        if ($_SERVER['SERVER_NAME'] === 'localhost') {
+            // Running on localhost
+            // $base_url = 'http://localhost/school-system-dcbt/student/';
+            $link = domainName . "verify_student.php?token=$token";
+
+        } else {
+            // Running on web hosting
+            // $base_url = 'https://sub.dcbt.online/';
+            // $base_url = 'http://' . $_SERVER['HTTP_HOST'] . '/student/';
+
+            $link = 'http://' . $_SERVER['HTTP_HOST'] . '/verify_student.php?token=' . $token;
+
+            // $link = domainName . "verify_student.php?token=$token";
+        }
+
+        // $link = domainName . "verify_student.php?token=$token";
        
         $email_message = "(Verification) click if it was you. $link (The token will lasts only 5 minutes)";
 

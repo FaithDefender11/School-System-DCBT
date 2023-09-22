@@ -4,6 +4,16 @@
     include_once('../../includes/classes/SubjectProgram.php');
     include_once('../../includes/classes/SchoolYear.php');
 
+    ?>
+        <style>
+
+            tr td {
+                text-decoration: none;
+                color: inherit; /* To maintain the link color */
+                white-space: nowrap; /* Prevent text from wrapping */
+            }
+        </style>
+    <?php
 
     if(isset($_GET['id'])){
 
@@ -21,6 +31,7 @@
         $current_school_year_term = $school_year_obj['term'];
 
         $back_url= "shs_index.php";
+
         ?>
             <div class="content">
                 
@@ -30,6 +41,7 @@
                         <h3>Back</h3>
                     </a>
                 </nav>
+
                 <main>
                     <div class="floating">
                         <header>
@@ -49,7 +61,6 @@
                             <table id="topic_template_table" class="a" style="margin: 0">
                                 <thead>
                                     <tr>
-                                        <th>ID</th>
                                         <th>Topics</th>
                                         <th>Description</th>
                                         <th>Period</th>
@@ -95,14 +106,13 @@
 
                                                 echo "
                                                     <tr>
-                                                        <td>$subject_period_code_topic_template_id</td>
                                                         <td>
-                                                                $topic
+                                                            $topic
                                                         </td>
                                                         <td>$description</td>
                                                         <td>$subject_period_name</td>
                                                         <td>
-                                                            <a href='$template_topic_handout_list_url'>
+                                                            <a style='color: inherit' href='$template_topic_handout_list_url'>
                                                                 <button title='handout' class='btn btn-sm btn'>
                                                                     <i class='fas fa-book'></i>
                                                                 </button>
@@ -114,7 +124,7 @@
                                                                 </button>
                                                             </a>
                                                             
-                                                            <a href='code_topics.php?id=$subject_program_id'>
+                                                            <a href='edit.php?id=$subject_period_code_topic_template_id&sp_id=$subject_program_id'>
                                                                 <button class='btn btn-sm btn-primary'>
                                                                     <i class='fas fa-pencil'></i>
                                                                 </button>

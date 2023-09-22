@@ -64,7 +64,7 @@
             $subject_code_assignment_id, $studentLoggedInId, $current_school_year_id);
 
 
-        var_dump($totalSubmissionCount);
+        // var_dump($totalSubmissionCount);
         
         $doesLatestAssigntmentGraded = $subjectAssignmentSubmission->DoesStudentGradedSubmissionAssignment(
             $subject_assignment_submission_id, $current_school_year_id, $studentLoggedInId);
@@ -166,26 +166,17 @@
                                             $uploadFile = $value['output_file'];
 
                                             $extension = pathinfo($uploadFile, PATHINFO_EXTENSION);
+                                            $original_file_name = "";
 
-                                            if (strtolower($extension) === 'pdf') {
+                                            if (strtolower($extension) === 'pdf' ||
+                                                    strtolower($extension) === 'docx' ||
+                                                    strtolower($extension) === 'doc') {
 
-                                                $parts = explode('_', $uploadFile);
-
-                                                $original_file_name = end($parts);
-
-                                                ?>
-                                                    <a title="View File" href='<?php echo "../../".  $value['output_file'] ?>' target='__blank' rel='noopener noreferrer'>
-                                                        <?php echo $original_file_name; ?>
-                                                    </a>
-                                                    <br>
-                                                <?php
-                                            }
-
-                                            if (strtolower($extension) === 'docx' ||
-                                                strtolower($extension) === 'doc') {
-
-                                                $parts = explode('_', $uploadFile);
-                                                $original_file_name = end($parts);
+                                                $pos = strpos($uploadFile, "img_");
+                                                if ($pos !== false) {
+                                                    // Extract the filename portion
+                                                    $original_file_name = substr($uploadFile, $pos + strlen("img_"));
+                                                }
 
                                                 ?>
                                                     <a title="View File" href='<?php echo "../../".  $value['output_file'] ?>' target='__blank' rel='noopener noreferrer'>
@@ -194,6 +185,7 @@
                                                     <br>
                                                 <?php
                                             }
+
                                             if (in_array(strtolower($extension), $image_extensions)) {
                                                 ?>
                                                     <div class="card" style="width: 18rem;">

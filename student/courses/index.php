@@ -93,7 +93,6 @@
                                     $subject_period_code_topic_id = $row['subject_period_code_topic_id'];
                                     $subject_period_name = $row['subject_period_name'];
 
-                                    $period_order = $row['period_order'];
                                     $topic = $row['topic'];
                                     $description = $row['description'];
 
@@ -156,11 +155,9 @@
                                                                             $due_date = date("M d",
                                                                                 strtotime($due_date));
                                                                         }
+
                                                                         // $due_date = isset($row_ass['due_date']) ? $row_ass['due_date'] : "";
 
-
-
-                                                                        $assignment_picture = "";
                                                                         $max_score = isset($row_ass['max_score']) ? $row_ass['max_score'] : "";
 
                                                                         $section_output = "";
@@ -326,9 +323,7 @@
                                 <h5 style="margin-bottom: 7px;">Assignments</h5>
                                 <p>
                                     <?php
-                                        echo "
-                                            <a style='color: blue' href='task_submission.php?sc_id=$get_only_one_assignmentTodoId'>".count($assignmentTodoIds)."  assignments due</a>
-                                        ";
+                                        echo "<a style='color: blue' href='task_submission.php?sc_id=$get_only_one_assignmentTodoId'>".count($assignmentTodoIds)."  assignments due</a>";
                                     ?>
                                 </p>
 

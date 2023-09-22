@@ -310,6 +310,10 @@ class SubjectProgram{
 
             t3.course_id, t3.program_section,
             t4.student_subject_id AS graded_student_subject_id,
+            t4.first,
+            t4.second,
+            t4.third,
+            t4.fourth,
             t4.remarks
                 
             -- t5.time_from,
@@ -338,7 +342,6 @@ class SubjectProgram{
             -- AND t5.course_id = t2.course_id
 
             -- LEFT JOIN teacher as t6 ON t6.teacher_id = t5.teacher_id
-
             WHERE t1.semester=:semester
             AND t1.program_id=:program_id
             AND t1.course_level=:course_level
@@ -364,7 +367,8 @@ class SubjectProgram{
 
      
 
-    public function GradeRecordsSHSBody($enrolledSubjectsGradeLevelSemesterBased,
+    public function GradeRecordsSHSBody(
+        $enrolledSubjectsGradeLevelSemesterBased,
         $checkEnrollmentEnrolled, $student_id) {
 
         foreach ($enrolledSubjectsGradeLevelSemesterBased as $key => $value) {
@@ -386,6 +390,12 @@ class SubjectProgram{
 
             $db_enrollment_id = $value['enrollment_id'];
             $db_is_transferee = $value['is_transferee'];
+
+
+            $first = $value['first'];
+            $second = $value['second'];
+            $third = $value['third'];
+            $fourth = $value['fourth'];
 
             $doesEnrollmentRetakeIsZero = $this->DoesEnrollmentRetakeIsZero($db_enrollment_id);
             
@@ -417,10 +427,10 @@ class SubjectProgram{
             // echo $is_final;
             // echo "<br>";
 
-            if ($student_subject_code != null && $is_final == 1 
-                    ) {
+            if ($student_subject_code != null && $is_final == 1) {
 
-                $subject_code = $student_subject_code;
+                # For Section Subject Code
+                // $subject_code = $student_subject_code;
 
                 // echo $student_subject_id;
                 // echo "<br>";
@@ -457,22 +467,34 @@ class SubjectProgram{
 
             $program_section = $is_final == 0 ? "" : $program_section;
 
+            $average = "";
+
+            if($first != 0 && $second != 0 && $third != 0 && $fourth != 0){
+
+                $average = $this->calculateAverage($first, $second, $third, $fourth);
+            }
+
+
             echo '<tr class="text-center">';
             echo '<td>' . $subject_title . '</td>';
             echo '<td>' . $subject_code . '</td>';
             echo '<td>' . $subject_type . '</td>';
             echo '<td>' . $unit . '</td>';
             echo '<td>' . $program_section . '</td>';
-            echo '<td></td>';
-            echo '<td></td>';
-            echo '<td></td>';
-            echo '<td></td>';
-            echo '<td></td>';
+            echo '<td>'.$first.'</td>';
+            echo '<td>'.$second.'</td>';
+            echo '<td>'.$third.'</td>';
+            echo '<td>'.$fourth.'</td>';
+            echo '<td>'.$average.'</td>';
             echo '<td>' . $remarks_url . '</td>';
             echo '</tr>';
         }
     }
-
+    public function calculateAverage($num1, $num2, $num3, $num4) {
+        $sum = $num1 + $num2 + $num3 + $num4;
+        $average = $sum / 4;
+        return round($average);
+    }
     public function DoesEnrollmentRetakeIsZero($enrollment_id){
 
         $subject_query = $this->con->prepare("SELECT 
@@ -550,6 +572,7 @@ class SubjectProgram{
                     
                     WHERE t1.subject_program_id = :subject_program_id
                     AND t2.school_year_term=:school_year_term
+                    AND t2.is_full= 'no'
                     
                     
                     GROUP BY t1.subject_program_id,
@@ -609,6 +632,8 @@ class SubjectProgram{
                     AND t1.semester=:semester
                     AND t2.active= 'yes'
                     AND t2.school_year_term=:school_year_term
+                    AND t2.is_full= 'no'
+
                     -- AND t1.program_id= 4
                     -- AND t1.course_level=12
 

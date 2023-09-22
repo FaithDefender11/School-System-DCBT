@@ -27,7 +27,7 @@ class Alert{
             title: 'Success!',
             text: '$text',
             backdrop: false,
-            confirmButtonText: 'Wait',
+            confirmButtonText: 'Redirecting',
             showCancelButton: false,
             showCloseButton: false,
         });

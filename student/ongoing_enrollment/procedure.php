@@ -35,7 +35,7 @@
     // echo $endEnrollment;
 
     if($now > $endEnrollment){
-        echo "endEnrollment > now";
+        // echo "endEnrollment > now";
     }
     
     // if($now >= $startEnrollment){

@@ -31,8 +31,10 @@
 
             $_SESSION["studentLoggedIn"] = $username;
             $_SESSION["studentLoggedInId"] = $wasSuccess[3];
+            $_SESSION["role"] = $wasSuccess[4];
 
-            header("Location: student/ongoing_enrollment/procedure.php?information=show");
+            // header("Location: student/ongoing_enrollment/procedure.php?information=show");
+            header("Location: student/registration/index.php");
             exit();
         }else{
             echo "Wrong";

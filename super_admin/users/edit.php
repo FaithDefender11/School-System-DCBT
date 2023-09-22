@@ -4,11 +4,7 @@
     include_once('../../includes/super_admin_header.php');
     include_once('../../includes/classes/User.php');
 
-
-
     $back_url = "index.php";
-
-
 
     if(isset($_GET['id'])){
 

@@ -20,7 +20,6 @@
   
     $school_year = new SchoolYear($con);
 
-
     $school_year_obj = $school_year->GetActiveSchoolYearAndSemester();
 
     $current_school_year_term = $school_year_obj['term'];
@@ -167,7 +166,7 @@
                                         <th rowspan="2">Level</th>
                                         <th rowspan="2">Semester</th>
                                         <th rowspan="2">Section</th>
-                                        <th rowspan="2">Schedule</th>
+                                        <th rowspan="2">Time</th>
                                         <th rowspan="2">Action</th>
                                     </tr>
                                 </thead>
@@ -237,7 +236,9 @@
                                                     // var_dump($hasSubjectCode);
                                                 $allTime  = "";
                                                 $allDays  = "";
-                                                $scheduleOutput = "TBA";
+
+                                                $scheduleOutput = "";
+
                                                 // if($hasSubjectCode !== NULL){
                                                 if($hasSubjectCode !== []){
 
@@ -256,9 +257,10 @@
                                                         $scheduleOutput .= "$schedule_day - $schedule_time <br>";
                                                         // echo "<br>";
                                                     }
-
                                                    
                                                     
+                                                }else{
+                                                    $scheduleOutput = "TBA";
                                                 }
 
                                                 // var_dump($schedule_array);

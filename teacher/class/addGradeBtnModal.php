@@ -42,6 +42,7 @@
 
                         <input type="hidden" id="subject_assignment_submission_id" name="subject_assignment_submission_id" value="<?php echo $subject_assignment_submission_id; ?>">
                         <input type="hidden" id="max_score" name="max_score" value="<?php echo $max_score; ?>">
+                        <input type="hidden" id="subject_code_topic_id" name="subject_code_topic_id" value="<?php echo $subject_code_topic_id; ?>">
 
                         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-primary">Save</button>
@@ -63,6 +64,7 @@
         var grade_input = parseInt($("#grade_input").val());
         var subject_assignment_submission_id = parseInt($("#subject_assignment_submission_id").val());
         var max_score = parseInt($("#max_score").val());
+        var subject_code_topic_id = parseInt($("#subject_code_topic_id").val());
         // console.log(grade_input);
  
         $.ajax({
@@ -111,6 +113,7 @@
                         icon: 'success',
                         title: 'Success',
                         text: 'Grade remarks success.',
+
                         }).then((result) => {
                       
                         if (result.isConfirmed) {
@@ -118,9 +121,11 @@
 
                             // $('#addGradeBtn').modal('hide');
                             // $('#saveAddGradeBtn')[0].reset();
-                            location.reload();
+                            // location.reload();
 
-                            // window.location.href = `process_enrollment.php?subject_review=show&st_id=${student_id}&selected_course_id=${chosen_course_id}`;
+                            var url = `task_summary.php?ct_id=${subject_code_topic_id}`;
+                            window.location.href = `${url}`;
+
                         }
                     });
                 }

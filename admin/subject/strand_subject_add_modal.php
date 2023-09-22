@@ -30,8 +30,14 @@
 
                         <div class='form-group mb-2'>
                             <label for="" class="mb-2">Pre Requisite</label>
-                            <input type="text" id="pre_req_subject_title" name="pre_req_subject_title" 
-                                class="form-control">
+                            <!-- <input type="text" id="pre_req_subject_title" 
+                                 
+                                name="pre_req_subject_title" 
+                                class="form-control"> -->
+
+                            <select name="pre_req_subject_title" id="pre_req_subject_title"
+                                class="form-control"></select>
+                            
                         </div>
 
                     </div>
@@ -51,6 +57,43 @@
 ?>
 
 <script>
+
+    $('#subject_template_id').on('change', function() {
+
+        var subject_template_id = parseInt($(this).val());
+
+
+        $.ajax({
+            url: "../../ajax/subject/get_pre_requisite.php",
+            type: "POST",
+            data: {
+                subject_template_id
+            },
+            dataType: 'json',
+
+            // processData: false,
+            // contentType: false,
+            success: function (response) {
+
+                // var response = response.trim();
+                // console.log(response);
+                
+                if(response.length > 0){
+
+                    var options = '';
+                    
+                    $.each(response, function (index, value) {
+                        options +=
+                        '<option value="' + value.subject_template_id + '">' + value.pre_requisite_title + '</option>';
+                    });
+
+                    $('#pre_req_subject_title').html(options);
+                }
+                
+            }
+        });
+    });
+
     $(document).on('submit', '#saveStudent', function (e) {
 
         e.preventDefault();

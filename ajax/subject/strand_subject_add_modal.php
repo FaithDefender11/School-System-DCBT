@@ -9,8 +9,7 @@
             && isset($_POST['semester'])
             && isset($_POST['pre_req_subject_title'])
             && isset($_POST['department_name'])
-            
-            ) {
+        ) {
 
         $subject_program = new SubjectProgram($con);
 
@@ -46,8 +45,11 @@
             $description = $row['description'];
             $unit = $row['unit'];
             $subject_type = $row['subject_type'];
-            $pre_requisite_title = $row['pre_requisite_title'];
+            $pre_requisite_title_template = $row['pre_requisite_title'];
 
+
+            // echo $pre_requisite_title;
+            // return;
 
             if($subject_program->CheckIfSubjectProgramExists($subject_title, $template_program_id) == true){
                 echo "already_registered";
@@ -56,15 +58,20 @@
                 $create = $con->prepare("INSERT INTO subject_program
                         (program_id, subject_code, pre_req_subject_title, 
                             subject_title, unit, description, 
-                            course_level, semester, subject_type, subject_template_id, department_type)
+                            course_level, semester, subject_type,
+                            subject_template_id, department_type)
 
                         VALUES(:program_id, :subject_code, :pre_req_subject_title,
                             :subject_title, :unit, :description,
-                            :course_level, :semester, :subject_type, :subject_template_id, :department_type)");
+                            :course_level, :semester, :subject_type,
+                            :subject_template_id, :department_type)");
                                             
                 $create->bindValue(':program_id', $template_program_id == 0 ? $program_id : $template_program_id);
                 $create->bindParam(':subject_code', $subject_code);
-                $create->bindParam(':pre_req_subject_title', $pre_req_subject_title);
+                // For Subject PRogram Input
+                // $create->bindParam(':pre_req_subject_title', $pre_req_subject_title);
+                // For Attach Subject Template
+                $create->bindParam(':pre_req_subject_title', $pre_requisite_title_template);
                 $create->bindParam(':subject_title', $subject_title);
                 $create->bindParam(':unit', $unit);
                 $create->bindParam(':description', $description);

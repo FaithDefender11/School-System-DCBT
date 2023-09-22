@@ -125,7 +125,7 @@
                                     <tr>
                                         <th>Section ID</th>
                                         <th>Section Name</th>
-                                        <th>Room</th>
+                                        <!-- <th>Room</th> -->
                                         <th>Students / Capacity</th>
                                         <th>Active</th>
                                         <th>Actions</th>
@@ -186,7 +186,7 @@
                                     <tr>
                                         <th>Section ID</th>
                                         <th>Section Name</th>
-                                        <th>Room</th>
+                                        <!-- <th>Room</th> -->
                                         <th>Students / Capacity</th>
                                         <th>Active</th>
                                         <th>Actions</th>

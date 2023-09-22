@@ -3,15 +3,16 @@
     include_once('../../includes/student_lms_header.php');
     include_once('../../includes/classes/SchoolYear.php');
     include_once('../../includes/classes/SubjectCodeHandout.php');
+    include_once('../../includes/classes/SubjectCodeHandoutStudent.php');
     include_once('../../includes/classes/SubjectPeriodCodeTopic.php');
 
     if(isset($_GET['id'])
-         
         ){
 
         $subject_code_handout_id = $_GET['id'];
 
         $subjectCodeHandout = new SubjectCodeHandout($con, $subject_code_handout_id);
+        $subjectCodeHandoutStudent = new SubjectCodeHandoutStudent($con);
         
         $subject_period_code_topic_id = $subjectCodeHandout->GetSubject_period_code_topic_id();
         $handout_file = $subjectCodeHandout->GetFile();
@@ -37,8 +38,11 @@
         // $back_url = "";
 
         $back_url = "index.php?c_id=$topic_course_id&c=$topic_subject_code";
-
      
+        # Check If student had goes in to this page.
+        $pushToHandoutView = $subjectCodeHandoutStudent->MarkStudentViewedHandout($subject_code_handout_id,
+            $studentLoggedInId, $current_school_year_id);
+        
 
         ?>
             <div class='content'>

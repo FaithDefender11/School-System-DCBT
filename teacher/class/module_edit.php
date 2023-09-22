@@ -4,6 +4,7 @@
     include_once('../../includes/classes/SchoolYear.php');
     include_once('../../includes/classes/SubjectCodeHandout.php');
     include_once('../../includes/classes/SubjectPeriodCodeTopic.php');
+    include_once('../../includes/classes/SubjectPeriodCodeTopicTemplate.php');
 
     ?>
         <head>
@@ -59,15 +60,21 @@
         $topic_subject_code = $subjectPeriodCodeTopic->GetSubjectCode();
         $topic_course_id = $subjectPeriodCodeTopic->GetCourseId();
 
-        // $back_url = "";
 
-        $back_url = "index.php?c_id=$topic_course_id&c=$topic_subject_code";
+        // $back_url = "index.php?c_id=$topic_course_id&c=$topic_subject_code";
+        
+        $subjectPeriodCodeTopicTemplate = new SubjectPeriodCodeTopicTemplate($con);
+        $subjectPeriodCodeTopicTemplateId = $subjectPeriodCodeTopicTemplate->GetTopicTemplateIdByTopicName($topic_name);
+
+        // echo $handout_file;
+
+        $back_url = "section_topic.php?id=$subjectPeriodCodeTopicTemplateId&ct_id=$subject_period_code_topic_id";
 
         if ($_SERVER['REQUEST_METHOD'] === "POST" &&
             isset($_POST['edit_handout_' . $subject_code_handout_id])
             && isset($_POST['handout_name'])
-            && isset($_FILES['assignment_image'])
-            ) {
+            && isset($_FILES['assignment_image'])) {
+
 
             $handout_name = $_POST['handout_name'];
             $image = $_FILES['assignment_image'] ?? null;
@@ -89,22 +96,24 @@
 
                 $uploadDirectory = '../../assets/images/handout/';
                 $originalFilename = $image['name'];
-                $uniqueFilename = uniqid() . '_' . time() . '_' . $originalFilename;
+                $uniqueFilename = uniqid() . '_' . time() . '_img_' . $originalFilename;
                 $targetPath = $uploadDirectory . $uniqueFilename;
 
                 if ($db_image !== NULL) { // Changed $photo to $db_image
+
                     $db_user_photo = "../../" . $db_image; // Changed $photo to $db_image
 
                     if (file_exists($db_user_photo)) {
                         unlink($db_user_photo);
                     }
+
                     // Upload the new file
                     move_uploaded_file($image['tmp_name'], $targetPath);
                     // $imagePath = $targetPath;
                     $imagePath = str_replace('../../', '', $targetPath);
-                } else {
-                    $imagePath = $db_image; // Changed $photo to $db_image
                 }
+            }else {
+                $imagePath = $db_image; // Changed $photo to $db_image
             }
 
             $handoutEdit = $subjectCodeHandout->UpdateHandout(
@@ -113,10 +122,10 @@
                     $imagePath
                 );
 
-                if ($handoutEdit) {
-                    Alert::success("Handout edited successfully", "");
-                    exit();
-                }
+            if ($handoutEdit) {
+                Alert::success("Handout edited successfully", $back_url);
+                exit();
+            }
 
         }
 
@@ -161,13 +170,17 @@
                                     <p>
                                         <?php 
 
-                                            // $uploadFile = $photo['image'];
-
                                             $extension = pathinfo($handout_file, PATHINFO_EXTENSION);
-                                            
-                                            $parts = explode('_', $handout_file);
+                                             
+                                            $pos = strpos($handout_file, "img_");
 
-                                            $original_file_name = end($parts);
+                                            $original_file_name = "";
+
+                                            // Check if "img_" was found
+                                            if ($pos !== false) {
+                                                $original_file_name = substr($handout_file, $pos + strlen("img_"));
+                                            }
+                                            
                                             if (in_array(strtolower($extension), ['pdf', 'docx', 'doc'])) {
                                                 ?>
                                                     

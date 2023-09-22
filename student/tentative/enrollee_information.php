@@ -174,9 +174,17 @@
 ?>
 
 <div class="content">
-
+    <nav>
+        <a href="<?php echo $logout_url;?>">
+            <i class="fas fa-sign-out-alt"></i>
+            <h3>Logout</h3>
+        </a>
+    </nav>
     <main>
         <div class="floating noBorder">
+
+            
+
             <header>
                 <div class="title">
                     <h2 style="color: var(--titleTheme)">New Enrollment Form</h2>

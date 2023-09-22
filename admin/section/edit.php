@@ -48,6 +48,8 @@
         $db_capacity = $section->GetSectionCapacity();
         $db_min_capacity = $section->GetSectionMinimumCapacity();
         $db_advisery_id = $section->GetSectionAdviseryId();
+        $db_isFull = $section->GetSectionIsFull();
+ 
 
         $first_period_room_id = $section->GetSectionFirstPeriodRoomId();
         $second_period_room_id = $section->GetSectionSecondPeriodRoomId();
@@ -98,6 +100,7 @@
             isset($_POST['program_id']) &&
             isset($_POST['min_student']) &&
             isset($_POST['capacity']) &&
+            isset($_POST['is_full']) &&
             // isset($_POST['adviser_teacher_id']) &&
             // isset($_POST['room_id']) &&
             // isset($_POST['room']) &&
@@ -111,6 +114,10 @@
             $program_id = $_POST['program_id'];
             $capacity = $_POST['capacity'];
             $min_student = $_POST['min_student'];
+            $is_full = $_POST['is_full'];
+
+            // echo $is_full;
+            // return;
 
             $adviser_teacher_id = isset($_POST['adviser_teacher_id']) 
                 ? ($_POST['adviser_teacher_id'] == 0 ? NULL : $_POST['adviser_teacher_id']) : NULL;
@@ -121,11 +128,6 @@
 
             $second_period_room_id = isset($_POST['second_period_room_id']) 
                 ? ($_POST['second_period_room_id'] == 0 ? NULL : $_POST['second_period_room_id']) : NULL;
-
-            // var_dump($first_period_room_id);
-            // return;
-
-            // $second_period_room_id = isset($_POST['second_period_room_id']) ? $_POST['second_period_room_id'] : NULL;
 
             $course_level = (int) $_POST['course_level'];
 
@@ -176,7 +178,8 @@
                         adviser_teacher_id = :adviser_teacher_id,
                         first_period_room_id = :first_period_room_id,
                         course_level = :course_level,
-                        min_student = :min_student
+                        min_student = :min_student,
+                        is_full = :is_full
 
 
                     WHERE course_id = :course_id");
@@ -192,7 +195,8 @@
                     adviser_teacher_id = :adviser_teacher_id,
                     second_period_room_id = :second_period_room_id,
                     course_level = :course_level,
-                    min_student = :min_student
+                    min_student = :min_student,
+                    is_full = :is_full
                     
                     WHERE course_id = :course_id");
 
@@ -206,6 +210,8 @@
             $update->bindParam(":course_level", $course_level, PDO::PARAM_INT);
             $update->bindParam(":min_student", $min_student, PDO::PARAM_INT);
             $update->bindParam(":course_id", $course_id, PDO::PARAM_INT);
+            $update->bindParam(":is_full", $is_full, PDO::PARAM_STR);
+            
             $update->execute();
 
             if($update->rowCount() > 0){
@@ -271,7 +277,7 @@
                                     <label class='mb-2'>Max Capacity</label>
                                     <input required class='form-control' value="<?php echo $db_capacity; ?>" type='number' placeholder='Maximum Capacity' name='capacity'>
                                 </div>
-
+ 
                                 <div class='form-group mb-2'>
                                     <label class='mb-2'>Advisery Name</label>
 
@@ -303,12 +309,29 @@
                                     </select>
                                 </div>
 
+                                <div class="form-group">
+                                    <label for="is_full">Capacity Status</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" <?php echo $db_isFull === "yes" ? "checked" : "" ?> name="is_full" id="full" value="yes">
+                                        <label class="form-check-label" for="full">
+                                            Full
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" <?php echo $db_isFull === "no" ? "checked" : "" ?> type="radio" name="is_full" id="notFull" value="no">
+                                        <label class="form-check-label" for="notFull">
+                                            Not Full
+                                        </label>
+                                    </div>
+                                </div>
+
+
+
                                 <?php
                                 
                                     if($current_school_year_period == "First"){
-                                    
                                         ?>
-                                            <div class='form-group mb-2'>
+                                            <!-- <div class='form-group mb-2'>
                                                 <label class='mb-2'>* Room for 1st Semester</label>
                                                     
                                                 <select <?php echo $current_school_year_period == "First" ? "" : "disabled='disabled'"; ?> class="form-control" 
@@ -336,17 +359,14 @@
 
                                                     ?>
                                                 </select>
-                                            </div>
+                                            </div> -->
                                         <?php
                                     }
-                                ?>
-
-
-                                <?php 
+                                    
                                     if($current_school_year_period == "Second"){
 
                                         ?>
-                                            <div class='form-group mb-2'>
+                                            <!-- <div class='form-group mb-2'>
 
                                                 <label class='mb-2'>* Room for 2nd Semester</label>
 
@@ -373,7 +393,7 @@
                                                     ?>
                                                 </select>
                                                 
-                                            </div>
+                                            </div> -->
                                         <?php
                                     }
                                 ?>

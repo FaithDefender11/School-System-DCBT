@@ -79,9 +79,9 @@
                         move_uploaded_file($image['tmp_name'], $targetPath);
                         // $imagePath = $targetPath;
                         $imagePath = str_replace('../../', '', $targetPath);
-                    } else {
-                        $imagePath = $db_image; // Changed $photo to $db_image
-                    }
+                    } 
+                }else {
+                    $imagePath = $db_image; // Changed $photo to $db_image
                 }
 
                 $handoutEdit = $subjectCodeHandoutTemplate->UpdateHandout(
@@ -135,13 +135,28 @@
                                     <p>
                                         <?php 
 
+                                            $original_file_name = "";
                                             // $uploadFile = $photo['image'];
 
                                             $extension = pathinfo($handout_file, PATHINFO_EXTENSION);
                                             
-                                            $parts = explode('_', $handout_file);
+                                            // $parts = explode('_', $handout_file);
 
-                                            $original_file_name = end($parts);
+                                            // $original_file_name = end($parts);
+
+                                            // $parts = explode('_', $handout_file);
+
+                                            // $original_file_name = end($parts);
+
+                                            $pos = strpos($handout_file, "img_");
+
+
+                                            // Check if "img_" was found
+                                            if ($pos !== false) {
+                                                
+                                                $original_file_name = substr($handout_file, $pos + strlen("img_"));
+                                            }
+
                                             if (in_array(strtolower($extension), ['pdf', 'docx', 'doc'])) {
                                                 ?>
                                                     <a title="View File" href='<?php echo "../../".  $handout_file ?>' target='__blank' rel='noopener noreferrer'>

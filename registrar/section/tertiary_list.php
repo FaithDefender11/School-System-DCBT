@@ -117,7 +117,7 @@ if (isset($_GET['id']) && $_GET['term']) {
                             <tr>
                                 <th>Section ID</th>
                                 <th>Section Name</th>
-                                <th>Room</th>
+                                <!-- <th>Room</th> -->
                                 <th>Students / Capacity</th>
                                 <th>Active</th>
                                 <th>Actions</th>
@@ -166,12 +166,12 @@ if (isset($_GET['id']) && $_GET['term']) {
                 </header>
 
                 <main>
-                    <table id="section_table_2" class="ws-table-all cw3-striped cw3-bordered" style="margin: 0">
+                    <table id="section_table_2" class="a" style="margin: 0">
                         <thead>
                             <tr>
                                 <th>Section ID</th>
                                 <th>Section Name</th>
-                                <th>Room</th>
+                                <!-- <th>Room</th> -->
                                 <th>Students / Capacity</th>
                                 <th>Active</th>
                                 <th>Actions</th>
@@ -220,12 +220,12 @@ if (isset($_GET['id']) && $_GET['term']) {
                 </header>
 
                 <main>
-                    <table id="section_table_3" class="ws-table-all cw3-striped cw3-bordered" style="margin: 0">
+                    <table id="section_table_3" class="a" style="margin: 0">
                         <thead>
                             <tr>
                                 <th>Section ID</th>
                                 <th>Section Name</th>
-                                <th>Room</th>
+                                <!-- <th>Room</th> -->
                                 <th>Students / Capacity</th>
                                 <th>Active</th>
                                 <th>Actions</th>
@@ -276,12 +276,12 @@ if (isset($_GET['id']) && $_GET['term']) {
                 </header>
 
                 <main>
-                    <table id="section_table_4" class="ws-table-all cw3-striped cw3-bordered" style="margin: 0">
+                    <table id="section_table_4" class="a" style="margin: 0">
                         <thead>
                             <tr>
                                 <th>Section ID</th>
                                 <th>Section Name</th>
-                                <th>Room</th>
+                                <!-- <th>Room</th> -->
                                 <th>Students / Capacity</th>
                                 <th>Active</th>
                                 <th>Actions</th>

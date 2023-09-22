@@ -7,7 +7,6 @@
 
     ?>  
       <head>
-
         <style>
             .show_search{
                 position: relative;

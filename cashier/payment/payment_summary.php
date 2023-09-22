@@ -9,7 +9,7 @@
     include_once('../../includes/classes/StudentSubject.php');
     include_once('../../includes/classes/StudentSubjectGrade.php');
     include_once('../../includes/classes/StudentRequirement.php');
-    include_once('../../includes/classes/WaitingList.php');
+    include_once('../../includes/classes/Schedule.php');
 
     $department = new Department($con, null);
     $school_year = new SchoolYear($con, null);
@@ -105,6 +105,9 @@
         $student_program_section = $section->GetSectionName();
         $section_capacity = $section->GetSectionCapacity();
 
+        $student_enrollment_school_year_id = $enrollment->GetEnrollmentSchoolYearByIdForm(
+            $student_id,
+            $enrollment_id);
 
         $student_program_id = $section->GetSectionProgramId($student_enrollment_course_id);
 
@@ -147,7 +150,8 @@
 
         $back_url = "process_enrollment.php?subject_review=show&st_id=$student_id&selected_course_id=$student_enrollment_course_id";
 
-        if(isset($_GET['student_details']) && $_GET['student_details'] == "show"){
+        if(isset($_GET['student_details']) 
+            && $_GET['student_details'] == "show"){
 
             ?>
                 <div class="content">
@@ -218,7 +222,7 @@
                             echo "
                                 <button class='tab' 
                                     style='background-color: var(--mainContentBG)'
-                                    onclick=\"window.location.href = 'payment_summary.php?id=$student_id&student_details=show';\">
+                                    onclick=\"window.location.href = 'payment_summary.php?id=$enrollment_form_id_url&student_details=show';\">
                                     Student Details
                                 </button>
                             ";
@@ -227,7 +231,7 @@
                                 <button class='tab' 
                                     id='shsPayment'
                                     style='background-color: var(--them); color: white'
-                                    onclick=\"window.location.href = 'payment_summary.php?id=$student_id&enrolled_subject=show';\">
+                                    onclick=\"window.location.href = 'payment_summary.php?id=$enrollment_form_id_url&enrolled_subject=show';\">
                                     Enrolled Subjects
                                 </button>
                             ";
@@ -235,7 +239,7 @@
                     </div>
 
 
-<main>
+                    <main>
                         <div class="floating">
                             <header class="mt-4">
                                 <div class="title">
@@ -354,7 +358,9 @@
             <?php
 
         }
-        if(isset($_GET['enrolled_subject']) && $_GET['enrolled_subject'] == "show"){
+
+        if(isset($_GET['enrolled_subject']) 
+            && $_GET['enrolled_subject'] == "show"){
 
             if(isset($_POST['subject_load_btn']) && isset($_POST['unique_enrollment_form_id']) ){
             
@@ -438,8 +444,7 @@
                                 <p class="text-center mb-0">Student no.</p>
                                 <p class="text-center">
                                     <a style="all: unset" href="../student/record_details.php?id=<?php echo $student_id;?>&enrolled_subject=show">
-                                    <?php echo $student_unique_id;?>
-
+                                        <?php echo $student_unique_id;?>
                                     </a>
                                 </p>
                             </div>
@@ -467,7 +472,7 @@
                             echo "
                                 <button class='tab' 
                                     style='background-color: var(--them)'
-                                    onclick=\"window.location.href = 'payment_summary.php?id=$student_id&student_details=show';\">
+                                    onclick=\"window.location.href = 'payment_summary.php?id=$enrollment_form_id_url&student_details=show';\">
                                     Student Details
                                 </button>
                             ";
@@ -476,7 +481,7 @@
                                 <button class='tab' 
                                     id='shsPayment'
                                     style='background-color: var(--mainContentBG); color: white'
-                                    onclick=\"window.location.href = 'payment_summary.php?id=$student_id&enrolled_subject=show';\">
+                                    onclick=\"window.location.href = 'payment_summary.php?id=$enrollment_form_id_url&enrolled_subject=show';\">
                                     Enrolled Subjects
                                 </button>
                             ";
@@ -505,7 +510,6 @@
                                         </span>
 
                                         <?php
-                                        
                                             if($type == "Tertiary"){
                                                 ?>
                                                     <span>
@@ -658,7 +662,6 @@
                                                 <?php
                                             }
                                         ?>
-
                                     </div>
 
                                     <div class="row">
@@ -687,37 +690,50 @@
                                 </form>
 
                             </main>
-
                         </div>
 
                         <div class="floating" id="shs-strand-subjects">
                             <header>
                                 <div class="title">
-                                    <h3>Section <?php echo $enrollment_course_section_name; ?></h3>
+                                    <span style="font-size: 13px; font-weight: bold;" class="mt-0 mb-0 text-right">
+                                        <?php 
+                                            $student_enrollment_program_id = $section->
+                                                GetSectionProgramId($student_enrollment_course_id);
+
+                                            $studentNumberInSection = $section->
+                                                GetTotalNumberOfStudentInSection($student_enrollment_course_id,
+                                                    $current_school_year_id);
+
+                                            if($student_enrollment_school_year_id == $current_school_year_id
+                                                // && $student_enrollment_status !== "enrolled"
+                                                ){
+                                                echo "Capacity: $studentNumberInSection / $section_capacity";
+                                            }
+                                        ?>
+                                    </span>
+                                    <h4><?php echo $enrollment_course_section_name; ?></h4>
                                 </div>
 
                                 <?php
 
-                                    $student_enrollment_program_id = $section->
-                                        GetSectionProgramId($student_enrollment_course_id);
+                                    // $student_enrollment_program_id = $section->
+                                    //     GetSectionProgramId($student_enrollment_course_id);
 
-                                        // echo $student_enrollment_program_id;
-                                            
-                                    $studentNumberInSection = $section->
-                                        GetTotalNumberOfStudentInSection($student_enrollment_course_id,
-                                            $current_school_year_id);
+                                    // $studentNumberInSection = $section->
+                                    //     GetTotalNumberOfStudentInSection($student_enrollment_course_id,
+                                    //         $current_school_year_id);
 
-                                    $capacity = $section->GetSectionCapacity();
+                                    // $capacity = $section->GetSectionCapacity();
 
                                 ?>
                             </header>
 
-                            <span style="font-size: 13px; font-weight: bold;" class="mt-0 mb-0">
+                            <!-- <span style="font-size: 13px; font-weight: bold;" class="mt-0 mb-0">
                                 Capacity:
                                 <?php 
                                     echo $updatedTotalStudent;
                                 ?> / <?php echo $section_capacity;?>
-                            </span>
+                            </span> -->
 
                             <form method="POST">
 
@@ -725,28 +741,35 @@
                                     <table id="subjectLoadTablex" class="a" style="margin: 0">
                                         <thead>
                                             <tr>
-                                                <th>Subject</th>
-                                                <th>Code</th>
-                                                <th>Type</th>
+                                                <th>Course Description</th>
+                                                <!-- <th>Code</th> -->
                                                 <th>Unit</th>
+                                                <th>Section</th>
+                                                <th>Type</th>
+                                                <th>Time</th>
+                                                <th>Room</th>
+                                                <th>Status</th>
                                             </tr>
+                                            
                                         </thead>
 
                                         <tbody>
                                             <?php
 
                                                 $assignSubjects = $student_subject->GetStudentAssignSubjects($enrollment_id,
-                                                    // $student_course_id, 
                                                     $student_id, $current_school_year_id);
                                                 
-                                                if(count($assignSubjects) == 0){
+                                                if(count($assignSubjects) == 0 && $student_enrollment_status != "withdraw"){
                                                     echo "No subject(s) results";
-                                                }else{
+                                                }
+                                                else{
 
                                                     foreach ($assignSubjects as $key => $value) {
 
                                                         $enrollment_id = $value['enrollment_id'];
                                                         $is_transferee = $value['is_transferee'];
+                                                        
+                                                        $enrolled_course_id = $value['enrolled_course_id'];
 
                                                         $subject_id = $value['subject_program_id'];
                                                         $pre_requisite = $value['pre_req_subject_title'];
@@ -757,7 +780,6 @@
                                                         $subject_title = $value['subject_title'];
                                                         $course_id = $value['course_id'];
                                                         $unit = $value['unit'];
-
 
                                                         $section = new Section($con, $course_id);
                                                         $sectionName = $section->GetSectionName();
@@ -785,23 +807,70 @@
                                                             $subject_status = "
                                                                 <i style='color: orange;' class='fas fa-credit-card'></i>
                                                             ";
+                                                        }
 
+                                                        $section_exec = new Section($con, $enrolled_course_id);
+                                                        $enrolled_section_name = $section_exec->GetSectionName();
+
+                                                        $allTime  = "";
+                                                        $allDays  = "";
+
+                                                        $schedule = new Schedule($con);
+
+                                                        // echo $section_subject_code;
+                                                        // echo "<br>";
+
+                                                        $hasSubjectCode = $schedule->GetSameSubjectCode(
+                                                            $enrolled_course_id,
+                                                            $ss_subject_code, $current_school_year_id);
+
+                                                        
+                                                        $scheduleOutput = "";
+                                                        $roomOutput = "";
+
+                                                        if($hasSubjectCode !== []){
+
+                                                            foreach ($hasSubjectCode as $key => $value) {
+
+                                                                // $schedule_subject_code = $value['subject_code'];
+                                                                
+                                                                $schedule_day = $value['schedule_day'];
+                                                                $schedule_time = $value['schedule_time'];
+            
+                                                                $allDays .= $schedule_day;
+                                                                $allTime .= $schedule_time;
+
+                                                                $scheduleOutput .= "$schedule_day - $schedule_time <br>";
+                                                                // echo "<br>";
+
+                                                                $room = $value['room_number'];
+
+                                                                if($value['room_number'] != NULL){
+                                                                    $roomOutput .= "$room <br>";
+                                                                }else{
+                                                                    $roomOutput .= "TBA";
+                                                                }
+                                                            }
+                                                        }else{
+                                                            $scheduleOutput = "TBA";
+                                                            $roomOutput = "TBA";
                                                         }
 
                                                         echo '<tr>'; 
                                                             echo '<td>'.$subject_title.'</td>';
-                                                            echo '<td>'.$ss_subject_code.'</td>';
-                                                            echo '<td>'.$subject_type.'</td>';
+                                                            // echo '<td>'.$subject_code.'</td>';
                                                             echo '<td>'.$unit.'</td>';
-                                                            // echo '<td>'.$subject_status.'</td>';
+                                                            echo '<td>'.$enrolled_section_name.'</td>';
+                                                            echo '<td>'.$subject_type.'</td>';
+                                                            echo '<td>'.$scheduleOutput.'</td>';
+                                                            echo '<td>'.$roomOutput.'</td>';
+                                                            echo '<td>'.$subject_status.'</td>';
                                                         echo '</tr>';
                                                     }
                                                 }
-                                                
-
                                             ?>
                                         </tbody> 
-                                    
+
                                     </table>
                                     
                                 </main>

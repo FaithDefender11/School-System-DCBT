@@ -6,7 +6,6 @@
     include_once('../../includes/classes/Section.php');
     include_once('../../includes/classes/SubjectProgram.php');
 
-
     $templateUrl = directoryPath . "template.php";
 
     if(isset($_GET['id'])){
@@ -38,8 +37,6 @@
         $section = new Section($con, null);
 
         $strand_name = $section->GetAcronymByProgramId($program_id);
-
-        // $subject = new Subject($con);
 
         $subject_template = new SubjectTemplate($con);
         

@@ -6,6 +6,8 @@
     include_once('../../includes/classes/SchoolYear.php');
     include_once('../../includes/classes/Schedule.php');
     include_once('../../includes/classes/Teacher.php');
+    include_once('../../includes/classes/SubjectPeriodCode.php');
+    include_once('../../includes/classes/Room.php');
 
     $school_year = new SchoolYear($con, null);
     $schedule = new Schedule($con);
@@ -50,6 +52,8 @@
 
         $schedule_course_id = $schedule->GetScheduleCourseId();
         $schedule_room = $schedule->GetRoom();
+
+        // var_dump($schedule_room);
         $schedule_time_to = $schedule->GetTimeTo();
         $schedule_time_from = $schedule->GetTimeFrom();
         $schedule_day = $schedule->GetScheduleDay();
@@ -71,6 +75,15 @@
             isset($_POST['time_to'])) {
 
             // $room = $_POST['room'];
+
+            // $room_id = isset($_POST['room_id']) ? intval($_POST['room_id']) : NULL;
+            // $room_id = isset($_POST['room_id']);
+            $room_id = isset($_POST['room_id']) && $_POST['room_id'] == 0 ? NULL : $_POST['room_id'];
+            
+            // ? intval($_POST['room_id']) : NULL;
+            
+            // var_dump($room_id);
+            // return;
 
             $schedule_day = $_POST['schedule_day'];
             $time_from_meridian = $_POST['time_from'];
@@ -120,18 +133,9 @@
                 $teacher = new Teacher($con, $teacher_id);
                 $new_teacher_fullname = $teacher->GetTeacherFullName();
 
-                // Check if  teacher has already scheduled in the subject.
-
-                // if($schedule->CheckIfTeacherAlreadyScheduleToTheSubject(
-                //     $subject_id, $teacher_id) == true){
-
-                //     Alert::error("Subject Code $section_subject_code has already been schedule to $new_teacher_fullname", 'create.php');
-                //     exit();
-                //     return;
-                // }
-
                 // $subject_program_id = 0;
                 $scheduleUpdateSuccess = $schedule->UpdateScheduleCodeBase(
+                    $room_id,
                     $schedule_id, $time_from_meridian, $time_to_meridian,
                     $schedule_day, $time_from_meridian_military, $time_to_meridian_military,
                     $schedule_time, $current_school_year_id,
@@ -170,6 +174,42 @@
                                 <label for="">* Room Number</label>
                                 <input value='<?php echo $schedule_room; ?>' required type="text" placeholder="Input Room" name="room" id="room" class="form-control" />
                             </div> -->
+
+                            <div class="mb-3">
+
+                                <label for="room_id">Room Number</label>
+
+                                <select required class="form-control" name="room_id" id="room_id">
+
+                                    <?php
+                                        $query = $con->prepare("SELECT * FROM room");
+                                        $query->execute();
+                                        if($query->rowCount() > 0){
+
+                                            echo "<option value='' disabled selected>Choose Room</option>";
+                                            if($schedule_room !== NULL)
+                                                echo "<option value='0'>Reset</option>";
+
+                                            while($row = $query->fetch(PDO::FETCH_ASSOC)) {
+
+                                                $room_id = $row['room_id'];
+
+                                                $room = new Room($con, $room_id);
+
+                                                $number = $room->GetRoomNumber();
+                                               
+                                                $selected = "";
+                                                if($room_id == $schedule_room){
+                                                    $selected = "selected";
+                                                }
+                                                echo "<option $selected value='$room_id'>$number</option>";
+                                            }
+                                        }else{
+                                            echo "<option value=''>No Available Room. Please Contact the Admin.</option>";
+                                        }
+                                    ?>
+                                </select>
+                            </div>
 
                             <div class="mb-3" style="position: relative">
                                 <label for="">* Time From</label>

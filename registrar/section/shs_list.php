@@ -96,7 +96,7 @@
 
                     <div style="display: flex;justify-content: center;" class="text-center mb-3">
                         <form method="GET" class="form-inline" action="<?php echo $_SERVER['REQUEST_URI']; ?>">
-                            <!-- Hidden input field to preserve the 'id' parameter -->
+                            
                             <input type="hidden" name="id" value="<?php echo $_GET['id']; ?>">
                             <label for="term">Choose Term:</label>
                             <?php echo $recordsPerPageDropdown; ?>
@@ -125,7 +125,7 @@
                                     <tr>
                                         <th>Section ID</th>
                                         <th>Section Name</th>
-                                        <th>Room</th>
+                                        <!-- <th>Room</th> -->
                                         <th>Students / Capacity</th>
                                         <th>Active</th>
                                         <th>Actions</th>
@@ -138,14 +138,14 @@
 
                                             echo $section->CreateSHSSectionLevelSemesterContent($program_id,
                                                 $term, "first_period_room_id",
-                                                $GRADE_ELEVEN, $enrollment, $current_school_year_period, $current_school_year_term);
+                                                $GRADE_ELEVEN, $enrollment, $current_school_year_period, $current_school_year_term, $current_school_year_id);
                                         }
 
                                         else if($current_school_year_period == "Second"){
 
                                             echo $section->CreateSHSSectionLevelSemesterContent($program_id,
                                                 $term, "second_period_room_id",
-                                                $GRADE_ELEVEN, $enrollment,$current_school_year_period, $current_school_year_term);
+                                                $GRADE_ELEVEN, $enrollment,$current_school_year_period, $current_school_year_term, $current_school_year_id);
                                         }
 
                                         // if($current_school_year_period == "Second"){
@@ -186,7 +186,7 @@
                                     <tr>
                                         <th>Section ID</th>
                                         <th>Section Name</th>
-                                        <th>Room</th>
+                                        <!-- <th>Room</th> -->
                                         <th>Students / Capacity</th>
                                         <th>Active</th>
                                         <th>Actions</th>
@@ -203,7 +203,7 @@
                                         else if($current_school_year_period == "Second"){
                                             echo $section->CreateSHSSectionLevelSemesterContent($program_id,
                                                 $term, "second_period_room_id",
-                                                $GRADE_TWELVE, $enrollment,$current_school_year_period, $current_school_year_term);
+                                                $GRADE_TWELVE, $enrollment,$current_school_year_period, $current_school_year_term, $current_school_year_id);
                                         }
 
                                         // echo $section->CreateSectionLevelContent($program_id, $term,

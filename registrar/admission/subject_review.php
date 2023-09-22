@@ -243,7 +243,8 @@
                                     <th rowspan="2">Unit</th>
                                     <th rowspan="2">Section</th>
                                     <th rowspan="2">Type</th>
-                                    <th rowspan="2">Schedule</th>
+                                    <th rowspan="2">Time</th>
+                                    <th rowspan="2">Room</th>
                                     <th rowspan="2">Action</th>
                                 </tr>
                             </thead>
@@ -294,7 +295,6 @@
                                             $program_code = $row['program_code'];
                                             $enrolled_section_id = $row['enrolled_section_id'];
 
-
                                             $unit = $row['unit'];
                                             $subject_type = $row['subject_type'];
                                             $pre_req_subject_title = $row['pre_req_subject_title'];
@@ -310,13 +310,56 @@
                                             $removeSubject = "removeSubject($student_subject_id)";
 
                                                     // <td>$pre_req_subject_title</td>
+
+                                                
+                                            $allTime  = "";
+                                            $allDays  = "";
+
+                                            $schedule = new Schedule($con);
+
+                                            $hasSubjectCode = $schedule->GetSameSubjectCode($enrolled_section_id,
+                                                $section_subject_code, $current_school_year_id);
+
+                                            
+                                            $scheduleOutput = "";
+                                            $roomOutput = "";
+
+                                            if($hasSubjectCode !== []){
+
+                                                foreach ($hasSubjectCode as $key => $value) {
+
+                                                    // $schedule_subject_code = $value['subject_code'];
+                                                    
+                                                    $schedule_day = $value['schedule_day'];
+                                                    $schedule_time = $value['schedule_time'];
+ 
+                                                    $allDays .= $schedule_day;
+                                                    $allTime .= $schedule_time;
+
+                                                    $scheduleOutput .= "$schedule_day - $schedule_time <br>";
+                                                    // echo "<br>";
+
+                                                    $room = $value['room_number'];
+
+                                                    if($value['room_number'] != NULL){
+                                                        $roomOutput .= "$room <br>";
+                                                    }else{
+                                                        $roomOutput .= "TBA";
+                                                    }
+                                                }
+                                            }else{
+                                                $scheduleOutput = "TBA";
+                                                $roomOutput = "TBA";
+                                            }
+                                         
                                             echo "
                                                 <tr class='text-center'>
                                                     <td>$subject_title</td>
                                                     <td>$unit</td>
                                                     <td>$enrolled_section_Name</td>
                                                     <td>$subject_type</td>
-                                                    <td></td>
+                                                    <td>$scheduleOutput</td>
+                                                    <td>$roomOutput</td>
                                                     <td>
                                                         <button 
                                                             class='btn btn-sm btn-primary'

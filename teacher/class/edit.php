@@ -7,6 +7,7 @@
     include_once('../../includes/classes/Schedule.php');
     include_once('../../includes/classes/SubjectCodeAssignment.php');
     include_once('../../includes/classes/SubjectCodeAssignmentTemplate.php');
+    include_once('../../includes/classes/SubjectPeriodCodeTopicTemplate.php');
 
     ?>
         <head>
@@ -74,6 +75,12 @@
         $topic_subject_code = $subjectPeriodCodeTopic->GetSubjectCode();
         $topic_assigned_teacher_id = $subjectPeriodCodeTopic->GetTeacherId();
         $topic_course_id = $subjectPeriodCodeTopic->GetCourseId();
+        $topic_name = $subjectPeriodCodeTopic->GetTopic();
+
+
+        $subjectPeriodCodeTopicTemplate = new SubjectPeriodCodeTopicTemplate($con);
+        
+        $subjectPeriodCodeTopicTemplateId = $subjectPeriodCodeTopicTemplate->GetTopicTemplateIdByTopicName($topic_name);
 
         // echo $topic_subject_code;
 
@@ -93,7 +100,8 @@
 
         // print_r($getAllTemplateUploadFiles);
         
-        $back_url = "index.php?c_id=$topic_course_id&c=$topic_subject_code";
+        // $back_url = "index.php?c_id=$topic_course_id&c=$topic_subject_code";
+        $back_url = "section_topic.php?id=$subjectPeriodCodeTopicTemplateId&ct_id=$subject_period_code_topic_id";
 
         if($_SERVER['REQUEST_METHOD'] === "POST"
             && isset($_POST['edit_assignment_topic_'. $subject_period_code_topic_id])
@@ -131,7 +139,7 @@
                         $originalFilename = $assignment_images['name'][$i];
 
                         // Generate a unique filename
-                        $uniqueFilename = uniqid() . '_' . time() . '_' . $originalFilename;
+                        $uniqueFilename = uniqid() . '_' . time() . '_img_' . $originalFilename;
                         $targetPath = $uploadDirectory . $uniqueFilename;
 
                         if (move_uploaded_file($assignment_images['tmp_name'][$i], $targetPath)) {
@@ -150,8 +158,9 @@
 
                             // Process $imagePath as needed (e.g., store in a database).
                         } else {
+
                             // Handle the case where file upload failed.
-                            echo "Error uploading file: " . $originalFilename . "<br>";
+                            // echo "Error uploading file: " . $originalFilename . "<br>";
                         }
                     }
 
@@ -230,99 +239,7 @@
                                         placeholder='Add Assignment' id="assignment_name" name='assignment_name'>
                                 </div>
 
-                                <div class='form-group mb-2'>
-
-                                    <?php if ($assignment_type === "upload" && $subject_code_assignment_template_id === NULL) : ?>
-                                        <label for="assignment_images" class='mb-2'>Files</label>
-                                        <input value="<?php echo $getAssignmentImage; ?>" class='form-control' type='file' 
-                                            placeholder='' id="assignment_images" multiple name='assignment_images[]'>
-                                    <?php endif; ?>
-
-                                    <!-- <input class='form-control' type='file' id="assignment_images" 
-                                        multiple name='assignment_images[]'> -->
-                                    
-                                    <?php if ($subject_code_assignment_template_id === NULL &&
-                                        count($getAllUploadFiles) > 0 ): ?>
-                                        <div class='form-group mb-2'>
-                                            <label for="assignment_images" class='mb-2'>Files</label>
-                                            <br>
-                                            <?php foreach ($getAllUploadFiles as $key => $photo): ?>
-                                                <?php 
-                                                    $uploadFile = $photo['image'];
-                                                    $extension = pathinfo($uploadFile, PATHINFO_EXTENSION);
-
-                                                    $parts = explode('_', $uploadFile);
-
-                                                    $original_file_name = end($parts);
-
-                                                    if (in_array(strtolower($extension), ['jpg', 'jpeg', 'png'])) {
-                                                        ?>
-                                                            <span onclick="uploadImageRemoval(<?php echo $photo['subject_code_assignment_list_id'] ?>, <?php echo $photo['subject_code_assignment_template_id'] ?>)" style="cursor: pointer;">
-                                                                <i class="fas fa-times"></i>
-                                                            </span>
-                                                            <a title="View File" href='<?php echo "../../".  $photo['image'] ?>' target='__blank' rel='noopener noreferrer'>
-                                                                <img style="margin-left:8px; width: 120px;" 
-                                                                    src='<?php echo "../../".$photo['image']; ?>' alt='Given Photo' class='preview-image'>
-                                                            </a>
-                                                            <br>
-                                                        <?php
-                                                    } elseif (in_array(strtolower($extension), ['pdf', 'docx', 'doc'])) {
-                                                        ?>
-                                                           
-                                                            <a title="View File" href='<?php echo "../../".  $photo['image'] ?>' target='__blank' rel='noopener noreferrer'>
-                                                                <?php echo $original_file_name; ?>
-                                                            </a>
-                                                            <br>
-                                                        <?php
-                                                    }
-                                                ?>
-                                            <?php endforeach; ?>
-                                        </div>
-                                    <?php endif; ?>
-
-                                 
-                                    <!-- For Admin Assignment Template Content -->
-
-                                    <?php if ($subject_code_assignment_template_id !== NULL 
-                                        && count($getAllTemplateUploadFiles) > 0): ?>
-
-                                        <div class='form-group mb-2'>
-                                            <label for="assignment_images" class='mb-2'>Files</label>
-                                            <br>
-                                            <?php foreach ($getAllTemplateUploadFiles as $key => $photo): ?>
-                                                <?php 
-                                                    $uploadFile = $photo['image'];
-                                                    $extension = pathinfo($uploadFile, PATHINFO_EXTENSION);
-
-                                                    $parts = explode('_', $uploadFile);
-
-                                                    $original_file_name = end($parts);
-
-                                                    if (in_array(strtolower($extension), ['jpg', 'jpeg', 'png'])) {
-                                                        ?>
-                                                            <a title="View File" href='<?php echo "../../".  $photo['image'] ?>' target='__blank' rel='noopener noreferrer'>
-                                                                <img style="margin-left:8px; width: 120px;" 
-                                                                    src='<?php echo "../../".$photo['image']; ?>' alt='Given Photo' class='preview-image'>
-                                                            </a>
-                                                            <br>
-                                                        <?php
-                                                    } elseif (in_array(strtolower($extension), ['pdf', 'docx', 'doc'])) {
-                                                        ?>
-                                                            <a title="View File" href='<?php echo "../../".  $photo['image'] ?>' target='__blank' rel='noopener noreferrer'>
-                                                                <?php echo $original_file_name; ?>
-                                                            </a>
-                                                            <br>
-                                                        <?php
-                                                    }
-                                                ?>
-                                            <?php endforeach; ?>
-                                        </div>
-                                    <?php endif; ?>
-                                    
-                                    
-                                </div>
-
-                                <br>
+                            
 
                                 <div class='form-group mb-2'>
                                     <label for="description" class='mb-2'>Description</label>
@@ -364,6 +281,128 @@
                                     <input value="<?php echo $max_attempt; ?>" required class='form-control' type="text"
                                        id="max_attempt" name="max_attempt">
                                 </div>
+
+                                <div class='form-group mb-2'>
+
+                                    <?php if ($assignment_type === "upload" && $subject_code_assignment_template_id === NULL) : ?>
+                                        <label for="assignment_images" class='mb-2'>Files</label>
+                                        <input value="<?php echo $getAssignmentImage; ?>" class='form-control' type='file' 
+                                            placeholder='' id="assignment_images" multiple name='assignment_images[]'>
+                                    <?php endif; ?>
+
+                                    <!-- <input class='form-control' type='file' id="assignment_images" 
+                                        multiple name='assignment_images[]'> -->
+                                    
+                                    <?php if ($subject_code_assignment_template_id === NULL &&
+                                        count($getAllUploadFiles) > 0 ): ?>
+                                        <div class='form-group mb-2'>
+                                            <label for="assignment_images" class='mb-2'>Files</label>
+                                            <br>
+                                            <?php foreach ($getAllUploadFiles as $key => $photo): ?>
+
+                                                <?php 
+                                                    $uploadFile = $photo['image'];
+
+                                                    // echo $uploadFile;
+                                                    // echo "<br>";
+
+                                                    $extension = pathinfo($uploadFile, PATHINFO_EXTENSION);
+
+                                                    // $parts = explode('_', $uploadFile);
+                                                    // $original_file_name = end($parts);
+
+                                                    $pos = strpos($uploadFile, "img_");
+
+                                                    $original_file_name = "";
+
+                                                    // Check if "img_" was found
+                                                    if ($pos !== false) {
+                                                        $original_file_name = substr($uploadFile, $pos + strlen("img_"));
+                                                    }
+
+                                                    if (in_array(strtolower($extension), ['jpg', 'jpeg', 'png'])) {
+                                                        ?>
+                                                            <span onclick="uploadImageRemoval(<?php echo $photo['subject_code_assignment_list_id'] ?>, <?php echo $photo['subject_code_assignment_id'] ?>)" style="cursor: pointer;">
+                                                                <i style="color: orange;" class="fas fa-times"></i>
+                                                            </span>
+
+                                                            <!-- <a title="View File" href='<?php echo "../../".  $photo['image'] ?>' target='__blank' rel='noopener noreferrer'>
+                                                                <img style="margin-left:8px; width: 120px; heigt: 120px" 
+                                                                    src='<?php echo "../../".$photo['image']; ?>' alt='Given Photo' class='preview-image'>
+                                                            </a> -->
+
+                                                            <a  title="View File" href='<?php echo "../../".  $photo['image'] ?>' target='__blank' rel='noopener noreferrer'>
+                                                                <?php echo $original_file_name; ?>
+                                                            </a>
+                                                            <br>
+                                                        <?php
+                                                    } elseif (in_array(strtolower($extension), ['pdf', 'docx', 'doc'])) {
+                                                        ?>
+
+                                                            <span onclick="uploadImageRemoval(<?php echo $photo['subject_code_assignment_list_id'] ?>, <?php echo $photo['subject_code_assignment_id'] ?>)" style="cursor: pointer;">
+                                                                <i style="color: orange;" class="fas fa-times"></i>
+                                                            </span>
+                                                           
+                                                            <a title="View File" href='<?php echo "../../".  $photo['image'] ?>' target='__blank' rel='noopener noreferrer'>
+                                                                <?php echo $original_file_name; ?>
+                                                            </a>
+                                                            <br>
+                                                        <?php
+                                                    }
+                                                ?>
+
+                                            <?php endforeach; ?>
+                                        </div>
+                                    <?php endif; ?>
+
+                                 
+                                    <!-- For Admin Assignment Template Content -->
+                                    <?php if ($subject_code_assignment_template_id !== NULL 
+                                        && count($getAllTemplateUploadFiles) > 0): ?>
+
+                                        <div class='form-group mb-2'>
+                                            <label for="assignment_images" class='mb-2'>Files</label>
+                                            <br>
+                                            <?php foreach ($getAllTemplateUploadFiles as $key => $photo): ?>
+                                                <?php 
+                                                    $uploadFile = $photo['image'];
+                                                    $extension = pathinfo($uploadFile, PATHINFO_EXTENSION);
+
+                                                    // $parts = explode('_', $uploadFile);
+                                                    // $original_file_name = end($parts);
+                                                    
+                                                    $pos = strpos($uploadFile, "img_");
+                                                    $original_file_name = "";
+
+                                                    // Check if "img_" was found
+                                                    if ($pos !== false) {
+                                                        $original_file_name = substr($uploadFile, $pos + strlen("img_"));
+                                                    }
+
+                                                    if (in_array(strtolower($extension), ['jpg', 'jpeg', 'png'])) {
+                                                        ?>
+                                                            <a title="View File" href='<?php echo "../../".  $photo['image'] ?>' target='__blank' rel='noopener noreferrer'>
+                                                                <img style="margin-left:8px; width: 120px;" 
+                                                                    src='<?php echo "../../".$photo['image']; ?>' alt='Given Photo' class='preview-image'>
+                                                            </a>
+                                                            <br>
+                                                        <?php
+                                                    } elseif (in_array(strtolower($extension), ['pdf', 'docx', 'doc'])) {
+                                                        ?>
+                                                            <a title="View File" href='<?php echo "../../".  $photo['image'] ?>' target='__blank' rel='noopener noreferrer'>
+                                                                <?php echo $original_file_name; ?>
+                                                            </a>
+                                                            <br>
+                                                        <?php
+                                                    }
+                                                ?>
+                                            <?php endforeach; ?>
+                                        </div>
+                                    <?php endif; ?>
+                                    
+                                    
+                                </div>
+                                <br>
                                 
                                 <div class="modal-footer">
                                     <button type='submit' class='btn btn-success' name='edit_assignment_topic_<?php echo $subject_period_code_topic_id; ?>'>Save Section</button>

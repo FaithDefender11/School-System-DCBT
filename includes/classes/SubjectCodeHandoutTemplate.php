@@ -68,15 +68,16 @@ class SubjectCodeHandoutTemplate{
 
        $insert = $this->con->prepare("INSERT INTO subject_code_handout
             (handout_name, subject_period_code_topic_id, subject_code_handout_template_id,
-            file, date_creation)
+            file, date_creation, is_given)
             VALUES(:handout_name, :subject_period_code_topic_id, :subject_code_handout_template_id,
-            :file, :date_creation)");
+            :file, :date_creation, :is_given)");
 
         $insert->bindValue(":handout_name", $handout_name);
         $insert->bindValue(":subject_period_code_topic_id", $subject_period_code_topic_id);
         $insert->bindValue(":subject_code_handout_template_id", $subject_code_handout_template_id);
         $insert->bindValue(":file", $file);
         $insert->bindValue(":date_creation", $date_creation);
+        $insert->bindValue(":is_given", 1);
         $insert->execute();
 
         if ($insert->rowCount() > 0) {

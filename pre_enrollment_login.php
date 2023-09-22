@@ -19,12 +19,6 @@ $current_school_year_term = $school_year_obj['term'];
 $current_school_year_period = $school_year_obj['period'];
 $current_school_year_id = $school_year_obj['school_year_id'];
 
-
-
-        // $currentURL = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https://" : "http://";
-        // $currentURL .= $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-
-
 ?>
     <!-- Include jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

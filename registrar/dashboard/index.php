@@ -37,11 +37,10 @@
 
     // echo $base_url;
 
-    echo "base_url: $base_url";
-    echo "<br>";
-
-    echo "domainName: $domainName";
-    echo "<br>";
+    // echo "base_url: $base_url";
+    // echo "<br>";
+    // echo "domainName: $domainName";
+    // echo "<br>";
 
 
     //     FROM student as t1
