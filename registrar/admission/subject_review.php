@@ -344,7 +344,7 @@
                                                     if($value['room_number'] != NULL){
                                                         $roomOutput .= "$room <br>";
                                                     }else{
-                                                        $roomOutput .= "TBA";
+                                                        $roomOutput .= "TBA <br>";
                                                     }
                                                 }
                                             }else{
