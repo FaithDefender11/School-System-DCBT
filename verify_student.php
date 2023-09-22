@@ -64,7 +64,15 @@
 
                 if($doesActivated == true){
 
-                    $url = "/school-system-dcbt/student/tentative/process.php?new_student=true&step=preferred_course";
+                    $url = "";
+
+                    if ($_SERVER['SERVER_NAME'] === 'localhost') {
+                        $url = "/school-system-dcbt/student/tentative/process.php?new_student=true&step=preferred_course";
+                    }else{
+                        $base_url = 'http://' . $_SERVER['HTTP_HOST'] . '/student/tentative/process.php?new_student=true&step=preferred_course';
+                    }
+
+                    // $url = "/school-system-dcbt/student/tentative/process.php?new_student=true&step=preferred_course";
                     header("Location: $url");
                     exit();
 
