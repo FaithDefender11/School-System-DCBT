@@ -104,7 +104,7 @@
 
         <header>
             <div class="title">
-                <h2><?php echo $lastname;?>, <?php echo $firstname;?>, <?php echo $middle_name;?> <?php echo $suffix;?></h2>
+                <h2><?php echo $lastname;?>, <?php echo $firstname;?> <?php echo $middle_name;?> <?php echo $suffix;?></h2>
             </div>
             <div class="action">
                 <div class="dropdown">

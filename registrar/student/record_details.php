@@ -28,7 +28,7 @@
 
         $student_id = $_GET['id'];
 
-        
+        // echo "qwe";
         $GRADE_TWELVE = 12;
         $GRADE_ELEVEN = 11;
 

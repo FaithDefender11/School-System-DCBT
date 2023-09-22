@@ -16,7 +16,7 @@
                 <header>
                     
                     <div class="title">
-                        <h2><?php echo $student->GetLastName();?>, <?php echo $student->GetFirstName();?>, <?php echo $student->GetMiddleName();?>, <?php echo $student->GetSuffix();?></h2>
+                        <h2><?php echo $student->GetLastName();?>, <?php echo $student->GetFirstName();?> <?php echo $student->GetMiddleName();?> <?php echo $student->GetSuffix();?></h2>
                     </div>
 
                     <div class="action">
