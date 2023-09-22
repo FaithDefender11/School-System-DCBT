@@ -96,10 +96,20 @@
                                     $program_section = $row['program_section'];
                                     
                                     $enrollment_approve = $row['enrollment_approve'];
-                                    if($enrollment_approve !== NULL)
+                                    $url = "";
+                                    if($enrollment_approve !== NULL){
+
                                         $enrollment_approve = date("F d, Y h:i a", strtotime($enrollment_approve));
-                                    else
+                                        $url = "
+                                            <a style='color: inherit' href='form_subjects.php?id=$enrollment_id'>
+                                                $enrollment_form_id
+                                            </a>
+                                        ";
+                                    }
+                                    else{
                                         $enrollment_approve = "-";
+
+                                    }
 
                                     $name = ucfirst($row['firstname']) . " " . ucfirst($row['lastname']);
 
@@ -120,9 +130,7 @@
                                     echo "
                                     <tr>
                                         <td>
-                                            <a style='color: inherit' href='form_subjects.php?id=$enrollment_id'>
-                                                $enrollment_form_id
-                                            </a>
+                                            $url
                                         </td>
                                         <td>$program_section</td>
                                         <td>$term</td>
