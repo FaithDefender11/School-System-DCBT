@@ -1,4 +1,5 @@
 <?php
+
     include('includes/config.php');
 
     // require_once('./classes/StudentEnroll.php');
@@ -55,6 +56,7 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
   <head>
     <meta charset="utf-8" />
     <meta
@@ -80,6 +82,7 @@
 
     <title>Daehan College of Business and Technology</title>
   </head>
+    
   <body>
     <nav class="navbar navbar-expand-lg navbar-light">
       <a class="navbar-brand" href="<?php echo domainName . "index.php" ?>">

@@ -36,7 +36,9 @@ $columnNames = array(
     'period',
     'day',
     'time',
-    'room'
+    'room',
+    'type',
+    'instructor'
 );
 
 $sortBy = $columnNames[$columnIndex];
@@ -51,9 +53,9 @@ if ($searchValue != '') {
     $searchValue = trim(strtolower($searchValue)); // Convert search value to lowercase
     
     $searchQuery = " AND (
-        program_section LIKE '%" . $searchValue . "%' OR 
-        subject_code LIKE '%" . $searchValue . "%' OR
-        schedule_time LIKE '%" . $searchValue . "%'
+        t2.program_section LIKE '%" . $searchValue . "%' OR 
+        t1.subject_code LIKE '%" . $searchValue . "%' OR
+        t1.schedule_time LIKE '%" . $searchValue . "%'
 
     )";
 }
@@ -160,8 +162,8 @@ if ($row != null) {
     $program_join_condition = "";
 
     if($program_id !== ""){
-        $program_join_condition = "INNER JOIN program AS t4 ON t4.program_id = t2.program_id";
-        $program_condition = "AND t4.program_id=:program_id";
+        $program_join_condition = "INNER JOIN program AS t7 ON t7.program_id = t2.program_id";
+        $program_condition = "AND t7.program_id=:program_id";
     }
     
 

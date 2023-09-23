@@ -229,8 +229,7 @@ if($row != null){
             <button type='submit' 
                 name='reset_student_password' 
                 class='default '
-                onclick=\"window.location.href = 'edit.php?id=$student_requirement_id';\"
-                >
+                onclick=\"window.location.href = 'edit.php?id=$student_requirement_id';\">
                     View
             </button>  
         ";
@@ -251,9 +250,15 @@ if($row != null){
             "name"=> $name,
             "program_section"=> $program_section,
             "status"=> $activeSearch,
+
             "form_137"=> $form_137Output,
             "good_moral"=> $good_moralOutput,
             "psa"=> $psaOutput,
+
+            // "form_137"=> $hasForm137,
+            // "good_moral"=> $good_moralOutput,
+            // "psa"=> $psaOutput,
+
             "view_button"=> $button
         );
     }

@@ -650,6 +650,20 @@
 
         }
 
+        public function TeacherRemoval($teacher_id){
+            $query = $this->con->prepare("DELETE FROM teacher
+                WHERE teacher_id=:teacher_id
+                ");
+
+            $query->bindParam(":teacher_id", $teacher_id);
+            $query->execute();
+
+            if($query->rowCount() > 0){
+                return true;
+            }
+            return false;
+        }
+
         public function ELMSVerifyLoginCredentials($username, $password){
 
             $in_active = "Inactive";

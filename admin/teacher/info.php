@@ -59,14 +59,14 @@
                         </div>
                         <div class="action">
                             <div class="dropdown">
-                            <button class="icon">
-                                <i class="bi bi-three-dots-vertical"></i>
-                            </button>
+                                <button class="icon">
+                                    <i class="bi bi-three-dots-vertical"></i>
+                                </button>
                                 <div class="dropdown-menu">
-                                    <a href="#" class="dropdown-item" style="color: red">
+                                    <button onclick="<?php echo "removeTeacher($teacher_id)" ?>" class="dropdown-item" style="color: red">
                                         <i class="bi bi-file-earmark-x"></i>
                                         Delete form
-                                    </a>
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -93,3 +93,79 @@
         
     
 ?>
+
+<script>
+    var dropBtns = document.querySelectorAll(".icon");
+
+    dropBtns.forEach(btn => {
+        btn.addEventListener("click", (e) => {
+            const dropMenu = e.currentTarget.nextElementSibling;
+            if (dropMenu.classList.contains("show")) {
+                dropMenu.classList.toggle("show");
+            } else {
+                document.querySelectorAll(".dropdown-menu").forEach(item => item.classList.remove("show"));
+                dropMenu.classList.add("show");
+            }
+        });
+    });
+
+    function removeTeacher(teacher_id){
+
+        var teacher_id = parseInt(teacher_id);
+
+        Swal.fire({
+            icon: 'question',
+            title: `Do you want to remove selected teacher`,
+            text: `Important! This action is cannot be undone`,
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // REFX
+                $.ajax({
+                    url: '../../ajax/teacher/removeTeacher.php',
+                    type: 'POST',
+                    data: {
+                        teacher_id
+                    },
+                    success: function(response) {
+
+                        response = response.trim();
+
+                        console.log(response);
+
+                            Swal.fire({
+                                icon: 'success',
+                                title: `Selected teacher has been removed.`,
+                            });
+
+                            setTimeout(() => {
+                                Swal.close();
+                                // location.reload();
+                                window.location.href = "index.php";
+                            }, 1000);
+
+
+ 
+
+                        // if (response === "success_update") {
+
+                        //     Swal.fire({
+                        //         icon: 'success',
+                        //         title: `Selected form has been rejected.`,
+                        //     });
+                        // } 
+
+                        // else {
+                        //     console.log('Update failed');
+                        // }
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.log('AJAX Error:', textStatus, errorThrown);
+                    }
+                });
+            }
+        });
+    }
+</script>

@@ -36,7 +36,6 @@ class Email {
             // $base_url = 'http://' . $_SERVER['HTTP_HOST'] . '/student/';
 
             $link = 'http://' . $_SERVER['HTTP_HOST'] . '/verify_student.php?token=' . $token;
-
             // $link = domainName . "verify_student.php?token=$token";
         }
 
@@ -57,11 +56,8 @@ class Email {
 
     public function SendTemporaryPassword($email_address, $token) {
 
-
-        // return false;
-
-        $link = "http://localhost/dcbt/enrollment/verify_student.php?token=" 
-            . $token;
+        // $link = "http://localhost/dcbt/enrollment/verify_student.php?token=" 
+        //     . $token;
  
         $email_message = "Please copy the full token that you will use for logging in: $token Note: Please changed your password immediately!";
 

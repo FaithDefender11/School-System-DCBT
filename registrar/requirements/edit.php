@@ -18,11 +18,14 @@
         $student_form137 = $student_requirement->GetForm137();
         $student_psa = $student_requirement->GetPSA();
 
+        $student_goodmoral_valid = $student_requirement->GetGoodMoralValid();
+        $student_form137_valid = $student_requirement->GetForm137Valid();
+        $student_psa_valid= $student_requirement->GetPSAValid();
 
-        if($_SERVER["REQUEST_METHOD"] === "POST"
-            && isset($_POST['student_requirements_btn_' . $student_requirement_id])
 
-        ){
+        // echo $student_goodmoral_valid;
+
+        if($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['student_requirements_btn_' . $student_requirement_id])){
 
             $good_moral = $_FILES['good_moral'] ?? null;
             $form_137 = $_FILES['form_137'] ?? null;
@@ -59,7 +62,7 @@
             if ($good_moral && $good_moral['tmp_name']) {
 
                 $originalFilename = $good_moral['name'];
-                $uniqueFilename = uniqid() . '_' . time() . '_' . $originalFilename;
+                $uniqueFilename = uniqid() . '_' . time() . '_img_' . $originalFilename;
                 $targetPath = $uploadDirectory . $uniqueFilename;
 
                 # Get the stored file in the student_requirements_files folder
@@ -84,7 +87,7 @@
             if ($form_137 && $form_137['tmp_name']) {
 
                 $originalFilename = $form_137['name'];
-                $uniqueFilename = uniqid() . '_' . time() . '_' . $originalFilename;
+                $uniqueFilename = uniqid() . '_' . time() . '_img_' . $originalFilename;
                 $targetPath = $uploadDirectory . $uniqueFilename;
 
                 // Get the stored file in the student_requirements_files folder
@@ -109,7 +112,7 @@
             $editedPSA = null;
             if ($psa && $psa['tmp_name']) {
                 $originalFilename = $psa['name'];
-                $uniqueFilename = uniqid() . '_' . time() . '_' . $originalFilename;
+                $uniqueFilename = uniqid() . '_' . time() . '_img_' . $originalFilename;
                 $targetPath = $uploadDirectory . $uniqueFilename;
 
                 // Get the stored file in the student_requirements_files folder
@@ -127,11 +130,32 @@
                 // If $psa is not being updated, retain the existing path
                 $editedPSA = $student_psa;
             }
+
+            // var_dump($editedPSA);
+            // return;
+
+            $good_moral_condition = "";
+            if($editedPSA != NULL){
+                $good_moral_condition = ",good_moral_valid = 1";
+            }
+
+            $form_137_condition = "";
+            if($editedPSA != NULL){
+                $form_137_condition = ",form_137_valid = 1";
+            }
+
+            $psa_condition = "";
+            if($editedPSA != NULL){
+                $psa_condition = ",psa_valid = 1";
+            }
         
             $update = $con->prepare("UPDATE student_requirement
                 SET good_moral = :good_moral,
                     form_137 = :form_137,
                     psa = :psa
+                    $good_moral_condition
+                    $psa_condition
+                    $form_137_condition
 
                 WHERE student_requirement_id = :student_requirement_id");
 
@@ -139,11 +163,11 @@
             $update->bindParam(':form_137', $editedForm137);
             $update->bindParam(':psa', $editedPSA);
             $update->bindParam(':student_requirement_id', $student_requirement_id);
-
+             
             // Execute the query
             $update->execute();
             if ($update->rowCount() > 0) {
-                echo "success";
+                // echo "success";
 
                 $redirectToParentPage = true;
 
@@ -201,14 +225,30 @@
                                                                 class="btn-danger btn btn-sm">
                                                                 <i class="fas fa-times"></i>
                                                             </button>
-                                                                <img style="width: 350px; border-radius: 5%;" 
-                                                                    src='<?php echo "../../".$student_goodmoral; ?>'
-                                                                    alt='Good Moral' class='preview-image'>
+
+                                                            <img style="width: 350px; border-radius: 5%;" 
+                                                                src='<?php echo "../../".$student_goodmoral; ?>'
+                                                                alt='Good Moral' class='preview-image'>
                                                             <?php
                                                         }
                                                     ?>
+
                                                 
                                                     <div class="card-body">
+
+                                                        <?php if($student_goodmoral_valid == 1):?>
+
+                                                            <button type="button" onclick="<?php echo "toggleGoodMoral($student_requirement_id, $student_id, 'Good moral')" ?>" class="btn btn-sm btn-success">
+                                                                <i class="fas fa-check"></i>
+                                                            </button>
+
+                                                        <?php else:?>
+                                                            <button type="button" onclick="<?php echo "toggleGoodMoral($student_requirement_id, $student_id, 'Good moral')" ?>" class="btn btn-sm btn-danger">
+                                                                <i class="fas fa-times"></i>
+                                                            </button>
+                                                        <?php endif;?>
+                                                        
+
                                                         <h5 class="card-title">* Good Moral</h5>
                                                     
                                                         <hr>
@@ -247,6 +287,19 @@
                                                     ?>
 
                                                     <div class="card-body">
+                                                        <?php if($student_form137_valid == 1):?>
+
+                                                            <button type="button" onclick="<?php echo "toggleForm137($student_requirement_id, $student_id, 'Form 137')" ?>" class="btn btn-sm btn-success">
+                                                                <i class="fas fa-check"></i>
+                                                            </button>
+
+                                                        <?php else:?>
+                                                            <button type="button" onclick="<?php echo "toggleForm137($student_requirement_id, $student_id, 'Form 137')" ?>" class="btn btn-sm btn-danger">
+                                                                <i class="fas fa-times"></i>
+                                                            </button>
+
+                                                        <?php endif;?>
+
                                                         <h5 class="card-title">* Form 137</h5>
                                                         <hr>
 
@@ -275,6 +328,20 @@
                                                         }
                                                     ?>
                                                     <div class="card-body">
+
+                                                        <?php if($student_psa_valid == 1):?>
+
+                                                            <button type="button" onclick="<?php echo "togglePsa($student_requirement_id, $student_id, 'Psa')" ?>" class="btn btn-sm btn-success">
+                                                                <i class="fas fa-check"></i>
+                                                            </button>
+
+                                                        <?php else:?>
+                                                            <button type="button" onclick="<?php echo "togglePsa($student_requirement_id, $student_id, 'Psa')" ?>" class="btn btn-sm btn-danger">
+                                                                <i class="fas fa-times"></i>
+                                                            </button>
+
+                                                        <?php endif;?>
+
                                                         <h5 class="card-title">* PSA</h5>
 
                                                         <hr>
@@ -378,4 +445,177 @@
                 }
         });
     }
+
+    function toggleGoodMoral(student_requirement_id, student_id, type){
+        Swal.fire({
+                icon: 'question',
+                title: `Are you sure you want to change status of ${type}?`,
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'Cancel'
+
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    
+                    $.ajax({
+                        url: "../../ajax/requirements/toggleRequirement.php",
+                        type: 'POST',
+                        data: {
+                            student_requirement_id, student_id, type
+                        },
+                        success: function(response) {
+                            response = response.trim();
+
+                            console.log(response);
+
+                            if(response == "success"){
+                                Swal.fire({
+                                icon: 'success',
+                                title: `Successfully Changed`,
+                                showConfirmButton: false,
+                                timer: 1000, // Adjust the duration of the toast message in milliseconds (e.g., 3000 = 3 seconds)
+                                toast: true,
+                                position: 'top-end',
+                                showClass: {
+                                popup: 'swal2-noanimation',
+                                backdrop: 'swal2-noanimation'
+                                },
+                                hideClass: {
+                                popup: '',
+                                backdrop: ''
+                                }
+                            }).then((result) => {
+
+                                $(`#requirement_list`).load(
+                                    location.href + ` #requirement_list`
+                                );
+                            });
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            // handle any errors here
+                        }
+                    });
+
+                } else {
+                    // User clicked "No," perform alternative action or do nothing
+                }
+        });
+    }
+
+    function toggleForm137(student_requirement_id, student_id, type){
+        Swal.fire({
+                icon: 'question',
+                title: `Are you sure you want to change status of ${type}?`,
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'Cancel'
+
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    
+                    $.ajax({
+                        url: "../../ajax/requirements/toggleRequirement.php",
+                        type: 'POST',
+                        data: {
+                            student_requirement_id, student_id, type
+                        },
+                        success: function(response) {
+                            response = response.trim();
+
+                            console.log(response);
+
+                            if(response == "success"){
+                                Swal.fire({
+                                icon: 'success',
+                                title: `Successfully Changed`,
+                                showConfirmButton: false,
+                                timer: 1000, // Adjust the duration of the toast message in milliseconds (e.g., 3000 = 3 seconds)
+                                toast: true,
+                                position: 'top-end',
+                                showClass: {
+                                popup: 'swal2-noanimation',
+                                backdrop: 'swal2-noanimation'
+                                },
+                                hideClass: {
+                                popup: '',
+                                backdrop: ''
+                                }
+                            }).then((result) => {
+
+                                $(`#requirement_list`).load(
+                                    location.href + ` #requirement_list`
+                                );
+                            });
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            // handle any errors here
+                        }
+                    });
+
+                } else {
+                    // User clicked "No," perform alternative action or do nothing
+                }
+        });
+    }
+
+    function togglePsa(student_requirement_id, student_id, type){
+        Swal.fire({
+                icon: 'question',
+                title: `Are you sure you want to change status of ${type}?`,
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'Cancel'
+
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    
+                    $.ajax({
+                        url: "../../ajax/requirements/toggleRequirement.php",
+                        type: 'POST',
+                        data: {
+                            student_requirement_id, student_id, type
+                        },
+                        success: function(response) {
+                            response = response.trim();
+
+                            console.log(response);
+
+                            if(response == "success"){
+                                Swal.fire({
+                                icon: 'success',
+                                title: `Successfully Changed`,
+                                showConfirmButton: false,
+                                timer: 1000, // Adjust the duration of the toast message in milliseconds (e.g., 3000 = 3 seconds)
+                                toast: true,
+                                position: 'top-end',
+                                showClass: {
+                                popup: 'swal2-noanimation',
+                                backdrop: 'swal2-noanimation'
+                                },
+                                hideClass: {
+                                popup: '',
+                                backdrop: ''
+                                }
+                            }).then((result) => {
+
+                                $(`#requirement_list`).load(
+                                    location.href + ` #requirement_list`
+                                );
+                            });
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            // handle any errors here
+                        }
+                    });
+
+                } else {
+                    // User clicked "No," perform alternative action or do nothing
+                }
+        });
+    }
+
+    
 </script>

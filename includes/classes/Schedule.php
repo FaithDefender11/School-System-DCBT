@@ -347,7 +347,15 @@
             AND t1.subject_code=:subject_code
             AND t1.school_year_id=:school_year_id
 
-
+            ORDER BY
+            CASE schedule_day
+                WHEN 'M' THEN 1
+                WHEN 'T' THEN 2
+                WHEN 'W' THEN 3
+                WHEN 'TH' THEN 4
+                WHEN 'F' THEN 5
+                ELSE 6  
+            END
             -- LIMIT 1
             ");
 

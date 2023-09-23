@@ -7,8 +7,7 @@
 
     require "../../vendor/autoload.php";
 
-    if(isset($_POST['reset_student_password']) 
-        && isset($_POST['student_username'])){
+    if(isset($_POST['reset_student_password'])  && isset($_POST['student_username'])){
 
         try {
 
