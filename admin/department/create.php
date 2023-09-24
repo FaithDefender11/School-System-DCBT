@@ -41,7 +41,7 @@
                 <form method="POST" enctype="multipart/form-data">
                     <div class="row">
                         <span>
-                            <label for="department_name">Department Name</label>
+                            <label for="dept_name">Department Name</label>
                             <div>
                                 <input type="text" name="department_name" placeholder="">
                             </div>
