@@ -612,6 +612,7 @@
 
             $html = "<span>
                         <label for=''>Department</label>
+                        <div>
                         <select name='department_id' required>
                             <option value=''>Choose Department</option>";
 
@@ -629,6 +630,7 @@
                 }
             }
             $html .= "</select>
+                    </div>
                     </span>";
 
             return $html;

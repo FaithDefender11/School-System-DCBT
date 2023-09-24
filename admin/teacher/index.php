@@ -37,7 +37,7 @@
 
   <!--SHS-TEACHERS-->
   <main>
-    <div class="floating" id="shs-teachers">
+    <div class="floating">
       <header>
         <div class="title">
           <h3>Teachers</h3>

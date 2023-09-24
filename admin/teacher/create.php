@@ -132,17 +132,6 @@
                         </span>
                     </div>
                     <div class="row">
-                        <?php echo $department_selection; ?>
-                    </div>
-                    <div class="row">
-                        <span>
-                            <label for="profilePic">Profile Pic</label>
-                            <div>
-                                <input type="file" name="profilePic" placeholder="" required>
-                            </div>
-                        </span>
-                    </div>
-                    <div class="row">
                         <span>
                             <label for="gender">Gender</label>
                             <div>
@@ -153,6 +142,20 @@
                             </div>
                         </span>
                         <span>
+                            <label for="birthday">Birthday</label>
+                            <div>
+                                <input type="date" name="birthday" placeholder="">
+                            </div>
+                        </span>
+                        <span>
+                            <label for="birthplace">Birthplace</label>
+                            <div>
+                                <input type="text" name="birthplace" placeholder="">
+                            </div>
+                        </span>
+                    </div>
+                    <div class="row">
+                        <span>
                             <label for="email">Email</label>
                             <div>
                                 <input type="email" name="email" placeholder="">
@@ -162,6 +165,18 @@
                             <label for="contact">Contact No.</label>
                             <div>
                                 <input type="text" name="contact_number" placeholder="">
+                            </div>
+                        </span>
+                        <span>
+                            <label for="religion">Religion</label>
+                            <div>
+                                <input type="text" name="religion" placeholder="">
+                            </div>
+                        </span>
+                        <span>
+                            <label for="citizenship">Citizenship</label>
+                            <div>
+                                <input type="text" name="citizenship" placeholder="">
                             </div>
                         </span>
                     </div>
@@ -175,29 +190,12 @@
                     </div>
                     <div class="row">
                         <span>
-                            <label for="citizenship">Citizenship</label>
+                            <label for="profilePic">Profile Pic</label>
                             <div>
-                                <input type="text" name="citizenship" placeholder="">
+                                <input type="file" name="profilePic" placeholder="" required>
                             </div>
                         </span>
-                        <span>
-                            <label for="birthplace">Birthplace</label>
-                            <div>
-                                <input type="text" name="birthplace" placeholder="">
-                            </div>
-                        </span>
-                        <span>
-                            <label for="birthday">Birthday</label>
-                            <div>
-                                <input type="date" name="birthday" placeholder="">
-                            </div>
-                        </span>
-                        <span>
-                            <label for="religion">Religion</label>
-                            <div>
-                                <input type="text" name="religion" placeholder="">
-                            </div>
-                        </span>
+                        <?php echo $department_selection; ?>
                     </div>
                     <div class="action">
                         <button type="submit" class="clean large" name="create_teacher_btn">Save</button>
