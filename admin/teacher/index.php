@@ -92,7 +92,6 @@
                         <a style='color: black;' href='edit.php?id=$teacher_id'>
                           $fullname
                         </a>
-
                       </td>
                       <td>$subject_load_count</td>
                       <td></td>
