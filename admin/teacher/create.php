@@ -189,13 +189,15 @@
                         </span>
                     </div>
                     <div class="row">
+                        <?php echo $department_selection; ?>
+                    </div>
+                    <div class="row">
                         <span>
                             <label for="profilePic">Profile Pic</label>
                             <div>
                                 <input type="file" name="profilePic" placeholder="" required>
                             </div>
                         </span>
-                        <?php echo $department_selection; ?>
                     </div>
                     <div class="action">
                         <button type="submit" class="clean large" name="create_teacher_btn">Save</button>
