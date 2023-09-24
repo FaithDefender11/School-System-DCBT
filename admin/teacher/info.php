@@ -60,8 +60,8 @@
                                     <i class="bi bi-three-dots-vertical"></i>
                                 </button>
                                 <div class="dropdown-menu">
-                                    <a onclick="<?php echo "removeTeacher($teacher_id) " ?>" class="dropdown-item" style="color: red;">
-                                        <i class="bi bi-file-earmark-x"></i>Delete form</a>
+                                    <button onclick="<?php echo "removeTeacher($teacher_id) " ?>" class="dropdown-item" style="color: red;">
+                                        <i class="bi bi-file-earmark-x"></i>Delete form</button>
                                 </div>
                             </div>
                         </div>
