@@ -1409,23 +1409,23 @@ class Helper {
             <div class='cards'>
                 <div class='card'>
                     <sup>Student No.</sup>
-                    <sup>$student_unique_id</sup>
+                    <sub>$student_unique_id</sub>
                 </div>
                 <div class='card'>
                     <sup>Level</sup>
-                    <sup>$student_level</sup>
+                    <sub>$student_level</sub>
                 </div>
                 <div class='card'>
                     <sup>$type</sup>
-                    <sup>$section_acronym</sup>
+                    <sub>$section_acronym</sub>
                 </div>
                 <div class='card'>
                     <sup>Status</sup>
-                    <sup>$student_status</sup>
+                    <sub>$student_status</sub>
                 </div>
                 <div class='card'>
                     <sup>Added on</sup>
-                    <sup>$formattedDate</sup>
+                    <sub>$formattedDate</sub>
                 </div>
             </div>
         ";
@@ -1444,19 +1444,19 @@ class Helper {
             <div class='cards'>
                 <div class='card'>
                     <sup>Teacher ID.</sup>
-                    <sup>$school_teacher_id</sup>
+                    <sub>$school_teacher_id</sub>
                 </div>
                 <div class='card'>
                     <sup>Department</sup>
-                    <sup>$department_type</sup>
+                    <sub>$department_type</sub>
                 </div>
                 <div class='card'>
                     <sup>Status</sup>
-                    <sup>$status</sup>
+                    <sub>$status</sub>
                 </div>
                 <div class='card'>
                     <sup>Added on</sup>
-                    <sup>$formattedDate</sup>
+                    <sub>$formattedDate</sub>
                 </div>
             </div>
         ";
@@ -1470,30 +1470,28 @@ class Helper {
         return "
             <div class='cards'>
                 <div class='card'>
-                    <p class='text-center mb-0'>Section ID</p>
-                    <p class='text-center'>$section_id</p>
+                    <sup>Section ID</sup>
+                    <sub>$section_id</sub>
                 </div>
                 <div class='card'>
-                    <p class='text-center mb-0'>School Year</p>
-                    <p class='text-center'>$school_year_term</p>
+                    <sup>School Year</sup>
+                    <sub>$school_year_term</sub>
                 </div>
                 <div class='card'>
-                    <p class='text-center mb-0'>Semester</p>
-                    <p class='text-center'>$school_year_period</p>
+                    <sup>Semester</sup>
+                    <sub>$school_year_period</sub>
                 </div>
                 <div class='card'>
-                    <p class='text-center mb-0'>Strand</p>
-                    <p class='text-center'>$acronym</p>
+                    <sup>Strand</sup>
+                    <sub>$acronym</sub>
                 </div>
                 <div class='card'>
-                    <p class='text-center mb-0'>Level</p>
-                    <p class='text-center'>$level</p>
+                    <sup>Level</sup>
+                    <sub>$level</sub>
                 </div>
                 <div class='card'>
-                    <p class='text-center mb-0'>Students</p>
-                    <p class='text-center'>
-                        $totalStudents
-                    </p>
+                    <sup>Students</sup>
+                    <sub>$totalStudents</sub>
                 </div>
             </div>
         ";
@@ -1510,26 +1508,24 @@ class Helper {
         return "
             <div class='cards'>
                 <div class='card'>
-                    <p class='text-center mb-0'>Form ID</p>
-                    <p class='text-center'>$enrollment_form_id</p>
+                    <sup>Form ID</sup>
+                    <sub>$enrollment_form_id</sub>
                 </div>
                 <div class='card'>
-                    <p class='text-center mb-0'>Admission type</p>
-                    <p class='text-center'>$admission_status</p>
+                    <sup>Admission type</sup>
+                    <sub>$admission_status</sub>
                 </div>
                 <div class='card'>
-                    <p class='text-center mb-0'>Student no.</p>
-                    <p class='text-center'>N/A</p>
+                    <sup>Student no.</sup>
+                    <sub>N/A</sub>
                 </div>
                 <div class='card'>
-                    <p class='text-center mb-0'>Status</p>
-                    <p class='text-center'>Evaluation</p>
+                    <sup>Status</sup>
+                    <sub>Evaluation</sub>
                 </div>
                 <div class='card'>
-                    <p class='text-center mb-0'>Submitted on</p>
-                    <p class='text-center'>
-                        $formattedDate
-                    </p>
+                    <sup>Submitted on</sup>
+                    <sub>$formattedDate</sub>
                 </div>
             </div>
         ";
@@ -1598,26 +1594,24 @@ class Helper {
         return "
             <div class='cards'>
                 <div class='card'>
-                    <p class='text-center mb-0'>Form ID</p>
-                    <p class='text-center'>$enrollment_form_id</p>
+                <sup>Form ID</sup>
+                <sub>$enrollment_form_id</sub>
                 </div>
                 <div class='card'>
-                    <p class='text-center mb-0'>Admission type</p>
-                    <p class='text-center'>$updated_type</p>
+                <sup>Admission type</sup>
+                <sub>$updated_type</sub>
                 </div>
                 <div class='card'>
-                    <p class='text-center mb-0'>Student no.</p>
-                    <a style='color: #333' target='_blank' href='$link'class='text-center'>$student_unique_id</a>
+                <sup>Student no.</sup>
+                <sub><a style='color: #333' target='_blank' href='$link'>$student_unique_id</a></sub>
                 </div>
                 <div class='card'>
-                    <p class='text-center mb-0'>Status</p>
-                    <p class='text-center'>Evaluation</p>
+                <sup>Status</sup>
+                <sub>Evaluation</sub>
                 </div>
                 <div class='card'>
-                    <p class='text-center mb-0'>Submitted on</p>
-                    <p class='text-center'>
-                        $formattedDate
-                    </p>
+                <sup>Submitted on</sup>
+                <sub>$formattedDate</sub>
                 </div>
             </div>
         ";
