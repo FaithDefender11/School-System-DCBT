@@ -16,7 +16,7 @@
 
                 <div class="action">
                     <a href="create.php">
-                        <button type="button" class="clean large success">+ Add new</button>
+                        <button type="button" class="default large">+ Add new</button>
                     </a>
                 </div>
 
@@ -61,11 +61,11 @@
                                     <td>$department_name</td>
                                     <td>
                                         <a href='edit.php?id=$department_id'>
-                                            <button class='btn btn-primary'>
+                                            <button class='information'>
                                                 <i class='fas fa-pen'></i>
                                             </button>
                                         </a>
-                                        <button onclick='$removeDepartmentBtn' class='btn btn-danger'>
+                                        <button onclick='$removeDepartmentBtn' class='danger'>
                                                 <i class='fas fa-trash'></i>
                                         </button>
                                     </td>
