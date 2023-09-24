@@ -39,40 +39,35 @@
         }
         
         ?>
-
-            <div class='row offset-md-1'>
-                <div class="col-md-10">
-                    <div class='card'>
-                        <hr>
-                        <a href="index.php">
-                            <button class="btn btn-primary">
-                                <i class="fas fa-arrow-left"></i>
-                            </button>
-                        </a>
-                        <div class='card-header'>
-                            <h4 class='text-center mb-3'>Edit Room</h4>
+        <body>
+            <div class="content">
+                <nav>
+                    <a href="index.php">
+                        <i class="bi bi-arrow-return-left fa-1x"></i>
+                        <h3>Back</h3>
+                    </a>
+                </nav>
+                <main>
+                    <form method="POST" enctype="multipart/form-data">
+                        <div class="row">
+                            <label for="room_name">Room Name</label>
+                            <div>
+                                <input type="text" name="room_name" value="<?php echo $room_name; ?>">
+                            </div>
                         </div>
-                        <div class='card-body'>
-                            <form method='POST' enctype='multipart/form-data'>
-                                <div class='form-group mb-2'>
-                                    <label for=''>Room Name</label>
-                                    <input class='form-control' type='text' value="<?php echo $room_name;?>" placeholder='' name='room_name'>
-                                </div>
-
-                                <div class='form-group mb-2'>
-                                    <label for=''>Room Capacity</label>
-                                    <input class='form-control' type='text' value="<?php echo $room_capacity;?>" placeholder='' name='room_capacity'>
-                                </div>
-
-                                <div class="modal-footer">
-                                    <button type='submit' class='btn btn-success' name="edit_room_btn_<?php echo $room_id;?>">Save</button>
-                                </div>
-                            </form>
+                        <div class="row">
+                            <label for="room_capacity">Room Capacity</label>
+                            <div>
+                                <input type="text" name="room_capacity" value="<?php echo $room_id; ?>">
+                            </div>
                         </div>
-                    </div>
-                </div>
-
+                        <div class="action">
+                            <button type="submit" class="clean large" name="edit_room_btn_<?php echo $room_id; ?>">Save</button>
+                        </div>
+                    </form>
+                </main>
             </div>
+        </body>
         <?php
 
     }

@@ -31,38 +31,39 @@
     }
     
     ?>
-        <div class='col-md-12 row '>
-            <div class='col-md-10 offset-md-1'>
-                <div class='card'>
-                    <hr>
-                    <a href="index.php">
-                        <button class="btn btn-primary">
-                            <i class="fas fa-arrow-left"></i>
-                        </button>
-                    </a>
-                    <div class='card-header'>
-                        <h4 class='text-center mb-3'>Create Room</h4>
+    <body>
+        <div class="content">
+            <nav>
+                <a href="index.php">
+                    <i class="bi bi-arrow-return-left fa-1x"></i>
+                    <h3>Back</h3>
+                </a>
+            </nav>
+            <main>
+                <form method="POST" enctype="multipart/form-data">
+                    <div class="row">
+                        <span>
+                            <label for="room_name">Room Name</label>
+                            <div>
+                                <input type="text" name="room_name" placeholder="">
+                            </div>
+                        </span>
                     </div>
-                    <div class='card-body'>
-                        <form method='POST' enctype='multipart/form-data'>
-                            <div class='form-group mb-2'>
-                                <label for=''>Room Name</label>
-                                <input class='form-control' type='text' placeholder='' name='room_name'>
+                    <div class="row">
+                        <span>
+                            <label for="room_capacity">Room Capacity</label>
+                            <div>
+                                <input type="text" name="room_capacity" placeholder="">
                             </div>
-
-                            <div class='form-group mb-2'>
-                                <label for=''>Room Capacity</label>
-                                <input class='form-control' type='text' placeholder='' name='room_capacity'>
-                            </div>
-
-                            <div class="modal-footer">
-                                <button type='submit' class='btn btn-success' name='create_room_btn'>Save</button>
-                            </div>
-                        </form>
+                        </span>
                     </div>
-                </div>
-            </div>
+                    <div class="action">
+                        <button type="submit" class="clean large" name="create_room_btn">Save</button>
+                    </div>
+                </form>
+            </main>
         </div>
+    </body>
     <?php
 ?>
 
