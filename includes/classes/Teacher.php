@@ -610,9 +610,9 @@
             $query->bindParam(":tertiary", $TERTIARY);
             $query->execute();
 
-            $html = "<div class='form-group'>
+            $html = "<span>
                         <label for=''>Department</label>
-                        <select class='form-control' name='department_id' required>
+                        <select name='department_id' required>
                             <option value=''>Choose Department</option>";
 
             if ($query->rowCount() > 0) {
@@ -629,7 +629,7 @@
                 }
             }
             $html .= "</select>
-                    </div>";
+                    </span>";
 
             return $html;
         }
