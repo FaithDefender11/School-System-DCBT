@@ -34,32 +34,31 @@
         }
         
         ?>
-            <div class='col-md-10 row offset-md-1'>
-                
-                <div class='card'>
-                    <hr>
+        <body>
+            <div class="content">
+                <nav>
                     <a href="index.php">
-                        <button class="btn btn-primary">
-                            <i class="fas fa-arrow-left"></i>
-                        </button>
+                        <i class="bi bi-arrow-return-left fa-1x"></i>
+                        <h3>Back</h3>
                     </a>
-                    <div class='card-header'>
-                        <h4 class='text-center mb-3'>Edit  Department</h4>
-                    </div>
-                    <div class='card-body'>
-                        <form method='POST' enctype='multipart/form-data'>
-                            <div class='form-group mb-2'>
-                                <label for=''>Department Name</label>
-                                <input class='form-control' type='text' placeholder='' value="<?php echo $department_name;?>" name='department_name'>
-                            </div>
-
-                            <div class="modal-footer">
-                                <button type='submit' class='btn btn-success' name='edit_department_btn_<?php echo $department_id;?>'>Save</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+                </nav>
+                <main>
+                    <form method="POST" enctype="multipart/form-data">
+                        <div class="row">
+                            <span>
+                                <label for="dept_name">Department Name</label>
+                                <div>
+                                    <input type="text" name="department_name" placeholder="" value="<?php echo $department_name;?>">
+                                </div>
+                            </span>
+                        </div>
+                        <div class="action">
+                            <button type="submit" class="clean large" name="edit_department_btn_<?php echo $department_id;?>">Save</button>
+                        </div>
+                    </form>
+                </main>
             </div>
+        </body>
         <?php
 
     }
