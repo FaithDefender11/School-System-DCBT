@@ -52,13 +52,13 @@
                         <div class="row">
                             <label for="room_name">Room Name</label>
                             <div>
-                                <input type="text" name="room_name" value="<?php echo $room_name; ?>">
+                                <input type="text" name="room_name" placeholder="" value="<?php echo $room_name; ?>">
                             </div>
                         </div>
                         <div class="row">
                             <label for="room_capacity">Room Capacity</label>
                             <div>
-                                <input type="text" name="room_capacity" value="<?php echo $room_id; ?>">
+                                <input type="text" name="room_capacity" placeholder="" value="<?php echo $room_id; ?>">
                             </div>
                         </div>
                         <div class="action">
