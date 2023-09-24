@@ -48,7 +48,7 @@
                         </span>
                     </div>
                     <div class="action">
-                        <button type="submit" class="clean large" name="create_department_btn"></button>Save</button>
+                        <button type="submit" class="clean large" name="create_department_btn">Save</button>
                     </div>
                 </form>
             </main>
