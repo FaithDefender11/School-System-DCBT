@@ -1594,24 +1594,24 @@ class Helper {
         return "
             <div class='cards'>
                 <div class='card'>
-                <sup>Form ID</sup>
-                <sub>$enrollment_form_id</sub>
+                    <sup>Form ID</sup>
+                    <sub>$enrollment_form_id</sub>
                 </div>
                 <div class='card'>
-                <sup>Admission type</sup>
-                <sub>$updated_type</sub>
+                    <sup>Admission type</sup>
+                    <sub>$updated_type</sub>
                 </div>
                 <div class='card'>
-                <sup>Student no.</sup>
-                <sub><a style='color: #333' target='_blank' href='$link'>$student_unique_id</a></sub>
+                    <sup>Student no.</sup>
+                    <sub><a style='color: #333' target='_blank' href='$link'>$student_unique_id</a></sub>
                 </div>
                 <div class='card'>
-                <sup>Status</sup>
-                <sub>Evaluation</sub>
+                    <sup>Status</sup>
+                    <sub>Evaluation</sub>
                 </div>
                 <div class='card'>
-                <sup>Submitted on</sup>
-                <sub>$formattedDate</sub>
+                    <sup>Submitted on</sup>
+                    <sub>$formattedDate</sub>
                 </div>
             </div>
         ";
