@@ -89,7 +89,7 @@
                     <tr>
                       <td>$teacher_id</td>
                       <td>
-                        <a style:'color: black;' href='edit.php?id=$teacher_id'>
+                        <a style='color: black;' href='edit.php?id=$teacher_id'>
                           $fullname
                         </a>
 
