@@ -43,7 +43,7 @@
                         <span>
                             <label for="dept_name">Department Name</label>
                             <div>
-                                <input type="text" name="department_name" placeholder="">
+                                <input class="form-control" type="text" name="department_name" placeholder="">
                             </div>
                         </span>
                     </div>
