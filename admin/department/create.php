@@ -29,33 +29,31 @@
     }
     
     ?>
-        <div class='col-md-12 row '>
-            <div class='col-md-10 offset-md-1'>
-                <div class='card'>
-                    <hr>
-                    <a href="index.php">
-                        <button class="btn   btn-primary">
-                            <i class="fas fa-arrow-left"></i>
-                        </button>
-                    </a>
-                    <div class='card-header'>
-                        <h4 class='text-center mb-3'>Create Department</h4>
-                    </div>
-                    <div class='card-body'>
-                        <form method='POST' enctype='multipart/form-data'>
-                            <div class='form-group mb-2'>
-                                <label for=''>Department Name</label>
-                                <input class='form-control' type='text' placeholder='' name='department_name'>
+    <body>
+        <div class="content">
+            <nav>
+                <a href="index.php">
+                    <i class="bi bi-arrow-return-left fa-10x"></i>
+                    <h3>Back</h3>
+                </a>
+            </nav>
+            <main>
+                <form method="POST" enctype="multipart/form-data">
+                    <div class="row">
+                        <span>
+                            <label for="department_name">Department Name</label>
+                            <div>
+                                <input type="text" name="department_name" placeholder="">
                             </div>
-
-                            <div class="modal-footer">
-                                <button type='submit' class='btn btn-success' name='create_department_btn'>Save</button>
-                            </div>
-                        </form>
+                        </span>
                     </div>
-                </div>
-            </div>
+                    <div class="action">
+                        <button type="submit" class="clean large" name="create_department_btn"></button>Save</button>
+                    </div>
+                </form>
+            </main>
         </div>
+    </body>
     <?php
 ?>
 
