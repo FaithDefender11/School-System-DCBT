@@ -147,7 +147,7 @@
 <div class="content">
     <nav>
         <a href="index.php">
-            <i class="bi bi-arrow-return-left fa-10x"></i>
+            <i class="bi bi-arrow-return-left fa-1x"></i>
             <h3>Back</h3>
         </a>
     </nav>
