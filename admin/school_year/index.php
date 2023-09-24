@@ -32,7 +32,7 @@
 
 <div class="content">
   <main>
-    <div class="floating" id="shs-sy">
+    <div class="floating">
       <header>
         <div class="title">
           <h3>School Year</h3>
@@ -78,7 +78,7 @@
                       <td style='text-align: right'>$text</td>
                       <td>
                           <a  href='timeframe.php?term=$term'>
-                            <button type='button' class='redirect-btn' id='shs-calendar'>
+                            <button type='button' class='redirect-btn'>
                               <i class='bi bi-arrow-right-circle'></i>
                             </button>
                           </a>
@@ -92,7 +92,7 @@
       </main>
     </div>
 
-    <div class="floating" id="shs-sy">
+    <div class="floating">
       <header>
           <div class="title">
               <h3>School Year</h3>
