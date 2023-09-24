@@ -41,21 +41,18 @@
 
 
         ?>
-
+        <body>
             <div class="content">
                 <nav>
-                    <a href="index.php"><i class="bi bi-arrow-return-left fa-1x"></i>
+                    <a href="index.php">
+                        <i class="bi bi-arrow-return-left fa-1x"></i>
                         <h3>Back</h3>
                     </a>
                 </nav>
                 <div class="content-header">
-                    <span class='text-muted' style='font-size: 15px;'>
-                        <em>Teacher</em> 
-                    </span>
-
                     <header>
                         <div class="title">
-                            <h2><?php echo $teacher->GetTeacherFullName();?></h2>
+                            <h1><?php echo $teacher->GetTeacherFullName(); ?></h1>
                         </div>
                         <div class="action">
                             <div class="dropdown">
@@ -63,30 +60,24 @@
                                     <i class="bi bi-three-dots-vertical"></i>
                                 </button>
                                 <div class="dropdown-menu">
-                                    <button onclick="<?php echo "removeTeacher($teacher_id)" ?>" class="dropdown-item" style="color: red">
-                                        <i class="bi bi-file-earmark-x"></i>
-                                        Delete form
-                                    </button>
+                                    <button onclick="<?php echo "removeTeacher($teacher_id) " ?>" class="dropdown-item" style="color: red;">
+                                        <i class="bi bi-file-earmark-x"></i>Delete form</button>
                                 </div>
                             </div>
                         </div>
                     </header>
-
-                    <?php echo Helper::CreateTeacherTabs($teacher_school_id, $department_name,
-                        $teacher_status, $teacher_creation);?>
+                    <?php echo Helper::CreateTeacherTabs($teacher_school_id, $department_name, $teacher_status, $teacher_creation); ?>
                 </div>
-
-                <?php 
+                <?php
                     if(isset($_GET['details']) && $_GET['details'] == "show"){
                         include_once('./details.php');
                     }
                     if(isset($_GET['subject_load']) && $_GET['subject_load'] == "show"){
                         include_once('./subject_load.php');
                     }
-
                 ?>
             </div>
-
+        </body>
         <?php
 
     }

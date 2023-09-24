@@ -1408,26 +1408,24 @@ class Helper {
         return "
             <div class='cards'>
                 <div class='card'>
-                    <p class='text-center mb-0'>Student No.</p>
-                    <p class='text-center'>$student_unique_id</p>
+                    <sup>Student No.</sup>
+                    <sup>$student_unique_id</sup>
                 </div>
                 <div class='card'>
-                    <p class='text-center mb-0'>Level</p>
-                    <p class='text-center'>$student_level</p>
+                    <sup>Level</sup>
+                    <sup>$student_level</sup>
                 </div>
                 <div class='card'>
-                    <p class='text-center mb-0'>$type</p>
-                    <p class='text-center'>$section_acronym</p>
+                    <sup>$type</sup>
+                    <sup>$section_acronym</sup>
                 </div>
                 <div class='card'>
-                    <p class='text-center mb-0'>Status</p>
-                    <p class='text-center'>$student_status</p>
+                    <sup>Status</sup>
+                    <sup>$student_status</sup>
                 </div>
                 <div class='card'>
-                    <p class='text-center mb-0'>Added on</p>
-                    <p class='text-center'>
-                        $formattedDate
-                    </p>
+                    <sup>Added on</sup>
+                    <sup>$formattedDate</sup>
                 </div>
             </div>
         ";
@@ -1445,22 +1443,20 @@ class Helper {
         return "
             <div class='cards'>
                 <div class='card'>
-                    <p class='text-center mb-0'>Teacher ID.</p>
-                    <p class='text-center'>$school_teacher_id</p>
+                    <sup>Teacher ID.</sup>
+                    <sup>$school_teacher_id</sup>
                 </div>
                 <div class='card'>
-                    <p class='text-center mb-0'>Department</p>
-                    <p class='text-center'>$department_type</p>
+                    <sup>Department</sup>
+                    <sup>$department_type</sup>
                 </div>
                 <div class='card'>
-                    <p class='text-center mb-0'>Status</p>
-                    <p class='text-center'>$status</p>
+                    <sup>Status</sup>
+                    <sup>$status</sup>
                 </div>
                 <div class='card'>
-                    <p class='text-center mb-0'>Added on</p>
-                    <p class='text-center'>
-                        $formattedDate
-                    </p>
+                    <sup>Added on</sup>
+                    <sup>$formattedDate</sup>
                 </div>
             </div>
         ";
