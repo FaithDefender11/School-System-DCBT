@@ -248,15 +248,25 @@
                         </span>
                     </div>
                     <div class="row">
-                        <span>
-                            <label for="status">Status</label>
-                            <div>
-                                <label>Active</label>
-                               <input type="radio" name="status" value="active"<?php echo ($status === 'Active' ? ' checked' : ''); ?>>
+                        <header>
+                            <div class="title">
+                                <h3 style="color: black;">Status</h3>
                             </div>
-                            <div>
-                                <label>Inactive</label>
-                                <input type="radio" name="status" value="non-active"<?php echo ($status === 'Inactive' ? ' checked' : ''); ?>>
+                        </header>
+                    </div>
+                    <div class="row">
+                        <span>
+                            <div class="form-element">
+                                <label for="active">Active</label>
+                                <div>
+                                    <input type="radio" name="active" value="active"<?php echo ($status === 'Active' ? ' checked' : ''); ?>>
+                                </div>
+                            </div>
+                            <div class="form-element">
+                                <label for="inactive">Inactive</label>
+                                <div>
+                                    <input type="radio" name="inactive" value="non-active"<?php echo ($status === 'Inactive' ? ' checked' : ''); ?>>
+                                </div>
                             </div>
                         </span>
                     </div>
