@@ -143,106 +143,68 @@
     $department_selection = $teacher->CreateTeacherDepartmentSelection($department_id);
 
     ?>
-        <div class="col-md-12 row">
-            <div class='col-md-10 offset-md-1'>
-
-                <div class='card'>
-                    <hr>
-                    <a href="index.php">
-                        <button class="btn   btn-primary">
-                            <i class="fas fa-arrow-left"></i>
-                        </button>
-                    </a>
-                    <div class='card-header'>
-                        <h4 class='text-center mb-3'>Edit Teacher</h4>
+    <body>
+        <div class="content">
+            <nav>
+                <a href="index.php">
+                    <i class="bi bi-arrow-return-left fa-1x"></i>
+                    <h3>Back</h3>
+                </a>
+            </nav>
+            <main>
+                <form method="post" enctype="multipart/form-data">
+                    <div class="row">
+                        <span>
+                            <label for="name">Name</label>
+                            <div>
+                                <input type="text" name="firstname" value="<?php echo $firstname; ?>">
+                                <small>First Name</small>
+                            </div>
+                            <div>
+                                <input type="text" name="middle_name" value="<?php echo $middle_name; ?>">
+                                <small>Middle Name</small>
+                            </div>
+                            <div>
+                                <input type="text" name="lastname" value="<?php echo $lastname; ?>">
+                                <small>Last Name</small>
+                            </div>
+                            <div>
+                                <input type="text" name="suffix" value="<?php echo $suffix; ?>">
+                                <small>Suffix</small>
+                            </div>
+                        </span>
                     </div>
-
-                    <div class='card-body'>
-                        <form method='POST' enctype='multipart/form-data'>
-                            <div class='form-group mb-2'>
-                                <label for=''>First Name</label>
-                                <input class='form-control' type='text' value='<?php echo $firstname; ?>' name='firstname'>
-                            </div>
-                            <div class='form-group mb-2'>
-                                <label for=''>Middle Name</label>
-                                <input class='form-control' value='<?php echo $middle_name; ?>' name='middle_name'>
-                            </div>
-                            <div class='form-group mb-2'>
-                                <label for=''>Last Name</label>
-                                <input class='form-control' type='text' value='<?php echo $lastname; ?>' name='lastname'>
-                            </div>
-                            <div class='form-group mb-2'>
-                                <label for=''>Suffix</label>
-                                <input class='form-control' type='text' value='<?php echo $suffix; ?>' name='suffix'>
-                            </div>
-                            <div class='form-group mb-2'>
-                                <?php echo $department_selection; ?>
-                            </div>
-                            <div class='form-group mb-2'>
-                                <label for=''>Profile Pic</label>
-                                <input class='form-control' type='file' name='profilePic'>
+                    <div class="row">
+                        <span>
+                            <label for="profilePic">Profile Pic</label>
+                            <div>
+                               <input type="file" name="profilePic">
                                 <?php if ($profilePic): ?>
-                                    <img style="width: 150px; border-radius: 100%;" 
-                                    src='<?php echo "../../".$profilePic; ?>' alt='Profile Picture' class='preview-image'>
+                                    <img style="width: 150px; border-radius: 100%;"src="<?php echo "../../".$profilePic; ?>" alt="Profile Picture">
                                 <?php else: ?>
-                                    <span class='text-muted'>No profile picture available</span>
-                                <?php endif; ?>
+                                    <small>No profile picture available</small> 
                             </div>
-
-                            <div class='form-group mb-2'>
-                                <label for=''>Gender</label>
-                                <select class='form-control' required name='gender' id='gender'>
-                                    <option value='Male'<?php echo ($gender === 'Male' ? ' selected' : ''); ?>>Male</option>
-                                    <option value='Female'<?php echo ($gender === 'Female' ? ' selected' : ''); ?>>Female</option>
+                        </span>
+                        <span>
+                            <?php echo $department_selection; ?>
+                        </span>
+                    </div>
+                    <div class="row">
+                        <span>
+                            <label for="gender">Gender</label>
+                            <div>
+                                <select name="gender" id="gender" required>
+                                    <option value="Male"<?php echo ($gender === 'Male' ? ' selected' : ''); ?>>Male</option>
+                                    <option value="Female"<?php echo ($gender === 'Female' ? ' selected' : ''); ?>>Female</option>
                                 </select>
                             </div>
-                            <div class='form-group mb-2'>
-                                <label for=''>Email</label>
-                                <input class='form-control' type='text' value='<?php echo $email; ?>' name='email'>
-                            </div>
-                            <div class='form-group mb-2'>
-                                <label for=''>Contact No.</label>
-                                <input class='form-control' type='text' value='<?php echo $contact_number; ?>' name='contact_number'>
-                            </div>
-                            <div class='form-group mb-2'>
-                                <label for=''>Address</label>
-                                <input class='form-control' type='text' value='<?php echo $address; ?>' name='address'>
-                            </div>
-                            <div class='form-group mb-2'>
-                                <label for=''>Citizenship</label>
-                                <input class='form-control' type='text' value='<?php echo $citizenship; ?>' name='citizenship'>
-                            </div>
-                            <div class='form-group mb-2'>
-                                <label for=''>Birth Place</label>
-                                <input class='form-control' type='text' value='<?php echo $birthplace; ?>' name='birthplace'>
-                            </div>
-                            <div class='form-group mb-2'>
-                                <label for=''>Birth Date</label>
-                                <input class='form-control' type='date' value='<?php echo $birthday; ?>' name='birthday'>
-                            </div>
-                            <div class='form-group mb-2'>
-                                <label for=''>Religion</label>
-                                <input class='form-control' type='text' value='<?php echo $religion; ?>' name='religion'>
-                            </div>
-                            <div class='form-group mb-2'>
-                                <label for=''>Status</label>
-                                <div>
-                                    <label>
-                                        <input type='radio' name='status' value='active'<?php echo ($status === 'Active' ? ' checked' : ''); ?>> Active
-                                    </label>
-                                    <label>
-                                        <input type='radio' name='status' value='non-active'<?php echo ($status === 'Inactive' ? ' checked' : ''); ?>> Inactive
-                                    </label>
-                                </div>
-                            </div>
-                            <button type='submit' class='btn btn-success' name='edit_teacher_btn_<?php echo $teacher_id?>'>Save</button>
-                        </form>
+                        </span>
                     </div>
-                </div>
-            </div>
+                </form>
+            </main>
         </div>
-
+    </body>
     <?php
-}
-?>
+    }
+    ?>
 
