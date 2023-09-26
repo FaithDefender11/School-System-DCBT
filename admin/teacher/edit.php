@@ -251,12 +251,12 @@
                         <span>
                             <label for="status">Status</label>
                             <div>
+                                <label>Active</label>
                                <input type="radio" name="status" value="active"<?php echo ($status === 'Active' ? ' checked' : ''); ?>>
-                               <small>Active</small>
                             </div>
                             <div>
+                                <label>Inactive</label>
                                 <input type="radio" name="status" value="non-active"<?php echo ($status === 'Inactive' ? ' checked' : ''); ?>>
-                                <small>Inactive</small>
                             </div>
                         </span>
                     </div>
