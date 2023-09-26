@@ -270,7 +270,7 @@
                             </span>
                         </div>
                         <div class="action">
-                            <button type="submit" class="clean large">Save</button>
+                            <button type="submit" class="clean large" name="edit_teacher_btn_<?php echo $teacher_id?>">Save</button>
                         </div>
                     </form>
                 </main>
