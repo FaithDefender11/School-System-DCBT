@@ -182,7 +182,8 @@
                                 <?php if ($profilePic): ?>
                                     <img style="width: 150px; border-radius: 100%;"src="<?php echo "../../".$profilePic; ?>" alt="Profile Picture">
                                 <?php else: ?>
-                                    <small>No profile picture available</small> 
+                                    <small>No profile picture available</small>
+                                <?php endif; ?>
                             </div>
                         </span>
                         <span>
@@ -199,6 +200,68 @@
                                 </select>
                             </div>
                         </span>
+                        <span>
+                            <label for="email">Email</label>
+                            <div>
+                                <input type="text" name="email" value="<?php echo $email; ?>">
+                            </div>
+                        </span>
+                        <span>
+                            <label for="contact_number">Contact Number</label>
+                            <div>
+                                <input type="text" name="contact_number" value="<?php echo $contact_number; ?>">
+                            </div>
+                        </span>
+                    </div>
+                    <div class="row">
+                        <span>
+                            <label for="address">Address</label>
+                            <div>
+                                <input type="text" name="address" value="<?php echo $address; ?>">
+                            </div>
+                        </span>
+                    </div>
+                    <div class="row">
+                        <span>
+                            <label for="citizenship">Citizenship</label>
+                            <div>
+                                <input type="text" name="citizenship" value="<?php echo $citizenship; ?>">
+                            </div>
+                        </span>
+                        <span>
+                            <label for="birthplace">Birthplace</label>
+                            <div>
+                                <input type="text" name="birthplace" value="<?php echo $birthplace; ?>">
+                            </div>
+                        </span>
+                        <span>
+                            <label for="birthday">Birthday</label>
+                            <div>
+                                <input type="date" name="birthday" value="<?php echo $birthday; ?>">
+                            </div>
+                        </span>
+                        <span>
+                            <label for="religion">Religion</label>
+                            <div>
+                                <input type="text" name="religion" value="<?php echo $religion; ?>">
+                            </div>
+                        </span>
+                    </div>
+                    <div class="row">
+                        <span>
+                            <label for="status">Status</label>
+                            <div>
+                               <input type="radio" name="status" value="active"<?php echo ($status === 'Active' ? ' checked' : ''); ?>>
+                               <small>Active</small>
+                            </div>
+                            <div>
+                                <input type="radio" name="status" value="non-active"<?php echo ($status === 'Inactive' ? ' checked' : ''); ?>>
+                                <small>Inactive</small>
+                            </div>
+                        </span>
+                    </div>
+                    <div class="action">
+                        <button type="submit" class="clean large">Save</button>
                     </div>
                 </form>
             </main>
