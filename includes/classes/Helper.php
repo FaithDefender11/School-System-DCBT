@@ -1301,7 +1301,7 @@ class Helper {
 
         if($isTertiary == true){
             $buttonTop = "
-                <div id='btn' style='left: 129px'></div>
+                <div id='btn' style='left: 119.9px'></div>
             ";
         }
 
