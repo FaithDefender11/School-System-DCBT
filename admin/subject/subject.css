@@ -19,6 +19,7 @@
   font-size: 36px;
   color: #070065;
 }
+
 .dashboard h5 {
   color: #070065;
 }
@@ -38,6 +39,7 @@
   justify-content: space-between;
   margin: 0 100px;
 }
+
 .subject_container i {
   font-size: 18px;
   cursor: pointer;
@@ -55,6 +57,7 @@
   font-family: 'lato', sans-serif;
   box-shadow: 0 3px 4px rgba(0, 0, 0, 0.3);
 }
+
 .form-box {
   display: inline-block;
 }
@@ -77,17 +80,6 @@
   text-align: center;
   color: white;
   font-weight: 800;
-}
-
-#btn {
-  left: 0;
-  top: 0;
-  position: absolute;
-  width: 125px;
-  height: 100%;
-  /* background: #470203; */
-  border-radius: 30px;
-  transition: 0.4s;
 }
 
 /* .btn-active {
