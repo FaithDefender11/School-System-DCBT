@@ -231,6 +231,50 @@
                                 </div>
                             </span>
                         </div>
+                        <div class="row">
+                            <span>
+                                <label for="min_student">Minimum Capacity</label>
+                                <div>
+                                    <input type="number" name="min_student" value="<?php echo $db_min_capacity; ?>" placeholder="Minimum Capacity">
+                                </div>
+                            </span>
+                            <span>
+                                <label for="capacity">Maximum Capacity</label>
+                                <div>
+                                    <input type="number" name="capacity" value="30" placeholder="Room Capacity">
+                                </div>
+                            </span>
+                        </div>
+                        <div class="row">
+                            <span>
+                                <label for="adviser_teacher_id">Adviser Name</label>
+                                <div>
+                                    <select name="adviser_teacher_id" id="adviser_teacher_id">
+                                        <?php
+                                            $query = $con->prepare("SELECT * FROM teacher");
+                                            $query->execute();
+                                            
+                                            echo "<option value='' disabled selected>Choose Teacher</option>";
+
+                                            if ($query->rowCount() > 0) {
+                                                while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+                                                    $selected = "";  
+
+                                                    // Add condition to check if the option should be selected
+                                                    if ($row['teacher_id'] == $selectedTeacherId) {
+                                                        $selected = "selected";
+                                                    }
+                                                    echo "<option value='" . $row['teacher_id'] . "' $selected>" . $row['firstname'] . " " . $row['lastname'] . "</option>";
+                                                }
+                                            }
+                                        ?>
+                                    </select>
+                                </div>
+                            </span>
+                        </div>
+                        <div class="action">
+                            <button type="submit" class="clean large" name="create_section_btn">Save</button>
+                        </div>
                     </form>
                 </main>
             </div>
