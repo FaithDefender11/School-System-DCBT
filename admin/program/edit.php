@@ -128,7 +128,7 @@
                             </span>
                         </div>
                         <div class="action">
-                            <button type="submit" class="clean large" name="program_edit_btn_<?php echo $program_id;?>"></button>
+                            <button type="submit" class="clean large" name="program_edit_btn_<?php echo $program_id;?>">Save</button>
                         </div>
                     </form>
                 </main>
