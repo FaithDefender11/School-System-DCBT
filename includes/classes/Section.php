@@ -660,10 +660,9 @@
             
             if($query->rowCount() > 0){
 
-                $html = "<div class='form-group mb-2'>
-                    <label class='mb-2'>Program</label>
-
-                    <select id='program_id' class='form-control' name='program_id'>";
+                $html = "<label for='program_id'>Program</label>
+                    <div>
+                    <select id='program_id' name='program_id'>";
 
                 $html .= "<option value='Course-Section' disabled selected>Select-Program</option>";
 
@@ -691,9 +690,9 @@
             if($department_name == "Senior High School"){
 
                 $html = "
-                <div class='form-group mb-2'>
-                    <label class='mb-2'>* Course Level</label>
-                    <select required id='course_level' class='form-control' name='course_level'>";
+                    <label for='course_level'>* Course Level</label>
+                    <div>
+                    <select required id='course_level' name='course_level'>";
 
                 // $html .= "<option value='Course-Section' disabled selected>Select-Program</option>";
                 
@@ -709,9 +708,9 @@
             }
             else if($department_name == "Tertiary"){
                 $html = "
-                <div class='form-group mb-2'>
-                    <label class='mb-2'>* Course Level</label>
-                    <select required id='course_level' class='form-control' name='course_level'>
+                    <label for='course_level'>* Course Level</label>
+                    <div>
+                    <select required id='course_level' name='course_level'>
                         <option value='' disabled selected>Choose Level</option>";
 
                 $html .= "
@@ -747,10 +746,10 @@
             
             if($query->rowCount() > 0){
 
-                $html = "<div class='form-group mb-2'>
-                    <label class='mb-2'>$text</label>
-
-                    <select id='course_id' class='form-control' name='course_id'>";
+                $html = "
+                    <label for='course_id'>$text</label>
+                    <div>
+                    <select id='course_id' name='course_id'>";
 
                 $html .= "<option value='' disabled selected>Select-Section</option>";
 
@@ -836,9 +835,10 @@
             
             if($query->rowCount() > 0){
 
-                $html = "<div class='form-group mb-2'>
-                    <label class='mb-2'>* $text</label>
-                    <select id='course_id' class='form-control' name='course_id'>";
+                $html = "
+                    <label for='course_id'>* $text</label>
+                    <div>
+                    <select id='course_id' name='course_id'>";
 
                 $html .= "<option value='' disabled selected>Select Subject-Code</option>";
 

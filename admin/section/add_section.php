@@ -203,139 +203,38 @@
         }
 
         ?>
-            <div class='content'>
-
+        <body>
+            <div class="content">
                 <nav>
-                    <a href="<?php echo $back_url;?>">
+                    <a href="<?php echo $back_url; ?>">
                         <i class="bi bi-arrow-return-left fa-1x"></i>
                         <h3>Back</h3>
                     </a>
                 </nav>
-
-                <div class='col-md-10 offset-md-1'>
-                    <div class='card'>
-                        
-                        <div class='card-header'>
-                            <h4 class='text-center mb-3'><?php echo $program->GetProgramSectionName();?><?php echo $course_level;?> Add Section</h4>
+                <div class="content-header">
+                    <header>
+                        <div class="title">
+                            <h1><?php echo $program->GetProgramSectionName(); ?> <em><?php echo $course_level; ?></em></h1>
                         </div>
-
-                        <div class="card-body">
-                            <form method='POST'>
-
-                                <?php echo $trackDropdown;?>
-
-                                <div class='form-group mb-2'>
-                                    <label class='mb-2'>Section</label>
-
-                                    <input required class='form-control' type='text' 
-                                        value="<?php echo $program->GetProgramSectionName();?><?php echo $course_level;?>-" placeholder='e.g: STEM11-A, ABM11-A' name='program_section'>
-                                </div>
-    
-                                <div class='form-group mb-2'>
-                                    <label class='mb-2'>* Minimum Capacity</label>
-                                    <input required class='form-control' value="<?php echo $db_min_capacity; ?>" type='number' placeholder='Minimum Capacity' name='min_student'>
-                                </div>
-
-                                <div class='form-group mb-2'>
-                                    <label class='mb-2'>* Maximum Capacity</label>
-                                    <input required class='form-control' value="30" type='number' placeholder='Room Capacity' name='capacity'>
-                                </div>
-
-                                <!-- <div class='form-group mb-2'>
-                                    <input class='form-control' type='text' placeholder='Adviser Name' name='adviser_teacher_id'>
-                                </div> -->
-
-                                <div class='form-group mb-2'>
-                                    <label class='mb-2'>Adviser Name</label>
-
-                                    <select class="form-control" name="adviser_teacher_id" id="adviser_teacher_id">
-                                        <?php
-                                            $query = $con->prepare("SELECT * FROM teacher");
-                                            $query->execute();
-                                            
-                                            echo "<option value='' disabled selected>Choose Teacher</option>";
-
-                                            if ($query->rowCount() > 0) {
-                                                while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
-                                                    $selected = "";  
-
-                                                    // Add condition to check if the option should be selected
-                                                    if ($row['teacher_id'] == $selectedTeacherId) {
-                                                        $selected = "selected";
-                                                    }
-                                                    echo "<option value='" . $row['teacher_id'] . "' $selected>" . $row['firstname'] . " " . $row['lastname'] . "</option>";
-                                                }
-                                            }
-                                        ?>
-                                    </select>
-                                </div>
-
-                                <!-- <div class='form-group mb-2'>
-                                    <label class='mb-2'>Room</label>
-                                    <input required class='form-control' type='number' placeholder='Room' name='room'>
-                                </div> -->
-
-                                <!-- <div class='form-group mb-2'>
-
-                                    <label class='mb-2'>* Room for 1st Semester</label>
-                                            
-                                    <select <?php echo $current_school_year_period == "First" ? "" : "disabled='disabled'"; ?> class="form-control" 
-                                            name="first_period_room_id" id="first_period_room_id">
-                                        <?php
-                                            $query = $con->prepare("SELECT * FROM room
-                                                -- WHERE school_year_id=:school_year_id
-                                                ");
-
-                                            // $query->bindParam(":school_year_id", $current_school_year_id);
-                                            $query->execute();
-                                            
-                                            echo "<option value='' disabled selected>Choose Room</option>";
-                                            if ($query->rowCount() > 0) {
-                                                while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
-                                                    $selected = "";  
-                                                    echo "<option value='" . $row['room_id'] . "' $selected>" . $row['room_number'] ."</option>";
-                                                }
-                                            }
-                                        ?>
-                                    </select>
-                                </div>
-
-                                <div class='form-group mb-2'>
-
-                                    <label class='mb-2'>* Room for 2nd Semester</label>
-
-                                    <select <?php echo $current_school_year_period == "Second" ? "" : "disabled='disabled'"; ?> class="form-control" name="second_period_room_id" id="second_period_room_id">
-                                        <?php
-                                            $query = $con->prepare("SELECT * FROM room
-                                                -- WHERE school_year_id=:school_year_id
-                                                ");
-
-                                            // $query->bindParam(":school_year_id", $current_school_year_id);
-                                            $query->execute();
-                                            
-                                            echo "<option value='' disabled selected>Choose Room</option>";
-                                            if ($query->rowCount() > 0) {
-                                                while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
-                                                    $selected = "";  
-                                                    echo "<option value='" . $row['room_id'] . "' $selected>" . $row['room_number'] ."</option>";
-                                                }
-                                            }
-                                        ?>
-                                    </select>
-                                </div> -->
-
-                                <div class="modal-footer">
-                                    <button type='submit' class='btn btn-success' name='create_section_btn'>Save Section</button>
-                                </div>
-
-                            </form>
-                        </div>
-
-                    </div>
+                    </header>
                 </div>
-                
-
+                <main>
+                    <form method="POST">
+                        <div class="row">
+                            <span>
+                                <?php echo $trackDropdown;?>
+                            </span>
+                            <span>
+                                <label for="program_section">Program</label>
+                                <div>
+                                    <input type="text" name="program_section" value="<?php echo $program->GetProgramSectionName();?><?php echo $course_level;?>" placeholder="e.g: STEM11-A, ABM11-A">
+                                </div>
+                            </span>
+                        </div>
+                    </form>
+                </main>
             </div>
+        </body>
         <?php
 
     }

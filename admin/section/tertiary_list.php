@@ -107,7 +107,7 @@ if (isset($_GET['id']) && $_GET['term']) {
 
                     <div class="action">
                         <a href="add_section.php?id=<?php echo $program_id;?>&level=<?php echo $FIRST_YEAR;?>&term=<?php echo $term;?>">
-                            <button type="button" class="clean large success">+ Add new</button>
+                            <button type="button" class="default large">+ Add new</button>
                         </a>
                     </div>
                 </header>
@@ -161,7 +161,7 @@ if (isset($_GET['id']) && $_GET['term']) {
 
                     <div class="action">
                         <a href="add_section.php?id=<?php echo $program_id;?>&level=<?php echo $SECOND_YEAR;?>&term=<?php echo $term;?>">
-                            <button type="button" class="clean large success">+ Add new</button>
+                            <button type="button" class="default large">+ Add new</button>
                         </a>
                     </div>
                 </header>
@@ -215,7 +215,7 @@ if (isset($_GET['id']) && $_GET['term']) {
 
                     <div class="action">
                         <a href="add_section.php?id=<?php echo $program_id;?>&level=<?php echo $THIRD_YEAR;?>&term=<?php echo $term;?>">
-                            <button type="button" class="clean large success">+ Add new</button>
+                            <button type="button" class="default large">+ Add new</button>
                         </a>
                     </div>
                 </header>
@@ -271,7 +271,7 @@ if (isset($_GET['id']) && $_GET['term']) {
 
                     <div class="action">
                         <a href="add_section.php?id=<?php echo $program_id;?>&level=<?php echo $FOURTH_YEAR;?>&term=<?php echo $term;?>">
-                            <button type="button" class="clean large success">+ Add new</button>
+                            <button type="button" class="default large">+ Add new</button>
                         </a>
                     </div>
                 </header>
