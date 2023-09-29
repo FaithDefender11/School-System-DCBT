@@ -196,8 +196,6 @@
                             </a>
                         </nav>
                         <div class="content-header">
-                             <?php echo Helper::RevealStudentTypePending($type); ?>
-
                             <header>
                             <div class="title">
                                 <h1>Enrollment form <em><?php echo Helper::RevealStudentTypePending($type); ?></em></h1>
