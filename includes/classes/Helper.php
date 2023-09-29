@@ -1366,8 +1366,8 @@ class Helper {
         }
 
         return "
-            <h1>Enrollment Form <em>$output</em></h1>
-            <small>$text</small>
+            <h1>Enrollment Form</h1>
+            <small>$output <em>$text</em></small>
         ";
     }
 
