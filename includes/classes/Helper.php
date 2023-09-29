@@ -1356,7 +1356,7 @@ class Helper {
 
         $output = "";
 
-        $text = $doesGraduate == true ? "<span style='font-weight: bold;' class='text-primary'>Graduate</span>" : "";
+        $text = $doesGraduate == true ? "Graduate" : "";
 
         if($type == 'SHS' || $type == 'Senior High School'){
             $output = "Senior High School";
@@ -1366,9 +1366,10 @@ class Helper {
         }
 
         return "
-            <span class='text-muted' style='font-size: 15px;'>
-                <em>$output &nbsp &nbsp $text</em> 
-            </span>
+            <div class='title'>
+                <h1>Enrollment Form <em>$output</em></h1>
+                <small>$text</small>
+            </div>
         ";
     }
 
