@@ -1366,10 +1366,8 @@ class Helper {
         }
 
         return "
-            <div class='title'>
-                <h1>Enrollment Form <em>$output</em></h1>
-                <small>$text</small>
-            </div>
+            <h1>Enrollment Form <em>$output</em></h1>
+            <small>$text</small>
         ";
     }
 
