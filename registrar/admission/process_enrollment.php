@@ -190,9 +190,9 @@
                     <!-- STEP 3 -->
                     <div class="content">
                         <nav>
-                            <a href="SHS-find-form-evaluation.html"
-                            ><i class="bi bi-arrow-return-left fa-1x"></i>
-                            <h3>Back</h3>
+                            <a href="evaluation.php">
+                                <i class="bi bi-arrow-return-left fa-1x"></i>
+                                <h3>Back</h3>
                             </a>
                         </nav>
                         <div class="content-header">
@@ -200,7 +200,7 @@
 
                             <header>
                             <div class="title">
-                                <h1>Enrollment form</h1>
+                                <h1>Enrollment form <em><?php echo Helper::RevealStudentTypePending($type); ?></em></h1>
                             </div>
                             <div class="action">
                                 <div class="dropdown">
