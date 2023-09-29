@@ -101,7 +101,7 @@
         <button
           class="tab"
           id="shsEvaluation"
-          style="background-color: var(--them)"
+          style="background-color: var(--theme); color: white;"
           onclick="window.location.href = 'evaluation.php';"
         >
           Evaluation (<?php echo $unionEnrollmentCount;?>)
@@ -110,7 +110,7 @@
         <button
           class="tab"
           id="shsPayment"
-          style="background-color: var(--mainContentBG); color: white"
+          style="background-color: var(--mainContentBG); color: black"
           onclick="window.location.href = 'waiting_payment.php';"
         >
           Waiting payment (<?php echo $waitingPaymentEnrollmentCount;?>)

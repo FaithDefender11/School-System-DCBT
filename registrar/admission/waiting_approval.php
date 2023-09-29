@@ -87,12 +87,6 @@
 ?>
 
   <div class="content">
-    <nav>
-      <a href="registrar_admission.html"
-        ><i class="bi bi-arrow-return-left fa-1x"></i>
-        <span>Back</span>
-      </a>
-    </nav>
     <div class="content-header">
       <header>
         <div class="title">
@@ -109,7 +103,7 @@
       <button
         class="tab"
         id="shsEvaluation"
-        style="background-color: var(--them)"
+        style="background-color: var(--theme); color: white"
         onclick="window.location.href = 'evaluation.php';"
       >
         Evaluation (<?php echo $unionEnrollmentCount;?>)
@@ -126,7 +120,7 @@
       <button
         class="tab"
         id="shsApproval"
-        style="background-color: var(--mainContentBG); color: white"
+        style="background-color: var(--mainContentBG); color: black"
         onclick="window.location.href = 'waiting_approval.php';"
       >
         Waiting approval (<?php echo $waitingApprovalEnrollmentCount;?>)
