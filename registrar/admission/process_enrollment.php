@@ -196,7 +196,6 @@
                             </a>
                         </nav>
                         <div class="content-header">
-                            <?php echo Helper::RevealStudentTypePending($type); ?>
 
                             <?php echo Helper::ProcessPendingCards($enrollment_form_id,
                                 $date_creation, $admission_status); ?>
