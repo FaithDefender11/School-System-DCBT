@@ -64,7 +64,6 @@
         </a>
     </nav>
     <div class="content-header">
-        <?php echo Helper::RevealStudentTypePending($type); ?>
 
         <?php echo Helper::PendingEnrollmentDetailsTop("step1", $pending_enrollees_id); ?>
 
