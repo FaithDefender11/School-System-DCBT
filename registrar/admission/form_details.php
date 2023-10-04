@@ -420,7 +420,7 @@
         </div>
 
         <div class="action">
-            <button class="default success large" 
+            <button class="default large" 
                 onclick="window.location.href = 'process_enrollment.php?find_section=show&st_id=<?php echo $student_id; ?>&c_id=<?php echo $student_enrollment_course_id;?>'">
                 Proceed
             </button>
