@@ -44,7 +44,9 @@
         </a>
     </nav>
     <div class="content-header">
-        <?php echo Helper::RevealStudentTypePending($type); ?>
+        <header>
+            <?php echo Helper::RevealStudentTypePending($type); ?>
+        </header>
         <?php echo Helper::ProcessStudentCards($student_id, $student_enrollment_form_id,
             $student_unique_id, $enrollment_creation, $student_new_enrollee,
             $enrollment_is_new_enrollee, $enrollment_is_transferee, $student_status_st); ?>

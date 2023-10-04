@@ -1366,23 +1366,21 @@ class Helper {
         }
 
         return "
-            <header>
-                <div class='title'>
-                    <h1>Enrollment Form</h1>
-                    <small>$output <em>$text</em></small>
-                </div>
-                <div class='action'>
-                    <div class='dropdown'>
-                        <button class='icon'>
-                            <i class='bi bi-three-dots-vertical'></i>
-                        </button>
-                        <div class='dropdown-menu'>
-                            <a href='#' class='dropdown-item' style='color: red'
-                            ><i class='bi bi-file-earmark-x'></i>Delete form</a>
-                        </div>
+            <div class='title'>
+                <h1>Enrollment Form</h1>
+                <small>$output <em>$text</em></small>
+            </div>
+            <div class='action'>
+                <div class='dropdown'>
+                    <button class='icon'>
+                        <i class='bi bi-three-dots-vertical'></i>
+                    </button>
+                    <div class='dropdown-menu'>
+                        <a href='#' class='dropdown-item' style='color: red'
+                        ><i class='bi bi-file-earmark-x'></i>Delete form</a>
                     </div>
                 </div>
-            </header>
+            </div>
         ";
     }
 
