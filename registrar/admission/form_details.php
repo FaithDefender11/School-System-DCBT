@@ -45,24 +45,6 @@
     </nav>
     <div class="content-header">
         <?php echo Helper::RevealStudentTypePending($type); ?>
-
-        <header>
-            <div class="title">
-                <h1>Enrollment form</h1>
-            </div>
-            <div class="action">
-                <div class="dropdown">
-                <button class="icon">
-                    <i class="bi bi-three-dots-vertical"></i>
-                </button>
-                <div class="dropdown-menu">
-                    <a href="#" class="dropdown-item" style="color: red"
-                    ><i class="bi bi-file-earmark-x"></i>Delete form</a
-                    >
-                </div>
-                </div>
-            </div>
-        </header>
         <?php echo Helper::ProcessStudentCards($student_id, $student_enrollment_form_id,
             $student_unique_id, $enrollment_creation, $student_new_enrollee,
             $enrollment_is_new_enrollee, $enrollment_is_transferee, $student_status_st); ?>
