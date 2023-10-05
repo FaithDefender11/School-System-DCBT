@@ -90,10 +90,12 @@
 ?>
 
   <div class="content">
-<<<<<<< HEAD
-    
-=======
->>>>>>> ab36c1169e9eadbb944d7c8c6d0b4ebe6a6bd812
+    <nav>
+      <a href="registrar_admission.html"
+        ><i class="bi bi-arrow-return-left fa-1x"></i>
+        <span>Back</span>
+      </a>
+    </nav>
     <div class="content-header">
       <header>
         <div class="title">
@@ -129,12 +131,7 @@
       <button
         class="tab"
         id="shsApproval"
-<<<<<<< HEAD
         style="background-color: var(--mainContentBG); color: white"
-        onclick="window.location.href = 'waiting_approval.php';">
-
-=======
-        style="background-color: var(--mainContentBG); color: black"
         onclick="window.location.href = 'waiting_approval.php';"
       >
 >>>>>>> ab36c1169e9eadbb944d7c8c6d0b4ebe6a6bd812
