@@ -9,6 +9,7 @@
     include_once('../../includes/classes/SubjectPeriodCodeTopic.php');
     include_once('../../includes/classes/SubjectAssignmentSubmission.php');
     include_once('../../includes/classes/SubjectCodeAssignmentTemplate.php');
+    include_once('../../includes/classes/Notification.php');
 
     ?>
         <head>
@@ -30,7 +31,19 @@
 
         $subject_code_assignment_id = $_GET['sc_id'];
 
+        if(isset($_GET['n_id'])
+            && isset($_GET['notification'])
+            && $_GET['notification'] == "true"){
 
+        $notification_id = $_GET['n_id'];
+
+        $notification = new Notification($con);
+
+        $markAsNotified = $notification->StudentNotificationMarkAsViewed($notification_id, $studentLoggedInId);
+        // echo "marked";
+        }
+
+        $notification = new Notification($con);
 
         $subjectAssignmentSubmission = new SubjectAssignmentSubmission($con);
 
@@ -41,16 +54,17 @@
         # This will prompt student if he had accesed the ungiven assignment.
         $prompt = $subjectCodeAssignment->PromptAssignmentIsNotGiven();
  
-        
+        # TIME NOW
+        $now = date("Y-m-d H:i:s");
+
         $subjectCodeAssignmentTemplate = new SubjectCodeAssignmentTemplate($con);
         
         $subject_period_code_topic_id = $subjectCodeAssignment->GetSubjectPeriodCodeTopicId();
         $assignment_type = $subjectCodeAssignment->GetType();
         $assignment_max_attempt = $subjectCodeAssignment->GetAssignmentMaxAttempt();
         $assignment_max_score = $subjectCodeAssignment->GetMaxScore();
-        $assignment_due = $subjectCodeAssignment->GetDueDate();
-        $assignment_due = date("M d", strtotime($assignment_due));
-
+        $assignment_due_db = $subjectCodeAssignment->GetDueDate();
+        $assignment_due = date("M d", strtotime($assignment_due_db));
 
         $assignment_creation = $subjectCodeAssignment->GetDateCreation();
         $assignment_creation = date("M d, h:i a", strtotime($assignment_creation));
@@ -96,8 +110,6 @@
         $get_subject_assignment_submission_date = $get_subject_assignment_submission !== NULL 
             ? $get_subject_assignment_submission['date_creation'] : NULL;
 
-        
- 
 
         $hasSubmittedAssignment = $subjectAssignmentSubmission->CheckStudentHasSubmissionOnAssignment(
             $subject_code_assignment_id, $current_school_year_id,
@@ -122,33 +134,42 @@
 
         // var_dump($submission_data);
 
-        $submission_remarks = NULL;
-        $submission_remark_percentage = NULL;
+        // $submission_remarks = NULL;
+        // $subject_assignment_submission_id = NULL;
+        // $submission_remark_percentage = NULL;
+
+        $submission_remarks = $subject_assignment_submission_id = $submission_remark_percentage = NULL;
 
         if($submission_data != NULL){
+
+            $subject_assignment_submission_id = $submission_data['subject_assignment_submission_id'];
             $submission_remarks = $submission_data['subject_grade'];
             $submission_remark_percentage = $subjectAssignmentSubmission->calculatePercentage($submission_remarks,
                 $assignment_max_score);
+
         }
 
-        // $submission_date = $subjectAssignmentSubmission->GetDateCreation();
+        // var_dump($subject_assignment_submission_id);
 
-        // echo $assignmentAttempts;
-        $issetLogic = "";
+        // $check = $notification->RemovePrevSubmittedNotification(
+        //     $subject_assignment_submission_id, $studentLoggedInId, $subject_code, $current_school_year_id
+        // );
 
-        if ($assignment_type === "upload") {
+        $statusSubmission = $subjectAssignmentSubmission->CheckStatusSubmission(
+            $subject_code_assignment_id,
+            $studentLoggedInId, $current_school_year_id
+        );
 
-            $issetLogic = isset($_FILES['assignment_images']);
-        } elseif ($assignment_type === "text") {
+        // var_dump($statusSubmission);
 
-            $issetLogic = isset($_POST['output_text']);
+        $assignmentEnded = false;
+        if($now >= $assignment_due_db){        
+            $assignmentEnded = true;
         }
 
-        // echo $isset;
         if($_SERVER['REQUEST_METHOD'] === "POST" 
             && isset($_POST['insert_assignment_btn_' . $subject_code_assignment_id . '_user_' . $studentLoggedInId])
-            && $issetLogic
-            ){
+            && $issetLogic){
                 
             $output_text = isset($_POST['output_text']) ?  $_POST['output_text'] : NULL;
 
@@ -177,27 +198,28 @@
                 mkdir('../../assets/images/student_assignment_images');
             }
 
-            $subject_assignment_submission_id = NULL;
+            // $subject_assignment_submission_id = NULL;
         
             $hasInserted = false;
 
             if($output_text != NULL && $assignment_type === "text"){
 
-                $doesCreated = $subjectAssignmentSubmission->CreateSubmissionAssignment(
-                    $subject_code_assignment_id,
-                    $studentLoggedInId, $current_school_year_id);
+                // $doesCreated = $subjectAssignmentSubmission->CreateSubmissionAssignment(
+                //     $subject_code_assignment_id,
+                //     $studentLoggedInId, $current_school_year_id);
 
-                $subject_assignment_submission_id = $con->lastInsertId();
+                // $subject_assignment_submission_id = $con->lastInsertId();
                 
-                if($subject_assignment_submission_id != 0){
-                    $wasInserted = $subjectAssignmentSubmission->SubmitWrittenAssignment(
-                        $subject_assignment_submission_id,
-                        $output_text);
+                // if($subject_assignment_submission_id != 0){
 
-                    if($wasInserted){
-                        $hasInserted = true;
-                    }
-                }
+                //     $wasInserted = $subjectAssignmentSubmission->SubmitWrittenAssignment(
+                //         $subject_assignment_submission_id,
+                //         $output_text);
+
+                //     if($wasInserted){
+                //         $hasInserted = true;
+                //     }
+                // }
             }
 
             if ($assignment_images 
@@ -205,11 +227,26 @@
                 && empty($assignment_images['name'][0] == false)
                 && is_array($assignment_images['tmp_name'])) {
 
+
                 $doesCreated = $subjectAssignmentSubmission->CreateSubmissionAssignment(
                     $subject_code_assignment_id,
-                    $studentLoggedInId, $current_school_year_id);
+                    $studentLoggedInId, $current_school_year_id,
+                    $subject_code,
+                    $subject_assignment_submission_id);
+
 
                 $subject_assignment_submission_id = $con->lastInsertId();
+
+                # Adding notification.
+
+                $notification = new Notification($con);
+
+                if($subject_assignment_submission_id !== NULL){
+
+                    $wasAddedNotif = $notification->StudentSubmitTaskNotification(
+                        $subject_code, $current_school_year_id,
+                        $subject_assignment_submission_id);
+                }
 
                 $uploadDirectory = '../../assets/images/student_assignment_images/';
 
@@ -251,7 +288,7 @@
 
                 
             if($hasInserted && $subject_code_assignment_id != 0){
-                Alert::success("Submission has been delivered successfully.",
+                Alert::successAutoRedirect("Submission has been delivered successfully.",
                     "submission_view.php?id=$subject_code_assignment_id&s_id=$subject_assignment_submission_id");
                 exit();
             }
@@ -266,11 +303,19 @@
         $button_type = "";
         $button_name = "";
 
-        if ($doesAvailabeToAnswer && $doesSubmittedAndGraded == false) {
+        if ($doesAvailabeToAnswer && $doesSubmittedAndGraded == false
+            && $assignmentEnded == false) {
             $buttontext = "Prepare answer";
             $button_type = "submit";
             $button_name = "insert_assignment_btn_$subject_code_assignment_id" . '_user_' . $studentLoggedInId;
+        } 
+        
+        else if ($doesAvailabeToAnswer && $doesSubmittedAndGraded == false
+            && $assignmentEnded == true) {
 
+            $buttontext = "Assignment Ended";
+            $button_name = "";
+            $button_type = "button";
         } 
         else if ($doesNotAvailableToAnswer == false
             && $doesAvailabeToAnswer && $doesSubmittedAndGraded == true) {
@@ -520,15 +565,20 @@
 
                         <div class='card'>
                             <div class='card-header'>
+
                                 <h5 style="margin-bottom: 7px;">Score</h5>
-                                <?php if($submission_remarks !== NULL && $submission_remark_percentage !== NULL) :?>
-                                   <p><?php echo "$submission_remarks / $assignment_max_score ($submission_remark_percentage%)" ?></p>
-                                
-                                <?php else: ?>
+                                <?php if ($submission_remarks !== NULL && $submission_remark_percentage !== NULL) : ?>
+                                    <p><?php echo "$submission_remarks / $assignment_max_score ($submission_remark_percentage%)" ?></p>
+
+                                <?php elseif ($statusSubmission == NULL && $assignmentEnded) : ?>
+                                    <p><i style="color: orangered;" class="fas fa-times"></i> Nothing submitted yet</p>
+
+                                <?php else : ?>
                                     <p>Waiting for Grade</p>
-                                <?php endif;?>
+                                <?php endif; ?>
                             </div>
                         </div>
+
 
                         <hr>
 

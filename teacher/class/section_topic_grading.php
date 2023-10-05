@@ -364,7 +364,14 @@
                                                                         $submission_grade = $subjectAssignmentSubmission->GetSubjectGrade();
 
                                                                         if($submission_grade !== NULL){
-                                                                            $status = $submission_grade;
+                                                                            
+                                                                            // $status = $submission_grade;
+
+                                                                            $status = "
+                                                                                <a style='color: inherit'; href='student_submission_view.php?id=$subject_assignment_submission_id'>
+                                                                                    $submission_grade
+                                                                                </a>
+                                                                            ";
                                                                         }
 
                                                                         if($submission_grade === NULL){

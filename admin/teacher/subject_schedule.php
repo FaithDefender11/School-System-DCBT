@@ -9,12 +9,11 @@
     
  
     <div class="content">
-
       <div class="tabs">
         <?php
             echo "
                 <button class='tab' 
-                    style='background-color: var(--mainContentBG)'
+                    style='background-color: var(--theme); color: white'
                     onclick=\"window.location.href = 'index.php';\">
                     <i class='bi bi-clipboard-check'></i>
                     Teacher List
@@ -24,7 +23,7 @@
             echo "
                 <button class='tab' 
                     id='shsPayment'
-                    style='background-color: var(--them); color: white'
+                    style='background-color: var(--mainContentBG); color: black'
                     onclick=\"window.location.href = 'subject_schedule.php';\">
                     <i class='bi bi-book'></i>
                     Teacher Schedule
@@ -34,7 +33,7 @@
       </div>
 
       <main>
-        <div class="floating" id="shs-teachers">
+        <div class="floating">
           <header>
             <div class="title">
               <h3>Subject Loader</h3>

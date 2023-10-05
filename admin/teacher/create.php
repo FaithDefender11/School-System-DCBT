@@ -100,84 +100,111 @@
     }
     
     ?>
-        <div class='col-md-12 row'>
-            <div class="col-md-10 offset-md-1">
-            <div class='card'>
-                <hr>
+    <body>
+        <div class="content">
+            <nav>
                 <a href="index.php">
-                    <button class="btn   btn-primary">
-                        <i class="fas fa-arrow-left"></i>
-                    </button>
+                    <i class="bi bi-arrow-return-left fa-1x"></i>
+                    <h3>Back</h3>
                 </a>
-                <div class='card-header'>
-                    <h4 class='text-center mb-3'>Create Teacher</h4>
-                </div>
-                <div class='card-body'>
-                    <form method='POST' enctype='multipart/form-data'>
-                        <div class='form-group mb-2'>
-                            <label for=''>First Name</label>
-                            <input class='form-control' type='text' placeholder='' name='firstname'>
-                        </div>
-                        <div class='form-group mb-2'>
-                            <label for=''>Middle Name</label>
-                            <input class='form-control' placeholder='' name='middle_name'>
-                        </div>
-                        <div class='form-group mb-2'>
-                            <label for=''>Last Name</label>
-                            <input class='form-control' type='text' placeholder='' name='lastname'>
-                        </div>
-                        <div class='form-group mb-2'>
-                            <label for=''>Suffix</label>
-                            <input class='form-control' type='text' placeholder='' name='suffix'>
-                        </div>
-                        <div class='form-group mb-2'>
-                            <?php echo $department_selection; ?>
-                        </div>
-                        <div class='form-group mb-2'>
-                            <label for=''>Profile Pic</label>
-                            <input required class='form-control' type='file' placeholder='' name='profilePic'>
-                        </div>
-                        <div class='form-group mb-2'>
-                            <label for=''>Gender</label>
-                            <select class='form-control' required name='gender' id='gender'>
-                                <option value='Male'>Male</option>
-                                <option value='Female'>Female</option>
-                            </select>
-                        </div>
-                        <div class='form-group mb-2'>
-                            <label for=''>Email</label>
-                            <input class='form-control' type='text' placeholder='' name='email'>
-                        </div>
-                        <div class='form-group mb-2'>
-                            <label for=''>Contact No.</label>
-                            <input class='form-control' type='text' placeholder='' name='contact_number'>
-                        </div>
-                        <div class='form-group mb-2'>
-                            <label for=''>Address</label>
-                            <input class='form-control' type='text' placeholder='' name='address'>
-                        </div>
-                        <div class='form-group mb-2'>
-                            <label for=''>Citizenship</label>
-                            <input class='form-control' type='text' placeholder='' name='citizenship'>
-                        </div>
-                        <div class='form-group mb-2'>
-                            <label for=''>Birth Place</label>
-                            <input class='form-control' type='text' placeholder='' name='birthplace'>
-                        </div>
-                        <div class='form-group mb-2'>
-                            <label for=''>Birth Date</label>
-                            <input class='form-control' type='date' placeholder='' name='birthday'>
-                        </div>
-                        <div class='form-group mb-2'>
-                            <label for=''>Religion</label>
-                            <input class='form-control' type='text' placeholder='' name='religion'>
-                        </div>
-                        <button type='submit' class='btn btn-success' name='create_teacher_btn'>Save</button>
-                    </form>
-                </div>
-            </div>
-            </div>
-
+            </nav>
+            <main>
+                <form method="POST" enctype="multipart/form-data">
+                    <div class="row">
+                        <span>
+                            <label for="name">Name</label>
+                            <div>
+                                <input type="text" name="firstname" placeholder="">
+                                <small>First Name</small>
+                            </div>
+                            <div>
+                                <input type="text" name="middle_name" placeholder="">
+                                <small>Middle Name</small>
+                            </div>
+                            <div>
+                                <input type="text" name="lastname" placeholder="">
+                                <small>Last Name</small>
+                            </div>
+                            <div>
+                                <input type="text" name="suffix" placeholder="">
+                                <small>Suffix</small>
+                            </div>
+                        </span>
+                    </div>
+                    <div class="row">
+                        <span>
+                            <label for="gender">Gender</label>
+                            <div>
+                                <select name="gender" id="gender">
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                </select>
+                            </div>
+                        </span>
+                        <span>
+                            <label for="birthday">Birthday</label>
+                            <div>
+                                <input type="date" name="birthday" placeholder="">
+                            </div>
+                        </span>
+                        <span>
+                            <label for="birthplace">Birthplace</label>
+                            <div>
+                                <input type="text" name="birthplace" placeholder="">
+                            </div>
+                        </span>
+                    </div>
+                    <div class="row">
+                        <span>
+                            <label for="email">Email</label>
+                            <div>
+                                <input type="email" name="email" placeholder="">
+                            </div>
+                        </span>
+                        <span>
+                            <label for="contact">Contact No.</label>
+                            <div>
+                                <input type="text" name="contact_number" placeholder="">
+                            </div>
+                        </span>
+                        <span>
+                            <label for="religion">Religion</label>
+                            <div>
+                                <input type="text" name="religion" placeholder="">
+                            </div>
+                        </span>
+                        <span>
+                            <label for="citizenship">Citizenship</label>
+                            <div>
+                                <input type="text" name="citizenship" placeholder="">
+                            </div>
+                        </span>
+                    </div>
+                    <div class="row">
+                        <span>
+                            <label for="address">Address</label>
+                            <div>
+                                <input type="text" name="address" placeholder="">
+                            </div>
+                        </span>
+                    </div>
+                    <div class="row">
+                        <?php echo $department_selection; ?>
+                    </div>
+                    <div class="row">
+                        <span>
+                            <label for="profilePic">Profile Pic</label>
+                            <div>
+                                <input type="file" name="profilePic" placeholder="" required>
+                            </div>
+                        </span>
+                    </div>
+                    <div class="action">
+                        <button type="submit" class="clean large" name="create_teacher_btn">Save</button>
+                    </div>
+                </form>
+            </main>
         </div>
+    </body>
     <?php
 ?>

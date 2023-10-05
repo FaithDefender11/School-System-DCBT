@@ -214,6 +214,28 @@ class SubjectPeriodCodeTopic{
     }
 
 
+    public function GetTeachingCodeTeacherId(
+        $subject_code, $school_year_id) {
+
+        $sql = $this->con->prepare("SELECT teacher_id
+            FROM subject_period_code_topic
+            
+            WHERE subject_code=:subject_code
+            AND school_year_id=:school_year_id
+            ");
+                
+        $sql->bindValue(":subject_code", $subject_code);
+        $sql->bindValue(":school_year_id", $school_year_id);
+        $sql->execute();
+
+        if($sql->rowCount() > 0){
+            return $sql->fetchColumn();
+        }
+
+        return NULL;
+    }
+
+
 
     public function GetAllsubjectPeriodCodeTopics(
         $subject_code, $school_year_id) {
@@ -269,5 +291,23 @@ class SubjectPeriodCodeTopic{
 
         return $check->rowCount() > 0;
     }
+
+
      
+    public function GetSubjectCodeTopicIdByAssignmentId(
+        $subject_code_assignment_id){
+
+        $check = $this->con->prepare("SELECT subject_period_code_topic_id FROM subject_code_assignment
+            WHERE subject_code_assignment_id=:subject_code_assignment_id
+        ");
+
+        $check->bindValue(":subject_code_assignment_id", $subject_code_assignment_id);
+        $check->execute();
+
+        if($check->rowCount() > 0){
+            return $check->fetchColumn();
+        }
+        
+        return NULL;
+    }
 }

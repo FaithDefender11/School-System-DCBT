@@ -20,9 +20,9 @@
         // string that specifies the details of the database connection, including the database driver
         $data_source = "mysql:host=" . DB_HOST . ";port=" . DB_PORT . ";dbname=" . DB_DATABASE;
 
-        $con = new PDO($data_source, DB_USERNAME, DB_PASSWORD);
+        // $con = new PDO($data_source, DB_USERNAME, DB_PASSWORD);
 
-        // $con = new PDO('mysql:host=localhost;port=3307;dbname=dcbt', 'root', '');
+        $con = new PDO('mysql:host=localhost;port=3307;dbname=dcbt', 'root', '');
 
         $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 

@@ -171,11 +171,15 @@
                                                     
                                                     # Assignment Template
                                                     $subject_code_assignment_template_id = isset($row['subject_code_assignment_template_id']) ? $row['subject_code_assignment_template_id'] : NULL;
+                                                    
+                                                    $template_subject_code_assignment_id = isset($row['template_subject_code_assignment_id']) ? $row['template_subject_code_assignment_id'] : NULL;
+                                                    
                                                     $assignment_name = isset($row['assignment_name']) ? $row['assignment_name'] : '';
                                                     $description = isset($row['description']) ? $row['description'] : '';
                                                     $max_score = isset($row['max_score']) ? $row['max_score'] : '';
                                                     $type = isset($row['type']) ? ucwords($row['type']) : '';
 
+                                                    var_dump($template_subject_code_assignment_id);
                                                     // 
 
                                                     # Non Template Handout
@@ -320,8 +324,12 @@
                                                         ";
 
 
+                                                        $edit_given_template_assignment_url = "edit.php?id=$template_subject_code_assignment_id";
+                                                        
                                                         $output_section = "
-                                                            $assignment_name
+                                                            <a style='color: inherit;' href='$edit_given_template_assignment_url'>
+                                                                $assignment_name
+                                                            </a>
                                                         ";
                                                     }
 
@@ -973,7 +981,6 @@
                 }
         });
     }
-    
 
     // MADE Assignment
     function giveMadeAssignment(subject_code_assignment_id,

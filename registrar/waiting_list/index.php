@@ -49,83 +49,83 @@
                     <tbody>
                         <?php
 
-                            $query = $con->prepare("SELECT 
+                            // $query = $con->prepare("SELECT 
 
-                                t1.*,
-                                t2.admission_status,
-                                t2.firstname,
-                                t2.lastname
+                            //     t1.*,
+                            //     t2.admission_status,
+                            //     t2.firstname,
+                            //     t2.lastname
 
-                                FROM waiting_list as t1
+                            //     FROM waiting_list as t1
 
-                                LEFT JOIN student as t2 on t2.student_id = t1.student_id
+                            //     LEFT JOIN student as t2 on t2.student_id = t1.student_id
 
-                                ");
+                            //     ");
 
-                            $query->execute();
+                            // $query->execute();
 
-                            if($query->rowCount() > 0){
+                            // if($query->rowCount() > 0){
 
-                                while($row = $query->fetch(PDO::FETCH_ASSOC)){
+                            //     while($row = $query->fetch(PDO::FETCH_ASSOC)){
 
-                                    $firstname = ucfirst($row['firstname']);
-                                    $lastname = ucfirst($row['lastname']);
+                            //         $firstname = ucfirst($row['firstname']);
+                            //         $lastname = ucfirst($row['lastname']);
 
-                                    $student_id = $row['student_id'];
+                            //         $student_id = $row['student_id'];
 
-                                    $course_level = $row['course_level'];
-                                    $registrar_evaluated = $row['registrar_evaluated'];
-                                    $cashier_evaluated = $row['cashier_evaluated'];
+                            //         $course_level = $row['course_level'];
+                            //         $registrar_evaluated = $row['registrar_evaluated'];
+                            //         $cashier_evaluated = $row['cashier_evaluated'];
 
-                                    $status = $row['status'];
-                                    $program_id = $row['program_id'];
-                                    $admission_status = $row['admission_status'];
+                            //         $status = $row['status'];
+                            //         $program_id = $row['program_id'];
+                            //         $admission_status = $row['admission_status'];
 
-                                    $program = new Program($con, $program_id);
+                            //         $program = new Program($con, $program_id);
 
-                                    $program_name = $program->GetProgramName();
+                            //         $program_name = $program->GetProgramName();
 
 
-                                    # Check if Tentative/Enrolled that has given form
-                                    $url = directoryPath . "../admission/adjustment.php?id=$student_id&enrolled_subject=show";
+                            //         # Check if Tentative/Enrolled that has given form
+                            //         $url = directoryPath . "../admission/adjustment.php?id=$student_id&enrolled_subject=show";
                                     
-                                    $has_form_enrollment_url = "
-                                        <button
-                                            onclick='window.location.href= \"$url\"'
-                                            class='btn btn-primary'>
-                                            <i class='fas fa-search'></i>
-                                        </button>
-                                    ";
+                            //         $has_form_enrollment_url = "
+                            //             <button
+                            //                 onclick='window.location.href= \"$url\"'
+                            //                 class='btn btn-primary'>
+                            //                 <i class='fas fa-search'></i>
+                            //             </button>
+                            //         ";
 
-                                    $registrar_evaluted_output = "~";
-                                    $cashier_evaluted_output = "~";
+                            //         $registrar_evaluted_output = "~";
+                            //         $cashier_evaluted_output = "~";
 
-                                    if($registrar_evaluated == "yes"){
-                                        $registrar_evaluted_output = "
-                                            <i style='color: green;' class='fas fa-check'></i>
-                                        ";
-                                    }
+                            //         if($registrar_evaluated == "yes"){
+                            //             $registrar_evaluted_output = "
+                            //                 <i style='color: green;' class='fas fa-check'></i>
+                            //             ";
+                            //         }
 
-                                    if($cashier_evaluated == "yes"){
-                                        $cashier_evaluted_output = "
-                                            <i style='color: green;' class='fas fa-check'></i>
-                                        ";
-                                    }
+                            //         if($cashier_evaluated == "yes"){
+                            //             $cashier_evaluted_output = "
+                            //                 <i style='color: green;' class='fas fa-check'></i>
+                            //             ";
+                            //         }
                                      
-                                    echo "
-                                        <tr>
-                                            <td>$program_name</td>
-                                            <td>$firstname $lastname</td>
-                                            <td>$course_level</td>
-                                            <td>$admission_status</td>
-                                            <td>$registrar_evaluted_output</td>
-                                            <td>$cashier_evaluted_output</td>
-                                            <td>$status</td>
-                                            <td>$has_form_enrollment_url</td>
-                                        </tr>
-                                    ";
-                                }
-                            }
+                            //         echo "
+                            //             <tr>
+                            //                 <td>$program_name</td>
+                            //                 <td>$firstname $lastname</td>
+                            //                 <td>$course_level</td>
+                            //                 <td>$admission_status</td>
+                            //                 <td>$registrar_evaluted_output</td>
+                            //                 <td>$cashier_evaluted_output</td>
+                            //                 <td>$status</td>
+                            //                 <td>$has_form_enrollment_url</td>
+                            //             </tr>
+                            //         ";
+                            //     }
+                            // }
 
                         ?>
                     </tbody>

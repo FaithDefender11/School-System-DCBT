@@ -143,10 +143,12 @@ class SubjectAssignmentSubmission{
 
         $query = $this->con->prepare("SELECT * FROM subject_assignment_submission
 
-                WHERE subject_code_assignment_id=:subject_code_assignment_id
-                AND student_id=:student_id
-                 
-                ");
+            WHERE subject_code_assignment_id=:subject_code_assignment_id
+            AND student_id=:student_id
+                
+            ORDER BY subject_assignment_submission_id DESC
+
+            ");
 
         $query->bindValue(":subject_code_assignment_id", $subject_code_assignment_id);
         $query->bindValue(":student_id", $student_id);
@@ -158,6 +160,32 @@ class SubjectAssignmentSubmission{
         }
 
         return [];
+    }
+
+    public function CheckSubmissionIsLatest($subject_code_assignment_id,
+        $school_year_id, $student_id) {
+
+        $latestSubmission = $this->GetSubmissionList($subject_code_assignment_id,
+            $school_year_id, $student_id);
+
+        // $latestSubmission = $latestSubmission[0];
+
+        // $latestSubmission = [];
+        if(count($latestSubmission) > 0){
+
+            $latestSubmission = $latestSubmission[0];
+
+            $latestSubmissionId = $latestSubmission['subject_assignment_submission_id'];
+            
+            if($latestSubmissionId !== NULL){
+                return $latestSubmissionId;
+            }
+        }
+
+        
+        // var_dump($latestSubmissionId);
+
+        return 0;
     }
 
     public function CheckStudentHasSubmissionOnAssignment(
@@ -278,12 +306,14 @@ class SubjectAssignmentSubmission{
 
         $query = $this->con->prepare("SELECT * 
 
-                FROM subject_assignment_submission
-                WHERE subject_code_assignment_id=:subject_code_assignment_id
-                AND school_year_id=:school_year_id
-                AND student_id=:student_id
+            FROM subject_assignment_submission
+            WHERE subject_code_assignment_id=:subject_code_assignment_id
+            AND school_year_id=:school_year_id
+            AND student_id=:student_id
 
-                ");
+            ORDER BY subject_assignment_submission_id DESC
+                
+        ");
 
         $query->bindValue(":subject_code_assignment_id", $subject_code_assignment_id);
         $query->bindValue(":school_year_id", $school_year_id);
@@ -393,9 +423,30 @@ class SubjectAssignmentSubmission{
     
 
     public function CreateSubmissionAssignment($subject_code_assignment_id,
-        $student_id, $school_year_id) {
+        $student_id, $school_year_id, $subject_code,
+        $subject_assignment_submission_id) {
 
         // The record exists, so update it
+
+        // echo "subject_assignment_submission_id: $subject_assignment_submission_id";
+        // return;
+        if($subject_assignment_submission_id !== NULL){
+
+
+            $notification = new Notification($this->con);
+
+            // $check  = $notification->CheckStudentHasSubmittedNotifiedOnAssignment(
+            //     $subject_assignment_submission_id, $student_id,
+            //         $subject_code, $school_year_id);
+        
+            // var_dump($check);
+            //     return;
+
+            $remove = $notification->RemovePrevSubmittedNotification(
+                $subject_assignment_submission_id, $student_id,
+                $subject_code, $school_year_id);
+            
+        }
 
         $date_creation = date("Y-m-d H:i:s");
 
@@ -410,9 +461,12 @@ class SubjectAssignmentSubmission{
         $update->execute();
 
         if($update->rowCount() > 0){
+            
             return true;
         }
+
         return false;
+
     }
 
     public function GradingUnSubmitAssignment($subject_code_assignment_id,
@@ -496,6 +550,8 @@ class SubjectAssignmentSubmission{
             WHERE t1.subject_code_assignment_id=:subject_code_assignment_id
             AND t1.student_id=:student_id
             AND t1.school_year_id=:school_year_id
+
+            ORDER BY subject_assignment_submission_id DESC
             LIMIT 1
 
             -- ORDER BY
@@ -516,6 +572,35 @@ class SubjectAssignmentSubmission{
         }
 
         return NULL;
+    }
+
+    public function DoesAssignmentHasEnded(
+        $subject_code_assignment_id,
+        $current_school_year_id){
+
+        $now = date("Y-m-d H:i:s");
+
+        $checkAssignment = $this->con->prepare("SELECT t1.*
+                                         
+            FROM subject_code_assignment as t1
+            INNER JOIN subject_period_code_topic as t2 ON t2.subject_period_code_topic_id = t1.subject_period_code_topic_id
+            AND t2.school_year_id=:school_year_id
+ 
+            WHERE t1.subject_code_assignment_id=:subject_code_assignment_id
+            AND t1.due_date >= :now_date
+
+            ORDER BY subject_code_assignment_id DESC
+            LIMIT 1
+        ");
+
+        $checkAssignment->bindParam(":school_year_id", $current_school_year_id);
+        $checkAssignment->bindParam(":subject_code_assignment_id", $subject_code_assignment_id);
+        $checkAssignment->bindParam(":now_date", $now);
+        $checkAssignment->execute();
+
+        // $subject_code_assignment_id
+
+        return $checkAssignment->rowCount() > 0;
     }
 
     public function GetSubmissionCountOnAssignment(

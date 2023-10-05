@@ -215,9 +215,11 @@
 
                                                 if (in_array(strtolower($extension), ['jpg', 'jpeg', 'png'])) {
                                                     ?>
+
                                                         <span onclick="uploadImageRemoval(<?php echo $photo['subject_code_assignment_template_list_id'] ?>, <?php echo $photo['subject_code_assignment_template_id'] ?>)" style="cursor: pointer;">
-                                                                <i style="color: orange;" class="fas fa-times"></i>
+                                                            <i style="color: orange;" class="fas fa-times"></i>
                                                         </span>
+
                                                         <!-- <a title="View File" href='<?php echo "../../".  $photo['image'] ?>' target='__blank' rel='noopener noreferrer'>
                                                             <img style="margin-left:8px; width: 120px;" 
                                                                 src='<?php echo "../../".$photo['image']; ?>' alt='Given Photo' class='preview-image'>
@@ -228,7 +230,7 @@
                                                         </a>
                                                         <br>
                                                     <?php
-                                                } elseif (in_array(strtolower($extension), ['pdf', 'docx', 'doc'])) {
+                                                } else if (in_array(strtolower($extension), ['pdf', 'docx', 'doc'])) {
                                                     ?>
                                                         <span onclick="uploadImageRemoval(<?php echo $photo['subject_code_assignment_template_list_id'] ?>, <?php echo $photo['subject_code_assignment_template_id'] ?>)" style="cursor: pointer;">
                                                             <i style="color: orange;" class="fas fa-times"></i>
@@ -242,6 +244,7 @@
                                             ?>
                                         <?php endforeach; ?>
                                     </div>
+
                                 <?php endif; ?>
 
 

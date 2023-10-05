@@ -154,24 +154,30 @@ function PreferredBtn(pending_enrollees_id) {
   var selected_program_id = $('#program_id').val();
   var selected_choose_level = $('#choose_level').val();
 
+  // console.log(selected_choose_level);
+  // if (selected_choose_level === null)
+  // {
+  //   console.log('nullw')
+  // } return;
+
   var selected_admission_type = $('input[name="admission_type"]:checked').val();
 
-  if (
-    selected_admission_type == 'New' &&
-    selected_department_type == 'Senior High School'
-  ) {
-    // console.log('qwe')
-    selected_choose_level = 11;
-    selected_choose_level = parseInt(selected_choose_level);
-  } else if (
-    selected_admission_type == 'New' &&
-    selected_department_type == 'Tertiary'
-  ) {
-    selected_choose_level = $('input[name="course_level"]:checked').val();
+  // if (
+  //   selected_admission_type == 'New' &&
+  //   selected_department_type == 'Senior High School'
+  // ) {
+  //   // console.log('qwe')
+  //   selected_choose_level = 11;
+  //   selected_choose_level = parseInt(selected_choose_level);
+  // } else if (
+  //   selected_admission_type == 'New' &&
+  //   selected_department_type == 'Tertiary'
+  // ) {
+  //   selected_choose_level = $('input[name="course_level"]:checked').val();
 
-    selected_choose_level = 1;
-    selected_choose_level = parseInt(selected_choose_level);
-  }
+  //   selected_choose_level = 1;
+  //   selected_choose_level = parseInt(selected_choose_level);
+  // }
 
   // console.log(selected_admission_type);
   // console.log(selected_department_type);
@@ -180,17 +186,30 @@ function PreferredBtn(pending_enrollees_id) {
 
   var hasError = false;
 
-  if (selected_choose_level == undefined) {
-    hasError = true;
-    alert('Please input the Course Level field.');
-    return;
-  }
+  // if (selected_choose_level == undefined) {
+  //   hasError = true;
+  //   alert('Please input the Course Level field.');
+  //   return;
+  // }
 
   if (selected_program_id == null || selected_program_id == '') {
     hasError = true;
     alert('Please input the Course/Strand field.');
     return;
   }
+
+  if (
+    selected_choose_level === null ||
+    selected_choose_level === 0 ||
+    selected_choose_level === undefined
+  ) {
+    hasError = true;
+    // console.log('null');
+
+    alert('Please choose academic level.');
+    return;
+  }
+
   // console.log(selected_admission_type);
 
   if (hasError == false) {
@@ -296,7 +315,7 @@ function PreferredBtn(pending_enrollees_id) {
         //   var url = 'process.php?new_student=true&step=enrollee_information';
         //   window.location.href = url;
         // }
-        // 
+        //
       },
     });
   }

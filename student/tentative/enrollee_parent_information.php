@@ -490,7 +490,7 @@
         }
         
         $defaultRedirect = true;
-        # If error above has arised, the add/updating function will not work.
+        # If error above had arised, the add/updating function will not work.
         if(empty(Helper::$errorArray) && $guardianError == false){
 
             if($parent->CheckEnrolleeHasParent($pending_enrollees_id)){
@@ -530,7 +530,9 @@
                 }else{
                 }
 
-            }else if($parent->CheckEnrolleeHasParent($pending_enrollees_id) == false){
+            }
+            else if($parent->CheckEnrolleeHasParent($pending_enrollees_id) 
+                == false){
                 
                 $mother_suffix = "";
                 $mother_email = "";
@@ -1015,7 +1017,8 @@
                         <button style="margin-right: 9px;"
                             type="button"
                             class="default large"
-                            onclick="window.location.href = 'process.php?new_student=true&step=enrollee_information';"
+                            onclick="window.location.href = 'process.php?new_student=true&step=enrollee_school_history';"
+
                             >Return
                         </button>
                         <button

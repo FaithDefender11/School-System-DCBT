@@ -109,7 +109,16 @@
                                             WHERE t4.student_id=:student_id
                                             AND t4.enrollment_id=:enrollment_id
 
-                                            ORDER BY t5.subject_title DESC
+                                            ORDER BY t5.subject_title ASC,
+
+                                            CASE t8.schedule_day
+                                                WHEN 'M' THEN 1
+                                                WHEN 'T' THEN 2
+                                                WHEN 'W' THEN 3
+                                                WHEN 'TH' THEN 4
+                                                WHEN 'F' THEN 5
+                                                ELSE 6  
+                                            END
 
 
                                         ");

@@ -360,7 +360,7 @@ $enrollment = new Enrollment($con, null);
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
     $submission_creation = $row['submission_creation'];
-    $submission_creation = date("F d, Y h:i a", strtotime($submission_creation));
+    $submission_creation = date("M d, Y h:i a", strtotime($submission_creation));
 
     $student_status_pending = $row['student_status_pending'];
     $pending_enrollees_id = $row['pending_enrollees_id'];

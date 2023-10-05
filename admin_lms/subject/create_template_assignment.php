@@ -102,7 +102,6 @@
 
                             // Process $imagePath as needed (e.g., store in a database).
                         } else {
-
                             // Handle the case where file upload failed.
                             // echo "Error uploading file: " . $originalFilename . "<br>";
                         }

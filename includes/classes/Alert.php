@@ -38,6 +38,7 @@ class Alert{
     }
 
 
+
     public static function error($text, $redirectUrl) {
         echo "<script>
             Swal.fire({

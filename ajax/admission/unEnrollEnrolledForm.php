@@ -74,30 +74,32 @@
 
             if($new_enrolled_enrollment_remove_success == true){
 
-                $studentHasRoom = $room->CheckStudentSectionHasRoom(
-                    $student_enrollment_course_id, $school_year_period, $school_year_term);
-                
-                if($studentHasRoom == true){
-                    #
-                    # Check updated room if unreached the minimum threshold
-                    # if so, reset.
+                # We dont need this because section is now not relied on its section room
+                # Room relied on its section subject(s) not the section itself.
 
-                    $students_enrolled = $enrollment->GetStudentEnrolledInSection(
-                        $student_enrollment_course_id, $school_year_id,
-                        $school_year_term, $school_year_period);
+                // $studentHasRoom = $room->CheckStudentSectionHasRoom(
+                //     $student_enrollment_course_id, $school_year_period, $school_year_term);
+                
+                // if($studentHasRoom == true){
+                //     #
+                //     # Check updated room if unreached the minimum threshold
+                //     # if so, reset.
+
+                //     $students_enrolled = $enrollment->GetStudentEnrolledInSection(
+                //         $student_enrollment_course_id, $school_year_id,
+                //         $school_year_term, $school_year_period);
  
-                    $checkSectionIsBelowMinStudent = $section->CheckSectionIsBelowMinStudent($students_enrolled,
-                        $student_enrollment_course_id, $school_year_term);
+                //     $checkSectionIsBelowMinStudent = $section->CheckSectionIsBelowMinStudent($students_enrolled,
+                //         $student_enrollment_course_id, $school_year_term);
                 
-                    if($checkSectionIsBelowMinStudent == true){
+                //     if($checkSectionIsBelowMinStudent == true){
 
-                        // echo "checkSectionIsBelowMinStudent";
-
-                        $resetRoomSuccess = $room->DeleteSectionRoomUnreachedMinStudent(
-                            $school_year_period,
-                            $student_enrollment_course_id);
-                    }
-                }
+                //         // echo "checkSectionIsBelowMinStudent";
+                //         $resetRoomSuccess = $room->DeleteSectionRoomUnreachedMinStudent(
+                //             $school_year_period,
+                //             $student_enrollment_course_id);
+                //     }
+                // }
 
                 // # Remove Student Table.
                 $removingNewEnrolledStudent = $student->RemovingNewEnrolledStudent($student_id);
@@ -106,12 +108,14 @@
                 // if(false){
                 if($removingNewEnrolledStudent){
 
+                    # Remove Parent Table.
+                    
+                    $parent = new PendingParent($con);
+                    $parentRemoved = $parent->RemovingParentOfNewStudent($student_id);
+                    $schoolHistoryRemoved = $pending->RemovingSchoolHistoryDataOfNewStudent($student_id);
+
                     echo "success_update";
                     return;
-
-                    # Remove Parent Table.
-                    $parent = new PendingParent($con);
-                    // $parentRemoved = $parent->RemovingParentOfNewStudent($student_id);
 
                     // if($get_student_new_pending_id == NULL){
                     //     # Pending Mark as REJECTED.

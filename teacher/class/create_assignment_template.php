@@ -8,6 +8,7 @@
     include_once('../../includes/classes/SubjectCodeAssignment.php');
     include_once('../../includes/classes/SubjectPeriodCodeTopicTemplate.php');
     include_once('../../includes/classes/SubjectCodeAssignmentTemplate.php');
+    include_once('../../includes/classes/Notification.php');
     
 
     if(
@@ -30,6 +31,7 @@
 
 
         $school_year = new SchoolYear($con);
+        $notification = new Notification($con);
  
         $school_year_obj = $school_year->GetActiveSchoolYearAndSemester();
 
@@ -134,6 +136,18 @@
                     $allow_late_submission, $due_date, $type, $max_attempt);
  
                 if($successCreate){
+
+                    $subject_code_assignment_id = $con->lastInsertId();
+
+                    // $subjectPeriodCodeTopic = new SubjectPeriodCodeTopic($con, $subject_period_code_topic_id);
+                    // $subject_code = $subjectPeriodCodeTopic->GetSubjectCode();
+        
+
+                    $wasNotifInserted = $notification->InsertNotificationForTeacherGivingAssignment(
+                        $current_school_year_id,
+                        $subject_code_assignment_id,
+                        $topic_subject_code);
+                    
                     Alert::success("Assignment has been successfully Inserted",
                         $back_url);
                     exit();
@@ -299,7 +313,7 @@
 
                                 <div class='form-group mb-2'>
                                     <label for="max_attempt" class='mb-2'>* Submission Count</label>
-                                    <input required class='form-control' type="text"
+                                    <input value="1" required class='form-control' type="text"
                                        id="max_attempt" name="max_attempt">
                                 </div>
 

@@ -19,6 +19,10 @@ $current_school_year_term = $school_year_obj['term'];
 $current_school_year_period = $school_year_obj['period'];
 $current_school_year_id = $school_year_obj['school_year_id'];
 
+    $back_url = "index.php";
+
+
+
 ?>
     <!-- Include jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -73,7 +77,6 @@ if($_SERVER['REQUEST_METHOD'] === "POST"
     }
 
     if($checkEnrolleeAccountVerified == false){
-
         echo "<script>
             $(document).ready(function() {
 
@@ -230,7 +233,12 @@ function getInputValue($name) {
 
 </head>
 <body>
+    <a href="<?php echo $back_url;?>">
+        <i class="bi bi-arrow-return-left fa-1x"></i>
+        <h3>Back</h3>
+    </a>
     <div class="signInContainer">
+          
         <div class="column">
 
             <div class="header">

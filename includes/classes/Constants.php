@@ -68,6 +68,13 @@ class Constants {
     public static $addressIsTooShort = "Address is Too short";
     public static $addressIsTooLong = "Address is Too long";
 
+    // School Name
+    public static $invalidSchoolCharacters = "Invalid School";
+    public static $schoolRequired = "School is required field";
+    public static $schoolIsTooShort = "School is Too short";
+    public static $schoolIsTooLong = "School is Too long";
+
+
 
     // Contact Number
     public static $invalidContactNumberCharacters = "Invalid Contact Number";

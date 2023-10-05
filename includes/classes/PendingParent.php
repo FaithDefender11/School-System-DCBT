@@ -1323,6 +1323,47 @@
         return false;
     }
 
+    public function PendingEnrolleeSetAsNull(
+        $pending_enrollees_id, $student_id){
+
+        $query = $this->con->prepare("SELECT parent_id 
+        
+            FROM parent
+            WHERE pending_enrollees_id=:pending_enrollees_id
+            ORDER BY parent_id DESC
+            LIMIT 1
+        ");
+
+        $query->bindValue(":pending_enrollees_id", $pending_enrollees_id);
+        $query->execute();
+
+        if($query->rowCount() > 0){
+
+            $row = $query->fetch(PDO::FETCH_ASSOC);
+
+            $parent_id = $row['parent_id'];
+
+            $update = $this->con->prepare("UPDATE parent
+
+                SET student_id=:set_student_id,
+                    pending_enrollees_id =:set_pending_enrollee_id
+                WHERE parent_id=:parent_id
+            
+                ");
+            
+            $update->bindValue(":set_student_id", $student_id);
+            $update->bindValue(":set_pending_enrollee_id", NULL);
+            $update->bindValue(":parent_id", $parent_id);
+            $update->execute();
+
+            if($update->rowCount() > 0){
+                return true;
+            }
+            
+        }
+        return false;
+    }
+
 }
 
 ?>

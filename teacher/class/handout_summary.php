@@ -111,7 +111,7 @@
         // var_dump($assignmentListOnTeachingCode);
         // echo count($assignmentListOnTeachingCode);
 
-        $back_url = "index.php?c_id=$course_id&c=$subject_code";
+        // $back_url = "index.php?c_id=$course_id&c=$subject_code";
  
         $back_url = "section_topic.php?id=$subjectPeriodCodeTopicTemplateId&ct_id=$subject_period_code_topic_id";
 

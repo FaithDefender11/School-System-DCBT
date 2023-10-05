@@ -144,15 +144,14 @@
                                         $query->bindParam(":department_id", $department_id);
 
                                         $query->execute();
+
                                         if($query->rowCount() > 0){
 
-
                                             $output = "";
+                                            $output .= "
+                                                <option value='' selected >Select Program</option>
+                                            ";
 
-
-                                                $output .= "
-                                                    <option value='' selected >Select Program</option>
-                                                ";
                                             while($row = $query->fetch(PDO::FETCH_ASSOC)){
 
                                                 $db_program_id = $row['program_id'];
@@ -180,10 +179,7 @@
                                 <label for="">Level &nbsp;<span class="errorMessage course_level_error" 
                                     ></span>
                                 </label>
-                                    
-
                                 <?php 
-
                                     echo $pending->PendingCourseLevelDropdown($pending_type, 
                                         $course_level);
                                 ?>

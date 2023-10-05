@@ -52,7 +52,7 @@
 
                 <div class="action">
                     <a href="create.php">
-                        <button type="button" class="clean large success">+ Add new</button>
+                        <button type="button" class="default large">+ Add new</button>
                     </a>
                 </div>
 

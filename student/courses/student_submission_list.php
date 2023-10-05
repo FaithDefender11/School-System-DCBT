@@ -41,8 +41,24 @@
 
         // print_r($getAnsweredAssignmentList);
 
+        $studentLatestSubjectAssignmentSubmission_id = $subjectAssignmentSubmission->CheckSubmissionIsLatest(
+            $subject_code_assignment_id,
+            $current_school_year_id, $student_id);
+
+        // echo $studentLatestSubjectAssignmentSubmission_id;
+
+        $back_url = "submission_view.php?id=$subject_code_assignment_id&s_id=$studentLatestSubjectAssignmentSubmission_id";
+
         ?>
             <div class="content">
+
+                <nav>
+                    <a href="<?php echo $back_url;?>">
+                        <i class="bi bi-arrow-return-left fa-1x"></i>
+                        <h3>Back</h3>
+                    </a>
+                </nav>
+
                 <main>
                     <div class="floating" id="shs-sy">
                         <header>

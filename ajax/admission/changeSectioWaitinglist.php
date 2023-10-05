@@ -30,7 +30,6 @@
         $student = new Student($con);
         $section = new Section($con, $course_id);
 
-        $waiting_list = new WaitingList($con);
         $enrollment = new Enrollment($con);
         $student_subject = new StudentSubject($con);
 

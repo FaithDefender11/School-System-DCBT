@@ -727,9 +727,8 @@
 
     }
 
-    public function GetStudentAssignSubjects($enrollment_id,
-            $student_id
-            ){
+    public function GetStudentAssignSubjects(
+        $enrollment_id, $student_id){
 
         $is_final = 0;
 
@@ -765,7 +764,6 @@
         }
 
         return [];
-
     }
 
     // public function GetStudentAssignSubjects2($enrollment_id,
@@ -1812,9 +1810,98 @@
         }
 
         return [];
-
     }
 
+
+    public function GetAllEnrolledSubjectCodeELMS($student_id,
+        $school_year_id, $enrollment_id){
+        
+            // echo $program_code;
+        $query = $this->con->prepare("SELECT 
+
+            t4.subject_code AS student_subject_code,
+            t4.is_final,
+            t4.enrollment_id,
+            t4.is_transferee,
+            t4.student_subject_id,
+            t4.retake AS ss_retake,
+            t4.overlap AS ss_overlap,
+
+            t5.subject_code AS sp_subjectCode,
+            t5.subject_type,
+            t5.subject_title,
+            t5.unit,
+
+            t6.program_section,
+
+            t7.student_subject_id as graded_student_subject_id,
+            t7.remarks,
+
+            t8.subject_schedule_id,
+            t8.course_id AS subject_schedule_course_id,
+            t8.subject_program_id AS subject_subject_program_id,
+            t8.time_from,
+            t8.time_to,
+            t8.schedule_day,
+            t8.schedule_time,
+
+            t9.firstname,
+            t9.lastname
+
+            FROM student_subject AS t4 
+
+            LEFT JOIN subject_program AS t5 ON t5.subject_program_id = t4.subject_program_id
+            LEFT JOIN course AS t6 ON t6.course_id = t4.course_id
+            LEFT JOIN student_subject_grade AS t7 ON t7.student_subject_id = t4.student_subject_id
+
+            LEFT JOIN subject_schedule AS t8 ON t8.subject_code = t4.subject_code
+            AND t8.course_id = t4.course_id
+
+            LEFT JOIN teacher as t9 ON t9.teacher_id = t8.teacher_id
+
+            WHERE t4.student_id=:student_id
+            AND t4.enrollment_id=:enrollment_id
+            AND t4.school_year_id=:school_year_id
+
+            GROUP BY t4.subject_code
+
+            ORDER BY t5.subject_title DESC
+        ");
+
+        $query->bindValue(":student_id", $student_id); 
+        $query->bindValue(":enrollment_id", $enrollment_id); 
+        $query->bindValue(":school_year_id", $school_year_id); 
+        
+        $query->execute(); 
+
+        if($query->rowCount() > 0){
+            return $query->fetchAll(PDO::FETCH_ASSOC);
+        }
+        return [];
+    }
+
+    public function CheckHasCreditedSubjectWithinSemester(
+        $student_id, $school_year_id){
+
+
+        $sql = $this->con->prepare("SELECT 
+            t1.*
+            
+            FROM student_subject as t1
+
+            WHERE t1.student_id = :student_id
+            AND t1.school_year_id = :school_year_id
+            AND t1.is_final = :is_final
+        ");
+                
+        $sql->bindParam(":student_id", $student_id);
+        $sql->bindParam(":school_year_id", $school_year_id);
+        $sql->bindValue(":is_final", 1);
+
+        $sql->execute();
+
+        return $sql->rowCount() > 0;
+    }
 
 }
 

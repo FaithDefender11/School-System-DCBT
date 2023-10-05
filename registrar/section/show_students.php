@@ -54,7 +54,7 @@
                                 <tbody>
                                     <?php
 
-                                        // $enrollment_status = "enrolled";
+                                        $enrollment_status = "enrolled";
                                         $sql = $con->prepare("SELECT 
                                                 t1.enrollment_approve,
                                                 t1.enrollment_status,
@@ -71,12 +71,12 @@
 
                                                 WHERE t1.course_id=:course_id
                                                 AND t1.school_year_id=:school_year_id
-                                                -- AND t1.enrollment_status=:enrollment_status
+                                                AND t1.enrollment_status=:enrollment_status
                                         ");
 
                                         $sql->bindValue(":course_id", $course_id);
                                         $sql->bindValue(":school_year_id", $school_year_id);
-                                        // $sql->bindValue(":enrollment_status", $enrollment_status);
+                                        $sql->bindValue(":enrollment_status", $enrollment_status);
                                         $sql->execute();
                                         if($sql->rowCount() > 0){
 

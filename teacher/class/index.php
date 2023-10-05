@@ -11,16 +11,18 @@
     include_once('../../includes/classes/SubjectCodeAssignment.php');
     include_once('../../includes/classes/SubjectPeriodCodeTopic.php');
     include_once('../../includes/classes/SubjectAssignmentSubmission.php');
+    include_once('../../includes/classes/Announcement.php');
  
 
     if(
         isset($_GET['c'])
-        && isset($_GET['c_id'])
-        
-        ){
+        && isset($_GET['c_id'])){
 
         $subject_code = $_GET['c'];
         $course_id = $_GET['c_id'];
+
+        
+        $announcement = new Announcement($con);
 
         $school_year = new SchoolYear($con);
         $school_year_obj = $school_year->GetActiveSchoolYearAndSemester();
@@ -35,6 +37,8 @@
 
         $program_code = $subjectProgram->GetProgramCodeBySubjectCode($subject_code,
             $course_id);
+
+        $announcementList = $announcement->GetAnnouncementsWithinSubjectCode($subject_code, $teacher_id);
             
         
         $subjectCodeAssignment = new SubjectCodeAssignment($con);
@@ -53,6 +57,7 @@
         // print_r($allTeachingTopicIds);
 
         $subjectCodeAssignmentIdsArr = [];
+
         foreach ($allTeachingTopicIds as $key => $topicIds) {
             # code...
             // $assignmentsBasedFromSubjectTopic = $subjectCodeAssignment->GetAllAssignmentsBasedFromSubjectTopic($topicIds);
@@ -122,6 +127,7 @@
                                 Populate
                             </button> -->
                         
+                            <button onclick="window.location.href='add_announcement.php?c_id=<?php echo $course_id;?>&c=<?php echo $subject_code; ?>'" class="btn btn-sm btn-success">+ Announcement</button>
                         </div>
 
                         <?php 
@@ -346,7 +352,6 @@
                         <div class='card-header'>
                             <?php if(count($ungradedSubmissionArr) > 0):?>
                                 
-
                                 <?php 
                                     $topicCount = [];
 
@@ -427,7 +432,42 @@
                             
                         </div>
                     </div>
+                    <hr>
+                    <div class='card'>
+                        <div id="notification_div" class='card-header'>
+                            <?php if(count($announcementList) > 0):?>
+
+                                <p style="margin-bottom: 7px;"><?php echo count($announcementList); ?> Announcement(s)</p>
+                                <?php 
+
+                                    $i= 0;
+                                    foreach ($announcementList as $key => $value) {
+
+                                        $title = $value['title'];
+                                        $announcement_id = $value['announcement_id'];
+                                        $i++;
+
+                                        $removeAnnouncement = "removeAnnouncement($announcement_id, $teacher_id)";
+
+                                        # code...
+                                        echo "
+                                            <a href='subject_announcement.php?id=$announcement_id'>
+                                                <span>$i. $title </span>
+                                            </a>
+                                            <span><i onclick='$removeAnnouncement' style='color: orange' class='fas fa-times'></i></span>
+                                            <br>
+                                        ";
+                                    }
+                                ?>
+                            <?php else:?>
+                                <h5 style="margin-bottom: 7px;">No to check assignments</h5>
+                            <?php endif;?>
+                        </div>
+                    </div>
+
+                   
                 </div>
+
 
             </div>
 
@@ -565,7 +605,6 @@
         });
     }
 
-
     function removeHandout(subject_code_handout_id,
         current_school_year_id, teacher_id){
 
@@ -621,6 +660,78 @@
                                 );
 
                                 // location.reload();
+                            });}
+
+                        },
+                        error: function(xhr, status, error) {
+                            // handle any errors here
+                            console.error('Error:', error);
+                            console.log('Status:', status);
+                            console.log('Response Text:', xhr.responseText);
+                            console.log('Response Code:', xhr.status);
+                        }
+                    });
+                } else {
+                    // User clicked "No," perform alternative action or do nothing
+                }
+        });
+    }
+
+    function removeAnnouncement(announcement_id, teacher_id){
+
+        var announcement_id = parseInt(announcement_id);
+        // var current_school_year_id = parseInt(current_school_year_id);
+        var teacher_id = parseInt(teacher_id);
+
+        Swal.fire({
+                icon: 'question',
+                title: `Are you sure you want remove the selected handout?`,
+                text: 'Important! This action cannot be undone.',
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'Cancel'
+
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    $.ajax({
+                    url: "../../ajax/class/removeAnnouncement.php",
+                        type: 'POST',
+                        data: {
+                            announcement_id,
+                            // current_school_year_id,
+                            teacher_id
+                        },
+                        success: function(response) {
+
+                            response = response.trim();
+
+                            console.log(response);
+
+                            if(response == "success_delete"){
+                                Swal.fire({
+                                icon: 'success',
+                                title: `Successfully Deleted`,
+                                showConfirmButton: false,
+                                timer: 1000, // Adjust the duration of the toast message in milliseconds (e.g., 3000 = 3 seconds)
+                                toast: true,
+                                position: 'top-end',
+                                showClass: {
+                                popup: 'swal2-noanimation',
+                                backdrop: 'swal2-noanimation'
+                                },
+                                hideClass: {
+                                popup: '',
+                                backdrop: ''
+                                }
+                            }).then((result) => {
+
+                                // $('#notification_div').load(
+                                //     location.href + ' #notification_div'
+                                // );
+
+                                location.reload();
+                                
                             });}
 
                         },

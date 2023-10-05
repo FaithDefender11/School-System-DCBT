@@ -62,7 +62,7 @@
     <?php
         echo "
             <button class='tab' 
-                style='background-color: var(--them)'
+                style='background-color: var(--theme); color: white'
                 onclick=\"window.location.href = 'info.php?details=show&id=$teacher_id';\">
                 <i class='bi bi-clipboard-check'></i>
                 Details
@@ -72,7 +72,7 @@
         echo "
             <button class='tab' 
                 id='shsPayment'
-                style='background-color: var(--mainContentBG); color: white'
+                style='background-color: var(--mainContentBG); color: black'
                 onclick=\"window.location.href = 'info.php?subject_load=show&id=$teacher_id';\">
                 <i class='bi bi-book'></i>
                 Subject Load

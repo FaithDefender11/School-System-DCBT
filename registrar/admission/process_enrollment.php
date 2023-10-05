@@ -73,7 +73,6 @@
         $pending_query->execute();
 
 
-
         $row = null;
 
         $course_id = 0;
@@ -138,9 +137,12 @@
             $type = $row['type'];
             $admission_status = $row['admission_status'];
             $student_status = $row['student_status'];
+            $enrollee_enrollment_status = $row['enrollment_status'];
             $pending_course_level = $row['course_level'];
+            $new_enrollee_enrollment_status = $row['enrollment_status'];
 
-            // echo $student_status;    
+
+            // echo $new_enrollee_enrollment_status;    
 
             $program = $con->prepare("SELECT acronym FROM program
                 WHERE program_id=:program_id
@@ -168,7 +170,6 @@
             if(isset($_GET['id']) && isset($_GET['enrollee_find_section'])){
 
                 include("./enrollee_find_section.php");
-
             }
 
             if(isset($_GET['step3']) && isset($_GET['st_id']) 
@@ -190,31 +191,12 @@
                     <!-- STEP 3 -->
                     <div class="content">
                         <nav>
-                            <a href="SHS-find-form-evaluation.html"
-                            ><i class="bi bi-arrow-return-left fa-1x"></i>
-                            <h3>Back</h3>
+                            <a href="evaluation.php">
+                                <i class="bi bi-arrow-return-left fa-1x"></i>
+                                <h3>Back</h3>
                             </a>
                         </nav>
                         <div class="content-header">
-                             <?php echo Helper::RevealStudentTypePending($type); ?>
-
-                            <header>
-                            <div class="title">
-                                <h1>Enrollment form</h1>
-                            </div>
-                            <div class="action">
-                                <div class="dropdown">
-                                <button class="icon">
-                                    <i class="bi bi-three-dots-vertical"></i>
-                                </button>
-                                <div class="dropdown-menu">
-                                    <a href="#" class="dropdown-item" style="color: red"
-                                    ><i class="bi bi-file-earmark-x"></i>Delete form</a
-                                    >
-                                </div>
-                                </div>
-                            </div>
-                            </header>
 
                             <?php echo Helper::ProcessPendingCards($enrollment_form_id,
                                 $date_creation, $admission_status); ?>
@@ -774,12 +756,13 @@
        $student_enrollment_course_id = $enrollment->GetEnrollmentFormCourseId($student_id,
             $student_enrollment_id, $current_school_year_id);
 
-
-
         // echo $student_enrollment_course_id;
 
         $student_enrollment_student_status = $enrollment->GetEnrollmentFormStudentStatus($student_id,
             $student_enrollment_id, $current_school_year_id);
+
+        // echo $student_enrollment_student_status;
+        // echo "<br>";
 
         $student_enrollment_retake_status = $enrollment->GetEnrollmentFormRetakeStatus($student_id,
             $student_enrollment_id, $current_school_year_id);
@@ -1035,5 +1018,199 @@
         });
     }
 
+    function enrolleeEnrollmentStatusChanger(
+        enrollee_enrollment_status_type,
+        pending_enrollees_id){
+
+        var pending_enrollees_id = parseInt(pending_enrollees_id);
+
+        Swal.fire({
+            icon: 'question',
+            title: `Mark Enrollee enrollment form as ${enrollee_enrollment_status_type}?`,
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // REFX
+                $.ajax({
+                    url: '../../ajax/pending/enrolleeEnrollmentStatusChanger.php',
+                    type: 'POST',
+                    data: {
+                        enrollee_enrollment_status_type,
+                        pending_enrollees_id
+                    },
+                    success: function(response) {
+
+                        response = response.trim();
+
+                        console.log(response);
+
+                        if(response == "success"){
+                                Swal.fire({
+                                icon: 'success',
+                                title: `Successfully Modified`,
+                                showConfirmButton: false,
+                                timer: 1000, // Adjust the duration of the toast message in milliseconds (e.g., 3000 = 3 seconds)
+                                toast: true,
+                                position: 'top-end',
+                                showClass: {
+                                popup: 'swal2-noanimation',
+                                backdrop: 'swal2-noanimation'
+                                },
+                                hideClass: {
+                                popup: '',
+                                backdrop: ''
+                                }
+                            }).then((result) => {
+
+                                location.reload();
+                            });}
+ 
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.log('AJAX Error:', textStatus, errorThrown);
+                    }
+                });
+            }
+        });
+    }
+
+    function enrolleeAdmissionStatusChanger(
+        enrollee_admission_status_type,
+        pending_enrollees_id){
+
+        var pending_enrollees_id = parseInt(pending_enrollees_id);
+
+        Swal.fire({
+            icon: 'question',
+            title: `Mark admission status as ${enrollee_admission_status_type}?`,
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // REFX
+                $.ajax({
+                    url: '../../ajax/pending/enrolleeAdmissionStatusChanger.php',
+                    type: 'POST',
+                    data: {
+                        enrollee_admission_status_type,
+                        pending_enrollees_id
+                    },
+                    success: function(response) {
+
+                        response = response.trim();
+
+                        console.log(response);
+
+                        if(response == "success"){
+                                Swal.fire({
+                                icon: 'success',
+                                title: `Successfully Modified`,
+                                showConfirmButton: false,
+                                timer: 1000, // Adjust the duration of the toast message in milliseconds (e.g., 3000 = 3 seconds)
+                                toast: true,
+                                position: 'top-end',
+                                showClass: {
+                                popup: 'swal2-noanimation',
+                                backdrop: 'swal2-noanimation'
+                                },
+                                hideClass: {
+                                popup: '',
+                                backdrop: ''
+                                }
+                            }).then((result) => {
+
+                                location.reload();
+                            });}
+ 
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.log('AJAX Error:', textStatus, errorThrown);
+                    }
+                });
+            }
+        });
+    }
+
+
+    // (Has Student Table) For student_find_section & subject_review pphp route
+
+        function enrollmentStudentStatusChanging(student_enrollment_id,
+        student_id, current_school_year_id, type){
+
+        var student_enrollment_id = parseInt(student_enrollment_id);
+        var student_id = parseInt(student_id);
+        var current_school_year_id = parseInt(current_school_year_id);
+        
+        var title = '';
+        var text = '';
+
+        if(type == "Regular"){
+            // text = "Note: If retake form is activated, This will de-activate the Retake form.";
+            text = "Note: Please finalized this changes.";
+        }
+        else if(type == "Irregular"){
+            text = "Note: Please finalized this changes.";
+        }
+
+        Swal.fire({
+            icon: 'question',
+            title: `Change status as ${type}?`,
+            text: `${text}`,
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'Cancel'
+
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // console.log(student_enrollment_form_id)
+
+                    $.ajax({
+                    url: '../../ajax/admission/changingFormStatus.php',
+                    type: 'POST',
+                    data: {
+                        student_enrollment_id,
+                        student_id,
+                        current_school_year_id,
+                        type
+                    },
+
+                    // dataType: "json",
+
+                    success: function(response) {
+
+                        response = response.trim();
+
+                        console.log(response);
+
+                        if(response == "update_success"){
+
+                            Swal.fire({
+                                title: "Changes Successfully made",
+                                icon: "success",
+                                showCancelButton: false,
+                                confirmButtonText: "OK",
+
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+
+                                    location.reload();
+
+                                } else {
+                                    
+                                }
+                            });
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        // handle any errors here
+                    }
+                });
+            }
+        });
+
+    }
 
 </script>

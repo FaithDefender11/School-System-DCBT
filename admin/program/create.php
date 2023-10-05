@@ -59,51 +59,53 @@
     }
     
     ?>
-        <div class='col-md-12 row'>
-            <div class='col-md-10 offset-md-1'>
-            <div class='card'>
-                <hr>
-                <a href="<?php echo $back_url;?>">
-                    <button class="btn btn-primary">
-                        <i class="fas fa-arrow-left"></i>
-                    </button>
+    <body>
+        <div class="content">
+            <nav>
+                <a href="<?php echo $back_url; ?>">
+                    <i class="bi bi-arrow-return-left fa-1x"></i>
+                    <h3>Back</h3>
                 </a>
-                <div class='card-header'>
-                    <h4 class='text-center mb-3'>Create Program</h4>
-                </div>
-                <div class='card-body'>
-                    <form method='POST' enctype='multipart/form-data'>
-                        <div class='form-group mb-2'>
-                            <label for=''>Program Name</label>
-                            <input class='form-control' type='text' placeholder='' name='program_name'>
-                        </div>
-
-                        <?php echo $departmentDropdown;?>
-
-                        <div class='form-group mb-2'>
-                            <label for=''>Dean</label>
-                            <input class='form-control' type='text' placeholder='' name='dean'>
-                        </div>
-
-                        <div class='form-group mb-2'>
-                            <label for=''>Track</label>
-                            <input class='form-control' type='text' placeholder='' name='track'>
-                        </div>
-
-                        <div class='form-group mb-2'>
-                            <label for=''>Acronym</label>
-                            <input class='form-control' type='text' placeholder='' name='acronym'>
-                        </div>
-
-                        <div class="modal-footer">
-                            <button type='submit' class='btn btn-success' name='program_create_btn'>Save</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            </div>
-
-
+            </nav>
+            <main>
+                <form method="POST" enctype="multipart/form-data">
+                    <div class="row">
+                        <span>
+                            <label for="program_name">Program Name</label>
+                            <div>
+                                <input type="text" name="program_name">
+                            </div>
+                            <div>
+                                <?php echo $departmentDropdown;?>
+                            </div>
+                        </span>
+                        <span>
+                            <label for="dean">Dean</label>
+                            <div>
+                                <input type="text" name="dean">
+                            </div>
+                        </span>
+                    </div>
+                    <div class="row">
+                        <span>
+                            <label for="track">Track</label>
+                            <div>
+                                <input type="text" name="track">
+                            </div>
+                        </span>
+                        <span>
+                            <label for="acronym">Acronym</label>
+                            <div>
+                                <input type="text" name="acronym">
+                            </div>
+                        </span>
+                    </div>
+                    <div class="action">
+                        <button type="submit" class="clean large" name="program_create_btn">Save</button>
+                    </div>
+                </form>
+            </main>
         </div>
+    </body>
     <?php
 ?>

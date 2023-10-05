@@ -53,6 +53,8 @@
     $waitingPaymentEnrollment = $enrollment->WaitingPaymentEnrollment($current_school_year_id);
     $waitingApprovalEnrollment = $enrollment->WaitingApprovalEnrollment($current_school_year_id);
     $enrolledStudentsEnrollment = $enrollment->EnrolledStudentsWithinSYSemester($current_school_year_id);
+    $sectionEnrolledStudentList = $section->GetCurrentSectionWithEnrolledStudent($current_school_year_id);
+
 
     $pendingEnrollmentCount = 0;
     $unionEnrollmentCount = 0;
@@ -64,6 +66,8 @@
     $waitingPaymentEnrollmentCount = count($waitingPaymentEnrollment);
     $waitingApprovalEnrollmentCount = count($waitingApprovalEnrollment);
     $enrolledStudentsEnrollmentCount = count($enrolledStudentsEnrollment);
+    $sectionEnrolledStudentListCount = count($sectionEnrolledStudentList);
+
 
     $selected_student_filter = "";
 
@@ -80,6 +84,7 @@
     }
 
       // echo "selected_student_filter: $selected_student_filter";
+  $period_short = $current_school_year_period === "First" ? "S1" : ($current_school_year_period === "Second" ? "S2" : "");
 
 ?>
 
@@ -94,14 +99,17 @@
               semester</small
             >
           </div>
+        <h5><?php echo $current_school_year_term; ?> <span><?php echo $period_short; ?></span></h5>
         </header>
+
       </div>
+
 
       <div class="tabs">
         <button
           class="tab"
           id="shsEvaluation"
-          style="background-color: var(--them)"
+          style="background-color: var(--theme); color: white;"
           onclick="window.location.href = 'evaluation.php';"
         >
           Evaluation (<?php echo $unionEnrollmentCount;?>)
@@ -110,7 +118,7 @@
         <button
           class="tab"
           id="shsPayment"
-          style="background-color: var(--mainContentBG); color: white"
+          style="background-color: var(--mainContentBG); color: black"
           onclick="window.location.href = 'waiting_payment.php';"
         >
           Waiting payment (<?php echo $waitingPaymentEnrollmentCount;?>)
@@ -127,9 +135,9 @@
           class="tab"
           id="shsEnrolled"
           style="background-color: var(--them); color: white"
-          onclick="window.location.href = 'enrolled_students.php';"
+          onclick="window.location.href = 'enrolled_sections.php';"
         >
-          Enrolled (<?php echo $enrolledStudentsEnrollmentCount;?>)
+          Enrolled (<?php echo $sectionEnrolledStudentListCount;?>)
         </button>
       </div>
 

@@ -7,6 +7,8 @@
     include_once('../../includes/classes/Schedule.php');
     include_once('../../includes/classes/SubjectCodeAssignment.php');
     include_once('../../includes/classes/SubjectAssignmentSubmission.php');
+    include_once('../../includes/classes/SubjectPeriodCodeTopic.php');
+    include_once('../../includes/classes/Announcement.php');
 
     if(isset($_GET['c'])){
 
@@ -21,6 +23,18 @@
 
         $subject_code_assignment = new SubjectCodeAssignment($con);
 
+        $subjectPeriodCodeTopic = new SubjectPeriodCodeTopic($con);
+        $announcement = new Announcement($con);
+        
+        $teachingSubject_teacher_id = $subjectPeriodCodeTopic->GetTeachingCodeTeacherId($subject_code, $current_school_year_id);
+
+        // echo $teachingSubject_teacher_id;
+
+        $studentAnnouncementList = $announcement->GetAnnouncementsAsStudentBasedOnSubject(
+            $subject_code, $teachingSubject_teacher_id, $studentLoggedInId, $current_school_year_id);
+
+            // echo $teachingSubject_teacher_id;
+            // var_dump($studentAnnouncementList);
 
         $assignmentTodoIds = $subject_code_assignment->GetAllTodosWithinSubjectCode(
             $studentLoggedInId,
@@ -145,16 +159,27 @@
 
                                                                 if(count($mergedList) > 0){
 
+                                                                    $now = date("Y-m-d H:i:s");
+
                                                                     foreach ($mergedList as $key => $row_ass) {
                                                                         
                                                                         $assignment_name = isset($row_ass['assignment_name']) ? $row_ass['assignment_name'] : "";
                                                                         $subject_code_assignment_id = isset($row_ass['subject_code_assignment_id']) ? $row_ass['subject_code_assignment_id'] : "";
+
+                                                                        $submitted_status = "-";
+
                                                                         $due_date = isset($row_ass['due_date']) ? $row_ass['due_date'] : "";
+                                                                        $due_date_output = "";
+
+                                                                        
 
                                                                         if($due_date != ""){
-                                                                            $due_date = date("M d",
-                                                                                strtotime($due_date));
+                                                                            $due_date_output = date("M d", strtotime($due_date));
                                                                         }
+
+                                                                        
+
+                                                                       
 
                                                                         // $due_date = isset($row_ass['due_date']) ? $row_ass['due_date'] : "";
 
@@ -168,8 +193,17 @@
 
                                                                         $subjectAssignmentSubmission = new SubjectAssignmentSubmission($con);
                                                                         
-                                                                        $statusSubmission = $subjectAssignmentSubmission->CheckStatusSubmission($subject_code_assignment_id,
+                                                                        $statusSubmission = $subjectAssignmentSubmission->CheckStatusSubmission(
+                                                                            $subject_code_assignment_id,
                                                                             $studentLoggedInId, $current_school_year_id);
+
+                                                                        // $doesAssignmentEnded = $subjectAssignmentSubmission->DoesAssignmentHasEnded(
+                                                                        //     $subject_code_assignment_id,
+                                                                        //     $current_school_year_id);   
+
+                                                                        //     echo $subject_code_assignment_id;
+                                                                            
+                                                                        // var_dump($doesAssignmentEnded);
 
                                                                         if($assignment_name !== ""){
                                                                             $section_output = "
@@ -186,11 +220,12 @@
 
                                                                         }
 
+                                                                        
+
                                                                         // $submitted_status = "
                                                                         //     <i style='color: orange;' class='fas fa-times'></i>
                                                                         // ";
 
-                                                                        $submitted_status = "-";
 
                                                                         $submission_grade = NULL;
                                                                         $submitted_grade = NULL;
@@ -224,6 +259,21 @@
 
                                                                         }
 
+                                                                        // var_dump($statusSubmission);
+                                                                        # TODO If not submitted and already deadline
+                                                                        # Should be allowed to pass.
+                                                                        # Student No Choose file click prompt error (it should have files in order to prepare answer)
+                                                                        if(
+                                                                            
+                                                                            $now >= $due_date 
+                                                                            && $statusSubmission == NULL
+                                                                        ){
+                                                                            $submitted_status = "
+                                                                                <i style='color: orange;' class='fas fa-flag'></i>
+                                                                            ";
+                                                                            // echo "due";
+                                                                        } 
+
 
                                                                         
                                                                         if($submission_grade !== NULL){
@@ -237,7 +287,7 @@
 
                                                                                 <td>$submitted_status</td>
                                                                                 <td>$score_output</td>
-                                                                                <td>$due_date</td>
+                                                                                <td>$due_date_output</td>
                                                                                 <td>$submitted_graded_status</td>
                                                                             </tr>
                                                                         ";
@@ -336,6 +386,37 @@
                             
                         </div>
                     </div>
+
+                    <hr>
+                    <div class='card'>
+                        <div class='card-header'>
+                            <?php if(count($studentAnnouncementList) > 0):?>
+
+                                <p style="margin-bottom: 7px;"><?php echo count($studentAnnouncementList); ?> Announcement</p>
+                                <?php 
+
+                                    $i=0;
+
+                                    foreach ($studentAnnouncementList as $key => $value) {
+
+                                        $title = $value['title'];
+                                        $announcement_id = $value['announcement_id'];
+                                        $i++;
+
+                                        # code...
+                                        echo "
+                                            <a href='student_subject_announcement.php?id=$announcement_id'>
+                                                <span>$i. $title</span>
+                                            </a>
+                                        <br>";
+                                    }
+                                ?>
+                            <?php else:?>
+                                <p style="margin-bottom: 7px;">No announcement</p>
+                            <?php endif;?>
+                        </div>
+                    </div>
+
                 </div>
             </div>
 

@@ -15,21 +15,20 @@
 
     $teacher_id = $_SESSION['teacherLoggedInId'];
 
-        $subjectCodeAssignment = new SubjectCodeAssignment($con);
-        $subjectPeriodCodeTopic = new SubjectPeriodCodeTopic($con);
-        $subjectAssignmentSubmission = new SubjectAssignmentSubmission($con);
-
-
-
+    $subjectCodeAssignment = new SubjectCodeAssignment($con);
+    $subjectPeriodCodeTopic = new SubjectPeriodCodeTopic($con);
+    $subjectAssignmentSubmission = new SubjectAssignmentSubmission($con);
 
     // print_r($allTeachingTopicIds);
 
     // echo $current_school_year_id;
 
-    $teachingSubjectCode = $subjectCodeAssignment->GetTeacherTeachingSubjects($teacher_id,
+    $teachingSubjectCode = $subjectCodeAssignment->GetTeacherTeachingSubjects(
+        $teacher_id,
         $current_school_year_id);
 
     $teachingTopicIdsArr = [];
+
 
     foreach ($teachingSubjectCode as $key => $value) {
 
@@ -207,6 +206,7 @@
                                         $subjectPeriodCodeTopic = new SubjectPeriodCodeTopic($con, $topicId);
                                         $topicName = $subjectPeriodCodeTopic->GetTopic();
                                         $getSubjectCode = $subjectPeriodCodeTopic->GetSubjectCode();
+                                        $program_code = $subjectPeriodCodeTopic->GetProgramCode();
                                         $courseId = $subjectPeriodCodeTopic->GetCourseId();
 
                                         if (!isset($topicCodeCount[$getSubjectCode])) {
@@ -214,6 +214,7 @@
                                                 'count' => 1,
                                                 'courseId' => $courseId,
                                                 'teaching_code' => $getSubjectCode,
+                                                'program_code' => $program_code
                                             ];
                                         } else {
                                             $topicCodeCount[$getSubjectCode]['count']++;
@@ -223,16 +224,19 @@
                                     foreach ($topicCodeCount as $getSubjectCode => $data) {
                                         $count = $data['count'];
                                         $teaching_code = $data['teaching_code'];
+                                        $program_code = $data['program_code'];
                                         $courseId = $data['courseId'];
                                     
                                         // $class_subject_url = "section_topic_grading.php?ct_id=$subject_period_code_topic_id";
                                         $class_subject_url = "../class/index.php?c_id=$courseId&c=$teaching_code";
+                                        
                                         echo "
-                                            <p style='margin:0'>Code:
+                                            <p style='margin:0'>Subject:
                                                 <a style='color:inherit' href='$class_subject_url'
-                                                class='m-0 text-right'> $teaching_code ($count)</a>
+                                                class='m-0 text-right'> $program_code ($count)</a>
                                             </p>
                                         ";
+
                                         echo "<br>";
                                     }
                                     ?>

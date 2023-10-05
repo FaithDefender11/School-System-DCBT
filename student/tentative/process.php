@@ -122,6 +122,14 @@
                    include_once('./preferred_course.php');
                 }
 
+                if(isset($_GET['step']) && $_GET['step'] == "enrollee_requirements"){
+                   include_once('./enrollee_requirements.php');
+                }
+
+                if(isset($_GET['step']) && $_GET['step'] == "enrollee_school_history"){
+                   include_once('./enrollee_school_history.php');
+                }
+
                 if(isset($_GET['step']) && $_GET['step'] == "enrollee_information"){
                   
                     include_once('./enrollee_information.php');

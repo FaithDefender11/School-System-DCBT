@@ -82,7 +82,7 @@
                     New student
                 </button>
          
-          <button type="button" onclick="oldStudentURL()" class="type-btn">Old student</button>
+          <button type="button" onclick="enrolledStudentURL()" class="type-btn">Old student</button>
         </div>
       </div>
 
@@ -112,10 +112,10 @@
     <div class="popup" id="login-form">
       <div class="close-btn">&times;</div>
       <div class="form">
-        <h2>Log-in</h2>
-        <p>Log-in with your school email</p>
 
-        <div class="form-element">
+        <h2>Choose section log-in</h2>
+
+        <!-- <div class="form-element">
           <label for="email">Email</label>
           <input type="text" id="email" />
         </div>
@@ -128,10 +128,27 @@
         </div>
         <div class="form-element">
           <a class="forgot-password">Forgot password?</a>
+        </div> -->
+
+        <div class="row col-md-12">
+
+          <div class="col-md-6">
+            <div class="form-element">
+              <button type="button">ELMS</button>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-element">
+              <button type="button">Enrollment</button>
+            </div>
+          </div>
         </div>
-        <div class="form-element">
+       
+        <!-- <div class="form-element">
           <button type="button">Confirm</button>
-        </div>
+        </div> -->
+        
       </div>
     </div>
 
@@ -179,7 +196,7 @@
         window.location.href = `${root}/pre_enrollment_register.php`
     }
 
-    function oldStudentURL(){
+    function enrolledStudentURL(){
 
         var root = `<?php
                 echo domainName;

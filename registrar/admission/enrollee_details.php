@@ -64,14 +64,19 @@
         </a>
     </nav>
     <div class="content-header">
-        <?php echo Helper::RevealStudentTypePending($type); ?>
+        <?php echo Helper::RevealStudentTypePending($type,
+            $enrollee_enrollment_status, $admission_status); ?>
 
-        <?php echo Helper::PendingEnrollmentDetailsTop("step1", $pending_enrollees_id); ?>
+        <?php echo Helper::PendingEnrollmentDetailsTop(
+            "step1", $pending_enrollees_id,
+            $enrollee_enrollment_status, $admission_status);
+        ?>
 
         <?php echo Helper::ProcessPendingCards($enrollment_form_id, $date_creation, $admission_status); ?>
     </div>
     
     <main>
+        
         <div class="progress">
             <span class="dot active"><p>Check form details</p></span>
             <span class="line inactive"></span>

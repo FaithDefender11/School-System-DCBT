@@ -103,6 +103,7 @@
                 if($successCreate){
                     $subject_code_assignment_id = $con->lastInsertId();
 
+                   
                 }
                 // var_dump($assignment_images);
 
@@ -165,7 +166,6 @@
                         <h3>Back</h3>
                     </a>
                 </nav>
-
 
                 <div class='col-md-10 offset-md-1'>
                     <div class='card'>
@@ -239,7 +239,7 @@
 
                                 <div class='form-group mb-2'>
                                     <label for="max_attempt" class='mb-2'>* Submission Count</label>
-                                    <input required class='form-control' type="text"
+                                    <input value="1" required class='form-control' type="text"
                                        id="max_attempt" name="max_attempt">
                                 </div>
                                 

@@ -2,8 +2,10 @@
 
     require_once("../../includes/config.php");
     require_once("../../includes/classes/StudentSubject.php");
+    require_once("../../includes/classes/Enrollment.php");
     
     if (isset($_POST['subject_program_id'])
+    
         && isset($_POST['current_school_year_id'])
         && isset($_POST['student_id'])
         && isset($_POST['subject_code'])
@@ -12,6 +14,9 @@
         ) {
 
         $subject_program_id = $_POST['subject_program_id'];
+
+    
+
         $current_school_year_id = $_POST['current_school_year_id'];
         $student_id = $_POST['student_id'];
         $subject_code = $_POST['subject_code'];
@@ -32,17 +37,31 @@
 
     
     if (isset($_POST['subject_program_id'])
+        && isset($_POST['enrollment_id'])
         && isset($_POST['current_school_year_id'])
         && isset($_POST['student_id'])
         && isset($_POST['type']) && $_POST['type'] == "Uncredit"
         ) {
 
         $subject_program_id = $_POST['subject_program_id'];
+        $enrollment_id = $_POST['enrollment_id'];
+
+
+
+
         $current_school_year_id = $_POST['current_school_year_id'];
         $student_id = $_POST['student_id'];
 
         $student_subject = new StudentSubject($con);
+        $enrollment = new Enrollment($con);
 
+        $enrollment_student_status = $enrollment->GetEnrollmentFormStudentStatus($student_id,
+            $enrollment_id);
+
+        
+
+        // echo $enrollment_student_status;
+        // return;
 
         $query = $con->prepare("DELETE FROM student_subject 
             WHERE school_year_id = :school_year_id

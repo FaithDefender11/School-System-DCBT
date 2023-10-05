@@ -283,9 +283,10 @@ if ($row != null) {
 
         else if($new_enrollee == 1
             && $enrollment_is_new_enrollee == 1 
-            && $enrollment_is_transferee == 0
+            // && $enrollment_is_transferee == 0
+
             // && $student_statusv2 == "Regular"
-            // && $enrollment_student_status == "Regular"
+            && $enrollment_student_status == "Regular"
             ){
 
             $updated_type = "New Regular";
@@ -300,12 +301,13 @@ if ($row != null) {
         // 
         else if($new_enrollee == 1
             && $enrollment_is_new_enrollee == 1 
-            && $enrollment_is_transferee == 1
+            // && $enrollment_is_transferee == 1
             // && $student_statusv2 == ""
-            // && ($enrollment_student_status == "Irregular" || $enrollment_student_status == "Regular")
+            && $enrollment_student_status == "Irregular"
             ){
 
-            $updated_type = "New Transferee";
+            $updated_type = "New Irregular";
+            // $updated_type = "New Transferee";
 
             $button_url = "
                 <button class='default'

@@ -59,10 +59,18 @@ class SubjectCodeAssignmentTemplate{
 
     public function GetCodeAssignmentTopicTemplateList($subject_period_code_topic_template_id) {
 
-        $sql = $this->con->prepare("SELECT *
-            FROM subject_code_assignment_template
+        $sql = $this->con->prepare("SELECT 
+        
+            t1.*
+
+            ,t2.subject_code_assignment_id as template_subject_code_assignment_id
+
+            FROM subject_code_assignment_template as t1
+            LEFT JOIN subject_code_assignment as t2 ON t2.subject_code_assignment_template_id = t1.subject_code_assignment_template_id
             
-            WHERE subject_period_code_topic_template_id=:subject_period_code_topic_template_id");
+            WHERE subject_period_code_topic_template_id = :subject_period_code_topic_template_id
+
+        ");
                 
         $sql->bindValue(":subject_period_code_topic_template_id", $subject_period_code_topic_template_id);
         $sql->execute();
@@ -237,7 +245,8 @@ class SubjectCodeAssignmentTemplate{
 
         $add = $this->con->prepare("INSERT INTO subject_code_assignment_template_list
             (subject_code_assignment_template_id, image)
-            VALUES(:subject_code_assignment_template_id, :image)");
+            VALUES(:subject_code_assignment_template_id, :image)
+        ");
         
         $add->bindValue(":subject_code_assignment_template_id", $subject_code_assignment_template_id );
         $add->bindValue(":image", $image);

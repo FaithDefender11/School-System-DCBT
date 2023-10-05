@@ -9,7 +9,7 @@
 
     $account = new Account($con);
     $teacher = new Teacher($con);
-
+    
     // if (isset($_SESSION['enrollment_form_id'])) {
     //     unset($_SESSION['enrollment_form_id']);
     // }

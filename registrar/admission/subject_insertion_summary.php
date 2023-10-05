@@ -13,6 +13,7 @@
     include_once('../../includes/classes/Program.php');
     include_once('../../includes/classes/Pending.php');
     include_once('../../includes/classes/Schedule.php');
+    include_once('../../includes/classes/PendingParent.php');
  
     ?>
         <style>
@@ -63,6 +64,7 @@
 
         $student = new Student($con, $student_id);
         $student_subject = new StudentSubject($con);
+        $pending = new Pending($con);
 
 
         // $promptIDIfDoesntExists = $student->CheckIdExists($student_id);
@@ -93,6 +95,7 @@
         $student_active_status = $student->CheckIfActive();
         
         $type = $type_status == 1 ? "Tertiary" : ($type_status === 0 ? "SHS" : "");
+       
         $student_suffix = $student->GetSuffix();
 
         $student_unique_id = $student->GetStudentUniqueId();
@@ -228,6 +231,11 @@
         $student_status_db = $student->GetStudentStatus();
 
         $student_status = "";
+
+        // $get_student_new_pending_id = $pending->GetPendingAccountByStudentTable(
+        //     $student_email, $student_firstname, $student_lastname);
+
+        // echo $get_student_new_pending_id;
 
         // echo "<br>";
         // echo $enrollment_is_new;
@@ -407,20 +415,34 @@
                                     # If student has Pending Table, Removed as it was created and officially
                                     # enrolled in the Student Table.
 
-                                    $pending = new Pending($con);
-
                                     $get_student_new_pending_id = $pending->GetPendingAccountByStudentTable(
                                         $student_email, $student_firstname, $student_lastname);
 
                                     if($get_student_new_pending_id !== NULL){
+
+                                     
+                                        # Once officially enrolled,
+                                        # 1. Pending Enrollee Account -> Removed.
+                                        # 2. Parent Pending Enrollee Id -> NULL, Student_Id (Updated)
+                                        # 3. Student School History Pending Enrollee Id -> NULL, Student_Id (Updated)
+
+                                        $parent = new PendingParent($con);
+
+                                        $parentEnrolleeRemovalSuccess = $parent->PendingEnrolleeSetAsNull(
+                                            $get_student_new_pending_id, $student_id);
+
+                                        # Set School History Pending Id to Null (Because Pending enrollee is now enrolled (Student Table generated))
+                                        $studentHistoryEnrolleeRemovalSuccess = $pending->SchoolHistoryEnrolleeSetAsNullAndStudentIdUpdated(
+                                            $get_student_new_pending_id, $student_id);
+
                                         # Pending Mark as REJECTED.
                                         // $successRejected = $pending->MarkAsRejected($get_student_new_pending_id);
-                                        $successRemoval = $pending->RemoveNewEnrollee($get_student_new_pending_id);
+                                        
+                                        $pendingSuccessRemoval = $pending->RemoveNewEnrollee($get_student_new_pending_id);
                                     }
                                 
                                     $initRequirement = $requirement->InitializedStudentRequirementTable(
                                         $student_id, $type);
-
                                 }
                             }
 
@@ -1062,7 +1084,6 @@
                                                             $hasSubjectCode = $schedule->GetSameSubjectCode(
                                                                 $enrolled_course_id,
                                                                 $ss_subject_code, $current_school_year_id);
-
                                                             
                                                             $scheduleOutput = "";
                                                             $roomOutput = "";
@@ -1401,8 +1422,10 @@
 
         Swal.fire({
             icon: 'question',
-            title: `Are you sure to un-enroll this enrollment form?`,
-            text: 'Important! This action will remove Student and Enrollment record and cannot be undone.',
+            title: `Are you sure to un-enroll this new enrollment form?`,
+            // text: 'Important! This action will remove Student and Enrollment record and cannot be undone.',
+            // If NEW Student -> Will removed:  Student, Enrollment, Parent, School History Table.
+            text: 'Important! This action will remove all student related data.',
             showCancelButton: true,
             confirmButtonText: 'Yes',
             cancelButtonText: 'Cancel'

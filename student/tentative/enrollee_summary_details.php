@@ -13,6 +13,18 @@
         $pending = new Pending($con, $pending_enrollees_id);
         $parent = new PendingParent($con, $pending_enrollees_id);
 
+        $school_history = $pending->GetEnrolleeSchoolHistory($pending_enrollees_id);
+
+        $student_school_history_id = $school_name = $school_address = $year_started = $year_ended = "";
+
+        if ($school_history !== NULL) {
+            $student_school_history_id = $school_history['student_school_history_id'];
+            $school_name = $school_history['school_name'];
+            $school_address = $school_history['address'];
+            $year_started = $school_history['year_started'];
+            $year_ended = $school_history['year_ended'];
+        }
+
         $lrn = $pending->GetPendingLRN();
         $firstname = $pending->GetPendingFirstName();
         $lastname = $pending->GetPendingLastName();
@@ -85,7 +97,7 @@
                 <div class="floating noBorder">
                     <header>
                         <div class="title">
-                            <h2 style="color: var(--titleTheme)">New Enrollment Form</h2>
+                            <h2 style="color: var(--titleTheme)">New enrollment form</h2>
                             <small>SY <?php echo $current_term; ?> &nbsp; <?php echo $current_semester; ?> Semester </small>
                         </div>
                     </header>
@@ -101,11 +113,10 @@
                     </div>
 
                     <form method="POST">
-
                         <main>
                             <header>
                                 <div class="title">
-                                    <h4 style="font-weight: bold;">Student Information</h4>
+                                    <h4 style="font-weight: bold;">Enrollee Information</h4>
                                     <div class="row">
                                         <span style="margin-left: 660px;">
                                             <label for="lrn">LRN</label>
@@ -223,6 +234,55 @@
                         </main>
 
                         <hr>
+
+                        <main>
+                            <header>
+                                <div class="title">
+                                    <h4 style="font-weight: bold;">Previous School Information</h4>
+                                </div>
+                            </header>
+                            <br>
+                            <div class="row">
+                                <span>
+                                    <label for="school_name">* School Name</label>
+                                    <div>
+                                        <input required type="text" id="school_name" name="school_name" class="read_only form-control" 
+                                        value="<?php echo $school_name; ?>">
+                                    </div>
+                                </span>
+                            </div>
+                            <div class="row">
+                                <span>
+                                    <label for="school_address">* Address</label>
+                                    <div>
+                                        <input required type="text" id="school_address" name="school_address"
+                                        class="read_only form-control" value="<?php echo $school_address; ?>">
+                                    </div>
+                                </span>
+                            </div>
+
+                            <div class="row">
+                                <span>
+                                    <label for="year_started">* Year Started</label>
+                                    <div>
+                                        <input required type="date" id="year_started" name="year_started"
+                                        class="read_only form-control" value="<?php echo $year_started;?>">
+                                    </div>
+                                </span>
+
+                                <span>
+                                    
+                                    <label for="year_ended">* Year Ended</label>
+                                    <div>
+                                        <input  required type="date" id="year_ended" name="year_ended" 
+                                        class="read_only form-control" value="<?php echo $year_ended;?>">
+                                    </div>
+                                </span>
+                            </div>
+                        </main>
+
+                        <hr>
+                       
                         <main>
                             <header>
                                 <div class="title">

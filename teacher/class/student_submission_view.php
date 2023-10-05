@@ -6,6 +6,7 @@
     include_once('../../includes/classes/SchoolYear.php');
     include_once('../../includes/classes/SubjectAssignmentSubmission.php');
     include_once('../../includes/classes/SubjectCodeAssignment.php');
+    include_once('../../includes/classes/Notification.php');
     
     echo Helper::RemoveSidebar();
 
@@ -25,12 +26,33 @@
         # Check if teacher owned the Section Subject Code.
 
 
+        if(isset($_GET['n_id'])
+            && isset($_GET['notification'])
+            && $_GET['notification'] == "true"){
+
+            $notification_id = $_GET['n_id'];
+            $notification = new Notification($con);
+
+            $markAsNotified = $notification->TeacherNotificationMarkAsViewed($notification_id, $teacherLoggedInId);
+            // echo "marked teacher";
+
+        }
+
         $school_year = new SchoolYear($con);
+
+        $school_year_obj = $school_year->GetActiveSchoolYearAndSemester();
+
+        $current_school_year_id = $school_year_obj['school_year_id'];
+        $current_school_year_period = $school_year_obj['period'];
+        $current_school_year_term = $school_year_obj['term'];
+
 
         $subjectAssignmentSubmission = new SubjectAssignmentSubmission($con,
             $subject_assignment_submission_id);
 
         $student_id = $subjectAssignmentSubmission->GetStudentId();
+
+
 
         $student = new Student($con, $student_id);
 
@@ -38,6 +60,12 @@
 
         $subject_code_assignment_id = $subjectAssignmentSubmission->GetSubjectCodeAssignmentId();
         $upload_time = $subjectAssignmentSubmission->GetDateCreation();
+
+        $latest_subject_assignment_submission_id = $subjectAssignmentSubmission->CheckSubmissionIsLatest(
+            $subject_code_assignment_id,
+            $current_school_year_id, $student_id);
+
+        // echo $latest_subject_assignment_submission_id;
 
         $get_grade = $subjectAssignmentSubmission->GetSubjectGrade();
 
@@ -53,15 +81,13 @@
 
         $subject_code = $subjectPeriodCodeTopic->GetSubjectCode();
 
-        $school_year_obj = $school_year->GetActiveSchoolYearAndSemester();
-
-        $current_school_year_id = $school_year_obj['school_year_id'];
-        $current_school_year_period = $school_year_obj['period'];
-        $current_school_year_term = $school_year_obj['term'];
 
         // $back_url = "submission_list.php?id=$subject_code_assignment_id&c=$subject_code";
         $back_url = "section_topic_grading.php?ct_id=$subject_code_topic_id";
 
+        // echo $subject_code_assignment_id;
+
+        $submission_history_url = "student_submission_list.php?id=$subject_code_assignment_id&st_id=$student_id";
 
         ?>
             <div class="content">
@@ -88,37 +114,35 @@
                             </div>  -->
 
                             <div class="title">
+                                <span>
+                                    <button onclick="window.location.href = '<?php echo $submission_history_url; ?>' " class="btn-info btn btn-sm">
+                                        History
+                                    </button>
+                                </span>
                                 <span>Submitted by: <?php echo $student_name; ?></span>
                                 <h3>Assignment: <?php echo $assignment_name; ?></h3>
                             </div>
 
                             <div class="action">
-                                
-                                <?php 
-                                
-                                    if($get_grade !== NULL){
-                                        
-                                        $get_grade = "
-                                            <a style='color: inherit' href='edit_given_grade.php?id=$subject_assignment_submission_id&c=$subject_code'>$get_grade</a>
-                                        ";
 
-                                        ?>
-                                            <h5><span style="font-size: 17px;">Remark: </span> <?php echo "$get_grade / $max_score"?></h5>
-                                        <?php
-                                    }else{
-                                        if($subject_assignment_submission_id != 0){
-                                            include_once('./addGradeBtnModal.php');
-                                        }
+                                <?php if ($get_grade !== NULL): ?>
+                                    <a style='color: inherit' href='edit_given_grade.php?id=<?php echo $subject_assignment_submission_id ?>&c=<?php echo $subject_code ?>'>
+                                        <?php echo $get_grade ?>
+                                    </a>
+                                    <h5><span style="font-size: 17px;">Remark: </span> <?php echo "$get_grade / $max_score"?></h5>
+                                <?php else: ?>
+                                    <?php if ($subject_assignment_submission_id != 0): ?>
+                                        <?php include_once('./addGradeBtnModal.php'); ?>
+                                    <?php endif; ?>
 
-                                        ?>
-                                            <a data-bs-target="#addGradeBtn" 
-                                                data-bs-toggle="modal"
-                                                class="btn btn-success" style="cursor:pointer;">
-                                                + Add Grade
-                                            </a>
-                                        <?php
-                                    }
-                                ?>
+                                    <?php if ($latest_subject_assignment_submission_id == $subject_assignment_submission_id): ?>
+                                        <a data-bs-target="#addGradeBtn" data-bs-toggle="modal" class="btn btn-success" style="cursor:pointer;">
+                                            + Add Grade
+                                        </a>
+                                    <?php endif; ?>
+                                <?php endif; ?>
+                                
+                                
                             </div>
                         </header>
 
@@ -150,7 +174,7 @@
 
                                             INNER JOIN subject_assignment_submission_list as t2 ON t2.subject_assignment_submission_id = t1.subject_assignment_submission_id
                                             
-                                            -- AND t1.subject_assignment_submission_id=:subject_assignment_submission_id
+                                            AND t1.subject_assignment_submission_id=:subject_assignment_submission_id
                                             AND t1.subject_code_assignment_id=:subject_code_assignment_id
                                             
                                             LEFT JOIN student as t3 ON t3.student_id = t1.student_id
@@ -158,12 +182,12 @@
                                             WHERE t1.student_id =:student_id
                                             AND t1.school_year_id =:school_year_id
 
-                                            ORDER BY t1.subject_assignment_submission_id DESC
+                                            -- ORDER BY t1.subject_assignment_submission_id DESC
 
-                                            -- LIMIT 1 
+                                            LIMIT 1 
                                         ");
 
-                                        // $query->bindParam(":subject_assignment_submission_id", $subject_assignment_submission_id);
+                                        $query->bindParam(":subject_assignment_submission_id", $subject_assignment_submission_id);
                                         $query->bindParam(":subject_code_assignment_id", $subject_code_assignment_id);
                                         $query->bindParam(":student_id", $student_id);
                                         $query->bindParam(":school_year_id", $current_school_year_id);

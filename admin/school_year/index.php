@@ -31,18 +31,15 @@
 ?>
 
 <div class="content">
-
   <main>
-    <div class="floating" id="shs-sy">
+    <div class="floating">
       <header>
         <div class="title">
-          <h4>School Year</h4>
-
+          <h3>School Year</h3>
         </div>
-
         <div class="action">
             <a href="create_term.php">
-                <button type="button" class="clean large information">+ Add new</button>
+                <button type="button" class="default large">+ Add new</button>
             </a>
         </div>
       </header>
@@ -81,7 +78,7 @@
                       <td style='text-align: right'>$text</td>
                       <td>
                           <a  href='timeframe.php?term=$term'>
-                            <button type='button' class='redirect-btn' id='shs-calendar'>
+                            <button type='button' class='redirect-btn'>
                               <i class='bi bi-arrow-right-circle'></i>
                             </button>
                           </a>
@@ -95,10 +92,10 @@
       </main>
     </div>
 
-    <div class="floating" id="shs-sy">
+    <div class="floating">
       <header>
           <div class="title">
-              <h4>School Year</h4>
+              <h3>School Year</h3>
           </div>
       </header>
       <table id="school_year_table" class="a" style="margin: 0">

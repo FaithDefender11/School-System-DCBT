@@ -58,6 +58,10 @@
         $assignment_type = $subjectCodeAssignment->GetType();
         $max_attempt = $subjectCodeAssignment->GetAssignmentMaxAttempt();
 
+        $checkOwned = $subjectCodeAssignment->CheckAssignmentBelongsToTeacher(
+            $subject_code_assignment_id, $teacherLoggedInId);
+        
+
         $subject_code_assignment_template_id = $subjectCodeAssignment->GetSubject_code_assignment_template_id();
 
         // echo $subject_code_assignment_template_id;

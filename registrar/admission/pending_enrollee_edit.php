@@ -165,7 +165,7 @@
         ?>
             <div class="content">
                 <nav>
-                    <a href="process_enrollment.php?step1=true&id=<?php echo $pending_enrollees_id;?>">
+                    <a href="process_enrollment.php?enrollee_details=true&id=<?php echo $pending_enrollees_id;?>">
                         <i class="bi bi-arrow-return-left fa-1x"></i>
                         <h3>Back</h3>
                     </a>

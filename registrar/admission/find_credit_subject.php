@@ -39,10 +39,7 @@
 
         $student_enrollment_course_id = $enrollment->GetEnrollmentFormCourseId($student_id,
             $enrollment_id, $current_school_year_id);
-
-        // $student_enrollment_course_id = $student->GetStudentCurrentCourseId();
-        // $student_enrollment_course_id= 805;
-
+ 
         $section = new Section($con, $student_enrollment_course_id);
         $section_name = $section->GetSectionName();
 
@@ -270,7 +267,7 @@
 
                                                                 $disabled = $ss_school_year_id == $current_school_year_id ? "" : "disabled";
 
-                                                                $undo_credit_btn = "undoCreditNonAssignSubject($subject_program_id, $current_school_year_id, $student_id, \"$subject_title\")";
+                                                                $undo_credit_btn = "undoCreditNonAssignSubject($subject_program_id, $enrollment_id, $current_school_year_id, $student_id, \"$subject_title\")";
 
                                                                 $action = "
                                                                     <button $disabled onclick='$undo_credit_btn' class='btn btn-sm btn-danger'>
@@ -282,7 +279,7 @@
                                                             // 
                                                             $disabled = $ss_school_year_id == $current_school_year_id ? "" : "disabled";
 
-                                                            $undo_credit_btn = "undoCreditNonAssignSubject($subject_program_id, $current_school_year_id, $student_id, \"$subject_title\")";
+                                                            $undo_credit_btn = "undoCreditNonAssignSubject($subject_program_id, $enrollment_id, $current_school_year_id, $student_id, \"$subject_title\")";
 
                                                             if($enrollment_section_level == $course_level && 
                                                                 $ss_school_year_id == $current_school_year_id){
@@ -298,7 +295,7 @@
                                                             if($enrollment_section_level != $course_level 
                                                                 && $ss_school_year_id == $current_school_year_id){
 
-                                                                $undo_credit_btn = "undoCreditNonAssignSubject($subject_program_id, $current_school_year_id, $student_id, \"$subject_title\")";
+                                                                $undo_credit_btn = "undoCreditNonAssignSubject($subject_program_id, $enrollment_id, $current_school_year_id, $student_id, \"$subject_title\")";
 
                                                                 $action = "
                                                                     <button $disabled onclick='$undo_credit_btn' class='btn btn-sm btn-danger'>
@@ -591,8 +588,9 @@
         });
     }
 
-        //  Simply deleted the generated credited subject of creditNonAssignSubject
-    function undoCreditNonAssignSubject(subject_program_id,
+    //   Simply deleted the generated credited subject of creditNonAssignSubject
+    
+    function undoCreditNonAssignSubject(subject_program_id, enrollment_id,
         current_school_year_id, student_id, subject_title){
 
         Swal.fire({
@@ -610,7 +608,9 @@
                         type: 'POST',
                         data: {
                             subject_program_id,
-                            current_school_year_id, student_id,
+                            enrollment_id,
+                            current_school_year_id, 
+                            student_id,
                             type: "Uncredit"
                         },
                         success: function(response) {

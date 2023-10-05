@@ -194,6 +194,36 @@
 
     }
 
+    public function GetEnrolleeSchoolHistory($pending_enrollees_id){
+        
+        $sql = $this->con->prepare("SELECT * FROM student_school_history
+            WHERE pending_enrollees_id=:pending_enrollees_id
+            ");
+        
+        $sql->bindParam(":pending_enrollees_id", $pending_enrollees_id);
+        $sql->execute();
+
+        if($sql->rowCount() > 0){
+
+            return $sql->fetch(PDO::FETCH_ASSOC);
+        }
+
+        return NULL;
+
+    }
+
+    public function CheckEnrolleeHasSchoolHistory($pending_enrollees_id){
+        
+        $sql = $this->con->prepare("SELECT * FROM student_school_history
+            WHERE pending_enrollees_id=:pending_enrollees_id
+            ");
+        
+        $sql->bindParam(":pending_enrollees_id", $pending_enrollees_id);
+        $sql->execute();
+
+        return $sql->rowCount() > 0;
+    }
+
     public function PendingFormEmail($fname, $lname, $mi,
         $password, $email_address, $token, $current_school_year_id){
 
@@ -242,7 +272,6 @@
         $pending_enrollees_id
     ) {
 
-
         $query = $this->con->prepare("UPDATE pending_enrollees SET 
             firstname = :firstname,
             lastname = :lastname,
@@ -276,7 +305,6 @@
         $query->bindParam(":religion", $religion);
         $query->bindParam(":pending_enrollees_id", $pending_enrollees_id);
 
-
         $query->execute();
 
         if($query->rowCount() > 0){
@@ -285,6 +313,57 @@
 
         return false;
     }
+
+ 
+    public function InsertSchoolHistoryAsPending($pending_enrollees_id, $school_name,
+        $year_started, $year_ended, $address){
+
+        $create = $this->con->prepare("INSERT INTO student_school_history
+            (pending_enrollees_id, school_name, address, year_started, year_ended)
+            VALUES (:pending_enrollees_id, :school_name, :address, :year_started, :year_ended)");
+        
+        $create->bindValue(":pending_enrollees_id", $pending_enrollees_id);
+        $create->bindValue(":school_name", $school_name);
+        $create->bindValue(":address", $address);
+        $create->bindValue(":year_started", $year_started);
+        $create->bindValue(":year_ended", $year_ended);
+
+        $create->execute();
+
+        if($create->rowCount() > 0){
+            return true;
+        }
+        return false;
+
+    }
+
+    public function UpdateSchoolHistory(
+        $student_school_history_id, $pending_enrollees_id,
+        $school_name, $year_started, $year_ended, $address) {
+
+        $update = $this->con->prepare("UPDATE student_school_history
+            SET school_name = :school_name, year_started = :year_started, year_ended = :year_ended, address = :address
+            WHERE student_school_history_id = :student_school_history_id
+            AND pending_enrollees_id = :pending_enrollees_id
+            ");
+
+        $update->bindValue(":school_name", $school_name);
+        $update->bindValue(":year_started", $year_started);
+        $update->bindValue(":year_ended", $year_ended);
+        $update->bindValue(":address", $address);
+
+        $update->bindValue(":student_school_history_id", $student_school_history_id);
+        $update->bindValue(":pending_enrollees_id", $pending_enrollees_id);
+
+
+        $update->execute();
+
+        if ($update->rowCount() > 0) {
+            return true;
+        }
+        return false;
+    }
+
 
     public function CreateRegisterStrand($program_id = null){
 
@@ -372,14 +451,17 @@
         $output = "";
         if ($pending_type == "SHS") {
             $output .= "
-                <select style='width: 450px' class='form-control' name='choose_level' id='choose_level'>
+                <select style='width: 450px' required class='form-control' name='choose_level' id='choose_level'>
+
+                    <option value='' selected disabled>Choose Academic level</option>
                     <option value='11' " . ($course_level == '11' ? 'selected' : '') . ">Grade 11</option>
                     <option value='12' " . ($course_level == '12' ? 'selected' : '') . ">Grade 12</option> 
                 </select>
             ";
         } else if ($pending_type == "Tertiary") {
+
             $output .= "
-                <select style='width: 450px' class='form-control' name='choose_level' id='choose_level'>
+                <select required style='width: 450px' class='form-control' name='choose_level' id='choose_level'>
                     <option value='1' " . ($course_level == '1' ? 'selected' : '') . ">1st Year</option>
                     <option value='2' " . ($course_level == '2' ? 'selected' : '') . ">2nd Year</option>
                     <option value='3' " . ($course_level == '3' ? 'selected' : '') . ">3rd Year</option>
@@ -1099,13 +1181,82 @@
             
             $update->bindValue(":update_student_id", $student_id);
             $update->bindValue(":parent_id", $parent_id);
-            
-            // $update->bindValue(":pending_enrollees_id", $pending_enrollees_id);
             return $update->execute();
         }
         return false;
     }
 
+    public function GetSchoolHistoryMatchPendingStudentId(
+        $pending_enrollees_id, $student_id){
+
+        $query = $this->con->prepare("SELECT student_school_history_id 
+        
+            FROM student_school_history
+            WHERE pending_enrollees_id=:pending_enrollees_id");
+
+        $query->bindValue(":pending_enrollees_id", $pending_enrollees_id);
+        $query->execute();
+
+        if($query->rowCount() > 0){
+
+            $row = $query->fetch(PDO::FETCH_ASSOC);
+
+            $student_school_history_id = $row['student_school_history_id'];
+
+            $update = $this->con->prepare("UPDATE student_school_history
+
+                SET student_id=:update_student_id
+                WHERE student_school_history_id=:student_school_history_id
+            
+                ");
+            
+            $update->bindValue(":update_student_id", $student_id);
+            $update->bindValue(":student_school_history_id", $student_school_history_id);
+            $update->execute();
+
+            if($update->rowCount() > 0){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function SchoolHistoryEnrolleeSetAsNullAndStudentIdUpdated(
+        $pending_enrollees_id, $student_id){
+
+        $query = $this->con->prepare("SELECT student_school_history_id
+        
+            FROM student_school_history
+            WHERE pending_enrollees_id=:pending_enrollees_id");
+
+        $query->bindValue(":pending_enrollees_id", $pending_enrollees_id);
+        $query->execute();
+
+        if($query->rowCount() > 0){
+
+            $row = $query->fetch(PDO::FETCH_ASSOC);
+
+            $student_school_history_id = $row['student_school_history_id'];
+
+            $update = $this->con->prepare("UPDATE student_school_history
+
+                SET student_id=:update_student_id,
+                    pending_enrollees_id=:set_pending_enrollees_id
+                WHERE student_school_history_id=:student_school_history_id
+            
+                ");
+            
+            $update->bindValue(":update_student_id", $student_id);
+            $update->bindValue(":set_pending_enrollees_id", NULL);
+            $update->bindValue(":student_school_history_id", $student_school_history_id);
+            $update->execute();
+
+            if($update->rowCount() > 0){
+                return true;
+            }
+        }
+        return false;
+    }
 
     public function SetPendingApprove($pending_enrollees_id) {
 
@@ -1218,14 +1369,7 @@
             // );
 
             // if($programLevelAvailable){
-            //     $waiting_list = new WaitingList($this->con);
-
-            //     $addToWaitingList = $waiting_list->AddPendingEnrolleeToWaitingList($pending_enrollees_id,
-            //         $current_school_year_id, $pending_program_id, $pending_level);
-
-            //     if($addToWaitingList){
-            //         return true;
-            //     }
+       
             // } 
             # That student should automatically registered in the waiting list.
        
@@ -1539,6 +1683,44 @@
 
         return false;
     }
+
+    public function ToggleEnrolleeEnrollmentForm($pending_enrollees_id, $type) {
+
+
+        $update = $this->con->prepare("UPDATE pending_enrollees
+            SET enrollment_status =:enrollment_status
+            WHERE pending_enrollees_id=:pending_enrollees_id
+            ");
+
+        $update->bindValue(":enrollment_status", $type);
+        $update->bindValue(":pending_enrollees_id", $pending_enrollees_id);
+        $update->execute();
+        
+        if($update->rowCount() > 0){
+            return true;
+        }
+
+        return false;
+    }
+
+    public function ToggleAdmissionEnrollmentForm($pending_enrollees_id, $type) {
+
+
+        $update = $this->con->prepare("UPDATE pending_enrollees
+            SET admission_status =:admission_status
+            WHERE pending_enrollees_id=:pending_enrollees_id
+            ");
+
+        $update->bindValue(":admission_status", $type);
+        $update->bindValue(":pending_enrollees_id", $pending_enrollees_id);
+        $update->execute();
+        
+        if($update->rowCount() > 0){
+            return true;
+        }
+
+        return false;
+    }
     
    
     public function generateTokenCompre($token) {
@@ -1569,6 +1751,7 @@
 
         return false;
     }
+
 
     public function PromptToken($token) {
 
@@ -1605,6 +1788,23 @@
             exit();
         }
     }
+
+    public function RemovingSchoolHistoryDataOfNewStudent($student_id){
+
+        $delete = $this->con->prepare("DELETE FROM student_school_history 
+            WHERE student_id = :student_id
+            ");
+
+        $delete->bindParam(":student_id", $student_id);
+        $delete->execute();
+
+        if($delete->rowCount() > 0){
+           return true;
+        }
+        return false;
+    }
+
+    
 
 }
 

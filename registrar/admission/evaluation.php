@@ -115,6 +115,7 @@
   $waitingPaymentEnrollment = $enrollment->WaitingPaymentEnrollment($current_school_year_id);
   $waitingApprovalEnrollment = $enrollment->WaitingApprovalEnrollment($current_school_year_id);
   $enrolledStudentsEnrollment = $enrollment->EnrolledStudentsWithinSYSemester($current_school_year_id);
+  $sectionEnrolledStudentList = $section->GetCurrentSectionWithEnrolledStudent($current_school_year_id);
 
   // var_dump($unionEnrollment);
 
@@ -128,17 +129,13 @@
   $waitingApprovalEnrollmentCount = count($waitingApprovalEnrollment);
   $enrolledStudentsEnrollmentCount = count($enrolledStudentsEnrollment);
 
+  $sectionEnrolledStudentListCount = count($sectionEnrolledStudentList);
 
   // echo $current_school_year_id;
 ?>
 
   <div class="content">
-    <nav>
-      <a href="registrar_admission.html"
-        ><i class="bi bi-arrow-return-left fa-1x"></i>
-        <span>Back</span>
-      </a>
-    </nav>
+     
     <div class="content-header">
       <header>
         <div class="title">
@@ -148,7 +145,7 @@
             semester</small
           >
         </div>
-          <h5><?php echo $current_school_year_term; ?> <span><?php echo $period_short; ?></span></h5>
+        <h5><?php echo $current_school_year_term; ?> <span><?php echo $period_short; ?></span></h5>
 
       </header>
     </div>
@@ -183,9 +180,9 @@
         class="tab"
         id="shsEnrolled"
         style="background-color: var(--them); color: white"
-        onclick="window.location.href = 'enrolled_students.php';"
+        onclick="window.location.href = 'enrolled_sections.php';"
       >
-        Enrolled (<?php echo $enrolledStudentsEnrollmentCount;?>)
+        Enrolled (<?php echo $sectionEnrolledStudentListCount;?>)
       </button>
     </div>
 

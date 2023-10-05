@@ -362,12 +362,21 @@
         if(isset($_GET['enrolled_subject']) 
             && $_GET['enrolled_subject'] == "show"){
 
-            if(isset($_POST['subject_load_btn']) && isset($_POST['unique_enrollment_form_id']) ){
+            if(isset($_POST['subject_load_btn']) 
+                && isset($_POST['unique_enrollment_form_id'])
+                && isset($_POST['enrollment_payment'])
+                ){
             
                 $array_success = [];
 
                 $unique_enrollment_form_id = $_POST['unique_enrollment_form_id'];
+                $enrollment_payment = $_POST['enrollment_payment'];
  
+
+                // echo $enrollment_payment;
+                // return;
+
+
                 $assignedSubjects = $student_subject->GetStudentAssignSubjects(
                     $enrollment_form_id_url, 
                     // $student_course_id,
@@ -394,24 +403,26 @@
                             $isAllFinalized = true;
                         }
                     }
-                 
                 }
-
 
                 // echo $student_enrollment_course_id;
 
+                // if(true){
                 if($isAllFinalized == true){
                      
                     $markAsPaid = $enrollment->EnrollmentFormMarkAsPaid(
                         $current_school_year_id,
                         $student_id,
-                        $student_enrollment_form_id, $student_enrollment_waiting_list);
+                        $student_enrollment_form_id,
+                        $student_enrollment_waiting_list,
+                        $enrollment_payment);
 
                     if(($markAsPaid) == true){
                         Alert::success("You have successfully mark as Paid Enrollment Form ID: $student_enrollment_form_id.", "index.php");
                         exit();
                     }
                 }
+
             }
            
             ?>
@@ -911,9 +922,14 @@
 
                                                 <input type="hidden" name="unique_enrollment_form_id" value="<?php echo $student_enrollment_form_id;?>">
 
+                                                <input style="margin-right: 5px; width: 200px;" 
+                                                    class="form-control" type="text"
+                                                    maxlength="5" name="enrollment_payment" id="enrollment_payment">
+                                                
                                                 <button type="submit" name="subject_load_btn" 
                                                     class="default large clean"
-                                                    onclick="return confirm('Are you sure to mark this form as paid?')">
+                                                    onclick="return confirm('Are you sure to mark this form as paid?')"
+                                                    >
                                                     Mark as Paid
                                                 </button>
                                             </div>

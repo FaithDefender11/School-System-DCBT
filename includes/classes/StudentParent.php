@@ -117,10 +117,6 @@
         return isset($this->sqlData['mother_email']) ? $this->sqlData["mother_email"] : ""; 
     }
 
-
-
-    
-
     public function UpdateStudentParent($student_id, $parent_id, $firstname, $lastname,
         $middle_name, $suffix, $contact_number,
         $email, $occupation, $relationship,

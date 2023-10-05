@@ -660,10 +660,9 @@
             
             if($query->rowCount() > 0){
 
-                $html = "<div class='form-group mb-2'>
-                    <label class='mb-2'>Program</label>
-
-                    <select id='program_id' class='form-control' name='program_id'>";
+                $html = "<label for='program_id'>Program</label>
+                    <div>
+                    <select id='program_id' name='program_id'>";
 
                 $html .= "<option value='Course-Section' disabled selected>Select-Program</option>";
 
@@ -691,9 +690,9 @@
             if($department_name == "Senior High School"){
 
                 $html = "
-                <div class='form-group mb-2'>
-                    <label class='mb-2'>* Course Level</label>
-                    <select required id='course_level' class='form-control' name='course_level'>";
+                    <label for='course_level'>* Course Level</label>
+                    <div>
+                    <select required id='course_level' name='course_level'>";
 
                 // $html .= "<option value='Course-Section' disabled selected>Select-Program</option>";
                 
@@ -709,9 +708,9 @@
             }
             else if($department_name == "Tertiary"){
                 $html = "
-                <div class='form-group mb-2'>
-                    <label class='mb-2'>* Course Level</label>
-                    <select required id='course_level' class='form-control' name='course_level'>
+                    <label for='course_level'>* Course Level</label>
+                    <div>
+                    <select required id='course_level' name='course_level'>
                         <option value='' disabled selected>Choose Level</option>";
 
                 $html .= "
@@ -747,10 +746,10 @@
             
             if($query->rowCount() > 0){
 
-                $html = "<div class='form-group mb-2'>
-                    <label class='mb-2'>$text</label>
-
-                    <select id='course_id' class='form-control' name='course_id'>";
+                $html = "
+                    <label for='course_id'>$text</label>
+                    <div>
+                    <select id='course_id' name='course_id'>";
 
                 $html .= "<option value='' disabled selected>Select-Section</option>";
 
@@ -836,9 +835,10 @@
             
             if($query->rowCount() > 0){
 
-                $html = "<div class='form-group mb-2'>
-                    <label class='mb-2'>* $text</label>
-                    <select id='course_id' class='form-control' name='course_id'>";
+                $html = "
+                    <label for='course_id'>* $text</label>
+                    <div>
+                    <select id='course_id' name='course_id'>";
 
                 $html .= "<option value='' disabled selected>Select Subject-Code</option>";
 
@@ -1473,6 +1473,92 @@
             }
             // print_r($course_ids);
             return $activeSection;
+
+        }
+
+        public function GetCurrentSectionWithEnrolledStudent(
+            $current_school_year_id){
+
+            $activeSection = [];
+            $enrollment_status = "enrolled";
+            $active = "yes";
+
+            $sql = $this->con->prepare("SELECT t1.school_year_id, t2.* FROM enrollment AS t1
+
+                INNER JOIN course AS t2 ON t2.course_id = t1.course_id
+                
+                WHERE t1.enrollment_status=:enrollment_status
+                AND t1.school_year_id=:school_year_id
+
+                GROUP BY t1.course_id
+            ");
+
+            $sql->bindParam(":enrollment_status", $enrollment_status);
+            $sql->bindParam(":school_year_id", $current_school_year_id);
+            
+            $sql->execute();
+        
+            if($sql->rowCount() > 0){
+                $activeSection = $sql->fetchAll(PDO::FETCH_ASSOC);
+            }
+            // print_r($course_ids);
+            return $activeSection;
+
+        }
+
+        public function GetStudentsEnrolledInSection(
+            $course_id,
+            $school_year_id){
+
+            $studentEnrolledList = [];
+            $enrollment_status = "enrolled";
+
+            $sql = $this->con->prepare("SELECT 
+                t1.school_year_id,
+                t1.enrollment_approve,
+                t2.*,
+
+                t3.firstname,
+                t3.username,
+                t3.student_unique_id,
+                t3.lastname,
+                t3.course_level,
+                t3.email,
+                t3.student_unique_id,
+
+                t3.admission_status,
+                t3.student_statusv2,
+                t3.course_id,
+                t3.student_id,
+                t3.course_level,
+                t3.student_status,
+                t3.is_tertiary,
+                t3.new_enrollee
+                
+                FROM enrollment AS t1
+
+                INNER JOIN course AS t2 ON t2.course_id = t1.course_id
+                AND t2.course_id=:course_id
+
+                INNER JOIN student AS t3 ON t3.student_id = t1.student_id
+
+
+                WHERE t1.enrollment_status=:enrollment_status
+                AND t1.school_year_id=:school_year_id
+
+            ");
+
+            $sql->bindParam(":enrollment_status", $enrollment_status);
+            $sql->bindParam(":school_year_id", $school_year_id);
+            $sql->bindParam(":course_id", $course_id);
+            
+            $sql->execute();
+        
+            if($sql->rowCount() > 0){
+                $studentEnrolledList = $sql->fetchAll(PDO::FETCH_ASSOC);
+            }
+            // print_r($course_ids);
+            return $studentEnrolledList;
 
         }
 

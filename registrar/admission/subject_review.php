@@ -12,6 +12,7 @@
     $selected_course_id = $_GET['selected_course_id'];
 
     $section = new Section($con, $selected_course_id);
+    $studentSubject = new StudentSubject($con, $selected_course_id);
 
     $section_subject_review_section_name = $section->GetSectionName();
 
@@ -23,18 +24,20 @@
     //                         || ($student_status_st == "" 
     //                         && $student_enrollment_is_new == 1 && $student_enrollment_is_transferee == 1)){
 
+    $hasCredited = $studentSubject->CheckHasCreditedSubjectWithinSemester($student_id, $current_school_year_id);
+
+    // var_dump($hasCredited);
+
+
     ?>
         <!-- Student Table Subject Review-->
         <div class="content">
-            <nav>
-                <a href="process_enrollment.php?find_section=show&st_id=<?php echo $student_id?>&c_id=<?php echo $student_enrollment_course_id?>"
-                ><i class="bi bi-arrow-return-left fa-1x"></i>
-                <h3>Back</h3>
-                </a>
-            </nav>
+            
             <div class="content-header">
 
-                <?php echo Helper::RevealStudentTypePending($type_status); ?>
+
+                <?php echo Helper::RevealStudentTypePending($type,
+                    $student_enrollment_student_status); ?>
 
                 <header>
 
@@ -61,24 +64,40 @@
                                     }
                                 ?>
 
-                                <a 
-                                    onclick="javascript: <?php echo $retakeFunc; ?>"
+                                <!-- <a  onclick="javascript: <?php echo $retakeFunc; ?>"
                                         href="#" class="dropdown-item" style="color: orange">
                                     <i class="bi bi-file-earmark-x"></i>
                                     Mark form as Retake
-                                </a>
+                                </a> -->
 
-                                <a 
-                                    onclick="enrollmentStudentStatusChanging(<?php echo $student_enrollment_id;?>, <?php echo $student_id;?>,<?php echo $current_school_year_id;?>, '<?php echo "Irregular"?>')"
-                                        href="#" class="dropdown-item" style="color: blue">
-                                    <i class="bi bi-file-earmark-x"></i>
-                                    Mark as Irregular
-                                </a>
-
-                                <a onclick="enrollmentStudentStatusChanging(<?php echo $student_enrollment_id;?>, <?php echo $student_id;?>,<?php echo $current_school_year_id;?>, '<?php echo "Regular"?>')"
+                                <?php if ($student_enrollment_student_status === "Irregular"): ?>
+                                    <a onclick="enrollmentStudentStatusChanging(<?php echo $student_enrollment_id; ?>, <?php echo $student_id; ?>, <?php echo $current_school_year_id; ?>, 'Regular')"
                                         href="#" class="dropdown-item" style="color: green">
+                                        <i class="bi bi-file-earmark-x"></i>
+                                        Mark as Regular
+                                    </a>
+                                <?php elseif ($student_enrollment_student_status === "Regular"): ?>
+                                    <a onclick="enrollmentStudentStatusChanging(<?php echo $student_enrollment_id; ?>, <?php echo $student_id; ?>, <?php echo $current_school_year_id; ?>, 'Irregular')"
+                                        href="#" class="dropdown-item" style="color: blue">
+                                        <i class="bi bi-file-earmark-x"></i>
+                                        Mark as Irregular
+                                    </a>
+                                <?php endif; ?>
+
+
+                                
+
+                                
+
+                                <!-- <a href="find_credit_subject.php?e_id=<?php echo $student_enrollment_id;?>&st_id=<?php echo $student_id?>">
+                                    <button type="button" class="large default">
+                                        <i style="font-size: 13px;" class='bi bi-map'></i> Credit Section</button>
+                                </a> -->
+
+                                <a href="find_credit_subject.php?e_id=<?php echo $student_enrollment_id;?>&st_id=<?php echo $student_id?>"
+                                    class="dropdown-item" style="color: yellow">
                                     <i class="bi bi-file-earmark-x"></i>
-                                    Mark as Regular
+                                    Credit Subject
                                 </a>
 
                             </div>
@@ -115,12 +134,19 @@
                 </div>
 
                 <?php 
-                    // IF Old Irregular Or New Transferee 
-                    if($student_enrollment_student_status == "Irregular"
-                            // || ($student_enrollment_student_status == "" 
-                            //     && $student_enrollment_is_new == 1 
-                            //     && $student_enrollment_is_transferee == 1)
+
+                    // If Old Irregular Or New Transferee.
+
+                    # If Irregular form, this could be seen only within semester
+                    # of crediting the subject.
+
+                    if(
+                        // $student_enrollment_student_status == "Irregular" 
+                        $hasCredited == true
                         ){ 
+
+                        // echo "Hey";
+
                         ?>
                             <!-- CREDITED SUBJECTS -->
                             <div class="floating">
@@ -129,12 +155,14 @@
                                     <div class="title">
                                         <h3>Credited Subjects</h3>
                                     </div>
-                                    <div class="action">
+                                    
+                                    <!-- <div class="action">
                                         <a href="find_credit_subject.php?e_id=<?php echo $student_enrollment_id;?>&st_id=<?php echo $student_id?>">
                                             <button type="button" class="large default">
                                                 <i style="font-size: 13px;" class='bi bi-map'></i> Credit Section</button>
                                         </a>
-                                    </div>
+                                    </div> -->
+
                                 </header>
 
                                 <main>
@@ -207,7 +235,6 @@
                                     </table>
                                 </main>
                             </div>
-                      
                         <?php
                     }
                 ?>
@@ -219,11 +246,13 @@
                             <h4><?php echo $section_subject_review_section_name;?> <a style="all:unset; cursor: pointer" href="choosing_subject.php?e_id=<?php echo $student_non_enrolled_enrollment_id;?>&st_id=<?php echo $student_id?>"></a></h4>
                         </div>
 
-                        <a href="choosing_subject.php?e_id=<?php echo $student_non_enrolled_enrollment_id;?>&st_id=<?php echo $student_id?>">
-                            <button type="button" class="default large">+ Add Subjects
-                                
-                            </button>
-                        </a>
+                        <?php if($student_enrollment_student_status == "Irregular"):?>
+                            <a href="choosing_subject.php?e_id=<?php echo $student_non_enrolled_enrollment_id;?>&st_id=<?php echo $student_id?>">
+                                <button type="button" class="default large">+ Add Subjects
+                                </button>
+                            </a>
+                        <?php endif;?>
+                        
                     </header>
 
                     <main>
@@ -307,6 +336,7 @@
                                             
                                             $enrolled_section_Name = $section_exec->GetSectionName(); 
                                             $change_section_subject_url = "change_subject.php?id=$student_subject_id";
+                                            
                                             $removeSubject = "removeSubject($student_subject_id)";
 
                                                     // <td>$pre_req_subject_title</td>
@@ -352,6 +382,19 @@
                                                 $roomOutput = "TBA";
                                             }
                                          
+                                            $removeSubjectLoadBtn = "";
+
+                                            if($student_enrollment_student_status === "Irregular"){
+                                                $removeSubjectLoadBtn = "
+                                                    <button 
+                                                        class='btn btn-sm btn-danger'
+                                                        onclick='$removeSubject'
+                                                        >
+                                                        <i class='fas fa-trash'></i>
+                                                    </button>
+                                                ";
+                                            }
+
                                             echo "
                                                 <tr class='text-center'>
                                                     <td>$subject_title</td>
@@ -367,12 +410,7 @@
                                                             >
                                                             <i class='fas fa-pencil'></i>
                                                         </button>
-                                                        <button 
-                                                            class='btn btn-sm btn-danger'
-                                                            onclick='$removeSubject'
-                                                            >
-                                                            <i class='fas fa-trash'></i>
-                                                        </button>
+                                                        $removeSubjectLoadBtn
                                                     </td>
                                                 </tr>
                                             ";
@@ -601,81 +639,81 @@
 
     }
 
-    function enrollmentStudentStatusChanging(student_enrollment_id,
-        student_id, current_school_year_id, type){
+    // function enrollmentStudentStatusChanging(student_enrollment_id,
+    //     student_id, current_school_year_id, type){
 
-        var student_enrollment_id = parseInt(student_enrollment_id);
-        var student_id = parseInt(student_id);
-        var current_school_year_id = parseInt(current_school_year_id);
+    //     var student_enrollment_id = parseInt(student_enrollment_id);
+    //     var student_id = parseInt(student_id);
+    //     var current_school_year_id = parseInt(current_school_year_id);
         
-        var title = '';
-        var text = '';
+    //     var title = '';
+    //     var text = '';
 
-        if(type == "Regular"){
-            // text = "Note: If retake form is activated, This will de-activate the Retake form.";
-            text = "Note: Please finalized this changes.";
-        }
-        else if(type == "Irregular"){
-            text = "Note: Please finalized this changes.";
-        }
+    //     if(type == "Regular"){
+    //         // text = "Note: If retake form is activated, This will de-activate the Retake form.";
+    //         text = "Note: Please finalized this changes.";
+    //     }
+    //     else if(type == "Irregular"){
+    //         text = "Note: Please finalized this changes.";
+    //     }
 
-        Swal.fire({
-            icon: 'question',
-            title: `Change status as ${type}?`,
-            text: `${text}`,
-            showCancelButton: true,
-            confirmButtonText: 'Yes',
-            cancelButtonText: 'Cancel'
+    //     Swal.fire({
+    //         icon: 'question',
+    //         title: `Change status as ${type}?`,
+    //         text: `${text}`,
+    //         showCancelButton: true,
+    //         confirmButtonText: 'Yes',
+    //         cancelButtonText: 'Cancel'
 
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // console.log(student_enrollment_form_id)
+    //     }).then((result) => {
+    //         if (result.isConfirmed) {
+    //             // console.log(student_enrollment_form_id)
 
-                    $.ajax({
-                    url: '../../ajax/admission/changingFormStatus.php',
-                    type: 'POST',
-                    data: {
-                        student_enrollment_id,
-                        student_id,
-                        current_school_year_id,
-                        type
-                    },
+    //                 $.ajax({
+    //                 url: '../../ajax/admission/changingFormStatus.php',
+    //                 type: 'POST',
+    //                 data: {
+    //                     student_enrollment_id,
+    //                     student_id,
+    //                     current_school_year_id,
+    //                     type
+    //                 },
 
-                    // dataType: "json",
+    //                 // dataType: "json",
 
-                    success: function(response) {
+    //                 success: function(response) {
 
-                        response = response.trim();
+    //                     response = response.trim();
 
-                        console.log(response);
+    //                     console.log(response);
 
-                        if(response == "update_success"){
+    //                     if(response == "update_success"){
 
-                            Swal.fire({
-                                title: "Changes Successfully made",
-                                icon: "success",
-                                showCancelButton: false,
-                                confirmButtonText: "OK",
+    //                         Swal.fire({
+    //                             title: "Changes Successfully made",
+    //                             icon: "success",
+    //                             showCancelButton: false,
+    //                             confirmButtonText: "OK",
 
-                            }).then((result) => {
-                                if (result.isConfirmed) {
+    //                         }).then((result) => {
+    //                             if (result.isConfirmed) {
 
-                                    location.reload();
+    //                                 location.reload();
 
-                                } else {
+    //                             } else {
                                     
-                                }
-                            });
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        // handle any errors here
-                    }
-                });
-            }
-        });
+    //                             }
+    //                         });
+    //                     }
+    //                 },
+    //                 error: function(xhr, status, error) {
+    //                     // handle any errors here
+    //                 }
+    //             });
+    //         }
+    //     });
 
-    }
+    // }
 
     function markAsEnrollmentRetake(student_enrollment_id,
         student_id, current_school_year_id, type){

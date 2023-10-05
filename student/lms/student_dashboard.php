@@ -9,6 +9,8 @@
     include_once('../../includes/classes/SubjectPeriodCodeTopic.php');
     include_once('../../includes/classes/SubjectCodeAssignment.php');
     include_once('../../includes/classes/SubjectProgram.php');
+    include_once('../../includes/classes/Announcement.php');
+    include_once('../../includes/classes/Notification.php');
 
     $section = new Section($con, null);
     $enrollment = new Enrollment($con);
@@ -26,10 +28,15 @@
         $school_year_id);
 
     $studentSubject = new StudentSubject($con);
+    $announcement = new Announcement($con);
 
+    $allEnrolledSubjectCode = $studentSubject->GetAllEnrolledSubjectCodeELMS
+        ($student_id, $school_year_id, $enrollment_id);
+        // public function GetAllAnnouncement($school_year_id) {
 
-    // $allEnrolledSubjectCode = $studentSubject->GetAllEnrolledSubjectCode($student_id,
-    //     $school_year_id, $enrollment_id);
+    $announcementList = $announcement->GetAllTeacherAnnouncement(
+        $school_year_id);
+
     // print_r($allEnrolledSubjectCode);
 
     $subjectPeriodCodeTopic = new SubjectPeriodCodeTopic($con);
@@ -102,6 +109,44 @@
     // print_r($submissionCodeAssignmentArr);
     // print_r($subjectCodeAssignmentsArray);
 
+    // $enrolledSubjectCode = [];
+
+ 
+    $enrolledSubjectList = [];
+    $studentAllAnnouncementIds = [];
+
+    // print_r($allEnrolledSubjectCode);
+
+    foreach ($allEnrolledSubjectCode as $key => $value) {
+        # code...
+        $subject_code = $value['student_subject_code'];
+        array_push($enrolledSubjectList, $subject_code);
+    }
+
+    // print_r($enrolledSubjectList);
+    // echo "<br>";
+
+
+    foreach ($announcementList as $key => $value) {
+
+        $announcement_subject_code = $value['subject_code'];
+        $announcement_id = $value['announcement_id'];
+
+        if (in_array($announcement_subject_code, $enrolledSubjectList)) {
+            
+            // echo $announcement_subject_code;
+            // echo "<br>";
+            array_push($studentAllAnnouncementIds, $announcement_id);
+        }
+    }
+ 
+
+    
+    $notif = new Notification($con);
+
+    $studentEnrolledSubjectAssignmentNotif = $notif->GetStudentAssignmentNotification($enrolledSubjectList, $school_year_id);
+
+    // var_dump($studentEnrolledSubjectAssignmentNotif);
 ?>
 
 <div class="content">
@@ -118,76 +163,25 @@
                     </header>
  
                     <main>
-                        <table id="student_dashboard_table" class="a" style="margin: 0">
-                            <thead>
-                                <tr>
-                                    <th>Subject</th>  
-                                    <th>Code</th>
-                                    <th>Type</th>
-                                    <th>Unit</th>
-                                    <th>Section</th>  
-                                    <th>Instructor</th>  
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php
-                                
-                                    $query = $con->prepare("SELECT 
+                        <?php if(count($allEnrolledSubjectCode) > 0): ?>
+                            <table id="student_dashboard_table" class="a" style="margin: 0">
+                                <thead>
+                                    <tr>
+                                        <th>Subject</th>  
+                                        <th>Code</th>
+                                        <th>Type</th>
+                                        <th>Unit</th>
+                                        <th>Section</th>  
+                                        <th>Instructor</th>  
+                                    </tr>
+                                </thead>
 
-                                        t4.subject_code AS student_subject_code,
-                                        t4.is_final,
-                                        t4.enrollment_id,
-                                        t4.is_transferee,
-                                        t4.student_subject_id,
-                                        t4.retake AS ss_retake,
-                                        t4.overlap AS ss_overlap,
-                                        
+                                <tbody>
+                                    <?php
 
-                                        t5.subject_code AS sp_subjectCode,
-                                        t5.subject_type,
-                                        t5.subject_title,
-                                        t5.unit,
+                                        foreach ($allEnrolledSubjectCode as $key => $row_inner) {
+                                        // while($row_inner = $query->fetch(PDO::FETCH_ASSOC)){
 
-                                        t6.program_section,
-
-                                        t7.student_subject_id as graded_student_subject_id,
-                                        t7.remarks,
-
-                                        t8.subject_schedule_id,
-                                        t8.course_id AS subject_schedule_course_id,
-                                        t8.subject_program_id AS subject_subject_program_id,
-                                        t8.time_from,
-                                        t8.time_to,
-                                        t8.schedule_day,
-                                        t8.schedule_time,
-
-                                        t9.firstname,
-                                        t9.lastname
-
-                                        FROM student_subject AS t4 
-
-                                        LEFT JOIN subject_program AS t5 ON t5.subject_program_id = t4.subject_program_id
-                                        LEFT JOIN course AS t6 ON t6.course_id = t4.course_id
-                                        LEFT JOIN student_subject_grade AS t7 ON t7.student_subject_id = t4.student_subject_id
-
-                                        LEFT JOIN subject_schedule AS t8 ON t8.subject_code = t4.subject_code
-                                        AND t8.course_id = t4.course_id
-
-                                        LEFT JOIN teacher as t9 ON t9.teacher_id = t8.teacher_id
-
-                                        WHERE t4.student_id=:student_id
-                                        AND t4.enrollment_id=:enrollment_id
-
-                                        ORDER BY t5.subject_title DESC
-                                    ");
-
-                                    $query->bindValue(":student_id", $student_id); 
-                                    $query->bindValue(":enrollment_id", $enrollment_id); 
-                                    $query->execute(); 
-
-                                    if($query->rowCount() > 0){
-
-                                        while($row_inner = $query->fetch(PDO::FETCH_ASSOC)){
                                             $subject_title = $row_inner['subject_title'];
 
                                             $schedule = new Schedule($con);
@@ -246,11 +240,15 @@
                                                 </tr>
                                             ";
                                         }
-                                    }
 
-                                ?>
-                            </tbody>
+                                    ?>
+                                </tbody>
                         </table>
+
+                        <?php else:?>
+                            <h4>No enrollment form data</h4>
+                        <?php endif;?>
+                        
                     </main>
                 </div>
             </main>
@@ -314,6 +312,120 @@
                                 </div>
                             <?php endif;?>
                         </div>
+                    </div>
+                </div>
+
+                 <hr>
+                <div class='card'>
+                    <div class='card-header'>
+                        <?php if(count($studentAllAnnouncementIds) > 0):?>
+
+                            <p style="margin-bottom: 7px;"><?php echo count($studentAllAnnouncementIds); ?> Announcement</p>
+                            <?php 
+                                $i=0;
+                                foreach ($studentAllAnnouncementIds as $key => $announcementId) {
+
+                                    $announcement = new Announcement($con, $announcementId);
+
+                                    $title = $announcement->GetTitle();
+                                    // $announcement_id = $announcement->getan();
+
+
+                                    // $title = $value['title'];
+                                    // $announcement_id = $value['announcement_id'];
+                                    $i++;
+
+                                    $student_view_obj = $announcement->GetStudentViewedAnnouncementId($announcementId);
+
+                                    $status = "
+                                        <i style='color: orange' class='fas fa-times'></i>
+                                    ";
+                                    // if($studentViewedAnnouncementIds == true){
+                                    if($student_view_obj !== NULL){
+                                        $studentViewedAnnouncementIds = $student_view_obj['announcement_id'];
+                                        
+                                        if($studentViewedAnnouncementIds == $announcementId){
+
+                                            $status = "
+                                                <i style='color: yellow' class='fas fa-check'></i>
+                                            ";
+                                        } 
+                                    }
+                                    
+
+                                    # code...
+                                    $announcement_url = "../courses/student_subject_announcement.php?id=$announcementId";
+
+                                    echo "
+                                        <a href='$announcement_url'>
+                                            <span>$i. $title ($status)</span>
+                                        </a>
+                                    <br>";
+                                }
+                            ?>
+                        <?php else:?>
+                            <p style="margin-bottom: 7px;">No announcement</p>
+                        <?php endif;?>
+                    </div>
+                </div>
+
+                <hr>
+                <div class='card'>
+                    <div class='card-header'>
+                        <?php if(count($studentEnrolledSubjectAssignmentNotif) > 0):?>
+
+                            <p style="margin-bottom: 7px;">Notification</p>
+
+                            <?php 
+
+                                $i=0;
+
+                                foreach ($studentEnrolledSubjectAssignmentNotif as $key => $notification) {
+
+
+                                    $notification_id = $notification['notification_id'];
+
+                                    $notif_exec = new Notification($con, $notification_id);
+
+                                    $sender_role = $notification['sender_role'];
+                                    $subject_code_assignment_id = $notification['subject_code_assignment_id'];
+                                    $assigment = new SubjectCodeAssignment($con, $subject_code_assignment_id);
+
+                                    $assigment_name = $assigment->GetAssignmentName();
+
+                                    // $title = $value['title'];
+                                    // $announcement_id = $value['announcement_id'];
+                                    $i++;
+
+                                    // $student_view_obj = $announcement->GetStudentViewedAnnouncementId($announcementId);
+
+                                    $status = "
+                                        <i style='color: orange' class='fas fa-times'></i>
+                                    ";
+
+                                    $assignment_notification_url = "../courses/task_submission.php?sc_id=$subject_code_assignment_id&n_id=$notification_id&notification=true";
+
+                                    #
+                                    $studentViewed = $notif_exec->CheckStudentViewedNotification($notification_id, $studentLoggedInId);
+
+                                    if($studentViewed){
+                                        $status = "
+                                            <i style='color: green' class='fas fa-check'></i>
+                                        ";
+                                    }
+
+                                    // var_dump($assigment_name);
+
+                                    echo "
+                                        <a href='$assignment_notification_url'>
+                                            <span>$i. $assigment_name ($status)</span>
+                                        </a>
+                                    <br>";
+                                }
+                            ?>
+                        <?php else:?>
+                            <p style="margin-bottom: 7px;">No Notification</p>
+                        <?php endif;?>
                     </div>
                 </div>
             </div>

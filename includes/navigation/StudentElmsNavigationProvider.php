@@ -34,6 +34,7 @@
 
             $courses_lms_url = $base_url .  "courses/index.php";
             $dashboard_lms_url = $base_url .  "lms/student_dashboard.php";
+            $notification_lms_url = $base_url .  "notification/index.php";
 
             $sideBarNavigationItem = "";
 
@@ -48,6 +49,11 @@
                     "bi bi-clipboard-data icon",
                     $dashboard_lms_url,
                     Constants::$navigationClass . Helper::GetActiveClass($page, "lms"));
+                
+                $sideBarNavigationItem .= Helper::createNavByIcon("Notification", 
+                    "bi bi-clipboard-data icon",
+                    $notification_lms_url,
+                    Constants::$navigationClass . Helper::GetActiveClass($page, "notification"));
 
                 $sideBarNavigationItem .= Helper::createNavByIcon("Log Out", 
                     "bi bi-box-arrow-right icon", $logout_url, Constants::$navigationClass);

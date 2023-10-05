@@ -92,11 +92,11 @@
         $sql->bindParam(":c_school_year_term", $school_year_term);
         $sql->execute();
 
-        if($sql->rowCount() > 0){
-            $value = $sql->rowCount();
-        }
+        // if($sql->rowCount() > 0){
+        //     $value = $sql->rowCount();
+        // }
 
-        return $value;
+        return $sql->rowCount();;
 
     }
 
@@ -1053,7 +1053,7 @@
     }
 
     public function GetEnrollmentFormStudentStatus($student_id, $enrollment_id,
-        $school_year_id) {
+        $school_year_id = null) {
 
         $student_status = "";
 
@@ -1063,13 +1063,13 @@
 
             WHERE enrollment_id = :enrollment_id
             AND student_id = :student_id
-            AND school_year_id = :school_year_id
+            -- AND school_year_id = :school_year_id
             
         ");
  
         $sql->bindValue(":enrollment_id", $enrollment_id);
         $sql->bindValue(":student_id", $student_id);
-        $sql->bindValue(":school_year_id", $school_year_id);
+        // $sql->bindValue(":school_year_id", $school_year_id);
         $sql->execute();
 
         if($sql->rowCount() > 0){
@@ -1081,7 +1081,7 @@
     }
 
     public function GetEnrollmentFormEnrollmentStatus($student_id, $enrollment_id,
-        $school_year_id) {
+        $school_year_id = null) {
 
         $student_status = "";
 
@@ -2123,8 +2123,6 @@
 
             $exec = true;
         }
-
-
         return $exec;
     }
 
@@ -2169,7 +2167,7 @@
 
 
     public function EnrollmentFormMarkAsPaid($current_school_year_id,
-        $student_id, $enrollment_form_id, $student_enrollment_waiting_list){
+        $student_id, $enrollment_form_id, $student_enrollment_waiting_list, $enrollment_payment){
 
         $cashier_evaluated = "yes";
         $now = date("Y-m-d H:i:s");
@@ -2177,7 +2175,8 @@
 
         $update_tentative = $this->con->prepare("UPDATE enrollment
             SET cashier_evaluated=:cashier_evaluated,
-                cashier_confirmation_date=:cashier_confirmation_date
+                cashier_confirmation_date=:cashier_confirmation_date,
+                enrollment_payment=:enrollment_payment
             
             WHERE student_id=:student_id
             AND school_year_id=:school_year_id
@@ -2186,6 +2185,7 @@
 
         $update_tentative->bindParam(":cashier_evaluated", $cashier_evaluated);
         $update_tentative->bindParam(":cashier_confirmation_date", $now);
+        $update_tentative->bindParam(":enrollment_payment", $enrollment_payment);
         $update_tentative->bindParam(":student_id", $student_id);
         $update_tentative->bindParam(":school_year_id", $current_school_year_id);
         $update_tentative->bindParam(":enrollment_form_id", $enrollment_form_id);
@@ -2197,14 +2197,10 @@
 
                 # Update the waiting list.
 
-                $waiting_list = new WaitingList($this->con);
-
-                $cashierUpdateSuccess = $waiting_list->CashierWaitingListUpdate(
-                    $student_id, $current_school_year_id);
-
-                if($cashierUpdateSuccess){
-                    return true;
-                }
+         
+                // if($cashierUpdateSuccess){
+                //     return true;
+                // }
 
             }else{
                 return true;
@@ -2921,74 +2917,6 @@
         return $hasDone;
     }
 
-    public function WithdrawingEnrollmentFormCashierEvaluated(
-        $enrollment_id, $student_id,
-        $school_year_id){
-
-        $doesCurrentSectionIsFull = false;
-
-        $student_enrollment_course_id = $this->GetEnrollmentFormCourseId($student_id,
-            $enrollment_id, $school_year_id);
-
-        $section_current = new Section($this->con, $student_enrollment_course_id);
-        $student_subject = new StudentSubject($this->con);
-        
-        $section_current_capacity_status = $section_current->GetSectionIsFull();
-        $current_section_capacity = $section_current->GetSectionCapacity();
-        $students_enrolled = $this->GetStudentEnrolled($student_enrollment_course_id);
-            
-        if($students_enrolled >= $current_section_capacity){
-            $doesCurrentSectionIsFull = true;
-        }
-
-        $cashier_evaluated = "yes";
-        $enrollment_withdraw_date = date("Y-m-d H:i:s");        
-        $enrollment_withdraw_status = "withdraw";     
-
-        $update = $this->con->prepare("UPDATE enrollment 
-
-            SET enrollment_status=:enrollment_withdraw_status,
-                enrollment_withdraw_date=:enrollment_withdraw_date
-
-            WHERE enrollment_id = :enrollment_id
-            AND student_id = :student_id
-            AND school_year_id = :school_year_id
-            AND cashier_evaluated = :cashier_evaluated
-            AND enrollment_status = :enrollment_status
-            ");
-
-        $update->bindParam(":enrollment_withdraw_status", $enrollment_withdraw_status);
-        $update->bindParam(":enrollment_withdraw_date", $enrollment_withdraw_date);
-        $update->bindParam(":enrollment_id", $enrollment_id);
-        $update->bindParam(":student_id", $student_id);
-        $update->bindParam(":school_year_id", $school_year_id);
-        $update->bindParam(":cashier_evaluated", $cashier_evaluated);
-        $update->bindValue(":enrollment_status", "enrolled");
-        $update->execute();
-
-        if($update->rowCount() > 0){
-
-            # Remove all subject load
-            $doesRemoveAll = $student_subject->RemovingSubjectLoads($student_id,
-                $enrollment_id, $school_year_id);
-
-
-            $section_exec = new Section($this->con, $student_enrollment_course_id);
-
-            if($doesCurrentSectionIsFull == true 
-                && $section_current_capacity_status == true){
-
-                $sectionUpdatedToUnFull = $section_exec->SetSectionToNonFull($student_enrollment_course_id);
-                
-                if($sectionUpdatedToUnFull){
-                    // echo "student_enrollment_course_id: $student_enrollment_course_id is now un-full.";
-                }
-            }
-            return true;
-        }
-        
-        return false;
-    }
 
     public function SecureNoPreviousEnrollmentEnrolled($school_year_id,
         $student_id) {

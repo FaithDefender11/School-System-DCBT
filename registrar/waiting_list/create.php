@@ -57,18 +57,6 @@
             $course_level = $_POST['course_level'];
             $school_year_id = $_POST['school_year_id'];
 
-            $waiting_list = new WaitingList($con);
-
-            $wasSuccess = $waiting_list->AddStudentToWaitingList($student_id,
-                $current_school_year_id, $program_id, $course_level);
-
-            if($wasSuccess){
-                Alert::success("Waiting list creation successfully made.",
-                    "$back_url");
-                exit();        
-            }
-
-
         }
         
         ?>

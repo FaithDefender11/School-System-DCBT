@@ -601,6 +601,8 @@ class SubjectCodeAssignment{
 
             WHERE t1.teacher_id=:teacher_id
             AND t1.school_year_id=:school_year_id
+
+            GROUP BY t1.subject_code
         ");
 
         $query->bindValue(":teacher_id", $teacher_id); 
@@ -837,6 +839,29 @@ class SubjectCodeAssignment{
 
         if ($query->rowCount() > 0) {
             return true;
+        }
+
+        return false;
+
+    }
+
+
+    public function CheckAssignmentBelongsToTeacher(
+        $subject_code_assignment_id, $teacher_id){
+
+        $subjectTopic = new SubjectPeriodCodeTopic($this->con);
+
+        $subject_code_topic_id = $subjectTopic->GetSubjectCodeTopicIdByAssignmentId(
+            $subject_code_assignment_id);
+
+        if($subject_code_topic_id !== NULL){
+
+            $subjectTopicExec = new SubjectPeriodCodeTopic($this->con, $subject_code_topic_id);
+
+            $owned_teacher_id = $subjectTopicExec->GetTeacherId();
+
+            if($teacher_id === $owned_teacher_id)
+                return true;
         }
 
         return false;

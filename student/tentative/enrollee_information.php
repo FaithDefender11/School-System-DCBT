@@ -17,6 +17,7 @@
     $admission_status = $pending->GetPendingAdmissionStatus();
  
     $parent = new PendingParent($con, $enrollee_id);
+    $studentRequirement = new StudentRequirement($con, $enrollee_id);
 
     // Guardian
     $parent_id = $parent->GetParentID();
@@ -139,14 +140,19 @@
                 $address,
                 $lrn,
                 $religion, $pending_enrollees_id);
- 
       
             if($enrolleeSuccess){
 
+
+                $initializedEnrollee = $studentRequirement->InitializedPendingEnrolleeRequirement(
+                    $pending_enrollees_id, $pending_type, $school_year_id);
+                
                 // $url = "process.php?new_student=true&step=student_requirements";
 
-                $url = "process.php?new_student=true&step=enrollee_parent_information";
-
+                // $url = "process.php?new_student=true&step=enrollee_parent_information";
+                // $url = "process.php?new_student=true&step=enrollee_school_history";
+                
+                $url = "process.php?new_student=true&step=enrollee_requirements";
                 Alert::success("Student Information filled-up.",
                     $url);
                 exit();
@@ -155,19 +161,18 @@
 
                 // $url = "process.php?new_student=true&step=student_requirements";
                 
-                $url = "process.php?new_student=true&step=enrollee_parent_information";
+                // $url = "process.php?new_student=true&step=enrollee_parent_information";
 
+                // echo "hey";
+
+                // $url = "process.php?new_student=true&step=enrollee_school_history";
+                $url = "process.php?new_student=true&step=enrollee_requirements";
                 header("Location: $url");
-
                 exit();
             }
-
+        }else{
+            // echo "Error";
         }
-        else{
-            // echo "has error";
-        }
-        
-       
     }
 
 
@@ -335,12 +340,12 @@
 
                     <div class="row">
                         <span>
-                        <label for="birthdate">Birthdate</label>
-                        <div>
-                        <input type="date" id="birthday" name="birthday" class="form-control" required value="<?php echo ($birthday != "") ? $birthday : "2023-06-17"; ?>">
-
-                        </div>
+                            <label for="birthdate">Birthdate</label>
+                            <div>
+                                <input type="date" id="birthday" name="birthday" class="form-control" required value="<?php echo ($birthday != "") ? $birthday : "2023-06-17"; ?>">
+                            </div>
                         </span>
+
                         <span>
                             <?php
                                 echo Helper::getError(Constants::$religionRequired);

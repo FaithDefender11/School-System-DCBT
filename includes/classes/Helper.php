@@ -292,6 +292,36 @@ class Helper {
 
     }
 
+    public static function ValidateSchoolName($text) {
+
+        $trimmed = trim($text);
+ 
+
+        if (empty($text)) {
+            array_push(self::$errorArray, Constants::$schoolRequired);
+            return;
+        } 
+        
+        else if (!preg_match("/^[a-zA-Z ]+$/", $text)) {
+            array_push(self::$errorArray, Constants::$invalidSchoolCharacters);
+            return;
+        }
+        else if ((strlen($trimmed) > 0 && strlen($trimmed) <= 2)) {
+            array_push(self::$errorArray, Constants::$schoolIsTooShort);
+            return;
+        } 
+        else if (strlen($trimmed) > 50) {
+            array_push(self::$errorArray, Constants::$schoolIsTooLong);
+            return;
+        } 
+
+        if(empty(self::$errorArray) && preg_match("/^[a-zA-Z0-9 ]+$/", $trimmed)) {
+            $output = self::sanitizeFormString($trimmed);
+            return $output;
+        }
+
+    }
+
     public static function ValidateContactNumber($text) {
 
         $trimmed = trim($text);
@@ -1254,7 +1284,7 @@ class Helper {
 
         if($isTertiary == true){
             $buttonTop = "
-                <div id='btn' style='left: 129px'></div>
+                <div id='btn' style='left: 122px'></div>
             ";
         }
 
@@ -1301,7 +1331,7 @@ class Helper {
 
         if($isTertiary == true){
             $buttonTop = "
-                <div id='btn' style='left: 129px'></div>
+                <div id='btn' style='left: 122px'></div>
             ";
         }
 
@@ -1351,12 +1381,17 @@ class Helper {
             </div>
         ";
     }
-
-    public static function RevealStudentTypePending($type, $doesGraduate = null){
+    
+    public static function RevealStudentTypePending(
+        $type,
+        //  $doesGraduate = null,
+        $enrolle_enrollment_status = null,
+        $admission_status = null){
 
         $output = "";
 
-        $text = $doesGraduate == true ? "<span style='font-weight: bold;' class='text-primary'>Graduate</span>" : "";
+        // $text = $doesGraduate == true ? "Graduate" : "";
+        $text = "";
 
         if($type == 'SHS' || $type == 'Senior High School'){
             $output = "Senior High School";
@@ -1366,9 +1401,21 @@ class Helper {
         }
 
         return "
-            <span class='text-muted' style='font-size: 15px;'>
-                <em>$output &nbsp &nbsp $text</em> 
-            </span>
+            <div class='title'>
+                <h1>Enrollment Form</h1>
+                <small>$output <em>$text</em></small>
+            </div>
+            <div class='action'>
+                <div class='dropdown'>
+                    <button class='icon'>
+                        <i class='bi bi-three-dots-vertical'></i>
+                    </button>
+                    <div class='dropdown-menu'>
+                        <a href='#' class='dropdown-item' style='color: red'
+                        ><i class='bi bi-file-earmark-x'></i>Delete form</a>
+                    </div>
+                </div>
+            </div>
         ";
     }
 
@@ -1408,26 +1455,24 @@ class Helper {
         return "
             <div class='cards'>
                 <div class='card'>
-                    <p class='text-center mb-0'>Student No.</p>
-                    <p class='text-center'>$student_unique_id</p>
+                    <sup>Student No.</sup>
+                    <sub>$student_unique_id</sub>
                 </div>
                 <div class='card'>
-                    <p class='text-center mb-0'>Level</p>
-                    <p class='text-center'>$student_level</p>
+                    <sup>Level</sup>
+                    <sub>$student_level</sub>
                 </div>
                 <div class='card'>
-                    <p class='text-center mb-0'>$type</p>
-                    <p class='text-center'>$section_acronym</p>
+                    <sup>$type</sup>
+                    <sub>$section_acronym</sub>
                 </div>
                 <div class='card'>
-                    <p class='text-center mb-0'>Status</p>
-                    <p class='text-center'>$student_status</p>
+                    <sup>Status</sup>
+                    <sub>$student_status</sub>
                 </div>
                 <div class='card'>
-                    <p class='text-center mb-0'>Added on</p>
-                    <p class='text-center'>
-                        $formattedDate
-                    </p>
+                    <sup>Added on</sup>
+                    <sub>$formattedDate</sub>
                 </div>
             </div>
         ";
@@ -1445,22 +1490,20 @@ class Helper {
         return "
             <div class='cards'>
                 <div class='card'>
-                    <p class='text-center mb-0'>Teacher ID.</p>
-                    <p class='text-center'>$school_teacher_id</p>
+                    <sup>Teacher ID.</sup>
+                    <sub>$school_teacher_id</sub>
                 </div>
                 <div class='card'>
-                    <p class='text-center mb-0'>Department</p>
-                    <p class='text-center'>$department_type</p>
+                    <sup>Department</sup>
+                    <sub>$department_type</sub>
                 </div>
                 <div class='card'>
-                    <p class='text-center mb-0'>Status</p>
-                    <p class='text-center'>$status</p>
+                    <sup>Status</sup>
+                    <sub>$status</sub>
                 </div>
                 <div class='card'>
-                    <p class='text-center mb-0'>Added on</p>
-                    <p class='text-center'>
-                        $formattedDate
-                    </p>
+                    <sup>Added on</sup>
+                    <sub>$formattedDate</sub>
                 </div>
             </div>
         ";
@@ -1474,30 +1517,28 @@ class Helper {
         return "
             <div class='cards'>
                 <div class='card'>
-                    <p class='text-center mb-0'>Section ID</p>
-                    <p class='text-center'>$section_id</p>
+                    <sup>Section ID</sup>
+                    <sub>$section_id</sub>
                 </div>
                 <div class='card'>
-                    <p class='text-center mb-0'>School Year</p>
-                    <p class='text-center'>$school_year_term</p>
+                    <sup>School Year</sup>
+                    <sub>$school_year_term</sub>
                 </div>
                 <div class='card'>
-                    <p class='text-center mb-0'>Semester</p>
-                    <p class='text-center'>$school_year_period</p>
+                    <sup>Semester</sup>
+                    <sub>$school_year_period</sub>
                 </div>
                 <div class='card'>
-                    <p class='text-center mb-0'>Strand</p>
-                    <p class='text-center'>$acronym</p>
+                    <sup>Strand</sup>
+                    <sub>$acronym</sub>
                 </div>
                 <div class='card'>
-                    <p class='text-center mb-0'>Level</p>
-                    <p class='text-center'>$level</p>
+                    <sup>Level</sup>
+                    <sub>$level</sub>
                 </div>
                 <div class='card'>
-                    <p class='text-center mb-0'>Students</p>
-                    <p class='text-center'>
-                        $totalStudents
-                    </p>
+                    <sup>Students</sup>
+                    <sub>$totalStudents</sub>
                 </div>
             </div>
         ";
@@ -1514,26 +1555,24 @@ class Helper {
         return "
             <div class='cards'>
                 <div class='card'>
-                    <p class='text-center mb-0'>Form ID</p>
-                    <p class='text-center'>$enrollment_form_id</p>
+                    <sup>Form ID</sup>
+                    <sub>$enrollment_form_id</sub>
                 </div>
                 <div class='card'>
-                    <p class='text-center mb-0'>Admission type</p>
-                    <p class='text-center'>$admission_status</p>
+                    <sup>Admission type</sup>
+                    <sub>$admission_status</sub>
                 </div>
                 <div class='card'>
-                    <p class='text-center mb-0'>Student no.</p>
-                    <p class='text-center'>N/A</p>
+                    <sup>Student no.</sup>
+                    <sub>N/A</sub>
                 </div>
                 <div class='card'>
-                    <p class='text-center mb-0'>Status</p>
-                    <p class='text-center'>Evaluation</p>
+                    <sup>Status</sup>
+                    <sub>Evaluation</sub>
                 </div>
                 <div class='card'>
-                    <p class='text-center mb-0'>Submitted on</p>
-                    <p class='text-center'>
-                        $formattedDate
-                    </p>
+                    <sup>Submitted on</sup>
+                    <sub>$formattedDate</sub>
                 </div>
             </div>
         ";
@@ -1602,33 +1641,33 @@ class Helper {
         return "
             <div class='cards'>
                 <div class='card'>
-                    <p class='text-center mb-0'>Form ID</p>
-                    <p class='text-center'>$enrollment_form_id</p>
+                    <sup>Form ID</sup>
+                    <sub>$enrollment_form_id</sub>
                 </div>
                 <div class='card'>
-                    <p class='text-center mb-0'>Admission type</p>
-                    <p class='text-center'>$updated_type</p>
+                    <sup>Admission type</sup>
+                    <sub>$updated_type</sub>
                 </div>
                 <div class='card'>
-                    <p class='text-center mb-0'>Student no.</p>
-                    <a style='color: #333' target='_blank' href='$link'class='text-center'>$student_unique_id</a>
+                    <sup>Student no.</sup>
+                    <sub><a style='color: #333' target='_blank' href='$link'>$student_unique_id</a></sub>
                 </div>
                 <div class='card'>
-                    <p class='text-center mb-0'>Status</p>
-                    <p class='text-center'>Evaluation</p>
+                    <sup>Status</sup>
+                    <sub>Evaluation</sub>
                 </div>
                 <div class='card'>
-                    <p class='text-center mb-0'>Submitted on</p>
-                    <p class='text-center'>
-                        $formattedDate
-                    </p>
+                    <sup>Submitted on</sup>
+                    <sub>$formattedDate</sub>
                 </div>
             </div>
         ";
     }
 
     public static function PendingEnrollmentDetailsTop($steps = null,
-        $pending_enrollees_id = null) {
+        $pending_enrollees_id = null,
+        $enrollee_enrollment_status = null,
+        $admission_status = null) {
 
             $result = "";
 
@@ -1651,6 +1690,59 @@ class Helper {
             ";
 
             $reject = "rejectForm($pending_enrollees_id)";
+            
+            $enrollee_enroll_status = "";
+            $enrollee_admission_status = "";
+
+            if($admission_status === "Standard"){
+
+                $enrolleeAdmissionStatusChanger = "enrolleeAdmissionStatusChanger(\"Transferee\", $pending_enrollees_id)";
+                
+                $enrollee_admission_status = "
+                    <a onclick='$enrolleeAdmissionStatusChanger' href='#' class='dropdown-item' style='color: teal'>
+                        <i class='bi bi-file-earmark-x'></i>
+                        Mark as Transferee
+                    </a>
+                ";
+
+            }else if($admission_status === "Transferee"){
+
+                $enrolleeAdmissionStatusChanger = "enrolleeAdmissionStatusChanger(\"Standard\", $pending_enrollees_id)";
+                
+                $enrollee_admission_status = "
+                    <a onclick='$enrolleeAdmissionStatusChanger' href='#' class='dropdown-item' style='color: teal'>
+                        <i class='bi bi-file-earmark-x'></i>
+                        Mark as Standard
+                    </a>
+                ";
+            }
+
+            #
+            if($enrollee_enrollment_status === "Regular"){
+
+                $enrolleeEnrollmentStatusChanger = "enrolleeEnrollmentStatusChanger(\"Irregular\", $pending_enrollees_id)";
+                
+                $enrollee_enroll_status = "
+                    <a onclick='$enrolleeEnrollmentStatusChanger' href='#' class='dropdown-item' style='color: green'>
+                        <i class='bi bi-file-earmark-x'></i>
+                        Mark as Irregular
+                    </a>
+                ";
+            }else if($enrollee_enrollment_status === "Irregular"){
+
+                $enrolleeEnrollmentStatusChanger = "enrolleeEnrollmentStatusChanger(\"Regular\", $pending_enrollees_id)";
+                $enrollee_enroll_status = "
+                    <a onclick='$enrolleeEnrollmentStatusChanger' href='#' class='dropdown-item' style='color: green'>
+                        <i class='bi bi-file-earmark-x'></i>
+                        Mark as Regular
+                    </a>
+                ";
+            }
+
+
+            
+
+
 
             $headerHtml = "
                 <header>
@@ -1658,18 +1750,28 @@ class Helper {
                         <h1>Enrollment form</h1>
                     </div>
                     <div class='action'>
+
                         <div class='dropdown'>
+
                             <button class='icon'>
                                 <i class='bi bi-three-dots-vertical'></i>
                             </button>
+
                             <div class='dropdown-menu'>
                                 <a onclick='$reject' href='#' class='dropdown-item' style='color: yellow'>
                                     <i class='bi bi-file-earmark-x'></i>
                                     Reject form
                                 </a>
+
+                                $enrollee_enroll_status
+                                $enrollee_admission_status
                                 $extra
+
                             </div>
+
+
                         </div>
+
                     </div>
                 </header>
             ";

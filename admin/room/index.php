@@ -21,7 +21,7 @@
 
 <div class="content">
     <main>
-        <div class="floating" id="shs-sy">
+        <div class="floating">
             <header>
                 <div class="title">
                     <h3>Available Room for <?php echo $current_school_year_term;?> <?php echo $current_school_year_period;?> Semester</h3>
@@ -29,7 +29,7 @@
 
                 <div class="action">
                     <a href="create.php">
-                        <button type="button" class="clean large success">+ Add New</button>
+                        <button type="button" class="default large">+ Add New</button>
                     </a>
                 </div>
             </header>
@@ -82,11 +82,11 @@
                                             <td>$room_capacity</td>
                                             <td>
                                                 <a href='edit.php?id=$room_id'>
-                                                    <button class='btn btn-primary'>
+                                                    <button class='information'>
                                                         <i class='fas fa-pen'></i>
                                                     </button>
                                                 </a>
-                                                <button onclick='$removeRoomBtn' class='btn btn-danger'>
+                                                <button onclick='$removeRoomBtn' class='danger'>
                                                         <i class='fas fa-trash'></i>
                                                 </button>
                                             </td>

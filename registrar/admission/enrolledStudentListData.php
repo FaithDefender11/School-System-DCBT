@@ -240,7 +240,6 @@ if ($row != null) {
         $enrollment_course_id = $row['enrollment_course_id'];
 
         $enrollment_approve = $row['enrollment_approve'];
-
         $enrollment_approvex = date("F d, Y", strtotime($enrollment_approve));
 
         $username = $row['username'];

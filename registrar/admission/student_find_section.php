@@ -6,8 +6,7 @@
         CheckStudentSectionSubjectAssignedWithinSY($student_enrollment_id,
             $student_enrollment_course_id, $student_id, $current_school_year_id);
 
-    if(isset($_POST['student_choose_section'])
-        && isset($_POST['find_selected_course_id'])){
+    if(isset($_POST['student_choose_section']) && isset($_POST['find_selected_course_id'])){
 
         $chosen_course_id = intval($_POST['find_selected_course_id']);
 
@@ -22,9 +21,13 @@
             }
         }
 
-        if($student_enrollment_course_id == 0 && 
-            $student_enrollment_course_id != $chosen_course_id){
+        if($student_enrollment_course_id == 0 
+            && $student_enrollment_course_id != $chosen_course_id 
+            && $student_enrollment_student_status === "Regular"
+            
+            ){
 
+              
             $change_enrollment_course_id_success = $enrollment->ChangeEnrollmentCourseId($current_school_year_id,
                 $student_id, $student_enrollment_form_id, $student_enrollment_course_id,
                 $chosen_course_id);
@@ -47,8 +50,9 @@
             }
         }
 
-        if($student_enrollment_course_id != 0 && 
-            $student_enrollment_course_id != $chosen_course_id){
+        if($student_enrollment_course_id != 0  
+            && $student_enrollment_course_id != $chosen_course_id
+            ){
 
             $change_enrollment_course_id_success = $enrollment->ChangeEnrollmentCourseId($current_school_year_id,
                 $student_id, $student_enrollment_form_id, $student_enrollment_course_id,
@@ -59,33 +63,24 @@
                 // Regular In the Previous Semester
                 // The subjects offered in todays semester should be all populated.
 
-                $update_student_subject_success = $student_subject->UpdateStudentSubjectCourseId($student_id, $student_enrollment_course_id,
-                        $chosen_course_id, $student_enrollment_id, $current_school_year_id,
-                        $current_school_year_period);
+                if($student_enrollment_student_status === "Regular"){
 
-                if($update_student_subject_success){
+                    $update_student_subject_success = $student_subject->UpdateStudentSubjectCourseId($student_id, $student_enrollment_course_id,
+                            $chosen_course_id, $student_enrollment_id, $current_school_year_id,
+                            $current_school_year_period);
 
-                    Alert::success("Successfully section changed.", "process_enrollment.php?subject_review=show&st_id=$student_id&selected_course_id=$chosen_course_id");
-                    exit();
+                    // if($update_student_subject_success){
 
+                    //     Alert::success("Successfully section changed.", "process_enrollment.php?subject_review=show&st_id=$student_id&selected_course_id=$chosen_course_id");
+                    //     exit();
+
+                    // }
                 }
-                // else{
-                //     Alert::success("Successfully find a section.", "process_enrollment.php?subject_review=show&st_id=$student_id&selected_course_id=$chosen_course_id");
-                //     exit();
-                // }
+
+                Alert::success("Successfully section changed.", "process_enrollment.php?subject_review=show&st_id=$student_id&selected_course_id=$chosen_course_id");
+                exit();
             }
         }
-
-        if($student_enrollment_id == 0 && 
-            $student_enrollment_course_id != $chosen_course_id
-            && $student_admission_status == "withdraw"){
-                    
-        }
-        // if($student_admission_status == "withdraw" || $student_active_status == 0){
-
-
-        // }
-
     }
 
     ?>
@@ -97,7 +92,8 @@
                     include_once('./changeStudentProgramModal.php');
                 ?>
 
-                <?php echo Helper::RevealStudentTypePending($type); ?>
+                <?php echo Helper::RevealStudentTypePending($type,
+                    $student_enrollment_student_status); ?>
 
                 <header>
 
@@ -113,22 +109,37 @@
 
                             <div class="dropdown-menu">
 
-                                <button 
+                                <!-- <button 
                                     onclick="<?php echo "studentRemoveForm($student_id, $student_enrollment_id, $current_school_year_id)"; ?>"
                                     style="cursor: pointer;"
                                     type='button' 
                                     href='#' class='dropdown-item text-danger'>
                                     <i style="color: red" class="bi bi-file-earmark-x"></i>
                                     &nbsp Delete form
-                                </button>
+                                </button> -->
+
+                                <?php if ($student_enrollment_student_status === "Irregular"): ?>
+                                    <a onclick="enrollmentStudentStatusChanging(<?php echo $student_enrollment_id; ?>, <?php echo $student_id; ?>, <?php echo $current_school_year_id; ?>, 'Regular')"
+                                        href="#" class="dropdown-item" style="color: green">
+                                        <i class="bi bi-file-earmark-x"></i>
+                                        Mark as Regular
+                                    </a>
+
+                                <?php elseif ($student_enrollment_student_status === "Regular"): ?>
+                                    <a onclick="enrollmentStudentStatusChanging(<?php echo $student_enrollment_id; ?>, <?php echo $student_id; ?>, <?php echo $current_school_year_id; ?>, 'Irregular')"
+                                        href="#" class="dropdown-item" style="color: blue">
+                                        <i class="bi bi-file-earmark-x"></i>
+                                        Mark as Irregular
+                                    </a>
+
+                                <?php endif; ?>
                             
-                                <button style="cursor: pointer;"
-                                    type='button' 
+                                <a style="cursor: pointer;"
                                     data-bs-target='#changeStudentProgram' 
                                     data-bs-toggle='modal'
                                     href='#' class='dropdown-item text-primary'>
                                     <i class='bi bi-pencil'></i>&nbsp Form Adjustment
-                                </button>
+                                </a>
                                 
                             </div>
                         </div>
@@ -467,7 +478,6 @@
                             $provideSection = [];
 
                             if($current_school_year_period == "First"){
-
 
                                 $irregularOldSections = $section->GetIrregularOldSectionList(
                                     $student_program_id, $current_school_year_term, 
