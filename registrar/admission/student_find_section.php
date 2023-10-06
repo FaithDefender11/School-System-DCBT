@@ -36,9 +36,10 @@
 
                 // Populated the selected $chosen_course_id
                 $wasStudentSubjectPopulated = $student_subject
-                    ->AddNonFinalDefaultEnrolledSubject($student_id, 
-                    $student_enrollment_id, $chosen_course_id, $current_school_year_id,
-                    $current_school_year_period,  $admission_status);
+                    ->AddNonFinalDefaultEnrolledSubject(
+                    $student_id,  $student_enrollment_id,
+                    $chosen_course_id, $current_school_year_id,
+                    $current_school_year_period, $admission_status);
                 
                 $section = new Section($con, $chosen_course_id);
                 $chosen_section_name = $section->GetSectionName();

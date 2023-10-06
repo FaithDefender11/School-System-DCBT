@@ -995,7 +995,7 @@
     }
 
     public function GetEnrollmentFormCourseId($student_id, $enrollment_id,
-        $school_year_id) {
+        $school_year_id = null) {
 
         $student_enrollment_course_id = 0;
 

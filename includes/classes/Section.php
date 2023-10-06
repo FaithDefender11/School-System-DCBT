@@ -1134,9 +1134,9 @@
             return false;
         }
 
-        public function CreateSectionSubjectCode($section_name, $subject_code){
+        public function CreateSectionSubjectCode($section_name, $program_code){
 
-            return $section_name . "-" . $subject_code;
+            return $section_name . "-" . $program_code;
         }
 
         public function DeactiveCurrentActiveSections($school_year_term){

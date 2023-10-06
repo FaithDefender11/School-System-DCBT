@@ -163,14 +163,8 @@
                     continue;
                 }
 
-                // echo $subject_code;
-
-                // if($hasError == false){
-                // if(false){
                 if(true){
-                    // echo "$subject_code is available";
-                    // echo "<br>";
-
+                  
                     $student_subject_code = $section->CreateSectionSubjectCode(
                         $section_name, $subject_code);
                     
@@ -190,14 +184,151 @@
                 }
             }
         }
-
         return $isFinish;
-
     }
-    
-    public function CheckIfStudentSubjectAlreadyCredited($enrollment_id){
+
+
+    public function PopulateBlockSectionSubjects(
+        $current_school_year_id,
+        $current_school_year_period,
+        $student_enrollment_course_id,
+        $student_enrollment_id,
+        $student_id){
+
+
+        $section = new Section($this->con, $student_enrollment_course_id);
+        $studentSectionName = $section->GetSectionName();
+        $student_course_level = $section->GetSectionGradeLevel();
+        $student_course_program_id = $section->GetSectionProgramId($student_enrollment_course_id);
+
+
+        $subjectProgram = new SubjectProgram($this->con);
+
+        # 1. Remove all subjects in the student_subject list
+        $removeAllGivenSubjects = $this->RemoveAllInsertedStudentSubjectList(
+            $student_enrollment_id, $current_school_year_id, $student_id);
+        
+
+        $sql = $this->con->prepare("SELECT t1.* FROM subject_program as t1
+
+            WHERE t1.semester=:semester
+            AND t1.course_level=:course_level
+            AND t1.program_id=:program_id
+            ");
+
+        $sql->bindParam("semester", $current_school_year_period);
+        $sql->bindParam("course_level", $student_course_level);
+        $sql->bindParam("program_id", $student_course_program_id);
+        $sql->execute();
+
+        $isFinish = false;
+
+        if($sql->rowCount() > 0){
+
+            $add_student_subject = $this->con->prepare("INSERT INTO student_subject
+                (student_id, subject_code, enrollment_id, course_id, subject_program_id,
+                school_year_id, is_transferee, is_final, program_code)
+                VALUES (:student_id, :subject_code, :enrollment_id, :course_id, :subject_program_id,
+                :school_year_id, :is_transferee, :is_final, :program_code)");
+
+            // $asd = $sql->fetchAll(PDO::FETCH_ASSOC);
+            // return $asd;
+
+            while($row = $sql->fetch(PDO::FETCH_ASSOC)){
+             
+                $program_code = $row['subject_code'];
+                $pre_requisite_code = $row['pre_req_subject_title'];
+                $subject_program_id = $row['subject_program_id'];
+ 
+                # 2. Remove the credited subjects within semester course level (if ever)
+
+                $checkSubjectProgramOfferedWithinSemester = $subjectProgram
+                    ->CheckSubjectProgramIsWithinSemesterOffered(
+                        $subject_program_id,
+                        $current_school_year_period, $student_course_level);
+
+                if($checkSubjectProgramOfferedWithinSemester == true){
+                    $removeAllCreditedSubjectsWithinSemester = $this->RemoveAllInsertedCreditedStudentSubjectList(
+                        $current_school_year_id, $student_id,
+                        $subject_program_id);
+                }
+                
+                # 3. Add Block Sections Subjects.
+                // $subjectProgram = new SubjectProgram($this->con, $subject_program_id);
+                // $program_code = $subjectProgram->GetSubjectProgramRawCode();
+
+                $student_subject_code = $section->CreateSectionSubjectCode($studentSectionName,
+                    $program_code);
+
+                $add_student_subject->bindParam(':student_id', $student_id);
+                $add_student_subject->bindParam(':subject_code', $student_subject_code);
+                $add_student_subject->bindParam(':enrollment_id', $student_enrollment_id);
+                $add_student_subject->bindParam(':course_id', $student_enrollment_course_id);
+                $add_student_subject->bindParam(':subject_program_id', $subject_program_id);
+                $add_student_subject->bindParam(':school_year_id', $current_school_year_id);
+                $add_student_subject->bindValue(':is_transferee', 0);
+                $add_student_subject->bindValue(':is_final', 0);
+                $add_student_subject->bindParam(':program_code', $program_code);
+
+                if($add_student_subject->execute()){
+                    $isFinish = true;
+                }
 
         
+            }
+        }
+        return $isFinish;
+    }
+
+    public function RemoveAllInsertedStudentSubjectList(
+        $enrollment_id, $school_year_id, $student_id){
+
+        $sql = $this->con->prepare("DELETE FROM student_subject
+
+            WHERE enrollment_id = :enrollment_id
+            AND school_year_id = :school_year_id
+            AND student_id = :student_id
+        ");
+                
+        $sql->bindParam(":enrollment_id", $enrollment_id);
+        $sql->bindParam(":school_year_id", $school_year_id);
+        $sql->bindParam(":student_id", $student_id);
+        $sql->execute();
+
+        if($sql->rowCount() > 0){
+            return true;
+        }
+
+        return false;
+    }
+
+    public function RemoveAllInsertedCreditedStudentSubjectList(
+        $school_year_id, $student_id, $subject_program_id){
+
+
+        $sql = $this->con->prepare("DELETE FROM student_subject
+
+            WHERE school_year_id = :school_year_id
+            AND student_id = :student_id
+            AND is_transferee = :is_transferee
+            AND subject_program_id = :subject_program_id
+            
+        ");
+                
+        $sql->bindParam(":school_year_id", $school_year_id);
+        $sql->bindParam(":student_id", $student_id);
+        $sql->bindValue(":is_transferee", 1);
+        $sql->bindValue(":subject_program_id", $subject_program_id);
+        $sql->execute();
+
+        if($sql->rowCount() > 0){
+            return true;
+        }
+
+        return false;
+    }
+    public function CheckIfStudentSubjectAlreadyCredited($enrollment_id){
+
         $code = "";
         $sql = $this->con->prepare("SELECT subject_code
 
@@ -502,7 +633,7 @@
                 enrollment_id=:set_null_enrollment_id,
                 course_id = NULL,
                 date_creation =:date_creation,
-                subject_code = '',
+                subject_code = NULL,
                 program_code =:program_code,
                 is_final = 1
 
@@ -1902,6 +2033,41 @@
 
         return $sql->rowCount() > 0;
     }
+
+
+    public function AddSubjectProgramIntoStudentSubjectList(
+
+        $student_id, $subject_code, $enrollment_id,
+        $student_enrollment_course_id, $student_subject_program_id,
+        $current_school_year_id, $program_code){
+
+        $add_student_subject = $this->con->prepare("INSERT INTO student_subject
+            
+            (student_id, subject_code, enrollment_id, course_id,
+            subject_program_id, school_year_id, is_transferee, is_final, program_code)
+            
+            VALUES (:student_id, :subject_code, :enrollment_id, :course_id, :subject_program_id,
+            :school_year_id, :is_transferee, :is_final, :program_code)
+        ");
+
+        $add_student_subject->bindParam(':student_id', $student_id);
+        $add_student_subject->bindParam(':subject_code', $subject_code);
+        $add_student_subject->bindParam(':enrollment_id', $enrollment_id);
+        $add_student_subject->bindParam(':course_id', $student_enrollment_course_id);
+        $add_student_subject->bindParam(':subject_program_id', $student_subject_program_id);
+        $add_student_subject->bindParam(':school_year_id', $current_school_year_id);
+        $add_student_subject->bindValue(':is_transferee', 0);
+        $add_student_subject->bindValue(':is_final', 0);
+        $add_student_subject->bindParam(':program_code', $program_code);
+        $add_student_subject->execute();
+        
+        if($add_student_subject->rowCount() > 0){
+            return true;
+        }
+
+        return false;
+    }
+
 
 }
 

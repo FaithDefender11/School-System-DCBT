@@ -848,5 +848,24 @@ class SubjectProgram{
         return [];
 
     }
+    public function CheckSubjectProgramIsWithinSemesterOffered(
+        $subject_program_id, $period, $student_enrollment_course_level){
+     
+        $sql = $this->con->prepare("SELECT t1.subject_program_id 
+        
+            FROM subject_program AS t1
+ 
+            WHERE t1.subject_program_id=:subject_program_id
+            AND t1.semester=:semester
+            AND t1.course_level=:course_level
+        ");
+
+        $sql->bindParam(":subject_program_id", $subject_program_id);
+        $sql->bindParam(":semester", $period);
+        $sql->bindParam(":course_level", $student_enrollment_course_level);
+        $sql->execute();
+
+        return $sql->rowCount() > 0;
+    }
 }
 ?>

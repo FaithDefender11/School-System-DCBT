@@ -1137,7 +1137,7 @@
 
     // (Has Student Table) For student_find_section & subject_review pphp route
 
-        function enrollmentStudentStatusChanging(student_enrollment_id,
+    function enrollmentStudentStatusChanging(student_enrollment_id,
         student_id, current_school_year_id, type){
 
         var student_enrollment_id = parseInt(student_enrollment_id);

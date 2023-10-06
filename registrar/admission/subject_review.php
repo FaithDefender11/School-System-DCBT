@@ -258,22 +258,14 @@
                     <main>
                         <table class="a" id="irregular_subject_review_table">
                             <thead>
-                                <!-- <tr class="text-center"> 
-                                    <th rowspan="2">ID</th>
-                                    <th rowspan="2">Section - Code</th>
-                                    <th rowspan="2">Description</th>
-                                    <th rowspan="2">Unit</th>
-                                    <th rowspan="2">Type</th>
-                                    <th rowspan="2">Action</th>
-                                </tr> -->
 
                                 <tr class="text-center"> 
                                     <th rowspan="2">Course Description</th>
-                                    <th rowspan="2">Unit</th>
                                     <th rowspan="2">Section</th>
                                     <th rowspan="2">Type</th>
                                     <th rowspan="2">Time</th>
                                     <th rowspan="2">Room</th>
+                                    <th rowspan="2">Unit</th>
                                     <th rowspan="2">Action</th>
                                 </tr>
                             </thead>
@@ -314,6 +306,8 @@
                                     if($sql->rowCount() > 0){
 
                                         $totalSubjectList = $sql->rowCount();
+
+                                        $totalUnits = NULL;
 
                                         while($row = $sql->fetch(PDO::FETCH_ASSOC)){
 
@@ -394,15 +388,16 @@
                                                     </button>
                                                 ";
                                             }
+                                            $totalUnits += $unit;
 
                                             echo "
                                                 <tr class='text-center'>
                                                     <td>$subject_title</td>
-                                                    <td>$unit</td>
                                                     <td>$enrolled_section_Name</td>
                                                     <td>$subject_type</td>
                                                     <td>$scheduleOutput</td>
                                                     <td>$roomOutput</td>
+                                                    <td>$unit</td>
                                                     <td>
                                                         <button 
                                                             class='btn btn-sm btn-primary'
@@ -412,12 +407,16 @@
                                                         </button>
                                                         $removeSubjectLoadBtn
                                                     </td>
+
                                                 </tr>
                                             ";
                                         }
                                     }
                                 ?>
                             </tbody>
+                            <tr class="text-right">
+                                <td colspan="6">Total Units: <?php echo $totalUnits;?></td>
+                            </tr>
                         </table>
                     </main>
                 </div>
