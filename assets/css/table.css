@@ -5,22 +5,22 @@
 
 /* table scroll style */
 
-.floating > main::-webkit-scrollbar {
+.floating>main::-webkit-scrollbar {
   height: 10px;
 }
 
 /* Track */
-.floating > main::-webkit-scrollbar-track {
+.floating>main::-webkit-scrollbar-track {
   background: #dddddd;
 }
 
 /* Handle */
-.floating > main::-webkit-scrollbar-thumb {
+.floating>main::-webkit-scrollbar-thumb {
   background: #888;
 }
 
 /* Handle on hover */
-.floating > main::-webkit-scrollbar-thumb:hover {
+.floating>main::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
 
@@ -48,7 +48,10 @@ table.a tr:nth-child(even) {
 
 table.b th,
 table.b td,
-table.b td a {
+table.b td a,
+table.c th,
+table.c td,
+table.c td a {
   padding: 10px 20px;
 }
 
@@ -56,22 +59,34 @@ table.b thead {
   margin: 10px;
 }
 
+.c>thead>tr>th,
+.c>thead>tr>td,
+.c>tbody>tr>th,
+.c>tbody>tr>td {
+  border: 1px solid black;
+}
+
+.c>tbody>tr>td>span {
+  font-weight: 600;
+}
+
 /* for tables with multiple height */
-td > p {
+td>p {
   margin: 0;
 }
 
-td > select {
+td>select {
   border: none;
   padding: 0px 5px;
   background-color: transparent;
 }
+
 /*tables with important data*/
 td.important {
   font-weight: bold;
 }
 
-td > button.icon i {
+td>button.icon i {
   font-size: 20px;
   font-weight: bold;
 }
