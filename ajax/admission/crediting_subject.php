@@ -125,7 +125,6 @@
             # Example: Credited = OCC, OCC is offered in 1st Semester
             # That subject should be added to the cart (just like undoing behavior)
 
-
             if($enrollment_student_status == "Regular" 
                 && $doesSubjectProgramOfferedWithinSemester === true){
 
