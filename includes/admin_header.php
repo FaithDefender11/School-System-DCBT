@@ -65,6 +65,7 @@
         <title><?php echo "Administrator " . $document_title; ?></title>
 
         <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
         
 
         <!-- Bootstrap Icons CSS -->
@@ -113,6 +114,7 @@
     <div class="pageContainer">
         <div class="sidebar-nav" style="color: white; display: block;">
             <div class="sidebar-profile">
+                
                 <h3><?php echo $adminLoggedInObj->getFirstName(); ?> <?php echo $adminLoggedInObj->getLastName(); ?> </h3>
                 <p class="user_email"><?php echo $adminLoggedInObj->getUsername(); ?></p>
                 <p class="role_name">Admin</p>

@@ -234,8 +234,12 @@
     
     <div class="content-header">
         
-        <?php echo Helper::RevealStudentTypePending($type,
-            $enrollee_enrollment_status, $admission_status); ?>
+        <?php 
+
+            echo Helper::RevealStudentTypePending($type,
+                $enrollee_enrollment_status, $admission_status); 
+            
+            ?>
 
         <?php echo Helper::PendingEnrollmentDetailsTop(null,
             $pending_enrollees_id,
@@ -263,7 +267,7 @@
 
             <header>
                 <div class="title">
-                <h3>Available sections</h3>
+                    <h3>Available sections</h3>
                 </div>
             </header>
             

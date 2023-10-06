@@ -1402,20 +1402,12 @@ class Helper {
 
         return "
             <div class='title'>
-                <h1>Enrollment Form</h1>
-                <small>$output <em>$text</em></small>
+                <small><em>$output &nbsp &nbsp </em></small>
+                <small><em>$enrolle_enrollment_status &nbsp </em></small>
+                <small><em>$admission_status &nbsp </em></small>
+             
             </div>
-            <div class='action'>
-                <div class='dropdown'>
-                    <button class='icon'>
-                        <i class='bi bi-three-dots-vertical'></i>
-                    </button>
-                    <div class='dropdown-menu'>
-                        <a href='#' class='dropdown-item' style='color: red'
-                        ><i class='bi bi-file-earmark-x'></i>Delete form</a>
-                    </div>
-                </div>
-            </div>
+             
         ";
     }
 
@@ -1680,6 +1672,12 @@ class Helper {
                             <i class='bi bi-file-earmark-x'></i>
                         Edit
                     </a>
+                    
+                    <a href='contact_enrollee.php?id=$pending_enrollees_id' class='dropdown-item' style='color: black'>
+                        <i class='fas fa-phone'></i>
+                        Contact
+                    </a>
+
                 ";
             }
 
@@ -1740,10 +1738,6 @@ class Helper {
             }
 
 
-            
-
-
-
             $headerHtml = "
                 <header>
                     <div class='title'>
@@ -1766,6 +1760,8 @@ class Helper {
                                 $enrollee_enroll_status
                                 $enrollee_admission_status
                                 $extra
+
+                               
 
                             </div>
 

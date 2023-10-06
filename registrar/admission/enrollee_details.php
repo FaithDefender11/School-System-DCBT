@@ -57,19 +57,23 @@
 ?>
 
 <div class="content">
+
     <nav>
         <a href="evaluation.php"
         ><i class="bi bi-arrow-return-left fa-1x"></i>
         <h3>Back</h3>
         </a>
     </nav>
+
     <div class="content-header">
         <?php echo Helper::RevealStudentTypePending($type,
             $enrollee_enrollment_status, $admission_status); ?>
 
         <?php echo Helper::PendingEnrollmentDetailsTop(
-            "step1", $pending_enrollees_id,
-            $enrollee_enrollment_status, $admission_status);
+            "step1",
+            $pending_enrollees_id,
+            $enrollee_enrollment_status,
+            $admission_status);
         ?>
 
         <?php echo Helper::ProcessPendingCards($enrollment_form_id, $date_creation, $admission_status); ?>

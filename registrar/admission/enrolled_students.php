@@ -38,88 +38,10 @@
     <?php
 
 
-<<<<<<< HEAD
     if(isset($_GET['id']) && isset($_GET['sy_id'])){
         
         $course_id = $_GET['id'];
         $school_year_id = $_GET['sy_id'];
-=======
-    $pendingEnrollmentCount = 0;
-    $unionEnrollmentCount = 0;
-    $waitingApprovalEnrollmentCount = 0;
-    $enrolledStudentsEnrollmentCount = 0;
-
-
-    $unionEnrollmentCount = count($unionEnrollment);
-    $waitingPaymentEnrollmentCount = count($waitingPaymentEnrollment);
-    $waitingApprovalEnrollmentCount = count($waitingApprovalEnrollment);
-    $enrolledStudentsEnrollmentCount = count($enrolledStudentsEnrollment);
-
-
-    $selected_student_filter = "";
-
-    if ($_SERVER["REQUEST_METHOD"] === "POST" 
-        && isset($_POST["student_filter"])) {
-
-        $selected_student_filters = $_POST["student_filter"];
-
-        foreach ($selected_student_filters as $selected_filter) {
-            // echo $selected_filter . "<br>";
-
-          $selected_student_filter = $selected_filter;
-
-        }
-    }
-
-    echo $selected_student_filter;
-?>
-
-<div class="content">
-    <div class="content-header">
-        <header>
-        <div class="title">
-            <h1>Enrollment form <em>SHS</em></h1>
-            <small
-            >Note: Numbers on tabs only count current school year and
-            semester</small
-            >
-        </div>
-        </header>
-    </div>
-
-    <div class="tabs">
-        <button
-        class="tab"
-        id="shsEvaluation"
-        style="background-color: var(--theme); color: white"
-        onclick="window.location.href = 'evaluation.php';"
-        >
-        Evaluation (<?php echo $unionEnrollmentCount;?>)
-        </button>
-        
-        <button
-            class="tab" id="shsPayment"
-            style="background-color: var(--them); color: white"
-            onclick="window.location.href = 'waiting_payment.php';">
-            Waiting payment (<?php echo $waitingPaymentEnrollmentCount;?>)
-        </button>
-        <button
-        class="tab"
-        id="shsApproval"
-        style="background-color: var(--them); color: white"
-        onclick="window.location.href = 'waiting_approval.php';">
-        Waiting approval (<?php echo $waitingApprovalEnrollmentCount;?>)
-        </button>
-        <button
-        class="tab"
-        id="shsEnrolled"
-        style="background-color: var(--mainContentBG); color: black"
-        onclick="window.location.href = 'enrolled_students.php';"
-        >
-        Enrolled (<?php echo $enrolledStudentsEnrollmentCount;?>)
-        </button>
-    </div>
->>>>>>> ab36c1169e9eadbb944d7c8c6d0b4ebe6a6bd812
 
         $school_year = new SchoolYear($con, null);
         $school_year_obj = $school_year->GetActiveSchoolYearAndSemester();

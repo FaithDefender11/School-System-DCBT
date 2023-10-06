@@ -27,7 +27,8 @@
 
         $type = $_GET['type'];
 
-        if(isset($_POST['create_subject_template'])
+        if($_SERVER["REQUEST_METHOD"] === "POST" &&
+            isset($_POST['create_subject_template'])
             && isset($_POST['subject_title'])
             && isset($_POST['subject_type'])
             && isset($_POST['unit'])

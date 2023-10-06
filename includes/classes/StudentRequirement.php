@@ -463,6 +463,24 @@
         return false;
     }
 
+    public function RemovedRequirementFile(
+        $requirement_id) {
+
+        $sql = $this->con->prepare("DELETE FROM requirement
+
+            WHERE requirement_id=:requirement_id
+        ");
+
+        $sql->bindParam(":requirement_id", $requirement_id);
+        $sql->execute();
+
+        if($sql->rowCount() > 0){
+            return true;
+        }
+
+        return false;
+    }
+
     public function GetStudentRequirementListFile($student_requirement_list_id){
 
         $query= $this->con->prepare("SELECT file FROM student_requirement_list
@@ -480,6 +498,21 @@
         return NULL;
     }
 
+    public function InsertRequirement($requirement_name,
+        $status, $is_enabled) {
+
+        $statement = $this->con->prepare("INSERT INTO requirement (requirement_name, status, is_enabled) VALUES (:requirement_name, :status, :is_enabled)");
+
+        $statement->bindParam(":requirement_name", $requirement_name);
+        $statement->bindParam(":status", $status);
+        $statement->bindParam(":is_enabled", $is_enabled);
+
+        if ($statement->execute()) {
+            return true; // Insert was successful
+        } else {
+            return false; // Insert failed
+        }
+    }
 
 }
 

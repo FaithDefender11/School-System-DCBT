@@ -90,12 +90,7 @@
 ?>
 
   <div class="content">
-    <nav>
-      <a href="registrar_admission.html"
-        ><i class="bi bi-arrow-return-left fa-1x"></i>
-        <span>Back</span>
-      </a>
-    </nav>
+     
     <div class="content-header">
       <header>
         <div class="title">
@@ -134,7 +129,6 @@
         style="background-color: var(--mainContentBG); color: white"
         onclick="window.location.href = 'waiting_approval.php';"
       >
->>>>>>> ab36c1169e9eadbb944d7c8c6d0b4ebe6a6bd812
         Waiting approval (<?php echo $waitingApprovalEnrollmentCount;?>)
       </button>
 

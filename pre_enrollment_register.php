@@ -37,6 +37,7 @@
 
         <!-- Bootstrap 4 JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    
     <?php
 
     $pending_firstname = "";
@@ -125,19 +126,18 @@
 
                 $errorLog = "Email Sending Error: " . $e->getMessage();
                 echo "<script>
-
-                $(document).ready(function() {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oh no!',
-                        text: 'Sending email is not working. Please contact the school administrator. {$mail->ErrorInfo} {$errorLog}',
-                        backdrop: false,
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            window.locaPre Enrollment Formtion.href = '';
-                        }
+                    $(document).ready(function() {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oh no!',
+                            text: 'Sending email is not working. Please contact the school administrator. {$mail->ErrorInfo} {$errorLog}',
+                            backdrop: false,
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = 'pre_enrollment_register.php';
+                            }
+                        });
                     });
-                });
                 </script>";
                 exit();
                 // echo "Sending email is not working. Please contact the school. {$mail->ErrorInfo}";

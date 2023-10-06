@@ -692,7 +692,7 @@
                 $html = "
                     <label for='course_level'>* Course Level</label>
                     <div>
-                    <select required id='course_level' name='course_level'>";
+                    <select class='form-control' required id='course_level' name='course_level'>";
 
                 // $html .= "<option value='Course-Section' disabled selected>Select-Program</option>";
                 

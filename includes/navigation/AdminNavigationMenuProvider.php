@@ -38,6 +38,7 @@
         $school_year_url = $base_url .  "school_year/index.php";
         $room_url = $base_url .  "room/index.php";
         $department_url = $base_url .  "department/index.php";
+        $requirement_url = $base_url .  "requirement/index.php";
         $program_url = $base_url .  "program/shs_index.php";
         $teacher_url = $base_url .  "teacher/index.php";
         $course_url = $base_url .  "course/index.php";
@@ -62,6 +63,9 @@
 
         $sideBarNavigationItem .= Helper::createNavByIcon("Department", 
             "bi bi-people", $department_url, Constants::$navigationClass . Helper::GetActiveClass($page, "department"));
+
+        $sideBarNavigationItem .= Helper::createNavByIcon("Requirement", 
+            "bi bi-file icon", $requirement_url, Constants::$navigationClass . Helper::GetActiveClass($page, "requirement"));
 
         $sideBarNavigationItem .= Helper::createNavByIcon("Room", 
             "bi bi-house", $room_url, Constants::$navigationClass . Helper::GetActiveClass($page, "room"));

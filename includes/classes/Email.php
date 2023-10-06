@@ -54,6 +54,24 @@ class Email {
         }
     }
 
+
+    public function SendMessageViaEmail($email_address,
+        $message, $subject) {
+
+
+        $this->mailer->addAddress($email_address);
+        // $this->mailer->Subject = "Daehan College of Business Technology Enrollment Verification";
+        $this->mailer->Subject = $subject;
+        $this->mailer->Body = $message;
+
+        if ($this->mailer->send()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
     public function SendTemporaryPassword($email_address, $token) {
 
         // $link = "http://localhost/dcbt/enrollment/verify_student.php?token=" 
