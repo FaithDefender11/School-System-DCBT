@@ -61,11 +61,11 @@
                                     <td>$department_name</td>
                                     <td>
                                         <a href='edit.php?id=$department_id'>
-                                            <button class='information'>
+                                            <button class='btn btn-sm btn-primary'>
                                                 <i class='fas fa-pen'></i>
                                             </button>
                                         </a>
-                                        <button onclick='$removeDepartmentBtn' class='danger'>
+                                        <button onclick='$removeDepartmentBtn' class='btn btn-danger btn-sm'>
                                                 <i class='fas fa-trash'></i>
                                         </button>
                                     </td>

@@ -82,11 +82,11 @@
                                             <td>$room_capacity</td>
                                             <td>
                                                 <a href='edit.php?id=$room_id'>
-                                                    <button class='information'>
+                                                    <button class='btn btn-sm btn-primary'>
                                                         <i class='fas fa-pen'></i>
                                                     </button>
                                                 </a>
-                                                <button onclick='$removeRoomBtn' class='danger'>
+                                                <button onclick='$removeRoomBtn' class='btn btn-danger btn-sm'>
                                                         <i class='fas fa-trash'></i>
                                                 </button>
                                             </td>

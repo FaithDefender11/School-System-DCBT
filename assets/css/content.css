@@ -88,16 +88,16 @@
   background-color: transparent;
 }
 
-.cards>.card {
+.content-header>.cards>.card {
   border: none;
 }
 
-.cards>.card>sub {
+.content-header>.cards>.card>sub {
   margin-top: 5px;
 }
 
-.cards>.card>sub,
-.cards>.card>sup {
+.content-header>.cards>.card>sub,
+.content-header>.cards>.card>sup {
   display: block;
   font-size: medium;
   text-align: center;
@@ -257,6 +257,11 @@
   column-gap: 5px;
   justify-content: center;
   font-weight: bold;
+}
+
+.floating>.tabs>.tab:focus {
+  border: none;
+  outline: none;
 }
 
 .floating>main {
