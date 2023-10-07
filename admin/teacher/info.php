@@ -41,6 +41,9 @@
 
 
         ?>
+        <style>
+            <?php include "../../assets/css/content.css" ?>
+        </style>
         <body>
             <div class="content">
                 <nav>
