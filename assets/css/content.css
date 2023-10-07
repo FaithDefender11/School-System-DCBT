@@ -388,9 +388,6 @@
 
 .content-header>header>.action>.dropdown>.dropdown-menu>.dropdown-item:hover {
   background-color: #ddd;
-}
-
-.content-header>header>.action>.dropdown>.dropdown-menu>.dropdown-item>a:hover {
   cursor: pointer;
 }
 
