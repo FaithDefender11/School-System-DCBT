@@ -390,6 +390,10 @@
   background-color: #ddd;
 }
 
+.content-header>header>.action>.dropdown>.dropdown-menu>.dropdown-item>a:hover {
+  cursor: pointer;
+}
+
 .floating>header>.action>.dropdown {
   position: relative;
 }
