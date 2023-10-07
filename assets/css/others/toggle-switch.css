@@ -33,11 +33,16 @@
     font-weight: 800;
 }
 
+.toggle-btn:focus {
+    border: none;
+    outline: none;
+}
+
 #btn {
     left: 0;
     top: 0;
     position: absolute;
-    width: 115px;
+    width: 114px;
     height: 100%;
     background: #02001C;
     border-radius: 30px;
