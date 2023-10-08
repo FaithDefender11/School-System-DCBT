@@ -154,9 +154,6 @@
             && $_GET['student_details'] == "show"){
 
             ?>
-            <style>
-                <?php include "../../assets/css/content.css" ?>
-            </style>
                 <div class="content">
 
                     <nav>
@@ -224,7 +221,7 @@
                         <?php
                             echo "
                                 <button class='tab' 
-                                    style='background-color: var(--mainContentBG)'
+                                    style='background-color: var(--mainContentBG); color: white'
                                     onclick=\"window.location.href = 'payment_summary.php?id=$enrollment_form_id_url&student_details=show';\">
                                     Student Details
                                 </button>
@@ -233,7 +230,7 @@
                             echo "
                                 <button class='tab' 
                                     id='shsPayment'
-                                    style='background-color: var(--them); color: white'
+                                    style='background-color: var(--them); color: black'
                                     onclick=\"window.location.href = 'payment_summary.php?id=$enrollment_form_id_url&enrolled_subject=show';\">
                                     Enrolled Subjects
                                 </button>
