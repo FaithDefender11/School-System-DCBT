@@ -154,6 +154,9 @@
             && $_GET['student_details'] == "show"){
 
             ?>
+            <style>
+                <?php include "../../assets/css/content.css" ?>
+            </style>
                 <div class="content">
 
                     <nav>
