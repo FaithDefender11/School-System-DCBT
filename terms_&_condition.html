@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Terms and Conditions Modal</title>
+    <!-- Add Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" href="assets/css/content.css" />
+    <link rel="stylesheet" href="assets/css/forms.css" />
+    <link rel="stylesheet" href="assets/css/fonts.css" />
+    <link rel="stylesheet" href="assets/css/buttons.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Lato"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Arimo"
+    />
+    <style>
+      body {
+        background-color: white;
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="content">
+      <main>
+        <div class="floating noBorder">
+          <header>
+            <div class="title">
+              <h3>Title <em>Student</em></h3>
+              <small> comment </small>
+            </div>
+            <div class="action">
+              <div class="dropdown">
+                <button class="icon">
+                  <i class="bi bi-three-dots-vertical"></i>
+                </button>
+                <div class="dropdown-menu">
+                  <a href="#" class="dropdown-item"
+                    ><i class="bi bi-calendar"></i>Edit Calendar</a
+                  >
+                  <a href="#" class="dropdown-item"
+                    ><i class="bi bi-printer"></i>Print Calendar</a
+                  >
+                </div>
+              </div>
+            </div>
+          </header>
+          <div class="progress">
+            <span class="dot active"><p>aa</p></span>
+            <span class="line active"></span>
+            <span class="dot active"
+              ><p><i class="bi bi-file icon"></i>aaa</p></span
+            >
+            <span class="line inactive"></span>
+            <span class="dot inactive"> <p>aaaaaaaa</p></span>
+            <span class="line"></span>
+            <span class="dot inactive"><p>aaaaaaaaaaaa</p> </span>
+          </div>
+          <main>
+            <form action="">
+              <div class="row">
+                <span>
+                  <label for="fname">Name</label>
+                  <div>
+                    <input
+                      type="text"
+                      name="firstname"
+                      placeholder="Your name.."
+                    />
+                    <small>Last name</small>
+                  </div>
+
+                  <div>
+                    <input
+                      type="text"
+                      name="firstname"
+                      placeholder="Your name.."
+                    />
+                    <small>Last name</small>
+                  </div>
+
+                  <div>
+                    <input
+                      type="text"
+                      name="firstname"
+                      placeholder="Your name.."
+                    />
+                    <small>Last name</small>
+                  </div>
+                </span>
+              </div>
+              <div class="row">
+                <span class="normal">
+                  <label for="fname">Name</label>
+                  <div>
+                    <input
+                      type="text"
+                      name="firstname"
+                      placeholder="Your name.."
+                    />
+                    <small>Last name</small>
+                  </div>
+                </span>
+
+                <span>
+                  <label for="fname">Name</label>
+                  <div>
+                    <input
+                      type="text"
+                      name="firstname"
+                      placeholder="Your name.."
+                    />
+                    <small>Last name</small>
+                  </div>
+                </span>
+              </div>
+              <div class="row">
+                <span class="small">
+                  <label for="fname">Name</label>
+                  <div>
+                    <input
+                      type="text"
+                      name="firstname"
+                      placeholder="Your name.."
+                    />
+                    <small>Last name</small>
+                  </div>
+                </span>
+                <span class="x-small">
+                  <label for="fname">Name</label>
+                  <div>
+                    <input
+                      type="text"
+                      name="firstname"
+                      placeholder="Your name.."
+                    />
+                    <small>Last name</small>
+                  </div>
+                </span>
+
+                <span>
+                  <label for="fname">Name</label>
+                  <div>
+                    <input
+                      type="text"
+                      name="firstname"
+                      placeholder="Your name.."
+                    />
+                    <small>Last name</small>
+                  </div>
+                </span>
+              </div>
+              <div class="action">
+                <button class="default large" type="submit">Save</button>
+
+                <!-- Button trigger modal -->
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  data-toggle="modal"
+                  data-target="#exampleModalLong"
+                >
+                  Launch demo modal
+                </button>
+
+                <!-- Modal -->
+                <div
+                  class="modal fade"
+                  id="exampleModalLong"
+                  tabindex="-1"
+                  role="dialog"
+                  aria-labelledby="exampleModalLongTitle"
+                  aria-hidden="true"
+                >
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">
+                          Modal title
+                        </h5>
+                        <button
+                          type="button"
+                          class="close"
+                          data-dismiss="modal"
+                          aria-label="Close"
+                        >
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">...</div>
+                      <div class="modal-footer">
+                        <button
+                          type="button"
+                          class="btn btn-secondary"
+                          data-dismiss="modal"
+                        >
+                          Close
+                        </button>
+                        <button type="button" class="btn btn-primary">
+                          Accept
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </main>
+        </div>
+      </main>
+    </div>
+
+    <!-- Add Bootstrap JS and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </body>
+</html>

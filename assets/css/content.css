@@ -492,3 +492,9 @@
 }
 
 /* ADDED CONTENT TO ACTION */
+
+/* MODAL CSS */
+.floating.noBorder>main>form>.action>.btn.btn-primary {
+  display: flex;
+  margin-left: 10px;
+}
