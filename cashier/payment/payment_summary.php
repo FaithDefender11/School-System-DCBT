@@ -225,7 +225,7 @@
                             echo "
                                 <button class='tab' 
                                     id='studentDetailsButton'
-                                    style='background-color: var(--mainContentBG)'
+                                    style='background-color: var(--mainContentBG); color: white'
                                     onclick=\"window.location.href = 'payment_summary.php?id=$enrollment_form_id_url&student_details=show';\">
                                     Student Details
                                 </button>
@@ -234,7 +234,7 @@
                             echo "
                                 <button class='tab' 
                                     id='enrolledSubjectsButton'
-                                    style='background-color: var(--them); color: white'
+                                    style='background-color: var(--them); color: black'
                                     onclick=\"window.location.href = 'payment_summary.php?id=$enrollment_form_id_url&enrolled_subject=show';\">
                                     Enrolled Subjects
                                 </button>
@@ -486,7 +486,7 @@
                         <?php
                             echo "
                                 <button class='tab' 
-                                    style='background-color: var(--them)'
+                                    style='background-color: var(--them); color: black'
                                     onclick=\"window.location.href = 'payment_summary.php?id=$enrollment_form_id_url&student_details=show';\">
                                     Student Details
                                 </button>
@@ -1021,25 +1021,6 @@
     }
 
 
-</script>
-
-<script>
-    // JavaScript code to change text color based on the current page
-    document.addEventListener('DOMContentLoaded', function () {
-        var currentUrl = window.location.href;
-        var studentDetailsButton = document.getElementById('studentDetailsButton');
-        var enrolledSubjectsButton = document.getElementById('enrolledSubjectsButton');
-
-        if (currentUrl.includes('student_details=show')) {
-            // User is on the Student Details page
-            studentDetailsButton.style.color = 'black';
-            enrolledSubjectsButton.style.color = 'white'; // Reset color for the other button
-        } else if (currentUrl.includes('enrolled_subject=show')) {
-            // User is on the Enrolled Subjects page
-            enrolledSubjectsButton.style.color = 'black';
-            studentDetailsButton.style.color = 'white'; // Reset color for the other button
-        }
-    });
 </script>
 
 <?php include_once('../../includes/footer.php') ?>
