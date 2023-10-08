@@ -7,9 +7,9 @@
     define('DB_HOST', 'localhost');
     define('DB_PORT', 3307); // Update with your specific port number
 
-    // define('DB_USERNAME', 'root');
-    // define('DB_PASSWORD', '');
-    // define('DB_DATABASE', 'dcbt');
+    //define('DB_USERNAME', 'root');
+    //define('DB_PASSWORD', '');
+    //define('DB_DATABASE', 'dcbt');
 
     define('DB_USERNAME', 'u544299924_master');
     define('DB_PASSWORD', 'xTVeEU~k=O8:');
@@ -22,7 +22,7 @@
 
         $con = new PDO($data_source, DB_USERNAME, DB_PASSWORD);
 
-        // $con = new PDO('mysql:host=localhost;port=3307;dbname=dcbt', 'root', '');
+        //$con = new PDO('mysql:host=localhost;port=3306;dbname=dcbt', 'root', '');
 
         $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 

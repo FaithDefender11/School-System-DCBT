@@ -20,6 +20,7 @@
             .dropdown-menu.show{
                 margin-left: -120px;
             }
+            <?php include "../../assets/css/content.css" ?>
         </style>
     <?php
 
@@ -694,7 +695,7 @@
 
                             echo "
                                 <button class='tab' 
-                                    style='background-color: var(--them)'
+                                    style='background-color: var(--them); color: white'
                                     onclick=\"window.location.href = 'subject_insertion_summary.php?id=$enrollment_id&student_details=show';\">
                                     Student Details
                                 </button>
@@ -702,7 +703,7 @@
                             echo "
                                 <button class='tab' 
                                     id='shsPayment'
-                                    style='background-color: var(--mainContentBG); color: white'
+                                    style='background-color: var(--mainContentBG); color: black'
                                     onclick=\"window.location.href = 'subject_insertion_summary.php?id=$enrollment_id&enrolled_subject=show';\">
                                     Enrolled Subjects
                                 </button>

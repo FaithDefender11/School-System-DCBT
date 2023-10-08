@@ -19,6 +19,7 @@
         .dropdown-menu.show{
             margin-left: -120px;
         }
+        <?php include "../../assets/css/content.css" ?>
     </style>
     <?php
 

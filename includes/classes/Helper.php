@@ -1326,12 +1326,12 @@ class Helper {
         $shs_url = null, $tertiary_url = null){
 
         $buttonTop = "
-            <div id='btn' style='left: 0px'></div>
+            <div id='btn' style='left: 0px; width: 114px'></div>
         ";
 
         if($isTertiary == true){
             $buttonTop = "
-                <div id='btn' style='left: 122px'></div>
+                <div id='btn' style='left: 110px; width: 140px'></div>
             ";
         }
 
