@@ -430,6 +430,9 @@
             }
            
             ?>
+            <style>
+                <?php include "../../assets/css/content.css" ?>
+            </style>
                 <div class="content">
                     <nav>
                         <a href="<?php echo $back_url; ?>">
