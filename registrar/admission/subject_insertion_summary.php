@@ -653,37 +653,37 @@
 
                         <div class="cards">
                             <div class="card">
-                                <p class="text-center mb-0">Form ID</p>
-                                <p class="text-center"><?php echo $student_enrollment_form_id;?></p>
+                                <sup>Form ID</sup>
+                                <sub><?php echo $student_enrollment_form_id;?></sub>
                             </div>
                             <div class="card">
-                                <p class="text-center mb-0">Admission type</p>
-                                <p class="text-center"><?php echo $student_status;?></p>
+                                <sup>Admission type</sup>
+                                <sub><?php echo $student_status;?></sub>
                             </div>
                             <div class="card">
-                                <p class="text-center mb-0">Student no.</p>
-                                <p class="text-center">
+                                <sup>Student no.</sup>
+                                <sub>
                                     <a style="all: unset" href="../student/record_details.php?id=<?php echo $student_id;?>&enrolled_subject=show">
                                     <?php echo $student_unique_id;?>
 
                                     </a>
-                                </p>
+                                </sub>
                             </div>
                             <div class="card">
-                                <p class="text-center mb-0">Status</p>
-                                <p class="text-center"><?php 
+                                <sup>Status</sup>
+                                <sub><?php 
                                     echo $student_enrollment_status === "withdraw" ? "Withdraw" : 
-                                    ($student_enrollment_status === "enrolled" ? "Enrolled" : "For Approval");?></p>
+                                    ($student_enrollment_status === "enrolled" ? "Enrolled" : "For Approval");?></sub>
                             </div>
                             <div class="card">
-                                <p class="text-center mb-0">Submitted on</p>
-                                <p class="text-center">
+                                <sup>Submitted on</sup>
+                                <sub>
                                     <?php
                                         $date = new DateTime($student_enrollment_made_date);
                                         $formattedDate = $date->format('m/d/Y H:i');
                                         echo $formattedDate;
                                     ?>
-                                </p>
+                                </sub>
                             </div>
                         </div>
 
