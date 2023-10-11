@@ -167,8 +167,8 @@
             </main>
         </div>
 
-        <br>
-        <div class="floating" id="shs-sy">
+        <!-- <br> -->
+        <!-- <div class="floating" id="shs-sy">
             <div>
                 <a href='shs_index.php'>
                     <button class="text-left btn btn-primary">
@@ -192,19 +192,19 @@
                     class="a" style="margin: 0"> 
                     <thead>
                         <tr class="text-center"> 
-                            <th rowspan="2">Template Id</th>
-                            <th rowspan="2">Strand</th>
-                            <th rowspan="2">Code</th>
-                            <th rowspan="2">Description</th>
-                            <th rowspan="2">Pre Requisite</th>
-                            <th rowspan="2">Type</th>  
-                            <th rowspan="2">Unit</th>
-                            <th rowspan="2">Action</th>
+                            <th>Template Id</th>
+                            <th>Strand</th>
+                            <th>Code</th>
+                            <th>Description</th>
+                            <th>Pre Requisite</th>
+                            <th>Type</th>  
+                            <th>Unit</th>
+                            <th>Action</th>
                         </tr>	
                     </thead> 	
-                    <tbody>
+                    <tbody> -->
 
-                        <?php
+                        <!-- <?php
 
                             $query = NULL;
 
@@ -268,11 +268,12 @@
                                     ";
                                 }
                             }
-                        ?>
-                    </tbody>
+                        ?> -->
+                    <!-- </tbody>
                 </table>
             </main>
-        </div>
+        </div> -->
+
     </main>
 </div>
 
