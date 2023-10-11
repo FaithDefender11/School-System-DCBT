@@ -13,19 +13,18 @@
     echo Helper::RemoveSidebar();
  
     ?>
-         <style>
+        
+        <style>
             .read_only{
                 pointer-events: none;
+            }
+            .red{
+                color: red;
             }
          </style>
     <?php
 
-    // echo "Student Tentative Page";
-    // echo "<br>";
-    // echo $_SESSION['studentLoggedIn'];
-    // echo "<br>";
-    // echo $_SESSION['status'];
-
+ 
     $school_year = new SchoolYear($con);
     $section = new Section($con, null);
 
@@ -79,7 +78,7 @@
 
         $sql = $con->prepare("SELECT * FROM pending_enrollees
             WHERE pending_enrollees_id=:pending_enrollees_id
-            AND is_finished = 0
+            -- AND is_finished = 0
             AND activated = 1
             AND student_status != 'APPROVED'
             ");
@@ -101,6 +100,7 @@
                 // echo "ERROR 401.";
                 // exit();
             }
+
             
             $pending = new Pending($con, $pending_enrollees_id);
 
@@ -110,13 +110,14 @@
             $pending_type = $pending->GetPendingType();
             $course_level = $pending->GetCourseLevel();
             $program_id = $pending->GetPendingProgramId();
+            $acceptance_condition = $pending->GetAcceptanceCondition();
+            $does_enrollee_finished_input = $pending->GetIsFinished();
 
-            // echo $pending_type;
+            // echo $acceptance_condition;
 
             // Student Info -> Parent -> Review -> Student Requiremnts Upload
 
             if(isset($_GET['new_student']) && $_GET['new_student'] == "true"){
-
 
                 if(isset($_GET['step']) && $_GET['step'] == "preferred_course"){
                    include_once('./preferred_course.php');
@@ -135,12 +136,6 @@
                     include_once('./enrollee_information.php');
                 }
 
-                // if(isset($_GET['step']) && $_GET['step'] == "student_requirements"){
-                  
-                //     include_once('./student_requirements.php');
-                // }
-
-
                 if(isset($_GET['step']) && $_GET['step'] == "enrollee_parent_information"){
 
                     include_once('./enrollee_parent_information.php');
@@ -150,6 +145,7 @@
                 if(isset($_GET['step']) && $_GET['step'] == "enrollee_summary_details"){
                     include_once('./enrollee_summary_details.php');
                 }
+
             }
         }
 
@@ -219,3 +215,29 @@
 
     } 
 ?>
+
+<script>
+
+  $(document).ready(function () {
+
+    var hasAcceptedTerms = localStorage.getItem("acceptedTerms");
+
+    // If the user has not accepted the terms, show the modal
+    if (!hasAcceptedTerms) {
+      $("#termsModal").modal({
+        backdrop: "static", // Prevent closing by clicking outside the modal
+        keyboard: false // Prevent closing by pressing ESC key
+      });
+    }
+
+    // Handle the accept button click
+    $("#acceptTerms").click(function () {
+      // Store in local storage that the user has accepted the terms
+      localStorage.setItem("acceptedTerms", "true");
+      // Close the modal
+      $("#termsModal").modal("hide");
+    });
+
+  });
+
+</script>

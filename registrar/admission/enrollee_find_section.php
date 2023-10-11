@@ -1,4 +1,5 @@
 <?php 
+
     $student_subject = new StudentSubject($con);
 
     if(isset($_POST['pending_choose_section_' . $pending_enrollees_id]) && isset($_POST['selected_course_id'])){
@@ -33,7 +34,7 @@
 
             $successInsert = $student->InsertStudentFromPendingTable(
                 $firstname, $lastname, $middle_name, $password,
-                $civil_status, $nationality, $contact_number, $birthday, $age,
+                $civil_status, $nationality, $contact_number, $birthday, "",
                 $sex, $course_id, $generateStudentUniqueId, $course_level, 
                 $username, $address, $lrn, $religion,
                 $birthplace, $email, $type, $new_enrollee);
@@ -137,6 +138,7 @@
             $selected_course_id_value = $_POST['selected_course_id'];
 
             $new_enrollee = 1;
+            $age = 0;
 
             $username = NULL;
             $generateStudentUniqueId = NULL;
@@ -250,6 +252,7 @@
         
     </div>
     <main>
+        
         <div class="progress">
             <span class="dot active"><p>Check form details</p></span>
             <span class="line active"></span>

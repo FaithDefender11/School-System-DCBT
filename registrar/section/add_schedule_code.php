@@ -149,19 +149,13 @@
 
             // Check if  teacher has already scheduled in the subject.
 
-            // if($schedule->CheckIfTeacherAlreadyScheduleToTheSubject(
-            //     $subject_id, $teacher_id) == true){
-
-            //     Alert::error("Subject Code $section_subject_code has already been schedule to $new_teacher_fullname", 'create.php');
-            //     exit();
-            //     return;
-            // }
+         
 
             $scheduleAddedSuccess = $schedule->AddScheduleCodeBase(
                 $time_from_meridian, $time_to_meridian,
                 $schedule_day, $time_from_meridian_military, $time_to_meridian_military,
                 $schedule_time, $current_school_year_id, $course_id,
-                $teacher_id, $section_subject_code, $subject_program_id
+                $teacher_id, $section_subject_code, $subject_program_id, ""
             );
 
             if($scheduleAddedSuccess){

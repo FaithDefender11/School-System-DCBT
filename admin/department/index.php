@@ -49,29 +49,29 @@
 
                             if($query->rowCount() > 0){
 
-                            while($row = $query->fetch(PDO::FETCH_ASSOC)){
+                                while($row = $query->fetch(PDO::FETCH_ASSOC)){
 
-                                $department_id = $row['department_id'];
-                                $department_name = $row['department_name'];
+                                    $department_id = $row['department_id'];
+                                    $department_name = $row['department_name'];
 
-                                $removeDepartmentBtn = "removeDepartmentBtn($department_id)";
-                                echo "
-                                <tr>
-                                    <td>$department_id</td>
-                                    <td>$department_name</td>
-                                    <td>
-                                        <a href='edit.php?id=$department_id'>
-                                            <button class='information'>
-                                                <i class='fas fa-pen'></i>
+                                    $removeDepartmentBtn = "removeDepartmentBtn($department_id)";
+                                    echo "
+                                    <tr>
+                                        <td>$department_id</td>
+                                        <td>$department_name</td>
+                                        <td>
+                                            <a href='edit.php?id=$department_id'>
+                                                <button class='information'>
+                                                    <i class='fas fa-pen'></i>
+                                                </button>
+                                            </a>
+                                            <button onclick='$removeDepartmentBtn' class='danger'>
+                                                    <i class='fas fa-trash'></i>
                                             </button>
-                                        </a>
-                                        <button onclick='$removeDepartmentBtn' class='danger'>
-                                                <i class='fas fa-trash'></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                ";
-                            }
+                                        </td>
+                                    </tr>
+                                    ";
+                                }
                             }
 
                         ?>
@@ -79,6 +79,7 @@
                 </table>
 
             </main>
+            
         </div>
     </main>
 </div>

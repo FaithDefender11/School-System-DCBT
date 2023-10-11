@@ -8,7 +8,7 @@
     require_once('../../includes/classes/Constants.php');
     require_once('../../includes/classes/Alert.php');
     require_once('../../includes/classes/Account.php');
-
+    
     $adminLoggedIn = isset($_SESSION["adminLoggedIn"]) 
         ? $_SESSION["adminLoggedIn"] : "";
 

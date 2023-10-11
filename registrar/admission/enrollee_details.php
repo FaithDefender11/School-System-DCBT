@@ -94,8 +94,14 @@
                 <div class="title">
                     <h3 class="text-primary text-center">Enrollee Form Details</h3>
                 </div>
+
+                <div>
+                    <button onclick="window.location.href='enrollee_file_submission.php?id=<?= $pending_enrollees_id;?>'" class="btn btn-sm btn-primary">
+                        <i class="fas fa-file"></i> Files
+                    </button>
+                </div>
+
             </header>
-                
              
             <header class="mt-4">
                 <div class="title">

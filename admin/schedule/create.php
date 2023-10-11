@@ -6,6 +6,7 @@
     include_once('../../includes/classes/Teacher.php');
     include_once('../../includes/classes/Section.php');
     include_once('../../includes/classes/SubjectProgram.php');
+    include_once('../../includes/classes/Room.php');
 
 
     $school_year = new SchoolYear($con, null);
@@ -23,7 +24,6 @@
 
     $allSection = $section->GetAllCreatedSectionWithinSYSemester($current_school_year_term);
 
-        
     if($_SERVER['REQUEST_METHOD'] === "POST" 
         && isset($_POST['add_section_subject_code_schedule'])
         && isset($_POST['course_id'])
@@ -34,7 +34,8 @@
         
         ){
 
-        $course_id = $_POST['course_id'];
+        $course_id = $_POST['course_id']; 
+        // $course_id = 1253;
 
         $section = new Section($con, $course_id);
 
@@ -52,16 +53,17 @@
         $get_subject_code = $subjectProgram->GetSubjectProgramRawCode();
 
     
-        // $teacher_id = intval($_POST['teacher_id']) ?? NULL;
-        $room_id = $_POST['room_id']  == 0 ? NULL : intval($_POST['room_id']);
+        $room_id = isset($_POST['room_id']) && $_POST['room_id'] == 0 ? NULL : intval($_POST['room_id']);
         $teacher_id = $_POST['teacher_id']  == 0 ? NULL : intval($_POST['teacher_id']);
             
+        // $room_id = isset($_POST['room_id']) ?? NULL;
+        // $teacher_id = isset($_POST['teacher_id']) ?? NULL;
+
         // var_dump($teacher_id);
         // return;
 
         $section_subject_code = $section->CreateSectionSubjectCode(
             $sectionName, $get_subject_code);
-
 
         // 02:00 PM
         $time_from_meridian = $_POST['time_from'];
@@ -77,16 +79,26 @@
         $time_to_meridian = $_POST['time_to'];
         $date = DateTime::createFromFormat("h:i A", $time_to_meridian);
 
+        $checkIfTimeIsEqualPrompt = $schedule->CheckIfTimeIsEqual($time_from_meridian,
+            $time_to_meridian);
+
         // Format the DateTime object into military (24-hour) format
         $time_to_meridian_military = $date->format("H:i");
  
         $time_to = str_replace(["AM", "PM"], "", $time_to_meridian);
 
-        // echo "time_from_meridian: " . $time_from_meridian . "<br>";
-        // echo "time_from_meridian_military: " . $time_from_meridian_military . "<br>";
-
         // 02:00 -10:30
         $schedule_time = $time_from . "-" . $time_to;
+
+        // echo "time_to_meridian_military: " . var_dump($time_to_meridian_military);
+        // echo "<br>";
+
+        // echo "time_from_meridian_military: " . var_dump($time_from_meridian_military);
+        // echo "<br>";
+        // return;
+                
+        $checkIfTimeFromIsGreaterPrompt = $schedule->CheckIfTimeFromIsGreater($time_from_meridian,
+            $time_to_meridian);
 
 
         // echo "time_to_meridian: " . $time_to_meridian . "<br>";
@@ -104,15 +116,6 @@
             Alert::success("Schedule has been added successfully.", $back_url);
             exit();
         }
-        // echo "Course ID: " . $_POST['course_id'] . "<br>";
-        // echo "Subject Code: " .  $subject_code . "<br>";
-        // echo "Subject Code 2 : " . $section_subject_code . "<br>";
-        // echo "Time From: " . $_POST['time_from'] . "<br>";
-        // echo "Time To: " . $_POST['time_to'] . "<br>";
-        // echo "Schedule Day: " . $_POST['schedule_day'] . "<br>";
-        // echo "Teacher ID: " . $teacher_id . "<br>";
-
-
 
     }
 
@@ -189,7 +192,7 @@
 
                     <div class="form-group mb-3">
                         <label for="room_id">* Room</label>
-                        <select name="room_id" id="room_id" class="form-control">
+                        <select required name="room_id" id="room_id" class="form-control">
                             
                             <?php
                                 $query = $con->prepare("SELECT * FROM room
@@ -232,7 +235,7 @@
 
                     <div class="mb-3">
                         <label for=""> Instructor</label>
-                        <select class="form-control" name="teacher_id" id="teacher_id">
+                        <select required class="form-control" name="teacher_id" id="teacher_id">
                             <?php
                                 $query = $con->prepare("SELECT * FROM teacher
                                     WHERE teacher_status = :teacher_status
@@ -267,7 +270,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="schedule_day">* Day</label>
+                        <label for="schedule_day">* Schedule Day</label>
                         <select required name="schedule_day" id="schedule_day" class="form-control">
                             <option value="">-- Select Day --</option>
                             <option value="M">Monday</option>
@@ -279,7 +282,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="">* Year Semester</label>
+                        <label for="">* A.Y Semester</label>
                         <input required type="text" readonly value="<?php echo "$current_school_year_term $current_school_year_period Semester"?>" placeholder="Semester Period" name="semester" id="semester" class="form-control" />
                     </div>
                         
@@ -315,7 +318,8 @@
             type: 'POST',
             data: {
                 course_id,
-                term, school_year_id
+                term,
+                school_year_id
             },
             dataType: 'json',
 
@@ -330,7 +334,7 @@
                     
                     $.each(response, function (index, value) {
                         options +=
-                        '<option value="' + value.subject_program_id + '">' + value.subject_code + '</option>';
+                        '<option value="' + value.subject_program_id + '">' + value.subject_title + ' &nbsp; (' + value.subject_code + ')</option>';
                         
                         // $('#subject_program_id').val(value.subject_program_id);
                     });

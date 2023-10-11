@@ -42,90 +42,6 @@
         $student_name = $student->GetFullName();
         $back_url = "subject_code_enrolled.php?id=$current_school_year_id&cd=$enrolled_student_subject_code";
 
-        // if (isset($_POST['edit_subject_code_schedule_' . $schedule_id]) &&
-        //     isset($_POST['teacher_id']) &&
-        //     // isset($_POST['course_id']) &&
-        //     // isset($_POST['room']) &&
-        //     isset($_POST['schedule_day']) &&
-        //     isset($_POST['time_from']) &&
-        //     isset($_POST['time_to'])) {
-
-        //     // $room = $_POST['room'];
-
-        //     $schedule_day = $_POST['schedule_day'];
-        //     $time_from_meridian = $_POST['time_from'];
-
-
-        //     $date = DateTime::createFromFormat("h:i A", $time_from_meridian);
-
-        //     // Format the DateTime object into military (24-hour) format
-        //     $time_from_meridian_military = $date->format("H:i");
-
-        //     // Output the result
-        //     // echo "Time from Meridian: " . $time_from_meridian . "<br>";
-        //     // echo "Military Time from: $time_from_meridian_military ";  // Output: "21:30"
-        //     // echo "<br>";
-        //     $time_from = str_replace(["AM", "PM"], "", $time_from_meridian);
-        
-        //     $time_to_meridian = $_POST['time_to'];
-
-        //     $date = DateTime::createFromFormat("h:i A", $time_to_meridian);
-
-        //     // Format the DateTime object into military (24-hour) format
-        //     $time_to_meridian_military = $date->format("H:i");
-
-        //     // echo "Time to Meridian: " . $time_to_meridian . "<br>";
-        //     // echo "Military Time to: $time_to_meridian_military ";  // Output: "21:30"
-        //     // echo "<br>";
-
-        //     $time_to = str_replace(["AM", "PM"], "", $time_to_meridian);
-
-        //     $schedule_time = $time_from . "-" . $time_to;
-        //     // $course_id = $_POST['course_id'];
-        //     $teacher_id = $_POST['teacher_id'];
-
-        //     // $time_from_am_pm = $_POST['time_from_am_pm'];
-        //     // $time_to_am_pm = $_POST['time_to_am_pm'];
-
-        //     // echo "Room: " . $room . "<br>";
-        //     // echo "Schedule Day: " . $schedule_day . "<br>";
-        //     // echo "Time From: " . $time_from . "<br>";
-        //     // echo "Time To: " . $time_to . "<br>";
-        //     // echo "Schedule Time: " . $schedule_time . "<br>";
-        //     // echo "Course ID: " . $schedule_course_id . "<br>";
-
-        //     // if(false){
-        //     if($schedule_course_id != 0){
-
-        //         $teacher = new Teacher($con, $teacher_id);
-        //         $new_teacher_fullname = $teacher->GetTeacherFullName();
-
-        //         // Check if  teacher has already scheduled in the subject.
-
-        //         // if($schedule->CheckIfTeacherAlreadyScheduleToTheSubject(
-        //         //     $subject_id, $teacher_id) == true){
-
-        //         //     Alert::error("Subject Code $section_subject_code has already been schedule to $new_teacher_fullname", 'create.php');
-        //         //     exit();
-        //         //     return;
-        //         // }
-
-        //         // $subject_program_id = 0;
-        //         $scheduleUpdateSuccess = $schedule->UpdateScheduleCodeBase(
-        //             $schedule_id, $time_from_meridian, $time_to_meridian,
-        //             $schedule_day, $time_from_meridian_military, $time_to_meridian_military,
-        //             $schedule_time, $current_school_year_id,
-        //             $teacher_id, $section_subject_code
-        //         );
-
-        //         if($scheduleUpdateSuccess){
-        //             Alert::success("Schedule Subject Code: $section_subject_code has been modified", $back_url);
-        //             exit();
-        //         }
-
-        //     }
-        // }
-
         if($_SERVER['REQUEST_METHOD'] === "POST"
             && isset($_POST['editGradeCode_' . $student_subject_grade_id])
             ){
@@ -145,7 +61,7 @@
                 $first_quarter_input,
                 $second_quarter_input,
                 $third_quarter_input,
-                $fourth_quarter_input
+                $fourth_quarter_input, ""
             );
 
             if($wasSuccess){

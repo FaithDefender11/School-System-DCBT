@@ -202,8 +202,10 @@ if ($row != null) {
         $program_condition
         $course_condition
 
-        ORDER BY $sortBy $sortOrder
-        
+        -- ORDER BY $sortBy $sortOrder
+
+        ORDER BY t1.day_count ASC, t1.date_creation
+
         LIMIT " . $row . "," . $rowperpage;
 
     $stmt = $con->prepare($empQuery);

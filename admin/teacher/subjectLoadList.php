@@ -227,9 +227,11 @@ if ($row != null) {
         $schedule->filterSubsequentOccurrencesSa($subject_code_occurrences,
             $subject_code, $subject_schedule_course_id, $subject_subject_program_id);
  
+        $period = $period === "First" ? "S1" : ($period === "Second" ? "S2" : "" );
+
         $data[] = array(
             "subject_title" => $subject_title,
-            "subject_code" => $subject_code,
+            // "subject_code" => $subject_code,
             "program_section" => $program_section,
             "term_period" => $term . " - " . $period,
             "schedule_day" => $schedule_day,

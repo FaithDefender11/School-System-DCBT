@@ -10,6 +10,7 @@
     include_once('../../includes/classes/StudentSubjectGrade.php');
     include_once('../../includes/classes/StudentRequirement.php');
     include_once('../../includes/classes/Schedule.php');
+    include_once('../../includes/classes/EnrollmentPayment.php');
 
     $department = new Department($con, null);
     $school_year = new SchoolYear($con, null);
@@ -28,22 +29,70 @@
 
         // $student_id = $_GET['id'];
 
+        $total_amount = NULL;
+        $totalBalance  = NULL;
+        // echo $SHS_REGULAR_TUITION_FEE;
+
+
         $enrollment_form_id_url = $_GET['id'];
+
+
+        $enrollmentPayment = new EnrollmentPayment($con);
+
+        $paymentEnrollmentList = $enrollmentPayment->GetPaymentHistory($enrollment_form_id_url);
+
+        // var_dump($paymentEnrollmentList);
 
         $enrollment_form_student_id = $enrollment->GetStudentIdByEnrollmentId(
             $enrollment_form_id_url, $current_school_year_id);
 
-        $student_id = $enrollment_form_student_id;
+        $enrollment_form_is_tertiary = $enrollment->GetEnrollmentFormIsTertiary(
+            $enrollment_form_student_id, $enrollment_form_id_url);
+
+        $enrollmentFormPaymentMethod = $enrollment->GetEnrollmentPaymentMethod(
+            $enrollment_form_student_id, $enrollment_form_id_url);
+
+        $enrollmentFormPaymentStatus = $enrollment->GetEnrollmentPaymentStatus(
+            $enrollment_form_student_id, $enrollment_form_id_url);
+
+        $enrollmentTotalPayment = $enrollment->GetEnrollmentTotalPayment(
+            $enrollment_form_student_id, $enrollment_form_id_url);
+
+        // $totalBalance = $enrollmentTotalPayment;
         
 
-        // echo $student_id;
-        
-        $checkRequirementExists = $requirement->CheckStudentExisted($student_id);
-        if($checkRequirementExists){
-            // echo "true";
-        }else{
-            // echo "false";
+        $WHOLE_SEMESTER_YEAR = 2;
+        $SHS_FIX_TUITION_FEE = 17500;
+
+        $SHS_REGULAR_TUITION_FEE = NULL;
+        $SHS_IRREGULAR_TUITION_FEE = NULL;
+
+        $TERTIARY_TUITION_FEE = NULL;
+
+        # Student is SHS
+        if($enrollment_form_is_tertiary === 0){
+
+            $price = 8750.00;
+
+            // $SHS_REGULAR_TUITION_FEE = number_format($SHS_FIX_TUITION_FEE / $WHOLE_SEMESTER_YEAR, 2);
+           
+            $SHS_REGULAR_TUITION_FEE = $SHS_FIX_TUITION_FEE / $WHOLE_SEMESTER_YEAR;
+            // $SHS_REGULAR_TUITION_FEE = $SHS_FIX_TUITION_FEE / 4;
+            $SHS_REGULAR_TUITION_FEE = sprintf("%.2f", $SHS_REGULAR_TUITION_FEE);
+
+            // if($SHS_REGULAR_TUITION_FEE == 4375.000){
+            //     echo "$SHS_REGULAR_TUITION_FEE right";
+            // }else{
+            //     echo "$SHS_REGULAR_TUITION_FEE not";
+            // }
+
         }
+        
+
+        // var_dump($enrollment_form_is_tertiary);
+
+        $student_id = $enrollment_form_student_id;
+        
 
         $shs_department_id = $department->GetDepartmentIdByName("Senior High School");
         $tertiary_department_id = $department->GetDepartmentIdByName("Tertiary");
@@ -91,8 +140,8 @@
         $student_enrollment_course_id = $enrollment->GetEnrollmentFormCourseId($student_id,
             $enrollment_form_id_url, $current_school_year_id);
 
-        $student_enrollment_waiting_list = $enrollment->GetEnrollmentFormWaitingList($student_id,
-            $enrollment_form_id_url, $current_school_year_id);
+        // $student_enrollment_waiting_list = $enrollment->GetEnrollmentFormWaitingList($student_id,
+        //     $enrollment_form_id_url, $current_school_year_id);
 
         $student_enrollment_form_id = $enrollment->GetEnrollmentFormId($enrollment_form_id_url,
             $student_enrollment_course_id, $current_school_year_id);
@@ -148,7 +197,7 @@
         $enrollment_course_section_name = $enrollment_course_section->GetSectionName();
         $enrollment_course_section_level = $enrollment_course_section->GetSectionGradeLevel();
 
-        $back_url = "process_enrollment.php?subject_review=show&st_id=$student_id&selected_course_id=$student_enrollment_course_id";
+        $back_url = "index.php";
 
         if(isset($_GET['student_details']) 
             && $_GET['student_details'] == "show"){
@@ -157,9 +206,9 @@
                 <div class="content">
 
                     <nav>
-                        <a href="<?php echo $back_url; ?>"
-                        ><i class="bi bi-arrow-return-left fa-1x"></i>
-                        <span>Back</span>
+                        <a href="<?php echo $back_url; ?>">
+                            <i class="bi bi-arrow-return-left fa-1x"></i>
+                            <span>Back</span>
                         </a>
                     </nav>
                     
@@ -169,6 +218,7 @@
                             <div class="title">
                                 <h1>Enrollment form</h1>
                             </div>
+                            
 
                             <div class="action">
                                 <div class="dropdown">
@@ -370,12 +420,28 @@
                 $array_success = [];
 
                 $unique_enrollment_form_id = $_POST['unique_enrollment_form_id'];
-                $enrollment_payment = $_POST['enrollment_payment'];
- 
+                $inserted_payment = $_POST['enrollment_payment'];
 
-                // echo $enrollment_payment;
+                $total_balance = $_POST['total_balance'];
+
+                // echo "inserted_payment: $inserted_payment";
+                // echo "<br>";
+
+                // echo "total_balance: $total_balance";
+                // echo "<br>";
                 // return;
 
+                if($inserted_payment > $total_balance){
+                    Alert::error("The entered amount exceeds the total payable amount.", "");
+                    exit();
+                }
+                if($inserted_payment == ""){
+                    Alert::error("Please input valid amount.", "");
+                    exit();
+                }
+
+                // echo $total_balance;
+                // return;
 
                 $assignedSubjects = $student_subject->GetStudentAssignSubjects(
                     $enrollment_form_id_url, 
@@ -386,43 +452,101 @@
 
                 $grade = new StudentSubjectGrade($con);
 
-                foreach ($assignedSubjects as $key => $value) {
+                // foreach ($assignedSubjects as $key => $value) {
 
-                    $enrollment_id = $value['enrollment_id'];
-                    $is_transferee = $value['is_transferee'];
-                    $student_id = $value['student_id'];
-                    $student_subject_id = $value['student_subject_id'];
+                //     $enrollment_id = $value['enrollment_id'];
+                //     $is_transferee = $value['is_transferee'];
+                //     $student_id = $value['student_id'];
+                //     $student_subject_id = $value['student_subject_id'];
 
-                    if($is_transferee == 0 && $enrollment_id != NULL){
+                //     if($is_transferee == 0 && $enrollment_id != NULL){
 
-                        // Mark as Enrolled Subject in the Student_Subject DB.
-                        if($student_subject->StudentSubjectMarkAsFinal($enrollment_id,
-                            // $student_enrollment_course_id, 
-                            $student_id, $current_school_year_id) == true){
+                //         // Mark as Enrolled Subject in the Student_Subject DB.
+                //         if($student_subject->StudentSubjectMarkAsFinal($enrollment_id,
+                //             // $student_enrollment_course_id, 
+                //             $student_id, $current_school_year_id) == true){
                             
-                            $isAllFinalized = true;
-                        }
-                    }
-                }
+                //             $isAllFinalized = true;
+                //         }
+                //     }
+                // }
 
                 // echo $student_enrollment_course_id;
 
-                // if(true){
-                if($isAllFinalized == true){
-                     
-                    $markAsPaid = $enrollment->EnrollmentFormMarkAsPaid(
-                        $current_school_year_id,
-                        $student_id,
-                        $student_enrollment_form_id,
-                        $student_enrollment_waiting_list,
-                        $enrollment_payment);
+                if(true){
+                // if($isAllFinalized == true){
 
-                    if(($markAsPaid) == true){
-                        Alert::success("You have successfully mark as Paid Enrollment Form ID: $student_enrollment_form_id.", "index.php");
-                        exit();
+                    $payment_status = NULL;
+                    $payment_method = NULL;
+
+                    if($enrollment_form_is_tertiary === 0 
+
+                        // && $inserted_payment < $SHS_REGULAR_TUITION_FEE
+                        ){
+
+                        $payment_status = $inserted_payment < $SHS_REGULAR_TUITION_FEE ? "Incomplete" 
+                            : ($inserted_payment == $SHS_REGULAR_TUITION_FEE ? "Complete" : NULL);
+                        
+                        $payment_method = $inserted_payment < $SHS_REGULAR_TUITION_FEE ? "Partial" 
+                            : ($inserted_payment == $SHS_REGULAR_TUITION_FEE ? "Cash" : NULL);
+
+                        
+                        // echo "payment_method: $payment_method";
+                        // echo "<br>";
+
+                        // echo "inserted_payment: $inserted_payment";
+                        // echo "<br>";
+
+                        // echo "total_balance: $total_balance";
+                        // echo "<br>";
+
+                        // return;
+                        
+                        $markAsPaid = $enrollment->EnrollmentFormMarkAsPaid(
+                            $current_school_year_id,
+                            $student_id,
+                            $student_enrollment_form_id,
+                            $SHS_REGULAR_TUITION_FEE,
+                            $payment_status,
+                            $payment_method
+                        );
+                        
+                        if(($markAsPaid) == true && $payment_method === "Cash"){
+
+                            # QWEE
+                            $wasSuccessPayment = $enrollmentPayment->AddEnrollmentPayment(
+                                $enrollment_id, $inserted_payment,
+                                $enrollment_form_student_id,
+                                $payment_method
+                            );
+
+                            if($wasSuccessPayment === "cash_complete_enrollment_payment_success"){
+                                Alert::success("Enrollment Form ID: $student_enrollment_form_id. has been approved and payment is fully settled.", "index.php");
+                                exit();
+                            }
+                        }
+
+                        if(($markAsPaid) == true && $payment_method === "Partial"){
+
+                            # QWEE
+                            $wasSuccessPayment = $enrollmentPayment->AddEnrollmentPayment(
+                                $enrollment_id, $inserted_payment,
+                                $enrollment_form_student_id,
+                                $payment_method);
+
+                            if($wasSuccessPayment === "payment_incomplete_enrollment_payment_success"){
+                                Alert::success("Enrollment Form ID: $student_enrollment_form_id. has been approved with remaining balance.", "index.php");
+                                exit();
+                            }
+                            if($wasSuccessPayment === "payment_completed_enrollment_payment_success"){
+                                Alert::success("Enrollment Form ID: $student_enrollment_form_id. has been approved and payment is fully settled.", "index.php");
+                                exit();
+                            }
+                        }
+
+
                     }
                 }
-
             }
            
             ?>
@@ -500,7 +624,6 @@
                     </div>
 
                     <main>
-
                         <div class="floating">
                             <header>
                                 <div class="title">
@@ -706,6 +829,21 @@
                         <div class="floating" id="shs-strand-subjects">
                             <header>
                                 <div class="title">
+
+                                    <?php if($enrollmentFormPaymentMethod === "Cash"
+                                        && $enrollmentFormPaymentStatus === "Complete"):?>
+                                        <span style="font-weight: bold;width: 217px; height: 27px" class="text-center bg-success">Payment Completed via Cash</span>
+                                    
+                                    <?php elseif($enrollmentFormPaymentMethod === "Partial"
+                                        && $enrollmentFormPaymentStatus === "Complete"):?>
+                                        <span style="font-weight: bold;width: 228px; height: 27px" class="text-center bg-success">Payment Completed via Partial</span>
+                                    
+                                    <?php elseif($enrollmentFormPaymentMethod === "Partial"
+                                        && $enrollmentFormPaymentStatus === "Incomplete"):?>
+                                        <span style="font-weight: bold;width: 233px; height: 27px" class="text-center bg-info">Payment Incomplete via Partial</span>
+
+                                    <?php endif;?>
+
                                     <span style="font-size: 13px; font-weight: bold;" class="mt-0 mb-0 text-right">
                                         <?php 
                                             $student_enrollment_program_id = $section->
@@ -724,19 +862,6 @@
                                     </span>
                                     <h4><?php echo $enrollment_course_section_name; ?></h4>
                                 </div>
-
-                                <?php
-
-                                    // $student_enrollment_program_id = $section->
-                                    //     GetSectionProgramId($student_enrollment_course_id);
-
-                                    // $studentNumberInSection = $section->
-                                    //     GetTotalNumberOfStudentInSection($student_enrollment_course_id,
-                                    //         $current_school_year_id);
-
-                                    // $capacity = $section->GetSectionCapacity();
-
-                                ?>
                             </header>
 
                             <!-- <span style="font-size: 13px; font-weight: bold;" class="mt-0 mb-0">
@@ -769,116 +894,111 @@
 
                                                 $assignSubjects = $student_subject->GetStudentAssignSubjects($enrollment_id,
                                                     $student_id, $current_school_year_id);
-                                                
-                                                if(count($assignSubjects) == 0 && $student_enrollment_status != "withdraw"){
-                                                    echo "No subject(s) results";
-                                                }
-                                                else{
+                                             
+                                                foreach ($assignSubjects as $key => $value) {
 
-                                                    foreach ($assignSubjects as $key => $value) {
+                                                    $enrollment_id = $value['enrollment_id'];
+                                                    $is_transferee = $value['is_transferee'];
+                                                    
+                                                    $enrolled_course_id = $value['enrolled_course_id'];
 
-                                                        $enrollment_id = $value['enrollment_id'];
-                                                        $is_transferee = $value['is_transferee'];
+                                                    $subject_id = $value['subject_program_id'];
+                                                    $pre_requisite = $value['pre_req_subject_title'];
+                                                    $subject_type = $value['subject_type'];
+                                                    $subject_code = $value['subject_code'];
+                                                    $ss_subject_code = $value['ss_subject_code'];
+                                                    $program_section = $value['program_section'];
+                                                    $subject_title = $value['subject_title'];
+                                                    $course_id = $value['course_id'];
+                                                    $unit = $value['unit'];
+
+                                                    $section = new Section($con, $course_id);
+                                                    $sectionName = $section->GetSectionName();
+
+
+                                                    // $subject_code = $program_section . "-" . $value['subject_code'];
+
+                                                    $student_subject_code = "";
+
+                                                    $subject_status = "";
+
+                                                    if($course_id != null && $enrollment_id != NULL){
+
+                                                        $student_subject_code = $section->CreateSectionSubjectCode($subject_code, 
+                                                            $sectionName);
                                                         
-                                                        $enrolled_course_id = $value['enrolled_course_id'];
-
-                                                        $subject_id = $value['subject_program_id'];
-                                                        $pre_requisite = $value['pre_req_subject_title'];
-                                                        $subject_type = $value['subject_type'];
-                                                        $subject_code = $value['subject_code'];
-                                                        $ss_subject_code = $value['ss_subject_code'];
-                                                        $program_section = $value['program_section'];
-                                                        $subject_title = $value['subject_title'];
-                                                        $course_id = $value['course_id'];
-                                                        $unit = $value['unit'];
-
-                                                        $section = new Section($con, $course_id);
-                                                        $sectionName = $section->GetSectionName();
-
-
-                                                        // $subject_code = $program_section . "-" . $value['subject_code'];
-
-                                                        $student_subject_code = "";
-
-                                                        $subject_status = "";
-
-                                                        if($course_id != null && $enrollment_id != NULL){
-
-                                                            $student_subject_code = $section->CreateSectionSubjectCode($subject_code, 
-                                                                $sectionName);
-                                                            
-                                                            $subject_status = "
-                                                                <i style='color: green;' class='fas fa-check-circle'></i>
-                                                            ";
-                                                        }
-                                                        
-                                                        else if($course_id === null && $enrollment_id === NULL){
-                                                            $student_subject_code = "-";
-                                                            $ss_subject_code = "Credited";
-                                                            $subject_status = "
-                                                                <i style='color: orange;' class='fas fa-credit-card'></i>
-                                                            ";
-                                                        }
-
-                                                        $section_exec = new Section($con, $enrolled_course_id);
-                                                        $enrolled_section_name = $section_exec->GetSectionName();
-
-                                                        $allTime  = "";
-                                                        $allDays  = "";
-
-                                                        $schedule = new Schedule($con);
-
-                                                        // echo $section_subject_code;
-                                                        // echo "<br>";
-
-                                                        $hasSubjectCode = $schedule->GetSameSubjectCode(
-                                                            $enrolled_course_id,
-                                                            $ss_subject_code, $current_school_year_id);
-
-                                                        
-                                                        $scheduleOutput = "";
-                                                        $roomOutput = "";
-
-                                                        if($hasSubjectCode !== []){
-
-                                                            foreach ($hasSubjectCode as $key => $value) {
-
-                                                                // $schedule_subject_code = $value['subject_code'];
-                                                                
-                                                                $schedule_day = $value['schedule_day'];
-                                                                $schedule_time = $value['schedule_time'];
-            
-                                                                $allDays .= $schedule_day;
-                                                                $allTime .= $schedule_time;
-
-                                                                $scheduleOutput .= "$schedule_day - $schedule_time <br>";
-                                                                // echo "<br>";
-
-                                                                $room = $value['room_number'];
-
-                                                                if($value['room_number'] != NULL){
-                                                                    $roomOutput .= "$room <br>";
-                                                                }else{
-                                                                    $roomOutput .= "TBA<br>";
-                                                                }
-                                                            }
-                                                        }else{
-                                                            $scheduleOutput = "TBA";
-                                                            $roomOutput = "TBA";
-                                                        }
-
-                                                        echo '<tr>'; 
-                                                            echo '<td>'.$subject_title.'</td>';
-                                                            // echo '<td>'.$subject_code.'</td>';
-                                                            echo '<td>'.$unit.'</td>';
-                                                            echo '<td>'.$enrolled_section_name.'</td>';
-                                                            echo '<td>'.$subject_type.'</td>';
-                                                            echo '<td>'.$scheduleOutput.'</td>';
-                                                            echo '<td>'.$roomOutput.'</td>';
-                                                            echo '<td>'.$subject_status.'</td>';
-                                                        echo '</tr>';
+                                                        $subject_status = "
+                                                            <i style='color: green;' class='fas fa-check-circle'></i>
+                                                        ";
                                                     }
+                                                    
+                                                    else if($course_id === null && $enrollment_id === NULL){
+                                                        $student_subject_code = "-";
+                                                        $ss_subject_code = "Credited";
+                                                        $subject_status = "
+                                                            <i style='color: orange;' class='fas fa-credit-card'></i>
+                                                        ";
+                                                    }
+
+                                                    $section_exec = new Section($con, $enrolled_course_id);
+                                                    $enrolled_section_name = $section_exec->GetSectionName();
+
+                                                    $allTime  = "";
+                                                    $allDays  = "";
+
+                                                    $schedule = new Schedule($con);
+
+                                                    // echo $section_subject_code;
+                                                    // echo "<br>";
+
+                                                    $hasSubjectCode = $schedule->GetSameSubjectCode(
+                                                        $enrolled_course_id,
+                                                        $ss_subject_code, $current_school_year_id);
+
+                                                    
+                                                    $scheduleOutput = "";
+                                                    $roomOutput = "";
+
+                                                    if($hasSubjectCode !== []){
+
+                                                        foreach ($hasSubjectCode as $key => $value) {
+
+                                                            // $schedule_subject_code = $value['subject_code'];
+                                                            
+                                                            $schedule_day = $value['schedule_day'];
+                                                            $schedule_time = $value['schedule_time'];
+        
+                                                            $allDays .= $schedule_day;
+                                                            $allTime .= $schedule_time;
+
+                                                            $scheduleOutput .= "$schedule_day - $schedule_time <br>";
+                                                            // echo "<br>";
+
+                                                            $room = $value['room_number'];
+
+                                                            if($value['room_number'] != NULL){
+                                                                $roomOutput .= "$room <br>";
+                                                            }else{
+                                                                $roomOutput .= "TBA<br>";
+                                                            }
+                                                        }
+                                                    }else{
+                                                        $scheduleOutput = "TBA";
+                                                        $roomOutput = "TBA";
+                                                    }
+
+                                                    echo '<tr>'; 
+                                                        echo '<td>'.$subject_title.'</td>';
+                                                        // echo '<td>'.$subject_code.'</td>';
+                                                        echo '<td>'.$unit.'</td>';
+                                                        echo '<td>'.$enrolled_section_name.'</td>';
+                                                        echo '<td>'.$subject_type.'</td>';
+                                                        echo '<td>'.$scheduleOutput.'</td>';
+                                                        echo '<td>'.$roomOutput.'</td>';
+                                                        echo '<td>'.$subject_status.'</td>';
+                                                    echo '</tr>';
                                                 }
+
                                             ?>
                                         </tbody> 
 
@@ -897,8 +1017,6 @@
                                     $checkIfRegistrarEvaluated = $enrollment->CheckEnrollmentRegistrarApproved($enrollment_form_id_url,
                                         $student_enrollment_course_id, $current_school_year_id);
                               
-                                    // var_dump($checkIfRegistrarEvaluated);
-
                                     if($checkIfCashierEvaluated == false
                                             && $checkIfRegistrarEvaluated == false
                                             && $doesStudentEnrolled == false){
@@ -914,29 +1032,109 @@
                                             <?php
                                     }
 
-                                    if($checkIfCashierEvaluated == false
-                                            && $checkIfRegistrarEvaluated == true
-                                            && $doesStudentEnrolled == false){
-                                        ?>
+                                    ?>
+                                        <div class="form-group">
+
+                                            <span>Total Amount: ₱ <?= $enrollmentTotalPayment; ?></span>
+                                            <br>
+                                            <br>
+
+                                            <?php if(
+                                                $enrollmentFormPaymentMethod === "Partial" &&
+                                                count($paymentEnrollmentList) > 0):?>
+
+                                                <h3>Transaction History:</h3>
+                                                <br>
+                                                <?php 
+                                                    $i=0;
+
+                                                    foreach ($paymentEnrollmentList as $key => $value) {
+                                                        $i++;
+                                                        $total_amount += $value['amount_paid'];
+
+                                                        $date_creation = $value['date_creation'];
+                                                        # code...
+                                                        $date_creation = date("M d, Y h:i a", strtotime($date_creation));
+
+                                                        ?>
+                                                            <span><?= $i; ?>. Paid Amount: <span style="font-weight:bold;">₱</span> <?php echo $value['amount_paid']; ?>, &nbsp;</span>
+                                                            <span>Transaction Date: <?php echo $date_creation; ?></span>
+                                                            <br>
+                                                        <?php
+                                                    }
+                                                    $totalBalance = $enrollmentTotalPayment - $total_amount;
+                                                ?>
+                                                
+                                                <?php if (($totalBalance > 0 || $totalBalance === NULL) && $enrollmentFormPaymentStatus !== "Complete"): ?>
+                                                    <span>Amount to pay: ₱ <?= $totalBalance; ?></span>
+                                                <?php endif; ?>
+                                            <?php endif; ?>
+
+
+                                            <?php if(
+                                                $enrollmentFormPaymentMethod === "Cash" &&
+                                                count($paymentEnrollmentList) > 0):?>
+
+                                                <h3>Transaction History:</h3>
+                                                <br>
+                                                <?php 
+                                                    $i=0;
+
+                                                    foreach ($paymentEnrollmentList as $key => $value) {
+                                                        $i++;
+                                                        $total_amount += $value['amount_paid'];
+
+                                                        $date_creation = $value['date_creation'];
+                                                        # code...
+                                                        $date_creation = date("M d, Y h:i a", strtotime($date_creation));
+
+                                                        ?>
+                                                            <span>Paid Amount: <span style="font-weight:bold;">₱</span> <?php echo $value['amount_paid']; ?>, &nbsp;</span>
+                                                            <span>Transaction Date: <?php echo $date_creation; ?></span>
+                                                            <br>
+                                                        <?php
+                                                    }
+                                                    $totalBalance = $enrollmentTotalPayment - $total_amount;
+
+                                                    // var_dump($totalBalance);
+                                                ?>
+                                            <?php endif;?>
+
+                                        </div>
+
+                                        <?php if($totalBalance !== 0 || $enrollmentFormPaymentStatus !== "Complete"):?>
+
                                             <div style="margin-top: 20px;" class="action">
 
                                                 <input type="hidden" name="unique_enrollment_form_id" value="<?php echo $student_enrollment_form_id;?>">
+                                                
+                                                <input type="hidden" name="total_balance" value="<?php
+                                                    if(count($paymentEnrollmentList) == 0 && $totalBalance == NULL){
+                                                        echo $enrollmentTotalPayment;
+                                                    }
+                                                    if(count($paymentEnrollmentList) > 0 && $totalBalance != NULL){
+                                                        echo $totalBalance;
+                                                    }
+                                                ?>">
 
                                                 <input style="margin-right: 5px; width: 200px;" 
                                                     class="form-control" type="text"
-                                                    maxlength="5" name="enrollment_payment" id="enrollment_payment">
+                                                    maxlength="9" name="enrollment_payment" id="enrollment_payment">
+                                            
                                                 
                                                 <button type="submit" name="subject_load_btn" 
-                                                    class="default large clean"
-                                                    onclick="return confirm('Are you sure to mark this form as paid?')"
-                                                    >
-                                                    Mark as Paid
+                                                        class="default large clean"
+                                                        onclick="return confirm('Are you sure to insert the inserted amount ?')">
+                                                    
+                                                        Confirm
+                                                    <!-- Mark as Paid -->
                                                 </button>
                                             </div>
 
-                                        <?php
-                                    }
+                                        <?php endif;?>
 
+                                        
+                                    <?php
                                 ?>
 
                             </form>

@@ -867,5 +867,40 @@ class SubjectProgram{
 
         return $sql->rowCount() > 0;
     }
+
+    public function GetSectionsHaveProgramCode($program_code){
+     
+        $query = $this->con->prepare("SELECT 
+            t2.*
+            ,t3.program_section
+            ,t3.course_level
+
+            ,t4.subject_schedule_id
+            ,t4.teacher_id
+            
+            FROM subject_program as t1
+
+            INNER JOIN student_subject as t2 ON t2.subject_program_id = t1.subject_program_id
+            AND t2.program_code =:program_code
+
+            LEFT JOIN course as t3 ON t3.course_id = t2.course_id
+
+            LEFT JOIN subject_schedule as t4 ON t4.subject_code = t2.subject_code
+            AND t4.school_year_id =t2.school_year_id
+
+
+            GROUP BY t2.course_id
+        ");
+
+        $query->bindValue(":program_code", $program_code);
+        $query->execute();
+
+        if($query->rowCount() > 0){
+            return $query->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        return [];
+
+    }
 }
 ?>

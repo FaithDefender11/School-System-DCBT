@@ -13,8 +13,8 @@
             <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
         </head>
     <?php
-    // echo Helper::RemoveSidebar();
 
+    // echo Helper::RemoveSidebar();
 
     if(isset($_SESSION['username'])
         && isset($_SESSION['enrollee_id'])
@@ -88,7 +88,9 @@
 
                             <?php
 
-                                $url = "./enrollee_summary_details_test.php?id=$pending_enrollees_id&details=show";
+                                // $url = "./enrollee_summary_details_test.php?id=$pending_enrollees_id&details=show";
+
+                                $url = "./process.php?new_student=true&step=preferred_course";
 
                                 if($isFinishedForm == true){
                                     echo "

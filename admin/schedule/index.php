@@ -43,15 +43,28 @@
                 overflow-y: auto;
             }
         </style>
-
     <?php
 
     $schedule = new Schedule($con);
+
+    $userTimeFrom = '11:29';
+    $userTimeTo = '13:00';
+    $userScheduleDay = 'M';
+    $room_id = 9;
+    // $room_id = NULL;
+
+
+    $check = $schedule->CheckScheduleDayWithRoomConflict(
+        $userTimeFrom, $userTimeTo, $userScheduleDay, $room_id);
+
+    // var_dump($check);
 
     $sy_id = "";
     $selected_program_id = "";
     $school_year_search = "";
     $selected_course_id = "";
+
+
     
     if($_SERVER['REQUEST_METHOD'] === "POST" 
         && isset($_POST['schedule_btn2'])){
@@ -73,6 +86,10 @@
 
         // $redirectUrl = "enrollmentListData.php?sy_id=$sy_id&p_id=$selected_program_id&c_id=$selected_course_id";
         // header("Location: $redirectUrl");
+
+
+ 
+
     }
 
     if(isset($_POST['reset_btn'])){

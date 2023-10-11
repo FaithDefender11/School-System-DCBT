@@ -124,6 +124,11 @@
         return isset($this->sqlData['program_id']) ? $this->sqlData["program_id"] : 0; 
     }
 
+    public function GetAcceptanceCondition() {
+        return isset($this->sqlData['condition_acceptance']) ? $this->sqlData["condition_acceptance"] : 0; 
+    }
+
+
     public function GetIsActivated() {
         return isset($this->sqlData['activated']) && $this->sqlData['activated'] == 1 ? true : false;
     }
@@ -282,7 +287,7 @@
             contact_number = :contact_number,
             birthday = :birthday,
             birthplace = :birthplace,
-            age = :age,
+            -- age = :age,
             sex = :sex,
             address = :address,
             lrn = :lrn,
@@ -298,7 +303,7 @@
         $query->bindParam(":contact_number", $contact_number);
         $query->bindParam(":birthday", $birthday);
         $query->bindParam(":birthplace", $birthplace);
-        $query->bindParam(":age", $age);
+        // $query->bindParam(":age", $age);
         $query->bindParam(":sex", $sex);
         $query->bindParam(":address", $address);
         $query->bindParam(":lrn", $lrn);
@@ -610,7 +615,7 @@
                         address=:address,
                         contact_number=:contact_number,
                         email=:email,
-                        age=:age,
+                        -- age=:age,
                         lrn=:lrn,
                         suffix=:suffix
                     WHERE pending_enrollees_id=:pending_enrollees_id");
@@ -628,7 +633,7 @@
         $query->bindValue(":address", $address);
         $query->bindValue(":contact_number", $contact_number);
         $query->bindValue(":email", $email);
-        $query->bindValue(":age", $age);
+        // $query->bindValue(":age", $age);
         $query->bindValue(":lrn", $lrn);
         $query->bindValue(":suffix", $suffix);
 
@@ -1093,7 +1098,7 @@
         
         $sql = $this->con->prepare("SELECT * FROM pending_enrollees
             WHERE pending_enrollees_id=:pending_enrollees_id
-            AND activated=1
+            AND activated = 1
             AND firstname != ''
             AND lastname != ''
             AND password != ''
@@ -1712,6 +1717,25 @@
             ");
 
         $update->bindValue(":admission_status", $type);
+        $update->bindValue(":pending_enrollees_id", $pending_enrollees_id);
+        $update->execute();
+        
+        if($update->rowCount() > 0){
+            return true;
+        }
+
+        return false;
+    }
+
+    public function TermAcceptance($pending_enrollees_id) {
+
+
+        $update = $this->con->prepare("UPDATE pending_enrollees
+            SET condition_acceptance =:condition_acceptance
+            WHERE pending_enrollees_id=:pending_enrollees_id
+            ");
+
+        $update->bindValue(":condition_acceptance", 1);
         $update->bindValue(":pending_enrollees_id", $pending_enrollees_id);
         $update->execute();
         

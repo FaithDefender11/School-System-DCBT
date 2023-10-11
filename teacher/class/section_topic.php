@@ -179,7 +179,7 @@
                                                     $max_score = isset($row['max_score']) ? $row['max_score'] : '';
                                                     $type = isset($row['type']) ? ucwords($row['type']) : '';
 
-                                                    var_dump($template_subject_code_assignment_id);
+                                                    // var_dump($template_subject_code_assignment_id);
                                                     // 
 
                                                     # Non Template Handout

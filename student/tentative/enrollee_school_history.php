@@ -144,7 +144,7 @@
                                 Constants::$schoolIsTooLong
                                 );
                             ?>
-                            <label for="school_name">* School Name</label>
+                            <label for="school_name">School Name <span class="red">*</span></label>
                             <div>
                                 <input required type="text" id="school_name" name="school_name" class="form-control" 
                                 value="<?php
@@ -163,10 +163,10 @@
                                 Constants::$addressIsTooLong
                                 );
                             ?>
-                            <label for="address">* Address</label>
+                            <label for="address">Address <span class="red">*</span></label>
                             <div>
                                 <input required type="text" id="address" name="address"
-                                class="form-control" value="<?php
+                                class="form-control" placeholder="House No Street Name Barangay City/Municipality" value="<?php
                                     echo Helper::DisplayText('address', $address);
                                 ?>">
                             </div>
@@ -175,10 +175,14 @@
 
                     <div class="row">
                         <span>
-                            <label for="year_started">* Year Started</label>
+                            <label for="year_started">Admission Year <span class="red">*</span></label>
                             <div>
-                                <input required type="date" id="year_started" name="year_started"
-                                class="form-control" value="<?php
+                                <!-- <input required type="date" id="year_started" name="year_started"
+                                    class="form-control" value="<?php
+                                    echo Helper::DisplayText('year_started', $year_started);
+                                ?>"> -->
+                                <input required type="text" id="year_started" name="year_started"
+                                    class="form-control" placeholder="e.g. 2020" value="<?php
                                     echo Helper::DisplayText('year_started', $year_started);
                                 ?>">
                             </div>
@@ -186,11 +190,15 @@
 
                         <span>
                             
-                            <label for="year_ended">* Year Ended</label>
+                            <label for="year_ended">Graduation Year <span class="red">*</span></label>
                             <div>
-                                <input required type="date" id="year_ended" name="year_ended" 
+                                <!-- <input required type="date" id="year_ended" name="year_ended" 
                                 class="form-control" value="<?php
                                     echo Helper::DisplayText('year_started', $year_ended);
+                                ?>"> -->
+                                <input required type="text" id="year_ended" name="year_ended"
+                                    class="form-control" placeholder="e.g. 2022" value="<?php
+                                    echo Helper::DisplayText('year_ended', $year_ended);
                                 ?>">
                             </div>
                         </span>

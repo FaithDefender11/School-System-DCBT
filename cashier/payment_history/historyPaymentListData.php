@@ -11,7 +11,6 @@ $current_school_year_term = $school_year_obj['term'];
 $current_school_year_period = $school_year_obj['period'];
 $current_school_year_id = $school_year_obj['school_year_id'];
 
-
 $section = new Section($con, null);
 
 $draw = $_POST['draw'] ?? null;
@@ -22,7 +21,12 @@ $columnName = $_POST['columns'][$columnIndex]['data'] ?? null;
 $columnSortOrder = $_POST['order'][0]['dir'] ?? null;
 $searchValue = $_POST['search']['value'] ?? null;
  
+$payment_method_filter = $_GET['payment_method_filter'] ?? NULL;
+$payment_status_filter = $_GET['payment_status_filter'] ?? NULL;
 
+
+$payment_method_filtering = "";
+$payment_status_filtering = "";
  
 $columnNames = array(
     'enrollment_form_id',
@@ -36,16 +40,23 @@ $sortBy = $columnNames[$columnIndex] ?? 'cashier_confirmation_date';
 
 $sortOrder = strtoupper($columnSortOrder) === 'DESC' ? 'DESC' : 'ASC';  
 
-
 ## Search
 $searchQuery = "";
+
 if ($searchValue != '') {
+
     $searchValue = trim(strtolower($searchValue)); // Convert search value to lowercase
+    
     $searchQuery = " AND (t1.firstname LIKE '%" . $searchValue . "%' OR 
         t1.lastname LIKE '%" . $searchValue . "%' OR
         t2.enrollment_form_id LIKE '%" . $searchValue . "%' OR
         t3.program_section LIKE '%" . $searchValue . "%' OR
-        t1.student_unique_id LIKE '%" . $searchValue . "%'
+
+        t1.student_unique_id LIKE '%" . $searchValue . "%' OR
+
+        t2.payment_status LIKE '%" . $searchValue . "%'
+
+
     )";
 }
 
@@ -55,36 +66,61 @@ $stmt = $con->prepare("SELECT COUNT(*) AS allcount
     FROM student AS t1
 
     INNER JOIN enrollment AS t2 ON t1.student_id = t2.student_id
-    INNER JOIN course AS t3 ON t3.course_id = t2.course_id
 
-    AND t2.enrollment_status='enrolled'
-    AND t2.cashier_evaluated = 'yes'
-    -- AND t2.school_year_id=:school_year_id
-    
+    AND t2.registrar_evaluated = :registrar_evaluated
+    AND t2.cashier_evaluated = :cashier_evaluated
+    AND t2.payment_status IS NOT NULL 
+    AND t2.payment_method IS NOT NULL 
+
+    INNER JOIN course AS t3 ON t3.course_id = t2.course_id
+ 
     ");
 
 
 // $stmt->bindValue(":school_year_id", 3);
+$stmt->bindValue(":registrar_evaluated", "yes");
+$stmt->bindValue(":cashier_evaluated", "yes");
+
 $stmt->execute();
 $records = $stmt->fetch(PDO::FETCH_ASSOC);
 $totalRecords = $records['allcount'];
 
+if($payment_method_filter !== ""){
+    $payment_method_filtering = "AND t2.payment_method=:payment_method";
+}
+
+if($payment_status_filter !== ""){
+    $payment_status_filtering = "AND t2.payment_status=:payment_status";
+}
 
 ## Total number of records with filtering
 $stmt = $con->prepare("SELECT COUNT(*) AS allcount 
         FROM student AS t1
     
         INNER JOIN enrollment AS t2 ON t1.student_id = t2.student_id
-        INNER JOIN course AS t3 ON t3.course_id = t2.course_id
+        AND t2.registrar_evaluated = :registrar_evaluated
+        AND t2.cashier_evaluated = :cashier_evaluated
+        AND t2.payment_status IS NOT NULL 
+        AND t2.payment_method IS NOT NULL 
+        $payment_method_filtering
+        $payment_status_filtering
 
-        -- AND t2.enrollment_status = 'enrolled'
-        AND t2.cashier_evaluated = 'yes'
+        INNER JOIN course AS t3 ON t3.course_id = t2.course_id
 
         WHERE 1 $searchQuery
     
     ");
  
-// $stmt->bindValue(":school_year_id", 3);
+$stmt->bindValue(":registrar_evaluated", "yes");
+$stmt->bindValue(":cashier_evaluated", "yes");
+if($payment_method_filtering !== ""){
+    $stmt->bindValue(":payment_method", $payment_method_filter);
+}
+
+if($payment_status_filtering !== ""){
+    $stmt->bindValue(":payment_status", $payment_status_filter);
+}
+
 $stmt->execute();
 
 $records = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -99,8 +135,7 @@ if ($row != null) {
     // $regular_Status = "Regular";
     // $enrollment_status = "tentative";
     // $registrar_evaluated = "yes";
-
-
+ 
 
     $empQuery = "SELECT 
         t2.student_id,
@@ -129,16 +164,29 @@ if ($row != null) {
         t2.waiting_list,
         t2.enrollment_id,
         t2.enrollment_form_id,
+        t2.payment_status,
+        t2.payment_method,
 
-        t3.program_section
+        t3.program_section,
+
+        t4.term,
+        t4.period
 
         FROM student AS t1
     
         INNER JOIN enrollment AS t2 ON t1.student_id = t2.student_id
+
+        AND t2.cashier_evaluated = :cashier_evaluated
+        AND t2.registrar_evaluated = :registrar_evaluated
+        AND t2.payment_status IS NOT NULL 
+        AND t2.payment_method IS NOT NULL 
+        $payment_method_filtering
+        $payment_status_filtering
+        
         INNER JOIN course AS t3 ON t3.course_id = t2.course_id
 
-        -- AND t2.enrollment_status = 'enrolled'
-        AND t2.cashier_evaluated = 'yes'
+        INNER JOIN school_year AS t4 ON t4.school_year_id = t2.school_year_id
+
 
         WHERE 1 $searchQuery
 
@@ -149,7 +197,17 @@ if ($row != null) {
 
     $stmt = $con->prepare($empQuery);
 
-    // $stmt->bindValue(":school_year_id", 3);
+    $stmt->bindValue(":cashier_evaluated", "yes");
+    $stmt->bindValue(":registrar_evaluated", "yes");
+
+    if($payment_method_filtering !== ""){
+        $stmt->bindValue(":payment_method", $payment_method_filter);
+    }
+    if($payment_status_filtering !== ""){
+        $stmt->bindValue(":payment_status", $payment_status_filter);
+    }
+
+
     $stmt->execute();
 
     $data = array();
@@ -157,7 +215,11 @@ if ($row != null) {
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
         
+        $term = $row['term'];
+        $period = $row['period'];
+
         $enrollment_id = $row['enrollment_id'];
+        
         $enrollment_form_id = $row['enrollment_form_id'];
         $fullname = ucfirst($row['firstname']) . " " . ucfirst($row['lastname']);
 
@@ -165,22 +227,41 @@ if ($row != null) {
         $student_unique_id = $row['student_unique_id'];
 
         $cashier_confirmation_date = $row['cashier_confirmation_date'];
-        $cashier_confirmation_date = date("F d, Y H:i a", strtotime($cashier_confirmation_date));
+
+        // if($cashier_confirmation_date === NULL){
+        //     $cashier_confirmation_date = "N/A";
+        // }else{
+        //     $cashier_confirmation_date = date("M d, Y H:i a", strtotime($cashier_confirmation_date));
+        // }
+        $cashier_confirmation_date = ($row['cashier_confirmation_date'] === NULL) ? "N/A" : date("M d, Y H:i a", strtotime($row['cashier_confirmation_date']));
+
 
         $username = $row['username'];
         $student_id = $row['t2_student_id'];
         $program_section = $row['program_section'];
         $course_level = $row['course_level'];
+        $payment_status = $row['payment_status'];
+        $payment_method = $row['payment_method'];
 
+        $url = "../payment/payment_summary.php?id=$enrollment_id&enrolled_subject=show";
+         
         $button_url = "
-            <button class='default information'>View</button>
+            <button onclick=\"window.location.href='$url'\" class='default information'>View</button>
         ";
+
+        $period_acronym = $period === "First" ? "S1" : ($period==="Second" ? "S2" : "");
+
+        $term_semester = "$term $period_acronym";
  
         $data[] = array(
             "enrollment_form_id" => $enrollment_form_id,
             "student_no" => $student_unique_id,
             "name" => $fullname,
+            "term_semester" => $term_semester,
+            
             "section" => $program_section,
+            "status" => $payment_status,
+            "method" => $payment_method,
             "cashier_confirmation_date" => $cashier_confirmation_date,
             "button_url" => $button_url,
         );

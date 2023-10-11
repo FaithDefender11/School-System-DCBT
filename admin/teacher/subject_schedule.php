@@ -55,11 +55,12 @@
                 <tr>
                   <th>Name</th>
                   <th>Subject</th>
-                  <th>Code</th>
+                  <!-- <th>Code</th> -->
                   <th>Section</th>
                   <th>Days</th>
                   <th>Schedule</th>
                   <th>S.Y - Semester</th>
+                  <th>Room</th>
                   <th style="width: 115px">Action</th>
                 </tr>
               </thead>
@@ -90,7 +91,10 @@
                     t3.subject_code AS sp_subject_code,
 
                     t5.period,
-                    t5.term
+                    t5.term,
+
+                    t6.room_number,
+                    t6.room_name
 
                     
                     FROM subject_schedule as t1
@@ -99,6 +103,7 @@
                     LEFT JOIN subject_program as t3 ON t3.subject_program_id = t1.subject_program_id
                     LEFT JOIN course as t4 ON t4.course_id = t1.course_id
                     LEFT JOIN school_year AS t5 ON t5.school_year_id = t1.school_year_id
+                    LEFT JOIN room AS t6 ON t6.room_id = t1.room_id
 
                     ORDER BY t1.day_count ASC
 
@@ -127,14 +132,23 @@
                         $period = $row['period'];
                         $subject_code = $row['subject_code'];
 
-                        
+                        $room_number = $row['room_number'];
+                        if($room_number === NULL){
+                          $room_number = "TBA";
+                        }
+                        $room_name = $row['room_name'];
+
+                         
 
                         //   $program_section = "";
                         //   $course_level = "";
 
-                        $edit = "../section/edit_schedule_code.php?s_id=$subject_schedule_id";
+                        $edit = "subject_schedule_edit.php?s_id=$subject_schedule_id";
 
                         $info = "info.php?details=show&id=$teacher_id";
+
+                        $period = $period === "First" ? "S1" : ($period === "Second" ? "S2" : "" );
+
                         echo "
                           <tr>
                             <td>
@@ -143,11 +157,11 @@
                               </a>
                             </td>
                             <td>$subject_title</td>
-                            <td>$subject_code</td>
                             <td>$program_section</td>
                             <td>$schedule_day</td>
                             <td>$schedule_time</td>
                             <td>$term - $period</td>
+                            <td>$room_number</td>
                             <td>
                               <button class='btn btn-sm btn-primary'
                               onclick='window.location.href =  \"$edit\" '

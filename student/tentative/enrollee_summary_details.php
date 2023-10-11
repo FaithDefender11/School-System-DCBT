@@ -244,7 +244,7 @@
                             <br>
                             <div class="row">
                                 <span>
-                                    <label for="school_name">* School Name</label>
+                                    <label for="school_name">School Name</label>
                                     <div>
                                         <input required type="text" id="school_name" name="school_name" class="read_only form-control" 
                                         value="<?php echo $school_name; ?>">
@@ -253,7 +253,7 @@
                             </div>
                             <div class="row">
                                 <span>
-                                    <label for="school_address">* Address</label>
+                                    <label for="school_address">Address</label>
                                     <div>
                                         <input required type="text" id="school_address" name="school_address"
                                         class="read_only form-control" value="<?php echo $school_address; ?>">
@@ -263,18 +263,18 @@
 
                             <div class="row">
                                 <span>
-                                    <label for="year_started">* Year Started</label>
+                                    <label for="year_started">Admission Year</label>
                                     <div>
-                                        <input required type="date" id="year_started" name="year_started"
+                                        <input required type="text" id="year_started" name="year_started"
                                         class="read_only form-control" value="<?php echo $year_started;?>">
                                     </div>
                                 </span>
 
                                 <span>
                                     
-                                    <label for="year_ended">* Year Ended</label>
+                                    <label for="year_ended">Graduation Year</label>
                                     <div>
-                                        <input  required type="date" id="year_ended" name="year_ended" 
+                                        <input  required type="text" id="year_ended" name="year_ended" 
                                         class="read_only form-control" value="<?php echo $year_ended;?>">
                                     </div>
                                 </span>
@@ -471,12 +471,16 @@
                                 >
                                 Return
                             </button>
-                            <button
-                                class="default success large"
-                                onclick="MarkAsValidated(<?php echo $pending_enrollees_id; ?>, <?php echo $school_year_id; ?>, '<?php echo $current_term; ?>', '<?php echo $current_semester; ?>')"
-                                type="button">
-                                Validate
-                            </button>
+
+                            <?php if($does_enrollee_finished_input === 1): ?>
+                                <button
+                                    class="default success large"
+                                    onclick="MarkAsValidated(<?php echo $pending_enrollees_id; ?>, <?php echo $school_year_id; ?>, '<?php echo $current_term; ?>', '<?php echo $current_semester; ?>')"
+                                    type="button">
+                                    Validate
+                                </button>
+                            <?php endif;?>
+                            
                         </div>
                     </form>
                                 <!-- onclick="window.location.href ='process.php?new_student=true&step=4'" -->

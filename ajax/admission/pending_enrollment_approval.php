@@ -40,7 +40,7 @@
         $birthday = $_POST['birthday'];
         $age = $_POST['age'];
         $guardian_name = $_POST['guardian_name'];
-        $guardian_contact_number = $_POST['guardian_contact_number'];
+        // $guardian_contact_number = $_POST['guardian_contact_number'];
         $sex = $_POST['sex'];
         $student_status = $_POST['student_status'];
         $pending_enrollees_id = $_POST['pending_enrollees_id']; 
@@ -103,12 +103,12 @@
             
         }
 
-        $sql = "INSERT INTO student (firstname, lastname, middle_name, password, civil_status, nationality, contact_number, birthday, age, guardian_name, guardian_contact_number, sex, student_status,
+        $sql = "INSERT INTO student (firstname, lastname, middle_name, password, civil_status, nationality, contact_number, birthday, guardian_name, guardian_contact_number, sex, student_status,
                     course_id, student_unique_id, 
                     course_level, username, address, lrn, religion, birthplace, email,
                     admission_status, is_tertiary) 
 
-                    VALUES (:firstname, :lastname, :middle_name, :password, :civil_status, :nationality, :contact_number, :birthday, :age, :guardian_name, :guardian_contact_number, :sex, :student_status,
+                    VALUES (:firstname, :lastname, :middle_name, :password, :civil_status, :nationality, :contact_number, :birthday, :guardian_name, :guardian_contact_number, :sex, :student_status,
                     :course_id, :student_unique_id,
                     :course_level, :username, :address, :lrn, :religion, :birthplace, :email,
                     :admission_status, :is_tertiary)";
@@ -124,9 +124,9 @@
         $stmt_insert->bindParam(':nationality', $nationality);
         $stmt_insert->bindParam(':contact_number', $contact_number);
         $stmt_insert->bindParam(':birthday', $birthday);
-        $stmt_insert->bindParam(':age', $age);
+        // $stmt_insert->bindParam(':age', $age);
         $stmt_insert->bindParam(':guardian_name', $guardian_name);
-        $stmt_insert->bindParam(':guardian_contact_number', $guardian_contact_number);
+        // $stmt_insert->bindParam(':guardian_contact_number', $guardian_contact_number);
         $stmt_insert->bindParam(':sex', $sex);
         $stmt_insert->bindParam(':student_status', $student_status);
         $stmt_insert->bindParam(':course_id', $selected_course_id);

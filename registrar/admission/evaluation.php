@@ -188,17 +188,12 @@
 
     <main>
 
-   
-
       <div class="floating">
         <header>
           <div class="title">
             <h3>Form details</h3>
           </div>
           <div class="action">
-
-             
-
             <form style="display: flex;" method="POST" id="student_filter_form">
                 <div style="margin-right: 15px;" class="form-group">
                     <label for="new">New</label>
@@ -224,10 +219,6 @@
             </tr>
           </table>
 
-           
-
-
-          
 
           <table style="width: 100%" id="evaluation_table" class="a">
            
@@ -318,10 +309,10 @@
             // { data: 'email', orderable: false }, // Disable sorting for email
             { data: 'type', orderable: false }, // Disable sorting for type
             { data: 'acronym', orderable: false }, // Disable sorting for acronym
-            { data: 'submission_creation', orderable: true }, // Disable sorting for submission_creation
+            { data: 'submission_creation', orderable: false }, // Disable sorting for submission_creation
             { data: 'button_url' }
           ],
-          'ordering': true
+          'ordering': false
       });
 
       // var ad = table.context;

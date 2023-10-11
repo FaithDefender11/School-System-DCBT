@@ -25,6 +25,26 @@
         $sy_id = NULL;
         $selected_program_id = NULL;
     }
+
+
+    $userTimeFrom = '07:00';
+    $userTimeTo = '08:31';
+    $userScheduleDay = 'M';
+
+    # NEW
+    $check1 = $schedule->CheckTeacherScheduleConflicted(
+        $userTimeFrom, $userTimeTo, $userScheduleDay, $teacher_id);
+
+    # OLD
+    // $check1 = $schedule->CheckTeacherScheduleConflictedH(
+    //     $userTimeFrom, $userTimeTo, $userScheduleDay, $teacher_id);
+
+
+    // $check2 = $schedule->CheckScheduleDayWithRoomConflict(
+    //     $userTimeFrom, $userTimeTo, $userScheduleDay, $room_id);
+
+
+    // var_dump($check1);
  
 ?>
 
@@ -82,150 +102,8 @@
 </div>
 
 
-
-
 <div class="content">
     <main>
-        <div style="display: none;" class="floating">
-            <header>
-                <div class="title">
-                    <h3>Schedule List</h3>
-                </div>
-
-                <div class="form-group">
-                    <label for="select_term">Term</label>
-                    <select name="" id="select_term" class="form-control">
-                        <option value="">First Semester</option>
-                    </select>
-                </div>
-                
-            </header>
-            <main>
-
-                <table id="department_table" class="a" style="margin: 0">
-                    <thead>
-                        <tr>
-                            <th>Subject</th>
-                            <th>Code</th>
-                            <th>Section</th>
-                            <th>Days</th>
-                            <th>Schedule</th>
-                            <th>Hrs/Week</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        
-                            $subject_titles_occurrences = [];
-                            $subject_code_occurrences = [];
-                            $section_occurrences = [];
-
-                            $section = new Section($con);
-
-                            $query = $con->prepare("SELECT 
-                                t1.subject_schedule_id,
-                                t1.course_id AS subject_schedule_course_id,
-                                t1.subject_program_id AS subject_subject_program_id,
-                                t1.time_from,
-                                t1.time_to,
-                                t1.schedule_day,
-                                t1.schedule_time,
-                                t1.room,
-                                t1.course_id, t1.subject_code,
-
-
-                                -- t3.subject_code, 
-                                t4.program_section,
-                                t4.course_id as courseCourseId,
-
-                                t3.subject_title,
-                                t3.subject_program_id,
-                                t3.subject_code AS sp_subject_code
-                                
-                                FROM subject_schedule as t1
-                                INNER JOIN teacher as t2 ON t2.teacher_id = t1.teacher_id
-                                
-                                LEFT JOIN subject_program as t3 ON t3.subject_program_id = t1.subject_program_id
-                                LEFT JOIN course as t4 ON t4.course_id = t1.course_id
-
-                                WHERE t1.teacher_id = :teacher_id
-
-                                ORDER BY t3.subject_title DESC
-
-                                ");
-
-                            $query->bindParam(":teacher_id", $teacher_id);
-                            $query->execute();
-                            if($query->rowCount() > 0){
-
-                                while($row = $query->fetch(PDO::FETCH_ASSOC)){
-
-                                    $subject_title = $row['subject_title'];
-                                    $course_id = $row['course_id'];
-                                    $subject_code = $row['subject_code'];
-                                    $program_section = $row['program_section'];
-                                    $subject_program_id = $row['subject_program_id'];
-                                    $courseCourseId = $row['courseCourseId'];
-                                    $schedule_day = $row['schedule_day'];
-                                    $time = $row['schedule_time'];
-                                    $subject_subject_program_id = $row['subject_subject_program_id'];
-                                    
-                                    $subject_schedule_course_id = $row['subject_schedule_course_id'];
-
-                                    $sp_subject_code = $row['sp_subject_code'];
-
-                                    $status = "";
-                                    $hrs_per_week = "";
-
-
-                                    // $section_subject_code = $section->CreateSectionSubjectCode(
-                                    //     $program_section, $subject_code
-                                    // );
-
-                                    // echo $subject_code;
-
-
-                                    $schedule->filterSubsequentOccurrencesSa($subject_titles_occurrences,
-                                        $subject_title, $subject_schedule_course_id, $subject_program_id);
-
-                                    $schedule->filterSubsequentOccurrencesSa($subject_code_occurrences,
-                                        $subject_code, $subject_schedule_course_id, $subject_subject_program_id);
-
-                                    // $schedule->filterSubsequentOccurrencesSa($section_occurrences,
-                                    //     $program_section, $subject_schedule_course_id, $subject_subject_program_id);
-
-                                    echo "
-                                        <tr>
-                                            <td>$subject_title</td>
-                                            <td>
-                                                <a style='color: inherit' href='subject_enrolled.php?term=$current_school_year_term&cd=$subject_code&c=$course_id'>
-                                                    $subject_code
-                                                </a>
-                                            </td>
-                                            <td>$program_section</td>
-                                            <td>$schedule_day</td>
-                                            <td>$time</td>
-                                            
-                                            <td>$hrs_per_week</td>
-                                        </tr>
-                                    ";
-
-                                }
-                            }else{
-                                echo "
-                                    <div class='col-md-12'>
-                                        <h4 class='text-info text-center'>No Subject Load</h4>
-                                    </div>
-                                ";
-                            }
-                        
-                        ?>
-                    </tbody>
-
-                </table>
-
-            </main>
-        </div>
 
         <div class="floating">
             <main>
@@ -401,9 +279,9 @@
                     <thead>
                         <tr>
                             <th>Subject</th>
-                            <th>Code</th>
+                            <!-- <th>Code</th> -->
                             <th>Section</th>
-                            <th>A.Y - Term</th>
+                            <th>Term - Semester</th>
                             <th>Days</th>
                             <th>Schedule</th>
                         </tr>
@@ -497,7 +375,7 @@
             
             'columns': [
             { data: 'subject_title', orderable: false },  
-            { data: 'subject_code', orderable: false },  
+            // { data: 'subject_code', orderable: false },  
             { data: 'program_section', orderable: false },
             { data: 'term_period', orderable: false },
             { data: 'schedule_day', orderable: false },

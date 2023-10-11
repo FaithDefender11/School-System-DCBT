@@ -31,7 +31,8 @@
         $email_address = $pending->GetPendingEmail();
 
 
-        $back_url = "process_enrollment.php?enrollee_details=true&id=$pending_enrollees_id";
+        // $back_url = "process_enrollment.php?enrollee_details=true&id=$pending_enrollees_id";
+        $back_url = "enrollee_file_submission.php?id=$pending_enrollees_id";
 
         if($_SERVER["REQUEST_METHOD"] === "POST" &&
             isset($_POST['enrollee_message_' . $pending_enrollees_id])

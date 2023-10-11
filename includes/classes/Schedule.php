@@ -30,6 +30,11 @@
         return isset($this->sqlData['subject_code']) ? $this->sqlData["subject_code"] : ""; 
     }
 
+    public function GetSubjectProgramId() {
+        return isset($this->sqlData['subject_program_id']) ? $this->sqlData["subject_program_id"] : NULL; 
+    }
+
+
     public function GetRoomId() {
         return isset($this->sqlData['room_id']) ? $this->sqlData["room_id"] : NULL; 
     }
@@ -56,7 +61,7 @@
     }
 
     public function GetScheduleTeacherId() {
-        return isset($this->sqlData['teacher_id']) ? $this->sqlData["teacher_id"] : 0; 
+        return isset($this->sqlData['teacher_id']) ? $this->sqlData["teacher_id"] : NULL; 
     }
 
     public function GetScheduleScheduleSubjectCode() {
@@ -84,26 +89,7 @@
         }
     }
 
-    public function CheckIfTeacherAlreadyScheduleToTheSubject($subject_id,
-        $teacher_id){
 
-        echo $subject_id;
-        echo "<br>";
-        echo $teacher_id;
-        echo "<br>";
-
-        $sql = $this->con->prepare("SELECT * FROM subject_schedule as t1
-
-            WHERE t1.subject_id=:subject_id
-            AND t1.teacher_id=:teacher_id
-        ");
-                
-        $sql->bindParam(":subject_id", $subject_id);
-        $sql->bindParam(":teacher_id", $teacher_id);
-        $sql->execute();
-
-        return $sql->rowCount() > 0;
-    }
 
     public function AddScheduleCodeBase(
         $room_id,
@@ -162,28 +148,138 @@
         $teacher_id, $section_subject_code, $subject_program_id, $room_id){
 
         $day_count = NULL;
+        
+        switch ($schedule_day) {
+            case "M":
+                $day_count = 1;
+                break;
+            case "T":
+                $day_count = 2;
+                break;
+            case "W":
+                $day_count = 3;
+                break;
+            case "TH":
+                $day_count = 4;
+                break;
+            case "F":
+                $day_count = 5;
+                break;
+            default:
+                // Handle cases where $schedule_day doesn't match any of the specified values.
+                // You may want to assign a default value or handle it differently.
+                break;
+        }
 
-        if($schedule_day == "M"){
-            $day_count = 1;
+
+        # TO DELETE.
+        $teacher_id = $teacher_id == 0 ? NULL : $teacher_id;
+        $room_id = $room_id == 0 ? NULL : $room_id;
+
+
+        // echo "time_from_meridian_military: $time_from_meridian_military";
+        // echo "<br>";
+
+        // echo "time_to_meridian_military: $time_to_meridian_military";
+        // echo "<br>";
+        // return;
+
+        if($room_id !== NULL){
+
+            $schedule_id_conflict = $this->CheckScheduleDayWithRoomConflict(
+                $time_from_meridian_military, $time_to_meridian_military,
+                $schedule_day, $current_school_year_id, $room_id);
+
+            if($schedule_id_conflict !== NULL){
+
+                $scheduleConflict = new Schedule($this->con, $schedule_id_conflict);
+
+                $time_from = $scheduleConflict->GetTimeFrom();
+                $time_from = $this->convertTo12HourFormat($time_from);
+
+                $time_to = $scheduleConflict->GetTimeTo();
+                $time_to = $this->convertTo12HourFormat($time_to);
+
+                $day = $scheduleConflict->GetScheduleDay();
+                $room_conflicted_id = $scheduleConflict->GetRoomId();
+
+                $room_conflict = new Room($this->con, $room_conflicted_id);
+                $room_number = $room_conflict->GetRoomNumber();
+
+                $room_inserted = new Room($this->con, $room_id);
+                $room_inserted_number = $room_inserted->GetRoomNumber();
+
+                $time_from_meridian_military = $this->convertTo12HourFormat($time_from_meridian_military);
+                $time_to_meridian_military = $this->convertTo12HourFormat($time_to_meridian_military);
+
+                Alert::conflictedMessage("Conflicted Schedule: $time_from - $time_to <br> ($day) Room: $room_number",
+                    "Desired Schedule: $time_from_meridian_military - $time_to_meridian_military <br> ($schedule_day) Room: $room_inserted_number", "");
+
+                exit();
+            }
+
         }
-        if($schedule_day == "T"){
-            $day_count = 2;
-        }if($schedule_day == "W"){
-            $day_count = 3;
-        }if($schedule_day == "TH"){
-            $day_count = 4;
-        }if($schedule_day == "F"){
-            $day_count = 5;
+
+
+
+        if($teacher_id !== NULL){
+
+            $check_teacher_id_conflict = $this->CheckTeacherScheduleConflicted(
+                $time_from_meridian_military, $time_to_meridian_military,
+                $schedule_day, $teacher_id);
+
+            if($check_teacher_id_conflict !== NULL){
+
+                // var_dump($check_teacher_id_conflict);
+                // return;
+
+                $scheduleConflict = new Schedule($this->con, $check_teacher_id_conflict);
+
+                $time_from = $scheduleConflict->GetTimeFrom();
+                $time_from = $this->convertTo12HourFormat($time_from);
+
+                $time_to = $scheduleConflict->GetTimeTo();
+                $time_to = $this->convertTo12HourFormat($time_to);
+
+                $day = $scheduleConflict->GetScheduleDay();
+                $room_conflicted_id = $scheduleConflict->GetRoomId();
+
+                $room_conflict = new Room($this->con, $room_conflicted_id);
+                $room_number = $room_conflict->GetRoomNumber();
+
+                if($room_number == NULL){
+                    $room_number = "N/A";
+                }
+                $room_inserted = new Room($this->con, $room_id);
+                $room_inserted_number = $room_inserted->GetRoomNumber();
+
+
+                $time_from_meridian_military = $this->convertTo12HourFormat($time_from_meridian_military);
+                $time_to_meridian_military = $this->convertTo12HourFormat($time_to_meridian_military);
+
+                // $time_from_meridian_military = $this->convertTo12HourFormat($raw_time_from);
+                // $time_to_meridian_military = $this->convertTo12HourFormat($raw_time_to);
+
+                Alert::conflictedMessage("Teacher Conflicted Schedule: $time_from - $time_to <br> ($day) Room: $room_number",
+                    "Desired Schedule: $time_from_meridian_military - $time_to_meridian_military <br> ($schedule_day) Room: $room_inserted_number", "");
+                exit();  
+                    
+                // Alert::error("Selected schedule day along with time for teacher is conflicted", "");
+                // exit();  
+
+            }
         }
+        
 
         $sql = $this->con->prepare("INSERT INTO subject_schedule
-                (schedule_day, time_from, time_to, schedule_time,
-                    school_year_id, course_id, teacher_id, subject_code,
-                    subject_program_id, day_count, room_id)
+            (schedule_day, time_from, time_to, schedule_time,
+                school_year_id, course_id, teacher_id, subject_code,
+                subject_program_id, day_count, room_id)
 
-                VALUES(:schedule_day, :time_from, :time_to, :schedule_time,
-                    :school_year_id, :course_id, :teacher_id, :subject_code,
-                    :subject_program_id, :day_count, :room_id)");
+            VALUES(:schedule_day, :time_from, :time_to, :schedule_time,
+                :school_year_id, :course_id, :teacher_id, :subject_code,
+                :subject_program_id, :day_count, :room_id)
+        ");
 
         $schedule_time = $time_from_meridian . ' - ' . $time_to_meridian;
 
@@ -199,13 +295,515 @@
         $sql->bindParam(":subject_program_id", $subject_program_id);
         $sql->bindParam(":day_count", $day_count);
         $sql->bindParam(":room_id", $room_id);
+        $sql->execute();
 
-        if($sql->execute() && $sql->rowCount() > 0){
+        if($sql->rowCount() > 0){
             return true;
         }
 
+
         return false;
     }
+
+    public function convertTo12HourFormat($time24Hour) {
+        // Convert the 24-hour time to 12-hour format with AM/PM
+        $time12Hour = date("h:i A", strtotime($time24Hour));
+        return $time12Hour;
+    }
+
+    public function UpdateSubjectSchedule(
+        $subject_schedule_id, $schedule_day,
+
+        $time_from, $time_to, $raw_time_from, $raw_time_to,
+
+        $school_year_id, $course_id,
+        $teacher_id, $subject_code, 
+        $subject_program_id, $room_id) {
+
+        $time_from = trim($time_from);
+        $time_to = trim($time_to);
+
+        $raw_time_from = trim($raw_time_from);
+        $raw_time_to = trim($raw_time_to);
+
+
+        // var_dump($time_from);
+        // echo "<br>";
+        // var_dump($time_to);
+        // echo "<br>";
+        // return;
+
+        $day_count = NULL;
+
+        if($schedule_day == "M"){
+            $day_count = 1;
+        }
+        if($schedule_day == "T"){
+            $day_count = 2;
+        }if($schedule_day == "W"){
+            $day_count = 3;
+        }if($schedule_day == "TH"){
+            $day_count = 4;
+        }if($schedule_day == "F"){
+            $day_count = 5;
+        }
+
+
+        // if($this->CheckScheduleDayWithRoomConflict(
+        //     $time_from, $time_to,
+        //     $schedule_day, $school_year_id,
+        //     $room_id, $subject_schedule_id) === true){
+
+        //     Alert::errorToast("Schedule day with time has conflicted with selected room.", "");
+        //     exit();
+        // }
+
+        if($room_id !== NULL){
+
+            $schedule_id_conflict = $this->CheckScheduleDayWithRoomConflict(
+                $time_from, $time_to,
+                $schedule_day, $school_year_id,
+                $room_id, $subject_schedule_id);
+
+            if($schedule_id_conflict !== NULL){
+
+                // var_dump($schedule_id_conflict);
+                // return;
+                $scheduleConflict = new Schedule($this->con, $schedule_id_conflict);
+
+                $time_from = $scheduleConflict->GetTimeFrom();
+                $time_from = $this->convertTo12HourFormat($time_from);
+
+                $time_to = $scheduleConflict->GetTimeTo();
+                $time_to = $this->convertTo12HourFormat($time_to);
+
+                $day = $scheduleConflict->GetScheduleDay();
+                $room_conflicted_id = $scheduleConflict->GetRoomId();
+
+                $room_conflict = new Room($this->con, $room_conflicted_id);
+                $room_number = $room_conflict->GetRoomNumber();
+
+                // var_dump($room_number);
+                // return;
+
+                if($room_number == NULL){
+                    $room_number = "N/A";
+                }
+
+                $room_inserted = new Room($this->con, $room_id);
+                $room_inserted_number = $room_inserted->GetRoomNumber();
+
+
+                // $time_from_meridian_military = $this->convertTo12HourFormat($time_from_meridian_military);
+                // $time_to_meridian_military = $this->convertTo12HourFormat($time_to_meridian_military);
+
+                
+                $time_from_meridian_military = $this->convertTo12HourFormat($raw_time_from);
+                $time_to_meridian_military = $this->convertTo12HourFormat($raw_time_to);
+
+                Alert::conflictedMessage("Conflicted Schedule: $time_from - $time_to <br> ($day) Room: $room_number",
+                    "Desired Schedule: $time_from_meridian_military - $time_to_meridian_military <br> ($schedule_day) Room: $room_inserted_number", "");
+                
+                // Alert::errorToast("Schedule day with time has conflicted with selected room.", "");
+                exit();
+
+            }   
+        }
+
+        if($teacher_id !== NULL){
+
+            $check_teacher_id_conflict = $this->CheckTeacherScheduleConflicted(
+                $time_from, $time_to, $schedule_day, $teacher_id, $subject_schedule_id);
+
+            if($check_teacher_id_conflict !== NULL){
+
+                // var_dump($check_teacher_id_conflict);
+                // return;
+
+                $scheduleConflict = new Schedule($this->con, $check_teacher_id_conflict);
+
+                $time_from = $scheduleConflict->GetTimeFrom();
+                $time_from = $this->convertTo12HourFormat($time_from);
+
+                $time_to = $scheduleConflict->GetTimeTo();
+                $time_to = $this->convertTo12HourFormat($time_to);
+
+                $day = $scheduleConflict->GetScheduleDay();
+                $room_conflicted_id = $scheduleConflict->GetRoomId();
+
+                $room_conflict = new Room($this->con, $room_conflicted_id);
+                $room_number = $room_conflict->GetRoomNumber();
+                if($room_number == NULL){
+                    $room_number = "N/A";
+                }
+                $room_inserted = new Room($this->con, $room_id);
+                $room_inserted_number = $room_inserted->GetRoomNumber();
+
+                if($room_inserted_number == NULL){
+                    $room_inserted_number = "N/A";
+                }
+
+                // $time_from_meridian_military = $this->convertTo12HourFormat($time_from_meridian_military);
+                // $time_to_meridian_military = $this->convertTo12HourFormat($time_to_meridian_military);
+
+                $time_from_meridian_military = $this->convertTo12HourFormat($raw_time_from);
+                $time_to_meridian_military = $this->convertTo12HourFormat($raw_time_to);
+
+                Alert::conflictedMessage("Teacher Conflicted Schedule: $time_from - $time_to <br> ($day) Room: $room_number",
+                    "Desired Schedule: $time_from_meridian_military - $time_to_meridian_military <br> ($schedule_day) Room: $room_inserted_number", "");
+                exit();  
+                    
+                // Alert::error("Selected schedule day along with time for teacher is conflicted", "");
+                // exit();  
+
+            }
+        }
+
+            // Prepare the UPDATE query
+        $sql = $this->con->prepare("UPDATE subject_schedule
+            SET schedule_day = :schedule_day,
+                time_from = :time_from,
+                time_to = :time_to,
+                school_year_id = :school_year_id,
+                course_id = :course_id,
+                teacher_id = :teacher_id,
+                subject_code = :subject_code,
+                subject_program_id = :subject_program_id,
+                day_count = :day_count,
+                room_id = :room_id,
+                schedule_time = :schedule_time
+            WHERE subject_schedule_id = :subject_schedule_id
+        ");
+
+        // Concatenate time_from and time_to for schedule_time
+
+        $schedule_time = $raw_time_from . ' - ' . $raw_time_to;
+        
+        // $schedule_time = $time_from . ' - ' . $time_to;
+
+        // Bind parameters
+        $sql->bindParam(":subject_schedule_id", $subject_schedule_id);
+        $sql->bindParam(":schedule_day", $schedule_day);
+        $sql->bindParam(":schedule_time", $schedule_time);
+        $sql->bindParam(":time_from", $time_from);
+        $sql->bindParam(":time_to", $time_to);
+        $sql->bindParam(":school_year_id", $school_year_id);
+        $sql->bindParam(":course_id", $course_id);
+        $sql->bindParam(":teacher_id", $teacher_id);
+        $sql->bindParam(":subject_code", $subject_code);
+        $sql->bindParam(":subject_program_id", $subject_program_id);
+        $sql->bindParam(":day_count", $day_count);
+        $sql->bindParam(":room_id", $room_id);
+
+        // Execute the UPDATE query
+        $sql->execute();
+
+        // Check if the UPDATE was successful
+        if ($sql->rowCount() > 0) {
+            return true; // Update successful
+        } 
+
+        return false; // Update failed
+    }
+
+
+    public function CheckScheduleDayWithRoomConflict(
+        $userTimeFrom, $userTimeTo, $userScheduleDay,
+        $school_year_id, $room_id = null, $subject_schedule_id = null) {
+
+        // if($room_id === NULL) return false;
+        
+            // var_dump($userScheduleDay);
+
+        // var_dump($userTimeFrom);
+        // echo "<br>";
+        // var_dump($userTimeTo);
+        // echo "<br>";
+        // echo "<br>";
+
+        $room_output_query = NULL;
+        // if($room_id !== NULL){
+        //     $room_output_query = "AND room_id=:room_id";
+        // }
+
+        $subject_schedule_output_query = "";
+
+        # If editing, it should remove the current subject_schedule_id
+        # From finding other schedules
+
+        if($subject_schedule_id !== NULL){
+            $subject_schedule_output_query = "AND subject_schedule_id !=:subject_schedule_id";
+        }
+
+        $stmt = $this->con->prepare("SELECT * FROM subject_schedule 
+        
+            WHERE schedule_day = :userScheduleDay
+            -- $room_output_query
+            AND room_id=:room_id
+            AND school_year_id=:school_year_id
+            $subject_schedule_output_query
+        ");
+
+        $stmt->bindParam(':userScheduleDay', $userScheduleDay);
+        $stmt->bindParam(':room_id', $room_id);
+        $stmt->bindParam(':school_year_id', $school_year_id);
+
+        // if($room_id !== NULL){
+        //     $stmt->bindParam(':room_id', $room_id);
+        // }
+
+        if($subject_schedule_id !== NULL){
+            $stmt->bindParam(':subject_schedule_id', $subject_schedule_id);
+        }
+
+        $stmt->execute();
+        if($stmt->rowCount() > 0){
+
+            $userTimeFrom = trim($userTimeFrom);
+            $userTimeTo = trim($userTimeTo);
+
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+
+                $existingTimeFrom = $row['time_from'];
+                $existingTimeFrom = trim($existingTimeFrom);
+
+                $existingTimeTo = $row['time_to'];
+                $existingTimeTo = trim($existingTimeTo);
+                $subject_schedule_id = $row['subject_schedule_id']; // Get the Class ID
+
+                // if (
+                //     ($userTimeFrom >= $existingTimeFrom && $userTimeFrom <= $existingTimeTo) ||
+                //     ($userTimeTo >= $existingTimeFrom && $userTimeTo <= $existingTimeTo) ||
+                //     ($userTimeFrom <= $existingTimeFrom && $userTimeTo >= $existingTimeTo))
+                // {
+                //     return true; // Conflict found
+                // }
+
+                // echo "userTimeFrom: " . var_dump($userTimeFrom);
+                // echo "<br>";
+                // echo "existingTimeTo: " . var_dump($existingTimeTo);
+                // echo "<br>";
+
+
+                if (
+                    ($userTimeFrom >= $existingTimeTo) ||
+                    ($userTimeTo <= $existingTimeFrom) ||
+                    ($existingTimeTo == $userTimeFrom) // Add this condition
+                ) {
+                    continue; // No conflict found, check the next schedule
+                } else {
+
+                    // echo "subject_schedule_id: $subject_schedule_id";
+                    return $subject_schedule_id;
+                    // Conflict schedule ID FOUND
+                    // return $subject_schedule_id; 
+
+                    // return true; // Conflict found
+                }
+            }
+        }
+        return NULL; // No conflicts found
+        // return false; // No conflicts found
+    }
+
+    public function CheckTeacherScheduleConflicted2(
+        $userTimeFrom, $userTimeTo, $schedule_day,
+            $teacher_id, $subject_schedule_id = null) {
+
+
+        // if($teacher_id === NULL) return false;
+
+        // var_dump($userTimeFrom);
+        // echo "<br>";
+        // var_dump($userTimeTo);
+        // echo "<br>";
+        // echo "<br>";
+
+        $subject_schedule_output_query = "";
+
+        if($subject_schedule_id !== NULL){
+            $subject_schedule_output_query = "AND subject_schedule_id !=:subject_schedule_id";
+        }
+ 
+        $stmt = $this->con->prepare("SELECT * FROM subject_schedule 
+        
+            WHERE schedule_day = :schedule_day
+            AND teacher_id = :teacher_id
+            $subject_schedule_output_query
+        ");
+        
+        $stmt->bindParam(':schedule_day', $schedule_day);
+        $stmt->bindParam(':teacher_id', $teacher_id);
+
+        if($subject_schedule_id !== NULL){
+            $stmt->bindParam(':subject_schedule_id', $subject_schedule_id);
+        }
+       
+        $stmt->execute();
+
+        if($stmt->rowCount() > 0){
+
+            $userTimeFrom = trim($userTimeFrom);
+            $userTimeTo = trim($userTimeTo);
+
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+
+                $existingTimeFrom = $row['time_from'];
+                $existingTimeFrom = trim($existingTimeFrom);
+
+                $existingTimeTo = $row['time_to'];
+                $existingTimeTo = trim($existingTimeTo);
+                $subject_schedule_id = $row['subject_schedule_id']; // Get the Class ID
+
+               
+
+
+                if (
+                    ($userTimeFrom >= $existingTimeTo) ||
+                    ($userTimeTo <= $existingTimeFrom) ||
+                    ($userTimeFrom == $existingTimeFrom) // Add this condition
+                ) {
+                    continue; // No conflict found, check the next schedule
+                } else {
+
+                    // Conflict schedule ID FOUND
+                    // return $subject_schedule_id; 
+                    // return true; // Conflict found
+                    return $subject_schedule_id;
+                }
+            }
+        }
+        return NULL; // No conflicts found
+    }
+
+    public function CheckTeacherScheduleConflictedH(
+        $userTimeFrom, $userTimeTo, $schedule_day,
+            $teacher_id, $subject_schedule_id = null) {
+ 
+        $stmt = $this->con->prepare("SELECT * FROM subject_schedule 
+        
+            WHERE schedule_day = :schedule_day
+            AND teacher_id = :teacher_id
+        ");
+        
+        $stmt->bindParam(':schedule_day', $schedule_day);
+        $stmt->bindParam(':teacher_id', $teacher_id);
+
+        $stmt->execute();
+
+        if($stmt->rowCount() > 0){
+
+            $userTimeFrom = trim($userTimeFrom);
+            $userTimeTo = trim($userTimeTo);
+
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+
+                $existingTimeFrom = $row['time_from'];
+                $existingTimeFrom = trim($existingTimeFrom);
+
+                $existingTimeTo = $row['time_to'];
+                $existingTimeTo = trim($existingTimeTo);
+                $subject_schedule_id = $row['subject_schedule_id']; // Get the Class ID
+
+
+                if (
+                    ($userTimeFrom >= $existingTimeTo) ||
+                    ($userTimeTo <= $existingTimeFrom) ||
+                    ($userTimeFrom == $existingTimeFrom) // Add this condition
+                ) {
+                    continue; // No conflict found, check the next schedule
+                } else {
+
+                    // Conflict schedule ID FOUND
+                    // return true; // Conflict found
+                    return $subject_schedule_id;
+                }
+            }
+        }
+        return NULL; // No conflicts found
+    }
+
+    public function CheckIfTimeIsEqual($time_from_meridian, $time_to_meridian
+    ) {
+
+        if($time_from_meridian == $time_to_meridian){
+            Alert::error("Schedule time should not be equal.", "");
+            exit();
+        }
+    }
+
+    public function CheckIfTimeFromIsGreater($time_from_meridian, $time_to_meridian
+    ) {
+
+        $timestamp_to = strtotime($time_to_meridian);
+        $timestamp_from = strtotime($time_from_meridian);
+
+        if ($timestamp_from > $timestamp_to) {
+            // echo "time_from is greater than time_to";
+            Alert::error("Time from should greater than Time to", "");
+            exit();
+        }
+    }
+
+    public function CheckTeacherScheduleConflicted(
+        $userTimeFrom, $userTimeTo, $schedule_day,
+        $teacher_id, $subject_schedule_id = null
+    ) {
+
+        $subject_schedule_output_query = "";
+
+        if($subject_schedule_id !== NULL){
+            $subject_schedule_output_query = "AND subject_schedule_id !=:subject_schedule_id";
+        }
+        $stmt = $this->con->prepare("SELECT 
+        
+            subject_schedule_id, time_from, time_to 
+        
+            FROM subject_schedule
+
+            WHERE schedule_day = :schedule_day
+            AND teacher_id = :teacher_id
+            $subject_schedule_output_query
+
+        ");
+
+        $stmt->bindParam(':schedule_day', $schedule_day);
+        $stmt->bindParam(':teacher_id', $teacher_id);
+
+        if($subject_schedule_id !== NULL){
+            $stmt->bindParam(':subject_schedule_id', $subject_schedule_id);
+        }
+
+        $stmt->execute();
+
+        if ($stmt->rowCount() > 0) {
+
+            $userTimeFrom = strtotime(trim($userTimeFrom));
+            $userTimeTo = strtotime(trim($userTimeTo));
+
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+
+                $existingTimeFrom = strtotime(trim($row['time_from']));
+                $existingTimeTo = strtotime(trim($row['time_to']));
+                $subject_schedule_id = $row['subject_schedule_id']; // Get the Class ID
+
+                if (
+                    ($userTimeFrom >= $existingTimeTo) ||
+                    ($userTimeTo <= $existingTimeFrom) 
+                    // ||  ($userTimeFrom == $existingTimeFrom)
+                    
+                ) {
+                    continue; // No conflict found, check the next schedule
+                } else {
+                    // Conflict schedule ID FOUND
+                    return $subject_schedule_id;
+                }
+            }
+        }
+
+        return null; // No conflicts found
+    }
+
 
     public function UpdateScheduleCodeBase(
         $room_id,

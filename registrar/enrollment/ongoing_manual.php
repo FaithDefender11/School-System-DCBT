@@ -16,6 +16,7 @@
 
 
     ?>
+
         <head>
 
             <style>
@@ -45,6 +46,7 @@
             <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 
         </head>
+
     <?php
 
         // echo $registrarLoggedIn;
@@ -509,7 +511,6 @@
         window.location.href = 'manual_create.php?admission_type=' + encodeURIComponent(radioValue);
         return;
     }
-
 
     $(document).ready(function() {
 

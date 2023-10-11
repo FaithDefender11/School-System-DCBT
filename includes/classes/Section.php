@@ -704,13 +704,13 @@
                         </div>";
 
                 return $html;
-
             }
+            
             else if($department_name == "Tertiary"){
                 $html = "
                     <label for='course_level'>* Course Level</label>
                     <div>
-                    <select required id='course_level' name='course_level'>
+                    <select class='form-control' required id='course_level' name='course_level'>
                         <option value='' disabled selected>Choose Level</option>";
 
                 $html .= "

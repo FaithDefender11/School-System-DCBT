@@ -7,8 +7,12 @@
     if (isset($_POST['student_enrollment_form_id'])
         && isset($_POST['student_course_id']) 
         && isset($_POST['student_id']) 
-        && isset($_POST['current_school_year_id'])){
+        && isset($_POST['current_school_year_id'])
+        && isset($_POST['enrollment_payment'])
+        ){
 
+
+        $enrollment_payment = intval($_POST['enrollment_payment']);  
 
         $student_enrollment_form_id = $_POST['student_enrollment_form_id'];   
         $student_course_id = $_POST['student_course_id'];   
@@ -18,7 +22,7 @@
         $enrollment = new Enrollment($con);
 
         $wasSuccess = $enrollment->MarkAsRegistrarEvaluated($current_school_year_id,
-            $student_course_id, $student_id, $student_enrollment_form_id);
+            $student_course_id, $student_id, $student_enrollment_form_id, $enrollment_payment);
 
         if($wasSuccess){
             echo "update_success";

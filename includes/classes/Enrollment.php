@@ -1160,33 +1160,33 @@
 
     }
 
-    public function GetEnrollmentFormWaitingList($student_id, $enrollment_id,
-        $school_year_id) {
+    // public function GetEnrollmentFormWaitingList($student_id, $enrollment_id,
+    //     $school_year_id) {
 
-        $waiting_list = "";
+    //     $waiting_list = "";
 
-        // Check if the enrollment form ID already exists in the database
+    //     // Check if the enrollment form ID already exists in the database
 
-        $sql = $this->con->prepare("SELECT waiting_list FROM enrollment 
+    //     $sql = $this->con->prepare("SELECT waiting_list FROM enrollment 
 
-            WHERE enrollment_id = :enrollment_id
-            AND student_id = :student_id
-            AND school_year_id = :school_year_id
+    //         WHERE enrollment_id = :enrollment_id
+    //         AND student_id = :student_id
+    //         AND school_year_id = :school_year_id
             
-        ");
+    //     ");
  
-        $sql->bindValue(":enrollment_id", $enrollment_id);
-        $sql->bindValue(":student_id", $student_id);
-        $sql->bindValue(":school_year_id", $school_year_id);
-        $sql->execute();
+    //     $sql->bindValue(":enrollment_id", $enrollment_id);
+    //     $sql->bindValue(":student_id", $student_id);
+    //     $sql->bindValue(":school_year_id", $school_year_id);
+    //     $sql->execute();
 
-        if($sql->rowCount() > 0){
-            $waiting_list = $sql->fetchColumn();
-        }
+    //     if($sql->rowCount() > 0){
+    //         $waiting_list = $sql->fetchColumn();
+    //     }
 
-        return $waiting_list;
+    //     return $waiting_list;
 
-    }
+    // }
 
 
     public function GetEnrollmentFormRetakeStatus($student_id, $enrollment_id,
@@ -1245,8 +1245,9 @@
 
     }
 
-    public function GetEnrollmentFormIsTertiary($student_id, $enrollment_id,
-        $school_year_id) {
+    public function GetEnrollmentFormIsTertiary($student_id,
+        $enrollment_id,
+        $school_year_id = null) {
 
         $student_status = "";
 
@@ -1256,13 +1257,96 @@
 
             WHERE enrollment_id = :enrollment_id
             AND student_id = :student_id
-            AND school_year_id = :school_year_id
+            -- AND school_year_id = :school_year_id
             
         ");
  
         $sql->bindValue(":enrollment_id", $enrollment_id);
         $sql->bindValue(":student_id", $student_id);
-        $sql->bindValue(":school_year_id", $school_year_id);
+        // $sql->bindValue(":school_year_id", $school_year_id);
+        $sql->execute();
+
+        if($sql->rowCount() > 0){
+            $student_status = $sql->fetchColumn();
+        }
+
+        return $student_status;
+    }
+    
+    public function EnrollmentPaymentCompleted(
+        $enrollment_id){
+
+        $COMPLETE_PAYMENT = "Complete";
+
+        $sql = $this->con->prepare("UPDATE enrollment
+            SET payment_status=:payment_status
+            WHERE enrollment_id=:enrollment_id
+
+        ");
+
+
+        $sql->bindValue(":payment_status", $COMPLETE_PAYMENT);
+        $sql->bindValue(":enrollment_id", $enrollment_id);
+        $sql->execute();
+
+        if($sql->rowCount() > 0){
+            return true;
+        }
+            
+        return false;
+    }
+
+    public function GetEnrollmentPaymentStatus($student_id,
+        $enrollment_id) {
+
+        $sql = $this->con->prepare("SELECT payment_status FROM enrollment 
+            WHERE enrollment_id = :enrollment_id
+            AND student_id = :student_id
+        ");
+ 
+        $sql->bindValue(":enrollment_id", $enrollment_id);
+        $sql->bindValue(":student_id", $student_id);
+        $sql->execute();
+
+        if($sql->rowCount() > 0){
+            $student_status = $sql->fetchColumn();
+        }
+
+        return $student_status;
+
+    }
+    public function GetEnrollmentTotalPayment($student_id,
+        $enrollment_id) {
+
+        $sql = $this->con->prepare("SELECT enrollment_payment FROM enrollment 
+            WHERE enrollment_id = :enrollment_id
+            AND student_id = :student_id
+        ");
+ 
+        $sql->bindValue(":enrollment_id", $enrollment_id);
+        $sql->bindValue(":student_id", $student_id);
+        $sql->execute();
+
+        if($sql->rowCount() > 0){
+            $student_status = $sql->fetchColumn();
+        }
+
+        return $student_status;
+
+    }
+
+   
+
+    public function GetEnrollmentPaymentMethod($student_id,
+        $enrollment_id) {
+
+        $sql = $this->con->prepare("SELECT payment_method FROM enrollment 
+            WHERE enrollment_id = :enrollment_id
+            AND student_id = :student_id
+        ");
+ 
+        $sql->bindValue(":enrollment_id", $enrollment_id);
+        $sql->bindValue(":student_id", $student_id);
         $sql->execute();
 
         if($sql->rowCount() > 0){
@@ -1748,14 +1832,19 @@
 
     public function MarkAsRegistrarEvaluated($current_school_year_id,
         $student_course_id,
-        $student_id, $enrollment_form_id){
+        $student_id, $enrollment_form_id, $enrollment_payment = null){
 
         $registrar_evaluated = "yes";
         $now = date("Y-m-d H:i:s");
+
+
+        // echo $enrollment_payment;
+        // return;
      
         $update_tentative = $this->con->prepare("UPDATE enrollment
             SET registrar_evaluated=:registrar_evaluated,
-                registrar_confirmation_date=:registrar_confirmation_date
+                registrar_confirmation_date=:registrar_confirmation_date,
+                enrollment_payment=:enrollment_payment
             
             -- WHERE student_id=:student_id
             WHERE school_year_id=:school_year_id
@@ -1766,6 +1855,7 @@
 
         $update_tentative->bindParam(":registrar_evaluated", $registrar_evaluated);
         $update_tentative->bindParam(":registrar_confirmation_date", $now);
+        $update_tentative->bindParam(":enrollment_payment", $enrollment_payment);
         // $update_tentative->bindParam(":student_id", $student_id);
         $update_tentative->bindParam(":school_year_id", $current_school_year_id);
         $update_tentative->bindParam(":enrollment_form_id", $enrollment_form_id);
@@ -2167,16 +2257,20 @@
 
 
     public function EnrollmentFormMarkAsPaid($current_school_year_id,
-        $student_id, $enrollment_form_id, $student_enrollment_waiting_list, $enrollment_payment){
+        $student_id, $enrollment_form_id,
+        $enrollment_payment,
+        $payment_status,
+        $payment_method){
 
         $cashier_evaluated = "yes";
         $now = date("Y-m-d H:i:s");
 
-
         $update_tentative = $this->con->prepare("UPDATE enrollment
             SET cashier_evaluated=:cashier_evaluated,
                 cashier_confirmation_date=:cashier_confirmation_date,
-                enrollment_payment=:enrollment_payment
+                enrollment_payment=:enrollment_payment,
+                payment_status=:payment_status,
+                payment_method=:payment_method
             
             WHERE student_id=:student_id
             AND school_year_id=:school_year_id
@@ -2189,25 +2283,14 @@
         $update_tentative->bindParam(":student_id", $student_id);
         $update_tentative->bindParam(":school_year_id", $current_school_year_id);
         $update_tentative->bindParam(":enrollment_form_id", $enrollment_form_id);
+        $update_tentative->bindParam(":payment_status", $payment_status);
+        $update_tentative->bindParam(":payment_method", $payment_method);
         $update_tentative->execute();
 
         if($update_tentative->rowCount() > 0){
-
-            if($student_enrollment_waiting_list == "yes"){
-
-                # Update the waiting list.
-
-         
-                // if($cashierUpdateSuccess){
-                //     return true;
-                // }
-
-            }else{
-                return true;
-            }
+            return true;
         } 
         return false;
-      
     }
 
     public function ChangeEnrollmentCourseId($current_school_year_id,
@@ -3055,5 +3138,253 @@
         }
         return [];
     }
+
+    public function GetActivatedLMSAccounts($school_year_id) : array{
+
+        $sql = $this->con->prepare("SELECT t3.*,
+
+            t4.program_section, t1.*
+
+            FROM lms_student  as t1
+
+            INNER JOIN enrollment as t2 ON t2.enrollment_id = t1.enrollment_id
+            AND t2.school_year_id=:school_year_id
+            AND t2.enrollment_status=:enrollment_status
+            
+            LEFT JOIN student as t3 ON t3.student_id = t2.student_id
+            LEFT JOIN course as t4 ON t4.course_id = t2.course_id
+
+            WHERE t1.account_status = 1
+
+            ");
+        
+        $sql->bindParam(":school_year_id", $school_year_id);
+        $sql->bindValue(":enrollment_status", "enrolled");
+
+        $sql->execute();
+
+        if($sql->rowCount() > 0){
+            return $sql->fetchAll(PDO::FETCH_ASSOC);
+        }
+        return [];
+    }
+
+    public function GetDeactivatedActivatedLMSAccounts($school_year_id) : array{
+
+        $sql = $this->con->prepare("SELECT t3.*,
+
+            t4.program_section, t1.*
+
+            FROM lms_student  as t1
+
+            INNER JOIN enrollment as t2 ON t2.enrollment_id = t1.enrollment_id
+            AND t2.school_year_id=:school_year_id
+            AND t2.enrollment_status=:enrollment_status
+            
+            LEFT JOIN student as t3 ON t3.student_id = t2.student_id
+            LEFT JOIN course as t4 ON t4.course_id = t2.course_id
+
+            WHERE t1.account_status = 0
+            AND t1.date_deactivation IS NOT NULL
+
+        ");
+        
+        $sql->bindParam(":school_year_id", $school_year_id);
+        $sql->bindValue(":enrollment_status", "enrolled");
+
+        $sql->execute();
+
+        if($sql->rowCount() > 0){
+            return $sql->fetchAll(PDO::FETCH_ASSOC);
+        }
+        return [];
+    }
+
+    // public function GetNonActivatedLMSAccounts2($school_year_id) : array{
+
+    //     $return_arr = [];
+
+    //     $allEnrolled = $this->GetEnrolledStudentsWithinSemester($school_year_id);
+    //     $activatedElmsAccount = $this->GetActivatedLMSAccounts($school_year_id);
+
+    //     $activatedElmsAccountArr = [];
+    //     $allEnrolledArr = [];
+
+    //     foreach ($allEnrolled as $key => $value) {
+    //         # code...
+    //         array_push($activatedElmsAccountArr, $value['enrollment_id']);
+    //     }
+
+    //     foreach ($activatedElmsAccount as $key => $value) {
+    //         # code...
+    //         array_push($allEnrolledArr, $value['enrollment_id']);
+    //     }
+
+    //     $array1 = [1,2,3];
+    //     $array2 = [1,2];
+
+    //     // $diff = array_diff($array1, $array2);
+    //     $diff = array_diff($activatedElmsAccountArr, $allEnrolledArr);
+
+    //     if(count($diff) > 0)
+    //     {
+    //         return $diff;
+    //     }
+                
+
+    //     // $sql = $this->con->prepare("SELECT 
+        
+    //     //     t1.*
+
+    //     //     FROM enrollment as t1
+
+    //     //     INNER JOIN student as t2 ON t2.student_id = t1.student_id
+    //     //     AND t1.school_year_id = :school_year_id
+    //     //     AND t1.enrollment_status = :enrollment_status
+            
+    //     //     ");
+        
+    //     // $sql->bindParam(":school_year_id", $school_year_id);
+    //     // $sql->bindValue(":enrollment_status", "enrolled");
+
+    //     // $sql->execute();
+
+    //     // if($sql->rowCount() > 0){
+    //     //     return $sql->fetchAll(PDO::FETCH_ASSOC);
+    //     // }
+    //     return [];
+    // }
+
+    public function GetNonActivatedLMSAccounts($school_year_id) {
+        // Assuming you have a database connection object named $this->con
+        
+        $sql = $this->con->prepare("SELECT
+
+            t3.*,
+
+            t4.program_section, t2.date_activation, t1.enrollment_id
+
+            FROM enrollment as t1
+            LEFT JOIN lms_student as t2 ON t1.enrollment_id = t2.enrollment_id
+    
+            LEFT JOIN student as t3 ON t3.student_id = t1.student_id
+            LEFT JOIN course as t4 ON t4.course_id = t1.course_id
+
+            WHERE t2.enrollment_id IS NULL
+            AND t1.school_year_id = :school_year_id
+            AND t1.enrollment_status = 'enrolled'
+            
+        ");
+
+        $sql->bindParam(":school_year_id", $school_year_id);
+        // $sql->bindValue(":enrollment_status", "enrolled");
+
+        $sql->execute();
+        if($sql->rowCount() > 0){
+            return $sql->fetchAll(PDO::FETCH_ASSOC); // You can change the fetch mode as needed
+        }
+        return [];
+        // Fetch and return the results as an array
+    }
+
+
+
+
+    public function GetEnrolledStudentsWithinSemester($school_year_id) : array{
+
+        $sql = $this->con->prepare("SELECT 
+        
+            t1.*
+
+            FROM enrollment as t1
+
+            INNER JOIN student as t2 ON t2.student_id = t1.student_id
+            AND t1.school_year_id = :school_year_id
+            AND t1.enrollment_status = :enrollment_status
+            
+            ");
+        
+        $sql->bindParam(":school_year_id", $school_year_id);
+        $sql->bindValue(":enrollment_status", "enrolled");
+
+        $sql->execute();
+
+        if($sql->rowCount() > 0){
+            return $sql->fetchAll(PDO::FETCH_ASSOC);
+        }
+        return [];
+    }
+
+     
+    public function ActivateEnrolledStudent($enrollment_id){
+
+        $now = date("Y-m-d H:i:s");
+        $account_status = 1;
+       
+        $sql = $this->con->prepare("INSERT INTO lms_student
+            (enrollment_id, account_status, date_activation)
+            VALUES(:enrollment_id, :account_status, :date_activation)
+        ");
+
+        $sql->bindParam(":enrollment_id", $enrollment_id);
+        $sql->bindParam(":account_status", $account_status);
+        $sql->bindParam(":date_activation", $now);
+
+        $sql->execute();
+
+        return $sql->rowCount() > 0;
+    }
+
+    public function DeActivateEnrolledStudent($enrollment_id, $lms_student_id){
+
+        $now = date("Y-m-d H:i:s");
+
+        $sql = $this->con->prepare("UPDATE lms_student
+            SET account_status=:set_account_status,
+                date_deactivation=:date_deactivation
+                -- date_activation=:set_date_activation
+
+            WHERE enrollment_id=:enrollment_id
+            AND lms_student_id=:lms_student_id
+            -- AND account_status=:current_account_status
+        ");
+
+        $sql->bindValue(":set_account_status", 0);
+        $sql->bindValue(":date_deactivation", $now);
+        // $sql->bindValue(":set_date_activation", NULL);
+        $sql->bindValue(":enrollment_id", $enrollment_id);
+        $sql->bindValue(":lms_student_id", $lms_student_id);
+        // $sql->bindValue(":current_account_status", 1);
+
+        $sql->execute();
+
+        return $sql->rowCount() > 0;
+    }
+
+    public function ActivateFromDeactivateEnrolledStudent($enrollment_id, $lms_student_id){
+
+        $now = date("Y-m-d H:i:s");
+
+        $sql = $this->con->prepare("UPDATE lms_student
+            SET account_status=:set_account_status,
+                -- date_deactivation = :set_date_deactivation,
+                date_activation=:set_date_activation
+
+            WHERE enrollment_id=:enrollment_id
+            AND lms_student_id=:lms_student_id
+        ");
+
+        $sql->bindValue(":set_account_status", 1);
+        // $sql->bindValue(":set_date_deactivation", NULL);
+        $sql->bindValue(":set_date_activation", $now);
+        $sql->bindValue(":enrollment_id", $enrollment_id);
+        $sql->bindValue(":lms_student_id", $lms_student_id);
+
+        $sql->execute();
+
+        return $sql->rowCount() > 0;
+    }
+    
+
 }
 ?>

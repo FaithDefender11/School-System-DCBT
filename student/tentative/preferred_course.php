@@ -1,7 +1,50 @@
 
 <script src="./preferred_course.js"></script>
 
+<?php 
+
+    
+    // if(isset($_SESSION['modal_gatepass'])){
+    //     echo $_SESSION['modal_gatepass'];
+    // }
+
+    // echo $pending_enrollees_id;
+
+?>
+
 <div class="content">
+
+    <!-- <div class="container mt-5">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+            Open Modal
+        </button>
+    </div> -->
+
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static">
+
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Terms and Conditions</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h5>DATA PRIVACY NOTICE</h5>
+                    <div class="form-check">
+                        <input type="checkbox"  class="form-check-input" id="agreeCheckbox">
+                        <label class="form-check-label" for="agreeCheckbox">I agree to the Data Privacy Notice</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button> -->
+                    <button type="button" disabled class="btn btn-primary" id="nextButton">Next</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
 
     <nav>
         <a href="<?php echo $logout_url;?>">
@@ -191,6 +234,14 @@
             </main>
 
             <div class="action">
+                <?php if($does_enrollee_finished_input === true):?>
+                    <button name="preferred_btn"
+                        class="information large"
+                        onclick="window.location.href = 'profile.php?fill_up_state=finished'">
+                    Back
+                </button>
+                <?php endif;?>
+                
                 <button name="preferred_btn"
                     class="default large"
                     onclick="<?php echo "PreferredBtn($pending_enrollees_id)"; ?>"
@@ -200,6 +251,78 @@
             </div>
         </div>
     </main>
+
 </div>
 
+<!-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.min.js"></script> -->
 
+
+<script>
+
+    var acceptance_condition = `
+        <?php echo $acceptance_condition; ?>
+    `;
+
+    if(acceptance_condition == 0){
+
+        setTimeout(function() {
+            ModalInitialized();
+        }, 500); // Delay for 2 seconds (2000 milliseconds)
+    }
+    
+    function ModalInitialized(){
+
+        $(document).ready(function() {
+
+            $('#myModal').modal({ backdrop: 'static', keyboard: false }); // Show the modal with static backdrop
+            $('#myModal').modal('show'); // Show the modal when the page loads
+        
+            // Handle checkbox change event
+            $('#agreeCheckbox').change(function() {
+                if ($(this).is(':checked')) {
+                    $('#nextButton').prop('disabled', false); // Enable the "Next" button
+                } else {
+                    $('#nextButton').prop('disabled', true); // Disable the "Next" button
+                }
+            });
+
+            // Handle "Next" button click event
+                // console.log("qwer");
+
+            $('#nextButton').click(function() {
+
+                var pending_enrollees_id = `
+                    <?php echo $pending_enrollees_id; ?>
+                `;
+
+                $.ajax({
+                    // url: '../../ajax/requirement/session_init.php',
+                    url: '../../ajax/requirements/condition_acceptance.php',
+                    type: 'POST',
+                    data: { 
+                        accepted_term: "yes",
+                        pending_enrollees_id
+                    }, // You can pass data here
+                    success: function(response) {
+                        // Handle the server response if needed
+
+                        response = response.trim();
+                        if(response === "success_accepted" ){
+                            $('#myModal').modal('hide'); // Close the modal
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error:', error);
+                        console.log('Status:', status);
+                        console.log('Response Text:', xhr.responseText);
+                        console.log('Response Code:', xhr.status);
+                    }
+                });
+
+            });
+        
+        });
+    }
+
+</script>

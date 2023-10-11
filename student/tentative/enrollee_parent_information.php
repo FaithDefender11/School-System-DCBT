@@ -672,7 +672,7 @@
                                             value="<?php 
                                                     echo Helper::DisplayText('father_lastname', $father_lastname);  
                                                 ?>">
-                                        <small>Last name *</small>
+                                        <small>Last name <span class="red">*</span></small>
                                     </div>
                                     <div>
                                         <?php 
@@ -687,7 +687,7 @@
                                             value="<?php 
                                                 echo Helper::DisplayText('father_firstname', $father_firstname);  
                                             ?>">
-                                        <small>First name *</small>
+                                        <small>First name <span class="red">*</span></small>
                                     </div>
                                     <div>
                                         <?php 
@@ -702,7 +702,7 @@
                                             value="<?php 
                                                 echo Helper::DisplayText('father_middle', $father_middle);  
                                             ?>">
-                                        <small>Middle name *</small>
+                                        <small>Middle name</small>
                                     </div>
                                     <div>
                                         <?php
@@ -724,7 +724,7 @@
                                         echo Helper::getError(Constants::$invalidFatherContactNumberCharacters);
                                         echo Helper::getError(Constants::$invalidFatherContactNumber2Characters);
                                     ?>
-                                    <label for="phone">Phone no  *</label>
+                                    <label for="phone">Phone no  <span class="red">*</span></label>
                                     <div>
                                         <input type="tel" id="father_contact_number" name="father_contact_number" class="form-control" 
                                             value="<?php 
@@ -789,7 +789,7 @@
                                                 echo Helper::DisplayText('mother_lastname', $mother_lastname); 
                                             ?>">
 
-                                        <small>Last name *</small>
+                                        <small>Last name <span class="red">*</span></small>
                                     </div>
 
                                     <div>
@@ -803,7 +803,7 @@
                                             value="<?php 
                                                 echo Helper::DisplayText('mother_firstname', $mother_firstname); 
                                             ?>">
-                                        <small>First name *</small>
+                                        <small>First name <span class="red">*</span></small>
                                     </div>
 
                                     <div>
@@ -818,7 +818,7 @@
                                                 echo Helper::DisplayText('mother_middle', $mother_middle); 
                                             ?>">
                                         
-                                        <small>Middle name *</small>
+                                        <small>Middle name</small>
                                     </div>
                                     <!-- <div>
                                         <input type="text" name="mother_suffix" class="form-control" maxlength="3" value="<?php echo $mother_suffix; ?>">
@@ -834,7 +834,7 @@
                                         echo Helper::getError(Constants::$invalidMotherContactNumberCharacters);
                                         echo Helper::getError(Constants::$invalidMotherContactNumber2Characters);
                                     ?>
-                                    <label for="phone">Phone no  *</label>
+                                    <label for="phone">Phone no  <span class="red">*</span></label>
                                     <div>
                                         <input type="tel" id="mother_contact_number" name="mother_contact_number" class="form-control" 
                                             value="<?php
@@ -897,7 +897,7 @@
                                         value="<?php 
                                             echo Helper::DisplayText('parent_lastname', $parent_lastname); 
                                         ?>">
-                                    <small>Last name *</small>
+                                    <small>Last name <span class="red">*</span></small>
                                 </div>
                                 <div>
                                     <?php 
@@ -911,7 +911,7 @@
                                             echo Helper::DisplayText('parent_firstname', $parent_firstname); 
                                         ?>">
 
-                                    <small>First name *</small>
+                                    <small>First name <span class="red">*</span></small>
                                 </div>
                                 <div>
                                     <?php 
@@ -941,7 +941,7 @@
                             </div>
                             <div class="row">
                                 <span>
-                                    <label for="phone">Phone no *</label>
+                                    <label for="phone">Phone no <span class="red">*</span></label>
                                     <?php
                                         echo Helper::getError(Constants::$guardianContactNumberRequired);
                                         echo Helper::getError(Constants::$invalidGuardianContactNumberCharacters);
@@ -989,7 +989,7 @@
 
                                             ?>">
                                     </div>
-                                    <label for="relationship">Relationship *</label>
+                                    <label for="relationship">Relationship <span class="red">*</span></label>
                                     <div>
                                         <?php 
                                             echo Helper::EchoErrorField(

@@ -28,6 +28,34 @@
 
     // var_dump($hasCredited);
 
+    $totalUnits = NULL;
+
+    $enrollment_payment = NULL;
+
+    # REGULAR SHS
+    if(
+        // $student_enrollment_student_status === "Regular" && 
+        $student_enrollment_is_tertiary === 0){
+
+        $SHS_VOUCHER = 17500;
+
+        $enrollment_payment =  $SHS_VOUCHER / 2;
+    }
+
+    # REGULAR TERTIARY
+    if(
+        // $student_enrollment_student_status === "Regular"  &&
+        
+        $student_enrollment_is_tertiary === 1){
+
+        $SHS_VOUCHER = 20000;
+        $enrollment_payment =  $SHS_VOUCHER / 2;
+    }
+
+    if($student_enrollment_student_status === "Irregular" 
+        && $student_enrollment_is_tertiary === 1){
+         
+    }
 
     ?>
         <!-- Student Table Subject Review-->
@@ -307,7 +335,6 @@
 
                                         $totalSubjectList = $sql->rowCount();
 
-                                        $totalUnits = NULL;
 
                                         while($row = $sql->fetch(PDO::FETCH_ASSOC)){
 
@@ -414,9 +441,12 @@
                                     }
                                 ?>
                             </tbody>
-                            <tr class="text-right">
-                                <td colspan="6">Total Units: <?php echo $totalUnits;?></td>
-                            </tr>
+                            <?php if($totalUnits != NULL): ?>
+                                <tr class="text-right">
+                                    <td colspan="6">Total Units: <?php echo $totalUnits;?></td>
+                                </tr>
+                            <?php endif; ?>
+                            
                         </table>
                     </main>
                 </div>
@@ -433,13 +463,14 @@
                     
                         if($student_evaluated_by_registrar == "yes"){
                             ?>
-                                <button onclick='EvaluateRequest("<?php echo $student_enrollment_id;?>", "<?php echo $student_enrollment_form_id;?>", <?php echo $student_enrollment_course_id;?>, <?php echo $current_school_year_id;?>, <?php echo $student_id;?>, "<?php echo $student_enrollment_student_status;?>", <?php echo $totalSubjectList;?>, "<?php echo "Evaluated"; ?>")' class="default clean large">
-                                    Evaluation Approved
+                                <!-- <button onclick='EvaluateRequest("<?php echo $student_enrollment_id;?>", "<?php echo $student_enrollment_form_id;?>", <?php echo $student_enrollment_course_id;?>, <?php echo $current_school_year_id;?>, <?php echo $student_id;?>, "<?php echo $student_enrollment_student_status;?>", <?php echo $totalSubjectList;?>, "<?php echo "Evaluated"; ?>")' class="default clean large"> -->
+                                <button  class="information large">
+                                    Evaluated
                                 </button>
                             <?php
                         }else if($student_evaluated_by_registrar == "no"){
                             ?>
-                                <button onclick='EvaluateRequest("<?php echo $student_enrollment_id;?>", "<?php echo $student_enrollment_form_id;?>", <?php echo $student_enrollment_course_id;?>, <?php echo $current_school_year_id;?>, <?php echo $student_id;?>, "<?php echo $student_enrollment_student_status;?>", <?php echo $totalSubjectList;?>, "<?php echo "Non-Evaluated"; ?>")' class="default clean success large">
+                                <button onclick='EvaluateRequest("<?php echo $student_enrollment_id;?>", "<?php echo $student_enrollment_form_id;?>", <?php echo $student_enrollment_course_id;?>, <?php echo $current_school_year_id;?>, <?php echo $student_id;?>, "<?php echo $student_enrollment_student_status;?>", <?php echo $totalSubjectList;?>, "<?php echo "Non-Evaluated" ?>", <?php echo $enrollment_payment; ?>)' class="default clean success large">
                                     Confirm
                                 </button>
                             <?php
@@ -517,7 +548,7 @@
 
     function EvaluateRequest(student_enrollment_id, student_enrollment_form_id,
         student_course_id, current_school_year_id, student_id,
-        student_status, totalSubjectList, remark){
+        student_status, totalSubjectList, remark, enrollment_payment){
 
         var student_id = parseInt(student_id);
         var student_course_id = parseInt(student_course_id);
@@ -578,7 +609,6 @@
 
             }else if(remark == "Non-Evaluated"){
                 title = "Confirm Enrollment?";
-                // text = "Note: Please deliberately finalized your evaluation."
             }
             Swal.fire({
                 icon: 'question',
@@ -591,14 +621,13 @@
 
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // console.log(student_enrollment_form_id)
 
                         $.ajax({
                         url: '../../ajax/admission/student_enrollment_confirm.php',
                         type: 'POST',
                         data: {student_enrollment_form_id,
                             student_course_id, current_school_year_id,
-                            student_id},
+                            student_id, enrollment_payment},
 
                         // dataType: "json",
 

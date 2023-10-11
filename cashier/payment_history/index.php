@@ -45,6 +45,38 @@
     $current_school_year_period = $school_year_obj['period'];
     $current_school_year_id = $school_year_obj['school_year_id'];
  
+ 
+    $selected_student_filter = "";
+    $selected_payment_status_filter = "";
+
+    if ($_SERVER["REQUEST_METHOD"] === "POST" 
+        && isset($_POST["student_filter"])) {
+
+        $selected_student_filters = $_POST["student_filter"];
+
+        foreach ($selected_student_filters as $selected_filter) {
+            // echo $selected_filter . "<br>";
+
+            $selected_student_filter = $selected_filter;
+        }
+    }
+
+    // echo "selected_student_filter: $selected_student_filter";
+    // echo "<br>";
+
+    if ($_SERVER["REQUEST_METHOD"] === "POST" 
+        && isset($_POST["payment_status"])) {
+
+        $selected_payment_statuss = $_POST["payment_status"];
+
+        foreach ($selected_payment_statuss as $selected_filter) {
+            // echo $selected_filter . "<br>";
+
+            $selected_payment_status_filter = $selected_filter;
+        }
+    }
+    // echo "selected_payment_status: $selected_payment_status_filter";
+    // echo "<br>";
 
 ?>
 
@@ -58,6 +90,8 @@
                         <h2>Confirmed Payment History</em></h1>
                         
                     </div>
+
+                   
                 </header>
             </div>
     
@@ -203,12 +237,52 @@
                 <div class="floating">
 
                     <table class="a">
-                    <tr>
-                        <th style="border-right: 2px solid black">Search by</th>
-                        <td><button>Name</button></td>
-                        <td><button>Email</button></td>
-                        <td><button>Student ID</button></td>
-                    </tr>
+
+                        <div class="action">
+                            <form style="display: flex;" method="POST" id="student_filter_form">
+                                <div style="margin-right: 15px;" class="form-group">
+                                    <label for="new">Cash</label>
+                                    <input type="checkbox" id="cash" name="student_filter[]"
+                                        value="Cash" class="form-control" 
+                                        onchange="handleCheckboxChange('cash')" 
+                                        <?php if (isset($_POST["student_filter"]) && in_array("Cash", $_POST["student_filter"])) echo "checked"; ?>>
+                                
+                               </div>
+                                <div class="form-group">
+                                    <label for="old">Partial</label>
+                                    <input type="checkbox" id="partial" name="student_filter[]"
+                                        value="Partial" class="form-control" 
+                                        onchange="handleCheckboxChange('partial')" 
+                                        <?php if (isset($_POST["student_filter"]) && in_array("Partial", $_POST["student_filter"])) echo "checked"; ?>>
+                                
+                                </div>
+
+                                <div style="margin-right: 15px;" class="form-group">
+                                    <label for="new">Complete</label>
+                                    <input type="checkbox" id="complete" name="payment_status[]"
+                                        value="Complete" class="form-control" 
+                                        onchange="handleCheckboxChange('complete')" 
+                                        <?php if (isset($_POST["payment_status"]) && in_array("Complete", $_POST["payment_status"])) echo "checked"; ?>>
+                                
+                               </div>
+                                <div class="form-group">
+                                    <label for="old">Incomplete</label>
+                                    <input type="checkbox" id="incomplete" name="payment_status[]"
+                                        value="Incomplete" class="form-control" 
+                                        onchange="handleCheckboxChange('incomplete')" 
+                                        <?php if (isset($_POST["payment_status"]) && in_array("Incomplete", $_POST["payment_status"])) echo "checked"; ?>>
+                                
+                                </div>
+
+                            </form>
+                        </div>
+
+                        <tr>
+                            <th style="border-right: 2px solid black">Search by</th>
+                            <td><button>Name</button></td>
+                            <td><button>Email</button></td>
+                            <td><button>Student ID</button></td>
+                        </tr>
                     </table>
                     
                     <table style="width: 100%" id="cashier_history_table" class="a">
@@ -217,7 +291,10 @@
                                 <th>Form ID</th>  
                                 <th>Student No</th>  
                                 <th>Name</th>
+                                <th>Term - Semester</th>
                                 <th>Section</th>
+                                <th>Status</th>
+                                <th>Method</th>
                                 <th>Date Confirmed</th>
                                 <th>Action</th>
                             </tr>
@@ -233,14 +310,58 @@
 
 <script>
 
+  function submitForm() {
+      document.getElementById("student_filter_form").submit();
+  }
+
+  function handleCheckboxChange(checkboxId) {
+
+      if (checkboxId == "cash") {
+          if (document.getElementById("partial").checked) {
+              document.getElementById("partial").checked = false;
+          }
+      } else if (checkboxId == "partial") {
+          if (document.getElementById("cash").checked) {
+              document.getElementById("cash").checked = false;
+          }
+      }
+
+      if (checkboxId == "complete") {
+          if (document.getElementById("incomplete").checked) {
+              document.getElementById("incomplete").checked = false;
+          }
+      } else if (checkboxId == "incomplete") {
+          if (document.getElementById("complete").checked) {
+              document.getElementById("complete").checked = false;
+          }
+      }
+
+      document.getElementById("student_filter_form").submit();
+  }
+
     $(document).ready(function() {
+
+        var selected_student_filter = `
+            <?php echo $selected_student_filter; ?>
+        `;
+
+        selected_student_filter = selected_student_filter.trim();
+
+        var selected_payment_status_filter = `
+            <?php echo $selected_payment_status_filter; ?>
+        `;
+
+        selected_payment_status_filter = selected_payment_status_filter.trim();
+
+
+
 
         var table = $('#cashier_history_table').DataTable({
             'processing': true,
             'serverSide': true,
             'serverMethod': 'POST',
             'ajax': {
-                'url': 'historyPaymentListData.php',
+                'url': `historyPaymentListData.php?payment_method_filter=${selected_student_filter}&payment_status_filter=${selected_payment_status_filter}`,
               'error': function(xhr, status, error) {
                   // Handle error response here
                   console.error('Error:', error);
@@ -255,13 +376,15 @@
                 'infoFiltered': '',
                 'processing': '<i class="fas fa-spinner fa-spin"></i> Processing...',
                 'emptyTable': "No available data for payment history.",
-            
             },
             'columns': [
               { data: 'enrollment_form_id', orderable: true },  
               { data: 'student_no', orderable: false },  
               { data: 'name', orderable: false },
+              { data: 'term_semester', orderable: false },
               { data: 'section', orderable: false },  
+              { data: 'status', orderable: false },  
+              { data: 'method', orderable: false },  
               { data: 'cashier_confirmation_date', orderable: true },
               { data: 'button_url', orderable: false }
             ],

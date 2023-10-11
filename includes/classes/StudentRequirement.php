@@ -50,6 +50,10 @@
         return isset($this->sqlData['student_id']) ? $this->sqlData["student_id"] : null; 
     }
 
+    public function GetEducationType() {
+        return isset($this->sqlData['education_type']) ? $this->sqlData["education_type"] : null; 
+    }
+
     public function GetForm137() {
         return isset($this->sqlData['form_137']) ? $this->sqlData["form_137"] : null; 
     }
@@ -210,7 +214,10 @@
         $student_requirement_id, $requirement_id, $file, $maxUploadAllowed) {
 
     
+        // var_dump($requirement_id);
+        // return;
         $now = date("Y-m-d H:i:s");
+
         if($this->CheckSubmittedRequirementCount($requirement_id,
             $student_requirement_id, $maxUploadAllowed) === true){
 
@@ -227,7 +234,6 @@
             if ($create->rowCount() > 0) {
                 return true;
             }
-
         }
 
 
@@ -403,12 +409,25 @@
         return [];
     }
 
-    public function GetRequirements($status) {
+    public function GetRequirements($status, $educ_type = null) {
+
+        $educ_type_query = "";
+
+        if($educ_type != NULL){
+            $educ_type_query = "AND education_type='Universal'";
+        }
 
         $query = $this->con->prepare("SELECT * FROM requirement
           
-            WHERE status=:status
-            AND is_enabled=:is_enabled
+            WHERE 
+                (status=:status
+                AND is_enabled=:is_enabled
+                $educ_type_query
+            )
+
+            
+            
+            GROUP BY requirement_name
         ");
      
         $query->bindValue(":status", $status);

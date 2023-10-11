@@ -841,12 +841,12 @@ class Student{
 
             $stmt_insert = $this->con->prepare("INSERT INTO student 
                 (firstname, lastname, middle_name, password, civil_status, nationality,
-                contact_number, birthday, age, sex, course_id, student_unique_id,
+                contact_number, birthday, sex, course_id, student_unique_id,
                 course_level, username, address, lrn, religion, birthplace, email,
                 student_statusv2, is_tertiary, new_enrollee, active_search, admission_status) 
                 
                 VALUES (:firstname, :lastname, :middle_name, :password, :civil_status, 
-                :nationality, :contact_number, :birthday, :age, :sex, :course_id,
+                :nationality, :contact_number, :birthday, :sex, :course_id,
                 :student_unique_id, :course_level, :username, :address, :lrn, :religion,
                 :birthplace, :email, :student_statusv2, :is_tertiary,:new_enrollee, :active_search, :admission_status)");
 
@@ -858,7 +858,7 @@ class Student{
             $stmt_insert->bindParam(':nationality', $nationality);
             $stmt_insert->bindParam(':contact_number', $contact_number);
             $stmt_insert->bindParam(':birthday', $birthday);
-            $stmt_insert->bindParam(':age', $age);
+            // $stmt_insert->bindParam(':age', $age);
             $stmt_insert->bindParam(':sex', $sex);
             $stmt_insert->bindParam(':course_id', $course_id);
             $stmt_insert->bindParam(':student_unique_id', $student_unique_id);
@@ -911,11 +911,11 @@ class Student{
 
         $stmt_insert = $this->con->prepare("INSERT INTO student 
             (firstname, lastname, middle_name, password, civil_status, nationality,
-            contact_number, birthday, age, sex, course_id, student_unique_id,
+            contact_number, birthday, sex, course_id, student_unique_id,
             course_level, username, address, lrn, religion, birthplace, email,
             student_statusv2, is_tertiary, new_enrollee, active_search, admission_status) 
             VALUES (:firstname, :lastname, :middle_name, :password, :civil_status, 
-            :nationality, :contact_number, :birthday, :age, :sex, :course_id,
+            :nationality, :contact_number, :birthday, :sex, :course_id,
             :student_unique_id, :course_level, :username, :address, :lrn, :religion,
             :birthplace, :email, :student_statusv2, :is_tertiary, :new_enrollee, :active_search, :admission_status)");
 
@@ -927,7 +927,7 @@ class Student{
         $stmt_insert->bindParam(':nationality', $nationality);
         $stmt_insert->bindParam(':contact_number', $contact_number);
         $stmt_insert->bindParam(':birthday', $birthday);
-        $stmt_insert->bindParam(':age', $age);
+        // $stmt_insert->bindParam(':age', $age);
         $stmt_insert->bindParam(':sex', $sex);
         $stmt_insert->bindParam(':course_id', $course_id);
         $stmt_insert->bindParam(':student_unique_id', $student_unique_id);

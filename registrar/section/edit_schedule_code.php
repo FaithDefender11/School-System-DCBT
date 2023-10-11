@@ -120,26 +120,8 @@
 
                 $teacher = new Teacher($con, $teacher_id);
                 $new_teacher_fullname = $teacher->GetTeacherFullName();
-
-                // Check if  teacher has already scheduled in the subject.
-
-                // if($schedule->CheckIfTeacherAlreadyScheduleToTheSubject(
-                //     $subject_id, $teacher_id) == true){
-
-                //     Alert::error("Subject Code $section_subject_code has already been schedule to $new_teacher_fullname", 'create.php');
-                //     exit();
-                //     return;
-                // }
-
-
-                // echo "teacher_id; $teacher_id";
-                // echo "<br>";
-
-                // echo "schedule_teacher_id; $schedule_teacher_id";
-                // echo "<br>";
-                // return;
-
-                // $subject_program_id = 0;
+ 
+         
                 $scheduleUpdateSuccess = $schedule->UpdateScheduleCodeBase(
                     $schedule_id, $time_from_meridian, $time_to_meridian,
                     $schedule_day, $time_from_meridian_military, $time_to_meridian_military,

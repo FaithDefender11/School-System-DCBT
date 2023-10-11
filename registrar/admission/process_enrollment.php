@@ -15,11 +15,11 @@
 
 
     ?>
-    <style>
-        .dropdown-menu.show{
-            margin-left: -120px;
-        }
-    </style>
+        <style>
+            .dropdown-menu.show{
+                margin-left: -120px;
+            }
+        </style>
     <?php
 
     $department = new Department($con);
@@ -67,6 +67,7 @@
 
         $pending_query = $con->prepare("SELECT * FROM pending_enrollees
                 WHERE pending_enrollees_id=:pending_enrollees_id
+                AND student_status = 'EVALUATION'
             ");
 
         $pending_query->bindValue(":pending_enrollees_id", $pending_enrollees_id);
@@ -127,9 +128,9 @@
             $password = $row['password'];
             $civil_status = $row['civil_status'];
             $nationality = $row['nationality'];
-            $age = $row['age'];
-            $guardian_name = $row['guardian_name'];
-            $guardian_contact_number = $row['guardian_contact_number'];
+            // $age = $row['age'];
+            // $guardian_name = $row['guardian_name'];
+            // $guardian_contact_number = $row['guardian_contact_number'];
             $lrn = $row['lrn'];
             $birthplace = $row['birthplace'];
             $religion = $row['religion'];
@@ -300,109 +301,111 @@
                                     Return
                                 </button>
 
-                                <button onclick='confirmPendingValidation("<?php echo $type ?>", "<?php echo $firstname ?>", "<?php echo $lastname ?>", "<?php echo $middle_name ?>", "<?php echo $password ?>", "<?php echo $program_id ?>", "<?php echo $civil_status ?>", "<?php echo $nationality ?>", "<?php echo $contact_number ?>", "<?php echo $birthday ?>", "<?php echo $age ?>", "<?php echo $guardian_name ?>", "<?php echo $guardian_contact_number ?>", "<?php echo $sex ?>", "<?php echo $student_status ?>", "<?php echo $pending_enrollees_id ?>", "<?php echo $address ?>", "<?php echo $lrn ?>", "<?php echo $selected_course_id ?>", "<?php echo $enrollment_form_id ?>", "<?php echo $religion ?>", "<?php echo $birthplace ?>", "<?php echo $email ?>")' class="default clean success large">
+                                <!-- <button onclick='confirmPendingValidation("<?php echo $type ?>", "<?php echo $firstname ?>", "<?php echo $lastname ?>", "<?php echo $middle_name ?>", "<?php echo $password ?>", "<?php echo $program_id ?>", "<?php echo $civil_status ?>", "<?php echo $nationality ?>", "<?php echo $contact_number ?>", "<?php echo $birthday ?>", "<?php echo "" ?>", "<?php echo $guardian_name ?>", "<?php echo "" ?>", "<?php echo $sex ?>", "<?php echo $student_status ?>", "<?php echo $pending_enrollees_id ?>", "<?php echo $address ?>", "<?php echo $lrn ?>", "<?php echo $selected_course_id ?>", "<?php echo $enrollment_form_id ?>", "<?php echo $religion ?>", "<?php echo $birthplace ?>", "<?php echo $email ?>")' class="default clean success large">
                                     Confirm
-                                </button>
+                                </button> -->
+
                             </div>
                         </main>
                     </div>
 
                     <script>
-                        function confirmPendingValidation(type, firstname, lastname, middle_name, password,
-                            program_id, civil_status, nationality, contact_number, birthday, age,
-                            guardian_name, guardian_contact_number, sex, student_status,
-                            pending_enrollees_id, address, lrn,
-                            selected_course_id, enrollment_form_id,
-                            religion, birthplace, email){
 
-                            selected_course_id = parseInt(selected_course_id);
-                            program_id = parseInt(program_id);
-                            age = parseInt(age);
-                            pending_enrollees_id = parseInt(pending_enrollees_id);
+                        // function confirmPendingValidation(type, firstname, lastname, middle_name, password,
+                        //     program_id, civil_status, nationality, contact_number, birthday, age,
+                        //     guardian_name, guardian_contact_number, sex, student_status,
+                        //     pending_enrollees_id, address, lrn,
+                        //     selected_course_id, enrollment_form_id,
+                        //     religion, birthplace, email){
 
-                            Swal.fire({
-                                icon: 'question',
-                                title: `Confirm Enrollment?`,
-                                showCancelButton: true,
-                                confirmButtonText: 'Yes',
-                                cancelButtonText: 'Cancel'
+                        //     selected_course_id = parseInt(selected_course_id);
+                        //     program_id = parseInt(program_id);
+                        //     age = parseInt(age);
+                        //     pending_enrollees_id = parseInt(pending_enrollees_id);
 
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    $.ajax({
-                                        url: '../../ajax/admission/pending_enrollment_approval.php',
-                                        type: 'POST',
-                                        data: {
-                                            type,
-                                            firstname, lastname, middle_name,
-                                            password, program_id, civil_status, nationality, 
-                                            contact_number, birthday, age, guardian_name, 
-                                            guardian_contact_number, sex, student_status, 
-                                            pending_enrollees_id, address, lrn, selected_course_id,
-                                            enrollment_form_id, religion, birthplace, email
-                                        },
+                        //     Swal.fire({
+                        //         icon: 'question',
+                        //         title: `Confirm Enrollment?`,
+                        //         showCancelButton: true,
+                        //         confirmButtonText: 'Yes',
+                        //         cancelButtonText: 'Cancel'
 
-                                        dataType: "json",
+                        //     }).then((result) => {
+                        //         if (result.isConfirmed) {
+                        //             $.ajax({
+                        //                 url: '../../ajax/admission/pending_enrollment_approval.php',
+                        //                 type: 'POST',
+                        //                 data: {
+                        //                     type,
+                        //                     firstname, lastname, middle_name,
+                        //                     password, program_id, civil_status, nationality, 
+                        //                     contact_number, birthday, age, guardian_name, 
+                        //                     guardian_contact_number, sex, student_status, 
+                        //                     pending_enrollees_id, address, lrn, selected_course_id,
+                        //                     enrollment_form_id, religion, birthplace, email
+                        //                 },
 
-                                        success: function(response) {
+                        //                 dataType: "json",
 
-                                            // console.log(response)
-                                            if(response['status'] == "student_account_exist"){
-                                                Swal.fire({
-                                                    title: "Student already have an account.",
-                                                    icon: "error",
-                                                    showCancelButton: false,
-                                                    confirmButtonText: "I understand and will verify.",
-                                                });
-                                            }
+                        //                 success: function(response) {
 
-                                            if(response.student_id){
+                        //                     // console.log(response)
+                        //                     if(response['status'] == "student_account_exist"){
+                        //                         Swal.fire({
+                        //                             title: "Student already have an account.",
+                        //                             icon: "error",
+                        //                             showCancelButton: false,
+                        //                             confirmButtonText: "I understand and will verify.",
+                        //                         });
+                        //                     }
 
-                                                Swal.fire({
-                                                        title: "Enrollment Approved",
-                                                        icon: "success",
-                                                        showCancelButton: false,
-                                                        confirmButtonText: "OK",
-                                                }).then((result) => {
-                                                    if (result.isConfirmed) {
+                        //                     if(response.student_id){
 
-                                                        var student_id = parseInt(response.student_id);
+                        //                         Swal.fire({
+                        //                                 title: "Enrollment Approved",
+                        //                                 icon: "success",
+                        //                                 showCancelButton: false,
+                        //                                 confirmButtonText: "OK",
+                        //                         }).then((result) => {
+                        //                             if (result.isConfirmed) {
 
-                                                        var url = `./subject_insertion_summary.php?id=${student_id}&enrolled_subject=show`;
+                        //                                 var student_id = parseInt(response.student_id);
 
-                                                        window.location.href = url;
+                        //                                 var url = `./subject_insertion_summary.php?id=${student_id}&enrolled_subject=show`;
 
-                                                    } else {
-                                                        // User clicked Cancel or closed the dialog
-                                                    }
-                                                });
+                        //                                 window.location.href = url;
 
-                                            }
+                        //                             } else {
+                        //                                 // User clicked Cancel or closed the dialog
+                        //                             }
+                        //                         });
 
-                                            // Swal.fire({
-                                            //         title: "Enrollment Approved",
-                                            //         icon: "success",
-                                            //         showCancelButton: false,
-                                            //         confirmButtonText: "OK",
-                                            // }).then((result) => {
-                                            //     if (result.isConfirmed) {
+                        //                     }
+
+                        //                     // Swal.fire({
+                        //                     //         title: "Enrollment Approved",
+                        //                     //         icon: "success",
+                        //                     //         showCancelButton: false,
+                        //                     //         confirmButtonText: "OK",
+                        //                     // }).then((result) => {
+                        //                     //     if (result.isConfirmed) {
 
 
-                                            //         // var url = `../enrollees/subject_insertion.php?enrolled_subjects=true&id=${student_id}`;
-                                            //         // window.location.href = url;
-                                            //     } else {
-                                            //         // User clicked Cancel or closed the dialog
-                                            //     }
-                                            // });
+                        //                     //         // var url = `../enrollees/subject_insertion.php?enrolled_subjects=true&id=${student_id}`;
+                        //                     //         // window.location.href = url;
+                        //                     //     } else {
+                        //                     //         // User clicked Cancel or closed the dialog
+                        //                     //     }
+                        //                     // });
                                           
-                                        },
-                                        error: function(xhr, status, error) {
-                                            // handle any errors here
-                                        }
-                                    });
-                                }
-                            });
-                        }
+                        //                 },
+                        //                 error: function(xhr, status, error) {
+                        //                     // handle any errors here
+                        //                 }
+                        //             });
+                        //         }
+                        //     });
+                        // }
                     </script>
                 <?php
             }
@@ -567,7 +570,7 @@
                                     Return
                                 </button>
 
-                                <button onclick='confirmPendingValidation("<?php echo $type ?>", "<?php echo $firstname ?>", "<?php echo $lastname ?>", "<?php echo $middle_name ?>", "<?php echo $password ?>", "<?php echo $program_id ?>", "<?php echo $civil_status ?>", "<?php echo $nationality ?>", "<?php echo $contact_number ?>", "<?php echo $birthday ?>", "<?php echo $age ?>", "<?php echo $guardian_name ?>", "<?php echo $guardian_contact_number ?>", "<?php echo $sex ?>", "<?php echo $student_status ?>", "<?php echo $pending_enrollees_id ?>", "<?php echo $address ?>", "<?php echo $lrn ?>", "<?php echo $selected_course_id ?>", "<?php echo $enrollment_form_id ?>", "<?php echo $religion ?>", "<?php echo $birthplace ?>", "<?php echo $email ?>")' class="default clean success large">
+                                <button onclick='confirmPendingValidation("<?php echo $type ?>", "<?php echo $firstname ?>", "<?php echo $lastname ?>", "<?php echo $middle_name ?>", "<?php echo $password ?>", "<?php echo $program_id ?>", "<?php echo $civil_status ?>", "<?php echo $nationality ?>", "<?php echo $contact_number ?>", "<?php echo $birthday ?>", "<?php echo $age ?>", "<?php echo $guardian_name ?>", "<?php echo "" ?>", "<?php echo $sex ?>", "<?php echo $student_status ?>", "<?php echo $pending_enrollees_id ?>", "<?php echo $address ?>", "<?php echo $lrn ?>", "<?php echo $selected_course_id ?>", "<?php echo $enrollment_form_id ?>", "<?php echo $religion ?>", "<?php echo $birthplace ?>", "<?php echo $email ?>")' class="default clean success large">
                                     Confirm
                                 </button>
                             </div>
@@ -575,104 +578,114 @@
                     </div>
 
                     <script>
-                        function confirmPendingValidation(type, firstname, lastname, middle_name, password,
-                            program_id, civil_status, nationality, contact_number, birthday, age,
-                            guardian_name, guardian_contact_number, sex, student_status,
-                            pending_enrollees_id, address, lrn,
-                            selected_course_id, enrollment_form_id,
-                            religion, birthplace, email){
 
-                            selected_course_id = parseInt(selected_course_id);
-                            program_id = parseInt(program_id);
-                            age = parseInt(age);
-                            pending_enrollees_id = parseInt(pending_enrollees_id);
+                        // function confirmPendingValidation(type, firstname, lastname, middle_name, password,
+                        //     program_id, civil_status, nationality, contact_number, birthday, age,
+                        //     guardian_name, guardian_contact_number, sex, student_status,
+                        //     pending_enrollees_id, address, lrn,
+                        //     selected_course_id, enrollment_form_id,
+                        //     religion, birthplace, email){
 
-                            Swal.fire({
-                                icon: 'question',
-                                title: `Confirm Enrollment?`,
-                                showCancelButton: true,
-                                confirmButtonText: 'Yes',
-                                cancelButtonText: 'Cancel'
+                        //     selected_course_id = parseInt(selected_course_id);
+                        //     program_id = parseInt(program_id);
+                        //     age = parseInt(age);
+                        //     pending_enrollees_id = parseInt(pending_enrollees_id);
 
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    $.ajax({
-                                        url: '../../ajax/admission/pending_enrollment_approval.php',
-                                        type: 'POST',
-                                        data: {
-                                            type,
-                                            firstname, lastname, middle_name,
-                                            password, program_id, civil_status, nationality, 
-                                            contact_number, birthday, age, guardian_name, 
-                                            guardian_contact_number, sex, student_status, 
-                                            pending_enrollees_id, address, lrn, selected_course_id,
-                                            enrollment_form_id, religion, birthplace, email
-                                        },
+                        //     Swal.fire({
+                        //         icon: 'question',
+                        //         title: `Confirm Enrollment?`,
+                        //         showCancelButton: true,
+                        //         confirmButtonText: 'Yes',
+                        //         cancelButtonText: 'Cancel'
 
-                                        dataType: "json",
+                        //     }).then((result) => {
+                        //         if (result.isConfirmed) {
+                        //             $.ajax({
+                        //                 url: '../../ajax/admission/pending_enrollment_approval.php',
+                        //                 type: 'POST',
+                        //                 data: {
+                        //                     type,
+                        //                     firstname, lastname, middle_name,
+                        //                     password, program_id, civil_status, nationality, 
+                        //                     contact_number, birthday, age, guardian_name, 
+                        //                     guardian_contact_number, sex, student_status, 
+                        //                     pending_enrollees_id, address, lrn, selected_course_id,
+                        //                     enrollment_form_id, religion, birthplace, email
+                        //                 },
 
-                                        success: function(response) {
+                        //                 dataType: "json",
 
-                                            // console.log(response)
-                                            if(response['status'] == "student_account_exist"){
-                                                Swal.fire({
-                                                    title: "Student already have an account.",
-                                                    icon: "error",
-                                                    showCancelButton: false,
-                                                    confirmButtonText: "I understand and will verify.",
-                                                });
-                                            }
+                        //                 success: function(response) {
 
-                                            if(response.student_id){
+                        //                     // console.log(response)
+                        //                     if(response['status'] == "student_account_exist"){
+                        //                         Swal.fire({
+                        //                             title: "Student already have an account.",
+                        //                             icon: "error",
+                        //                             showCancelButton: false,
+                        //                             confirmButtonText: "I understand and will verify.",
+                        //                         });
+                        //                     }
 
-                                                Swal.fire({
-                                                        title: "Enrollment Approved",
-                                                        icon: "success",
-                                                        showCancelButton: false,
-                                                        confirmButtonText: "OK",
-                                                }).then((result) => {
-                                                    if (result.isConfirmed) {
+                        //                     if(response.student_id){
 
-                                                        var student_id = parseInt(response.student_id);
+                        //                         Swal.fire({
+                        //                                 title: "Enrollment Approved",
+                        //                                 icon: "success",
+                        //                                 showCancelButton: false,
+                        //                                 confirmButtonText: "OK",
+                        //                         }).then((result) => {
+                        //                             if (result.isConfirmed) {
 
-                                                        var url = `./subject_insertion_summary.php?id=${student_id}&enrolled_subject=show`;
+                        //                                 var student_id = parseInt(response.student_id);
 
-                                                        window.location.href = url;
+                        //                                 var url = `./subject_insertion_summary.php?id=${student_id}&enrolled_subject=show`;
 
-                                                    } else {
-                                                        // User clicked Cancel or closed the dialog
-                                                    }
-                                                });
+                        //                                 window.location.href = url;
 
-                                            }
+                        //                             } else {
+                        //                                 // User clicked Cancel or closed the dialog
+                        //                             }
+                        //                         });
 
-                                            // Swal.fire({
-                                            //         title: "Enrollment Approved",
-                                            //         icon: "success",
-                                            //         showCancelButton: false,
-                                            //         confirmButtonText: "OK",
-                                            // }).then((result) => {
-                                            //     if (result.isConfirmed) {
+                        //                     }
+
+                        //                     // Swal.fire({
+                        //                     //         title: "Enrollment Approved",
+                        //                     //         icon: "success",
+                        //                     //         showCancelButton: false,
+                        //                     //         confirmButtonText: "OK",
+                        //                     // }).then((result) => {
+                        //                     //     if (result.isConfirmed) {
 
 
-                                            //         // var url = `../enrollees/subject_insertion.php?enrolled_subjects=true&id=${student_id}`;
-                                            //         // window.location.href = url;
-                                            //     } else {
-                                            //         // User clicked Cancel or closed the dialog
-                                            //     }
-                                            // });
+                        //                     //         // var url = `../enrollees/subject_insertion.php?enrolled_subjects=true&id=${student_id}`;
+                        //                     //         // window.location.href = url;
+                        //                     //     } else {
+                        //                     //         // User clicked Cancel or closed the dialog
+                        //                     //     }
+                        //                     // });
                                           
-                                        },
-                                        error: function(xhr, status, error) {
-                                            // handle any errors here
-                                        }
-                                    });
-                                }
-                            });
-                        }
+                        //                 },
+                        //                 error: function(xhr, status, error) {
+                        //                     // handle any errors here
+                        //                 }
+                        //             });
+                        //         }
+                        //     });
+                        // }
+                        
                     </script>
                 <?php
             }
+        }else{
+            
+            echo "
+                <div class='col-md-12'>
+                    <br>
+                    <h4 class='text-center text-warning'>Enrollee has been approved.</h4>
+                </div>
+            ";
         }
 
     }
@@ -761,9 +774,13 @@
         $student_enrollment_student_status = $enrollment->GetEnrollmentFormStudentStatus($student_id,
             $student_enrollment_id, $current_school_year_id);
 
-        // echo $student_enrollment_student_status;
-        // echo "<br>";
 
+        $student_enrollment_is_tertiary = $enrollment->GetEnrollmentFormIsTertiary($student_id,
+            $student_enrollment_id);
+
+        // echo $student_enrollment_is_tertiary;
+        // echo "<br>";
+ 
         $student_enrollment_retake_status = $enrollment->GetEnrollmentFormRetakeStatus($student_id,
             $student_enrollment_id, $current_school_year_id);
         
@@ -889,8 +906,6 @@
         }
     }
 
-
-
 ?>
 
 
@@ -968,7 +983,6 @@
             }
         });
     }
-
     
     function studentRemoveForm(student_id, enrollment_id, school_year_id){
 
@@ -1133,7 +1147,6 @@
             }
         });
     }
-
 
     // (Has Student Table) For student_find_section & subject_review pphp route
 

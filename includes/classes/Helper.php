@@ -1667,17 +1667,16 @@ class Helper {
 
             if($steps == "step1"){
 
+                //  <a href='contact_enrollee.php?id=$pending_enrollees_id' class='dropdown-item' style='color: black'>
+                //         <i class='fas fa-phone'></i>
+                //         Contact
+                //     </a>
+
                 $extra .= "
                     <a href='pending_enrollee_edit.php?id=$pending_enrollees_id' class='dropdown-item text-primary''>
                             <i class='bi bi-file-earmark-x'></i>
                         Edit
                     </a>
-                    
-                    <a href='contact_enrollee.php?id=$pending_enrollees_id' class='dropdown-item' style='color: black'>
-                        <i class='fas fa-phone'></i>
-                        Contact
-                    </a>
-
                 ";
             }
 

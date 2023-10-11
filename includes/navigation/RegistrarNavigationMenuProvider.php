@@ -12,7 +12,6 @@
 
     public function create($page){
 
-
         // $base_url = 'http://' . web_root . '/registrar/';
 
         if ($_SERVER['SERVER_NAME'] === 'localhost') {

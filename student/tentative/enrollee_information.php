@@ -64,7 +64,7 @@
         && isset($_POST['birthplace'])
         && isset($_POST['nationality'])
         && isset($_POST['contact_number'])
-        && isset($_POST['email'])
+        // && isset($_POST['email'])
         && isset($_POST['address'])
         ){
 
@@ -77,6 +77,8 @@
         $suffix = isset($_POST['suffix']) ? Helper::ValidateSuffix($_POST['suffix']) : '';
 
         // echo $suffix;
+        // return;
+
 
         $civil_status = Helper::ValidateCivilStatus($_POST['civil_status']);
 
@@ -96,12 +98,13 @@
 
         $contact_number = Helper::ValidateContactNumber($_POST['contact_number']);
 
-        $email = Helper::ValidateEmailNewEnrollee(
-            $pending_enrollees_id,
-            $_POST['email'], false, $con);
+        // $email = Helper::ValidateEmailNewEnrollee(
+        //     $pending_enrollees_id,
+        //     $_POST['email'], false, $con);
+
+        $email = "";
 
         $lrn = isset($_POST['lrn']) ? Helper::sanitizeFormString($_POST['lrn']) : '';
-
 
         
         // echo "firstname: $firstname<br>";
@@ -118,6 +121,7 @@
         // echo "religion: $religion<br>";
         // echo "contact_number: $contact_number<br>";
         // echo "email: $email<br>";
+        // return;
         // echo "lrn: $lrn<br>";
 
 
@@ -139,8 +143,10 @@
                 $sex,
                 $address,
                 $lrn,
-                $religion, $pending_enrollees_id);
+                $religion, $pending_enrollees_id
+            );
       
+            
             if($enrolleeSuccess){
 
 
@@ -171,10 +177,9 @@
                 exit();
             }
         }else{
-            // echo "Error";
+            echo "Error";
         }
     }
-
 
 ?>
 
@@ -233,19 +238,19 @@
                                         Constants::$lastNameIsTooShort, Constants::$lastNameIsTooLong
                                     );
                                 ?>
-                                <input class="read_only form-control" type="text"
+                                <input class=" form-control" type="text"
                                     name="lastname" id="lastName"  placeholder="Last name" 
                                     value="<?php  
                                         echo Helper::DisplayText('lastname', $lastname);
                                     ?>">
-                                <small>Last name</small>
+                                <small>Last name <span class="red">*</span></small>
                             </div>
                         <div>
                             <?php 
                                 Helper::EchoErrorField(Constants::$firstNameRequired, Constants::$invalidFirstNameCharacters,
                                     Constants::$firstNameIsTooShort, Constants::$firstNameIsTooLong);
                             ?>
-                            <input class="read_only form-control"
+                            <input class=" form-control"
                                 type="text" name="firstname" 
                                 placeholder="First name"
                                 id="firstName" 
@@ -253,7 +258,7 @@
                                     echo Helper::DisplayText('firstname', $firstname);
                                 ?>"
                              >
-                            <small>First name</small>
+                            <small>First name <span class="red">*</span></small>
                         </div>
 
                         <div>
@@ -264,7 +269,7 @@
                                     Constants::$middleNameIsTooShort,
                                     Constants::$middleNameIsTooLong);
                             ?>
-                            <input class="read_only form-control" type="text" name="middle_name" id="middleName" 
+                            <input class=" form-control" type="text" name="middle_name" id="middleName" 
                                 placeholder="Middle name"
                                 value="<?php
                                     echo Helper::DisplayText('middle_name', $middle_name);
@@ -291,7 +296,7 @@
                                 echo Helper::getError(Constants::$civilStatusRequired);
                                 echo Helper::getError(Constants::$invalidCivilStatusCharacters);
                             ?>
-                            <label for="status">Status</label>
+                            <label for="status">Status <span class="red">*</span></label>
                             <div>
                                 <select class="form-control" id="status" name="civil_status" class="form-control">
                                     <option value="Single"<?php echo ($civil_status == "Single") ? " selected" : ""; ?>>Single</option>
@@ -307,7 +312,7 @@
                                 echo Helper::getError(Constants::$invalidNationalityCharacters);
                             ?>
                             
-                            <label for="citizenship">Citizenship</label>
+                            <label for="citizenship">Citizenship <span class="red">*</span></label>
                             <div>
                                 <input class="form-control" style="width: 220px;" 
                                     type="text" name="nationality" 
@@ -328,7 +333,7 @@
                                 echo Helper::getError(Constants::$genderRequired);
                                 echo Helper::getError(Constants::$invalidGenderCharacters);
                             ?>
-                            <label for="gender">Gender</label>
+                            <label for="gender">Gender <span class="red">*</span></label>
                             <div>
                                 <select class="form-control" name="sex" id="sex">
                                     <option value="Male"<?php echo ($sex == "Male") ? " selected" : ""; ?>>Male</option>
@@ -340,7 +345,7 @@
 
                     <div class="row">
                         <span>
-                            <label for="birthdate">Birthdate</label>
+                            <label for="birthdate">Birthdate <span class="red">*</span></label>
                             <div>
                                 <input type="date" id="birthday" name="birthday" class="form-control" required value="<?php echo ($birthday != "") ? $birthday : "2023-06-17"; ?>">
                             </div>
@@ -370,10 +375,10 @@
                                     Constants::$birthPlaceIsTooLong
                                 );
                             ?>
-                            <label for="birthplace">Birthplace</label>
+                            <label for="birthplace">Birthplace <span class="red">*</span></label>
                             <div>
                                 <input type="text" id="birthplace" name="birthplace" 
-                                    class="form-control"  
+                                    class="form-control"  placeholder="City/Municipality"
                                     value="<?php 
                                         echo Helper::DisplayText('birthplace', $birthplace);
                                     ?>">
@@ -391,15 +396,14 @@
                                     Constants::$addressIsTooShort,
                                     Constants::$addressIsTooLong);
                                 ?>
-                            <label for="address">Address</label>
+                            <label for="address">Address <span class="red">*</span></label>
                             <div>
                                 <input autocomplete="offpro" style="text-align: start;" type="text" 
-                                id="address" name="address" 
+                                id="address" name="address" placeholder="House No Street Name Barangay City/Municipality"
                                 class="form-control" 
                                 value="<?php
                                     echo Helper::DisplayText('address', $address);
                                 ?>">
-
                             </div>
                         </span>
                     </div>
@@ -411,7 +415,7 @@
                                 echo Helper::getError(Constants::$invalidContactNumberCharacters);
                                 echo Helper::getError(Constants::$invalidContactNumber2Characters);
                             ?>
-                            <label for="phone">Contact no.</label>
+                            <label for="phone">Contact no. <span class="red">*</span></label>
                             <div>
                                 <input type="tel" id="contact_number"
                                     name="contact_number" class="form-control"
@@ -425,10 +429,10 @@
                                 echo Helper::getError(Constants::$EmailRequired);
                                 echo Helper::getError(Constants::$invalidEmailCharacters);
                             ?>
-                            <label for="email">Email</label>
+                            <label for="email">Email <span class="red">*</span></label>
                             <div>
-                                <input autocomplete="off" type="email" id="email" name="email" 
-                                class="read_only form-control" 
+                                <input disabled autocomplete="off" type="email" id="email" name="email" 
+                                class=" form-control" 
                                 value="<?php 
                                     echo Helper::DisplayText('email', $email);
                                 ?>">

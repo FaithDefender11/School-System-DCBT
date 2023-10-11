@@ -29,7 +29,7 @@
         // echo $current_school_year_period;
         // return;
 
-        $get = $con->prepare("SELECT t1.subject_code,
+        $get = $con->prepare("SELECT t1.subject_code,t1.subject_title,
             t1.subject_program_id
             
             FROM subject_program as t1
@@ -54,12 +54,14 @@
             
                 $subject_program_id = $row['subject_program_id'];
                 $subject_code = $row['subject_code'];
+                $subject_title = $row['subject_title'];
 
                 // $createSectionSubjectCode = $section->CreateSectionSubjectCode()
 
                 $data[] = array(
                 'subject_program_id' => $subject_program_id,
-                'subject_code' => $subject_code
+                'subject_code' => $subject_code,
+                'subject_title' => $subject_title
                 );
             }
            
