@@ -308,7 +308,6 @@
                                                 $days_occurrences = [];
 
                                                 while($row = $sql->fetch(PDO::FETCH_ASSOC)){
-                                                    
 
                                                     
                                                     $course_id = $row['course_id'];

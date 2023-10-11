@@ -169,7 +169,7 @@
 
         if($_SERVER['REQUEST_METHOD'] === "POST" 
             && isset($_POST['insert_assignment_btn_' . $subject_code_assignment_id . '_user_' . $studentLoggedInId])
-            && $issetLogic){
+            ){
                 
             $output_text = isset($_POST['output_text']) ?  $_POST['output_text'] : NULL;
 

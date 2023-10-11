@@ -1506,6 +1506,39 @@
 
         }
 
+        public function GetSectionSubjectCodes(
+            $program_id, $current_semester, $course_level, $type){
+
+            $sql = $this->con->prepare("SELECT 
+            
+                t1.*
+                
+                FROM subject_program AS t1
+
+                -- INNER JOIN course AS t2 ON t2.course_id = t1.course_id
+                
+                WHERE t1.program_id=:program_id
+                AND t1.semester=:semester
+                AND t1.course_level=:course_level
+                AND t1.department_type=:department_type
+
+            ");
+
+            $sql->bindParam(":program_id", $program_id);
+            $sql->bindParam(":semester", $current_semester);
+            $sql->bindParam(":course_level", $course_level);
+            $sql->bindParam(":department_type", $type);
+            
+            $sql->execute();
+        
+            if($sql->rowCount() > 0){
+                return $sql->fetchAll(PDO::FETCH_ASSOC);
+            }
+
+            return [];
+
+        }
+
         public function GetStudentsEnrolledInSection(
             $course_id,
             $school_year_id){
@@ -1969,6 +2002,8 @@
             return false;
 
         }
+
+     
 
     }
 

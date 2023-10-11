@@ -215,7 +215,8 @@
 
                     program_id = program_id.trim();
 
-                    console.log(program_id);
+                    // console.log(program_id);
+                    
                     var table = $('#table_list').DataTable({
                         'processing': true,
                         'serverSide': true,

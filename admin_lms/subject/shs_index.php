@@ -123,6 +123,7 @@
                         <tr>
                             <th>ID</th>
                             <th>Strand</th>
+                            <th>Code</th>
                             <th>Subject</th>
                             <th>Number of Section Enrolled</th>
                             <th>Action</th>
@@ -235,6 +236,7 @@
             'columns': [
                 { data: 'subject_program_id', orderable: false },  
                 { data: 'subject_type', orderable: false },  
+                { data: 'subject_code', orderable: false },  
                 { data: 'subject_title', orderable: false },  
                 { data: 'number_enrolled', orderable: false },  
                 { data: 'button_url', orderable: false }

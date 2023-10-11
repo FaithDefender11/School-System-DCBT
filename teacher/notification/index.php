@@ -42,7 +42,7 @@
     $studentListSubmittedNotification = $notification->GetStudentSubmittedAssignmentNotification(
         $teachingSubjects, $current_school_year_id);
 
-    print_r($studentListSubmittedNotification);
+    // print_r($studentListSubmittedNotification);
     
 ?>
 

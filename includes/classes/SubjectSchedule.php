@@ -81,6 +81,19 @@
         }
 
         
+        public function GetScheduleTeacherBySectionSubjectCode($subject_code) {
+
+            $query = $this->con->prepare("SELECT teacher_id FROM subject_schedule
+                WHERE subject_code=:subject_code");
+
+            $query->bindValue(":subject_code", $subject_code);
+            $query->execute();
+
+            if($query->rowCount() > 0){
+                return $query->fetchColumn();
+            }
+            return 0;
+        }
 
     }
 ?>

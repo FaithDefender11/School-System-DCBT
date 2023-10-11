@@ -65,9 +65,11 @@ if ($searchValue != '') {
 
     $searchQuery = " AND (
 
-        t1.subject_title LIKE '%" . $searchValue . "%'
+        t1.subject_title LIKE '%" . $searchValue . "%' OR
+        t1.subject_code LIKE '%" . $searchValue . "%'
    
     )";
+    
 }
 
 ## Total number of records without filtering
@@ -185,6 +187,7 @@ if ($row != null) {
         $data[] = array(
             "subject_program_id" => $subject_program_id,
             "subject_type" => $code_type,
+            "subject_code" => $subject_code,
             "subject_title" => $subject_title,
             "number_enrolled" => $number_enrolled,
             "button_url" => $button_url,

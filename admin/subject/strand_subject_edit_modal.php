@@ -62,7 +62,7 @@
                 <div class="modal-footer">
                     <input type="hidden" value="<?php echo ""?>" id="to_subject_program_id" name="to_subject_program_id">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Update Student</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
                 </div>
 
             </form>
@@ -93,7 +93,7 @@
 
                 var res = JSON.parse(response)
 
-                console.log(res);
+                // console.log(res);
 
                 $("#edit_course_level").val(res.course_level);
                 $("#edit_semester").val(res.semester);
@@ -143,8 +143,8 @@
 
                 if(response == "success"){
 
-                    $('#strand_subject_view_table').load(
-                        location.href + " #strand_subject_view_table");
+                    // $('#strand_subject_view_table').load(
+                    //     location.href + " #strand_subject_view_table");
 
                     $('#subjectStrandEditModal').modal('hide');
                     $('#editSubjectStrand')[0].reset();
@@ -154,16 +154,21 @@
                         title: 'Success',
                         text: `Successfully edited successfully!`,
                     });
+
+                    setTimeout(function() {
+                        location.reload();
+                    }, 1700); // 2000 milliseconds = 2 seconds
+
                 }
 
-                if(response == "already_registered"){
+                // if(response == "already_registered"){
 
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oh no!',
-                        text: `Already Registered!`,
-                    });
-                }
+                //     Swal.fire({
+                //         icon: 'error',
+                //         title: 'Oh no!',
+                //         text: `Already Registered!`,
+                //     });
+                // }
 
             }
         });

@@ -38,8 +38,6 @@
         && isset($_POST['subject_program_id'])
         && isset($_POST['edit_subject_template_id'])
         && isset($_POST['pre_req_subject_title'])
-        
-        
         ){
 
         $subject_program = new SubjectProgram($con);
@@ -91,7 +89,7 @@
 
                 // echo $sb_subject_program_id;
 
-                if($subject_title === $sb_subject_title){
+                // if($subject_title === $sb_subject_title){
 
                     // echo "Equal";
                     //  EDIT
@@ -127,68 +125,69 @@
                     if($query->execute()){
                         echo "success";
                     }
-                }
+                // }
 
-                if($subject_title !== $sb_subject_title){
+                // if($subject_title !== $sb_subject_title){
                    
 
-                    // Check if subject_template_id is already in the subject_program
+                //     // Check if subject_template_id is already in the subject_program
 
-                    $check_subject_program_exists  = $con->prepare("SELECT * 
-                        FROM subject_program
+                //     $check_subject_program_exists  = $con->prepare("SELECT * 
+                //         FROM subject_program
 
-                        WHERE subject_template_id=:subject_template_id");
+                //         WHERE subject_template_id=:subject_template_id");
 
-                    $check_subject_program_exists->bindParam(":subject_template_id", $db_subject_template_id);
-                    $check_subject_program_exists->execute();
+                //     $check_subject_program_exists->bindParam(":subject_template_id", $db_subject_template_id);
+                //     $check_subject_program_exists->execute();
 
-                    if($check_subject_program_exists->rowCount() == 0){
+                //     if($check_subject_program_exists->rowCount() == 0){
 
-                        //  ALLOW TO Modify and choose to another.
-                        // echo "allow to change to other template id 
-                        // in the subject program table";
+                //         //  ALLOW TO Modify and choose to another.
+                //         // echo "allow to change to other template id 
+                //         // in the subject program table";
 
-                        $query = $con->prepare("UPDATE subject_program
-                            SET subject_code=:subject_code,
-                                course_level=:course_level,
-                                semester=:semester,
-                                subject_template_id=:subject_template_id,
-                                subject_title=:subject_title,
-                                pre_req_subject_title=:pre_req_subject_title,
-                                unit=:unit,
-                                subject_type=:subject_type,
-                                subject_code=:subject_code,
-                                description=:description
+                //         $query = $con->prepare("UPDATE subject_program
+                //             SET subject_code=:subject_code,
+                //                 course_level=:course_level,
+                //                 semester=:semester,
+                //                 subject_template_id=:subject_template_id,
+                //                 subject_title=:subject_title,
+                //                 pre_req_subject_title=:pre_req_subject_title,
+                //                 unit=:unit,
+                //                 subject_type=:subject_type,
+                //                 subject_code=:subject_code,
+                //                 description=:description
 
-                            WHERE subject_program_id=:subject_program_id");
+                //             WHERE subject_program_id=:subject_program_id");
 
-                        $query->bindValue(":subject_code", $subject_code);
-                        $query->bindValue(":course_level", $course_level);
-                        $query->bindValue(":semester", $semester);
-                        $query->bindValue(":subject_template_id", $subject_template_id);
+                //         $query->bindValue(":subject_code", $subject_code);
+                //         $query->bindValue(":course_level", $course_level);
+                //         $query->bindValue(":semester", $semester);
+                //         $query->bindValue(":subject_template_id", $subject_template_id);
 
-                        $query->bindValue(":subject_title", $subject_title);
-                        $query->bindValue(":pre_req_subject_title", $pre_requisite_title);
-                        $query->bindValue(":unit", $unit);
-                        $query->bindValue(":subject_type", $subject_type);
-                        $query->bindValue(":subject_code", $subject_code);
-                        $query->bindValue(":description", $description);
+                //         $query->bindValue(":subject_title", $subject_title);
+                //         $query->bindValue(":pre_req_subject_title", $pre_requisite_title);
+                //         $query->bindValue(":unit", $unit);
+                //         $query->bindValue(":subject_type", $subject_type);
+                //         $query->bindValue(":subject_code", $subject_code);
+                //         $query->bindValue(":description", $description);
 
-                        $query->bindValue(":subject_program_id", $subject_program_id);
+                //         $query->bindValue(":subject_program_id", $subject_program_id);
 
-                        if($query->execute()){
-                            echo "success";
-                        }
-                    }else{
+                //         if($query->execute()){
+                //             echo "success";
+                //         }
+                //     }else{
 
-                        // There a subject_template_id which currently existed 
-                        // in the subject_program table.
-                        // echo "not allow to change";
+                //         // There a subject_template_id which currently existed 
+                //         // in the subject_program table.
+                //         // echo "not allow to change";
 
-                        echo "already_registered";
+                //         echo "already_registered";
 
-                    }
-                }
+                //     }
+                // }
+
             }
             
         }
