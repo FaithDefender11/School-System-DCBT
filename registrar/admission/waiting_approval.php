@@ -126,7 +126,7 @@
       <button
         class="tab"
         id="shsApproval"
-        style="background-color: var(--mainContentBG); color: white"
+        style="background-color: var(--mainContentBG); color: black"
         onclick="window.location.href = 'waiting_approval.php';"
       >
         Waiting approval (<?php echo $waitingApprovalEnrollmentCount;?>)

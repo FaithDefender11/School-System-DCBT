@@ -91,7 +91,7 @@
                 <?php
                     echo "
                         <button class='tab' 
-                            style='background-color: var(--them)'
+                            style='background-color: var(--them); color: white'
                             onclick=\"window.location.href = 'record_details.php?id=$student_id&details=show';\">
                             <i class='bi bi-clipboard-check'></i>
                             Student Details
@@ -111,7 +111,7 @@
                     echo "
                         <button class='tab' 
                             id='shsPayment'
-                            style='background-color: var(--mainContentBG); color: white'
+                            style='background-color: var(--mainContentBG); color: black'
                             onclick=\"window.location.href = 'record_details.php?id=$student_id&enrolled_subject=show';\">
                             <i class='bi bi-collection icon'></i>
                             Enrolled Subjects

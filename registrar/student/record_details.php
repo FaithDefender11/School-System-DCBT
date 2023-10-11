@@ -15,6 +15,9 @@
 
     ?>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+        <style>
+            <?php include "../../assets/css/content.css" ?>
+        </style>
     <?php
 
     $school_year = new SchoolYear($con, null);

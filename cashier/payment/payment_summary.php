@@ -203,6 +203,9 @@
             && $_GET['student_details'] == "show"){
 
             ?>
+            <style>
+                <?php include "../../assets/css/content.css" ?>
+            </style>
                 <div class="content">
 
                     <nav>
@@ -238,30 +241,30 @@
 
                         <div class="cards">
                             <div class="card">
-                                <p class="text-center mb-0">Form ID</p>
-                                <p class="text-center"><?php echo $student_enrollment_form_id;?></p>
+                                <sup>Form ID</sup>
+                                <sub><?php echo $student_enrollment_form_id;?></sub>
                             </div>
                             <div class="card">
-                                <p class="text-center mb-0">Admission type</p>
-                                <p class="text-center"><?php echo $student_status;?></p>
+                                <sup>Admission type</sup>
+                                <sub><?php echo $student_status;?></sub>
                             </div>
                             <div class="card">
-                                <p class="text-center mb-0">Student no.</p>
-                                <p class="text-center"><?php echo $student_unique_id;?></p>
+                                <sup>Student no.</sup>
+                                <sub><?php echo $student_unique_id;?></sub>
                             </div>
                             <div class="card">
-                                <p class="text-center mb-0">Status</p>
-                                <p class="text-center">Evaluation</p>
+                                <sup>Status</sup>
+                                <sub>Evaluation</sub>
                             </div>
                             <div class="card">
-                                <p class="text-center mb-0">Submitted on</p>
-                                <p class="text-center">
+                                <sup>Submitted on</sup>
+                                <sub>
                                     <?php
                                         $date = new DateTime($date_creation);
                                         $formattedDate = $date->format('m/d/Y H:i');
                                         echo $formattedDate;
                                     ?>
-                                </p>
+                                </sub>
                             </div>
                         </div>
                     </div>
@@ -271,7 +274,8 @@
                         <?php
                             echo "
                                 <button class='tab' 
-                                    style='background-color: var(--mainContentBG)'
+                                    id='studentDetailsButton'
+                                    style='background-color: var(--mainContentBG); color: black'
                                     onclick=\"window.location.href = 'payment_summary.php?id=$enrollment_form_id_url&student_details=show';\">
                                     Student Details
                                 </button>
@@ -279,7 +283,7 @@
 
                             echo "
                                 <button class='tab' 
-                                    id='shsPayment'
+                                    id='enrolledSubjectsButton'
                                     style='background-color: var(--them); color: white'
                                     onclick=\"window.location.href = 'payment_summary.php?id=$enrollment_form_id_url&enrolled_subject=show';\">
                                     Enrolled Subjects
@@ -550,6 +554,9 @@
             }
            
             ?>
+            <style>
+                <?php include "../../assets/css/content.css" ?>
+            </style>
                 <div class="content">
                     <nav>
                         <a href="<?php echo $back_url; ?>">
@@ -568,34 +575,34 @@
 
                         <div class="cards">
                             <div class="card">
-                                <p class="text-center mb-0">Form ID</p>
-                                <p class="text-center"><?php echo $student_enrollment_form_id;?></p>
+                                <sup>Form ID</sup>
+                                <sub><?php echo $student_enrollment_form_id;?></sub>
                             </div>
                             <div class="card">
-                                <p class="text-center mb-0">Admission type</p>
-                                <p class="text-center"><?php echo $student_status;?></p>
+                                <sup>Admission type</sup>
+                                <sub><?php echo $student_status;?></sub>
                             </div>
                             <div class="card">
-                                <p class="text-center mb-0">Student no.</p>
-                                <p class="text-center">
+                                <sup>Student no.</sup>
+                                <sub>
                                     <a style="all: unset" href="../student/record_details.php?id=<?php echo $student_id;?>&enrolled_subject=show">
                                         <?php echo $student_unique_id;?>
                                     </a>
-                                </p>
+                                </sub>
                             </div>
                             <div class="card">
-                                <p class="text-center mb-0">Status</p>
-                                <p class="text-center">For Approval</p>
+                                <sup>Status</sup>
+                                <sub>For Approval</sub>
                             </div>
                             <div class="card">
-                                <p class="text-center mb-0">Submitted on</p>
-                                <p class="text-center">
+                                <sup>Submitted on</sup>
+                                <sub>
                                     <?php
                                         $date = new DateTime($date_creation);
                                         $formattedDate = $date->format('m/d/Y H:i');
                                         echo $formattedDate;
                                     ?>
-                                </p>
+                                </sub>
                             </div>
                         </div>
 
@@ -606,7 +613,7 @@
                         <?php
                             echo "
                                 <button class='tab' 
-                                    style='background-color: var(--them)'
+                                    style='background-color: var(--them); color: white'
                                     onclick=\"window.location.href = 'payment_summary.php?id=$enrollment_form_id_url&student_details=show';\">
                                     Student Details
                                 </button>
@@ -615,7 +622,7 @@
                             echo "
                                 <button class='tab' 
                                     id='shsPayment'
-                                    style='background-color: var(--mainContentBG); color: white'
+                                    style='background-color: var(--mainContentBG); color: black'
                                     onclick=\"window.location.href = 'payment_summary.php?id=$enrollment_form_id_url&enrolled_subject=show';\">
                                     Enrolled Subjects
                                 </button>

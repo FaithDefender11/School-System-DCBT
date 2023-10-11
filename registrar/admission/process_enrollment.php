@@ -15,11 +15,11 @@
 
 
     ?>
-        <style>
-            .dropdown-menu.show{
-                margin-left: -120px;
-            }
-        </style>
+    <style>
+        .dropdown-menu.show{
+            margin-left: -120px;
+        }
+    </style>
     <?php
 
     $department = new Department($con);

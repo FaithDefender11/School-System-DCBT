@@ -45,7 +45,6 @@
                             <th>Grade 11</th>
                             <th>Grade 12</th>
                             <th>Action</th>
-                            <th></th>
                         </tr>
                     </thead>
                     <tbody>

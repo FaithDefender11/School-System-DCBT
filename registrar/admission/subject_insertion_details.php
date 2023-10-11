@@ -32,30 +32,30 @@
 
         <div class="cards">
             <div class="card">
-                <p class="text-center mb-0">Form ID</p>
-                <p class="text-center"><?php echo $student_enrollment_form_id;?></p>
+                <sup>Form ID</sup>
+                <sub><?php echo $student_enrollment_form_id;?></sub>
             </div>
             <div class="card">
-                <p class="text-center mb-0">Admission type</p>
-                <p class="text-center"><?php echo $student_status;?></p>
+                <sup>Admission type</sup>
+                <sub><?php echo $student_status;?></sub>
             </div>
             <div class="card">
-                <p class="text-center mb-0">Student no.</p>
-                <p class="text-center"><?php echo $student_unique_id;?></p>
+                <sup>Student no.</sup>
+                <sub><?php echo $student_unique_id;?></sub>
             </div>
             <div class="card">
-                <p class="text-center mb-0">Status</p>
-                <p class="text-center">For Approval</p>
+                <sup>Status</sup>
+                <sub>For Approval</sub>
             </div>
             <div class="card">
-                <p class="text-center mb-0">Submitted on</p>
-                <p class="text-center">
+                <sup>Submitted on</sup>
+                <sub>
                     <?php
                         $date = new DateTime($date_creation);
                         $formattedDate = $date->format('m/d/Y H:i');
                         echo $formattedDate;
                     ?>
-                </p>
+                </sub>
             </div>
         </div>
     </div>

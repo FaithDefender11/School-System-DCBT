@@ -112,7 +112,7 @@
         <button
         class="tab"
         id="shsEvaluation"
-        style="background-color: var(--them)"
+        style="background-color: var(--them); color: white"
         onclick="window.location.href = 'evaluation.php';"
         >
         Evaluation (<?php echo $unionEnrollmentCount;?>)
@@ -135,7 +135,7 @@
         <button
         class="tab"
         id="shsEnrolled"
-        style="background-color: var(--mainContentBG); color: white"
+        style="background-color: var(--mainContentBG); color: black"
         onclick="window.location.href = 'enrolled_sections.php';"
         >
         Enrolled (<?php echo $sectionEnrolledStudentListCount;?>)
