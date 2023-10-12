@@ -51,6 +51,9 @@
         public function GetSectionIsFull() {
             return isset($this->sqlData['is_full']) ? $this->sqlData["is_full"] : NULL; 
         }
+        public function GetSectionIsActive() {
+            return isset($this->sqlData['active']) ? $this->sqlData["active"] : NULL; 
+        }
 
 
         public function GetSectionGradeLevel($course_id = null) {

@@ -5,6 +5,7 @@
     include_once('../../includes/classes/Section.php');
     include_once('../../includes/classes/SchoolYear.php');
     include_once('../../includes/classes/SubjectSchedule.php');
+    include_once('../../includes/classes/Teacher.php');
 
     
     ?>
@@ -38,6 +39,9 @@
         </head>
 
     <?php
+
+
+    $sy =  41;
     
     $school_year = new SchoolYear($con);
     $school_year_obj = $school_year->GetActiveSchoolYearAndSemester();
@@ -46,9 +50,6 @@
     $current_school_year_period = $school_year_obj['period'];
     $current_school_year_term = $school_year_obj['term'];
 
-
-
-    // var_dump($enrolledSection);
     
 
     if(isset($_GET['id'])){
@@ -64,6 +65,9 @@
 
         $subjectSchedule = new SubjectSchedule($con);
         
+        // $current_school_year_period = "Second";
+        // $sectionLevel = 12;
+
         $sectionSubjectCodes = $section->GetSectionSubjectCodes(
             $sectionProgramId, $current_school_year_period, $sectionLevel, "SHS");
 
@@ -88,7 +92,7 @@
                     <header>
 
                         <div class="title">
-                            <h5><?= "<span class='text-primary'>$sectionName</span>"; ?> subjects</h5>
+                            <h5 class="mb-3"><?= "<span class='text-primary'>$sectionName</span>"; ?> Subjects &nbsp;<?php echo "<span class='text-right'>A.Y $current_school_year_term $current_school_year_period Semester</span>" ?></h5>
                         </div>
                         
                     </header>
@@ -103,6 +107,7 @@
                                     <tr>
                                         <th>Description</th>  
                                         <th>Code</th>
+                                        <th>Instructor</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -118,6 +123,8 @@
                                             $subject_program_id = $value['subject_program_id'];
 
                                             // $subject_program = new Subjectprogra
+                                            // var_dump($rawCode);
+
 
                                             $section_subject_code = $section->CreateSectionSubjectCode(
                                                 $sectionName, $rawCode);
@@ -126,18 +133,26 @@
                                             // $school_year_id = $value['school_year_id'];
 
                                             // $totalStudent = $section->GetTotalNumberOfStudentInSection($course_id, $current_school_year_id);
-                                            
 
                                             $teacher_id = $subjectSchedule->GetScheduleTeacherBySectionSubjectCode(
                                                 $section_subject_code);
-                                            
 
+                                                // var_dump($teacher_id);
+
+                                            $teacher = new Teacher($con, $teacher_id);
+
+                                            $teacherName = "N/A";
+
+                                            if($teacher_id != 0){
+                                                $teacherName = ucwords($teacher->GetTeacherFirstName()) . " " . ucwords($teacher->GetTeacherLastName());
+                                            }
                                             
                                             echo "
                                                 <tr>
                                                      
                                                     <td>$subject_title</td>
                                                     <td>$section_subject_code</td>
+                                                    <td>$teacherName</td>
 
                                                     <td>
                                                         <a href='subject_topics.php?id=$course_id&c=$rawCode&t_id=$teacher_id'>

@@ -59,11 +59,91 @@ class SubjectPeriodCodeTopic{
         return isset($this->sqlData['date_creation']) ? $this->sqlData["date_creation"] : NULL; 
     }
 
-    public function AddTopic($course_id,$teacher_id, $school_year_id,
+    public function AddTopic($course_id, $teacher_id, $school_year_id,
         $topic, $description,$subject_period_name,
         $subject_code, $program_code, $subject_program_id) {
 
         $teacher_id = $teacher_id == 0 ? NULL : $teacher_id;
+
+
+        # Cbeck if subject code is not assigned to other teacher
+        if($this->CheckDefaultTopicAlreadyBeenAssigned($subject_code,
+            $school_year_id, $subject_period_name) == false){
+
+            $add = $this->con->prepare("INSERT INTO subject_period_code_topic
+                (course_id,teacher_id, school_year_id,
+                    topic, description,subject_period_name,
+                    subject_code, program_code, subject_program_id)
+                VALUES(:course_id,:teacher_id, :school_year_id,
+                    :topic, :description,:subject_period_name,
+                    :subject_code, :program_code, :subject_program_id)");
+                
+            $add->bindValue(":course_id", $course_id);
+            $add->bindValue(":teacher_id", $teacher_id);
+            $add->bindValue(":school_year_id", $school_year_id);
+            $add->bindValue(":topic", $topic);
+            $add->bindValue(":description", $description);
+            $add->bindValue(":subject_period_name", $subject_period_name);
+            $add->bindValue(":subject_code", $subject_code);
+            $add->bindValue(":program_code", $program_code);
+            $add->bindValue(":subject_program_id", $subject_program_id);
+            // $add->bindValue(":period_order", $period_order);
+
+            $add->execute();
+
+            if($add->rowCount() > 0){
+                return true;
+            }
+        }
+
+        // else{
+        //     echo "Not exec";
+        //     return;
+        // }
+
+       
+
+        return false;
+
+    }
+
+    public function UpdateAssignTeacherOnSubjectCodeTopic(
+        $course_id, $teacher_id,
+        $school_year_id, $subject_code) {
+
+        $teacher_id = $teacher_id == 0 ? NULL : $teacher_id;
+     
+        $updateTopic = $this->con->prepare("UPDATE subject_period_code_topic
+
+            SET teacher_id=:teacher_id
+
+            WHERE course_id=:course_id
+            AND school_year_id=:school_year_id
+            AND subject_code=:subject_code
+        ");
+            
+        $updateTopic->bindValue(":teacher_id", $teacher_id);
+        $updateTopic->bindValue(":course_id", $course_id);
+        $updateTopic->bindValue(":school_year_id", $school_year_id);
+        $updateTopic->bindValue(":subject_code", $subject_code);
+
+        $updateTopic->execute();
+
+        if($updateTopic->rowCount() > 0){
+            return true;
+        }
+
+        return false;
+
+    }
+    
+
+    public function AddTopicSingle($course_id,$teacher_id, $school_year_id,
+        $topic, $description,$subject_period_name,
+        $subject_code, $program_code, $subject_program_id) {
+
+        $teacher_id = $teacher_id == 0 ? NULL : $teacher_id;
+
 
         $add = $this->con->prepare("INSERT INTO subject_period_code_topic
             (course_id,teacher_id, school_year_id,
@@ -72,7 +152,7 @@ class SubjectPeriodCodeTopic{
             VALUES(:course_id,:teacher_id, :school_year_id,
                 :topic, :description,:subject_period_name,
                 :subject_code, :program_code, :subject_program_id)");
-        
+            
         $add->bindValue(":course_id", $course_id);
         $add->bindValue(":teacher_id", $teacher_id);
         $add->bindValue(":school_year_id", $school_year_id);
@@ -89,6 +169,13 @@ class SubjectPeriodCodeTopic{
         if($add->rowCount() > 0){
             return true;
         }
+        
+        // else{
+        //     echo "Not exec";
+        //     return;
+        // }
+
+       
 
         return false;
 
@@ -310,4 +397,111 @@ class SubjectPeriodCodeTopic{
         
         return NULL;
     }
+
+    public function CheckTeacherHasGivenSubjectCodeDefaultTopics(
+        $subject_code, $teacher_id, $school_year_id){
+
+        $query = $this->con->prepare("SELECT 
+        
+            subject_period_code_topic_id 
+
+            FROM subject_period_code_topic
+
+            WHERE teacher_id=:teacher_id
+            AND school_year_id=:school_year_id
+            AND subject_code=:subject_code
+
+        ");
+
+        $query->bindValue(":teacher_id", $teacher_id);
+        $query->bindValue(":school_year_id", $school_year_id);
+        $query->bindValue(":subject_code", $subject_code);
+        $query->execute();
+ 
+        if($query->rowCount() > 0){
+            return $query->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        return [];
+    }
+
+    public function CheckDefaultTopicAlreadyBeenAssigned(
+        $subject_code, $school_year_id, $subject_period_name = null){
+
+        $subject_period_name_query = "";
+
+        if($subject_period_name != NULL){
+            $subject_period_name_query = "AND subject_period_name=:subject_period_name";
+        }
+
+        $query = $this->con->prepare("SELECT 
+        
+            subject_period_code_topic_id 
+
+            FROM subject_period_code_topic
+
+            WHERE school_year_id=:school_year_id
+            AND subject_code=:subject_code
+            $subject_period_name_query
+
+        ");
+
+        $query->bindValue(":school_year_id", $school_year_id);
+        $query->bindValue(":subject_code", $subject_code);
+        if($subject_period_name != NULL){
+            $query->bindValue(":subject_period_name", $subject_period_name);
+
+        }
+        $query->execute();
+ 
+        return  $query->rowCount() > 0;
+
+    }
+
+    public function RemovalOfDefaultSubjectCodeTopics(
+        $subject_period_code_topic_id){
+
+        $query = $this->con->prepare("DELETE FROM subject_period_code_topic
+
+            WHERE subject_period_code_topic_id=:subject_period_code_topic_id
+
+        ");
+
+        $query->bindValue(":subject_period_code_topic_id", $subject_period_code_topic_id);
+        $query->execute();
+ 
+        if($query->rowCount() > 0){
+            return true;
+        }
+
+        return false;
+    }
+
+    public function GetSubjectCodeDefaultTopics(
+        $subject_code, $course_id, $school_year_id){
+
+        $query = $this->con->prepare("SELECT 
+        
+            * 
+
+            FROM subject_period_code_topic
+
+            WHERE school_year_id=:school_year_id
+            AND subject_code=:subject_code
+            AND course_id=:course_id
+
+        ");
+
+        $query->bindValue(":school_year_id", $school_year_id);
+        $query->bindValue(":subject_code", $subject_code);
+        $query->bindValue(":course_id", $course_id);
+        $query->execute();
+ 
+        if($query->rowCount() > 0){
+            return $query->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        return [];
+    }
+
 }

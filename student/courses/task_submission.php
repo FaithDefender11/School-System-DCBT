@@ -27,9 +27,13 @@
         </style>
     <?php
 
-    if(isset($_GET['sc_id'])){
+    if(
+        isset($_GET['sc_id']) &&
+        isset($_GET['ss_id'])
+        ){
 
         $subject_code_assignment_id = $_GET['sc_id'];
+        $student_subject_id = $_GET['ss_id'];
 
         if(isset($_GET['n_id'])
             && isset($_GET['notification'])
@@ -96,7 +100,8 @@
 
         $assignment_name = $subjectCodeAssignment->GetAssignmentName();
 
-        $back_url = "index.php?c=$subject_code";
+        // $back_url = "index.php?c=$subject_code";
+        $back_url = "index.php?id=$student_subject_id";
  
         // echo $subject_assignment_submission_id;
 
@@ -350,6 +355,7 @@
                             
                                 <button style="pointer-events: none;" type="button" "
                                     class="btn btn-sm btn-primary" >Instructions</button>
+
                                 <?php 
                                     if($assignmentAttempts > 0){
 
@@ -365,6 +371,7 @@
                                         <?php
                                     }
                                 ?>
+
                             </div>
 
                             <div class="card-body">
@@ -548,13 +555,15 @@
                         </div>
                     </div>
 
+
+
                     <div class="col-md-4">
                         <div class='card'>
                             
                             <div class='card-header'>
                                 <!-- <p class="text-info text-center">Assignment type: <?php echo $assignment_type; ?></p> -->
                                 <p>Type: <?php echo $assignment_type === "upload" ? "Dropbox" : "Text" ?></p>
-                                <p>Max Score: </p>
+                                <p>Max Score: <?= $assignment_max_score; ?></p>
                                 <p>Category: Assignment</p>
                                 <p>Start: <?php echo $assignment_creation ?></p>
                                 <p>Due: <?php echo $assignment_due ?></p>
@@ -589,10 +598,14 @@
                                 <h5 style="margin-bottom: 7px;">Submission</h5>
 
                                 <?php if($get_subject_assignment_submission_date !== NULL) :?>
-                                    <p class="mb-1">Submitted: <?php 
-                                    $get_subject_assignment_submission_date =  $get_subject_assignment_submission_date; 
-                                        echo $submission_creation = date("M d, h:i a", strtotime($get_subject_assignment_submission_date));
-                                ?> </p>
+                                    <p class="mb-1">Submitted: 
+
+                                        <?php 
+                                            $get_subject_assignment_submission_date =  $get_subject_assignment_submission_date; 
+                                                
+                                            echo $submission_creation = date("M d, h:i a", strtotime($get_subject_assignment_submission_date));
+                                        ?>
+                                    </p>
                                 <?php endif;?>
                                 
                                 <p class="mb-1">Attempts: <?php echo $assignmentAttempts; ?> </p>

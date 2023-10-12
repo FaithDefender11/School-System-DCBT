@@ -158,7 +158,7 @@
                 <div class="floating" id="shs-sy">
                     <header>
                         <div class="title">
-                            <h4 style="font-weight: bold;" class="text-primary">My Enrolled Subject(s)</h4>
+                            <h4 style="font-weight: bold;" class="text-primary">Enrolled Subject</h4>
                         </div>
                     </header>
  
@@ -180,9 +180,11 @@
                                     <?php
 
                                         foreach ($allEnrolledSubjectCode as $key => $row_inner) {
-                                        // while($row_inner = $query->fetch(PDO::FETCH_ASSOC)){
+
+                                            // while($row_inner = $query->fetch(PDO::FETCH_ASSOC)){
 
                                             $subject_title = $row_inner['subject_title'];
+                                            $student_subject_id = $row_inner['student_subject_id'];
 
                                             $schedule = new Schedule($con);
 
@@ -217,7 +219,8 @@
 
                                             // $section_code = trim(strtolower($section_code));
 
-                                            $courses_url = "../courses/index.php?c=$section_code";
+                                            // $courses_url = "../courses/index.php?c=$section_code";
+                                            $courses_url = "../courses/index.php?id=$student_subject_id";
                                             
                                             echo "
                                                 <tr class='text-center'>

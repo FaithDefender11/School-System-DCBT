@@ -47,7 +47,7 @@
         // echo $subject_program_id;
         // return;
 
-        $create = $subjectPeriodCodeTopic->AddTopic($course_id,
+        $create = $subjectPeriodCodeTopic->AddTopicSingle($course_id,
                 $teacher_id, $current_school_year_id, $topic, $description,
                 $subject_period_name, $subject_code, $program_code, $subject_program_id);
 

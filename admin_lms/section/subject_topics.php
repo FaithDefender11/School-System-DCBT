@@ -4,6 +4,7 @@
     include_once('../../includes/classes/SubjectProgram.php');
     include_once('../../includes/classes/SchoolYear.php');
     include_once('../../includes/classes/Section.php');
+    include_once('../../includes/classes/SubjectPeriodCodeTopic.php');
 
 
     if(
@@ -23,23 +24,35 @@
         $program_code = $_GET['c'];
         $teacher_id = $_GET['t_id'];
 
+        // var_dump($teacher_id);
+
         $section = new Section($con, $course_id);
         $sectionName = $section->GetSectionName();
+        $subject_code = $section->CreateSectionSubjectCode($sectionName, $program_code);
 
         $subjectProgram = new SubjectProgram($con);
 
-        $subject_code = $section->CreateSectionSubjectCode($sectionName, $program_code);
+        $subjectPeriodCodeTopic = new SubjectPeriodCodeTopic($con);
+
+
+        $hasDefaultSubjectAlreadyWithinSemester = $subjectPeriodCodeTopic->CheckDefaultTopicAlreadyBeenAssigned(
+            $subject_code, $current_school_year_id);
+
+        // var_dump($hasDefaultSubjectAlreadyWithinSemester);
 
         $subjectProgramId = $subjectProgram->GetSubjectProgramIdByProgramCode($program_code);
 
-        // $subjectProgram = new SubjectProgram($con, $subjectProgramId);
-
-
         $subject_period_code_topic = NULL;
 
-        // $teacher_id = "";
+        $back_url = "subject_code.php?id=$course_id";
 
-        $back_url = "section_code_list.php?id=$subjectProgramId";
+        $teacher_id_return = $teacher_id == "" ? 0 : $teacher_id;
+
+        $addWholeTopic = "addWholeTopic($course_id, $teacher_id_return, $current_school_year_id, $subjectProgramId)";
+        // $removeWholeTopic = "removeWholeTopic($course_id, $teacher_id_return, $current_school_year_id, $subjectProgramId)";
+        
+        // var_dump($teacher_id);
+
         ?>
             <div class="content">
                 <nav>
@@ -53,8 +66,19 @@
                     <div class="floating" id="shs-sy">
                         <header>
                             <div class="title">
-                                <h4>Subject Code Topics : <span style="font-size: 15px;"><?php echo $subject_code; ?></span></h4>
+                                <h4>Subject code Topics : <span style="font-size: 15px;"><?php echo $subject_code; ?></span></h4>
                             </div>
+
+                            <?php if($hasDefaultSubjectAlreadyWithinSemester && $teacher_id_return != 0):?>
+                                <div>
+                                    <button onclick="removeWholeTopic('<?php echo $course_id; ?>', '<?php echo $current_school_year_id; ?>', '<?php echo $subject_code; ?>')" class="default large danger">Remove Topics</button>
+                                </div>
+                                <?php elseif($hasDefaultSubjectAlreadyWithinSemester == false && $teacher_id_return != 0):?>
+                                <div>
+                                    <button onclick="<?php echo $addWholeTopic; ?>" class="default large success">Populate Topics</button>
+                                </div>
+                            <?php endif;?>
+                            
                         </header>
                         <main>
 
@@ -99,7 +123,6 @@
 
                                                 $subject_period_code_topic_id = 0;
 
-                                                $status = "";
 
 
                                                 $subject_period_code_topic_id = NULL;
@@ -132,9 +155,9 @@
                                                 // $topic, $description,$subject_period_name,
                                                 // $subject_code, $program_code
 
-                                                $addTopic = "addTopic($subject_period_code_topic_template_id, $course_id,
-                                                    $teacher_id, $current_school_year_id, \"$program_code\", \"$topic\", \"$description\", \"$subject_period_name\", \"$period_order\")";
-
+       
+                                                
+                                                $status = "";
                                                 
                                                 if($subject_period_code_topic_id !== NULL){
                                                     $removePopulateTopic = "removePopulateTopic($subject_period_code_topic_id, $current_school_year_id)";
@@ -145,11 +168,21 @@
                                                     ";
                                                 }else{
 
-                                                    $status = "
-                                                        <button onclick='$addTopic' class='btn btn-success'>
-                                                            <i class='fas fa-add'></i>
-                                                        </button>
-                                                    ";
+                                                    // var_dump($teacher_id);
+
+                                                    if($teacher_id_return != 0){
+
+                                                        $addTopic = "addTopic($subject_period_code_topic_template_id, $course_id, $teacher_id, $current_school_year_id, \"$program_code\", \"$topic\", \"$description\", \"$subject_period_name\", \"$period_order\")";
+
+
+                                                        $status = "
+                                                            <button onclick='$addTopic' class='btn btn-success'>
+                                                                <i class='fas fa-add'></i>
+                                                            </button>
+                                                        ";
+                                                    }
+
+                                                    
                                                 }
 
                                                 echo "
@@ -178,98 +211,6 @@
                     </div>
                 </main>
 
-                <br>
-
-                <main>
-                    <div class="floating" id="shs-sy">
-                        <header>
-                            <div class="title">
-                                <h4>Subject Code Topics : <span style="font-size: 15px;"><?php echo $subject_code; ?></span></h4>
-                            </div>
-
-                            <div class="action">
-                                <a href="test_create.php?code=<?php echo $program_code;?>&t_id=<?php echo $teacher_id;?>&c_id=<?php echo $course_id ?>">
-                                    <button type="button" class="clean large success">+ Populate</button>
-                                </a>
-                            </div>
-                        </header>
-                        <main>
-
-                            <table id="topic_table_v2" class="a" style="margin: 0">
-                                <thead>
-                                    <tr>
-                                        <th>Period</th>
-                                        <th>Topics</th>
-                                        <th>Description</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-
-                                <tbody>
-                                    <?php
-                                    
-
-                                        $query = $con->prepare("SELECT 
-
-                                            t1.*
-                                            FROM subject_period_code_topic as t1
-                                            WHERE t1.program_code =:program_code
-                                            AND t1.course_id =:course_id
-                                        ");
-
-                                        $query->bindValue(":program_code", $program_code);
-                                        $query->bindValue(":course_id", $course_id);
-                                        $query->execute();
-
-                                        if($query->rowCount() > 0){
-
-                                            while($row = $query->fetch(PDO::FETCH_ASSOC)){
-
-                                                $subject_period_code_topic_id = $row['subject_period_code_topic_id'];
-                                                // $course_id = $row['course_id'];
-
-                                                // $subject_period_code_topic_template_id = $row['subject_period_code_topic_template_id'];
-                                                $topic = $row['topic'];
-                                                $description = $row['description'];
-                                                $subject_period_name = $row['subject_period_name'];
-
-                                                // $subject_period_code_topic_id = 0;
-
-                                                $status = "";
-                                                $subjectProgramId = 0;
-
-                                                // $subject_period_code_topic_id = NULL;
-    
-                                                echo "
-                                                    <tr>
-                                                        <td>$subject_period_name</td>
-                                                        <td>$topic</td>
-                                                        <td>$description</td>
-                                                        <td>
-                                                            <a href='section_code_create_topics.php?id=$subjectProgramId&ct_id=$subject_period_code_topic_id'>
-                                                                <button class='btn btn-success'>
-                                                                    <i class='fas fa-add'></i>
-                                                                </button>
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                ";
-
-                                            }
-                                        }
-
-                                    ?>
-                                </tbody>
-                            </table>
-
-                             <!-- <div class="action">
-                                <a href="section_code_create_topics.php?id=<?php echo $subjectProgramId;?>">
-                                    <button type="button" class="clean large success">+ Add new</button>
-                                </a>
-                            </div> -->
-                        </main>
-                    </div>
-                </main>
             </div>
 
 
@@ -280,6 +221,144 @@
 ?>
 
 <script>
+
+    // $populateTopic = "populateTopic($course_id, $teacher_id, $current_school_year_id, $subjectProgramId)";
+    
+    
+
+    function removeWholeTopic(course_id,
+        current_school_year_id, subject_code){
+
+        Swal.fire({
+            icon: 'question',
+            title: `Are you sure you want to remove given subject code topics ?`,
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'Cancel'
+            }).then((result) => {
+
+                if (result.isConfirmed) {
+                    $.ajax({
+                    url: "../../ajax/class/removeWholeTopic.php",
+                        type: 'POST',
+                        data: {
+                            course_id,
+                            current_school_year_id,
+                            subject_code
+                        },
+
+                        success: function(response) {
+
+                            response = response.trim();
+
+                            console.log(response);
+
+                            if(response == "success"){
+                                Swal.fire({
+                                icon: 'success',
+                                title: `Topic has been removed successfully.`,
+                                showConfirmButton: false,
+                                timer: 1000, // Adjust the duration of the toast message in milliseconds (e.g., 3000 = 3 seconds)
+                                toast: true,
+                                position: 'top-end',
+                                showClass: {
+                                popup: 'swal2-noanimation',
+                                backdrop: 'swal2-noanimation'
+                                },
+                                hideClass: {
+                                popup: '',
+                                backdrop: ''
+                                }
+                            }).then((result) => {
+
+                                // $('#topic_table').load(
+                                //     location.href + ' #topic_table'
+                                // );
+
+                                location.reload();
+
+                            });}
+
+                        },
+                        error: function(xhr, status, error) {
+                            // handle any errors here
+                        }
+                    });
+                } else {
+                    // User clicked "No," perform alternative action or do nothing
+                }
+        });
+
+            
+    }
+
+    function addWholeTopic(course_id, teacher_id,
+        current_school_year_id, subjectProgramId){
+
+        Swal.fire({
+            icon: 'question',
+            title: `Are you sure you want to populate whole default topics ?`,
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'Cancel'
+            }).then((result) => {
+
+                if (result.isConfirmed) {
+                    $.ajax({
+                    url: "../../ajax/class/addWholeTopic.php",
+                        type: 'POST',
+
+                        data: {
+                            course_id,
+                            teacher_id,
+                            current_school_year_id,
+                            subjectProgramId
+                        },
+
+                        success: function(response) {
+
+                            response = response.trim();
+
+                            console.log(response);
+
+                            if(response == "success"){
+                                Swal.fire({
+                                icon: 'success',
+                                title: `Topic has been populated successfully.`,
+                                showConfirmButton: false,
+                                timer: 1000, // Adjust the duration of the toast message in milliseconds (e.g., 3000 = 3 seconds)
+                                toast: true,
+                                position: 'top-end',
+                                showClass: {
+                                popup: 'swal2-noanimation',
+                                backdrop: 'swal2-noanimation'
+                                },
+                                hideClass: {
+                                popup: '',
+                                backdrop: ''
+                                }
+                            }).then((result) => {
+
+                                // $('#topic_table').load(
+                                //     location.href + ' #topic_table'
+                                // );
+
+                                location.reload();
+                            });}
+
+                        },
+                        error: function(xhr, status, error) {
+                            // handle any errors here
+                        }
+                    });
+                } else {
+                    // User clicked "No," perform alternative action or do nothing
+                }
+        });
+
+            
+    }
+
     function addTopic(subject_period_code_topic_template_id,
         course_id, teacher_id, current_school_year_id, program_code,
         topic, description, subject_period_name, period_order){

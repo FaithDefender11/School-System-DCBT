@@ -24,6 +24,7 @@
 
     $allSection = $section->GetAllCreatedSectionWithinSYSemester($current_school_year_term);
 
+    
     if($_SERVER['REQUEST_METHOD'] === "POST" 
         && isset($_POST['add_section_subject_code_schedule'])
         && isset($_POST['course_id'])

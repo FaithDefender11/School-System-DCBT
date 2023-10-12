@@ -36,6 +36,10 @@
             return isset($this->sqlData['subject_schedule_id']) ? $this->sqlData["subject_schedule_id"] : ""; 
         }
 
+        public function GetSubjectProgramId() {
+            return isset($this->sqlData['subject_program_id']) ? $this->sqlData["subject_program_id"] : NULL; 
+        }
+
         public function GetTimeFrom() {
             return isset($this->sqlData['time_from']) ? $this->sqlData["time_from"] : ""; 
         }

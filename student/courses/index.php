@@ -8,11 +8,15 @@
     include_once('../../includes/classes/SubjectCodeAssignment.php');
     include_once('../../includes/classes/SubjectAssignmentSubmission.php');
     include_once('../../includes/classes/SubjectPeriodCodeTopic.php');
+    include_once('../../includes/classes/StudentSubject.php');
     include_once('../../includes/classes/Announcement.php');
+    include_once('../../includes/classes/SubjectProgram.php');
 
-    if(isset($_GET['c'])){
+    if(isset($_GET['id'])){
 
-        $subject_code = $_GET['c'];
+        // $subject_code = $_GET['c'];
+
+        $student_subject_id = $_GET['id'];
 
         $school_year = new SchoolYear($con);
         $school_year_obj = $school_year->GetActiveSchoolYearAndSemester();
@@ -21,7 +25,18 @@
         $current_school_year_period = $school_year_obj['period'];
         $current_school_year_term = $school_year_obj['term'];
 
+        $studentSubject = new StudentSubject($con, $student_subject_id);
+
+        $subject_code = $studentSubject->GetStudentSubjectCode();
+        $subjectProgramId = $studentSubject->GetStudentSubjectProgramId();
+
+        $subjectProgram = new SubjectProgram($con, $subjectProgramId);
+
+        $subject_title = $subjectProgram->GetTitle();
+
         $subject_code_assignment = new SubjectCodeAssignment($con);
+
+
 
         $subjectPeriodCodeTopic = new SubjectPeriodCodeTopic($con);
         $announcement = new Announcement($con);
@@ -56,20 +71,32 @@
 
         ?>
 
-            <div class="row content col-md-12">
-
-                <nav>
+        <div class="content">
+                <nav style="min-width: 100%; margin-bottom: 7px;
+                    display: flex;flex-direction: row;">
                     <a href="<?php echo $back_url;?>">
                         <i class="bi bi-arrow-return-left fa-1x"></i>
                         <h3>Back</h3>
                     </a>
+
+                    <div style="flex: 1;"  class="text-right">
+
+                        <span>
+                            <h3 style="font-weight: bold;"><?= $subject_title?></h3>
+                        </span>
+                    </div>
+
                 </nav>
+
+            <div class="row content col-md-12">
+                
 
                 <div class="col-md-9">
 
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="text-center text-muted"><?php echo $subject_code;?></h3>
+                            <!-- <h4 class="text-center text-muted"><?php echo $subject_code;?> Modules</h4> -->
+                            <h4 class="text-start text-primary mb-2">Modules</h4>
                         </div>
 
                         <?php 
@@ -152,7 +179,7 @@
                                                                 $handoutList = $subjectCodeAssignment->
                                                                         GetSubjectTopicHandoutList($subject_period_code_topic_id);
 
-                                                                    // print_r($handoutList);
+                                                                    // var_dump($handoutList);
 
                                                                 $mergedList = array_merge($handoutList, $subjectTopicAssignmentList);
                                                                 
@@ -165,21 +192,21 @@
                                                                         
                                                                         $assignment_name = isset($row_ass['assignment_name']) ? $row_ass['assignment_name'] : "";
                                                                         $subject_code_assignment_id = isset($row_ass['subject_code_assignment_id']) ? $row_ass['subject_code_assignment_id'] : "";
+                                                                        
+                                                                        $subject_code_handout_id = isset($row_ass['subject_code_handout_id']) ? $row_ass['subject_code_handout_id'] : "";
 
+                                                                        // echo $subject_code_handout_id;
+                                                                        // echo "<br>";
+                                                                        
                                                                         $submitted_status = "-";
 
                                                                         $due_date = isset($row_ass['due_date']) ? $row_ass['due_date'] : "";
                                                                         $due_date_output = "";
 
-                                                                        
 
                                                                         if($due_date != ""){
                                                                             $due_date_output = date("M d", strtotime($due_date));
                                                                         }
-
-                                                                        
-
-                                                                       
 
                                                                         // $due_date = isset($row_ass['due_date']) ? $row_ass['due_date'] : "";
 
@@ -187,7 +214,6 @@
 
                                                                         $section_output = "";
 
-                                                                        $task_view_url = "task_submission.php?sc_id=$subject_code_assignment_id";
                                                                         $handout_name = isset($row_ass['handout_name']) ? $row_ass['handout_name'] : "";
                                                                         $subject_code_handout_id = isset($row_ass['subject_code_handout_id']) ? $row_ass['subject_code_handout_id'] : NULL;
 
@@ -205,19 +231,23 @@
                                                                             
                                                                         // var_dump($doesAssignmentEnded);
 
+                                                                        $task_view_url = "task_submission.php?sc_id=$subject_code_assignment_id&ss_id=$student_subject_id";
+                                                                        
                                                                         if($assignment_name !== ""){
+
                                                                             $section_output = "
                                                                                 <a style='color: blue;' href='$task_view_url'>
                                                                                     $assignment_name
                                                                                 </a>
                                                                             ";
-                                                                        }else{
+
+                                                                        }
+                                                                        else{
                                                                             $section_output = "
-                                                                                <a style='color: inherit;' href='topic_module_view.php?id=$subject_code_handout_id'>
+                                                                                <a style='color: inherit;' href='topic_module_view.php?id=$subject_code_handout_id&ss_id=$student_subject_id'>
                                                                                     <i class='fas fa-file'></i>&nbsp $handout_name
                                                                                 </a>
                                                                             ";
-
                                                                         }
 
                                                                         
@@ -263,10 +293,14 @@
                                                                         # TODO If not submitted and already deadline
                                                                         # Should be allowed to pass.
                                                                         # Student No Choose file click prompt error (it should have files in order to prepare answer)
+                                                                        
+                                                                        # The deadline flag should appear only for assignment
+                                                                        # Not for handouts given.
                                                                         if(
                                                                             
                                                                             $now >= $due_date 
                                                                             && $statusSubmission == NULL
+                                                                            && $subject_code_handout_id == ""
                                                                         ){
                                                                             $submitted_status = "
                                                                                 <i style='color: orange;' class='fas fa-flag'></i>
@@ -417,8 +451,16 @@
                         </div>
                     </div>
 
+                    <hr>
+                    <div class='card'>
+                        <div class='card-header'>
+                            <p style="margin-bottom: 7px;">Upcoming</p>
+                        </div>
+                    </div>
                 </div>
             </div>
+
+        </div>
 
         <?php
     }

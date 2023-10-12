@@ -846,8 +846,8 @@ class SubjectProgram{
         }
 
         return [];
-
     }
+    
     public function CheckSubjectProgramIsWithinSemesterOffered(
         $subject_program_id, $period, $student_enrollment_course_level){
      

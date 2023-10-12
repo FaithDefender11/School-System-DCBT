@@ -8,7 +8,8 @@
     include_once('../../includes/classes/SubjectProgram.php');
     include_once('../../includes/classes/Schedule.php');
     include_once('../../includes/classes/Room.php');
-
+    include_once('../../includes/classes/SubjectPeriodCodeTopicTemplate.php');
+    include_once('../../includes/classes/SubjectPeriodCodeTopic.php');
 
     $school_year = new SchoolYear($con, null);
     $schedule = new Schedule($con);
@@ -144,12 +145,13 @@
                 $schedule_day, $time_from, $time_to, $raw_time_from, $raw_time_to,
                 $current_school_year_id,
                 $course_id, $teacher_id, $section_subject_code,
-                $subject_program_id, $room_id);
+                $subject_program_id, $room_id, $get_subject_code, $current_school_year_id);
 
             if($wasSuccessUpdate){
                 Alert::success("Schedule Update executed.", "index.php");
                 exit();
             }
+            
         }
 
         ?>
@@ -313,6 +315,7 @@
                                 </div>
 
                                 <div class="mb-3">
+
                                     <label for="schedule_day">* Schedule Day</label>
                                     <select required name="schedule_day" id="schedule_day" class="form-control">
                                         <option value="">-- Select Day --</option>
@@ -322,6 +325,7 @@
                                         <option value="TH" <?php echo $schedule_day === "TH" ? "selected" : "" ?>>Thursday</option>
                                         <option value="F" <?php echo $schedule_day === "F" ? "selected" : "" ?>>Friday</option>
                                     </select>
+
                                 </div>
 
                                 <div class="mb-3">

@@ -6,10 +6,14 @@
     include_once('../../includes/classes/SubjectCodeHandoutStudent.php');
     include_once('../../includes/classes/SubjectPeriodCodeTopic.php');
 
-    if(isset($_GET['id'])
+    if(
+        
+        isset($_GET['id']) &&
+        isset($_GET['ss_id'])
         ){
 
         $subject_code_handout_id = $_GET['id'];
+        $student_subject_id = $_GET['ss_id'];
 
         $subjectCodeHandout = new SubjectCodeHandout($con, $subject_code_handout_id);
         $subjectCodeHandoutStudent = new SubjectCodeHandoutStudent($con);
@@ -20,7 +24,6 @@
         $handout_template_id = $subjectCodeHandout->GetSubjectCodeHandoutTemplateId();
 
         $subjectPeriodCodeTopic = new SubjectPeriodCodeTopic($con, $subject_period_code_topic_id);
-
 
         $school_year = new SchoolYear($con);
         $school_year_obj = $school_year->GetActiveSchoolYearAndSemester();
@@ -37,7 +40,9 @@
 
         // $back_url = "";
 
-        $back_url = "index.php?c_id=$topic_course_id&c=$topic_subject_code";
+        // $back_url = "index.php?c_id=$topic_course_id&c=$topic_subject_code";
+
+        $back_url = "index.php?id=$student_subject_id";
      
         # Check If student had goes in to this page.
         $pushToHandoutView = $subjectCodeHandoutStudent->MarkStudentViewedHandout($subject_code_handout_id,

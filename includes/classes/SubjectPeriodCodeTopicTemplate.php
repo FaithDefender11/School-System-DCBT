@@ -94,6 +94,28 @@ class SubjectPeriodCodeTopicTemplate{
             return false;
         }
     }
+
+    public function GetTopicTemplateDefaultTopics(
+        $rawCode){
+
+        $query = $this->con->prepare("SELECT * FROM 
+        
+            subject_period_code_topic_template
+            WHERE program_code=:program_code
+
+        ");
+        
+        $query->bindValue(":program_code", $rawCode);
+        $query->execute();
+
+        if($query->rowCount() > 0){
+
+            return $query->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        return [];
+        
+    }
     
 
 }

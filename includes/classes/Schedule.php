@@ -318,7 +318,12 @@
 
         $school_year_id, $course_id,
         $teacher_id, $subject_code, 
-        $subject_program_id, $room_id) {
+        $subject_program_id, $room_id,
+        
+        $rawCode = null, $current_school_year_id = null) {
+
+        // var_dump($teacher_id);
+        // return;
 
         $time_from = trim($time_from);
         $time_to = trim($time_to);
@@ -410,12 +415,13 @@
             }   
         }
 
+        
         if($teacher_id !== NULL){
 
             $check_teacher_id_conflict = $this->CheckTeacherScheduleConflicted(
                 $time_from, $time_to, $schedule_day, $teacher_id, $subject_schedule_id);
 
-            if($check_teacher_id_conflict !== NULL){
+            if($check_teacher_id_conflict != NULL){
 
                 // var_dump($check_teacher_id_conflict);
                 // return;
@@ -457,6 +463,169 @@
                 // exit();  
 
             }
+
+            # If teacher_id is not NULL (there`s a teacher)
+            # Check if the teacher is the same teacher before editing this route.
+
+            $subject_schedule = new Schedule($this->con, $subject_schedule_id);
+            $subject_schedule_teacher_id = $subject_schedule->GetScheduleTeacherId();
+
+
+            // echo "subject_schedule_teacher_id: $subject_schedule_teacher_id";
+            // echo "<br>";
+
+            // echo "selected_teacher_id: $teacher_id";
+            // echo "<br>";
+
+            // return;
+            
+            $doesTeacherTheSame = $subject_schedule_teacher_id == $teacher_id;
+
+
+            if($check_teacher_id_conflict == NULL 
+                && $subject_schedule_teacher_id != NULL
+                && $doesTeacherTheSame == true){
+
+                // echo "same teacher";
+                // return;
+
+
+            }
+
+            # Chosen different teacher that subject code topic would be place
+            # to selected teacher
+
+            if($check_teacher_id_conflict == NULL 
+                && $subject_schedule_teacher_id != NULL
+                && $doesTeacherTheSame == false){
+
+                # Insert the default topic for subject assigned teacher
+                # Subject Code OCC -> Prelim, Midterm etc Topics for LMS
+
+                $subjectPeriodCodeTopicTemplate = new SubjectPeriodCodeTopicTemplate($this->con);
+                
+                $subjectPeriodCodeTopic = new SubjectPeriodCodeTopic($this->con);
+
+                // echo "changed teacher";
+                // return;
+
+                $getCurrentSubjectCodeTopics = $subjectPeriodCodeTopic
+                    ->GetSubjectCodeDefaultTopics($subject_code, $course_id, $current_school_year_id);
+
+
+                // $subject_schedule = new Schedule($this->con, $subject_schedule_id);
+
+                // $subjectProgramId = $subject_schedule->GetSubjectProgramId();
+
+                if(count($getCurrentSubjectCodeTopics) > 0){
+
+                    foreach ($getCurrentSubjectCodeTopics as $key => $row) {
+
+                        $subject_period_code_topic_id = $row['subject_period_code_topic_id'];
+                     
+                        # UPDATE 
+
+                        $wasSuccess = $subjectPeriodCodeTopic->UpdateAssignTeacherOnSubjectCodeTopic(
+                            $course_id, $teacher_id,
+                            $current_school_year_id, $subject_code);
+                        
+                        if($wasSuccess){
+
+                            $doesEditedFinish = true;
+
+                        }
+                    }
+                }
+
+            }
+
+            # FROM TBA to chosen teacher_id
+
+            if($check_teacher_id_conflict == NULL 
+                && $subject_schedule_teacher_id == NULL){
+
+                # Insert the default topic for subject assigned teacher
+                # Subject Code OCC -> Prelim, Midterm etc Topics for LMS
+
+                $subjectPeriodCodeTopicTemplate = new SubjectPeriodCodeTopicTemplate($this->con);
+                
+                $subjectPeriodCodeTopic = new SubjectPeriodCodeTopic($this->con);
+
+                $getAllDefaultTopicTemplate = $subjectPeriodCodeTopicTemplate->GetTopicTemplateDefaultTopics($rawCode);
+
+                $subject_schedule = new Schedule($this->con, $subject_schedule_id);
+
+                $subjectProgramId = $subject_schedule->GetSubjectProgramId();
+
+                if(count($getAllDefaultTopicTemplate) > 0){
+
+                    foreach ($getAllDefaultTopicTemplate as $key => $row) {
+
+                        $topic = $row['topic'];
+                        $description = $row['description'];
+                        $subject_period_name = $row['subject_period_name'];
+                        $program_code = $row['program_code'];
+
+                        # Populate default topic to the chosen teacher
+                        $wasSuccess = $subjectPeriodCodeTopic->AddTopic(
+                            $course_id, $teacher_id, $current_school_year_id,
+                            $topic, $description,
+                            $subject_period_name, $subject_code,
+                            $program_code, $subjectProgramId);
+                        
+                        if($wasSuccess){
+
+                            $doesFinish = true;
+
+                        }
+                    }
+                }
+
+            }
+            
+
+        }
+
+        if($teacher_id === NULL){
+
+            # Check current subject_schedule_id assigned teacher
+
+            $subject_schedule = new Schedule($this->con, $subject_schedule_id);
+            $subject_schedule_teacher_id = $subject_schedule->GetScheduleTeacherId();
+            $subject_code_db = $subject_schedule->GetSubjectCode();
+
+
+            if($subject_schedule_teacher_id != NULL){
+
+                $subjectPeriodCodeTopic = new SubjectPeriodCodeTopic($this->con);
+
+                // echo "subject_schedule_teacher_id: $subject_schedule_teacher_id, rawCode: $rawCode";
+
+                # Check if it has given default subject topics using Raw Code
+
+                $checkTeacherGivenDefaultTopicsBySubjectCode = $subjectPeriodCodeTopic
+                    ->CheckTeacherHasGivenSubjectCodeDefaultTopics(
+                        $subject_code_db, $subject_schedule_teacher_id, $current_school_year_id);
+                
+                if(count($checkTeacherGivenDefaultTopicsBySubjectCode) > 0){
+                    // echo "check success";
+
+                    foreach ($checkTeacherGivenDefaultTopicsBySubjectCode as $key => $value) {
+
+                        $subject_period_code_topic_id = $value['subject_period_code_topic_id'];
+                        
+                          $defaultTopicRemoval = $subjectPeriodCodeTopic
+                            ->RemovalOfDefaultSubjectCodeTopics(
+                                $subject_period_code_topic_id);
+                            
+                        # code...
+                    }
+
+                }
+            }
+
+            
+            // return;
         }
 
             // Prepare the UPDATE query
