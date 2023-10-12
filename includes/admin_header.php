@@ -47,11 +47,14 @@
             session_destroy();
             exit();
         }
+
         # If Online,
         header("Location: /enrollment_login.php");
         session_destroy();
         exit();
+
     }
+    
     $page = Helper::GetUrlPath();
     $document_title = Helper::DocumentTitlePage($page);
 
