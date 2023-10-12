@@ -16,7 +16,7 @@
 
         if ($_SERVER['SERVER_NAME'] === 'localhost') {
             // Running on localhost
-            $base_url = 'http://localhost/school-system-dcbt/admin_lms';
+            $base_url = 'http://localhost/school-system-dcbt/admin_lms/';
 
         } else {
             // Running on web hosting
