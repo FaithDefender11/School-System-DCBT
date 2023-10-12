@@ -31,11 +31,11 @@
             $logout_url = "$new_url/logout.php";
         }
 
-        $dashboard_url = $base_url .  "/dashboard/index.php";
-        $subject_url = $base_url .  "/subject/shs_index.php";
-        $account_url = $base_url .  "/account/activated.php";
+        $dashboard_url = $base_url .  "dashboard/index.php";
+        $subject_url = $base_url .  "subject/shs_index.php";
+        $account_url = $base_url .  "account/activated.php";
 
-        $section_url = $base_url .  "/section/shs_index.php";
+        $section_url = $base_url .  "section/shs_index.php";
         
  
         // $class = "navigationItem ";
