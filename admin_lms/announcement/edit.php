@@ -84,7 +84,7 @@
                 $student_selected
             );
             if($wasSuccess){
-                Alert::successAutoRedirect("Announcement has been modified.", "");
+                Alert::successAutoRedirect("Announcement has been modified.", $back_url);
                 exit();
             }
 
