@@ -366,7 +366,7 @@
                                         // echo $subject_assignment_submission_id;
                                         
                                         ?>
-                                            <button onclick="location.href= 'submission_view.php?sc_id=<?php echo $subject_code_assignment_id; ?>&s_id=<?php echo $get_subject_assignment_submission_id; ?>'" 
+                                            <button onclick="location.href= 'submission_view.php?sc_id=<?php echo $subject_code_assignment_id; ?>&s_id=<?php echo $get_subject_assignment_submission_id; ?>&ss_id=<?= $student_subject_id;?>'" 
                                                 class="btn btn-sm btn-outline-primary">Submissions</button>
                                         <?php
                                     }

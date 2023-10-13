@@ -21,10 +21,16 @@
     <?php
 
     if(isset($_GET['sc_id'])
-        && isset($_GET['s_id'])){
+        && isset($_GET['s_id'])
+        && isset($_GET['ss_id'])
+        ){
 
         // $subject_code_assignment_id = $_GET['id'];
         $subject_code_assignment_id = $_GET['sc_id'];
+
+        $student_subject_id = $_GET['ss_id'];
+
+        
 
         $subject_assignment_submission_id = $_GET['s_id'];
 
@@ -153,7 +159,7 @@
                                 <h4 class='text-left text-muted mb-3'><?php echo $topic_name; ?> : <span style="font-size: 19px;"><?php echo $assignment_name ?></span></h4>
                             
                                 <button  type="button"
-                                    onclick="window.location.href = 'task_submission.php?sc_id=<?php echo $subject_code_assignment_id; ?>' "
+                                    onclick="window.location.href = 'task_submission.php?sc_id=<?php echo $subject_code_assignment_id; ?>&ss_id=<?php echo $student_subject_id ?>' "
                                     class="btn btn-sm btn-outline-primary" >Instructions</button>
                             
                                 <button  style="pointer-events: none;"
