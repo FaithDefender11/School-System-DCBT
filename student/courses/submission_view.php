@@ -20,10 +20,11 @@
         </head>
     <?php
 
-    if(isset($_GET['id'])
+    if(isset($_GET['sc_id'])
         && isset($_GET['s_id'])){
 
-        $subject_code_assignment_id = $_GET['id'];
+        // $subject_code_assignment_id = $_GET['id'];
+        $subject_code_assignment_id = $_GET['sc_id'];
 
         $subject_assignment_submission_id = $_GET['s_id'];
 
@@ -309,11 +310,13 @@
 
                 <main>
                     <div class="floating" id="shs-sy">
-                        <button style="width: 135px;" onclick="window.location.href = 'task_submission.php?sc_id=<?php echo $subject_code_assignment_id; ?>' "
-                                    class="btn btn-sm btn-outline-primary" >Instructions</button>
+                        <button style="width: 135px;" onclick="window.location.href = 'task_submission.php?sc_id=<?php echo $subject_code_assignment_id; ?>&ss_id=' "
+                            class="btn btn-sm btn-outline-primary" >
+                            Instructions
+                        </button>
 
                         <button style="width: 135px;"
-                            class="btn btn-sm btn-primary" >View Submission</button>
+                            class="btn btn-sm btn-primary" >Submission</button>
                         
                         <header>
                             <div class="title">
