@@ -10,13 +10,13 @@
     include_once('../../includes/classes/Notification.php');
 
 
-
     if(isset($_GET['id'])){
 
         $announcement_id = $_GET['id'];
 
 
-        if(isset($_GET['n_id'])
+        if(
+            isset($_GET['n_id'])
             && isset($_GET['notification'])
             && $_GET['notification'] == "true")
             {
@@ -26,8 +26,7 @@
 
             $markAsNotified = $notification->StudentNotificationMarkAsViewed($notification_id, $studentLoggedInId);
             // echo "marked";
-            
-        }
+          }
 
         $announcement = new Announcement($con, $announcement_id);
 
@@ -37,10 +36,10 @@
         $creation = $announcement->GetDateCreation();
         $creation = date("F d, Y h:i a", strtotime($creation));
 
-        # Only in announcement not notification viewed indication
+
         $markAsSViewed = $announcement->StudentAnnouncementAsViewed($announcement_id, $studentLoggedInId);
 
-        $back_url = "index.php?c=$subject_code";
+        $back_url = "index.php";
         ?>
 
         <div class="content">

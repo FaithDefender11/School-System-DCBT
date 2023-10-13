@@ -130,11 +130,12 @@
                                 $assignment_notification_url = "";
 
 
+                                // var_dump($sender_role);
+                                // echo "<br>";
 
                                 if($sender_role === "admin" && 
                                     $announcement_id != NULL){
 
-                                    
                                     $announcement = new Announcement($con, $announcement_id);
                                     $users_id = $announcement->GetUserId();
 
@@ -150,10 +151,10 @@
 
                                     $title = "Admin add announcement: <span style='font-weight: bold;'>$announcementTitle</span>";
 
-                                    $announcement_url = "../dashboard/announcement.php?id=$announcement_id&n_id=$notification_id&notification=true";
+                                    $announcement_url = "admin_announcement.php?id=$announcement_id&n_id=$notification_id&notification=true";
                                     
                                     $button_url = "
-                                        <button onclick='window.location.href=\"$announcement_url\"' class='btn btn-primary btn-sm'>
+                                        <button title='View notification' onclick='window.location.href=\"$announcement_url\"' class='btn btn-primary btn-sm'>
                                             <i class='fas fa-eye'></i>
                                         </button>
                                     ";
@@ -190,7 +191,8 @@
                                         </button>
                                     ";
                                 }
-                                else if($announcement_id != NULL 
+
+                                if($announcement_id != NULL 
                                     && $subject_code != NULL){
 
                                     $announcement = new Announcement($con, $announcement_id);

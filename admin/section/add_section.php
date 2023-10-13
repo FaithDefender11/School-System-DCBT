@@ -225,7 +225,7 @@
                                 <?php echo $trackDropdown;?>
                             </span>
                             <span>
-                                <label for="program_section">Program</label>
+                                <label for="program_section">Section Name</label>
                                 <div>
                                     <input type="text" name="program_section" value="<?php echo $program->GetProgramSectionName();?><?php echo $course_level;?>" placeholder="e.g: STEM11-A, ABM11-A">
                                 </div>

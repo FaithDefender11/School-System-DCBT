@@ -2034,6 +2034,35 @@
         return $sql->rowCount() > 0;
     }
 
+    public function GetStudentSubjectIdBySubjectCode(
+        $student_id, $school_year_id, $subject_code){
+
+
+        $sql = $this->con->prepare("SELECT 
+            t1.student_subject_id
+            
+            FROM student_subject as t1
+
+            WHERE t1.student_id = :student_id
+            AND t1.subject_code = :subject_code
+            AND t1.school_year_id = :school_year_id
+            AND t1.is_final = :is_final
+        ");
+                
+        $sql->bindParam(":student_id", $student_id);
+        $sql->bindParam(":subject_code", $subject_code);
+        $sql->bindParam(":school_year_id", $school_year_id);
+        $sql->bindValue(":is_final", 1);
+
+        $sql->execute();
+
+        if($sql->rowCount() > 0){
+            
+            return $sql->fetchColumn();
+        }
+
+        return 0;
+    }
 
     public function AddSubjectProgramIntoStudentSubjectList(
 

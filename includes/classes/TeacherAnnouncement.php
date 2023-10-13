@@ -94,7 +94,7 @@
 
             $get = $this->con->prepare("SELECT t1.* 
             
-                FROM announcement_student as t1
+                FROM announcement_user as t1
 
                 WHERE t1.announcement_id=:announcement_id
                 AND t1.student_id=:student_id
@@ -114,7 +114,7 @@
             if($this->CheckStudentViewedGivenAnnouncement($announcement_id,
                 $student_id) == false){
 
-                $add = $this->con->prepare("INSERT INTO announcement_student
+                $add = $this->con->prepare("INSERT INTO announcement_user
                     (student_id, announcement_id, date_viewed)
                     VALUES(:student_id, :announcement_id, :date_viewed)");
                 
@@ -154,10 +154,10 @@
 
             $get = $this->con->prepare("SELECT t1.*
             
-                FROM announcement_student as t1
+                FROM announcement_user as t1
 
                 WHERE t1.announcement_id=:announcement_id
-                ORDER BY announcement_student_id DESC
+                ORDER BY announcement_user_id DESC
                 LIMIT 1
                 ");
 

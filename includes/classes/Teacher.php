@@ -745,5 +745,25 @@
 
         }
 
+
+        public function GetAllActiveTeacher(){
+
+            $active = "Active";
+
+            $query_teacher = $this->con->prepare("SELECT 
+
+                *
+                FROM teacher
+                WHERE teacher_status = :teacher_status
+            ");
+        
+            $query_teacher->bindParam(":teacher_status", $active);
+            $query_teacher->execute();
+
+            if($query_teacher->rowCount() > 0){
+                return $query_teacher->fetchAll(PDO::FETCH_ASSOC);    
+            }
+            return [];
+        }
     }
 ?>

@@ -309,7 +309,7 @@
                                     foreach ($assignmentCounts as $assignmentTitle => $data) {
                                         $count = $data['count'];
                                         $topic_subject_code = $data['topic_subject_code'];
-                                        echo "<a style='color:inherit' href='assignment_due.php?c=$topic_subject_code' class='m-0 text-right'>Assignment Title: $assignmentTitle ($count)</a>";
+                                        echo "<a style='color:inherit' href='assignment_due.php?c=$topic_subject_code' class='m-0 text-right'>$assignmentTitle - ($count)</a>";
                                         echo "<br>";
                                     }
                                     ?>

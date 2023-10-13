@@ -36,6 +36,7 @@
         $account_url = $base_url .  "account/activated.php";
 
         $section_url = $base_url .  "section/shs_index.php";
+        $announcement_url = $base_url .  "announcement/index.php";
         
  
         // $class = "navigationItem ";
@@ -48,6 +49,9 @@
 
         $sideBarNavigationItem .= Helper::createNavByIcon("Section", 
             "bi bi-calendar icon ", $section_url, Constants::$navigationClass . Helper::GetActiveClass($page, "section"));
+
+        $sideBarNavigationItem .= Helper::createNavByIcon("Announcement", 
+            "bi bi-clipboard-data icon", $announcement_url, Constants::$navigationClass . Helper::GetActiveClass($page, "announcement"));
 
 
         $sideBarNavigationItem .= Helper::createNavByIcon("Account", 

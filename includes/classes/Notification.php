@@ -76,35 +76,39 @@ class Notification{
     public function GetStudentSubmittedAssignmentNotification(
         $teachingSubjects, $school_year_id) {
 
-        $inPlaceholders = implode(', ', array_map(function($value, $index) {
-            return ":subject_code$index";
-        }, $teachingSubjects, array_keys($teachingSubjects)));
+        if(count($teachingSubjects) > 0){
 
-        $query = $this->con->prepare("SELECT * 
-            FROM notification 
-            WHERE subject_code IN ($inPlaceholders)
-            AND school_year_id = :school_year_id
-            AND sender_role = 'student'
-            AND subject_assignment_submission_id IS NOT NULL
+            $inPlaceholders = implode(', ', array_map(function($value, $index) {
+                return ":subject_code$index";
+            }, $teachingSubjects, array_keys($teachingSubjects)));
 
-        ");
+            $query = $this->con->prepare("SELECT * 
+                FROM notification 
+                WHERE subject_code IN ($inPlaceholders)
+                AND school_year_id = :school_year_id
+                AND sender_role = 'student'
+                AND subject_assignment_submission_id IS NOT NULL
 
-        // Bind values to named placeholders in the IN clause
-        foreach ($teachingSubjects as $index => $subjectCode) {
-            $placeholderName = ":subject_code$index";
-            $query->bindValue($placeholderName, $subjectCode);
+            ");
+
+            // Bind values to named placeholders in the IN clause
+            foreach ($teachingSubjects as $index => $subjectCode) {
+                $placeholderName = ":subject_code$index";
+                $query->bindValue($placeholderName, $subjectCode);
+            }
+
+            // Bind the school_year_id
+            $query->bindValue(':school_year_id', $school_year_id, PDO::PARAM_INT); // Assuming school_year_id is an integer
+
+            $query->execute();
+
+            if($query->rowCount() > 0){
+                $result = $query->fetchAll(PDO::FETCH_ASSOC);
+                // var_dump($result);
+                return $result;
+            }
         }
 
-        // Bind the school_year_id
-        $query->bindValue(':school_year_id', $school_year_id, PDO::PARAM_INT); // Assuming school_year_id is an integer
-
-        $query->execute();
-
-        if($query->rowCount() > 0){
-            $result = $query->fetchAll(PDO::FETCH_ASSOC);
-            // var_dump($result);
-            return $result;
-        }
 
         return [];
     }

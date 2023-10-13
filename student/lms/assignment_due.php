@@ -5,15 +5,19 @@
     include_once('../../includes/classes/SubjectProgram.php');
     include_once('../../includes/classes/SubjectCodeAssignment.php');
     include_once('../../includes/classes/SubjectPeriodCodeTopic.php');
+    include_once('../../includes/classes/StudentSubject.php');
 
-    if(isset($_GET['c'])){
+
+    if(
+        isset($_GET['c'])
+        ){
 
         $subject_code = $_GET['c'];
 
         $school_year = new SchoolYear($con);
         $subjectProgram = new SubjectProgram($con);
 
-
+        $studentSubject = new StudentSubject($con);
 
         $school_year_obj = $school_year->GetActiveSchoolYearAndSemester();
 
@@ -21,7 +25,11 @@
         $current_school_year_period = $school_year->getSchoolYearValue($school_year_obj, 'period');
         $current_school_year_id = $school_year->getSchoolYearValue($school_year_obj, 'school_year_id');
 
-        // echo $subject_code;
+        $student_subject_id = $studentSubject->GetStudentSubjectIdBySubjectCode($studentLoggedInId,
+            $current_school_year_id, $subject_code);
+
+        // echo $student_subject_id;
+
 
         $subject_code_assignment = new SubjectCodeAssignment($con);
         $subjectPeriodCodeTopic = new SubjectPeriodCodeTopic($con);
@@ -89,7 +97,7 @@
                                                 $assignment_due = date("M d, g:i a", strtotime($assignment_due));
                                                 $max_score = $subject_code_assignment->GetMaxScore();
 
-                                                $assignment_url = "../courses/task_submission.php?sc_id=$subjectCodeAssignmentId";
+                                                $assignment_url = "../courses/task_submission.php?sc_id=$subjectCodeAssignmentId&ss_id=$student_subject_id";
                                                 echo "
                                                     <tr class='text-center'>
                                                         <td >

@@ -12,7 +12,9 @@
     include_once('../../includes/classes/Announcement.php');
     include_once('../../includes/classes/SubjectProgram.php');
 
-    if(isset($_GET['id'])){
+    if(
+        isset($_GET['id'])
+        ){
 
         // $subject_code = $_GET['c'];
 
@@ -407,7 +409,7 @@
                                 <h5 style="margin-bottom: 7px;">Assignments</h5>
                                 <p>
                                     <?php
-                                        echo "<a style='color: blue' href='task_submission.php?sc_id=$get_only_one_assignmentTodoId'>".count($assignmentTodoIds)."  assignments due</a>";
+                                        echo "<a style='color: blue' href='task_submission.php?sc_id=$get_only_one_assignmentTodoId&ss_id=$student_subject_id'>".count($assignmentTodoIds)."  assignments due</a>";
                                     ?>
                                 </p>
 
