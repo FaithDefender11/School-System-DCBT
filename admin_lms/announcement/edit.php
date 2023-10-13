@@ -35,8 +35,7 @@
         $for_students = $announcement->GetForStudents();
         $teachers_id = $announcement->GetTeachersIds();
 
-        var_dump($teachers_id);
-
+        // var_dump($teachers_id);
 
         if(isset($_SERVER['REQUEST_METHOD']) == "POST"
             && (isset($_POST['add_announcement_' . $adminUserId]))

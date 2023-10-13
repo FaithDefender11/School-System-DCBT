@@ -392,6 +392,7 @@
                                     $notif_exec = new Notification($con, $notification_id);
 
                                     $sender_role = $notification['sender_role'];
+                                    
                                     $subject_code_assignment_id = $notification['subject_code_assignment_id'];
                                     $assigment = new SubjectCodeAssignment($con, $subject_code_assignment_id);
 

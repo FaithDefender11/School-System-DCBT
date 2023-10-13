@@ -174,7 +174,7 @@
                                         // var_dump($assigment_name);
 
                                         $type = "Announcement";
-                                        $title = "<span style='font-weight: bold;'>$admin_content</span>";
+                                        $title = "<span style='font-weight: bold;'>$admin_title</span>";
 
                                         $announcement_url = "announcement_view.php?id=$admin_announcement_id&notification=true";
 
