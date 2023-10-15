@@ -683,20 +683,6 @@
   display: none;
 }
 
-@media only screen and (max-width: 500px) {
-  .bars {
-    flex-direction: column;
-  }
-
-  .floating>main>.b>thead {
-    display: none;
-  }
-
-  .floating>main>.b>tbody>tr>.b-1 {
-    display: none;
-  }
-}
-
 /* ADDED DROPDOWN */
 
 /* ADDED CONTENT TO ACTION */
@@ -715,4 +701,32 @@
 .floating.noBorder>main>form>.action>.btn.btn-primary {
   display: flex;
   margin-left: 10px;
+}
+
+/*RESPONSIVE*/
+@media only screen and (max-width: 500px) {
+  .bars {
+    flex-direction: column;
+  }
+
+  .floating>main>.b>thead {
+    display: none;
+  }
+
+  .floating>main>.b>tbody>tr>.b-1 {
+    display: none;
+  }
+}
+
+@media only screen and (max-width: 540px) {
+  .content-header>.cards {
+    display: flex;
+    justify-content: space-around;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .content-header>.cards>.card {
+    margin-top: 25px;
+  }
 }
