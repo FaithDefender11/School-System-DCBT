@@ -90,3 +90,29 @@ td>button.icon i {
   font-size: 20px;
   font-weight: bold;
 }
+
+/*MODIFIED CSS*/
+table.a>tbody>tr>td>a>.bi-x-lg,
+table.a>tbody>tr>td>a>.bi-check-lg {
+  display: none;
+}
+
+@media only screen and (max-width: 768px) {
+  .floating>main {
+    overflow-x: auto;
+  }
+
+  .floating>main>table.a>thead>tr>.type,
+  .floating>main>table.a>thead>tr>.sent,
+  .floating>main>table.a>thead>tr>.read,
+  .floating>main>table.a>tbody>tr>.type,
+  .floating>main>table.a>tbody>tr>.sent,
+  .floating>main>table.a>tbody>tr>.read {
+    display: none;
+  }
+
+  table.a>tbody>tr>td>a>.bi-x-lg,
+  table.a>tbody>tr>td>a>.bi-check-lg {
+    display: inline-flex;
+  }
+}

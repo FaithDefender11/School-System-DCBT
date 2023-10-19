@@ -66,6 +66,14 @@
           </div>
           <div class="navigationItem">
             <a href="#">
+              <span class="badge">5</span>
+              <i class="bi bi-megaphone-fill">
+                <span>Announcement</span>
+              </i>
+            </a>
+          </div>
+          <div class="navigationItem">
+            <a href="#">
               <i class="bi bi-person-circle">
                 <span>User</span>
               </i>
@@ -85,6 +93,7 @@
         <button class="sidebar">
           <i class="bi bi-list"></i>
         </button>
+
         <div class="notif">
           <button
             class="icon"
@@ -157,38 +166,66 @@
         </div>
       </div>
 
-      <div class="content-header">
-        <header>
-          <div class="title">
-            <h1>UCSP Topic 1 <em>Handout</em></h1>
-          </div>
-        </header>
-      </div>
-
       <nav>
-        <a href="subject_TOC_template.html"
+        <a href="Dashboard_enrolled.html"
           ><i class="bi bi-arrow-return-left"></i>Back</a
         >
       </nav>
 
       <main>
-        <div class="floating noBorder">
+        <div class="floating">
           <header>
             <div class="title">
-              <h3>*Handout Name</h3>
+              <h3>Notifications</h3>
+            </div>
+            <div class="action">
+              <button class="clean">
+                <span>Mark as read</span>
+              </button>
             </div>
           </header>
           <main>
-            <form action="">
-              <div class="row">
-                <span>
-                  <label for="file">File</label>
-                  <div>
-                    <a href="#" title="View File">File</a>
-                  </div>
-                </span>
-              </div>
-            </form>
+            <table class="a">
+              <thead>
+                <tr>
+                  <th>From</th>
+                  <th class="type">Type</th>
+                  <th>Subject</th>
+                  <th class="sent">Sent</th>
+                  <th class="read">Read?</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Albert Einstein</td>
+                  <td class="type">Assignment</td>
+                  <td>
+                    <a href="#">
+                      <i class="bi bi-x-lg" style="color: red"></i>
+                      Due soon: assignment '03 Laboratory Exercise 1 - ARG' in
+                      class 'Information Assurance and Security (Data Privacy) -
+                      SY2324-1T'
+                    </a>
+                  </td>
+                  <td class="sent">12:23 am</td>
+                  <td class="read"><i class="bi bi-x"></i></td>
+                </tr>
+                <tr>
+                  <td>Albert Einstein</td>
+                  <td class="type">Assignment</td>
+                  <td>
+                    <a href="#">
+                      <i class="bi bi-check-lg" style="color: var(--clean)"></i>
+                      Due soon: assignment '03 Laboratory Exercise 1 - ARG' in
+                      class 'Information Assurance and Security (Data Privacy) -
+                      SY2324-1T'
+                    </a>
+                  </td>
+                  <td class="sent">12:23 am</td>
+                  <td class="read"><i class="bi bi-x"></i></td>
+                </tr>
+              </tbody>
+            </table>
           </main>
         </div>
       </main>

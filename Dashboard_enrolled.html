@@ -8,11 +8,15 @@
     <script src="assets/js/elms-sidebar.js" defer></script>
     <script src="assets/js/elms-dropdown.js" defer></script>
     <script src="assets/js/table-dropdown.js" defer></script>
+    <script src="assets/js/calendar.js" defer></script>
     <!--Link styleshets-->
+    <link rel="stylesheet" href="assets/css/sidebar.css" />
     <link rel="stylesheet" href="assets/css/fonts.css" />
     <link rel="stylesheet" href="assets/css/content.css" />
     <link rel="stylesheet" href="assets/css/buttons.css" />
     <link rel="stylesheet" href="assets/css/table.css" />
+    <link rel="stylesheet" href="assets/css/elms.css" />
+    <link rel="stylesheet" href="assets/css/calendar.css" />
     <!--Custom CSS-->
     <link
       rel="stylesheet"
@@ -42,14 +46,44 @@
   </head>
   <body>
     <div class="content">
+      <div class="sidebar-nav">
+        <div class="navigationContainer">
+          <div class="navigationItem">
+            <a href="#">
+              <span class="badge">5</span>
+              <i class="bi bi-clipboard-data">
+                <span>Dashboard</span>
+              </i>
+            </a>
+          </div>
+          <div class="navigationItem">
+            <a href="#">
+              <span class="badge">5</span>
+              <i class="bi bi-bell-fill">
+                <span>Notification</span>
+              </i>
+            </a>
+          </div>
+          <div class="navigationItem">
+            <a href="#">
+              <i class="bi bi-person-circle">
+                <span>User</span>
+              </i>
+            </a>
+          </div>
+          <div class="navigationItem">
+            <a href="#">
+              <i class="bi bi-box-arrow-in-left">
+                <span>Log-out</span>
+              </i>
+            </a>
+          </div>
+        </div>
+      </div>
       <div class="icons">
-        <!--<button class="sidebar">
+        <button class="sidebar" id="sidebar-btn">
           <i class="bi bi-list"></i>
         </button>
-        <div class="menu">
-          <a href="#">Dashboard</a>
-          <a href="#">Sample</a>
-        </div>-->
         <div class="notif">
           <button
             class="icon"
@@ -116,52 +150,9 @@
               </div>
             </a>
           </div>
-          <button
-            class="icon"
-            data-toggle="tooltip"
-            data-placement="bottom"
-            title="Announcements"
-            id="announce-btn"
-          >
-            <i class="bi bi-megaphone-fill"></i>
-            <span class="badge-2">4</span>
-          </button>
-          <div class="announce-menu">
-            <a href="#" class="announce-item">
-              <div class="col">
-                <header>
-                  <div class="title">
-                    <h5>Teacher</h5>
-                    <span
-                      >Given: assignment '05 Task Performance 1' in course
-                      'Software Quality Assurance'</span
-                    >
-                    <small>Oct 12, 7:27pm</small>
-                  </div>
-                </header>
-              </div>
-            </a>
-            <a href="#" class="announce-item">
-              <div class="col">
-                <header>
-                  <div class="title">
-                    <span>None</span>
-                    <small>Oct 12, 7:27pm</small>
-                  </div>
-                </header>
-              </div>
-            </a>
-            <a href="#" class="announce-item">
-              <div class="col">
-                <header>
-                  <div class="title">
-                    <span>Please follow guidelines</span>
-                    <small>Oct 12, 7:27pm</small>
-                  </div>
-                </header>
-              </div>
-            </a>
-          </div>
+        </div>
+        <div class="username">
+          <a href="#" title="Profile">Cultura, Dhan Exeq...</a>
         </div>
       </div>
 
@@ -188,6 +179,45 @@
         </button>
       </div>
       <main>
+        <div class="bars right">
+          <div class="floating">
+            <main>
+              <div class="calendar">
+                <div class="header">
+                  <button class="prev-btn" onclick="previousMonth()">
+                    &lt;
+                  </button>
+                  <h1 id="current-month"></h1>
+                  <button class="next-btn" onclick="nextMonth()">&gt;</button>
+                </div>
+                <div class="days"></div>
+              </div>
+            </main>
+          </div>
+          <div class="floating">
+            <header>
+              <div class="title">
+                <h3>To-do <em>(3)</em></h3>
+              </div>
+            </header>
+            <ul>
+              <li>
+                <a href="#">Software Quality Assurance <span>(3)</span></a>
+              </li>
+            </ul>
+          </div>
+          <div class="floating">
+            <header>
+              <div class="title">
+                <h3>Announcements <em>(0)</em></h3>
+              </div>
+            </header>
+            <ul>
+              <li></li>
+            </ul>
+          </div>
+        </div>
+
         <div class="floating noOutline">
           <a href="subject_TOC_template.html">
             <header>

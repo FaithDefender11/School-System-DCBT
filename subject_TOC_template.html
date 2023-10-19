@@ -5,15 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ELMS - Daehan College of Business and Technology</title>
     <!--Link JavaScript-->
-    <script src="js/elms-sidebar.js" defer></script>
-    <script src="js/elms-dropdown.js" defer></script>
-    <script src="js/table-dropdown.js" defer></script>
+    <script src="assets/js/elms-sidebar.js" defer></script>
+    <script src="assets/js/elms-dropdown.js" defer></script>
+    <script src="assets/js/table-dropdown.js" defer></script>
+    <script src="assets/js/calendar.js" defer></script>
     <!--Link styleshets-->
-    <link rel="stylesheet" href="css/sidebar.css" />
-    <link rel="stylesheet" href="css/fonts.css" />
-    <link rel="stylesheet" href="css/content.css" />
-    <link rel="stylesheet" href="css/buttons.css" />
-    <link rel="stylesheet" href="css/table.css" />
+    <link rel="stylesheet" href="assets/css/sidebar.css" />
+    <link rel="stylesheet" href="assets/css/fonts.css" />
+    <link rel="stylesheet" href="assets/css/content.css" />
+    <link rel="stylesheet" href="assets/css/buttons.css" />
+    <link rel="stylesheet" href="assets/css/table.css" />
+    <link rel="stylesheet" href="assets/css/elms.css" />
+    <link rel="stylesheet" href="assets/css/calendar.css" />
     <!--Custom CSS-->
     <link
       rel="stylesheet"
@@ -43,14 +46,45 @@
   </head>
   <body>
     <div class="content">
+      <div class="sidebar-nav">
+        <div class="navigationContainer">
+          <div class="navigationItem">
+            <a href="#">
+              <span class="badge">5</span>
+              <i class="bi bi-clipboard-data">
+                <span>Dashboard</span>
+              </i>
+            </a>
+          </div>
+          <div class="navigationItem">
+            <a href="#">
+              <span class="badge">5</span>
+              <i class="bi bi-bell-fill">
+                <span>Notification</span>
+              </i>
+            </a>
+          </div>
+          <div class="navigationItem">
+            <a href="#">
+              <i class="bi bi-person-circle">
+                <span>User</span>
+              </i>
+            </a>
+          </div>
+          <div class="navigationItem">
+            <a href="#">
+              <i class="bi bi-box-arrow-in-left">
+                <span>Log-out</span>
+              </i>
+            </a>
+          </div>
+        </div>
+      </div>
+
       <div class="icons">
         <button class="sidebar" id="sidebar-btn">
           <i class="bi bi-list"></i>
         </button>
-        <div class="menu" id="sidebar-menu">
-          <a href="#">Dashboard</a>
-          <a href="#">Sample</a>
-        </div>
         <div class="notif">
           <button
             class="icon"
@@ -117,52 +151,9 @@
               </div>
             </a>
           </div>
-          <button
-            class="icon"
-            data-toggle="tooltip"
-            data-placement="bottom"
-            title="Announcements"
-            id="announce-btn"
-          >
-            <i class="bi bi-megaphone-fill"></i>
-            <span class="badge-2">4</span>
-          </button>
-          <div class="announce-menu">
-            <a href="#" class="announce-item">
-              <div class="col">
-                <header>
-                  <div class="title">
-                    <h5>Teacher</h5>
-                    <span
-                      >Given: assignment '05 Task Performance 1' in course
-                      'Software Quality Assurance'</span
-                    >
-                    <small>Oct 12, 7:27pm</small>
-                  </div>
-                </header>
-              </div>
-            </a>
-            <a href="#" class="announce-item">
-              <div class="col">
-                <header>
-                  <div class="title">
-                    <span>None</span>
-                    <small>Oct 12, 7:27pm</small>
-                  </div>
-                </header>
-              </div>
-            </a>
-            <a href="#" class="announce-item">
-              <div class="col">
-                <header>
-                  <div class="title">
-                    <span>Please follow guidelines</span>
-                    <small>Oct 12, 7:27pm</small>
-                  </div>
-                </header>
-              </div>
-            </a>
-          </div>
+        </div>
+        <div class="username">
+          <a href="#" title="Profile">Cultura, Dhan Exeq...</a>
         </div>
       </div>
 
@@ -173,11 +164,13 @@
           </div>
         </header>
       </div>
+
       <nav>
         <a href="Dashboard_enrolled.html"
           ><i class="bi bi-arrow-return-left"></i>Back</a
         >
       </nav>
+
       <main>
         <div class="bars">
           <div class="floating">
@@ -253,7 +246,11 @@
                   <td class="b-1">></td>
                 </tr>
                 <tr>
-                  <td><a href="#">Handout</a></td>
+                  <td>
+                    <a href="student_assignment_instructions_template.html"
+                      >Assignment</a
+                    >
+                  </td>
                   <td class="b-1">-</td>
                   <td class="b-1">-</td>
                   <td class="b-1">-</td>

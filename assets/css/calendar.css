@@ -1,0 +1,52 @@
+.calendar {
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #b42372;
+    color: #fff;
+    padding: 10px;
+}
+
+.button {
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
+    color: inherit;
+    font-size: 1.2em;
+}
+
+.days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    padding: 10px;
+}
+
+.current-day {
+    background-color: #b42372;
+    color: #fff;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    display: flex;
+    /* Use flexbox to center content vertically and horizontally */
+    justify-content: center;
+    align-items: center;
+}
+
+#current-month {
+    font-size: 16px;
+}
+
+@media only screen and (max-width: 424px) {
+    .calendar {
+        max-width: 300px;
+    }
+}
