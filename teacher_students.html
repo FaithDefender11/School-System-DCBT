@@ -84,6 +84,7 @@
         <button class="sidebar">
           <i class="bi bi-list"></i>
         </button>
+
         <div class="notif">
           <button
             class="icon"
@@ -99,7 +100,9 @@
               <div class="col">
                 <header>
                   <div class="title">
-                    <h5>Teacher</h5>
+                    <h5>
+                      Teacher <i class="bi bi-x-lg" style="color: red"></i>
+                    </h5>
                     <span
                       >You have completed the course Workplace Etiquette</span
                     >
@@ -112,7 +115,10 @@
               <div class="col">
                 <header>
                   <div class="title">
-                    <h5>Teacher</h5>
+                    <h5>
+                      Teacher
+                      <i class="bi bi-check-lg" style="color: var(--clean)"></i>
+                    </h5>
                     <span
                       >You are now enrolled in course Workplace Etiquette</span
                     >
@@ -125,7 +131,10 @@
               <div class="col">
                 <header>
                   <div class="title">
-                    <h5>Teacher</h5>
+                    <h5>
+                      Teacher
+                      <i class="bi bi-check-lg" style="color: var(--clean)"></i>
+                    </h5>
                     <span
                       >Due soon: assignment '05 Activity 1 - ARG' in class
                       'Technopreneurship'</span
@@ -139,7 +148,10 @@
               <div class="col">
                 <header>
                   <div class="title">
-                    <h5>Teacher</h5>
+                    <h5>
+                      Teacher
+                      <i class="bi bi-check-lg" style="color: var(--clean)"></i>
+                    </h5>
                     <span
                       >Given: assignment '05 Task Performance 1' in course
                       'Software Quality Assurance'</span
@@ -149,106 +161,86 @@
                 </header>
               </div>
             </a>
+            <div class="action">
+              <button class="default">See all</button>
+              <button class="clean">Mark all read</button>
+            </div>
           </div>
         </div>
+        <button
+          class="calendar-btn"
+          title="Calendar"
+          onclick="window.location.href = '#'"
+        >
+          <i class="bi bi-calendar-event"></i>
+        </button>
         <div class="username">
           <a href="#" title="Profile">Cultura, Dhan Exeq...</a>
+        </div>
+        <div class="log-out">
+          <button class="log-out-btn">
+            <i class="bi bi-chevron-down"></i>
+          </button>
+          <div class="log-out-item">
+            <button class="item">
+              <i class="bi bi-box-arrow-in-left">
+                <span>Log-out</span>
+              </i>
+            </button>
+          </div>
         </div>
       </div>
 
       <div class="content-header">
         <header>
           <div class="title">
-            <h1>Gradebook in UCSP Topic 1 <em>Prelim</em></h1>
+            <h1>HUMSS11-A-UCSP <em>SY2324-1T</em></h1>
           </div>
         </header>
       </div>
+      <div class="tabs">
+        <button
+          class="tab"
+          style="background-color: var(--theme); color: white"
+          onclick="window.location.href = 'teacher_subject_TOC_template.html'"
+        >
+          Module
+        </button>
+        <button
+          class="tab"
+          style="background-color: var(--mainContentBG); color: black"
+          onclick="window.location.href = 'teacher_students.html'"
+        >
+          Students
+        </button>
+      </div>
 
       <nav>
-        <a href="teacher_moduleOverview_template.html"
+        <a href="teacher_dashboard.html"
           ><i class="bi bi-arrow-return-left"></i>Back</a
         >
       </nav>
 
       <main>
-        <div class="floating row">
-          <main class="row" style="width: 320px">
-            <table class="a">
-              <thead>
-                <tr>
-                  <th colspan="2">Assignments</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <th></th>
-                  <th>Due</th>
-                </tr>
-                <tr>
-                  <th>Students</th>
-                  <th>Overall</th>
-                </tr>
-                <tr>
-                  <td>Doe, Jane</td>
-                  <td>86</td>
-                </tr>
-                <tr>
-                  <td>Cultura, Dhan Exequiel M.</td>
-                  <td>90</td>
-                </tr>
-              </tbody>
-            </table>
-          </main>
-          <main class="row">
-            <table class="a">
-              <thead>
-                <tr>
-                  <th>Extra Assignment</th>
-                  <th>Assignment 1</th>
-                  <th>Assignment 2</th>
-                  <th>Assignment 3</th>
-                  <th>Assignment 4</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <th>Oct 15</th>
-                  <th>Oct 15</th>
-                  <th>Oct 13</th>
-                  <th>Oct 13</th>
-                  <th>Oct 13</th>
-                </tr>
-                <tr>
-                  <th>100</th>
-                  <th>100</th>
-                  <th>100</th>
-                  <th>100</th>
-                  <th>100</th>
-                </tr>
-                <tr>
-                  <td><input type="text" name="" id="" /></td>
-                  <td><input type="text" name="" id="" /></td>
-                  <td><input type="text" name="" id="" /></td>
-                  <td><input type="text" name="" id="" /></td>
-                  <td>
-                    <input type="text" name="" id="" /><button
-                      class="icon-sub"
-                      type="submit"
-                    >
-                      <i class="bi bi-check2"></i>
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <td><input type="text" name="" id="" /></td>
-                  <td><input type="text" name="" id="" /></td>
-                  <td><input type="text" name="" id="" /></td>
-                  <td><input type="text" name="" id="" /></td>
-                  <td><input type="text" name="" id="" /></td>
-                </tr>
-              </tbody>
-            </table>
-          </main>
+        <div class="floating">
+          <table class="a">
+            <thead>
+              <tr>
+                <th>No.</th>
+                <th>Name</th>
+                <th>Activity 1</th>
+                <th>Activity 2</th>
+                <th>Activity 3</th>
+              </tr>
+            </thead>
+            <tbody>
+              <td>1</td>
+              <td>Cultura, Dhan Exequiel M.</td>
+              <td>-</td>
+              <td>-</td>
+              <td>-</td>
+            </tbody>
+          </table>
         </div>
       </main>
     </div>

@@ -97,6 +97,12 @@ table.a>tbody>tr>td>a>.bi-check-lg {
   display: none;
 }
 
+table.a>tbody>tr>td>input {
+  width: 50px;
+  height: 20px;
+  text-align: center;
+}
+
 @media only screen and (max-width: 768px) {
   .floating>main {
     overflow-x: auto;

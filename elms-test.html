@@ -100,7 +100,9 @@
               <div class="col">
                 <header>
                   <div class="title">
-                    <h5>Teacher</h5>
+                    <h5>
+                      Teacher <i class="bi bi-x-lg" style="color: red"></i>
+                    </h5>
                     <span
                       >You have completed the course Workplace Etiquette</span
                     >
@@ -113,7 +115,10 @@
               <div class="col">
                 <header>
                   <div class="title">
-                    <h5>Teacher</h5>
+                    <h5>
+                      Teacher
+                      <i class="bi bi-check-lg" style="color: var(--clean)"></i>
+                    </h5>
                     <span
                       >You are now enrolled in course Workplace Etiquette</span
                     >
@@ -126,7 +131,10 @@
               <div class="col">
                 <header>
                   <div class="title">
-                    <h5>Teacher</h5>
+                    <h5>
+                      Teacher
+                      <i class="bi bi-check-lg" style="color: var(--clean)"></i>
+                    </h5>
                     <span
                       >Due soon: assignment '05 Activity 1 - ARG' in class
                       'Technopreneurship'</span
@@ -140,7 +148,10 @@
               <div class="col">
                 <header>
                   <div class="title">
-                    <h5>Teacher</h5>
+                    <h5>
+                      Teacher
+                      <i class="bi bi-check-lg" style="color: var(--clean)"></i>
+                    </h5>
                     <span
                       >Given: assignment '05 Task Performance 1' in course
                       'Software Quality Assurance'</span
@@ -150,10 +161,33 @@
                 </header>
               </div>
             </a>
+            <div class="action">
+              <button class="default">See all</button>
+              <button class="clean">Mark all read</button>
+            </div>
           </div>
         </div>
+        <button
+          class="calendar-btn"
+          title="Calendar"
+          onclick="window.location.href = '#'"
+        >
+          <i class="bi bi-calendar-event"></i>
+        </button>
         <div class="username">
           <a href="#" title="Profile">Cultura, Dhan Exeq...</a>
+        </div>
+        <div class="log-out">
+          <button class="log-out-btn">
+            <i class="bi bi-chevron-down"></i>
+          </button>
+          <div class="log-out-item">
+            <button class="item">
+              <i class="bi bi-box-arrow-in-left">
+                <span>Log-out</span>
+              </i>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -377,6 +411,50 @@
         </div>
 
         <div class="floating">
+          <main>
+            <table class="d">
+              <thead>
+                <tr>
+                  <th>Sun</th>
+                  <th>Mon</th>
+                  <th>Tue</th>
+                  <th>Wed</th>
+                  <th>Thu</th>
+                  <th>Fri</th>
+                  <th>Sat</th>
+                </tr>
+              </thead>
+              <tbody class="days_headers">
+                <tr></tr>
+                <tr></tr>
+                <tr></tr>
+              </tbody>
+            </table>
+          </main>
+        </div>
+
+        <div class="floating">
+          <main>
+            <table class="d">
+              <thead>
+                <tr>
+                  <th>Sun</th>
+                  <th>Mon</th>
+                  <th>Tue</th>
+                  <th>Wed</th>
+                  <th>Thu</th>
+                  <th>Fri</th>
+                  <th>Sat</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr id="day-row"></tr>
+              </tbody>
+            </table>
+          </main>
+        </div>
+
+        <div class="floating">
           <header>
             <div class="title">
               <h3>Notifications</h3>
@@ -426,6 +504,79 @@
                   </td>
                   <td class="sent">12:23 am</td>
                   <td class="read"><i class="bi bi-x"></i></td>
+                </tr>
+              </tbody>
+            </table>
+          </main>
+        </div>
+
+        <div class="floating row">
+          <main class="row" style="width: 320px">
+            <table class="a">
+              <thead>
+                <tr>
+                  <th colspan="2">Assignments</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th></th>
+                  <th>Due</th>
+                </tr>
+                <tr>
+                  <th>Students</th>
+                  <th>Overall</th>
+                </tr>
+                <tr>
+                  <td>Doe, Jane</td>
+                  <td>86</td>
+                </tr>
+                <tr>
+                  <td>Cultura, Dhan Exequiel M.</td>
+                  <td>90</td>
+                </tr>
+              </tbody>
+            </table>
+          </main>
+          <main class="row">
+            <table class="a">
+              <thead>
+                <tr>
+                  <th>Extra Assignment</th>
+                  <th>USCP Topic Assignment 1</th>
+                  <th>USCP Topic Assignment 2</th>
+                  <th>USCP Topic Assignment 3</th>
+                  <th>USCP Topic Assignment 4</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th>Oct 15</th>
+                  <th>Oct 15</th>
+                  <th>Oct 13</th>
+                  <th>Oct 13</th>
+                  <th>Oct 13</th>
+                </tr>
+                <tr>
+                  <th>100</th>
+                  <th>100</th>
+                  <th>100</th>
+                  <th>100</th>
+                  <th>100</th>
+                </tr>
+                <tr>
+                  <td><input type="text" name="" id="" /></td>
+                  <td><input type="text" name="" id="" /></td>
+                  <td><input type="text" name="" id="" /></td>
+                  <td><input type="text" name="" id="" /></td>
+                  <td><input type="text" name="" id="" /></td>
+                </tr>
+                <tr>
+                  <td><input type="text" name="" id="" /></td>
+                  <td><input type="text" name="" id="" /></td>
+                  <td><input type="text" name="" id="" /></td>
+                  <td><input type="text" name="" id="" /></td>
+                  <td><input type="text" name="" id="" /></td>
                 </tr>
               </tbody>
             </table>

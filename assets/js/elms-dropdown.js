@@ -1,5 +1,6 @@
 var dropBtns = document.querySelectorAll(".icon");
 var notifMenus = document.querySelectorAll(".notif-menu");
+var actionBtn = document.querySelectorAll(".action");
 
 dropBtns.forEach(btn => {
     btn.addEventListener("click", (e) => {
@@ -20,6 +21,27 @@ dropBtns.forEach(btn => {
     });
 });
 
+
+var logoutBtns = document.querySelectorAll(".log-out-btn");
+var logItems = document.querySelectorAll(".log-out-item");
+
+logoutBtns.forEach(btn => {
+    btn.addEventListener("click", (e) => {
+        const logMenu = e.currentTarget.nextElementSibling;
+
+        logMenu.classList.toggle("show");
+
+        logItems.forEach(menu => {
+            if (menu !== logMenu && menu.classList.contains("show")) {
+                menu.classList.remove("show");
+            }
+        });
+
+        e.stopPropagation();
+    });
+});
+
+
 // Add a click event listener to the document to close menus when clicking outside
 document.addEventListener("click", (e) => {
     notifMenus.forEach(menu => {
@@ -28,29 +50,9 @@ document.addEventListener("click", (e) => {
         }
     });
 
-    annMenus.forEach(menu => {
+    logItems.forEach(menu => {
         if (menu.classList.contains("show") && !menu.contains(e.target)) {
             menu.classList.remove("show");
         }
-    });
-});
-
-
-var annBtn = document.getElementById("announce-btn");
-var annMenus = document.querySelectorAll(".announce-menu");
-
-annBtn.forEach(btn => {
-    btn.addEventListener("click", (e) => {
-        const annMenu = e.currentTarget.nextElementSibling;
-
-        annMenu.classList.toggle("show");
-
-        annMenus.forEach(menu => {
-            if (menu !== annMenu && menu.classList.contains("show")) {
-                menu.classList.remove("show");
-            }
-        });
-
-        e.stopPropagation();
     });
 });

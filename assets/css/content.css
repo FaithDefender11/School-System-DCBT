@@ -50,6 +50,51 @@
   width: 180px;
 }
 
+.content>.icons>.log-out {
+  margin: 5px;
+}
+
+.content>.icons>.calendar-btn {
+  background-color: transparent;
+  color: white;
+  cursor: pointer;
+}
+
+.content>.icons>.log-out>.log-out-item {
+  position: absolute;
+  display: none;
+  right: 10px;
+  width: auto;
+  z-index: 1;
+}
+
+.content>.icons>.log-out>.log-out-item.show {
+  display: block;
+}
+
+.content>.icons>.log-out>.log-out-item>.item {
+  cursor: pointer;
+  font-weight: 400;
+  font-size: 18px;
+  padding: 10px;
+}
+
+.content>.icons>.log-out>.log-out-item>.item>i>span {
+  font-style: normal;
+}
+
+.content>.icons>.log-out>.log-out-btn {
+  background-color: transparent;
+  color: white;
+  cursor: pointer;
+}
+
+.content>.icons>.log-out>.log-out-btn:focus,
+.content>.icons>.calendar-btn:focus {
+  outline: none;
+  border: none;
+}
+
 .content>.icons>.username>a {
   width: 100%;
 }
@@ -57,7 +102,6 @@
 .content>.icons>.notif>.icon {
   margin: 15px;
   color: var(--mainContentBG);
-  transition: 0.3s;
 }
 
 .content>.icons>.notif>.icon:focus {
@@ -66,7 +110,9 @@
   color: #b8b7b7;
 }
 
-.content>.icons>.notif>.icon:hover {
+.content>.icons>.notif>.icon:hover,
+.content>.icons>.calendar-btn:hover,
+.content>.icons>.log-out>.log-out-item>.item:hover {
   color: #b8b7b7;
 }
 
@@ -85,8 +131,7 @@
   font-size: 12px;
 }
 
-.content>.icons>.notif>.notif-menu,
-.content>.icons>.notif>.announce-menu {
+.content>.icons>.notif>.notif-menu {
   display: none;
   position: absolute;
   top: 50px;
@@ -97,12 +142,28 @@
   overflow: auto;
   border-radius: 10px;
   border: 1px solid black;
-  padding: 15px;
+  box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.25);
   z-index: 3;
 }
 
-.content>.icons>.notif>.notif-menu.show,
-.content>.icons>.notif>.announce-menu.show {
+.content>.icons>.notif>.notif-menu>.action {
+  display: flex;
+  flex-direction: row;
+  position: sticky;
+  bottom: 0;
+  width: 100%;
+  padding: 10px;
+  background-color: var(--mainContentBG);
+  border-color: #636363;
+  border-top-style: solid;
+  z-index: 1;
+}
+
+.content>.icons>.notif>.notif-menu>.action>button {
+  margin: 5px;
+}
+
+.content>.icons>.notif>.notif-menu.show {
   display: block;
 }
 
@@ -678,6 +739,22 @@
 .floating>header>.action>.dropdown>.table-drop>.bi-chevron-down.none,
 .floating>header>.action>.dropdown>.table-drop>.bi-chevron-up.none {
   display: none;
+}
+
+.floating.row {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+}
+
+.floating.row>.row {
+  display: flex;
+  flex-direction: row;
+  margin: 1px;
 }
 
 /* ADDED DROPDOWN */

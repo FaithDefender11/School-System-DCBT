@@ -12,11 +12,16 @@ function renderCalendar() {
 
     const firstDay = new Date(year, month, 1);
     const lastDay = new Date(year, month + 1, 0);
+    const today = new Date();
 
     for (let day = new Date(firstDay); day <= lastDay; day.setDate(day.getDate() + 1)) {
         const dayElement = document.createElement('div');
         dayElement.textContent = day.getDate();
         daysContainer.appendChild(dayElement);
+
+        if (day.toDateString() === today.toDateString()) {
+            dayElement.classList.add('current-day');
+        }
     }
 }
 
@@ -32,25 +37,11 @@ function nextMonth() {
 
 renderCalendar();
 
-function renderCalendar() {
-    const year = currentMonth.getFullYear();
-    const month = currentMonth.getMonth();
 
-    currentMonthElement.textContent = new Date(year, month, 1).toLocaleString('en-US', { month: 'long', year: 'numeric' });
+const daysRow = document.querySelector('.days_headers');
 
-    daysContainer.innerHTML = '';
+function renderDays() {
+    daysRow.innerHTML = '';
 
-    const firstDay = new Date(year, month, 1);
-    const lastDay = new Date(year, month + 1, 0);
-    const today = new Date();
-
-    for (let day = new Date(firstDay); day <= lastDay; day.setDate(day.getDate() + 1)) {
-        const dayElement = document.createElement('div');
-        dayElement.textContent = day.getDate();
-        daysContainer.appendChild(dayElement);
-
-        if (day.toDateString() === today.toDateString()) {
-            dayElement.classList.add('current-day');
-        }
-    }
+    
 }
