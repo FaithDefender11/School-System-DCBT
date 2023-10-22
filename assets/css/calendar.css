@@ -29,6 +29,20 @@
     padding: 10px;
 }
 
+.day {
+    width: 14.28%;
+    text-align: center;
+    font-weight: bold;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    padding: 10px;
+    background-color: #fff;
+}
+
 .current-day {
     background-color: #b42372;
     color: #fff;
@@ -39,6 +53,11 @@
     /* Use flexbox to center content vertically and horizontally */
     justify-content: center;
     align-items: center;
+}
+
+.current_day {
+    background-color: #b42372;
+    color: #fff;
 }
 
 #current-month {

@@ -757,6 +757,42 @@
   margin: 1px;
 }
 
+.bars>.floating>main>ul {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.bars>.floating>main>ul>li {
+  margin: 2px;
+  padding: 2px;
+}
+
+ul>.task-blue,
+ul>.task-green,
+ul>.task-gray,
+ul>.task-mauve,
+ul>.task-teal,
+ul>.task-coral,
+ul>.task-taupe,
+ul>.task-beige {
+  color: white;
+}
+
+ul>.task-blue,
+ul>.task-green,
+ul>.task-gray,
+ul>.task-mauve,
+ul>.task-teal,
+ul>.task-coral,
+ul>.task-taupe,
+ul>.task-beige,
+ul>.task-lavender,
+ul>.task-ivory,
+ul>.task-yellow {
+  border-radius: 5px;
+}
+
 /* ADDED DROPDOWN */
 
 /* ADDED CONTENT TO ACTION */
