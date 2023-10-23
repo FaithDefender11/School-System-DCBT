@@ -33,7 +33,7 @@
                 $logout_url = "$new_url/lms_logout.php";
             }
 
-            $dashboard_lms_url = $base_url .  "dashboard/index.php";
+            $dashboard_lms_url = $base_url .  "dashboard/index2.php";
             $classes_lms_url = $base_url .  "class/index.php";
             $grade_url = $base_url .  "grade/index.php";
             $notification_url = $base_url .  "notification/index.php";

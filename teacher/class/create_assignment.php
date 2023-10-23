@@ -102,12 +102,12 @@
 
                 if($successCreate){
                     $subject_code_assignment_id = $con->lastInsertId();
-
-                   
                 }
+                
                 // var_dump($assignment_images);
 
                 // if (false) {
+
                 if ($assignment_images
                      && $subject_code_assignment_id !== 0
                     && is_array($assignment_images['tmp_name'])) {
@@ -141,14 +141,8 @@
                         }
                     }
                 } 
-                // else {
-                //     // Handle the case where no files were uploaded.
-                //     echo "No files were uploaded.<br>";
-                // }
 
                 if($successCreate){
-
-                    // echo $subject_code_assignment_id;
 
                     Alert::success("Assignment has been successfully Inserted",
                         $back_url);

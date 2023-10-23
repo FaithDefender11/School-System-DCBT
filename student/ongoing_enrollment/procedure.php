@@ -70,10 +70,10 @@
 
             $enrollment = new Enrollment($con);
             
-            $enrollment_form_id = $enrollment->GenerateEnrollmentFormId();
+            $enrollment_form_id = $enrollment->GenerateEnrollmentFormId($school_year_id);
 
             if (!isset($_SESSION['enrollment_form_id'])) {
-                $enrollment_form_id = $enrollment->GenerateEnrollmentFormId();
+                $enrollment_form_id = $enrollment->GenerateEnrollmentFormId($school_year_id);
                 $_SESSION['enrollment_form_id'] = $enrollment_form_id;
                 
             } else {

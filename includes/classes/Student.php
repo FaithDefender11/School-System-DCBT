@@ -669,10 +669,12 @@ class Student{
 
         // Get the last student_unique_id
 
-
         $result = $this->con->prepare("SELECT student_unique_id FROM student
             ORDER BY student_id DESC 
-            LIMIT 1");
+            LIMIT 1
+
+        ");
+
         $result->execute();
 
         if($result->rowCount() > 0){
@@ -695,8 +697,7 @@ class Student{
 
                 // Generate a new seven-digit ID by adding 1 to the last six digits
                 $new_six_digits = sprintf('%06d', intval($last_six_digits) + 1);
-                // $new_id = '100' . $new_six_digits;
-
+              
                 // echo 'Studet User ID: ' . $result['student_id'] . '<br>';
                 return $new_six_digits;
             }
@@ -708,6 +709,55 @@ class Student{
         
 
     }
+
+    public function GenerateUniqueStudentNumberV2() {
+
+        // Loop until a unique student number is generated
+        while (true) {
+
+            // Generate the next student number
+            // Get the last student_unique_id
+            $result = $this->con->prepare("SELECT student_unique_id 
+                FROM student
+                WHERE student_unique_id IS NOT NULL
+                ORDER BY student_id DESC
+                LIMIT 1
+            ");
+            $result->execute();
+
+            if ($result->rowCount() > 0) {
+
+                $row = $result->fetch(PDO::FETCH_ASSOC);
+                $lastStudentID = $row['student_unique_id'];
+
+                // Increment the last student ID and remove leading zeros
+                $nextStudentID = ltrim((int)$lastStudentID + 1, '0');
+
+                // Add leading zeros to ensure it's 6 characters
+                $nextStudentID = str_pad($nextStudentID, 6, '0', STR_PAD_LEFT);
+            } else {
+                // If no students are found, generate the first student ID
+                $nextStudentID = '000001';
+            }
+
+            // Check if the generated student number is unique
+            $result = $this->con->prepare("SELECT student_id 
+            
+                FROM student 
+                WHERE student_unique_id = :nextStudentID
+            ");
+
+            $result->bindParam(':nextStudentID', $nextStudentID);
+            $result->execute();
+
+            if ($result->rowCount() == 0) {
+                return $nextStudentID; // Unique student number
+            }
+            
+             // If the generated student number already exists, continue the loop to generate a new one
+        }
+    }
+
 
     public function GenerateUniqueStudentHexaDecimalNumber(){
 

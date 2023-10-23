@@ -106,19 +106,19 @@
                         // echo "Please Check your email to verify if its you.";
 
                         echo "<script>
-                        $(document).ready(function() {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Email Sent!',
-                                text: 'Please check your email to confirm our verification.',
-                                backdrop: false,
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    window.location.href = 'pre_enrollment_register.php';
-                                }
+                            $(document).ready(function() {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Email Sent!',
+                                    text: 'Please check your email to confirm our verification.',
+                                    backdrop: false,
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        window.location.href = 'pre_enrollment_register.php';
+                                    }
+                                });
                             });
-                        });
-                        </script>";
+                            </script>";
                         exit();
                     }
                 }

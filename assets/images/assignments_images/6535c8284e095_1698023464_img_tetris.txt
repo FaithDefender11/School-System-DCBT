@@ -1,0 +1,46 @@
+Game: Tetris
+
+1. Platform Type - List of Tetris variants.
+
+2. Time Interval
+
+Experienced	25 sec	38 sec
+Intermediate	30 sec	47 sec
+"decent"	44 sec	60 sec
+beginner	80 sec /1:20 min	2:00 min
+
+3. Player Mode
+Multiple Player/Single
+
+4. Goal Tetris primary goal is to prevent the blocks from stacking up to the top of the
+ screen for as long as possible
+
+5. Genre - Puzzle Game
+
+6. Rules/Mechanics - 
+Tetris has very simple rules: you can only move the pieces in specific ways; your game is over
+ if your pieces reach the top of the screen; and you can only remove pieces from the screen by filling
+ all the blank space in a line.
+
+
+7.Reward System - The scoring formula is built on the idea that more difficult line clears should be awarded more points. For example, a single line clear is worth 40 points
+
+
+   Action		                           Point Value
+
+Single/Mini T-Spin		                    100×level
+Mini T-Spin Single		                    200×level
+Double		                                    300×level
+T-Spin/Mini T-Spin Double		            400×level
+Triple		                                    500×level
+B2B Mini T-Spin Double		                    600×level
+Tetris/T-Spin Single		                    800×level
+B2B T-Spin Single/B2B Tetris/T-Spin Double	    1,200×level
+T-Spin Triple		                            1,600×level
+B2B T-Spin Double		                    1,800×level
+B2B T-Spin Triple		                    2,400×level
+Combo		                                    (move value+50)×level
+Soft drop		                            1 point per cell
+Hard drop		                            2 points per cell
+
+

@@ -7,6 +7,8 @@
     include_once('../../includes/classes/SubjectCodeAssignment.php');
     include_once('../../includes/classes/SubjectAssignmentSubmission.php');
     
+    echo Helper::RemoveSidebar();
+
 
     if(isset($_GET['id'])
         && isset($_GET['st_id'])){
@@ -108,6 +110,8 @@
                                                     if($subject_assignment_submission_id == $highestNumber){
                                                         $latest = "Latest";
                                                     }
+
+                                                    
                                                     echo "
                                                         <tr>
                                                             <td>$i</td>

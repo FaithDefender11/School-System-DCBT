@@ -4,6 +4,7 @@
   include_once('../../includes/classes/Enrollment.php');
   include_once('../../includes/classes/Section.php');
   include_once('../../includes/classes/SchoolYear.php');
+  include_once('../../includes/classes/Student.php');
  
 
   ?>
@@ -130,6 +131,12 @@
   $enrolledStudentsEnrollmentCount = count($enrolledStudentsEnrollment);
 
   $sectionEnrolledStudentListCount = count($sectionEnrolledStudentList);
+
+
+  $student = new Student($con);
+
+  $check = $student->GenerateUniqueStudentNumberV2();
+  // var_dump($check);
 
   // echo $current_school_year_id;
 ?>

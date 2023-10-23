@@ -98,8 +98,11 @@
 
             
 
-            $due_date = $row['due_date'];
-            $due_date = date("Y-m-d", strtotime($due_date));
+            $due_date_db = $row['due_date'];
+            $due_date = date("Y-m-d", strtotime($due_date_db));
+
+            $due_time_hours = date("h:i a", strtotime($due_date_db));
+
 
             // $url = "../../teacher/class/section_topic.php?id=$subject_period_code_topic_template_id&ct_id=$subject_period_code_topic_id";
            
@@ -107,7 +110,8 @@
             
             $dataCalendar[] = array(
                 'subject_code_assignment_id' => $subject_code_assignment_id,
-                'title' => $assignment_name,
+                'title' => $due_time_hours . " " . $assignment_name,
+
                 'start' => $due_date,
                 'end' => $due_date,
                 'url' => $url

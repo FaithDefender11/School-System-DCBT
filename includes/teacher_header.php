@@ -48,7 +48,7 @@
     
     <head>
         
-        <title><?php echo "Student " . $document_title; ?></title>
+        <title><?php echo "Teacher " . $document_title; ?></title>
 
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
@@ -111,8 +111,7 @@
                 $nav = new TeacherElmsNavigationProvider($con, $teacherLoggedInObj);
 
                 if(isset($_SESSION['role']) 
-                    && $_SESSION['role'] == "teacher"
-                    ){
+                    && $_SESSION['role'] == "teacher"  ){
                         // echo "qwe";
                     echo $nav->create($page);
                 }
@@ -121,7 +120,7 @@
 
         <div class="mainSectionContainer">
             <div class="mainContentContainer">
-
+                
 
 <script>
     $(document).ready(function() {

@@ -11,8 +11,13 @@
     include_once('../../includes/classes/Student.php');
     include_once('../../includes/classes/Announcement.php');
 
+    echo Helper::RemoveSidebar();
+
+
     $subjectCodeAssignment = new SubjectCodeAssignment($con);
+
     $notification = new Notification($con);
+    
     $announcement = new Announcement($con);
     
     $school_year = new SchoolYear($con);
@@ -46,17 +51,41 @@
 
     // print_r($studentListSubmittedNotification);
 
-
     $adminAnnouncement = $announcement->CheckTeacherIdBelongsToAdminAnnouncement($current_school_year_id,
         $teacherLoggedInId);
 
     // var_dump($adminAnnouncement);
 
-    $studentSubmittedAndAdminAnnouncement = array_merge($studentListSubmittedNotification,
+    $studentSubmittedAndAdminAnnouncement = array_merge(
+        $studentListSubmittedNotification,
         $adminAnnouncement);
+    
 
+    $viewedCount = $notification->GetTeacherViewedNotificationCount(
+        $studentListSubmittedNotification, $teacherLoggedInId);
 
-    // var_dump($adminAnnouncement);
+    $unViewedCount = $notification->GetTeacherUnViewedNotificationCount(
+        $studentListSubmittedNotification, $teacherLoggedInId);
+
+    echo "viewedCount: $viewedCount";
+    echo "<br>";
+
+    echo "unViewedCount: $unViewedCount";
+    echo "<br>";
+
+    usort($studentSubmittedAndAdminAnnouncement, function($a, $b) {
+        $dateA = strtotime($a['date_creation']);
+        $dateB = strtotime($b['date_creation']);
+
+        if ($dateA == $dateB) {
+            return 0;
+        }
+        
+        return ($dateA > $dateB) ? -1 : 1; // Change from 1 to -1 for descending order
+    });
+    
+
+    // var_dump($unViewedCount);
 
     // echo count($adminAnnouncement);
 ?>
@@ -100,6 +129,8 @@
                             foreach ($studentSubmittedAndAdminAnnouncement as $key => $notification) {
                                 
                                 // $department_id = $row['department_id'];
+
+
                                 
                                 $notification_id = isset($notification['notification_id']) ? $notification['notification_id'] : "";
 
@@ -144,6 +175,7 @@
                                 
 
                                 $admin_announcement_id = isset($notification['announcement_id']) ? $notification['announcement_id'] : '';
+                                
                                 $admin_title = isset($notification['title']) ? $notification['title'] : '';
                                 $admin_content = isset($notification['content']) ? $notification['content'] : '';
                                 
@@ -238,10 +270,11 @@
                                     ";
                                 }
 
+                                // ($notification_id)
 
                                 echo "
                                     <tr>
-                                        <td>$sender_name</td>
+                                        <td> $sender_name</td>
                                         <td>$type</td>
                                         <td>$title</td>
                                         <td>$date_creation</td>

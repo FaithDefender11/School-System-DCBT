@@ -666,6 +666,137 @@
             return false;
         }
 
+        public function LmsLoginCheck($username, $password){
+
+            $in_active = "Inactive";
+
+            $arr = [];
+
+            $username = strtolower($username);
+
+
+            $username_parts = explode('@', $username);
+
+            if (count($username_parts) == 2) {
+                $char_before_at = strtoupper(substr($username_parts[0], -1)); // Get the last character and make it uppercase
+
+                // Define the roles based on the character
+                $role = "teacher";
+
+                if ($char_before_at == 'F') {
+
+                    $role = "Faculty (Teacher)";
+
+                    $query_teacher = $this->con->prepare("SELECT 
+
+                        *
+                        FROM teacher
+                        WHERE username =:username
+                        AND teacher_status =:teacher_status
+
+                        LIMIT 1
+
+                    ");
+                
+                    $query_teacher->bindParam(":username", $username);
+                    $query_teacher->bindValue(":teacher_status", "Active");
+                    $query_teacher->execute();
+
+                    if($query_teacher->rowCount() > 0){
+
+                        $user = $query_teacher->fetch(PDO::FETCH_ASSOC);    
+
+                        $teacher_id = $user['teacher_id'];
+
+                        // echo $user['password'];
+                        if($user['password'] == $password){
+                        }
+
+                        if ($user && password_verify($password, $user['password'])) {
+                            array_push($arr, $username); // [0]
+                            array_push($arr, "teacher");
+                            array_push($arr, $teacher_id); // [3]
+                        }
+
+                    }
+
+                }elseif ($char_before_at == 'S') {
+
+                    $role = "Student";
+
+                    $query_student = $this->con->prepare("SELECT 
+
+                        student_unique_id, username, password, student_id
+
+                        FROM student
+                        WHERE username=:username
+                        AND active !=:inactive
+
+                        LIMIT 1");
+                
+                    $query_student->bindParam(":username", $username);
+                    $query_student->bindParam(":inactive", $in_active);
+                    $query_student->execute();
+
+                    if($query_student->rowCount() > 0){
+                        
+                        $user = $query_student->fetch(PDO::FETCH_ASSOC);    
+
+                        $student_id = $user['student_id'];
+
+                        // echo $user['password'];
+                        if($user['password'] == $password){
+                        }
+
+                        if ($user && password_verify($password, $user['password'])) {
+                            array_push($arr, $username); // [0]
+                            array_push($arr, "student");
+                            array_push($arr, $student_id); // [2]
+                        }
+                        
+                    }
+
+                }elseif ($char_before_at == 'A') {
+
+                    $role = "Admin";
+
+                    $query_admin = $this->con->prepare("SELECT *
+
+                        FROM users
+                        WHERE username=:username
+                        LIMIT 1");
+                
+                    $query_admin->bindParam(":username", $username);
+                    $query_admin->execute();
+
+                    if($query_admin->rowCount() > 0){
+                        
+                        $admin_row = $query_admin->fetch(PDO::FETCH_ASSOC);    
+
+                        $admin_id = $admin_row['user_id'];
+                        $username = $admin_row['username'];
+
+                        if ($admin_row  && password_verify($password, $admin_row['password'])) {
+                            array_push($arr, $username); // [0]
+                            array_push($arr, "admin");
+                            array_push($arr, $admin_id); // [2]
+                        }
+
+                    }
+                }
+                else {
+
+                    $role = "Wrong credentials";  
+                }
+
+                // echo "The role of the user is: " . $role;
+                // echo "<br>";
+            }
+
+            return $arr;
+            
+        }
+
         public function ELMSVerifyLoginCredentials($username, $password){
 
             $in_active = "Inactive";
@@ -682,7 +813,8 @@
                 WHERE username=:username
                 AND teacher_status !=:teacher_status
 
-                LIMIT 1");
+                LIMIT 1
+            ");
         
             $query_teacher->bindParam(":username", $username);
             $query_teacher->bindParam(":teacher_status", $in_active);
@@ -733,13 +865,6 @@
 
                 }
             }
-
-
-
-
-            // else{
-            //     return "Username or Password is Incorrect.";
-            // }
             
             return $arr;
 

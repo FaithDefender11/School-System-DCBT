@@ -46,6 +46,14 @@
         return isset($this->sqlData['subject_code']) ? $this->sqlData["subject_code"] : ""; 
     }
 
+    public function GetEnrollmentId() {
+        return isset($this->sqlData['enrollment_id']) ? $this->sqlData["enrollment_id"] : NULL; 
+    }
+
+    public function GetSchoolYearId() {
+        return isset($this->sqlData['school_year_id']) ? $this->sqlData["school_year_id"] : ""; 
+    }
+
     public function GetStudentProgramCode() {
         return isset($this->sqlData['program_code']) ? $this->sqlData["program_code"] : ""; 
     }
@@ -1668,6 +1676,32 @@
         return $code;
     }
 
+    // public function GetStudentSubjectIdBySubjectCode($subject_code,
+    //     $student_id, $school_year_id){
+        
+    //     $code = NULL;
+    //     $sql = $this->con->prepare("SELECT student_subject_id
+
+    //         FROM student_subject AS t1
+
+    //         WHERE t1.subject_code = :subject_code
+    //         AND t1.student_id = :student_id
+    //         AND t1.school_year_id = :school_year_id
+        
+    //     ");
+                
+    //     $sql->bindParam(":subject_code", $subject_code);
+    //     $sql->bindParam(":student_id", $student_id);
+    //     $sql->bindParam(":school_year_id", $school_year_id);
+    //     $sql->execute();
+
+    //     if($sql->rowCount() > 0){
+    //         $code =  $sql->fetchColumn();
+    //     }
+
+    //     return $code;
+    // }
+
     public function GetAEnrolledSubjectByEnrollmentId($student_id,
         $enrollment_id){
 
@@ -2011,6 +2045,60 @@
         return [];
     }
 
+    public function GetAllPassedPreviousEnrolledSubjects($student_id,
+        $school_year_id){
+        
+        // echo $program_code;
+        # we should consuder the remarks of enrolled subject to be 'PASSED'
+        # to be officially completed the subject
+        $query = $this->con->prepare("SELECT 
+        
+            t1.student_subject_id,
+            t4.subject_code,
+            t4.subject_type,
+            t4.subject_title,
+            t4.unit,
+            t9.firstname,
+            t9.lastname
+            
+            FROM student_subject AS t1 
+
+
+            INNER JOIN enrollment AS t2 ON t2.enrollment_id = t1.enrollment_id
+
+            -- INNER JOIN student_subject_grade AS t3 ON t3.student_subject_id = t1.student_subject_id
+            -- AND t3.remarks = 'Passed'
+
+            LEFT JOIN subject_program AS t4 ON t4.subject_program_id = t1.subject_program_id
+            
+            LEFT JOIN course AS t6 ON t6.course_id = t1.course_id
+
+            LEFT JOIN subject_schedule AS t8 ON t8.subject_code = t1.subject_code
+            AND t8.course_id = t1.course_id
+
+            LEFT JOIN teacher as t9 ON t9.teacher_id = t8.teacher_id
+
+            WHERE t1.student_id=:student_id
+
+            -- Not equal to current school year
+            
+            AND t1.school_year_id != :school_year_id
+ 
+
+            ORDER BY t1.school_year_id ASC
+        ");
+
+        $query->bindValue(":student_id", $student_id); 
+        $query->bindValue(":school_year_id", $school_year_id); 
+        
+        $query->execute(); 
+
+        if($query->rowCount() > 0){
+            return $query->fetchAll(PDO::FETCH_ASSOC);
+        }
+        return [];
+    }
+
     public function CheckHasCreditedSubjectWithinSemester(
         $student_id, $school_year_id){
 
@@ -2097,6 +2185,27 @@
         return false;
     }
 
+    public function GetStudentSubjectIdBySectionSubjectCode(
+        $sectionSubjectCode, $student_id, $enrollment_id){
+
+        $sql = $this->con->prepare("SELECT student_subject_id FROM student_subject
+
+            WHERE subject_code = :subject_code
+            AND enrollment_id = :enrollment_id
+            AND student_id = :student_id
+        ");
+                
+        $sql->bindParam(":subject_code", $sectionSubjectCode);
+        $sql->bindParam(":enrollment_id", $enrollment_id);
+        $sql->bindParam(":student_id", $student_id);
+        $sql->execute();
+
+        if($sql->rowCount() > 0){
+            return $sql->fetchColumn();
+        }
+
+        return NULL;;
+    }
 
 }
 

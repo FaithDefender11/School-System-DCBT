@@ -80,14 +80,23 @@
         $subjectPeriodCodeTopic = new SubjectPeriodCodeTopic($con, $subject_code_topic_id);
 
         $subject_code = $subjectPeriodCodeTopic->GetSubjectCode();
+        $school_year_id = $subjectPeriodCodeTopic->GetSchoolYearId();
 
 
         // $back_url = "submission_list.php?id=$subject_code_assignment_id&c=$subject_code";
-        $back_url = "section_topic_grading.php?ct_id=$subject_code_topic_id";
-
+        
+        // $back_url = "section_topic_grading.php?ct_id=$subject_code_topic_id";
+        $back_url = "task_summary.php?ct_id=$subject_code_topic_id";
+ 
         // echo $subject_code_assignment_id;
 
         $submission_history_url = "student_submission_list.php?id=$subject_code_assignment_id&st_id=$student_id";
+
+
+        $totalSubmissionCount = $subjectAssignmentSubmission->GetSubmissionCountOnAssignment(
+            $subject_code_assignment_id, $student_id, $school_year_id);
+
+
 
         ?>
             <div class="content">
@@ -114,11 +123,16 @@
                             </div>  -->
 
                             <div class="title">
-                                <span>
-                                    <button onclick="window.location.href = '<?php echo $submission_history_url; ?>' " class="btn-info btn btn-sm">
-                                        History
-                                    </button>
-                                </span>
+
+                               
+                                <?php if($totalSubmissionCount > 1): ?>
+                                   
+                                    <span>
+                                        <button onclick="window.location.href = 'student_submission_list.php?id=<?php echo $subject_code_assignment_id; ?>&st_id=<?= $student_id;?>'" class="btn-info btn btn-sm">
+                                            History
+                                        </button>
+                                    </span>
+                                <?php endif;?>
                                 <span>Submitted by: <?php echo $student_name; ?></span>
                                 <h3>Assignment: <?php echo $assignment_name; ?></h3>
                             </div>
@@ -250,7 +264,7 @@
                                                         ";
 
                                                     } 
-                                                    elseif (in_array(strtolower($extension), ['pdf', 'docx', 'doc'])) {
+                                                    elseif (in_array(strtolower($extension), ['pdf', 'docx', 'doc', 'txt'])) {
                                                         $output_assignment = "
                                                             <a title='View File' href='$file_path' target='__blank' rel='noopener noreferrer'>
                                                                 $original_file_name

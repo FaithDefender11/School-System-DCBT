@@ -46,24 +46,27 @@
         $sql = $con->prepare("SELECT * FROM pending_enrollees
             -- 
             WHERE firstname=:firstname
+            AND is_enrolled=:is_enrolled
             AND is_finished=:is_finished
             ");
 
         $sql->bindValue(":firstname", $username);
+        $sql->bindValue(":is_enrolled", 0);
         $sql->bindValue(":is_finished", 1);
+        
         $sql->execute();
 
-        $isFinished = $pending->GetPendingIsFinished();
-        $pending_enrollees_id = $pending->GetPendingID();
+        if($sql->rowCount() > 0){
 
-        // if($sql->rowCount() > 0){
+            $isFinished = $pending->GetPendingIsFinished();
+            $pending_enrollees_id = $pending->GetPendingID();
 
-        if($isFinished != null && $isFinished == 1){
+            // if($sql->rowCount() > 0){
 
             $row = $sql->fetch(PDO::FETCH_ASSOC);
 
             $enrollee_id = $_SESSION['enrollee_id'];
- 
+
             if(isset($_GET['fill_up_state']) && $_GET['fill_up_state'] == "finished"){
 
                 $isFinishedForm = $pending->CheckStudentFinishedForm($pending_enrollees_id);
@@ -118,11 +121,13 @@
                     </div>
                 <?php
             }
+
         }
-        // else  if($isFinished != null && $isFinished == 0){
-        //     header("Location: process.php?new_student=true&step=preferred_course");
-        //     exit();
+        // else{
+        //     echo "enrolled";
         // }
+
+     
     }
 
 ?>

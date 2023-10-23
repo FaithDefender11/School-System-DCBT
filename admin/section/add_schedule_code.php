@@ -192,7 +192,7 @@
 
                             <div class="mb-3">
                                 <label for="room_id">Room Number</label>
-                                <select required class="form-control" name="room_id" id="room_id">
+                                <select class="form-control" name="room_id" id="room_id">
                                     <?php
                                         $query = $con->prepare("SELECT * FROM room
                                         ");
@@ -230,7 +230,7 @@
 
                             <div class="mb-3" style="position: relative">
                                 <label for="">* Time To</label>
-                                <input id="datetimex" required type="text" value="9:30" placeholder="(7:00)" name="time_to" id="time_to" class="form-control" />
+                                <input id="datetimex" required type="text" value="10:00" placeholder="(7:00)" name="time_to" id="time_to" class="form-control" />
                             </div>
 
                             <div class="mb-3">

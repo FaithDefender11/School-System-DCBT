@@ -29,13 +29,18 @@
 
         
         $school_year = new SchoolYear($con);
+
+        $school_year_obj = $school_year->GetActiveSchoolYearAndSemester();
+
+        $current_school_year_id = $school_year_obj['school_year_id'];
+
         $department = new Department($con);
         $section = new Section($con, null);
         $student = new Student($con);
 
         $enrollment = new Enrollment($con);
 
-        $generateFormId = $enrollment->GenerateEnrollmentFormId();
+        $generateFormId = $enrollment->GenerateEnrollmentFormId($current_school_year_id);
         $enrollment_form_id = $enrollment->CheckEnrollmentFormIdExists($generateFormId);
         if (!isset($_SESSION['enrollment_form_id'])) {
             

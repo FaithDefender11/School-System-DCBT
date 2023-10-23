@@ -75,6 +75,10 @@
         return isset($this->sqlData['type']) ? $this->sqlData["type"] : ""; 
     }
 
+
+
+
+
     public function GetPendingNationality() {
         return isset($this->sqlData['nationality']) ? ucfirst($this->sqlData["nationality"]) : ""; 
     }
@@ -96,6 +100,13 @@
         }
     }
 
+    public function GetEnrolleeStatus() {
+        return isset($this->sqlData['student_status']) ? ucfirst($this->sqlData["student_status"]) : ""; 
+    }
+
+    public function GetPendingEnrollmentStatus() {
+        return isset($this->sqlData['enrollment_status']) ? ucfirst($this->sqlData["enrollment_status"]) : ""; 
+    }
 
     public function GetPendingBirthday() {
         return isset($this->sqlData['birthday']) ? $this->sqlData["birthday"] : ""; 
@@ -164,7 +175,7 @@
             AND activated=:activated
             LIMIT 1");
     
-        $query->bindValue(":student_status", "APPROVED");
+        $query->bindValue(":student_status", "REJECTED");
         $query->bindParam(":email", $email);
         $query->bindParam(":activated", $activated);
         $query->execute();
@@ -319,6 +330,35 @@
         return false;
     }
 
+    public function UpdateNewEnrolleeSchoolHistory(
+        $pending_enrollees_id, $school_name,
+        $year_started, $year_ended, $address
+    ) {
+
+        $query = $this->con->prepare("UPDATE pending_enrollees SET 
+            school_name = :school_name,
+            year_started = :year_started,
+            year_ended = :year_ended,
+            address = :address
+            
+            WHERE pending_enrollees_id = :pending_enrollees_id
+        ");
+
+        $query->bindParam(":school_name", $school_name);
+        $query->bindParam(":year_started", $year_started);
+        $query->bindParam(":year_ended", $year_ended);
+        $query->bindParam(":address", $address);
+        $query->bindParam(":pending_enrollees_id", $pending_enrollees_id);
+
+        $query->execute();
+
+        if($query->rowCount() > 0){
+            return true;
+        }
+
+        return false;
+    }
+
  
     public function InsertSchoolHistoryAsPending($pending_enrollees_id, $school_name,
         $year_started, $year_ended, $address){
@@ -346,7 +386,7 @@
         $student_school_history_id, $pending_enrollees_id,
         $school_name, $year_started, $year_ended, $address) {
 
-        $update = $this->con->prepare("UPDATE student_school_history
+        $update = $this->con->prepare("UPDATE parent
             SET school_name = :school_name, year_started = :year_started, year_ended = :year_ended, address = :address
             WHERE student_school_history_id = :student_school_history_id
             AND pending_enrollees_id = :pending_enrollees_id
@@ -1394,6 +1434,23 @@
         WHERE pending_enrollees_id = :pending_enrollees_id");
 
         $query->bindValue(":student_status", "REJECTED");
+        $query->bindValue(":pending_enrollees_id", $pending_enrollees_id);
+        $query->execute();
+
+        if($query->rowCount() > 0){
+            return true;
+        }
+        return false;
+    }
+
+    public function MarkAsEnrolled($pending_enrollees_id) {
+
+        
+        $query = $this->con->prepare("UPDATE pending_enrollees
+            SET is_enrolled=:is_enrolled
+        WHERE pending_enrollees_id = :pending_enrollees_id");
+
+        $query->bindValue(":is_enrolled", 1, PDO::PARAM_INT);
         $query->bindValue(":pending_enrollees_id", $pending_enrollees_id);
         $query->execute();
 

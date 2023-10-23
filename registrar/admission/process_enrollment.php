@@ -55,10 +55,10 @@
         $enrollment = new Enrollment($con);
         $section = new Section($con);
         
-        $enrollment_form_id = $enrollment->GenerateEnrollmentFormId();
+        $enrollment_form_id = $enrollment->GenerateEnrollmentFormId($current_school_year_id);
 
         if (!isset($_SESSION['enrollment_form_id'])) {
-            $enrollment_form_id = $enrollment->GenerateEnrollmentFormId();
+            $enrollment_form_id = $enrollment->GenerateEnrollmentFormId($current_school_year_id);
             $_SESSION['enrollment_form_id'] = $enrollment_form_id;
             
         } else {
@@ -706,15 +706,16 @@
         $enrollment = new Enrollment($con);
 
 
-        $generated_enrollment_form_id = $enrollment->GenerateEnrollmentFormId();
+        $generated_enrollment_form_id = $enrollment->GenerateEnrollmentFormId($current_school_year_id);
 
         if (!isset($_SESSION['enrollment_form_id'])) {
-            $generated_enrollment_form_id = $enrollment->GenerateEnrollmentFormId();
+            $generated_enrollment_form_id = $enrollment->GenerateEnrollmentFormId($current_school_year_id);
             $_SESSION['enrollment_form_id'] = $generated_enrollment_form_id;
             
         } else {
             $generated_enrollment_form_id = $_SESSION['enrollment_form_id'];
         }
+
 
         // echo $generated_enrollment_form_id;
 

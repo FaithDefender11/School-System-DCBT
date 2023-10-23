@@ -54,6 +54,16 @@
         return isset($this->sqlData['education_type']) ? $this->sqlData["education_type"] : null; 
     }
 
+    public function GetStudentType() {
+        return isset($this->sqlData['student_type']) ? $this->sqlData["student_type"] : null; 
+    }
+
+    public function GetAdmissionStatus() {
+        return isset($this->sqlData['admission_status']) ? $this->sqlData["admission_status"] : null; 
+    }
+
+
+
     public function GetForm137() {
         return isset($this->sqlData['form_137']) ? $this->sqlData["form_137"] : null; 
     }
@@ -116,7 +126,7 @@
 
     public function CheckStudentExisted($student_id){
 
-        $query= $this->con->prepare("SELECT pending_enrollees_id FROM student_requirement
+        $query= $this->con->prepare("SELECT student_requirement_id FROM student_requirement
             WHERE student_id=:student_id
             ");
 
@@ -138,6 +148,7 @@
 
         return $query->rowCount() > 0;
     }
+    
 
     public function CheckSubmittedRequirementCount(
         $requirement_id, $student_requirement_id, $maxAllowed){
@@ -171,6 +182,7 @@
 
 
         if($this->CheckStudentExisted($student_id) == false){
+            
             $create = $this->con->prepare("INSERT INTO student_requirement
                     (student_id, student_type)
                     VALUES (:student_id, :student_type)");
@@ -188,17 +200,19 @@
     }
 
     public function InitializedPendingEnrolleeRequirement(
-        $pending_enrollees_id, $student_type, $school_year_id) {
+        $pending_enrollees_id, $school_year_id ) {
 
 
         if($this->CheckEnrolleeExisted($pending_enrollees_id) == false){
 
             $create = $this->con->prepare("INSERT INTO student_requirement
-                    (pending_enrollees_id, student_type, school_year_id)
-                    VALUES (:pending_enrollees_id, :student_type, :school_year_id)");
+                    (pending_enrollees_id, school_year_id)
+                    VALUES (:pending_enrollees_id, :school_year_id)");
 
             $create->bindParam(':pending_enrollees_id', $pending_enrollees_id);
-            $create->bindParam(':student_type', $student_type);
+            // $create->bindParam(':admission_status', $admission_status);
+            // $create->bindParam(':student_type', $student_type);
+            
             $create->bindParam(':school_year_id', $school_year_id);
             $create->execute();
 
@@ -276,6 +290,33 @@
         $update->bindValue(":good_moral_valid",
             $goodMoralValid === 0 ? 1 : 0);
         $update->bindParam(":student_id", $student_id);
+        $update->bindParam(":student_requirement_id", $student_requirement_id);
+        $update->execute();
+
+        if($update->rowCount() > 0){
+            return true;
+        }
+
+        return false;
+    }
+
+    public function UpdateStudentRequirementAdmission($pending_enrollees_id,
+        $student_requirement_id, $student_type, $admission_status) {
+    
+        
+        $update = $this->con->prepare("UPDATE student_requirement
+
+            SET admission_status=:admission_status,
+                student_type=:student_type
+
+            WHERE pending_enrollees_id=:pending_enrollees_id
+            AND student_requirement_id=:student_requirement_id
+            ");
+ 
+        $update->bindParam(":admission_status", $admission_status);
+        $update->bindParam(":student_type", $student_type);
+
+        $update->bindParam(":pending_enrollees_id", $pending_enrollees_id);
         $update->bindParam(":student_requirement_id", $student_requirement_id);
         $update->execute();
 
@@ -442,6 +483,7 @@
     }
 
 
+    # Get EnrolleeRequirement
     public function GetStudentRequirement($pending_enrollees_id, $school_year_id) {
 
         $sql = $this->con->prepare("SELECT student_requirement_id
@@ -452,6 +494,26 @@
         ");
 
         $sql->bindParam(":pending_enrollees_id", $pending_enrollees_id);
+        $sql->bindParam(":school_year_id", $school_year_id);
+        $sql->execute();
+
+        if($sql->rowCount() > 0){
+            return $sql->fetchColumn();
+        }
+
+        return NULL;
+    }
+
+    public function GetEnrollledStudentRequirement($student_id, $school_year_id) {
+
+        $sql = $this->con->prepare("SELECT student_requirement_id
+
+            FROM student_requirement
+            WHERE student_id=:student_id
+            AND school_year_id=:school_year_id
+        ");
+
+        $sql->bindParam(":student_id", $student_id);
         $sql->bindParam(":school_year_id", $school_year_id);
         $sql->execute();
 

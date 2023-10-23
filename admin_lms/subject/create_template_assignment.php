@@ -8,9 +8,7 @@
 
     
     if(
-        isset($_GET['id'])
-        && isset($_GET['ct_id'])
-        ){
+        isset($_GET['id']) && isset($_GET['ct_id'])){
 
         $subject_program_id = $_GET['id'];
         $subject_period_code_topic_template_id = $_GET['ct_id'];
@@ -33,6 +31,7 @@
             // && isset($_POST['max_attempt']) 
             && isset($_POST['max_score']) 
             && isset($_POST['type']) 
+            && isset($_POST['task_type_id']) 
             
             ){
 
@@ -41,6 +40,8 @@
                 // $max_attempt = $_POST['max_attempt'];
                 $max_score = $_POST['max_score'];
                 $type = $_POST['type'];
+
+                $task_type_id = $_POST['task_type_id'];
 
                 $assignment_images = $_FILES['assignment_images'] ?? NULL;
                 $image_upload = NULL;
@@ -66,7 +67,8 @@
                 $successCreate = $subjectCodeAssignmentTemplate->AddAssignmentTemplate(
                     $subject_period_code_topic_template_id,
                     $assignment_name, $description,
-                    $max_score, $type);
+                    $max_score, $type,
+                $task_type_id);
 
                 if($successCreate){
                     $subject_code_assignment_template_id = $con->lastInsertId();
@@ -140,22 +142,54 @@
                                 <div class='form-group mb-2'>
 
                                     <label for="type" class='mb-2'>Type *</label>
+                                    
                                     <select class="form-control" name="type" id="type">
-                                        <option value="" selected disabled>Choose Type</option>
-                                        <option value="text">Text</option>
-                                        <option value="upload">Upload</option>
+                                        <!-- <option value="" selected disabled>Choose Type</option> -->
+                                        <!-- <option value="text">Text</option> -->
+                                        <option selected value="upload">Upload</option>
                                     </select>
 
                                 </div>
 
                                 <div class='form-group mb-2'>
-                                    <label for="assignment_name" class='mb-2'>Assignment Name *</label>
+
+                                    <label for="task_type_id" class='mb-2'>* Category</label>
+                                    
+                                    <select required class="form-control" name="task_type_id" id="task_type_id">
+                                        <?php 
+                                        
+                                            $query = $con->prepare("SELECT * FROM task_type WHERE enabled=1");
+                                            $query->execute();
+                                            if($query->rowCount() > 0){
+
+                                                echo "
+                                                    <option value='' selected disabled>Choose Type</option>
+                                                ";
+                                                while($row = $query->fetch(PDO::FETCH_ASSOC)){
+
+                                                    $task_type_id = $row['task_type_id'];
+                                                    $task_name = $row['task_name'];
+
+
+                                                    echo "
+                                                        <option value='$task_type_id'>$task_name</option>
+                                                    ";
+                                                }
+                                            }
+                                        
+                                        ?>
+                                    </select>
+
+                                </div>
+
+                                <div class='form-group mb-2'>
+                                    <label for="assignment_name" class='mb-2'>Task Name *</label>
                                     <input required id="assignment_name" class='form-control' type='text' placeholder='' name='assignment_name'>
                                 </div>
 
                                 <div class='form-group mb-2'>
                                     <label for="description" class='mb-2'>Description *</label>
-                                    <input required id="description" class='form-control' type='text' placeholder='' name='description'>
+                                    <textarea required id="description" class="summernote form-control" type="text" placeholder="" name="description"></textarea>
                                 </div>
 
                                 <div class='form-group mb-2'>
@@ -191,3 +225,10 @@
     }
 ?>
 
+<script>
+    $(document).ready(function () {
+        $('.summernote').summernote({
+            height:250
+        });
+    });
+</script>

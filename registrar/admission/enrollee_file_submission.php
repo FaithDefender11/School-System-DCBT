@@ -69,9 +69,9 @@
                             <header>
                                 <div class="title">
                                     <div class="text-right">
-                                        <button type="button" onclick="window.location.href='<?= $contact_url;?>'" class="btn btn-success btn-sm">
+                                       <a href="<?= $contact_url; ?>" target="_blank" class="btn btn-success btn-sm">
                                             <i class="fas fa-phone"></i> &nbsp; Contact
-                                        </button>
+                                        </a>
                                     </div>
                                     <h4 style="font-weight: bold;"><?php echo "$admission_status"; ?> Requirements to submit: </h4>
                                 </div>

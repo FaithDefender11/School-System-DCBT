@@ -35,9 +35,7 @@
 
   <head>
 
-    <title>My Calendar</title>
-    <!-- *Note: You must have internet connection on your laptop or pc other wise below code is not working -->
-    <!-- CSS for full calender -->
+   
     <link
       href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.css"
       rel="stylesheet"
@@ -58,9 +56,9 @@
     <style>
 
     .fc-content {
-   width: auto !important;
-    white-space: normal !important;
-    overflow: visible !important;
+      width: auto !important;
+      white-space: normal !important;
+      overflow: visible !important;
     }
     </style>
   </head>
@@ -71,7 +69,7 @@
       <div class="row">
         <div class="col-lg-12">
           <h4 style="font-weight: bold;" class="mt-2 text-primary text-center">
-            My Calendar
+            Task Calendar
           </h4>
           <div id="calendar"></div>
         </div>
@@ -180,7 +178,6 @@
       <?php echo $enrollment_id; ?>
     `;
 
-    
 
     display_events(studentId, current_school_year_id, enrollment_id);
 

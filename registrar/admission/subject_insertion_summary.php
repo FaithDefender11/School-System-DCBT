@@ -15,6 +15,12 @@
     include_once('../../includes/classes/Schedule.php');
     include_once('../../includes/classes/PendingParent.php');
  
+    // require_once __DIR__ . '../../../includes/config.php';
+    // require_once __DIR__ . '../../../vendor/autoload.php';
+    include_once('../../vendor/autoload.php');
+
+    use Dompdf\Dompdf;
+
     ?>
         <style>
             .dropdown-menu.show{
@@ -22,6 +28,7 @@
             }
             <?php include "../../assets/css/content.css" ?>
         </style>
+
     <?php
 
     $department = new Department($con, null);
@@ -67,6 +74,7 @@
         $student_subject = new StudentSubject($con);
         $pending = new Pending($con);
 
+        $processEnrolled = false;
 
         // $promptIDIfDoesntExists = $student->CheckIdExists($student_id);
 
@@ -264,7 +272,7 @@
 
         // echo $enrollment_course_section_level;
 
-        $back_url = "process_enrollment.php?subject_review=show&st_id=$student_id&selected_course_id=$student_enrollment_course_id";
+        // $back_url = "process_enrollment.php?subject_review=show&st_id=$student_id&selected_course_id=$student_enrollment_course_id";
 
 
 // if($isSectionFull == false 
@@ -311,254 +319,19 @@
             include_once('./subject_insertion_details.php');
         }
 
-        if(isset($_GET['enrolled_subject']) && $_GET['enrolled_subject'] == "show"){
+        if(isset($_GET['enrolled_subject']) 
+            && $_GET['enrolled_subject'] == "show"){
 
-            if(isset($_POST['subject_load_btn']) && isset($_POST['unique_enrollment_form_id']) ){
-            
-                $array_success = [];
-
-                $unique_enrollment_form_id = $_POST['unique_enrollment_form_id'];
- 
-                $assignedSubjects = $student_subject->GetStudentAssignSubjects(
-                    $enrollment_id, 
-                    $student_id,
-                    $current_school_year_id);
-
-                $isAllFinalized = false;
-                $successEnrollmentEnrolled = false;
-
-                $successEnrollmentEnrolled = $enrollment->EnrollmentFormMarkAsEnrolled(
-                        $current_school_year_id,
-                        $student_enrollment_course_id,
-                        $student_id,
-                        $student_enrollment_form_id,
-                        $student_enrollment_student_status);
-                
-                $grade = new StudentSubjectGrade($con);
-
-                if($successEnrollmentEnrolled){
-
-                    $section_exec = new Section($con, $student_enrollment_course_id);
-
-                    $latestStudentNumberInSection = $section_exec->
-                        GetTotalNumberOfStudentInSection($student_enrollment_course_id,
-                            $current_school_year_id);
-                     
-
-                    foreach ($assignedSubjects as $key => $value) {
-
-                        $enrollment_id = $value['enrollment_id'];
-                        $is_transferee = $value['is_transferee'];
-                        $student_id = $value['student_id'];
-                        $student_subject_id = $value['student_subject_id'];
-
-                        if($is_transferee == 0 && $enrollment_id != NULL){
-
-                            // Mark as Enrolled Subject in the Student_Subject DB.
-                            if($student_subject->StudentSubjectMarkAsFinal($enrollment_id,
-                                // $student_enrollment_course_id, 
-                                $student_id, $current_school_year_id) == true){
-                                
-                                $isAllFinalized = true;
-                            }
-                        }
-                    }
-
-                    if($isAllFinalized == true){
-
-                        # Check if student has enrolled form, if has removed the form
-                        # and enrolled the new tentative form
-                        
-                        $checkPreviousEnrolled = $enrollment->CheckStudentHasEnrolledFormAndRemove(
-                            $student_id, $current_school_year_id);
-
-                        // Once given an enrollment form. it should dictated if the student is irregular or regular
-
-                        # Remove the previous form, and Enroll the new Form.
-                        
-                        // $markEnrolled = $enrollment->EnrollmentFormMarkAsEnrolled(
-                        //     $current_school_year_id,
-                        //     $student_enrollment_course_id,
-                        //     $student_id,
-                        //     $student_enrollment_form_id,
-                        //     $student_enrollment_student_status);
-
-                        // if(($markEnrolled) == true){
-
-                            // $change_student_course_id_success = $student->UpdateStudentCourseId($student_id,
-                            //     $student_course_id, $student_enrollment_course_id,
-                            //     $enrollment_course_section_level, $student_enrollment_student_status);
-                            
-                            # Update latest section to the student & username, student_unique_id creation
-
-                            $created_student_unique_id = $student->GenerateUniqueStudentHexaDecimalNumber();
-                            $created_student_username = $student->GenerateStudentUsername(
-                                $student_lastname,
-                                $created_student_unique_id);
+            // if (isset($_POST['subject_load_btn']) 
+            //     && isset($_POST['unique_enrollment_form_id'])) {
 
 
-                            $updateStudentEnrollmentFormBasedSuccess = false;
+            // }
 
-                            if($enrollment_is_new === 1 && $student_admission_status === "New"){
-
-                                $updateStudentEnrollmentFormBasedSuccess = $student->UpdateStudentEnrollmentFormBased(
-                                    $student_id,
-                                    $enrollment_course_section_level,
-                                    $student_enrollment_course_id,
-                                    $student_enrollment_student_status,
-                                    $created_student_unique_id,
-                                    $created_student_username);
-
-                                # Create the Student Requirement Table
-                                # Enrollment New Form.
-                                if($updateStudentEnrollmentFormBasedSuccess == true){
-
-                                    # If student has Pending Table, Removed as it was created and officially
-                                    # enrolled in the Student Table.
-
-                                    $get_student_new_pending_id = $pending->GetPendingAccountByStudentTable(
-                                        $student_email, $student_firstname, $student_lastname);
-
-                                    if($get_student_new_pending_id !== NULL){
-
-                                     
-                                        # Once officially enrolled,
-                                        # 1. Pending Enrollee Account -> Removed.
-                                        # 2. Parent Pending Enrollee Id -> NULL, Student_Id (Updated)
-                                        # 3. Student School History Pending Enrollee Id -> NULL, Student_Id (Updated)
-
-                                        $parent = new PendingParent($con);
-
-                                        $parentEnrolleeRemovalSuccess = $parent->PendingEnrolleeSetAsNull(
-                                            $get_student_new_pending_id, $student_id);
-
-                                        # Set School History Pending Id to Null (Because Pending enrollee is now enrolled (Student Table generated))
-                                        $studentHistoryEnrolleeRemovalSuccess = $pending->SchoolHistoryEnrolleeSetAsNullAndStudentIdUpdated(
-                                            $get_student_new_pending_id, $student_id);
-
-                                        # Pending Mark as REJECTED.
-                                        // $successRejected = $pending->MarkAsRejected($get_student_new_pending_id);
-                                        
-                                        $pendingSuccessRemoval = $pending->RemoveNewEnrollee($get_student_new_pending_id);
-                                    }
-                                
-                                    $initRequirement = $requirement->InitializedStudentRequirementTable(
-                                        $student_id, $type);
-                                }
-                            }
-
-                            # RFR
-                            if($enrollment_is_new === 0 && $student_admission_status === "Old"){
-
-                                # Updating Student Course Id Scenario is Either on
-                                # 1. Ongoing student decided to change program
-                                # 2. Moving Up to Higher Program Level (STEM11-A -> STEM12-A)
-                                
-                                $wasSuccess = $student->UpdateOldStudentEnrollmentForm(
-                                    $student_id,
-                                    $enrollment_course_section_level,
-                                    $student_enrollment_course_id);
-
-                                // if($wasSuccess){
-                                //     $updateStudentEnrollmentFormBasedSuccess = true;
-                                // }
-                            }
-                            
-
-                            $capacity = $section->GetSectionCapacity();
-                            $course_program_id = $section->GetSectionProgramId($student_enrollment_course_id);
-                            $course_level = $section->GetSectionGradeLevel();
-                            $program_section = $section->GetSectionName();
-
-                            $successCreateNewSection = false;
-
-                            $checkNextActiveSectionIfExistNotFull = $section->CheckNextActiveSectionIfExistNotFull($program_section,
-                                $current_school_year_term);
-
-                            $checkNextActiveSectionIfExist = $section->CheckNextActiveSectionIfExist($program_section,
-                                $current_school_year_term);
-
-                            # HUMMS11-A = 2 / 3
-                            # 3 / 3, 
-                            # if next created same program & level section is not full it should not create HUMMS11-B
-                            # if next created same program & level section is full it should create HUMMS11-C
-                            # HUMMS11-B (NOT FULL)
-                            # HUMMS11-B (FULL)
-
-                            $checkNextInActiveSectionIfExistAndUpdateToActive = $section
-                                ->CheckNextInActiveSectionIfExistAndUpdateToActive($program_section,
-                                $current_school_year_term);
-
-                            $updateInActivePreviousSectionToActive = false;
-
-                            if($checkNextInActiveSectionIfExistAndUpdateToActive){
-                                $updateInActivePreviousSectionToActive = true;
-                            }
-
-
-                            // $section_exec = new Section($con, $student_enrollment_course_id);
-                            // $latestStudentNumberInSection = $section_exec->
-                            //     GetTotalNumberOfStudentInSection($student_enrollment_course_id,
-                            //         $current_school_year_id);
-
-                            if ($latestStudentNumberInSection >= $capacity &&
-                                count($hasAvailableRoomWithinSemester) > 0
-                                && (($checkNextActiveSectionIfExist && !$checkNextActiveSectionIfExistNotFull) 
-                                        || !$checkNextActiveSectionIfExist)){
-
-                                # Update Previous Section into Is FULL.
-                                $update_isfull = $section->SetSectionIsFull($student_enrollment_course_id);
-                                
-                                $new_program_section = $section->AutoCreateAnotherSection($program_section);
-
-                                # Create New Section
-                                $createNewSection = $section->CreateNewSection($new_program_section, 
-                                    $course_program_id, $course_level,
-                                    $current_school_year_term);
-
-                                if($createNewSection == true){
-
-                                    $successCreateNewSection = true;
-
-                                    if(
-                                        $successCreateNewSection == true
-                                        // && $updateStudentEnrollmentFormBasedSuccess
-                                        ){
-
-                                        // Alert::success("Enrollment Form ID: $student_enrollment_form_id is now enrolled. This section is now full,
-                                        //     System has created new section.", "../student/record_details.php?id=$student_id&enrolled_subject=show");
-
-                                        Alert::success("Enrollment Form ID: $student_enrollment_form_id is now enrolled and New Section has been Created.", "../student/record_details.php?id=$student_id&enrolled_subject=show");
-                                        exit();
-                                    }
-                                }
-                            }
-
-                            if(
-                                // $updateStudentEnrollmentFormBasedSuccess == true
-                                $successCreateNewSection == false
-                                ){
-
-                                Alert::success("Enrollment Form ID: $student_enrollment_form_id is now enrolled.", "../student/record_details.php?id=$student_id&enrolled_subject=show");
-                                exit();
-                            }
-                        // }
-                    }
-
-                }
-
-
-
-            }
            
             ?>
                 <div class="content">
-                    <nav>
-                        <a href="<?php echo $back_url; ?>">
-                            <i class="bi bi-arrow-return-left fa-1x"></i>
-                        <span>Back</span>
-                        </a>
-                    </nav>
+ 
 
                     <div class="content-header">
 
@@ -808,7 +581,6 @@
                                                 <?php
                                             }
                                             else if($type == "SHS"){
-                                                
                                                 ?>
                                                     <span>
 
@@ -940,15 +712,341 @@
                                             }
                                         ?>
                                     </span>
+
                                     <h4>
+
                                        <a style="all: unset;" href='../section/show.php?id=<?php echo $student_enrollment_course_id; ?>'>
                                             <?php echo $enrollment_course_section_name; ?>
                                         </a> 
+
+                                        <form style="display: none;" action="print_enrolled_subject.php" method="POST" id="printForm">
+
+                                     
+                                            <input type="hidden" name="enrollment_id" id="enrollment_id" value="<?php echo $enrollment_id;?>">
+                                            <input type="hidden" name="student_id" id="student_id" value="<?php echo $student_id;?>">
+                                            <input type="hidden" name="school_year_id" id="school_year_id" value="<?php echo $current_school_year_id;?>">
+                                            
+                                            <button name="print_enrolled_subject" id="toClickButton" class="btn btn-sm btn-success">Print</button>
+
+                                        </form>
+
+
                                     </h4>
                                     
                                 </div>
 
                                 <?php
+
+                                    if(isset($_POST['subjexct_load_btn']) 
+                                        && isset($_POST['unixque_enrollment_form_id'])){
+
+
+                                        # TRIGGERED
+                                        $processEnrolled = true;
+
+                                        if($processEnrolled == true){
+                                            Alert::success("Student has been enrolled.", "");
+                                            // exit();
+
+                                            ?>
+                                                <script>
+
+                                                    // let processEnrolledJs = `
+                                                    //     <?php echo $processEnrolled;?>
+                                                    // `;
+
+                                                    // processEnrolledJs = processEnrolledJs.trim();
+
+                                                    // // console.log(processEnrolledJs);
+
+                                                    // if(processEnrolledJs == true){
+                                                    
+                                                    //     var buttonToClick = document.getElementById('toClickButton');
+                                                    //     buttonToClick.click();
+                                                    // }
+
+                                                </script>
+                                            <?php
+
+                                        }
+
+                                    }
+                                        
+
+                                    if(isset($_POST['subject_load_btn']) 
+                                        && isset($_POST['unique_enrollment_form_id'])){
+
+
+                                       
+                                        // echo "Qweqew";
+
+                                    
+                                    
+                                        $array_success = [];
+
+                                        $unique_enrollment_form_id = $_POST['unique_enrollment_form_id'];
+                        
+                                        $assignedSubjects = $student_subject->GetStudentAssignSubjects(
+                                            $enrollment_id, 
+                                            $student_id,
+                                            $current_school_year_id);
+
+
+                                        
+
+                                        $isAllFinalized = false;
+                                        $successEnrollmentEnrolled = false;
+
+                                        $successEnrollmentEnrolled = $enrollment->EnrollmentFormMarkAsEnrolled(
+                                                $current_school_year_id,
+                                                $student_enrollment_course_id,
+                                                $student_id,
+                                                $student_enrollment_form_id,
+                                                $student_enrollment_student_status);
+                                        
+                                        $grade = new StudentSubjectGrade($con);
+
+                                        if($successEnrollmentEnrolled){
+
+                                            $section_exec = new Section($con, $student_enrollment_course_id);
+
+                                            $latestStudentNumberInSection = $section_exec->
+                                                GetTotalNumberOfStudentInSection($student_enrollment_course_id,
+                                                    $current_school_year_id);
+                                            
+                                            
+
+                                            foreach ($assignedSubjects as $key => $value) {
+
+                                                $enrollment_id = $value['enrollment_id'];
+                                                $is_transferee = $value['is_transferee'];
+                                                $student_id = $value['student_id'];
+                                                $student_subject_id = $value['student_subject_id'];
+
+                                                if($is_transferee == 0 && $enrollment_id != NULL){
+
+                                                    // Mark as Enrolled Subject in the Student_Subject DB.
+                                                    if($student_subject->StudentSubjectMarkAsFinal($enrollment_id,
+                                                        // $student_enrollment_course_id, 
+                                                        $student_id, $current_school_year_id) == true){
+                                                        
+                                                        $isAllFinalized = true;
+                                                    }
+                                                }
+                                            }
+
+                                            if($isAllFinalized == true){
+
+                                                # Check if student has enrolled form, if has removed the form
+                                                # and enrolled the new tentative form
+                                                
+                                                $checkPreviousEnrolled = $enrollment->CheckStudentHasEnrolledFormAndRemove(
+                                                    $student_id, $current_school_year_id);
+
+                                                // if(($markEnrolled) == true){
+
+                                                    // $change_student_course_id_success = $student->UpdateStudentCourseId($student_id,
+                                                    //     $student_course_id, $student_enrollment_course_id,
+                                                    //     $enrollment_course_section_level, $student_enrollment_student_status);
+                                                    
+                                                    # Update latest section to the student & username, student_unique_id creation
+
+                                                    // $created_student_unique_id = $student->GenerateUniqueStudentHexaDecimalNumber();
+                                                    
+                                                    # FROM 000001 to 999999, and 1000000 and so on again,
+                                                    
+                                                    $created_student_unique_id = $student->GenerateUniqueStudentNumberV2();
+
+                                                    $created_student_username = $student->GenerateStudentUsername(
+                                                        $student_lastname,
+                                                        $created_student_unique_id);
+
+
+                                                    $updateStudentEnrollmentFormBasedSuccess = false;
+
+                                                    if($enrollment_is_new === 1 && $student_admission_status === "New"){
+
+                                                        $updateStudentEnrollmentFormBasedSuccess = $student->UpdateStudentEnrollmentFormBased(
+                                                            $student_id,
+                                                            $enrollment_course_section_level,
+                                                            $student_enrollment_course_id,
+                                                            $student_enrollment_student_status,
+                                                            $created_student_unique_id,
+                                                            $created_student_username);
+
+                                                        # Create the Student Requirement Table
+                                                        # Enrollment New Form.
+                                                        if($updateStudentEnrollmentFormBasedSuccess == true){
+
+                                                            # If student has Pending Table, Removed as it was created and officially
+                                                            # enrolled in the Student Table.
+
+                                                            $get_student_new_pending_id = $pending->GetPendingAccountByStudentTable(
+                                                                $student_email, $student_firstname, $student_lastname);
+
+                                                            if($get_student_new_pending_id !== NULL){
+
+
+                                                                $processEnrolled = true;
+                                                            
+                                                                # Once officially enrolled,
+                                                                # 1. Pending Enrollee Account -> Removed.
+                                                                # 2. Parent Pending Enrollee Id -> NULL, Student_Id (Updated)
+                                                                # 3. Student School History Pending Enrollee Id -> NULL, Student_Id (Updated)
+
+                                                                $parent = new PendingParent($con);
+
+                                                                $parentEnrolleeRemovalSuccess = $parent->PendingEnrolleeSetAsNull(
+                                                                    $get_student_new_pending_id, $student_id);
+
+                                                                # Set School History Pending Id to Null (Because Pending enrollee is now enrolled (Student Table generated))
+                                                                $studentHistoryEnrolleeRemovalSuccess = $pending->SchoolHistoryEnrolleeSetAsNullAndStudentIdUpdated(
+                                                                    $get_student_new_pending_id, $student_id);
+
+                                                                # Pending Mark as Enrolled
+                                                                $successRejected = $pending->MarkAsEnrolled($get_student_new_pending_id);
+                                                                
+                                                                # Pending Removal if it he was being enrolled.
+                                                                // $pendingSuccessRemoval = $pending->RemoveNewEnrollee($get_student_new_pending_id);
+
+                                                            }
+                                                        
+                                                            $initRequirement = $requirement->InitializedStudentRequirementTable(
+                                                                $student_id, $type);
+                                                        }
+                                                    }
+
+                                                    # RFR
+                                                    if($enrollment_is_new === 0 && $student_admission_status === "Old"){
+
+                                                        # Updating Student Course Id Scenario is Either on
+                                                        # 1. Ongoing student decided to change program
+                                                        # 2. Moving Up to Higher Program Level (STEM11-A -> STEM12-A)
+                                                        
+                                                        $wasSuccess = $student->UpdateOldStudentEnrollmentForm(
+                                                            $student_id,
+                                                            $enrollment_course_section_level,
+                                                            $student_enrollment_course_id);
+
+                                                        // if($wasSuccess){
+                                                        //     $updateStudentEnrollmentFormBasedSuccess = true;
+                                                        // }
+                                                    }
+                                                    
+
+                                                    $capacity = $section->GetSectionCapacity();
+                                                    $course_program_id = $section->GetSectionProgramId($student_enrollment_course_id);
+                                                    $course_level = $section->GetSectionGradeLevel();
+                                                    $program_section = $section->GetSectionName();
+
+                                                    $successCreateNewSection = false;
+
+                                                    $checkNextActiveSectionIfExistNotFull = $section->CheckNextActiveSectionIfExistNotFull($program_section,
+                                                        $current_school_year_term);
+
+                                                    $checkNextActiveSectionIfExist = $section->CheckNextActiveSectionIfExist($program_section,
+                                                        $current_school_year_term);
+
+                                                    # HUMMS11-A = 2 / 3
+                                                    # 3 / 3, 
+                                                    # if next created same program & level section is not full it should not create HUMMS11-B
+                                                    # if next created same program & level section is full it should create HUMMS11-C
+                                                    # HUMMS11-B (NOT FULL)
+                                                    # HUMMS11-B (FULL)
+
+                                                    $checkNextInActiveSectionIfExistAndUpdateToActive = $section
+                                                        ->CheckNextInActiveSectionIfExistAndUpdateToActive($program_section,
+                                                        $current_school_year_term);
+
+                                                    $updateInActivePreviousSectionToActive = false;
+
+                                                    if($checkNextInActiveSectionIfExistAndUpdateToActive){
+                                                        $updateInActivePreviousSectionToActive = true;
+                                                    }
+
+
+                                                    // $section_exec = new Section($con, $student_enrollment_course_id);
+                                                    // $latestStudentNumberInSection = $section_exec->
+                                                    //     GetTotalNumberOfStudentInSection($student_enrollment_course_id,
+                                                    //         $current_school_year_id);
+
+                                                    if ($latestStudentNumberInSection >= $capacity &&
+                                                        count($hasAvailableRoomWithinSemester) > 0
+                                                        && (($checkNextActiveSectionIfExist && !$checkNextActiveSectionIfExistNotFull) 
+                                                                || !$checkNextActiveSectionIfExist)){
+
+                                                        # Update Previous Section into Is FULL.
+                                                        $update_isfull = $section->SetSectionIsFull($student_enrollment_course_id);
+                                                        
+                                                        $new_program_section = $section->AutoCreateAnotherSection($program_section);
+
+                                                        # Create New Section
+                                                        $createNewSection = $section->CreateNewSection($new_program_section, 
+                                                            $course_program_id, $course_level,
+                                                            $current_school_year_term);
+
+                                                        if($createNewSection == true){
+
+                                                            $successCreateNewSection = true;
+
+                                                            if(
+                                                                $successCreateNewSection == true
+                                                                // && $updateStudentEnrollmentFormBasedSuccess
+                                                                ){
+
+                                                                // Alert::success("Enrollment Form ID: $student_enrollment_form_id is now enrolled. This section is now full,
+                                                                //     System has created new section.", "../student/record_details.php?id=$student_id&enrolled_subject=show");
+
+                                                                // $processEnrolled = true;
+
+                                                                Alert::success("Enrollment Form ID: $student_enrollment_form_id is now enrolled and New section has been created.", "../student/record_details.php?id=$student_id&enrolled_subject=show");
+                                                                // exit();
+                                                            }
+                                                        }
+                                                    }
+
+                                                    if(
+                                                        // $updateStudentEnrollmentFormBasedSuccess == true
+                                                        $successCreateNewSection == false
+                                                        ){
+
+                                                        if($processEnrolled){
+                                                            Alert::success("Enrollment Form ID: $student_enrollment_form_id is now enrolled.", "../student/record_details.php?id=$student_id&enrolled_subject=show");
+
+                                                                ?>
+                                                                    <script>
+
+                                                                        let processEnrolledJs = `
+                                                                            <?php echo $processEnrolled;?>
+                                                                        `;
+
+                                                                        processEnrolledJs = processEnrolledJs.trim();
+
+                                                                        // console.log(processEnrolledJs);
+
+                                                                        if(processEnrolledJs == true){
+                                                                        
+                                                                            var buttonToClick = document.getElementById('toClickButton');
+                                                                            buttonToClick.click();
+                                                                        }
+
+                                                                    </script>
+                                                                <?php
+
+                                                            // exit();
+
+                                                        }
+
+                                                    }
+
+                                                // }
+                                            }
+
+                                        }
+
+
+
+                                    }
 
                                     $student_enrollment_program_id = $section->
                                         GetSectionProgramId($student_enrollment_course_id);
@@ -986,9 +1084,8 @@
                                 ?>
                             </header>
 
-
                             <?php 
-                            
+
                                 $assignSubjects = $student_subject->GetStudentAssignSubjects(
                                     $enrollment_id,
                                     $student_id);
@@ -1138,7 +1235,7 @@
                             ?>
 
                             <form method="POST">
-
+                                  
                                 <input type="hidden" name="unique_enrollment_form_id" value="<?php echo $student_enrollment_form_id;?>">
 
                                 <?php 
@@ -1161,56 +1258,55 @@
                                     // echo '$checkIfRegistrarEvaluated == ' . ($checkIfRegistrarEvaluated ? 'true' : 'false') . "<br>";
                                     // echo '$doesStudentEnrolled == ' . ($doesStudentEnrolled ? 'true' : 'false') . "<br>";
 
-                                    if($isSectionFull == false 
-                                        && $checkIfCashierEvaluated == false 
-                                        && $checkIfRegistrarEvaluated == true
-                                        && $doesStudentEnrolled == false
-                                        && $student_enrollment_status != "withdraw"
-                                        
-                                        ){
-                                            ?>
-                                                <div style="margin-top: 20px;" class="action">
-                                                    <button
-                                                        class="default large"
-                                                        name="pending_choose_section"
-                                                        type="button"
-                                                        onclick="window.location.href='process_enrollment.php?subject_review=show&st_id=<?php echo $student_id;?>&selected_course_id=<?php echo $student_enrollment_course_id;?>'"
-                                                        
-                                                        >
-                                                        Waiting
-                                                    </button>
-                                                </div>
-                                            <?php
-                                    }
-
-
-                                    if($isSectionFull == false 
-                                        && $checkIfCashierEvaluated == false 
-                                        && $checkIfRegistrarEvaluated == false
-                                        && $doesStudentEnrolled == false
-                                        ){
-                                            ?>
-                                                <div style="margin-top: 20px;" class="action">
-                                                    
-                                                    <button
-                                                        class="default large information"
-                                                        name="pending_choose_section"
-                                                        type="button"
-                                                        onclick="window.location.href='process_enrollment.php?subject_review=show&st_id=<?php echo $student_id;?>&selected_course_id=<?php echo $student_enrollment_course_id;?>'"
-                                                        >
-
-                                                        Registrar not evaluated
-                                                    </button>
-
-                                                </div>
-                                            <?php
-                                    }
-
-                                    if($isSectionFull == false 
-                                            && $checkIfCashierEvaluated == true
+                                        if($isSectionFull == false 
+                                            && $checkIfCashierEvaluated == false 
                                             && $checkIfRegistrarEvaluated == true
                                             && $doesStudentEnrolled == false
-                                        ){
+                                            && $student_enrollment_status != "withdraw"
+                                            
+                                            ){
+                                                ?>
+                                                    <div style="margin-top: 20px;" class="action">
+                                                        <button
+                                                            class="default large"
+                                                            name="pending_choose_section"
+                                                            type="button"
+                                                            onclick="window.location.href='process_enrollment.php?subject_review=show&st_id=<?php echo $student_id;?>&selected_course_id=<?php echo $student_enrollment_course_id;?>'"
+                                                            
+                                                            >
+                                                            Waiting
+                                                        </button>
+                                                    </div>
+                                                <?php
+                                        }
+
+
+                                        if($isSectionFull == false 
+                                            && $checkIfCashierEvaluated == false 
+                                            && $checkIfRegistrarEvaluated == false
+                                            && $doesStudentEnrolled == false
+                                            ){
+                                                ?>
+                                                    <div style="margin-top: 20px;" class="action">
+                                                        
+                                                        <button
+                                                            class="default large information"
+                                                            name="pending_choose_section"
+                                                            type="button"
+                                                            onclick="window.location.href='process_enrollment.php?subject_review=show&st_id=<?php echo $student_id;?>&selected_course_id=<?php echo $student_enrollment_course_id;?>'"
+                                                            >
+
+                                                            Registrar not evaluated
+                                                        </button>
+
+                                                    </div>
+                                                <?php
+                                        }
+
+                                        if($isSectionFull == false 
+                                            && $checkIfCashierEvaluated == true
+                                            && $checkIfRegistrarEvaluated == true
+                                            && $doesStudentEnrolled == false){
 
                                             $getPreviousEnrolledFormId = $enrollment->GetStudentPreviousEnrolledForm(
                                                 $student_id, $current_school_year_id
@@ -1259,13 +1355,13 @@
                                     # If previous enrolled form selected is STEM11-A section
                                     # and created new form has been selected the same section STEM11-A
 
-                                    if($isSectionFull == true 
+                                        if($isSectionFull == true 
                                             && $checkIfCashierEvaluated == true
                                             && $checkIfRegistrarEvaluated == true
                                             && $doesStudentEnrolled == false
                                             && $student_enrollment_status != "withdraw"
-                                            && $checkPreviousEnrolledFormHasSameSectionToCurrrent == true
-                                        ){
+                                            && $checkPreviousEnrolledFormHasSameSectionToCurrrent == true){
+                                            
                                             $text = "";
                                             if($getPreviousEnrolledFormId != NULL){
                                                 $text = "System sensed you have enrolled previous form: $getPreviousEnrolledFormId. Note if you enrolled this tentative form, the previous enrolled form will be remove.";
@@ -1273,7 +1369,6 @@
                                                 $text = "I agreed to enroll this enrollment form.";
                                             }
 
-                                            // echo $getPreviousEnrolledFormId;
                                         ?>
                                             <div style="margin-top: 20px;" class="action">
                                                 <button type="submit" name="subject_load_btn" 
@@ -1282,12 +1377,12 @@
                                                     Approve Enrollment
                                                 </button>
                                             </div>
-
                                         <?php
                                     }
 
 
                                 ?>
+
 
                             </form>
 
@@ -1301,6 +1396,7 @@
 
 
 <script>
+    
 
     var dropBtns = document.querySelectorAll(".icon");
 
@@ -1364,7 +1460,6 @@
             }
         });
     }
-
 
     function removeForm(student_id, enrollment_id, school_year_id){
 
@@ -1520,6 +1615,8 @@
             }
         });
     }
+
+
 
 
 </script>

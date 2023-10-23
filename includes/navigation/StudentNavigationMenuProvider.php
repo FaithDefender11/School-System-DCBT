@@ -36,6 +36,7 @@
 
         $ongoing_enrollment_url = $base_url .  "ongoing_enrollment/procedure.php?information=show";
         $registration_enrollment_url = $base_url .  "registration/index.php";
+        $requirements_url = $base_url .  "requirements/index.php";
         $pending_enrollment_url = $base_url .  "tentative/process.php";
         $dashboard_url = $base_url .  "dashboard/index.php";
         
@@ -51,6 +52,10 @@
                 "bi bi-clipboard-data icon",
                 $ongoing_enrollment_url, Constants::$navigationClass . Helper::GetActiveClass($page, "ongoing_enrollment"));
             
+            $sideBarNavigationItem .= Helper::createNavByIcon("Requirements", 
+                "bi bi-clipboard-data icon",
+                $requirements_url, Constants::$navigationClass . Helper::GetActiveClass($page, "requirements"));
+
 
             $sideBarNavigationItem .= Helper::createNavByIcon("Log Out", 
                 "bi bi-box-arrow-right icon", $logout_url, Constants::$navigationClass);

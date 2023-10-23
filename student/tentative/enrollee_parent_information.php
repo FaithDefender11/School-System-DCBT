@@ -420,53 +420,7 @@
 
         $hasErrorInGuardian = false;
         $guardianEmptyError = false;
-
-        // if(empty(Helper::$errorArray)){
-        //     // if($parent_suffix !== ""
-        //     //     && ($parent_firstname === "" || $parent_lastname === ""
-        //     //         || $parent_middle_name === "" || $parent_contact_number === "")){
-        //     //     Alert::errorNoRedirect("If you input any of Guardian fields. Please kindly fill-up all required fields.",
-        //     //     ""); 
-        //     // }
-        //     if($parent->DoesGuardianNonRequiredFieldsValid($parent_suffix,
-        //         $parent_firstname, $parent_lastname,
-        //         $parent_middle_name, $parent_contact_number) === false){
-        //             Alert::errorNoRedirect("1If you input any of Guardian fields. Please kindly fill-up all required fields.",
-        //                 ""); 
-        //         $hasErrorInGuardian = true;
-                    
-        //     }
-
-        //     if($parent->DoesGuardianNonRequiredFieldsValid($parent_occupation,
-        //         $parent_firstname, $parent_lastname,
-        //         $parent_middle_name, $parent_contact_number) === false){
-        //             Alert::errorNoRedirect("2If you input any of Guardian fields. Please kindly fill-up all required fields.",
-        //                 ""); 
-        //         $hasErrorInGuardian = true;
-
-        //     }
-
-        //     if($parent->DoesGuardianNonRequiredFieldsValid($parent_middle_name,
-        //         $parent_firstname, $parent_lastname,
-        //         $parent_middle_name, $parent_contact_number) === false){
-        //             Alert::errorNoRedirect("3If you input any of Guardian fields. Please kindly fill-up all required fields.",
-        //                 ""); 
-        //         $hasErrorInGuardian = true;
-
-        //     }
-
-        //     if($parent->DoesGuardianNonRequiredFieldsValid(
-        //         $parent_relationship,
-        //         $parent_firstname, $parent_lastname,
-        //         $parent_middle_name, $parent_contact_number) === false){
-
-        //         Alert::errorNoRedirect("4If you input any of Guardian fields. Please kindly fill-up all required fields.",
-        //             ""); 
-        //         $hasErrorInGuardian = true;
-        //     }
-
-        //     $guardianEmptyError = true;
-        // }
+ 
 
         $guardianError = false;
         // if($hasErrorInGuardian == false && $guardianEmptyError == true){
@@ -498,6 +452,7 @@
                 $mother_suffix = "";
                 $mother_email = "";
                 $father_email = "";
+                
                 // UPDATE
                 $updateEnroleeParent = $parent->UpdatePendingParent(
                     $pending_enrollees_id, $parent_id, $parent_firstname, $parent_lastname,
@@ -577,7 +532,9 @@
         }else{
             $defaultRedirect = false;
         }
+        
         if($defaultRedirect == true){
+
             // header("Location: enrollee_summary_details.php?id=$pending_enrollees_id&details=show");
             header("Location: process.php?new_student=true&step=enrollee_summary_details");
             exit(); 

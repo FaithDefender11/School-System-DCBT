@@ -9,6 +9,7 @@
     include_once('../../includes/classes/Announcement.php');
     include_once('../../includes/classes/Notification.php');
 
+    echo Helper::RemoveSidebar();
 
 
 
@@ -71,13 +72,13 @@
 
         <div class='content'>
 
-            <nav>
-                <a href="<?php echo $back_url;?>">
-                    <i class="bi bi-arrow-return-left fa-1x"></i>
-                    <h3>Back</h3>
-                </a>
+            <nav style="min-width: 100%; margin-bottom: 7px;
+                    display: flex;flex-direction: row;">
+                    <a href="<?php echo $back_url;?>">
+                        <i class="bi bi-arrow-return-left fa-1x"></i>
+                        <h3>Back</h3>
+                    </a>
             </nav>
-
 
             <div class='col-md-10 offset-md-1'>
                 <div class='card'>

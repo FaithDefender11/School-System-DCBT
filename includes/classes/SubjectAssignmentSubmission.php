@@ -547,7 +547,9 @@ class SubjectAssignmentSubmission{
         $checkSubmission = $this->con->prepare("SELECT t1.*
                                          
             FROM subject_assignment_submission as t1
+
             WHERE t1.subject_code_assignment_id=:subject_code_assignment_id
+            
             AND t1.student_id=:student_id
             AND t1.school_year_id=:school_year_id
 
@@ -639,23 +641,125 @@ class SubjectAssignmentSubmission{
         # We GROUP BY student_id -> to get only one student
         # SELECT student_id, MAX(date_creation) to retrieve the latest submitted of this multiple submission.
         
-        $submission = $this->con->prepare("SELECT t1.*
+        $arr = [];
 
-            FROM subject_assignment_submission AS t1
-            INNER JOIN (
-                SELECT student_id, MAX(date_creation) AS latest_date_creation
-                FROM subject_assignment_submission
-                WHERE subject_code_assignment_id = :subject_code_assignment_id
-                AND subject_grade IS NULL
-                AND date_graded IS NULL
-                GROUP BY student_id
-            ) AS t2 ON t1.student_id = t2.student_id AND t1.date_creation = t2.latest_date_creation
+        # ORIGINAL FORM
+
+        // $submission = $this->con->prepare("SELECT t1.*
+
+        //     FROM subject_assignment_submission AS t1
+        //     INNER JOIN (
+        //         SELECT student_id, MAX(date_creation) AS latest_date_creation
+
+        //         FROM subject_assignment_submission
+
+        //         WHERE subject_code_assignment_id = :subject_code_assignment_id
+        //         AND subject_grade IS NULL
+        //         AND date_graded IS NULL
+        //         GROUP BY student_id
+        //     ) AS t2 ON t1.student_id = t2.student_id AND t1.date_creation = t2.latest_date_creation
             
+        //     WHERE t1.subject_code_assignment_id = :subject_code_assignment_id
+        //     AND t1.subject_grade IS NULL
+        //     AND t1.date_graded IS NULL
+
+        // ");
+
+        # Has a bit issue.
+
+        $submission = $this->con->prepare("WITH LatestSubmissions AS (
+                SELECT student_id, subject_code_assignment_id, MAX(date_creation) AS latest_date_creation
+                FROM subject_assignment_submission
+                WHERE date_graded IS NULL
+                GROUP BY student_id, subject_code_assignment_id
+            )
+
+            SELECT t1.*
+            FROM subject_assignment_submission AS t1
+
+            JOIN LatestSubmissions AS t2 ON t1.student_id = t2.student_id 
+
+            AND t1.subject_code_assignment_id = t2.subject_code_assignment_id 
+            AND t1.date_creation = t2.latest_date_creation
+
             WHERE t1.subject_code_assignment_id = :subject_code_assignment_id
             AND t1.subject_grade IS NULL
             AND t1.date_graded IS NULL
         ");
+ 
 
+
+        $submission->bindValue(":subject_code_assignment_id", $subject_code_assignment_id);
+        $submission->execute();
+         
+        if($submission->rowCount() > 0){
+
+            $result = $submission->fetchAll(PDO::FETCH_ASSOC);
+            // $arr = $submission->fetchAll(PDO::FETCH_ASSOC);
+
+
+            $hasOtherSubmissionGraded = false;
+
+            if(count($result) > 0){
+
+                foreach ($result as $key => $value) {
+
+                    # code...
+                    $db_subject_code_assignment_id = $value['subject_code_assignment_id'];
+                    
+                   
+                    
+                    $db_subject_assignment_submission_id = $value['subject_assignment_submission_id'];
+
+                    $db_student_id = $value['student_id'];
+                    $db_school_year_id = $value['school_year_id'];
+
+                    $db_subject_grade = $value['subject_grade'];
+                    $db_date_graded = $value['date_graded'];
+
+                    // echo "db_subject_assignment_submission_id: $db_subject_assignment_submission_id";
+                    // echo "<br>";
+                    // echo "db_subject_code_assignment_id: $db_subject_code_assignment_id";
+
+                    // echo "<br>";
+
+
+                    // $check = $this->CheckOtherSubmissionHasBeenGraded(
+                    //     $db_subject_code_assignment_id,
+                    //     $db_student_id, $db_school_year_id);
+
+                    $check = $this->CheckOtherSubmissionHasBeenGraded2(
+                        $db_subject_assignment_submission_id);
+                    
+                        // var_dump($check);
+                  
+                    if($check == false){
+
+                        // echo "db_subject_assignment_submission_id: $db_subject_assignment_submission_id";
+                        // echo "<br>";
+
+                        array_push($arr, $db_subject_assignment_submission_id);
+                        $hasOtherSubmissionGraded = true;
+
+
+                    }
+
+                    // if($db_subject_grade != NUll && $db_date_graded != NULL){
+                    //     continue;
+                    // }
+
+                }
+
+                // if($hasOtherSubmissionGraded == true){
+                //     $arr = $result;
+                // }
+            }
+
+            // $arr = $result;
+
+        }
+
+        
         // $submission = $this->con->prepare("SELECT 
         //     t1.*, MAX(t1.date_creation) AS latest_date_creation
 
@@ -666,15 +770,151 @@ class SubjectAssignmentSubmission{
         //     GROUP BY t1.student_id
         // ");
 
+        return $arr;
+    }
+
+    public function GetSubmittedUngradedSubmissionBasedOnAssignment(
+        $subject_code_assignment_id) {
+        
+        $arr = array();
+
+        $submission = $this->con->prepare("WITH LatestSubmissions AS (
+                SELECT student_id, subject_code_assignment_id, MAX(date_creation) AS latest_date_creation
+                FROM subject_assignment_submission
+                WHERE date_graded IS NULL
+                GROUP BY student_id, subject_code_assignment_id
+            )
+
+            SELECT t1.*
+            FROM subject_assignment_submission AS t1
+
+            JOIN LatestSubmissions AS t2 ON t1.student_id = t2.student_id 
+
+            AND t1.subject_code_assignment_id = t2.subject_code_assignment_id 
+            AND t1.date_creation = t2.latest_date_creation
+
+            WHERE t1.subject_code_assignment_id = :subject_code_assignment_id
+            AND t1.subject_grade IS NULL
+            AND t1.date_graded IS NULL
+
+            ORDER BY t1.date_creation ASC
+        ");
+
         $submission->bindValue(":subject_code_assignment_id", $subject_code_assignment_id);
         $submission->execute();
          
         if($submission->rowCount() > 0){
 
-            return $submission->fetchAll(PDO::FETCH_ASSOC);
+            $result = $submission->fetchAll(PDO::FETCH_ASSOC);
+            // $arr = $submission->fetchAll(PDO::FETCH_ASSOC);
+
+            $hasOtherSubmissionGraded = false;
+
+            if(count($result) > 0){
+
+                foreach ($result as $key => $value) {
+
+                    # code...
+                    $db_subject_code_assignment_id = $value['subject_code_assignment_id'];
+                    
+                    $db_subject_assignment_submission_id = $value['subject_assignment_submission_id'];
+ 
+                    $check = $this->CheckOtherSubmissionHasBeenGraded2(
+                        $db_subject_assignment_submission_id);
+                    
+                        // var_dump($check);
+                  
+                    if($check == false){
+
+                        // echo "db_subject_assignment_submission_id: $db_subject_assignment_submission_id";
+                        // echo "<br>";
+
+                        array_push($arr, $value);
+                        $hasOtherSubmissionGraded = true;
+                    }
+
+                }
+            }
+        }
+        return $arr;   
+    }
+    public function CheckOtherSubmissionHasBeenGraded2(
+        $subject_assignment_submission_id
+        // $subject_code_assignment_id,
+        // $student_id, $school_year_id
+        ) {
+
+        
+        $subject_assignment_submission = new SubjectAssignmentSubmission($this->con,
+            $subject_assignment_submission_id);
+
+        $get_GetSubjectCodeAssignmentId = $subject_assignment_submission->GetSubjectCodeAssignmentId();
+        $get_GetStudentId = $subject_assignment_submission->GetStudentId();
+
+
+        $checkSubmission = $this->con->prepare("SELECT t1.*
+                                         
+            FROM subject_assignment_submission as t1
+
+            WHERE t1.subject_code_assignment_id=:subject_code_assignment_id
+            AND t1.student_id=:student_id
+            
+            -- AND t1.school_year_id=:school_year_id
+
+            AND t1.subject_grade IS NOT NULL
+            AND t1.date_graded IS NOT NULL
+
+            -- LIMIT 1
+        ");
+
+        $checkSubmission->bindParam(":subject_code_assignment_id", $get_GetSubjectCodeAssignmentId);
+        $checkSubmission->bindParam(":student_id", $get_GetStudentId);
+
+        // $checkSubmission->bindParam(":school_year_id", $school_year_id);
+
+        $checkSubmission->execute();
+
+        // $subject_code_assignment_id
+
+        if($checkSubmission->rowCount() > 0){
+
+            return true;
         }
 
-        return [];
+        return false;
+
+    }
+
+    public function CheckOtherSubmissionHasBeenGraded(
+        $subject_code_assignment_id,
+        $student_id, $school_year_id) {
+            
+        $checkSubmission = $this->con->prepare("SELECT t1.*
+                                         
+            FROM subject_assignment_submission as t1
+
+            WHERE t1.subject_code_assignment_id=:subject_code_assignment_id
+            AND t1.student_id=:student_id
+            AND t1.school_year_id=:school_year_id
+            AND t1.subject_grade IS NOT NULL
+            AND t1.date_graded IS NOT NULL
+
+            -- LIMIT 1
+        ");
+
+        $checkSubmission->bindParam(":subject_code_assignment_id", $subject_code_assignment_id);
+        $checkSubmission->bindParam(":student_id", $student_id);
+        $checkSubmission->bindParam(":school_year_id", $school_year_id);
+        $checkSubmission->execute();
+
+        // $subject_code_assignment_id
+
+        if($checkSubmission->rowCount() > 0){
+            return true;
+        }
+
+        return false;
+
     }
 
     public function GetTotalSubmittedOnAssignment(
@@ -712,6 +952,148 @@ class SubjectAssignmentSubmission{
         }
 
         return [];
+    }
+
+    public function GetSubjectSubmissionTotalPoints(
+        $subjectCodeAssignmentIds,
+        $student_id, $school_year_id) {
+
+        
+        # TODO. Get all student submissions based on subject CodeAssignmentIds (Default assignments)
+        
+        $storePoints = [];
+            
+        if(count($subjectCodeAssignmentIds) > 0){
+
+            foreach ($subjectCodeAssignmentIds as $key => $subjectCodeAssignmentId) {
+
+                $submission = $this->con->prepare("SELECT 
+                                                                
+                    t1.subject_grade
+                    
+                    FROM subject_assignment_submission  as t1
+
+                    WHERE subject_code_assignment_id=:subject_code_assignment_id
+                    AND student_id=:student_id
+                    AND school_year_id=:school_year_id
+                    AND subject_grade IS NOT NULL
+                    LIMIT 1
+                ");
+
+                $submission->bindValue(":subject_code_assignment_id", $subjectCodeAssignmentId);
+                $submission->bindValue(":student_id", $student_id);
+                $submission->bindValue(":school_year_id", $school_year_id);
+                $submission->execute();
+
+                if($submission->rowCount() > 0){
+
+                    // $all = $submission->fetchAll(PDO::FETCH_COLUMN);
+                    $points = $submission->fetchColumn();
+
+                    array_push($storePoints, $points);
+                    // var_dump($all);
+                    // return $all;
+                    
+                }
+            }
+        }
+         
+        return $storePoints;
+    }
+
+    public function CheckAssignmentIsDue(
+        $subjectCodeAssignmentIds) {
+
+        $now = date("Y-m-d H:i:s");
+
+        
+        $submission = $this->con->prepare("SELECT *
+            
+            FROM subject_code_assignment AS t1
+
+            WHERE t1.subject_code_assignment_id=:subject_code_assignment_id
+            AND t1.due_date <= :due_date
+            LIMIT 1
+
+        ");
+
+        $submission->bindValue(":subject_code_assignment_id", $subjectCodeAssignmentIds);
+        $submission->bindValue(":due_date", $now);
+        $submission->execute();
+
+        return $submission->rowCount() > 0;
+
+    }
+
+    public function GetOverscoreFromAssignmentAnswered(
+        $subjectCodeAssignmentIds,
+        $student_id, $school_year_id) {
+
+        
+        # TODO. Get all student submissions based on subject CodeAssignmentIds (Default assignments)
+        
+        $maxScoreArr = [];
+
+        $max_score_output = 0;
+            
+        if(count($subjectCodeAssignmentIds) > 0){
+
+            foreach ($subjectCodeAssignmentIds as $key => $subjectCodeAssignmentId) {
+
+
+                $statusSubmission = $this->CheckStatusSubmission(
+                    $subjectCodeAssignmentId,
+                    $student_id, $school_year_id
+                );
+                
+
+
+                $submitted_grade = false;
+
+                if($statusSubmission !== NULL){
+                    
+                    $submitted_grade =  $statusSubmission['subject_grade'];
+
+                    // echo "<br>";
+                    // var_dump($submitted_grade);
+                }
+
+                # What are the overall score to be added.
+                # 1. Past Due.
+                # 2. Submitted with graded.
+
+                # What are the overall score should not be added.
+                # 1. Submitted but not yet graded.
+                # 2. Not Due.
+
+                $studentHasSubmittedByNotGraded = $statusSubmission !== NULL && $submitted_grade === NULL;
+
+                # If assignment is due and student had been passed the assignment
+                # then it should add the max_score.
+
+                if($this->CheckAssignmentIsDue($subjectCodeAssignmentId) == true
+                    && $studentHasSubmittedByNotGraded == false){
+
+                    $subjectCodeAssignment = new SubjectCodeAssignment($this->con, $subjectCodeAssignmentId);
+
+                    $overAllScore = $subjectCodeAssignment->GetMaxScore();
+
+                    $student = new Student($this->con, $student_id);
+
+                    $assname = $subjectCodeAssignment->GetAssignmentName();
+                    $studentFirstname = $student->GetFirstName();
+
+                    // echo "Assignment Name: $assname, studentFirstname: $studentFirstname";
+                    // echo "<br>";
+                    // echo "<br>";
+
+                    $max_score_output += $overAllScore;
+                }
+            }
+        }
+         
+        return $max_score_output;
+
     }
 
 }

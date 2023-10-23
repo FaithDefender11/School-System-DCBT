@@ -88,7 +88,7 @@
             $student_type = "";
             $student_admission_status = $student->GetAdmissionStatus();
 
-            $generateFormId = $enrollment->GenerateEnrollmentFormId();
+            $generateFormId = $enrollment->GenerateEnrollmentFormId($current_school_year_id);
             $enrollment_form_id = $enrollment->CheckEnrollmentFormIdExists($generateFormId);
 
             if (!isset($_SESSION['enrollment_form_id'])) {

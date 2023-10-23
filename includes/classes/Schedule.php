@@ -226,7 +226,7 @@
 
             $check_teacher_id_conflict = $this->CheckTeacherScheduleConflicted(
                 $time_from_meridian_military, $time_to_meridian_military,
-                $schedule_day, $teacher_id);
+                $current_school_year_id, $schedule_day, $teacher_id);
 
             if($check_teacher_id_conflict !== NULL){
 
@@ -370,6 +370,8 @@
                 $schedule_day, $school_year_id,
                 $room_id, $subject_schedule_id);
 
+          
+
             if($schedule_id_conflict !== NULL){
 
                 // var_dump($schedule_id_conflict);
@@ -419,8 +421,13 @@
         if($teacher_id !== NULL){
 
             $check_teacher_id_conflict = $this->CheckTeacherScheduleConflicted(
-                $time_from, $time_to, $schedule_day, $teacher_id, $subject_schedule_id);
+                $time_from, $time_to, $schedule_day,
+                $teacher_id, $school_year_id,
+                $subject_schedule_id);
 
+            // var_dump($schedule_id_conflict);
+            // return;
+            
             if($check_teacher_id_conflict != NULL){
 
                 // var_dump($check_teacher_id_conflict);
@@ -916,7 +923,7 @@
 
     public function CheckTeacherScheduleConflicted(
         $userTimeFrom, $userTimeTo, $schedule_day,
-        $teacher_id, $subject_schedule_id = null
+        $teacher_id, $school_year_id, $subject_schedule_id = null
     ) {
 
         $subject_schedule_output_query = "";
@@ -932,12 +939,14 @@
 
             WHERE schedule_day = :schedule_day
             AND teacher_id = :teacher_id
+            AND school_year_id = :school_year_id
             $subject_schedule_output_query
 
         ");
 
         $stmt->bindParam(':schedule_day', $schedule_day);
         $stmt->bindParam(':teacher_id', $teacher_id);
+        $stmt->bindParam(':school_year_id', $school_year_id);
 
         if($subject_schedule_id !== NULL){
             $stmt->bindParam(':subject_schedule_id', $subject_schedule_id);
@@ -1092,7 +1101,7 @@
         } elseif ($name === 'F') {
             return "Friday";
         } else {
-            return "Invalid input";
+            return "";
         }
     }
 

@@ -65,14 +65,18 @@
         $start_date = $subjectCodeAssignmentExec->GetDateCreation();
         $start_date = date("Y-m-d", strtotime($start_date));
 
-        $due_date = $subjectCodeAssignmentExec->GetDueDate();
-        $due_date = date("Y-m-d", strtotime($due_date));
+        $due_date_db = $subjectCodeAssignmentExec->GetDueDate();
+        $due_date = date("Y-m-d", strtotime($due_date_db));
+
+
+        $due_time_hours = date("h:i a", strtotime($due_date_db));
+ 
 
         $url = "../../student/courses/task_submission.php?sc_id=$subjectCodeAssignmentIds";
 
         $dataCalendar[] = array(
             'subject_code_assignment_id' => $subjectCodeAssignmentIds,
-            'title' => $assignment_name,
+            'title' => $due_time_hours . " " . $assignment_name,
             'start' => $due_date,
             'end' => $due_date,
             'url' => $url

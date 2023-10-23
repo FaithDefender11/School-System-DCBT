@@ -14,9 +14,8 @@
  
     echo Helper::RemoveSidebar();
     
-        ?>
+    ?>
         <style>
-            /* Add CSS for preventing text wrapping */
             th a {
                 text-decoration: underline;
                 color: inherit; /* To maintain the link color */

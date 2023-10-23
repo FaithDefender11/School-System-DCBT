@@ -5,6 +5,7 @@
     include_once('../../includes/classes/SubjectProgram.php');
     include_once('../../includes/classes/SubjectPeriodCodeTopicTemplate.php');
     include_once('../../includes/classes/SubjectCodeAssignmentTemplate.php');
+    include_once('../../includes/classes/TaskType.php');
 
     
     if(
@@ -29,6 +30,10 @@
         $description = $subjectCodeAssignmentTemplate->GetDescription();
         $max_Score = $subjectCodeAssignmentTemplate->GetMaxScore();
         $assignment_type = $subjectCodeAssignmentTemplate->GetType();
+
+        $db_task_type_id = $subjectCodeAssignmentTemplate->GetTaskTypeId();
+
+        
         
         $subjectPeriodCodeTopicTemplate = new SubjectPeriodCodeTopicTemplate(
             $con, $subject_period_code_topic_template_id);
@@ -48,12 +53,16 @@
             && isset($_POST['assignment_name'])
             && isset($_POST['description'])
             && isset($_POST['max_score']) 
-            && isset($_POST['type'])  ){
+            && isset($_POST['type'])
+            && isset($_POST['task_type_id'])
+            
+            ){
 
                 $assignment_name = $_POST['assignment_name'];
                 $description = $_POST['description'];
                 $max_score = $_POST['max_score'];
                 $type = $_POST['type'];
+                $task_type_id = $_POST['task_type_id'];
 
                 // echo "Assignment Name: " . $assignment_name . "<br>";
                 // echo "Description: " . $description . "<br>";
@@ -81,7 +90,7 @@
                 $successCreate = $subjectCodeAssignmentTemplate->UpdateAssignmentTemplate(
                     $subject_code_assignment_template_id,
                     $assignment_name, $description,
-                    $max_score, $type);
+                    $max_score, $type, $task_type_id);
 
                 // if($successCreate){
                 //     $subject_code_assignment_template_id = $con->lastInsertId();
@@ -159,8 +168,9 @@
 
                                     <label for="type" class='mb-2'>Type *</label>
                                     <select class="form-control" name="type" id="type">
-                                        <option value="text" <?php echo $assignment_type == "text" ? "selected" : "" ?>>Text</option>
-                                        <option value="upload" <?php echo $assignment_type == "upload" ? "selected" : "" ?>>Upload</option>
+                                        <!-- <option value="" selected disabled>Choose Type</option> -->
+                                        <!-- <option value="text">Text</option> -->
+                                        <option selected value="upload">Upload</option>
                                     </select>
 
                                 </div>
@@ -171,8 +181,48 @@
                                 </div>
 
                                 <div class='form-group mb-2'>
+
+                                    <label for="task_type_id" class='mb-2'>* Category</label>
+                                    
+                                    <select required class="form-control" name="task_type_id" id="task_type_id">
+                                        <?php 
+                                        
+                                            $query = $con->prepare("SELECT * 
+                                            
+                                                FROM task_type WHERE enabled=1
+                                                
+                                            ");
+                                            $query->execute();
+                                            if($query->rowCount() > 0){
+
+                                                echo "
+                                                    <option value='' selected disabled>Choose Type</option>
+                                                ";
+                                                while($row = $query->fetch(PDO::FETCH_ASSOC)){
+
+                                                    $task_type_id = $row['task_type_id'];
+                                                    $task_name = $row['task_name'];
+
+                                                    $selected = "";
+
+                                                    if($task_type_id == $db_task_type_id){
+                                                        $selected = "selected";
+                                                    }
+
+                                                    echo "
+                                                        <option $selected value='$task_type_id'>$task_name</option>
+                                                    ";
+                                                }
+                                            }
+                                        
+                                        ?>
+                                    </select>
+
+                                </div>
+
+                                <div class='form-group mb-2'>
                                     <label for="description" class='mb-2'>Description *</label>
-                                    <input value="<?php echo $description ?>" required id="description" class='form-control' type='text' placeholder='' name='description'>
+                                    <textarea required id="description" class='form-control summernote' type='text' placeholder='' name='description'><?php echo $description ?></textarea>
                                 </div>
 
                                 <div class='form-group mb-2'>

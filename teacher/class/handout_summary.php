@@ -11,55 +11,19 @@
     include_once('../../includes/classes/SubjectPeriodCodeTopicTemplate.php');
     include_once('../../includes/classes/SubjectCodeHandoutStudent.php');
     include_once('../../includes/classes/SubjectCodeAssignment.php');
+    include_once('../../includes/classes/SubjectCodeHandout.php');
  
     echo Helper::RemoveSidebar();
-    
+
     ?>
         <style>
-            /* Add CSS for preventing text wrapping */
-            /* th a {
-                text-decoration: underline;
-                color: inherit; 
-                white-space: nowrap; 
-            } */
-
             th a {
                 text-decoration: underline;
                 color: inherit; /* To maintain the link color */
                 white-space: nowrap; /* Prevent text from wrapping */
-                display: flex;
-                flex-direction: column; /* Stack the spans vertically */
-                align-items: center; /* Center content horizontally within the th */
             }
-
-            .topic-name {
-                font-weight: bold; /* Make the topic name bold */
-                margin-bottom: -1px; /* Add space between the two spans */
-            }
-
-            .handout-name {
-                margin-top: 1px; /* Add space between the two spans */
-            }
-
-            .table-header {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                text-align: center;
-            }
-
-            .header-text {
-                font-weight: bold; /* Make "Handouts" bold if desired */
-            }
-
-             
-            
-
-
-
-
-
         </style>
+
     <?php
 
     if(isset($_GET['ct_id'])){
@@ -80,25 +44,35 @@
         $subjectPeriodCodeTopic = new SubjectPeriodCodeTopic($con, $subject_period_code_topic_id);
         
         $subjectCodeAssignment = new SubjectCodeAssignment($con);
+        $subjectCodeHandout = new SubjectCodeHandout($con);
 
         $subjectPeriodCodeTopicTemplateId = $subjectPeriodCodeTopic->GetSubjectPeriodCodeTopicTemplateId();
         $subject_code = $subjectPeriodCodeTopic->GetSubjectCode();
         $course_id = $subjectPeriodCodeTopic->GetCourseId();
         $subject_code = $subjectPeriodCodeTopic->GetSubjectCode();
+        $school_year_id = $subjectPeriodCodeTopic->GetSchoolYearId();
 
         // echo $subject_code;
 
         $assignmentListOnTeachingCode = $subjectCodeAssignment->GetSubjectAssignmentBasedOnTeachingSubject(
             $subject_code,
-            $current_school_year_id,
+            $school_year_id,
             $teacherLoggedInId);
 
         $handoutGivenListOnTeachingCode = $subjectCodeAssignment->GetSubjectHandoutBasedOnTeachingSubject(
             $subject_code,
-            $current_school_year_id,
+            $school_year_id,
             $teacherLoggedInId);
 
+        $handoutIdsArray = [];
 
+        foreach ($handoutGivenListOnTeachingCode as $key => $value) {
+            # code...
+            array_push($handoutIdsArray, $value['subject_code_handout_id']);
+            
+        }
+        
+        // var_dump($handoutIdsArray);
 
         // var_dump($handoutGivenListOnTeachingCode);
 
@@ -106,7 +80,7 @@
 
         $studentGradeBook = $subjectCodeAssignment->GetStudentGradeBookOnTeachingSubject(
             $subject_code,
-            $current_school_year_id);
+            $school_year_id);
 
         // var_dump($assignmentListOnTeachingCode);
         // echo count($assignmentListOnTeachingCode);
@@ -151,7 +125,7 @@
                                                 <th colspan='4'>
                                                     <div class="table-header">
                                                         <div class="header-text">Handouts</div>
-                                                        <div class="sub-header-text">Given</div>
+                                                        <div class="sub-header-text"></div>
                                                     </div>
                                                 </th>
                                             </tr>
@@ -163,9 +137,9 @@
                                             </tr>
                                             <tr>
                                                 <th>Students</th>
+                                               <th></th>
                                                 <th></th>
-                                                <th></th>
-                                                <th class='text-center'></th>
+                                                <th class='text-center'>Overall</th>
                                             </tr>
 
                                             <tbody>
@@ -192,7 +166,7 @@
                                                     ");
 
                                                     $stud->bindParam(":subject_code", $subject_code);
-                                                    $stud->bindParam(":school_year_id", $current_school_year_id);
+                                                    $stud->bindParam(":school_year_id", $school_year_id);
                                                     $stud->execute();
 
                                                     if($stud->rowCount() > 0){
@@ -207,21 +181,43 @@
 
                                                             $fullname = ucwords($lastname) . ", " . ucwords($firstname);
 
-                                                            //  $fullname = ucwords($firstname) . " " . ucwords($lastname);
-
-                                                                // Check if the length of the fullname exceeds 10 characters
-                                                                if (strlen($fullname) > 18) {
-                                                                    // Trim the fullname to 10 characters and add ellipsis
-                                                                    $fullname = substr($fullname, 0, 18) . "...";
-                                                                }
-
-                                                            // ($student_id)
                                                             
+                                                            // Check if the length of the fullname exceeds 10 characters
+                                                            if (strlen($fullname) > 18) {
+                                                                // Trim the fullname to 10 characters and add ellipsis
+                                                                $fullname = substr($fullname, 0, 18) . "...";
+                                                            }
+
+                                                            $testCount = $subjectCodeHandout
+                                                                ->GetTotalViewedHandoutOnSubject($handoutIdsArray,
+                                                                    $student_id);
+                                                            
+                                                            // $totalHandoutViewedCount = $subjectCodeHandout
+                                                            //     ->GetTotalViewedHandoutCountOnTopicSection(
+                                                            //     $subject_period_code_topic_id,
+                                                            //     $student_id, $current_school_year_id
+                                                            // );
+
+
+                                                            $totalCount = count($handoutGivenListOnTeachingCode);
+                                                            
+                                                            $rounded_equivalent = "";
+
+                                                            if($totalCount > 0){
+
+                                                                $equivalent = ($testCount / $totalCount) * 100;
+                                                                // $rounded_equivalent = floor($equivalent / 10) * 10;
+                                                                
+                                                                $rounded_equivalent = round($equivalent, 0, PHP_ROUND_HALF_UP);
+                                                            }
+                                                                
                                                             echo "
                                                                 <tr>
                                                                     <td style='font-size: 15px'>
-                                                                     $fullname
-                                                                    </td>
+                                                                     $fullname                                                                    </td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td>$testCount / $totalCount = $rounded_equivalent%</td>
                                                                 </tr>
                                                             ";
                                                         }

@@ -1,0 +1,57 @@
+form .row {
+    display: flex;
+    flex: 1;
+    gap: 15px;
+    padding: 10px;
+}
+
+form .row>span {
+    display: flex;
+    flex: 3 1 auto;
+    gap: 10px;
+}
+
+form .row>span.small {
+    flex: 1 2 auto;
+}
+
+form .row>span.x-small {
+    flex: 0 3 auto;
+    width: 100px;
+}
+
+form label {
+    font-weight: bold;
+}
+
+form .row>span>div {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+}
+
+form .row>span>div>input,
+form .row>span>div>a {
+    width: 99%;
+}
+
+.content form>.action {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+}
+
+@media only screen and (max-width: 800px) {
+    form>.row>span>label {
+        display: block;
+    }
+
+    form .row {
+        flex-wrap: wrap;
+    }
+
+    form .row>span {
+        flex-wrap: wrap;
+        flex-direction: column;
+    }
+}

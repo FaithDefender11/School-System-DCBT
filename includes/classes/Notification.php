@@ -45,6 +45,8 @@ class Notification{
             return ":subject_code$index";
         }, $enrolledSubjectList, array_keys($enrolledSubjectList)));
 
+        
+
         $query = $this->con->prepare("SELECT * 
             FROM notification 
             WHERE subject_code IN ($inPlaceholders)
@@ -121,7 +123,7 @@ class Notification{
             FROM notification as t1
 
             WHERE t1.sender_role=:sender_role
-            AND t1.sender_role=:sender_role
+            AND t1.school_year_id=:school_year_id
             AND t1.announcement_id IS NOT NULL
         ");
 
@@ -130,11 +132,14 @@ class Notification{
         $get->execute();
 
         if($get->rowCount() > 0){
+            echo "hey";
             return $get->fetchAll(PDO::FETCH_ASSOC);
         }
 
         return [];
     }
+
+
    
 
     public function CheckStudentViewedNotification(
@@ -155,6 +160,105 @@ class Notification{
 
         return $get->rowCount() > 0;
     }
+
+    public function GetTeacherViewedNotificationCount(
+        $studentListSubmittedNotification, $teacher_id) {
+
+        $count = 0;
+        
+        if(count($studentListSubmittedNotification) > 0){
+
+            foreach ($studentListSubmittedNotification as $key => $value) {
+                # code...
+
+                $subject_code_teacher_id = $value['subject_code_teacher_id'];
+                $notification_id = $value['notification_id'];
+
+                $get = $this->con->prepare("SELECT t1.* 
+                
+                    FROM notification_view as t1
+
+                    WHERE t1.notification_id=:notification_id
+                    AND t1.teacher_id=:teacher_id
+                    
+                    ");
+                $get->bindValue(":notification_id", $notification_id);
+                $get->bindValue(":teacher_id", $teacher_id);
+                $get->execute();
+
+                if($get->rowCount() > 0){
+                    $count++;
+                }
+            }
+
+
+        }
+
+        return $count;
+
+    }
+
+    public function GetTeacherUnViewedNotificationCount(
+        $studentListSubmittedNotification, $teacher_id) {
+
+        $count = 0;
+        
+        if(count($studentListSubmittedNotification) > 0){
+
+            foreach ($studentListSubmittedNotification as $key => $value) {
+                # code...
+
+                $subject_code_teacher_id = $value['subject_code_teacher_id'];
+                $notification_id = $value['notification_id'];
+
+                $get = $this->con->prepare("SELECT t1.* 
+                
+                    FROM notification_view as t1
+
+                    WHERE t1.notification_id=:notification_id
+                    AND t1.teacher_id=:teacher_id
+                    
+                    ");
+                $get->bindValue(":notification_id", $notification_id);
+                $get->bindValue(":teacher_id", $teacher_id);
+                $get->execute();
+
+                if($get->rowCount() == 0){
+                    $count++;
+                }
+            }
+
+
+        }
+
+        return $count;
+
+    }
+
+    public function GetNotificationIdByAnnouncementId(
+        $announcement_id, $school_year_id) {
+            
+
+        $get = $this->con->prepare("SELECT notification_id FROM notification 
+
+            WHERE announcement_id = :announcement_id
+            AND school_year_id = :school_year_id
+            
+        ");
+
+        $get->bindValue(":announcement_id", $announcement_id);
+        $get->bindValue(":school_year_id", $school_year_id);
+        $get->execute();
+
+        if($get->rowCount() > 0){
+            return $get->fetchColumn();
+        }   
+
+        return NULL;
+    }
+
+            
+
     public function CheckTeacherViewedNotification(
         $notification_id, $teacher_id) {
 
@@ -432,6 +536,43 @@ class Notification{
 
         return false;
     }
+
+    public function UpdateNotificationForTeacherAnnouncement(
+        $school_year_id, $db_subject_code,
+        $chosen_subject_code, $announcement_id) {
+
+            $now = date("Y-m-d H:i:s");
+
+
+        $sql = $this->con->prepare("UPDATE notification 
+        
+            SET 
+            subject_code = :chosen_subject_code,
+            date_creation = :todays_date
+
+            WHERE announcement_id = :announcement_id
+            AND school_year_id = :school_year_id
+            AND subject_code = :subject_code
+            
+        ");
+
+        $sql->bindValue(":chosen_subject_code", $chosen_subject_code);
+        $sql->bindValue(":todays_date", $now);
+        
+        $sql->bindValue(":announcement_id", $announcement_id);
+        $sql->bindValue(":school_year_id", $school_year_id);
+        $sql->bindValue(":subject_code", $db_subject_code);
+
+        $sql->execute();
+
+        if ($sql->rowCount() > 0) {
+            return true;
+        }
+
+        return false;
+    }
+
+
 
     public function InsertNotificationForTeacherGivingAssignment(
         $school_year_id, $subject_code_assignment_id, $subject_code){

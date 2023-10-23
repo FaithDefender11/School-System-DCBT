@@ -95,6 +95,8 @@
                         icon: 'error',
                         title: 'Oh no!',
                         text: 'Invalid Grade Input',
+                        backdrop: false,
+                        allowEscapeKey: false,
                         }).then((result) => {
                       
                         if (result.isConfirmed) {
@@ -113,6 +115,8 @@
                         icon: 'success',
                         title: 'Success',
                         text: 'Grade remarks success.',
+                        backdrop: false,
+                        allowEscapeKey: false,
 
                         }).then((result) => {
                       

@@ -278,7 +278,6 @@
 
 
                                                 LEFT JOIN room as t6 ON t6.room_id = t4.room_id
-                                                -- LEFT JOIN student_subject as t6 ON t6.subject_program_id = t1.subject_program_id
 
 
                                                 WHERE t2.course_id=:course_id

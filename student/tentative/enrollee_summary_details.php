@@ -1,6 +1,6 @@
 
 
-<?php 
+<?php  
 
         ?>
             <style>
@@ -13,17 +13,24 @@
         $pending = new Pending($con, $pending_enrollees_id);
         $parent = new PendingParent($con, $pending_enrollees_id);
 
-        $school_history = $pending->GetEnrolleeSchoolHistory($pending_enrollees_id);
+        // $school_history = $pending->GetEnrolleeSchoolHistory($pending_enrollees_id);
+        // $student_school_history_id = $school_name = $school_address = $year_started = $year_ended = "";
+        // if ($school_history !== NULL) {
 
-        $student_school_history_id = $school_name = $school_address = $year_started = $year_ended = "";
+            // $student_school_history_id = $school_history['student_school_history_id'];
 
-        if ($school_history !== NULL) {
-            $student_school_history_id = $school_history['student_school_history_id'];
-            $school_name = $school_history['school_name'];
-            $school_address = $school_history['address'];
-            $year_started = $school_history['year_started'];
-            $year_ended = $school_history['year_ended'];
-        }
+            // $school_name = $school_history['school_name'];
+            // $school_address = $school_history['address'];
+            // $year_started = $school_history['year_started'];
+            // $year_ended = $school_history['year_ended'];
+        // }
+
+
+        $school_name = $parent->GetSchoolName();
+        $school_address = $parent->GetSchoolAddress();
+        $year_started = $parent->GetSchoolYearStarted();
+        $year_ended = $parent->GetSchoolYearEnded();
+
 
         $lrn = $pending->GetPendingLRN();
         $firstname = $pending->GetPendingFirstName();
@@ -472,7 +479,7 @@
                                 Return
                             </button>
 
-                            <?php if($does_enrollee_finished_input === 1): ?>
+                            <?php if($does_enrollee_finished_input !== 1): ?>
                                 <button
                                     class="default success large"
                                     onclick="MarkAsValidated(<?php echo $pending_enrollees_id; ?>, <?php echo $school_year_id; ?>, '<?php echo $current_term; ?>', '<?php echo $current_semester; ?>')"

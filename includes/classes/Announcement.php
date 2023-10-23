@@ -80,6 +80,42 @@
             return false;
         }
 
+        public function UpdateAnnouncement($announcement_id,
+            $school_year_id, $teacher_id,
+            $subject_code, $title, $content){
+
+
+            $now = date("Y-m-d H:i:s");
+
+            $sql = $this->con->prepare("UPDATE announcement SET
+                title = :title,
+                content = :content,
+                subject_code = :subject_code,
+                date_creation = :todays_date
+
+                WHERE announcement_id = :announcement_id
+                AND school_year_id = :school_year_id
+                AND teacher_id = :teacher_id
+                ");
+
+            $sql->bindValue(":title", $title);
+            $sql->bindValue(":content", $content);
+            $sql->bindValue(":subject_code", $subject_code);
+            $sql->bindValue(":todays_date", $now);
+
+            $sql->bindValue(":announcement_id", $announcement_id);
+            $sql->bindValue(":school_year_id", $school_year_id);
+            $sql->bindValue(":teacher_id", $teacher_id);
+
+            $sql->execute();
+
+            if($sql->rowCount() > 0){
+                return true;
+            }
+            return false;
+        }
+
+
 
         public function InsertAdminAnnouncement($admin_id, $teacher_id,
             $school_year_id, $title, $content, $student_selected){
@@ -364,6 +400,30 @@
 
         public function GetAdminAnnouncementList(
             $school_year_id = null, $admin_id) {
+
+            $get = $this->con->prepare("SELECT t1.* 
+            
+                FROM announcement as t1
+
+                WHERE t1.role=:role
+                AND t1.users_id=:users_id
+                
+            ");
+
+            $get->bindValue(":role", "admin");
+            $get->bindValue(":users_id", $admin_id);
+            $get->execute();
+
+            if($get->rowCount() > 0){
+
+                return $get->fetchAll(PDO::FETCH_ASSOC);
+            }
+
+            return [];
+        }
+
+        public function GetTeacherAnnouncementFromAdmin(
+            $teacher_id = null, $admin_id) {
 
             $get = $this->con->prepare("SELECT t1.* 
             

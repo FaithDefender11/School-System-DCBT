@@ -2,6 +2,9 @@
 
     include_once('../../includes/registrar_header.php');
     include_once('../../includes/classes/StudentRequirement.php');
+    include_once('../../includes/classes/Program.php');
+
+
 ?>
     <head>
         <style>
@@ -18,9 +21,101 @@
         <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     </head>
 
+
 <div class="content">
 
     <main>
+
+        <div class="floating">
+            <header>
+                <div class="title">
+                <h3>Student Requirements for <span class="text-primary">New enrollees</span> | 
+                    <a href="enrolled_students.php" class="text-muted">
+                        Enrolled students
+                    </a>
+                </h3>
+                </div>
+            </header>
+
+
+            <table id="" class="a" style="margin: 0">
+
+                <thead>
+                    <tr class="text-center"> 
+                        <th>Enrollee Id</th>  
+                        <th>Name</th>  
+                        <th>Type</th>  
+                        <th>Program</th>  
+                        <th>Level</th>  
+                        <th>Enrollee Status</th>  
+                        <th>Admission Status</th>  
+                        <th>Enrollment Status</th>  
+                        <th>Action</th>  
+
+                    </tr>	
+                </thead>
+
+                <tbody>
+                    <?php 
+
+                        $query = $con->prepare("SELECT t1.* 
+                        
+                            FROM pending_enrollees AS t1
+                            
+                            INNER JOIN student_requirement as t2 ON t2.pending_enrollees_id = t1.pending_enrollees_id
+
+                            WHERE t1.is_enrolled = 0
+                        ");
+
+                        $query->execute();
+
+                        if($query->rowCount() > 0){
+
+                            while($row = $query->fetch(PDO::FETCH_ASSOC)){
+
+                                $pending_enrollees_id = $row['pending_enrollees_id'];
+
+                                $enrolleeFullName = ucwords($row['firstname']) . " " . ucwords($row['lastname']);
+                                $program_id = $row['program_id'];
+                                $type = $row['type'];
+                                $course_level = $row['course_level'];
+
+                                $student_status =  ($row['student_status']);
+
+
+                                $enrollment_status = $row['enrollment_status'];
+                                $admission_status = $row['admission_status'];
+
+                                $program = new Program($con, $program_id);
+
+                                $programName = $program->GetProgramName();
+                                $acronym = $program->GetProgramAcronym();
+
+                                echo "
+                                    <tr>
+                                        <td>$pending_enrollees_id</td>
+                                        <td>$enrolleeFullName</td>
+                                        <td>$type</td>
+                                        <td>$acronym</td>
+                                        <td>$course_level</td>
+                                        <td>$student_status</td>
+                                        <td>$enrollment_status</td>
+                                        <td>$admission_status</td>
+                                        <td>
+                                            <button onclick='window.location.href = \"view_new_enrollee.php?id=$pending_enrollees_id\"' class='btn btn-primary btn-sm'>
+                                                <i class='fas fa-eye'></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ";
+                            }
+                        }
+                    ?>
+                </tbody>
+            </table>
+        </div>
+
+        <br>
 
         <div class="floating">
             <header>

@@ -1,26 +1,37 @@
 :root {
   --th-color: rgb(230, 230, 230);
   --alterColor: #eeeeee;
+  --blue: rgb(59, 59, 235);
+  --green: rgb(35, 134, 35);
+  --gray: lightgray;
+  --lavender: #dfc5fe;
+  --taupe: #483c32;
+  --beige: #a67a5b;
+  --ivory: #fffdd0;
+  --teal: #00808d;
+  --coral: #f08080;
+  --yellow: #fdfd96;
+  --mauve: #874c62;
 }
 
 /* table scroll style */
 
-.floating>main::-webkit-scrollbar {
+.floating > main::-webkit-scrollbar {
   height: 10px;
 }
 
 /* Track */
-.floating>main::-webkit-scrollbar-track {
+.floating > main::-webkit-scrollbar-track {
   background: #dddddd;
 }
 
 /* Handle */
-.floating>main::-webkit-scrollbar-thumb {
+.floating > main::-webkit-scrollbar-thumb {
   background: #888;
 }
 
 /* Handle on hover */
-.floating>main::-webkit-scrollbar-thumb:hover {
+.floating > main::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
 
@@ -59,23 +70,23 @@ table.b thead {
   margin: 10px;
 }
 
-.c>thead>tr>th,
-.c>thead>tr>td,
-.c>tbody>tr>th,
-.c>tbody>tr>td {
+.c > thead > tr > th,
+.c > thead > tr > td,
+.c > tbody > tr > th,
+.c > tbody > tr > td {
   border: 1px solid black;
 }
 
-.c>tbody>tr>td>span {
+.c > tbody > tr > td > span {
   font-weight: 600;
 }
 
 /* for tables with multiple height */
-td>p {
+td > p {
   margin: 0;
 }
 
-td>select {
+td > select {
   border: none;
   padding: 0px 5px;
   background-color: transparent;
@@ -86,7 +97,133 @@ td.important {
   font-weight: bold;
 }
 
-td>button.icon i {
+td > button.icon i {
   font-size: 20px;
   font-weight: bold;
+}
+
+/*MODIFIED CSS*/
+table.a > tbody > tr > td > a > .bi-x-lg,
+table.a > tbody > tr > td > a > .bi-check-lg {
+  display: none;
+}
+
+table.a > tbody > tr > td > input {
+  width: 50px;
+  height: 20px;
+  text-align: center;
+}
+
+table.c > tbody > tr > td {
+  padding: 0;
+}
+
+table.c > tbody > tr > td > .day-element {
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+table.c > tbody > tr > td > .task-blue,
+table.c > tbody > tr > td > .task-green,
+table.c > tbody > tr > td > .task-gray,
+table.c > tbody > tr > td > .task-lavender,
+table.c > tbody > tr > td > .task-yellow,
+table.c > tbody > tr > td > .task-mauve,
+table.c > tbody > tr > td > .task-teal,
+table.c > tbody > tr > td > .task-ivory,
+table.c > tbody > tr > td > .task-coral,
+table.c > tbody > tr > td > .task-taupe,
+table.c > tbody > tr > td > .task-beige {
+  margin: 2px;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.task-blue {
+  background-color: rgb(59, 59, 235);
+}
+
+.task-green {
+  background-color: rgb(35, 134, 35);
+}
+
+.task-gray {
+  background-color: var(--gray);
+}
+
+.task-lavender {
+  background-color: var(--lavender);
+}
+
+.task-yellow {
+  background-color: var(--yellow);
+}
+
+.task-mauve {
+  background-color: var(--mauve);
+}
+
+.task-teal {
+  background-color: var(--teal);
+}
+
+.task-ivory {
+  background-color: var(--ivory);
+}
+
+.task-coral {
+  background-color: var(--coral);
+}
+
+.task-taupe {
+  background-color: var(--taupe);
+}
+
+.task-beige {
+  background-color: var(--beige);
+}
+
+.task-lavender > a,
+.task-yellow > a,
+.task-ivory > a {
+  color: black;
+}
+
+.task-blue > a,
+.task-green > a,
+.task-gray > a,
+.task-mauve > a,
+.task-teal > a,
+.task-coral > a,
+.task-taupe > a,
+.task-beige > a {
+  color: white;
+}
+
+/*RESPONSIVE*/
+@media only screen and (max-width: 768px) {
+  .floating > main {
+    overflow-x: auto;
+  }
+
+  .floating > main > table.a > thead > tr > .type,
+  .floating > main > table.a > thead > tr > .sent,
+  .floating > main > table.a > thead > tr > .read,
+  .floating > main > table.a > tbody > tr > .type,
+  .floating > main > table.a > tbody > tr > .sent,
+  .floating > main > table.a > tbody > tr > .read {
+    display: none;
+  }
+
+  table.a > tbody > tr > td > a > .bi-x-lg,
+  table.a > tbody > tr > td > a > .bi-check-lg {
+    display: inline-flex;
+  }
+
+  table.c > thead {
+    display: none;
+  }
 }

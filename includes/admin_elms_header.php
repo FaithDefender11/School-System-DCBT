@@ -64,6 +64,7 @@
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
 
+
         <!-- Custom CSS -->
         <link rel="stylesheet" type="text/css" href="../../assets/css/main_style.css">
         <link rel="stylesheet" type="text/css" href="../../assets/css/content.css">
@@ -75,8 +76,9 @@
         <link rel="stylesheet" href="../../assets/css/others/toggle-switch.css">
 
         <!-- Google Fonts -->
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato" />
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Arimo" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Arimo">
+
 
         <!-- jQuery (additional instance) -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -87,8 +89,15 @@
         <!-- SweetAlert2 -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.24/sweetalert2.all.js"></script>
 
-        <!-- Bootstrap 4 JavaScript -->
+
+        <!-- SUMMER NOTE LINK -->
+        <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+
+         <!-- Bootstrap 4 JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        
+        <!-- SUMMER NOTE SCRIPT -->
+        <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
     
     </head>
 

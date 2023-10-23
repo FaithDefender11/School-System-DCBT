@@ -7,7 +7,7 @@
     # Good Moral
     if (isset($_POST['student_requirement_list_id'])
         && isset($_POST['student_requirement_id']))
-        // 
+        // student_id
         {
         
         $student_requirement_list_id = $_POST['student_requirement_list_id'];

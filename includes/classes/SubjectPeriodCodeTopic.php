@@ -39,6 +39,9 @@ class SubjectPeriodCodeTopic{
     public function GetCourseId() {
         return isset($this->sqlData['course_id']) ? $this->sqlData["course_id"] : NULL; 
     }
+    public function GetSchoolYearId() {
+        return isset($this->sqlData['school_year_id']) ? $this->sqlData["school_year_id"] : NULL; 
+    }
 
     public function GetSubjectCode() {
         return isset($this->sqlData['subject_code']) ? $this->sqlData["subject_code"] : ""; 
@@ -325,17 +328,29 @@ class SubjectPeriodCodeTopic{
 
 
     public function GetAllsubjectPeriodCodeTopics(
-        $subject_code, $school_year_id) {
+        $subject_code, $school_year_id, $teacher_id = null) {
+
+        $teacher_query = "";
+
+        if($teacher_id != NULL){
+
+            $teacher_query = "AND teacher_id=:teacher_id";
+        }
 
         $sql = $this->con->prepare("SELECT subject_period_code_topic_id
             FROM subject_period_code_topic
             
             WHERE subject_code=:subject_code
             AND school_year_id=:school_year_id
+            $teacher_query
             ");
                 
         $sql->bindValue(":subject_code", $subject_code);
         $sql->bindValue(":school_year_id", $school_year_id);
+
+        if($teacher_id != NULL){
+            $sql->bindValue(":teacher_id", $teacher_id);
+        }
         $sql->execute();
 
         if($sql->rowCount() > 0){
@@ -356,6 +371,28 @@ class SubjectPeriodCodeTopic{
             ");
                 
         $sql->bindValue(":subject_period_code_topic_id", $subject_period_code_topic_id);
+        $sql->execute();
+
+        if($sql->rowCount() > 0){
+            return $sql->fetchColumn();
+        }
+
+        return NULL;
+    }
+
+    public function GetCourseIdBySubjectCodeAndSchoolYear(
+        $subject_code, $school_year_id) {
+
+        $sql = $this->con->prepare("SELECT course_id
+            FROM subject_period_code_topic
+            
+            WHERE subject_code=:subject_code
+            AND school_year_id=:school_year_id
+
+            ");
+                
+        $sql->bindValue(":subject_code", $subject_code);
+        $sql->bindValue(":school_year_id", $school_year_id);
         $sql->execute();
 
         if($sql->rowCount() > 0){
@@ -502,6 +539,107 @@ class SubjectPeriodCodeTopic{
         }
 
         return [];
+    }
+
+    
+    public function GetAllGivenAssignmentsBasedOnSubjectCodeTopics(
+        $assignedSubjectCodeTopics) {
+
+            // var_dump($assignedSubjectCodeTopics);
+
+        if(count($assignedSubjectCodeTopics) > 0){
+
+
+            
+            $givenAssignementsArray = [];
+            $subjectCodeAssignmentSubmissionArray = [];
+
+            $subjectCodeAssignment = new SubjectCodeAssignment($this->con);
+            
+            foreach ($assignedSubjectCodeTopics as $key => $subject_period_code_topic_id) {
+
+                # code...
+
+                $givenAssignements = $subjectCodeAssignment
+                    ->GetTotalGivenAssignmentByTopicSection(
+                        $subject_period_code_topic_id);
+
+                foreach ($givenAssignements as $key => $value) {
+                    # code...
+
+                    $subject_code_assignment_id = $value['subject_code_assignment_id'];
+                
+                    array_push($givenAssignementsArray, $subject_code_assignment_id);
+                }    
+
+            }
+
+            if(count($givenAssignementsArray) > 0){
+
+                foreach ($givenAssignementsArray as $key => $subject_code_assignment_id) {
+
+                    $submission = $this->con->prepare("WITH LatestSubmissions AS (
+                        SELECT student_id, subject_code_assignment_id, MAX(date_creation) AS latest_date_creation
+                        FROM subject_assignment_submission
+                        WHERE date_graded IS NULL
+                        GROUP BY student_id, subject_code_assignment_id)
+
+                        SELECT t1.*
+                        FROM subject_assignment_submission AS t1
+
+                        JOIN LatestSubmissions AS t2 ON t1.student_id = t2.student_id 
+
+                        AND t1.subject_code_assignment_id = t2.subject_code_assignment_id 
+                        AND t1.date_creation = t2.latest_date_creation
+
+                        WHERE t1.subject_code_assignment_id = :subject_code_assignment_id
+                        AND t1.subject_grade IS NULL
+                        AND t1.date_graded IS NULL
+                    ");
+        
+                    $submission->bindValue(":subject_code_assignment_id", $subject_code_assignment_id);
+                    $submission->execute();
+                    
+                    if($submission->rowCount() > 0){
+
+                        $result = $submission->fetchAll(PDO::FETCH_ASSOC);
+
+                        foreach ($result as $key => $submission_subject_code_assignment) {
+
+
+                            // array_push($subjectCodeAssignmentSubmissionArray, $submission_subject_code_assignment_id);
+
+                            $db_subject_assignment_submission_id = $submission_subject_code_assignment['subject_assignment_submission_id'];
+                            $submission_subject_code_assignment_id = $submission_subject_code_assignment['subject_code_assignment_id'];
+
+                            $subjectAssignmentSubmission = new SubjectAssignmentSubmission($this->con);
+                            
+                            $check = $subjectAssignmentSubmission->CheckOtherSubmissionHasBeenGraded2(
+                                $db_subject_assignment_submission_id);
+                            
+                        
+                            if($check == false){
+
+                                if (!in_array($submission_subject_code_assignment_id, $subjectCodeAssignmentSubmissionArray)) {
+                                    $subjectCodeAssignmentSubmissionArray[] = $submission_subject_code_assignment_id;
+                                }
+                                // array_push($subjectCodeAssignmentSubmissionArray, $submission_subject_code_assignment_id);
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+                // return $subjectCodeAssignmentSubmissionArray;
+
+            }
+            
+        }
+
+        return $subjectCodeAssignmentSubmissionArray;
     }
 
 }

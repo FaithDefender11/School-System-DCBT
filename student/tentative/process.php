@@ -80,7 +80,8 @@
             WHERE pending_enrollees_id=:pending_enrollees_id
             -- AND is_finished = 0
             AND activated = 1
-            AND student_status != 'APPROVED'
+            AND is_enrolled = 0
+            -- AND student_status != 'APPROVED'
             ");
         
         $sql->bindValue(":pending_enrollees_id", $pending_enrollees_id);
@@ -211,8 +212,6 @@
             }
 
         }
-       
-
     } 
 ?>
 

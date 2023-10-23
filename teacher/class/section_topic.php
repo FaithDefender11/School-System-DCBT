@@ -11,11 +11,14 @@
     include_once('../../includes/classes/SubjectCodeHandout.php');
     include_once('../../includes/classes/SubjectCodeAssignment.php');
  
+    echo Helper::RemoveSidebar();
+
+
     ?>
         <style>
-        .dropdown-menu.show{
-            margin-left: -157px;
-        }
+            .dropdown-menu.show{
+                margin-left: -157px;
+            }
         </style>
     <?php
 
@@ -37,6 +40,8 @@
         $current_school_year_term = $school_year_obj['term'];
 
         $teacher_id = $_SESSION['teacherLoggedInId'];
+
+        // var_dump($teacher_id);
 
         $subjectCodeAssignmentTemplate = new SubjectCodeAssignmentTemplate(
             $con);
@@ -60,12 +65,16 @@
         $subjectCodeAssignment = new SubjectCodeAssignment($con);
 
         $nonTemplateHandout = $subjectCodeHandout->GetNonTemplateHandoutBasedOnSubjectTopic($subject_period_code_topic_id);
+        
         $nonTemplateAssignment = $subjectCodeAssignment->GetNonTemplateAssignmentBasedOnSubjectTopic(
             $subject_period_code_topic_id);
 
+
+        $school_year_id = $subjectPeriodCodeTopic->GetSchoolYearId();
+
         // print_r($nonTemplateHandout);
 
-        $back_url = "index.php?c_id=$topic_course_id&c=$topic_subject_code";
+        $back_url = "index.php?c=$topic_subject_code&sy_id=$school_year_id";
 
         ?>
 
@@ -81,10 +90,10 @@
                     <h4 style="font-weight: bold;" class="text-muted text-start"><?php echo $topic_name; ?> (<?php echo $subject_period_name?>)</h4>
                     
                     <div class="row">
-                        <span class="mr-2">
+                        <!-- <span class="mr-2">
                             <button onclick="window.location.href = 'section_topic_grading.php?ct_id=<?php echo $subject_period_code_topic_id; ?>' "
                                 class="btn btn-info btn-sm">To Grade: </button> 
-                        </span>
+                        </span> -->
 
                         <span class="mr-2">
                             <button onclick="window.location.href = 'task_summary.php?ct_id=<?php echo $subject_period_code_topic_id; ?>' "
@@ -152,7 +161,7 @@
                                                 <th>Section</th>
                                                 <th>Template</th>
                                                 <th>Given</th>
-                                                <th>Action</th>
+                                                <!-- <th>Action</th> -->
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -443,12 +452,7 @@
 
 
                                                     # NON TEMPLATE Assignment
-                                                    if(
-                                                        // $subject_code_handout_template_id === NULL 
-                                                        // && $subject_code_assignment_template_id === NULL
-                                                        // && $nonTemplateSubjectCodeHandoutId === NULL
-                                                        $nonTemplateSubjectCodeAssignmentId !== NULL
-                                                        ){
+                                                    if($nonTemplateSubjectCodeAssignmentId !== NULL){
                                                             
                                                         $filename = basename($nonTemplateFile);
                                                         $extension = pathinfo($nonTemplateFile, PATHINFO_EXTENSION);
@@ -502,18 +506,16 @@
                                                                 $nonTemplateSubjectAssignmentName
                                                             </a>
                                                         ";
-
-
-                                                        
                                                         
                                                     }
+
+                                                    // <td>$output_btn</td>
 
                                                     echo "
                                                         <tr>
                                                             <td>$output_section</td>
                                                             <td>$template_status</td>
                                                             <td>$given_status</td>
-                                                            <td>$output_btn</td>
                                                         </tr>
                                                     ";
                                                 }
@@ -556,76 +558,6 @@
 
     
 
-    function ungiveAssignmentTemplate(subject_code_assignment_id,
-        subject_period_code_topic_id, teacher_id){
-
-        var subject_code_assignment_id = parseInt(subject_code_assignment_id);
-        var subject_period_code_topic_id = parseInt(subject_period_code_topic_id);
-        var teacher_id = parseInt(teacher_id);
-
-        Swal.fire({
-                icon: 'question',
-                title: `Do you want to un-give the selected assignment?`,
-                showCancelButton: true,
-                confirmButtonText: 'Yes',
-                cancelButtonText: 'Cancel'
-
-            }).then((result) => {
-                if (result.isConfirmed) {
-
-                    $.ajax({
-                    url: "../../ajax/class/ungiveAssignmentTemplate.php",
-                        type: 'POST',
-                        data: {
-                            subject_code_assignment_id,
-                            subject_period_code_topic_id,
-                            teacher_id
-                        },
-                        success: function(response) {
-
-                            response = response.trim();
-
-                            console.log(response);
-
-                            if(response == "success"){
-                                Swal.fire({
-                                icon: 'success',
-                                title: `Successfully Un-gived Assignment`,
-                                showConfirmButton: false,
-                                timer: 1200, // Adjust the duration of the toast message in milliseconds (e.g., 3000 = 3 seconds)
-                                toast: true,
-                                position: 'top-end',
-                                showClass: {
-                                popup: 'swal2-noanimation',
-                                backdrop: 'swal2-noanimation'
-                                },
-                                hideClass: {
-                                popup: '',
-                                backdrop: ''
-                                }
-                            }).then((result) => {
-
-                                $('#handoutt_template_table').load(
-                                    location.href + ' #handoutt_template_table'
-                                );
-
-                                // location.reload();
-                            });}
-
-                        },
-                        error: function(xhr, status, error) {
-                            // handle any errors here
-                            console.error('Error:', error);
-                            console.log('Status:', status);
-                            console.log('Response Text:', xhr.responseText);
-                            console.log('Response Code:', xhr.status);
-                        }
-                    });
-                } else {
-                    // User clicked "No," perform alternative action or do nothing
-                }
-        });
-    }
 
     // Template Handout
     function giveHandoutTemplate(subject_code_handout_template_id,
@@ -946,6 +878,79 @@
                                 Swal.fire({
                                 icon: 'success',
                                 title: `Handout has been removed`,
+                                showConfirmButton: false,
+                                timer: 1200, // Adjust the duration of the toast message in milliseconds (e.g., 3000 = 3 seconds)
+                                toast: true,
+                                position: 'top-end',
+                                showClass: {
+                                popup: 'swal2-noanimation',
+                                backdrop: 'swal2-noanimation'
+                                },
+                                hideClass: {
+                                popup: '',
+                                backdrop: ''
+                                }
+                            }).then((result) => {
+
+                                $('#handoutt_template_table').load(
+                                    location.href + ' #handoutt_template_table'
+                                );
+
+                                // location.reload();
+                            });}
+
+                        },
+                        error: function(xhr, status, error) {
+                            // handle any errors here
+                            console.error('Error:', error);
+                            console.log('Status:', status);
+                            console.log('Response Text:', xhr.responseText);
+                            console.log('Response Code:', xhr.status);
+                        }
+                    });
+                } else {
+                    // User clicked "No," perform alternative action or do nothing
+                }
+        });
+    }
+
+    // Template Assignment
+
+    function ungiveAssignmentTemplate(subject_code_assignment_id,
+        subject_period_code_topic_id, teacher_id){
+
+        var subject_code_assignment_id = parseInt(subject_code_assignment_id);
+        var subject_period_code_topic_id = parseInt(subject_period_code_topic_id);
+        var teacher_id = parseInt(teacher_id);
+
+        Swal.fire({
+                icon: 'question',
+                title: `Do you want to un-give the selected assignment?`,
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'Cancel'
+
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    $.ajax({
+                    url: "../../ajax/class/ungiveAssignmentTemplate.php",
+                        type: 'POST',
+                        data: {
+                            subject_code_assignment_id,
+                            subject_period_code_topic_id,
+                            teacher_id
+                        },
+                        success: function(response) {
+
+                            response = response.trim();
+
+                            console.log(response);
+
+                            if(response == "success"){
+                                Swal.fire({
+                                icon: 'success',
+                                title: `Successfully Un-gived Assignment`,
                                 showConfirmButton: false,
                                 timer: 1200, // Adjust the duration of the toast message in milliseconds (e.g., 3000 = 3 seconds)
                                 toast: true,

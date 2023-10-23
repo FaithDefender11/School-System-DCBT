@@ -43,6 +43,8 @@
             $studentLoggedInId,
             $current_school_year_id,
             $subject_code);
+
+        
         
         // print_r($assignmentTodoIds);
         
@@ -63,7 +65,7 @@
 
                 <main>
                     <div class="floating" id="shs-sy">
-                        <header>
+                        <header class="mb-3">
                             <div class="title">
 
                                 <h4 style="font-weight: bold;" class="text-primary"><?php echo "$subject_title - SY $current_school_year_term $period_shortcut"; ?></h4>
@@ -125,6 +127,7 @@
             </div>
         
         <?php
+
 
     }
 ?>

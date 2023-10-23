@@ -6,6 +6,8 @@
     require_once("../../includes/classes/Pending.php");
     require_once("../../includes/classes/Helper.php");
     require_once("../../includes/classes/Constants.php");
+    require_once("../../includes/classes/StudentRequirement.php");
+    require_once("../../includes/classes/SchoolYear.php");
     
     if (
         $_SERVER['REQUEST_METHOD'] === 'POST'
@@ -15,6 +17,14 @@
         && isset($_POST['selected_choose_level'])
         && isset($_POST['pending_enrollees_id'])
     ) {
+
+        $school_year = new SchoolYear($con);
+
+        $school_year_obj = $school_year->GetActiveSchoolYearAndSemester();
+
+        $school_year_id = $school_year_obj['school_year_id'];
+        $current_semester = $school_year_obj['period'];
+        $current_term = $school_year_obj['term'];
         
         $pending_enrollees_id = intval($_POST['pending_enrollees_id']);
         // Int
@@ -61,6 +71,34 @@
                 $selected_department_type, $selected_program_id,
                 $selected_choose_level, $pending_enrollees_id);
 
+                $admission_status = $selected_admission_type == "New" ? "Standard" 
+                    : ($selected_admission_type == "Transferee" ? "Transferee" : "");
+                
+                $type = $selected_department_type == "Senior High School" ? "SHS" 
+                    : ($selected_department_type == "Tertiary" ? "Tertiary" : "");
+
+
+                $studentRequirement = new StudentRequirement($con);
+
+                $student_requirement_id = $studentRequirement->GetStudentRequirement(
+                    $pending_enrollees_id,
+                    $school_year_id);
+
+                if($student_requirement_id == NULL){
+
+                    # Create.
+                    $initNewEnrolleeStudentRequirement = $studentRequirement
+                        ->InitializedPendingEnrolleeRequirement(
+                        $pending_enrollees_id, $school_year_id);
+                    
+                }
+
+                $updateRequirements = $studentRequirement
+                    ->UpdateStudentRequirementAdmission(
+                        $pending_enrollees_id, $student_requirement_id,
+                            $type, $admission_status);
+    
+            
             if($wasSuccess){
 
                 $data[] = array(

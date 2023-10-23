@@ -24,9 +24,21 @@ $searchValue = $_POST['search']['value'] ?? null;
 $payment_method_filter = $_GET['payment_method_filter'] ?? NULL;
 $payment_status_filter = $_GET['payment_status_filter'] ?? NULL;
 
+$school_year_id_filter = $_GET['school_year_id_filter'] ?? NULL;
+$program_id_filter = $_GET['program_id_filter'] ?? NULL;
+$course_level_filter = $_GET['course_level_filter'] ?? NULL;
+$course_id_filter = $_GET['course_id_filter'] ?? NULL;
+
+
 
 $payment_method_filtering = "";
 $payment_status_filtering = "";
+
+$school_year_id_filtering = "";
+$program_id_filtering = "";
+$course_level_filtering = "";
+$course_id_filtering = "";
+
  
 $columnNames = array(
     'enrollment_form_id',
@@ -47,8 +59,33 @@ if ($searchValue != '') {
 
     $searchValue = trim(strtolower($searchValue)); // Convert search value to lowercase
     
-    $searchQuery = " AND (t1.firstname LIKE '%" . $searchValue . "%' OR 
-        t1.lastname LIKE '%" . $searchValue . "%' OR
+    $names = explode(" ", $searchValue);
+    // $firstName = $names[0];
+    // $lastName = isset($names[1]) ? $names[1] : "";
+
+
+    if (count($names) > 1) {
+        $lastName = array_pop($names); // Remove the last element and assign it to the last name
+        $firstName = implode(" ", $names); // The remaining parts are considered the first name
+    } else {
+        $firstName = $names[0]; // Only one part, so it's the first name
+        $lastName = ""; // No last name provided
+    }
+
+    $firstName = trim(strtolower($firstName));
+    $lastName = trim(strtolower($lastName));
+
+        // t1.firstname LIKE '%" . $searchValue . "%' OR 
+        // t1.lastname LIKE '%" . $searchValue . "%' OR
+
+    $searchQuery = " AND (
+
+
+        (t1.firstname LIKE '%" . $firstName . "%' AND t1.lastname LIKE '%" . $lastName . "%') OR 
+        t1.firstname LIKE '%" . $searchValue . "%' OR 
+        t1.lastname LIKE '%" . $searchValue . "%' OR 
+
+
         t2.enrollment_form_id LIKE '%" . $searchValue . "%' OR
         t3.program_section LIKE '%" . $searchValue . "%' OR
 
@@ -74,6 +111,10 @@ $stmt = $con->prepare("SELECT COUNT(*) AS allcount
 
     INNER JOIN course AS t3 ON t3.course_id = t2.course_id
  
+    INNER JOIN school_year AS t4 ON t4.school_year_id = t2.school_year_id
+
+    INNER JOIN program AS t5 ON t5.program_id = t3.program_id
+
     ");
 
 
@@ -93,6 +134,23 @@ if($payment_status_filter !== ""){
     $payment_status_filtering = "AND t2.payment_status=:payment_status";
 }
 
+if($school_year_id_filter !== ""){
+    $school_year_id_filtering = "AND t2.school_year_id=:school_year_id";
+}
+
+if($program_id_filter !== ""){
+    $program_id_filtering = "AND t5.program_id=:program_id";
+}
+
+if($course_level_filter !== ""){
+    $course_level_filtering = "AND t3.course_level=:course_level";
+}
+
+if($course_id_filter !== ""){
+    $course_id_filtering = "AND t3.course_id=:course_id";
+}
+
+
 ## Total number of records with filtering
 $stmt = $con->prepare("SELECT COUNT(*) AS allcount 
         FROM student AS t1
@@ -107,12 +165,23 @@ $stmt = $con->prepare("SELECT COUNT(*) AS allcount
 
         INNER JOIN course AS t3 ON t3.course_id = t2.course_id
 
+        INNER JOIN school_year AS t4 ON t4.school_year_id = t2.school_year_id
+
+        INNER JOIN program AS t5 ON t5.program_id = t3.program_id
+
         WHERE 1 $searchQuery
-    
+        $school_year_id_filtering
+        $program_id_filtering
+        $course_id_filtering
+        $course_level_filtering
+
+
     ");
  
 $stmt->bindValue(":registrar_evaluated", "yes");
 $stmt->bindValue(":cashier_evaluated", "yes");
+
+
 if($payment_method_filtering !== ""){
     $stmt->bindValue(":payment_method", $payment_method_filter);
 }
@@ -120,6 +189,23 @@ if($payment_method_filtering !== ""){
 if($payment_status_filtering !== ""){
     $stmt->bindValue(":payment_status", $payment_status_filter);
 }
+
+if($school_year_id_filtering !== ""){
+    $stmt->bindValue(":school_year_id", $school_year_id_filter);
+}
+
+if($program_id_filtering !== ""){
+    $stmt->bindValue(":program_id", $program_id_filter);
+}
+
+if($course_id_filtering !== ""){
+    $stmt->bindValue(":course_id", $course_id_filter);
+}
+
+if($course_level_filtering !== ""){
+    $stmt->bindValue(":course_level", $course_level_filter);
+}
+
 
 $stmt->execute();
 
@@ -183,12 +269,20 @@ if ($row != null) {
         $payment_method_filtering
         $payment_status_filtering
         
+
         INNER JOIN course AS t3 ON t3.course_id = t2.course_id
 
         INNER JOIN school_year AS t4 ON t4.school_year_id = t2.school_year_id
 
+        INNER JOIN program AS t5 ON t5.program_id = t3.program_id
+
 
         WHERE 1 $searchQuery
+
+        $school_year_id_filtering
+        $program_id_filtering
+        $course_id_filtering
+        $course_level_filtering
 
         ORDER BY $sortBy $sortOrder
         
@@ -203,8 +297,25 @@ if ($row != null) {
     if($payment_method_filtering !== ""){
         $stmt->bindValue(":payment_method", $payment_method_filter);
     }
+
     if($payment_status_filtering !== ""){
         $stmt->bindValue(":payment_status", $payment_status_filter);
+    }
+
+    if($school_year_id_filtering !== ""){
+        $stmt->bindValue(":school_year_id", $school_year_id_filter);
+    }
+
+    if($program_id_filtering !== ""){
+        $stmt->bindValue(":program_id", $program_id_filter);
+    }
+
+    if($course_id_filtering !== ""){
+        $stmt->bindValue(":course_id", $course_id_filter);
+    }
+
+    if($course_level_filtering !== ""){
+        $stmt->bindValue(":course_level", $course_level_filter);
     }
 
 

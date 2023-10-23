@@ -15,7 +15,6 @@
     define('DB_PASSWORD', 'xTVeEU~k=O8:');
     define('DB_DATABASE', 'u544299924_main');
 
-
     try {
         
         // string that specifies the details of the database connection, including the database driver

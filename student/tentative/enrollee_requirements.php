@@ -1,18 +1,40 @@
 
 <?php 
 
-    // echo "pending_type: $pending_type";
-    // echo "<br>";
 
-    // echo "admission_status: $admission_status";
-    // echo "<br>";
-    // echo "<br>";
 
-    $studentRequirementE = new StudentRequirement($con);
+    $studentRequirement = new StudentRequirement($con);
 
-    $student_requirement_id = $studentRequirementE->GetStudentRequirement(
+    $student_requirement_id = $studentRequirement->GetStudentRequirement(
         $pending_enrollees_id,
         $school_year_id);
+
+    if($student_requirement_id == NULL){
+
+        # Create.
+        $initNewEnrolleeStudentRequirement = $studentRequirement
+            ->InitializedPendingEnrolleeRequirement($pending_enrollees_id,
+            $pending_type, $school_year_id);
+        
+    }
+
+    $studentRequirementExec = new StudentRequirement($con, $student_requirement_id);
+
+    $student_type = $studentRequirementExec->GetStudentType();
+    $student_admission_status = $studentRequirementExec->GetAdmissionStatus();
+    // $student_admission_status = "";
+
+
+    // echo "pending_type: $pending_type";
+    // echo "student_type: $student_type";
+    // echo "<br>";
+
+    // echo "student_admission_status: $student_admission_status";
+    // echo "admission_status: $admission_status";
+    // echo "<br>";
+
+
+    // var_dump($student_requirement_id);
  
     // echo $student_requirement_id;
  
@@ -62,22 +84,6 @@
             mkdir('../../assets/images/student_requirements_files');
         }
 
-        // $psa = $_FILES['psa'] ?? NULL;
-        // var_dump($psa);
-
-        // foreach ($_POST as $key => $value) {
-        //     // Check if the key matches the pattern of file input names
-        //     if (in_array($key, $universalRequirementsAcronym)) {
-        //         // $key is the name of the file input
-        //         echo "File input name: " . $key . "<br>";
-
-
-        //         $psa = $_FILES[$key] ?? NULL;
-
-        //         // var_dump($psa);
-                
-        //     }
-        // }
 
         $hasInserted = false;
         $redirectOnly = false;
@@ -93,7 +99,6 @@
 
                 // echo "fileCount: $fileCount";
                 // echo "<br>";
-
 
                 $uploadDirectory = '../../assets/images/student_requirements_files/';
                 
@@ -199,14 +204,14 @@
 
         foreach ($transfereeRequirements as $key => $value) {
 
-            if($value['status'] === $admission_status){
+            if($value['status'] === $student_admission_status){
 
                 $requirement_id_true = $value['requirement_id'];
                 $acronym = $value['acronym'];
 
              
 
-                if ($value['education_type'] == $pending_type 
+                if ($value['education_type'] == $student_type 
                     || $value['education_type'] == "Universal"){
 
 
@@ -339,7 +344,7 @@
                 <main>
                     <header>
                         <div class="title">
-                            <h4 style="font-weight: bold;"><?php echo "$admission_status"; ?> Requirements to submit: </h4>
+                            <h4 style="font-weight: bold;"><?php echo "$student_admission_status"; ?> Requirements to submit: </h4>
                         </div>
                     </header>
 
@@ -414,11 +419,11 @@
                     <?php endforeach; ?>
 
 
-                    <?php if ($admission_status === "Standard"): ?>
+                    <?php if ($student_admission_status === "Standard"): ?>
 
                         <?php foreach ($standardRequirements as $key => $value): ?>
                             
-                            <?php if ($value['education_type'] == $pending_type 
+                            <?php if ($value['education_type'] == $student_type 
                                 || $value['education_type'] == "Universal"): ?>
 
                                 <div class="card-body">
@@ -493,14 +498,14 @@
                         <?php endforeach; ?>
                     <?php endif; ?>
 
-                    <?php if ($admission_status === "Transferee"): ?>
+                    <?php if ($student_admission_status === "Transferee"): ?>
 
-                        <h5 class="text-center"><?php echo $admission_status; ?> below: </h5>
+                        <h5 class="text-center"><?php echo $student_admission_status; ?> below: </h5>
                         <?php foreach ($transfereeRequirements as $key => $value): ?>
 
                             <!-- IF student ( SHS OR Tertiary ) is matched to the education_type ( SHS OR Tertiary )  -->
                             
-                            <?php if ($value['education_type'] == $pending_type 
+                            <?php if ($value['education_type'] == $student_type 
                                 || $value['education_type'] == "Universal"): ?>
 
                                 <?php
@@ -603,6 +608,7 @@
             </form>
         </div>
     </main>
+    
 </div>
 
 

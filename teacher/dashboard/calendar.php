@@ -6,6 +6,8 @@
     include_once('../../includes/classes/SubjectCodeAssignment.php');
     include_once('../../includes/classes/SubjectPeriodCodeTopic.php');
     include_once('../../includes/classes/SubjectAssignmentSubmission.php');
+    
+    echo Helper::RemoveSidebar();
 
 
     $school_year = new SchoolYear($con);
@@ -56,16 +58,28 @@
 
 <body>
 
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-12">
-          <h4 style="font-weight: bold;" class="mt-2 text-primary text-center">
-            My Calendar
-          </h4>
-          <div id="calendar"></div>
+    <div class="row col-md-12">
+
+      <div class="col-md-9">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-12">
+              <h4 style="font-weight: bold;" class="mt-2 text-primary text-center">
+                My Calendar
+              </h4>
+              <div id="calendar"></div>
+            </div>
+          </div>
         </div>
       </div>
+
+      <div class="col-md-3">
+        <h4>Legend</h4>
+      </div>
+
+
     </div>
+
 
     <!-- Start popup dialog box -->
     <!-- <div

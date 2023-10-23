@@ -16,7 +16,7 @@ $current_school_year_id = $school_year_obj['school_year_id'];
 
 $enrollment = new Enrollment($con);
 
-$generateFormId = $enrollment->GenerateEnrollmentFormId();
+$generateFormId = $enrollment->GenerateEnrollmentFormId($current_school_year_id);
 $enrollment_form_id = $enrollment->CheckEnrollmentFormIdExists($generateFormId);
         
 

@@ -119,6 +119,22 @@
         return isset($this->sqlData['mother_email']) ? $this->sqlData["mother_email"] : ""; 
     }
 
+    public function GetSchoolName() {
+        return isset($this->sqlData['school_name']) ? $this->sqlData["school_name"] : ""; 
+    }
+
+    public function GetSchoolAddress() {
+        return isset($this->sqlData['school_address']) ? $this->sqlData["school_address"] : ""; 
+    }
+
+    public function GetSchoolYearStarted() {
+        return isset($this->sqlData['year_started']) ? $this->sqlData["year_started"] : ""; 
+    }
+
+    public function GetSchoolYearEnded() {
+        return isset($this->sqlData['year_ended']) ? $this->sqlData["year_ended"] : ""; 
+    }
+
     public function UpdatePendingParent($pending_enrollees_id, $parent_id, $firstname, $lastname,
         $middle_name, $suffix, $contact_number,
         $email, $occupation, $relationship,
@@ -342,6 +358,60 @@
 
         return $query->rowCount() > 0;
     }
+
+    public function UpdateNewEnrolleeSchoolHistory(
+        $pending_enrollees_id, $school_name,
+        $year_started, $year_ended, $school_address
+    ) {
+
+        $query = $this->con->prepare("UPDATE parent SET 
+            school_name = :school_name,
+            year_started = :year_started,
+            year_ended = :year_ended,
+            school_address = :school_address
+            
+            WHERE pending_enrollees_id = :pending_enrollees_id
+        ");
+
+        $query->bindParam(":school_name", $school_name);
+        $query->bindParam(":year_started", $year_started);
+        $query->bindParam(":year_ended", $year_ended);
+        $query->bindParam(":school_address", $school_address);
+        $query->bindParam(":pending_enrollees_id", $pending_enrollees_id);
+
+        $query->execute();
+
+        if($query->rowCount() > 0){
+            return true;
+        }
+
+        return false;
+    }
+
+    public function InsertNewEnrolleeSchoolHistory(
+        $pending_enrollees_id, $school_name,
+        $year_started, $year_ended, $school_address
+    ) {
+        $query = $this->con->prepare("INSERT INTO parent
+            (pending_enrollees_id, school_name, year_started, year_ended, school_address)
+            VALUES (:pending_enrollees_id, :school_name, :year_started, :year_ended, :school_address)
+        ");
+
+        $query->bindParam(":pending_enrollees_id", $pending_enrollees_id);
+        $query->bindParam(":school_name", $school_name);
+        $query->bindParam(":year_started", $year_started);
+        $query->bindParam(":year_ended", $year_ended);
+        $query->bindParam(":school_address", $school_address);
+
+        $query->execute();
+
+        if ($query->rowCount() > 0) {
+            return true;
+        }
+
+        return false;
+    }
+
     
 
     public function getInputValue($name) {

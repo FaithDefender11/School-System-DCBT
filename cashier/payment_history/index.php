@@ -4,8 +4,10 @@
     include_once('../../includes/classes/Enrollment.php');
     include_once('../../includes/classes/Section.php');
     include_once('../../includes/classes/SchoolYear.php');
+    include_once('../../includes/classes/Program.php');
 
     ?>  
+
       <head>
 
         <style>
@@ -78,11 +80,76 @@
     // echo "selected_payment_status: $selected_payment_status_filter";
     // echo "<br>";
 
+
+
+
+    $selected_program_id = "";
+    $school_year_search = "";
+    $selected_course_id = "";
+    $selected_school_year_id = "";
+    $selected_student_subject_id = "";
+    $selected_course_level = "";
+
+    $hasClicked = false;
+    
+    $get_period = NULL;
+    $get_term = NULL;
+
+    if($_SERVER['REQUEST_METHOD'] === "POST" 
+        && isset($_POST['payment_history_btn'])){
+
+        
+        $selected_school_year_id = $_POST['school_year_id'] ?? NULL;
+        $selected_program_id = $_POST['program_id'] ?? NULL;
+        $selected_course_level = $_POST['course_level'] ?? NULL;
+
+        $school_year = new SchoolYear($con, $selected_school_year_id);
+
+        $get_term = $school_year->GetTerm();
+        $get_period = $school_year->GetPeriod();
+
+
+        $program = new Program($con, $selected_program_id);
+        $program_name = $program->GetProgramName();
+
+
+        $selected_course_id = $_POST['course_id'] ?? NULL;
+        $selected_student_subject_id = $_POST['student_subject_id'] ?? NULL;
+
+        $hasClicked = true;
+
+        // $redirectUrl = "enrollmentListData.php?sy_id=$sy_id&p_id=$selected_program_id&c_id=$selected_course_id";
+        // header("Location: $redirectUrl");
+    }
+    
+    // echo "selected_school_year_id: $selected_school_year_id";
+    // echo "<br>";
+
+    // echo "selected_course_level: $selected_course_level";
+    // echo "<br>";
+
+    // echo "selected_program_id: $selected_program_id";
+    // echo "<br>";
+
+    // echo "selected_course_id: $selected_course_id";
+    // echo "<br>";
+
+    if(isset($_POST['reset_btn'])){
+
+        $selected_school_year_id = NULL;
+        $selected_program_id = NULL;
+        $selected_student_subject_id = NULL;
+        $selected_course_level = NULL;
+        
+    }
+
+
 ?>
 
 
 
     <div class="content">
+
         <main>
             <div class="content-header">
                 <header>
@@ -98,10 +165,13 @@
             <main>
 
 
-                <div class="col-md-12">
+                <div class="col-lg-12">
+
+                    
+
                     <form method="POST">
                         <div class="row invoice-info">
-                            
+                        
                             <div class="col-sm-3 invoice-col">
                                 Academic Year
                                 <select name="school_year_id" id="school_year_id" class="form-control">
@@ -125,7 +195,7 @@
                                                 $school_year_id = $row['school_year_id'];
 
                                                 $selected = "";
-                                                if($sy_id == $school_year_id){
+                                                if($selected_school_year_id == $school_year_id){
                                                     $selected = "selected";
                                                 }
                                                 echo "
@@ -139,7 +209,7 @@
                             </div>
 
                             <div class="col-sm-3 invoice-col">
-                                Offered Program
+                                Program(s)
 
                                 <select name="program_id" id="program_id" class="form-control">
                                     <?php 
@@ -153,7 +223,7 @@
                                         if($query->rowCount() > 0){
 
                                             echo "
-                                                <option value='' selected>Choose Program</option>
+                                                <option value='' selected>Select</option>
                                             ";
 
                                             while($row = $query->fetch(PDO::FETCH_ASSOC)){
@@ -164,7 +234,7 @@
 
                                                 $selected = "";
                                                 if($selected_program_id == $program_id){
-                                                    $selected = "selected";
+                                                    // $selected = "selected";
                                                 }
                                                 echo "
                                                     <option $selected value='$program_id'>$acronym</option>
@@ -173,6 +243,15 @@
                                         }
                                     ?>
                                 </select>
+                            </div>
+
+
+                            <div class="col-sm-3 invoice-col">
+                                Academic Level
+
+                                <select name="course_level" id="course_level" class="form-control">
+                                </select>
+                                <input type="hidden" id="course_level_value" name="course_level_value">
                             </div>
 
                             <div class="col-sm-3 invoice-col">
@@ -212,15 +291,21 @@
                                     </select>
                             </div>
 
+                            
+            
 
                             <div class="col-sm-0 invoice-col"> 
                                 <br>
                                 <div class="form-group"> 
-                                    <button type="submit" name="schedule_btn2" class="btn btn-primary">
+
+                                    <!-- <input type="hidden" id="student_subject_grade_id"> -->
+
+                                    <button type="submit" name="payment_history_btn" class="btn btn-primary">
                                         <i class="fas fa-search fa-1x"></i>
                                     </button>
                                 </div>
                             </div>
+
                             <div class="col-sm-0 invoice-col"> 
                                 <br>
                                 <div class="form-group"> 
@@ -231,8 +316,9 @@
                             </div>
                         </div>
                     </form>
-                </div>
 
+                    
+                </div>
 
                 <div class="floating">
 
@@ -247,7 +333,7 @@
                                         onchange="handleCheckboxChange('cash')" 
                                         <?php if (isset($_POST["student_filter"]) && in_array("Cash", $_POST["student_filter"])) echo "checked"; ?>>
                                 
-                               </div>
+                                </div>
                                 <div class="form-group">
                                     <label for="old">Partial</label>
                                     <input type="checkbox" id="partial" name="student_filter[]"
@@ -264,7 +350,7 @@
                                         onchange="handleCheckboxChange('complete')" 
                                         <?php if (isset($_POST["payment_status"]) && in_array("Complete", $_POST["payment_status"])) echo "checked"; ?>>
                                 
-                               </div>
+                                </div>
                                 <div class="form-group">
                                     <label for="old">Incomplete</label>
                                     <input type="checkbox" id="incomplete" name="payment_status[]"
@@ -302,6 +388,7 @@
                     </table>
 
                 </div>
+
             </main>
         </main>
     </div>
@@ -310,34 +397,159 @@
 
 <script>
 
-  function submitForm() {
-      document.getElementById("student_filter_form").submit();
-  }
+    function submitForm() {
+        document.getElementById("student_filter_form").submit();
+    }
 
-  function handleCheckboxChange(checkboxId) {
+    function handleCheckboxChange(checkboxId) {
 
-      if (checkboxId == "cash") {
-          if (document.getElementById("partial").checked) {
-              document.getElementById("partial").checked = false;
-          }
-      } else if (checkboxId == "partial") {
-          if (document.getElementById("cash").checked) {
-              document.getElementById("cash").checked = false;
-          }
-      }
+        if (checkboxId == "cash") {
+            if (document.getElementById("partial").checked) {
+                document.getElementById("partial").checked = false;
+            }
+        } else if (checkboxId == "partial") {
+            if (document.getElementById("cash").checked) {
+                document.getElementById("cash").checked = false;
+            }
+        }
 
-      if (checkboxId == "complete") {
-          if (document.getElementById("incomplete").checked) {
-              document.getElementById("incomplete").checked = false;
-          }
-      } else if (checkboxId == "incomplete") {
-          if (document.getElementById("complete").checked) {
-              document.getElementById("complete").checked = false;
-          }
-      }
+        if (checkboxId == "complete") {
+            if (document.getElementById("incomplete").checked) {
+                document.getElementById("incomplete").checked = false;
+            }
+        } else if (checkboxId == "incomplete") {
+            if (document.getElementById("complete").checked) {
+                document.getElementById("complete").checked = false;
+            }
+        }
 
-      document.getElementById("student_filter_form").submit();
-  }
+        document.getElementById("student_filter_form").submit();
+    }
+
+    let program_id_value = null;
+
+    $('#program_id').on('change', function() {
+
+        let program_id = parseInt($(this).val());
+        // var chosen_school_year_id = parseInt($("#school_year_id").val());
+
+        program_id_value = program_id;
+        
+        // console.log("program_id_value "  +  program_id_value)
+        // console.log("program_id " + program_id)
+        
+        $.ajax({
+            url: '../../ajax/classlist/populate_academic_level_by_program.php',
+            type: 'POST',
+            data: {
+                program_id
+                // chosen_school_year_id
+            },
+            dataType: 'json',
+
+            success: function(response) {
+
+                var options = '<option value="">Choose Level</option>';
+
+                $.each(response, function(index, value) {
+
+                    if(value.level > 5){
+                        options += '<option value="' + value.level + '">Grade ' + value.level +'</option>';
+                    }
+
+                    else if(value.level <= 4){
+                        var yearLabel;
+                        switch (value.level) {
+                            case "1":
+                                yearLabel = "1st year";
+                                break;
+                            case "2":
+                                yearLabel = "2nd year";
+                                break;
+                            case "3":
+                                yearLabel = "3rd year";
+                                break;
+                            case "4":
+                                yearLabel = "4th year";
+                                break;
+                            default:
+                                yearLabel = value.level + "th year";
+                        }
+                        options += '<option value="' + value.level + '">' + yearLabel + '</option>';
+                    }
+                });
+
+                $('#course_level').html(options);
+            },
+            'error': function(xhr, status, error) {
+                // Handle error response here
+                console.error('Error:', error);
+                console.log('Status:', status);
+                console.log('Response Text:', xhr.responseText);
+                console.log('Response Code:', xhr.status);
+            }
+        });
+
+    });
+
+    $('#course_level').on('change', function() {
+
+
+        let course_level_value = parseInt($(this).val());
+
+        let program_id = program_id_value;
+
+        // console.log("program_id "  +  program_id)
+        // console.log("course_level "  +  course_level_value)
+        
+        // var program_id = parseInt($(this).val());
+        var chosen_school_year_id = parseInt($("#school_year_id").val());
+
+        $.ajax({
+            url: '../../ajax/grade/get_program_section.php',
+            type: 'POST',
+            data: {
+                program_id,
+                chosen_school_year_id,
+                course_level_value,
+                type: "class_list_per_section"
+
+            },
+            dataType: 'json',
+
+            success: function(response) {
+
+                // response = response.trim();
+
+                console.log(response);
+
+                if(response.length > 0){
+                    var options = '<option selected value="">Available Sections</option>';
+                    
+                    $.each(response, function (index, value) {
+                        options +=
+                        '<option value="' + value.course_id + '">' + value.program_section + '</option>';
+                    });
+
+                    $('#course_id').html(options);
+                    // $('#student_subject_id').val(options);
+                    
+                }else{
+                    $('#course_id').html('<option selected value="">No data found(s).</option>');
+
+                }
+            },
+            'error': function(xhr, status, error) {
+                // Handle error response here
+                console.error('Error:', error);
+                console.log('Status:', status);
+                console.log('Response Text:', xhr.responseText);
+                console.log('Response Code:', xhr.status);
+            }
+        });
+
+    });
+
 
     $(document).ready(function() {
 
@@ -354,6 +566,30 @@
         selected_payment_status_filter = selected_payment_status_filter.trim();
 
 
+        var school_year_id_filter = `
+            <?php echo $selected_school_year_id; ?>
+        `;
+
+        school_year_id_filter = school_year_id_filter.trim();
+
+        var program_id_filter = `
+            <?php echo $selected_program_id; ?>
+        `;
+
+        program_id_filter = program_id_filter.trim();
+
+        var course_level_filter = `
+            <?php echo $selected_course_level; ?>
+        `;
+
+        course_level_filter = course_level_filter.trim();
+
+
+        var course_id_filter = `
+            <?php echo $selected_course_id; ?>
+        `;
+
+        course_id_filter = course_id_filter.trim();
 
 
         var table = $('#cashier_history_table').DataTable({
@@ -361,14 +597,14 @@
             'serverSide': true,
             'serverMethod': 'POST',
             'ajax': {
-                'url': `historyPaymentListData.php?payment_method_filter=${selected_student_filter}&payment_status_filter=${selected_payment_status_filter}`,
-              'error': function(xhr, status, error) {
-                  // Handle error response here
-                  console.error('Error:', error);
-                  console.log('Status:', status);
-                  console.log('Response Text:', xhr.responseText);
-                  console.log('Response Code:', xhr.status);
-              }
+                'url': `historyPaymentListData.php?payment_method_filter=${selected_student_filter}&payment_status_filter=${selected_payment_status_filter}&school_year_id_filter=${school_year_id_filter}&program_id_filter=${program_id_filter}&course_level_filter=${course_level_filter}&course_id_filter=${course_id_filter}`,
+                'error': function(xhr, status, error) {
+                    // Handle error response here
+                    console.error('Error:', error);
+                    console.log('Status:', status);
+                    console.log('Response Text:', xhr.responseText);
+                    console.log('Response Code:', xhr.status);
+                }
             },
 
             'pageLength': 5,
@@ -378,17 +614,18 @@
                 'emptyTable': "No available data for payment history.",
             },
             'columns': [
-              { data: 'enrollment_form_id', orderable: true },  
-              { data: 'student_no', orderable: false },  
-              { data: 'name', orderable: false },
-              { data: 'term_semester', orderable: false },
-              { data: 'section', orderable: false },  
-              { data: 'status', orderable: false },  
-              { data: 'method', orderable: false },  
-              { data: 'cashier_confirmation_date', orderable: true },
-              { data: 'button_url', orderable: false }
+                { data: 'enrollment_form_id', orderable: true },  
+                { data: 'student_no', orderable: false },  
+                { data: 'name', orderable: false },
+                { data: 'term_semester', orderable: false },
+                { data: 'section', orderable: false },  
+                { data: 'status', orderable: false },  
+                { data: 'method', orderable: false },  
+                { data: 'cashier_confirmation_date', orderable: true },
+                { data: 'button_url', orderable: false }
             ],
             'ordering': true
         });
     });
+
 </script>

@@ -11,7 +11,10 @@
     include_once('../../includes/classes/Student.php');
     include_once('../../includes/classes/Announcement.php');
 
-    // echo "Qwe";
+  
+    echo Helper::RemoveSidebar();
+
+
 
     if(isset($_GET['id'])){
 
@@ -27,7 +30,7 @@
             $markAsNotified = $teacherAnnouncement->TeacherNotificationMarkAsViewed(
                 $announcement_id, $teacherLoggedInId);
                 
-            echo "marked";
+            // echo "marked";
             
         }
 
@@ -44,7 +47,7 @@
         $creation = date("F d, Y h:i a", strtotime($creation));
 
 
-        $back_url = "";
+        $back_url = "../dashboard/index.php";
 
         ?>
 

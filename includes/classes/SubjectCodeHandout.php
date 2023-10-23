@@ -90,6 +90,7 @@ class SubjectCodeHandout{
              
             WHERE t1.subject_period_code_topic_id = :subject_period_code_topic_id
             AND subject_code_handout_template_id IS NULL
+            
         ");
 
         $submission->bindValue(":subject_period_code_topic_id", $subject_period_code_topic_id);
@@ -198,6 +199,158 @@ class SubjectCodeHandout{
         return false;
     }
 
+    public function GetTotalGivenHandoutByTopicSection(
+        $subject_period_code_topic_id){
+
+         $query = $this->con->prepare("SELECT 
+        
+            t1.* 
+
+            FROM subject_code_handout as t1
+
+            
+            WHERE t1.subject_period_code_topic_id=:subject_period_code_topic_id
+            -- AND t1.school_year_id=:school_year_id
+            AND t1.is_given = :is_given
+
+            ORDER BY t1.date_creation DESC
+
+        ");
+
+        $query->bindValue(":subject_period_code_topic_id", $subject_period_code_topic_id);
+        // $query->bindValue(":school_year_id", $school_year_id);
+        $query->bindValue(":is_given", 1);
+        $query->execute();
+ 
+        if($query->rowCount() > 0){
+            return $query->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        return [];
+    }
+
+    public function GetTotalViewedHandoutCountOnTopicSection(
+        $subject_period_code_topic_id, $student_id, $school_year_id){
+
+        $checkSubmission = $this->con->prepare("SELECT t1.*
+                                         
+            FROM subject_code_handout_student as t1
+
+
+            INNER JOIN subject_code_handout as t2 ON t2.subject_code_handout_id = t1.subject_code_handout_id
+            AND t2.subject_period_code_topic_id = :subject_period_code_topic_id
+
+            -- WHERE t1.subject_code_assignment_id=:subject_code_assignment_id
+            WHERE t1.student_id=:student_id
+            AND t1.school_year_id=:school_year_id
+
+
+            GROUP BY t2.subject_code_handout_id
+        ");
+
+        $checkSubmission->bindParam(":subject_period_code_topic_id", $subject_period_code_topic_id);
+        $checkSubmission->bindParam(":student_id", $student_id);
+        $checkSubmission->bindParam(":school_year_id", $school_year_id);
+        $checkSubmission->execute();
+
+        // $subject_code_assignment_id
+
+        // if($checkSubmission->rowCount() > 0){
+        //     $row = $checkSubmission->fetch(PDO::FETCH_ASSOC);
+        //     return $row;
+
+        //     // return true;
+        // }
+
+        return $checkSubmission->rowCount();
+
+    }
+
+    public function GetTotalViewedHandoutOnSubject(
+            $handoutIdsArray, 
+            $student_id
+        ){
+
+        $total_handout_viewed_count = 0;
+
+        if(count($handoutIdsArray) > 0){
+
+            foreach ($handoutIdsArray as $key => $subject_code_handout_id) {
+
+                # Get all topics in subjects
+                $checkHandout = $this->con->prepare("SELECT t1.*
+                                                
+                    FROM subject_code_handout_student as t1
+
+                    INNER JOIN subject_code_handout as t2 ON t2.subject_code_handout_id = t1.subject_code_handout_id
+                    AND t2.subject_code_handout_id = :subject_code_handout_id
+
+                    WHERE t1.student_id=:student_id
+
+                    LIMIT 1
+                    -- AND t1.school_year_id=:school_year_id
+
+                    -- GROUP BY t2.subject_code_handout_id
+                ");
+
+                $checkHandout->bindParam(":subject_code_handout_id", $subject_code_handout_id);
+                $checkHandout->bindParam(":student_id", $student_id);
+                // $checkHandout->bindParam(":school_year_id", $school_year_id);
+                $checkHandout->execute();
+
+                if($checkHandout->rowCount() > 0){
+
+                    // echo "subject_code_handout_id: $subject_code_handout_id has been seen";
+                    // echo "<br>";
+                    $total_handout_viewed_count += 1;
+
+                }else{
+                    // echo "subject_period_code_topic_id: $subject_period_code_topic_id has not been seen";
+                    // echo "<br>";
+                }
+            }
+        }
+
+        return $total_handout_viewed_count;
+
+    }
+
+    public function GetTotalViewedHandoutCountByHandou(
+        $subject_period_code_topic_id, $student_id, $school_year_id){
+
+        $checkSubmission = $this->con->prepare("SELECT t1.*
+                                         
+            FROM subject_code_handout_student as t1
+
+
+            INNER JOIN subject_code_handout as t2 ON t2.subject_code_handout_id = t1.subject_code_handout_id
+            AND t2.subject_period_code_topic_id = :subject_period_code_topic_id
+
+            -- WHERE t1.subject_code_assignment_id=:subject_code_assignment_id
+            WHERE t1.student_id=:student_id
+            AND t1.school_year_id=:school_year_id
+
+
+            GROUP BY t2.subject_code_handout_id
+        ");
+
+        $checkSubmission->bindParam(":subject_period_code_topic_id", $subject_period_code_topic_id);
+        $checkSubmission->bindParam(":student_id", $student_id);
+        $checkSubmission->bindParam(":school_year_id", $school_year_id);
+        $checkSubmission->execute();
+
+        // $subject_code_assignment_id
+
+        // if($checkSubmission->rowCount() > 0){
+        //     $row = $checkSubmission->fetch(PDO::FETCH_ASSOC);
+        //     return $row;
+
+        //     // return true;
+        // }
+
+        return $checkSubmission->rowCount();
+
+    }
     
 }
 ?>

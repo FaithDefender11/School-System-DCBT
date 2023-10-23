@@ -801,11 +801,21 @@
     }
 
 
-    public function GenerateEnrollmentFormId(){
+    public function GenerateEnrollmentFormId($school_year_id = null){
+
+        $school_year = new SchoolYear($this->con, $school_year_id);
+
+        $term = $school_year->GetTerm();
+        $period = $school_year->GetPeriod();
+
+        $period_short = $period === "First" ? "S1" : ($period === "Second" ? "S2" : "");
 
         // $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         // $length = 6;
         // $enrollmentFormId = substr(str_shuffle($characters), 0, $length);
+
+        # 2023S1E2DZBX
+
 
         $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $length = 6;
@@ -827,8 +837,33 @@
             
         }
 
-        return $enrollmentFormId;
+        $term = $this->changeYearFormat($term);
+        
+        return $term . $period_short . "-". $enrollmentFormId;
     }
+
+    public function changeYearFormat($dateRange) {
+        // Split the input date range by the hyphen
+        $dateParts = explode("-", $dateRange);
+
+        // Check if there are two valid parts
+        if (count($dateParts) == 2) {
+            $startYear = intval($dateParts[0]);
+            $endYear = intval($dateParts[1]);
+
+            // Extract the last two digits of the years
+            $startYearLastTwo = $startYear % 100;
+            $endYearLastTwo = $endYear % 100;
+
+            // Format the result as "YYYY if 2023-2024 -> 2324"
+            $result = sprintf("%02d%02d", $startYearLastTwo, $endYearLastTwo);
+
+            return $result;
+        } else {
+            return "Invalid date format";
+        }
+    }
+
 
     function generateUniqueId($characters, $length) {
         return substr(str_shuffle($characters), 0, $length);
@@ -975,7 +1010,7 @@
     }
 
     function GetEnrollmentFormByFormId($enrollment_id, $course_id,
-        $school_year_id) {
+        $school_year_id = null) {
         // Check if the enrollment form ID already exists in the database
 
         $sql = $this->con->prepare("SELECT enrollment_form_id FROM enrollment 

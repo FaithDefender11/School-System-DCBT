@@ -179,7 +179,7 @@
 
                                 <label for="room_id">Room Number</label>
 
-                                <select required class="form-control" name="room_id" id="room_id">
+                                <select class="form-control" name="room_id" id="room_id">
 
                                     <?php
                                         $query = $con->prepare("SELECT * FROM room");

@@ -7,6 +7,7 @@
     include_once('../../includes/classes/SchoolYear.php');
     include_once('../../includes/classes/Announcement.php');
 
+    // echo Helper::RemoveSidebar();
 
 
     $teacher = new Teacher($con);
@@ -58,6 +59,7 @@
                     $current_school_year_id, $title, $content,
                     $student_selected
                 );
+
                 if($wasSuccess){
                     Alert::successAutoRedirect("Announcement has been posted.", $back_url);
                     exit();

@@ -6,26 +6,35 @@
 
     $doesEnrolleeHasSchoolHistoryMade = $pending->CheckEnrolleeHasSchoolHistory($pending_enrollees_id);
 
-    // var_dump($doesEnrolleeHasSchoolHistoryMade);
+    // var_dump($pending_enrollees_id);
 
     $school_history = $pending->GetEnrolleeSchoolHistory($pending_enrollees_id);
 
-    $student_school_history_id = "";
-    $school_name = "";
-    $address = "";
-    $year_started = "";
-    $year_ended = "";
+    // $student_school_history_id = "";
+    // $school_name = "";
+    // $address = "";
+    // $year_started = "";
+    // $year_ended = "";
 
     if($school_history !== NULL){
 
-        $student_school_history_id = $school_history['student_school_history_id'];
-        $school_name = $school_history['school_name'];
-        $address = $school_history['address'];
-        $year_started = $school_history['year_started'];
-        $year_ended = $school_history['year_ended'];
+        // $student_school_history_id = $school_history['student_school_history_id'];
+        // $school_name = $school_history['school_name'];
+        // $address = $school_history['address'];
+        // $year_started = $school_history['year_started'];
+        // $year_ended = $school_history['year_ended'];
     }
 
-    // echo $address;
+    $parent = new PendingParent($con, $pending_enrollees_id);
+
+    $school_name = $parent->GetSchoolName();
+    $address = $parent->GetSchoolAddress();
+    $year_started = $parent->GetSchoolYearStarted();
+    $year_ended = $parent->GetSchoolYearEnded();
+
+    // var_dump($address);
+
+
 
     if($_SERVER["REQUEST_METHOD"] === "POST"
         && isset($_POST['student_school_history_btn_' . $pending_enrollees_id])
@@ -50,47 +59,92 @@
         // Address: $address <br>
         // ";
 
+        $defaultRedirect = true;
+
+        $parent_url = "process.php?new_student=true&step=enrollee_parent_information";
+
         if(empty(Helper::$errorArray)){
 
-            $parent_url = "process.php?new_student=true&step=enrollee_parent_information";
+            // echo "empty";
+            if($parent->CheckEnrolleeHasParent($pending_enrollees_id)){
 
-            if($doesEnrolleeHasSchoolHistoryMade == false){
+                # Update School
 
-                $addSuccess = $pending->InsertSchoolHistoryAsPending($pending_enrollees_id, $school_name,
-                    $year_started, $year_ended, $address);
-
-                if($addSuccess){
-
-                    Alert::successAutoRedirect("School history completed.",
-                        $parent_url);
-                    exit();
-                }
-                // else{
-
-                //     header("Location: $parent_url");
-                //     exit();
-                // }
-            }
-            if($doesEnrolleeHasSchoolHistoryMade == true){
-                ## 
-
-                $updateSuccess = $pending->UpdateSchoolHistory(
-                    $student_school_history_id, $pending_enrollees_id,
+                $schoolUpdate = $parent->UpdateNewEnrolleeSchoolHistory(
+                    $pending_enrollees_id,
                     $school_name, $year_started, $year_ended, $address);
 
-                if($updateSuccess){
+                if($schoolUpdate){
+
+                    $defaultRedirect = false;
 
                     Alert::successAutoRedirect("School history updated.",
                         $parent_url);
-                    exit();
-                }else{
-                    header("Location: $parent_url");
+
                     exit();
                 }
+
             }
+            if($parent->CheckEnrolleeHasParent($pending_enrollees_id) == false){
+
+                # Create School
+                $schoolCreate = $parent->InsertNewEnrolleeSchoolHistory($pending_enrollees_id,
+                    $school_name, $year_started, $year_ended, $address);
+
+                if($schoolCreate){
+
+                    $defaultRedirect = false;
+                    // echo "success create";
+                    Alert::success("School history data has been successfully created", "$parent_url");
+                    exit();
+                }
+
+            }
+
+            // if($doesEnrolleeHasSchoolHistoryMade == false){
+
+            //     $addSuccess = $pending->InsertSchoolHistoryAsPending($pending_enrollees_id, $school_name,
+            //         $year_started, $year_ended, $address);
+
+            //     if($addSuccess){
+
+            //         Alert::successAutoRedirect("School history completed.",
+            //             $parent_url);
+            //         exit();
+            //     }
+            //     // else{
+
+            //     //     header("Location: $parent_url");
+            //     //     exit();
+            //     // }
+            // }
+            // if($doesEnrolleeHasSchoolHistoryMade == true){
+            //     ## 
+
+            //     $updateSuccess = $pending->UpdateSchoolHistory(
+            //         $student_school_history_id, $pending_enrollees_id,
+            //         $school_name, $year_started, $year_ended, $address);
+
+            //     if($updateSuccess){
+
+            //         Alert::successAutoRedirect("School history updated.",
+            //             $parent_url);
+            //         exit();
+            //     }else{
+            //         header("Location: $parent_url");
+            //         exit();
+            //     }
+            // }
+
         }
         else{
-            // echo "Error";
+            $defaultRedirect = false;
+        }
+
+        if($defaultRedirect == true){
+
+            header("Location: $parent_url");
+            exit(); 
         }
     }
 
@@ -181,7 +235,7 @@
                                     class="form-control" value="<?php
                                     echo Helper::DisplayText('year_started', $year_started);
                                 ?>"> -->
-                                <input required type="text" id="year_started" name="year_started"
+                                <input maxlength="4" required type="text" id="year_started" name="year_started"
                                     class="form-control" placeholder="e.g. 2020" value="<?php
                                     echo Helper::DisplayText('year_started', $year_started);
                                 ?>">
@@ -196,7 +250,7 @@
                                 class="form-control" value="<?php
                                     echo Helper::DisplayText('year_started', $year_ended);
                                 ?>"> -->
-                                <input required type="text" id="year_ended" name="year_ended"
+                                <input  maxlength="4" required type="text" id="year_ended" name="year_ended"
                                     class="form-control" placeholder="e.g. 2022" value="<?php
                                     echo Helper::DisplayText('year_ended', $year_ended);
                                 ?>">

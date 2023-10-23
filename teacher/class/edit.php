@@ -340,7 +340,7 @@
                                                             </a>
                                                             <br>
                                                         <?php
-                                                    } elseif (in_array(strtolower($extension), ['pdf', 'docx', 'doc'])) {
+                                                    } elseif (in_array(strtolower($extension), ['pdf', 'docx', 'doc', 'txt'])) {
                                                         ?>
 
                                                             <span onclick="uploadImageRemoval(<?php echo $photo['subject_code_assignment_list_id'] ?>, <?php echo $photo['subject_code_assignment_id'] ?>)" style="cursor: pointer;">
@@ -391,7 +391,7 @@
                                                             </a>
                                                             <br>
                                                         <?php
-                                                    } elseif (in_array(strtolower($extension), ['pdf', 'docx', 'doc'])) {
+                                                    } elseif (in_array(strtolower($extension), ['pdf', 'docx', 'doc', 'txt'])) {
                                                         ?>
                                                             <a title="View File" href='<?php echo "../../".  $photo['image'] ?>' target='__blank' rel='noopener noreferrer'>
                                                                 <?php echo $original_file_name; ?>

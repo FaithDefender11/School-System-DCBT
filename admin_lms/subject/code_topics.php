@@ -43,8 +43,14 @@
                 </nav>
 
                 <main>
+                    <div class="action">
+                        <a href="task_type_index.php">
+                            <button type="button" class="btn btn-sm btn-info">+ Task</button>
+                        </a>
+                    </div>
                     <div class="floating">
                         <header>
+                            
                             <div class="title">
                                 <h5>Default Topics for: <span style="font-size: 15px;"><?php echo $program_code; ?></span></h5>
                             </div>

@@ -323,7 +323,7 @@ if ($row != null) {
 
             $button_url = "
                 <button class='default success'
-                    onclick=\"window.location.href = '" . $waiting_payment_url . "subject_insertion_summary.php?id=560&enrolled_subject=show'\">
+                    onclick=\"window.location.href = '" . $waiting_payment_url . "'\">
                     Evaluate
                 </button>
             ";
@@ -339,7 +339,7 @@ if ($row != null) {
 
             $button_url = "
                 <button class='default success'
-                onclick=\"window.location.href = '" . $waiting_payment_url . "subject_insertion_summary.php?id=560&enrolled_subject=show'\">
+                onclick=\"window.location.href = '" . $waiting_payment_url . "'\">
                     Evaluate
                 </button>
             ";
@@ -355,7 +355,7 @@ if ($row != null) {
 
             $button_url = "
                 <button class='default clean'
-                    onclick=\"window.location.href = '" . $waiting_payment_url . "subject_insertion_summary.php?id=560&enrolled_subject=show'\">
+                    onclick=\"window.location.href = '" . $waiting_payment_url . "'\">
                     Evaluate
                 </button>
             ";
@@ -370,7 +370,7 @@ if ($row != null) {
 
             $button_url = "
                 <button class='default clean'
-                    onclick=\"window.location.href = '" . $waiting_payment_url . "subject_insertion_summary.php?id=560&enrolled_subject=show'\">
+                    onclick=\"window.location.href = '" . $waiting_payment_url . "'\">
                     Evaluate
                 </button>
             ";
@@ -388,7 +388,7 @@ if ($row != null) {
 
         $button_url = "
             <button class='default clean'
-                onclick=\"window.location.href = '" . $waiting_payment_url . "subject_insertion_summary.php?id=560&enrolled_subject=show'\">
+                onclick=\"window.location.href = '" . $waiting_payment_url . "' \">
                 Evaluate
             </button>
         ";

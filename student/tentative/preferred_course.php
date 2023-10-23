@@ -10,6 +10,21 @@
 
     // echo $pending_enrollees_id;
 
+    
+    $studentRequirement = new StudentRequirement($con);
+    
+    $student_requirement_id = $studentRequirement->GetStudentRequirement(
+        $pending_enrollees_id,
+        $school_year_id);
+
+    if($student_requirement_id == NULL){
+
+        # Create.
+        $initNewEnrolleeStudentRequirement = $studentRequirement
+            ->InitializedPendingEnrolleeRequirement($pending_enrollees_id,
+            $school_year_id);
+        
+    }
 ?>
 
 <div class="content">

@@ -5,6 +5,7 @@
     include_once('../../includes/classes/SchoolYear.php');
     include_once('../../includes/classes/SubjectPeriodCodeTopicTemplate.php');
     include_once('../../includes/classes/SubjectCodeAssignmentTemplate.php');
+    include_once('../../includes/classes/TaskType.php');
 
     ?>
         <style>
@@ -41,6 +42,8 @@
 
         $back_url= "code_topics.php?id=$subject_program_id";
 
+        // $db_task_type_id = $subjectCodeAssignmentTemplate->GetTaskTypeId();
+
 
         ?>
             <div class="content">
@@ -75,7 +78,7 @@
                                         <th>Assignment</th>
                                         <th>Description</th>
                                         <th>Max Score</th>
-                                        <th>Type</th>
+                                        <th>Category</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -103,6 +106,13 @@
                                                 $description = $row['description'];
                                                 $max_score = $row['max_score'];
                                                 $type = ucwords($row['type']);
+
+                                                $task_type_id = ucwords($row['task_type_id']);
+
+                                                $taskType = new TaskType($con, $task_type_id);
+
+                                                $taskTypeName = $taskType->GetTaskName();
+
                                                 
                                                 $removeAssignmentTemplate= "removeAssignmentTemplate($subject_code_assignment_template_id)";
                                                 
@@ -114,7 +124,7 @@
                                                         </td>
                                                         <td>$description</td>
                                                         <td>$max_score</td>
-                                                        <td>$type</td>
+                                                        <td>$taskTypeName</td>
                                                         
                                                         <td>
 

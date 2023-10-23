@@ -17,7 +17,7 @@ class Email {
         $this->mailer->Password = $this->my_gmail_password;
         $this->mailer->SMTPSecure = 'ssl';
         $this->mailer->Port = 465;
-        $this->mailer->setFrom($this->my_gmail_username, "Daehan College");
+        $this->mailer->setFrom($this->my_gmail_username, "Daehan College of Business & Technology");
         $this->mailer->isHTML(true);
     }
     
@@ -63,6 +63,29 @@ class Email {
         // $this->mailer->Subject = "Daehan College of Business Technology Enrollment Verification";
         $this->mailer->Subject = $subject;
         $this->mailer->Body = $message;
+
+        if ($this->mailer->send()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+  
+
+    public function SendEnrolledSubjectListViaPdf(
+            $email_address, $pdfContent, $pdfName) {
+
+        $subject = "You have successfully enrolled";
+        $message = "Here is your Enrollment details";
+
+        $this->mailer->addAddress($email_address);
+        // $this->mailer->Subject = "Daehan College of Business Technology Enrollment Verification";
+        $this->mailer->Subject = $subject;
+        $this->mailer->Body = $message;
+
+        // Attach the PDF content to the email
+        $this->mailer->addStringAttachment($pdfContent, "$pdfName", "base64", "application/pdf");
 
         if ($this->mailer->send()) {
             return true;

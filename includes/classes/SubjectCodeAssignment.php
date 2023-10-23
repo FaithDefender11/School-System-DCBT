@@ -29,6 +29,11 @@ class SubjectCodeAssignment{
         return isset($this->sqlData['is_given']) ? $this->sqlData["is_given"] : NULL; 
     }
 
+    public function GetTaskTypeId() {
+        return isset($this->sqlData['task_type_id']) ? $this->sqlData["task_type_id"] : NULL; 
+    }
+
+
 
     public function GetAssignmentImage() {
         return isset($this->sqlData['assignment_image']) ? $this->sqlData["assignment_image"] : NULL; 
@@ -83,13 +88,28 @@ class SubjectCodeAssignment{
         $subject_period_code_topic_id,
         $assignment_name,$description,
         $max_score,$allow_late_submission,
-        $due_date, $type, $max_attempt) {
+        $due_date, $type, $max_attempt,
+        $task_type_id) {
+
+
+        $due_date_convert = strtotime($due_date);
+        $now = date("Y-m-d H:i:s");
+
+        if ($due_date_convert <= strtotime($now) ) {
+            // The input date is greater than or equal to the current date
+            // echo "The due date is in the future.";
+            // echo "due_date should be greater";
+            Alert::error("Due date should be greater than now.", "");
+            exit();
+        } 
+ 
+        // return;
 
         $add = $this->con->prepare("INSERT INTO subject_code_assignment
             (subject_period_code_topic_id, assignment_name, description,
-                max_score, allow_late_submission, due_date, type, max_attempt)
+                max_score, allow_late_submission, due_date, type, max_attempt, task_type_id)
             VALUES(:subject_period_code_topic_id, :assignment_name, :description,
-                :max_score, :allow_late_submission, :due_date, :type, :max_attempt)");
+                :max_score, :allow_late_submission, :due_date, :type, :max_attempt, :task_type_id)");
 
         
         $add->bindValue(":subject_period_code_topic_id", $subject_period_code_topic_id);
@@ -100,6 +120,7 @@ class SubjectCodeAssignment{
         $add->bindValue(":due_date", $due_date);
         $add->bindValue(":type", $type);
         $add->bindValue(":max_attempt", $max_attempt);
+        $add->bindValue(":task_type_id", $task_type_id);
 
         $add->execute();
 
@@ -616,8 +637,75 @@ class SubjectCodeAssignment{
         return [];
     }
 
+    public function GetTeacherTeachingPreviousSubjects(
+        $teacher_id, $current_school_year_id)  {
+
+        $query = $this->con->prepare("SELECT 
+            t1.*,
+            t2.subject_title,
+            t3.program_section
+
+            FROM subject_schedule AS t1  
+
+            LEFT JOIN subject_program as t2 ON t2.subject_program_id = t1.subject_program_id
+            LEFT JOIN course as t3 ON t3.course_id = t1.course_id
+
+            WHERE t1.teacher_id=:teacher_id
+            AND t1.school_year_id !=:school_year_id
+
+            GROUP BY t1.subject_code
+        ");
+
+        $query->bindValue(":teacher_id", $teacher_id); 
+        $query->bindValue(":school_year_id", $current_school_year_id); 
+        $query->execute(); 
+
+        if($query->rowCount() > 0){
+            
+            return $query->fetchAll(PDO::FETCH_ASSOC);
+        }
+        return [];
+    }
+
+    public function GetTeacherTeachingSubjectsWithAnnouncement(
+        $teacher_id, $school_year_id)  {
+
+        $query = $this->con->prepare("SELECT 
+            t1.title,
+            t1.content,
+            t1.date_creation AS announcement_creation,
+            t1.announcement_id,
+            t1.teacher_id,
+            t1.subject_code
+
+            FROM announcement as t1
+
+            WHERE t1.teacher_id=:announcement_teacher_id
+            AND t1.school_year_id=:announcement_school_year_id
+
+            ORDER BY t1.date_creation DESC
+            -- GROUP BY t1.subject_code
+        ");
+
+        $query->bindValue(":announcement_teacher_id", $teacher_id); 
+        $query->bindValue(":announcement_school_year_id", $school_year_id); 
+        $query->execute(); 
+
+        if($query->rowCount() > 0){
+            
+            return $query->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        return [];
+    }
+
     public function GetSubjectAssignmentBasedOnTeachingSubject(
-        $subject_code, $current_school_year_id, $teacher_id)  {
+        $subject_code, $current_school_year_id, $teacher_id, $doesGiven = null)  {
+
+        $given_query = "";
+        if($doesGiven == true){
+            $given_query = "AND t1.is_given = 1";
+        }
 
         $query = $this->con->prepare("SELECT 
             t1.*
@@ -625,9 +713,14 @@ class SubjectCodeAssignment{
             FROM subject_code_assignment AS t1  
 
             INNER JOIN subject_period_code_topic as t2 ON t2.subject_period_code_topic_id = t1.subject_period_code_topic_id
+            
             AND t2.subject_code=:subject_code
             AND t2.teacher_id=:teacher_id
             AND t2.school_year_id=:school_year_id
+
+            $given_query
+
+            ORDER BY t1.date_creation ASC
 
         ");
 
@@ -736,8 +829,16 @@ class SubjectCodeAssignment{
   
 
     public function GetNonTemplateAssignmentBasedOnSubjectTopic(
-        $subject_period_code_topic_id) {
+        $subject_period_code_topic_id, $task_type_id = null) {
             
+
+        $task_type_query = "";
+
+        if($task_type_id != NULL){
+
+            $task_type_query = "AND t1.task_type_id = :task_type_id";
+        }
+
         $submission = $this->con->prepare("SELECT 
 
             t1.subject_code_assignment_id AS nonTemplateSubjectCodeAssignmentId,
@@ -748,10 +849,15 @@ class SubjectCodeAssignment{
              
             WHERE t1.subject_period_code_topic_id = :subject_period_code_topic_id
             AND subject_code_assignment_template_id IS NULL
-
+            $task_type_query
         ");
 
         $submission->bindValue(":subject_period_code_topic_id", $subject_period_code_topic_id);
+        
+        if($task_type_id != null){
+            $submission->bindValue(":task_type_id", $task_type_id);
+        }
+        
         $submission->execute();
          
         if($submission->rowCount() > 0){
@@ -865,6 +971,110 @@ class SubjectCodeAssignment{
         }
 
         return false;
+
+    }
+
+    public function GetSubjectCodeAssignments(
+        $subject_code, $school_year_id){
+
+        $query = $this->con->prepare("SELECT 
+        
+            t1.* 
+
+            FROM subject_code_assignment as t1
+
+            INNER JOIN subject_period_code_topic as t2 ON t2.subject_period_code_topic_id= t1.subject_period_code_topic_id
+            
+            
+            WHERE t2.subject_code=:subject_code
+            AND t2.school_year_id=:school_year_id
+            AND t1.is_given = :is_given
+
+            ORDER BY t1.date_creation DESC
+
+        ");
+
+        $query->bindValue(":subject_code", $subject_code);
+        $query->bindValue(":school_year_id", $school_year_id);
+        $query->bindValue(":is_given", 1);
+        $query->execute();
+ 
+        if($query->rowCount() > 0){
+            return $query->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        return [];
+    }
+   
+    public function GetTotalGivenAssignmentByTopicSection(
+        $subject_period_code_topic_id){
+
+         $query = $this->con->prepare("SELECT 
+        
+            t1.* 
+
+            FROM subject_code_assignment as t1
+
+            
+            WHERE t1.subject_period_code_topic_id=:subject_period_code_topic_id
+            AND t1.is_given = :is_given
+
+            ORDER BY t1.date_creation DESC
+
+        ");
+
+        $query->bindValue(":subject_period_code_topic_id", $subject_period_code_topic_id);
+        // $query->bindValue(":school_year_id", $school_year_id);
+        $query->bindValue(":is_given", 1);
+        $query->execute();
+ 
+        if($query->rowCount() > 0){
+            return $query->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        return [];
+    }
+
+  
+
+    public function GetTotalSubmissionCountOnAssignmentOnTopicSection(
+        $subject_period_code_topic_id, $student_id, $school_year_id){
+
+        $checkSubmission = $this->con->prepare("SELECT t1.*
+                                         
+            FROM subject_assignment_submission as t1
+
+
+            INNER JOIN subject_code_assignment as t2 ON t2.subject_code_assignment_id = t1.subject_code_assignment_id
+            AND t2.subject_period_code_topic_id = :subject_period_code_topic_id
+
+            -- WHERE t1.subject_code_assignment_id=:subject_code_assignment_id
+            WHERE t1.student_id=:student_id
+            AND t1.school_year_id=:school_year_id
+
+            -- ORDER BY subject_assignment_submission_id DESC
+            -- LIMIT 1
+
+            -- ORDER BY
+
+            GROUP BY t2.subject_code_assignment_id
+        ");
+
+        $checkSubmission->bindParam(":subject_period_code_topic_id", $subject_period_code_topic_id);
+        $checkSubmission->bindParam(":student_id", $student_id);
+        $checkSubmission->bindParam(":school_year_id", $school_year_id);
+        $checkSubmission->execute();
+
+        // $subject_code_assignment_id
+
+        // if($checkSubmission->rowCount() > 0){
+        //     $row = $checkSubmission->fetch(PDO::FETCH_ASSOC);
+        //     return $row;
+
+        //     // return true;
+        // }
+
+        return $checkSubmission->rowCount();
 
     }
 

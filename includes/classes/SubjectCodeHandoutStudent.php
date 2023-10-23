@@ -103,5 +103,56 @@ class SubjectCodeHandoutStudent{
      
     }
 
+    public function DoesStudentViewedHandoutOnSectionTopic($subject_code_handout_id,
+        $student_id, $school_year_id){
+        
+        if($this->CheckHandoutIfAlreadyViewed($subject_code_handout_id,
+            $student_id, $school_year_id) === false){
+
+
+            $query = $this->con->prepare("INSERT INTO subject_code_handout_student
+
+                (subject_code_handout_id, student_id, school_year_id)
+                VALUES(:subject_code_handout_id, :student_id, :school_year_id)
+            ");
+            
+            $query->bindValue(":subject_code_handout_id", $subject_code_handout_id);
+            $query->bindValue(":student_id", $student_id);
+            $query->bindValue(":school_year_id", $school_year_id);
+            $query->execute();
+
+            if($query->rowCount() > 0){
+                return true;
+            }
+        }
+        return false;
+     
+    }
+
+    public function CheckSingleHandoutViewed($subject_code_handout_id,
+        $student_id, $school_year_id){
+
+        $check = $this->con->prepare("SELECT t1.*
+                                         
+            FROM subject_code_handout_student as t1
+
+            WHERE t1.subject_code_handout_id=:subject_code_handout_id
+            AND t1.student_id=:student_id
+            AND t1.school_year_id=:school_year_id
+
+            LIMIT 1
+
+            -- ORDER BY
+        ");
+
+        $check->bindParam(":subject_code_handout_id", $subject_code_handout_id);
+        $check->bindParam(":student_id", $student_id);
+        $check->bindParam(":school_year_id", $school_year_id);
+        $check->execute();
+
+ 
+        return $check->rowCount() > 0;
+    }
+
 }
 ?>

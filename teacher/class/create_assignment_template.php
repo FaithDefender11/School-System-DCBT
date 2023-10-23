@@ -216,7 +216,7 @@
                                                         </a>
                                                         <br>
                                                     <?php
-                                                } elseif (in_array(strtolower($extension), ['pdf', 'docx', 'doc'])) {
+                                                } elseif (in_array(strtolower($extension), ['pdf', 'docx', 'doc', 'txt'])) {
                                                     ?>
                                                         <a title="View File" href='<?php echo "../../".  $photo['image'] ?>' target='__blank' rel='noopener noreferrer'>
                                                             <?php echo $original_file_name; ?>
@@ -271,7 +271,7 @@
                                                         </a>
                                                         <br>
                                                     <?php
-                                                } elseif (in_array(strtolower($extension), ['pdf', 'docx', 'doc'])) {
+                                                } elseif (in_array(strtolower($extension), ['pdf', 'docx', 'doc', 'txt'])) {
                                                     ?>
                                                       
                                                         <a title="View File" href='<?php echo "../../".  $photo['image'] ?>' target='__blank' rel='noopener noreferrer'>

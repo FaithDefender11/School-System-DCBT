@@ -52,15 +52,18 @@
 
                     // TODO. All IsFull In First Semester Sections should be reset.
                     
-                    $resetSection = $section->ResetCurrentActiveSections($current_school_year_term);
+                    # ==
+                    // $resetSection = $section->ResetCurrentActiveSections($current_school_year_term);
                     
-                    $currentNewEnrolled = $enrollment->GetEnrolledNewStudentWithinSemester($current_school_year_id);
+                    // $currentNewEnrolled = $enrollment->GetEnrolledNewStudentWithinSemester($current_school_year_id);
                     
-                    foreach ($currentNewEnrolled as $key => $student_ids) {
-                        // All new enrolled student in the enrollment form will update as OLD
-                        $toOld = $student->UpdateStudentAdmissionStatusToOld($student_ids);
-                    }
+                    // foreach ($currentNewEnrolled as $key => $student_ids) {
+                    //     // All new enrolled student in the enrollment form will update as OLD
+                    //     $toOld = $student->UpdateStudentAdmissionStatusToOld($student_ids);
+                    // }
 
+
+                    # ==
                     # First semester room transfered to 2nd Semester.
                     // $roomSectionTransfer = $section->SectionHasRoomTransfer(
                     //     $current_school_year_term, $current_school_year_period);
@@ -70,28 +73,31 @@
 
                 if($current_school_year_period == "Second"){
 
-
                     // echo $current_school_year_term;
                     // return;
 
-                    # Second Semester Successful opened room move-up sections.
-                    $movingUpSection = $section->MovingUpCurrentActiveSections($current_school_year_term);
-                    
-                    # As finals end, there`s no reason to accomodate students in the section
-                    # InActive opened sections
-                    $deactiveCurrentSection = $section->DeactiveCurrentActiveSections($current_school_year_term);
-                    
-                    // Create each one section to be used for new students section.
-                    # Alternative, Admin create manual room.
+                    # ==
 
-                    $createEachNewSection = $section->CreateEachSectionStrandCourse($current_school_year_term);
-
-                    $currentNewEnrolled = $enrollment->GetEnrolledNewStudentWithinSemester($current_school_year_id);
+                    // # Second Semester Successful opened room move-up sections.
+                    // $movingUpSection = $section->MovingUpCurrentActiveSections($current_school_year_term);
                     
-                    foreach ($currentNewEnrolled as $key => $student_ids) {
-                        // All new enrolled student in the enrollment form will update as OLD
-                        $toOld = $student->UpdateStudentAdmissionStatusToOld($student_ids);
-                    }
+                    // # As finals end, there`s no reason to accomodate students in the section
+                    // # InActive opened sections
+                    // $deactiveCurrentSection = $section->DeactiveCurrentActiveSections($current_school_year_term);
+                    
+                    // // Create each one section to be used for new students section.
+                    // # Alternative, Admin create manual room.
+
+                    // $createEachNewSection = $section->CreateEachSectionStrandCourse($current_school_year_term);
+
+                    // $currentNewEnrolled = $enrollment->GetEnrolledNewStudentWithinSemester($current_school_year_id);
+                    
+                    // foreach ($currentNewEnrolled as $key => $student_ids) {
+                    //     // All new enrolled student in the enrollment form will update as OLD
+                    //     $toOld = $student->UpdateStudentAdmissionStatusToOld($student_ids);
+                    // }
+
+                    # ==
 
                     echo "success_update"; 
 

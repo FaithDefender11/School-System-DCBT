@@ -2,6 +2,10 @@
 
     $student_subject = new StudentSubject($con);
 
+    // $check = $enrollment->changeYearFormat("2021-2022");
+    // var_dump($check);
+
+
     if(isset($_POST['pending_choose_section_' . $pending_enrollees_id]) && isset($_POST['selected_course_id'])){
 
         // New (Standard start from the beginning of DCBT). 

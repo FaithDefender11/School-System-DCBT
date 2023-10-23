@@ -210,8 +210,6 @@
     }).then((result) => {
         if (result.isConfirmed) {
 
-           
-
             $.ajax({
                 url: "../../ajax/school_year/school_year_maintenance.php",
                 type: 'POST',

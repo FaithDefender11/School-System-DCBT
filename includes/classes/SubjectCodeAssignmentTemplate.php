@@ -37,6 +37,10 @@ class SubjectCodeAssignmentTemplate{
         return isset($this->sqlData['description']) ? $this->sqlData["description"] : NULL; 
     }
 
+    public function GetTaskTypeId() {
+        return isset($this->sqlData['task_type_id']) ? $this->sqlData["task_type_id"] : NULL; 
+    }
+
     public function GetDueDate() {
         return isset($this->sqlData['due_date']) ? $this->sqlData["due_date"] : NULL; 
     }
@@ -57,7 +61,18 @@ class SubjectCodeAssignmentTemplate{
         return isset($this->sqlData['max_attempt']) ? $this->sqlData["max_attempt"] : NULL; 
     }
 
-    public function GetCodeAssignmentTopicTemplateList($subject_period_code_topic_template_id) {
+    public function GetCodeAssignmentTopicTemplateList(
+        $subject_period_code_topic_template_id,
+        $task_type_id = NULL) {
+
+        $task_type_query = "";
+
+        // echo $subject_period_code_topic_template_id;
+
+        if($task_type_id !== NULL){
+            $task_type_query = "AND t1.task_type_id =:task_type_id";
+            // echo $task_type_query;
+        }
 
         $sql = $this->con->prepare("SELECT 
         
@@ -69,13 +84,22 @@ class SubjectCodeAssignmentTemplate{
             LEFT JOIN subject_code_assignment as t2 ON t2.subject_code_assignment_template_id = t1.subject_code_assignment_template_id
             
             WHERE subject_period_code_topic_template_id = :subject_period_code_topic_template_id
+            $task_type_query
 
         ");
                 
         $sql->bindValue(":subject_period_code_topic_template_id", $subject_period_code_topic_template_id);
+        
+        if($task_type_id != NULL){
+            // echo "yyy: $task_type_id";
+            $sql->bindValue(":task_type_id", $task_type_id);
+        }
+
         $sql->execute();
 
         if($sql->rowCount() > 0){
+            // echo "hey";
+
             return $sql->fetchAll(PDO::FETCH_ASSOC);
         }
 
@@ -184,13 +208,13 @@ class SubjectCodeAssignmentTemplate{
     public function AddAssignmentTemplate(
         $subject_period_code_topic_template_id,
         $assignment_name, $description,
-        $max_score, $type){
+        $max_score, $type, $task_type_id){
 
         $insert = $this->con->prepare("INSERT INTO subject_code_assignment_template
             (assignment_name, subject_period_code_topic_template_id, description,
-                max_score, type)
+                max_score, type, task_type_id)
             VALUES(:assignment_name, :subject_period_code_topic_template_id, :description,
-                :max_score, :type)");
+                :max_score, :type, :task_type_id)");
 
         $insert->bindValue(":assignment_name", $assignment_name);
         $insert->bindValue(":subject_period_code_topic_template_id", $subject_period_code_topic_template_id);
@@ -198,6 +222,7 @@ class SubjectCodeAssignmentTemplate{
         // $insert->bindValue(":max_attempt", $max_attempt);
         $insert->bindValue(":max_score", $max_score);
         $insert->bindValue(":type", $type);
+        $insert->bindValue(":task_type_id", $task_type_id);
         $insert->execute();
 
         if($insert->rowCount() > 0){
@@ -214,13 +239,15 @@ class SubjectCodeAssignmentTemplate{
         $assignment_name,
         $description,
         $max_score,
-        $type
+        $type, $task_type_id
     ) {
         $update = $this->con->prepare("UPDATE subject_code_assignment_template
             SET assignment_name = :assignment_name,
                 description = :description,
                 max_score = :max_score,
-                type = :type
+                type = :type,
+                task_type_id = :task_type_id
+                
             WHERE subject_code_assignment_template_id = :subject_code_assignment_template_id
             ");
 
@@ -229,6 +256,7 @@ class SubjectCodeAssignmentTemplate{
         $update->bindValue(":description", $description);
         $update->bindValue(":max_score", $max_score);
         $update->bindValue(":type", $type);
+        $update->bindValue(":task_type_id", $task_type_id);
 
         $update->execute();
 

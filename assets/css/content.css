@@ -21,6 +21,7 @@
   align-items: center;
   column-gap: 10px;
   padding: 15px 50px;
+  background-color: var(--mainContentBG);
 }
 
 .content>nav>a {
@@ -28,6 +29,168 @@
   align-items: center;
   column-gap: 10px;
   text-decoration: none;
+}
+
+.content>.icons {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  background-color: var(--theme);
+}
+
+.content>.icons>.notif {
+  display: flex;
+  width: 100%;
+  justify-content: flex-end;
+  margin: 5px;
+}
+
+.content>.icons>.username {
+  margin: 5px;
+  width: 180px;
+}
+
+.content>.icons>.log-out {
+  margin: 5px;
+}
+
+.content>.icons>.calendar-btn {
+  background-color: transparent;
+  color: white;
+  cursor: pointer;
+}
+
+.content>.icons>.log-out>.log-out-item {
+  position: absolute;
+  display: none;
+  right: 10px;
+  width: auto;
+  z-index: 1;
+}
+
+.content>.icons>.log-out>.log-out-item.show {
+  display: block;
+}
+
+.content>.icons>.log-out>.log-out-item>.item {
+  cursor: pointer;
+  font-weight: 400;
+  font-size: 18px;
+  padding: 10px;
+}
+
+.content>.icons>.log-out>.log-out-item>.item>i>span {
+  font-style: normal;
+}
+
+.content>.icons>.log-out>.log-out-btn {
+  background-color: transparent;
+  color: white;
+  cursor: pointer;
+}
+
+.content>.icons>.log-out>.log-out-btn:focus,
+.content>.icons>.calendar-btn:focus {
+  outline: none;
+  border: none;
+}
+
+.content>.icons>.username>a {
+  width: 100%;
+}
+
+.content>.icons>.notif>.icon {
+  margin: 15px;
+  color: var(--mainContentBG);
+}
+
+.content>.icons>.notif>.icon:focus {
+  border: none;
+  outline: none;
+  color: #b8b7b7;
+}
+
+.content>.icons>.notif>.icon:hover,
+.content>.icons>.calendar-btn:hover,
+.content>.icons>.log-out>.log-out-item>.item:hover {
+  color: #b8b7b7;
+}
+
+.content>.icons>.notif>.icon>.badge-1,
+.content>.icons>.notif>.icon>.badge-2 {
+  display: inline-flex;
+  position: absolute;
+  top: 10px;
+  justify-content: center;
+  align-items: center;
+  background-color: red;
+  border-radius: 50%;
+  color: white;
+  width: 20px;
+  height: 20px;
+  font-size: 12px;
+}
+
+.content>.icons>.notif>.notif-menu {
+  display: none;
+  position: absolute;
+  top: 50px;
+  right: 0;
+  width: auto;
+  height: 250px;
+  background-color: var(--mainContentBG);
+  overflow: auto;
+  border-radius: 10px;
+  border: 1px solid black;
+  box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.25);
+  z-index: 3;
+}
+
+.content>.icons>.notif>.notif-menu>.action {
+  display: flex;
+  flex-direction: row;
+  position: sticky;
+  bottom: 0;
+  width: 100%;
+  padding: 10px;
+  background-color: var(--mainContentBG);
+  border-color: #636363;
+  border-top-style: solid;
+  z-index: 1;
+}
+
+.content>.icons>.notif>.notif-menu>.action>button {
+  margin: 5px;
+}
+
+.content>.icons>.notif>.notif-menu.show {
+  display: block;
+}
+
+.content>.icons>.notif>.notif-menu>.notif-item {
+  text-decoration: none;
+  width: auto;
+
+}
+
+.content>.icons>.notif>.notif-menu>.notif-item>.col {
+  width: auto;
+  border-bottom: 1px solid #636363;
+}
+
+.content>.icons>.notif>.notif-menu>.notif-item>.col:hover {
+  background-color: #cccbcb;
+}
+
+.content>.icons>.notif>.notif-menu>.notif-item>.col>header {
+  display: flex;
+  flex-direction: column;
+  color: black;
+}
+
+.content>.icons>.notif>.notif-menu>.notif-item>.col>header>.title>small {
+  display: flex;
+  color: gray;
 }
 
 .content-header {
@@ -479,6 +642,157 @@
   font-size: 16px;
 }
 
+.floating.noOutline,
+.floating.noOutline>a {
+  text-decoration: none;
+  transition: 0.2s;
+}
+
+.floating.noOutline>a>header>.title>h3 {
+  color: var(--titleTheme);
+}
+
+.floating.noOutline>a>header>.title>h3>em {
+  color: var(--titleEm);
+  font-style: normal;
+}
+
+.floating.noOutline:hover {
+  background-color: rgb(247, 247, 247);
+
+}
+
+.floating.noOutline>header>.title>small,
+.floating.noOutline>a>header>.title>small,
+.floating.noOutline>a>header>.title>em {
+  color: black;
+  font-style: normal;
+}
+
+.floating.noOutline>main {
+  display: flex;
+  flex-direction: column;
+}
+
+.floating.noOutline>main>.action {
+  display: flex;
+  margin-top: 5px;
+}
+
+.floating.noOutline>main>.action>.task {
+  cursor: pointer;
+  border: none;
+  justify-content: center;
+  background-color: transparent;
+}
+
+.floating.noOutline>main>.action>.task:focus {
+  border: none;
+  outline: none;
+}
+
+.bars {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.bars>.floating {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 5px;
+}
+
+.bars>.floating>.progress {
+  margin: 0;
+}
+
+.floating>header>.action>.dropdown>.table-drop {
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.floating>header>.action>.dropdown>.table-drop:focus {
+  outline: none;
+  border: none;
+}
+
+.floating>main>.b {
+  display: none;
+}
+
+.floating>main>.b.show {
+  display: table;
+}
+
+.floating>header>.action>.dropdown>.table-drop>.bi-chevron-up {
+  display: none;
+}
+
+.floating>header>.action>.dropdown>.table-drop>.bi-chevron-up.show,
+.floating>header>.action>.dropdown>.table-drop>.bi-chevron-down.show {
+  display: flex;
+}
+
+.floating>header>.action>.dropdown>.table-drop>.bi-chevron-down.none,
+.floating>header>.action>.dropdown>.table-drop>.bi-chevron-up.none {
+  display: none;
+}
+
+.floating.row {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+}
+
+.floating.row>.row {
+  display: flex;
+  flex-direction: row;
+  margin: 1px;
+}
+
+.bars>.floating>main>ul {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.bars>.floating>main>ul>li {
+  margin: 2px;
+  padding: 2px;
+}
+
+ul>.task-blue,
+ul>.task-green,
+ul>.task-gray,
+ul>.task-mauve,
+ul>.task-teal,
+ul>.task-coral,
+ul>.task-taupe,
+ul>.task-beige {
+  color: white;
+}
+
+ul>.task-blue,
+ul>.task-green,
+ul>.task-gray,
+ul>.task-mauve,
+ul>.task-teal,
+ul>.task-coral,
+ul>.task-taupe,
+ul>.task-beige,
+ul>.task-lavender,
+ul>.task-ivory,
+ul>.task-yellow {
+  border-radius: 5px;
+}
+
 /* ADDED DROPDOWN */
 
 /* ADDED CONTENT TO ACTION */
@@ -497,4 +811,42 @@
 .floating.noBorder>main>form>.action>.btn.btn-primary {
   display: flex;
   margin-left: 10px;
+}
+
+/*RESPONSIVE*/
+@media only screen and (max-width: 767px) {
+  .content>.icons>.username {
+    display: none;
+  }
+
+  .bars {
+    flex-direction: column;
+  }
+}
+
+@media only screen and (max-width: 500px) {
+  .floating>main>.b>thead {
+    display: none;
+  }
+
+  .floating>main>.b>tbody>tr>.b-1 {
+    display: none;
+  }
+}
+
+@media only screen and (max-width: 540px) {
+  .content-header>.cards {
+    display: flex;
+    justify-content: space-around;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .content-header>.cards>.card {
+    margin-top: 25px;
+  }
+
+  .content>.icons>.username>a {
+    font-size: 12px;
+  }
 }

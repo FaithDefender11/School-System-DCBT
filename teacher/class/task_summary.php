@@ -5,27 +5,24 @@
     include_once('../../includes/classes/Section.php');
     include_once('../../includes/classes/Enrollment.php');
     include_once('../../includes/classes/SchoolYear.php');
-    include_once('../../includes/classes/Schedule.php');
     include_once('../../includes/classes/SubjectCodeAssignmentTemplate.php');
     include_once('../../includes/classes/SubjectPeriodCodeTopic.php');
     include_once('../../includes/classes/SubjectPeriodCodeTopicTemplate.php');
     include_once('../../includes/classes/SubjectAssignmentSubmission.php');
     include_once('../../includes/classes/SubjectCodeAssignment.php');
+    include_once('../../includes/classes/Student.php');
  
     echo Helper::RemoveSidebar();
     
     ?>
         <style>
-            /* Add CSS for preventing text wrapping */
-                    <style>
-
-            tr td {
+            th a {
                 text-decoration: underline;
                 color: inherit; /* To maintain the link color */
                 white-space: nowrap; /* Prevent text from wrapping */
             }
         </style>
-        </style>
+
     <?php
 
     if(isset($_GET['ct_id'])){
@@ -46,27 +43,44 @@
         $subjectPeriodCodeTopic = new SubjectPeriodCodeTopic($con, $subject_period_code_topic_id);
         
         $subjectCodeAssignment = new SubjectCodeAssignment($con);
+        $subjectAssignmentSubmission = new SubjectAssignmentSubmission($con);
 
         $subjectPeriodCodeTopicTemplateId = $subjectPeriodCodeTopic->GetSubjectPeriodCodeTopicTemplateId();
         $subject_code = $subjectPeriodCodeTopic->GetSubjectCode();
         $course_id = $subjectPeriodCodeTopic->GetCourseId();
         $subject_code = $subjectPeriodCodeTopic->GetSubjectCode();
-
-        // echo $subject_code;
+        $school_year_id = $subjectPeriodCodeTopic->GetSchoolYearId();
 
         $assignmentListOnTeachingCode = $subjectCodeAssignment->GetSubjectAssignmentBasedOnTeachingSubject(
             $subject_code,
-            $current_school_year_id,
-            $teacherLoggedInId);
+            $school_year_id,
+            $teacherLoggedInId,
+            true
+        );
 
+        $total_subject_score = NULL;
+
+        $subjectCodeAssignmentIds = [];
+
+        $now = date("Y-m-d H:i:s");
+
+        foreach ($assignmentListOnTeachingCode as $key => $value) {
+            # code...
+            $scores = $value['max_score'];
+
+            $subject_code_assignment_id = $value['subject_code_assignment_id'];
+
+            $due_date =  $value['due_date'];
+
+            $total_subject_score += $scores;
+
+            array_push($subjectCodeAssignmentIds, $subject_code_assignment_id);
+
+        }
+     
         $studentGradeBook = $subjectCodeAssignment->GetStudentGradeBookOnTeachingSubject(
             $subject_code,
-            $current_school_year_id);
-
-        // var_dump($assignmentListOnTeachingCode);
-        // echo count($assignmentListOnTeachingCode);
-
-        $back_url = "index.php?c_id=$course_id&c=$subject_code";
+            $school_year_id);
  
         $back_url = "section_topic.php?id=$subjectPeriodCodeTopicTemplateId&ct_id=$subject_period_code_topic_id";
 
@@ -99,11 +113,11 @@
                                     <table class='table table-hover tb-left'>
                                         <thead>
                                             <tr class='text-center'>
-                                                <th colspan='4'>Assignments</th>
+                                                <th colspan='4'>Tasks</th>
                                             </tr>
-                                            <!-- <tr style='text-align:right;'>
+                                            <tr style='text-align:right;'>
                                                 <th colspan='4'>Category</th>
-                                            </tr> -->
+                                            </tr>
                                             <tr style='text-align:right;'>
                                                 <th colspan='4'>Due</th>
                                             </tr>
@@ -138,38 +152,64 @@
                                                     ");
 
                                                     $stud->bindParam(":subject_code", $subject_code);
-                                                    $stud->bindParam(":school_year_id", $current_school_year_id);
+                                                    $stud->bindParam(":school_year_id", $school_year_id);
                                                     $stud->execute();
 
                                                     if($stud->rowCount() > 0){
 
+                                                        $output_max_score = 0;
+
                                                         while($row_stud = $stud->fetch(PDO::FETCH_ASSOC)){
                                                             
                                                             $student_id = $row_stud['student_id'];
-                                                            $firstname = $row_stud['firstname'];
-                                                            $lastname = $row_stud['lastname'];
+                                                            $firstname = ucwords(trim($row_stud['firstname']));
+                                                            $lastname = ucwords(trim($row_stud['lastname']));
 
-                                                            // $fullname = ucwords($firstname) . " " . ucwords($lastname);
+                                                            $fullname = ucwords($firstname) . " " . ucwords($lastname);
 
-                                                            $fullname = ucwords($lastname) . ", " . ucwords($firstname);
+                                                            // Check if the length of the fullname exceeds 10 characters
+                                                            if (strlen($fullname) > 18) {
+                                                                // Trim the fullname to 10 characters and add ellipsis
+                                                                $fullname = substr($fullname, 0, 18) . "...";
+                                                            }
 
-                                                            //  $fullname = ucwords($firstname) . " " . ucwords($lastname);
+                                                            $student_points = 0;
+                                                            
+                                                            $getAllSubmissionsPointsToSubjectCode = $subjectAssignmentSubmission
+                                                                ->GetSubjectSubmissionTotalPoints($subjectCodeAssignmentIds,
+                                                                    $student_id, $school_year_id);
+                                                            
+                                                            $qualifiedMaxScore = $subjectAssignmentSubmission
+                                                                ->GetOverscoreFromAssignmentAnswered($subjectCodeAssignmentIds,
+                                                                    $student_id, $school_year_id);
 
-                                                                // Check if the length of the fullname exceeds 10 characters
-                                                                if (strlen($fullname) > 18) {
-                                                                    // Trim the fullname to 10 characters and add ellipsis
-                                                                    $fullname = substr($fullname, 0, 18) . "...";
-                                                                }
+                                                            foreach ($getAllSubmissionsPointsToSubjectCode as $key => $value) {
+                                                                $student_points += $value;
+                                                            }
+
+                                                            $rounded_equivalent = "";
+                                                            // $rounded_equivalent = floor($equivalent / 10) * 10;
+                                                            
+                                                            if($qualifiedMaxScore > 0){
+                                                                $equivalent = ($student_points / $qualifiedMaxScore) * 100;
+                                                                $rounded_equivalent = round($equivalent, 0, PHP_ROUND_HALF_UP);
+
+                                                            }
+
+
                                                             echo "
                                                                 <tr>
                                                                     <td style='font-size: 15px'>
-                                                                    $fullname
+                                                                        $lastname
                                                                     </td>
+                                                                    <td>$firstname</td>
+                                                                    <td></td>
+                                                                    <td>$student_points / $qualifiedMaxScore = $rounded_equivalent% </td>
                                                                 </tr>
                                                             ";
                                                         }
                                                     }
-
+                                                    
                                                 ?>
                                             </tbody>
                                         </thead>
@@ -208,6 +248,28 @@
 
                                                 echo "</tr>";
 
+                                                # CATEGORY
+
+                                                echo "<tr>";
+
+                                                    foreach ($assignmentListOnTeachingCode as $key => $row_due) {
+
+                                                        $task_type = $row_due['task_type'];
+
+                                                      
+                                                        
+                                                        echo "
+                                                            <th>
+                                                                <a style='color: inherit;'>
+                                                                    $task_type
+                                                                </a>
+                                                            </th>
+                                                        ";
+
+                                                    }
+
+                                                echo "</tr>";
+
                                                 echo "<tr>";
 
                                                     foreach ($assignmentListOnTeachingCode as $key => $row_due) {
@@ -231,10 +293,10 @@
 
                                                 echo "<tr>";
 
-                                                    foreach ($assignmentListOnTeachingCode as $key => $row_due) {
+                                                    foreach ($assignmentListOnTeachingCode as $key => $row) {
 
-                                                        $max_score = $row_due['max_score'];
- 
+                                                        $max_score = $row['max_score'];
+
                                                         echo "
                                                             <th>
                                                                 <a style='color: inherit;'>
@@ -266,20 +328,59 @@
 
                                                             $max_score =  $row_query2['max_score'];
 
+                                                            $due_date =  $row_query2['due_date'];
+                                                            $now = date("Y-m-d H:i:s");
+                                                            $doesPastDue = false;
+
+                                                            if(strtotime($due_date) <= strtotime($now)){
+                                                                // echo "expire";
+                                                                $doesPastDue = true;
+
+                                                            }
+
+
+
                                                             $gradeStudent = "gradeStudent($student_id, $subject_code_assignment_id, $max_score, $current_school_year_id)";
 
-                                                            $status = "
-                                                                <input style='width: 80px' autocomplete='off' maxLength='3' type='text' name='grade_input_$subject_code_assignment_id' id='grade_input_$subject_code_assignment_id'>
-                                                                <button onclick='$gradeStudent'>
-                                                                    <i style='color:blue' class='fas fa-pencil'></i>
-                                                                </button>
-                                                            ";
+                                                            $status = "";
+
+
+                                                            if($doesPastDue == false){
+
+                                                                # DEFAULT STAGE.
+                                                                $status = "
+                                                                    <div id='statusContainer'>
+                                                                        <button class='btn btn-sm btn-primary' id='statusButton'>
+                                                                            <i class='fas fa-marker'></i>
+                                                                        </button>
+                                                                    </div>
+                                                                ";
+
+                                                                # WHEN IT WAS CLICKED.
+
+                                                                $status = "
+                                                                    <div class='row'>
+                                                                        <input style='width: 60px' autocomplete='off' maxLength='3' type='text' name='grade_input_$student_id-_$subject_code_assignment_id' id='grade_input_$student_id-_$subject_code_assignment_id'>
+                                                                        
+                                                                        <button title='Add grade' style='margin-left: 4px' onclick='$gradeStudent'>
+                                                                            <i style='color:blue' class='fas fa-pencil'></i>
+                                                                        </button>
+                                                                    </div>
+                                                                ";
+
+                                                            }
+                                                            else{
+                                                                $status = "
+                                                                    <i title='Past Due' style='color: orange;' class='fas fa-flag'></i>
+                                                                ";
+                                                            }
+                                                            
 
                                                             $subjectAssignmentSubmission = new SubjectAssignmentSubmission($con);
 
                                                             $checkSubmission = $subjectAssignmentSubmission->CheckStatusSubmission(
                                                                 $subject_code_assignment_id,
-                                                                $student_id, $current_school_year_id);
+                                                                $student_id, $school_year_id);
 
                                                             $submission_grade = "~";
 
@@ -292,10 +393,12 @@
                                                                     
                                                                 $submission_grade = $subjectAssignmentSubmission->GetSubjectGrade();
 
+                                                                $to_check_assignment_url = "student_submission_view.php?id=$subject_assignment_submission_id";
+                                                                
                                                                 if($submission_grade !== NULL){
 
                                                                     $status = "
-                                                                        <a style='color: inherit'; href='student_submission_view.php?id=$subject_assignment_submission_id'>
+                                                                        <a style='color: inherit'; href='$to_check_assignment_url'>
                                                                             $submission_grade
                                                                         </a>
                                                                     ";
@@ -306,7 +409,7 @@
                                                                     $to_check_assignment_url = "student_submission_view.php?id=$subject_assignment_submission_id";
                                                                     
                                                                     $status = "
-                                                                        <a href='$to_check_assignment_url'>
+                                                                        <a title='View Submission' href='$to_check_assignment_url'>
                                                                             <i style='cursor: pointer;color:blue' class='fas fa-eye'></i>
                                                                         </a>
                                                                     ";
@@ -347,14 +450,17 @@
 
 <script>
 
+ 
+
     function gradeStudent(student_id, subject_code_assignment_id, max_score, school_year_id){
 
         var student_id = parseInt(student_id);
         var subject_code_assignment_id = parseInt(subject_code_assignment_id);
 
-        var grade_input_value = $(`#grade_input_${subject_code_assignment_id}`).val();
+        var grade_input_value = $(`#grade_input_${student_id}-_${subject_code_assignment_id}`).val();
 
-        // console.log(grade_input_value)
+        // console.log(grade_input_value);
+
 
         Swal.fire({
                 icon: 'question',

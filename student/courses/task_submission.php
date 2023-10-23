@@ -10,6 +10,10 @@
     include_once('../../includes/classes/SubjectAssignmentSubmission.php');
     include_once('../../includes/classes/SubjectCodeAssignmentTemplate.php');
     include_once('../../includes/classes/Notification.php');
+    include_once('../../includes/classes/TaskType.php');
+
+    echo Helper::RemoveSidebar();
+
 
     ?>
         <head>
@@ -35,16 +39,17 @@
         $subject_code_assignment_id = $_GET['sc_id'];
         $student_subject_id = $_GET['ss_id'];
 
+        # 
         if(isset($_GET['n_id'])
             && isset($_GET['notification'])
             && $_GET['notification'] == "true"){
 
-        $notification_id = $_GET['n_id'];
+            $notification_id = $_GET['n_id'];
 
-        $notification = new Notification($con);
+            $notification = new Notification($con);
 
-        $markAsNotified = $notification->StudentNotificationMarkAsViewed($notification_id, $studentLoggedInId);
-        // echo "marked";
+            $markAsNotified = $notification->StudentNotificationMarkAsViewed($notification_id, $studentLoggedInId);
+            // echo "marked";
         }
 
         $notification = new Notification($con);
@@ -54,6 +59,11 @@
         $subjectCodeAssignment = new SubjectCodeAssignment($con, $subject_code_assignment_id);
         
         $doesAssignmentGiven = $subjectCodeAssignment->GetIsGiven();
+        $task_type_id = $subjectCodeAssignment->GetTaskTypeId();
+
+        $taskType = new TaskType($con, $task_type_id);
+
+        $taskname = $taskType->GetTaskName();
 
         # This will prompt student if he had accesed the ungiven assignment.
         $prompt = $subjectCodeAssignment->PromptAssignmentIsNotGiven();
@@ -101,7 +111,7 @@
         $assignment_name = $subjectCodeAssignment->GetAssignmentName();
 
         // $back_url = "index.php?c=$subject_code";
-        $back_url = "index.php?id=$student_subject_id";
+        $back_url = "subject_module.php?id=$student_subject_id";
  
         // echo $subject_assignment_submission_id;
 
@@ -154,6 +164,7 @@
 
         }
 
+        // var_dump($submission_remark_percentage);
         // var_dump($subject_assignment_submission_id);
 
         // $check = $notification->RemovePrevSubmittedNotification(
@@ -171,6 +182,8 @@
         if($now >= $assignment_due_db){        
             $assignmentEnded = true;
         }
+
+        // var_dump($assignmentEnded);
 
         if($_SERVER['REQUEST_METHOD'] === "POST" 
             && isset($_POST['insert_assignment_btn_' . $subject_code_assignment_id . '_user_' . $studentLoggedInId])
@@ -251,6 +264,8 @@
                     $wasAddedNotif = $notification->StudentSubmitTaskNotification(
                         $subject_code, $current_school_year_id,
                         $subject_assignment_submission_id);
+
+                    
                 }
 
                 $uploadDirectory = '../../assets/images/student_assignment_images/';
@@ -294,7 +309,7 @@
                 
             if($hasInserted && $subject_code_assignment_id != 0){
                 Alert::successAutoRedirect("Submission has been delivered successfully.",
-                    "submission_view.php?id=$subject_code_assignment_id&s_id=$subject_assignment_submission_id");
+                    "submission_view.php?sc_id=$subject_code_assignment_id&s_id=$subject_assignment_submission_id&ss_id=$student_subject_id");
                 exit();
             }
                 
@@ -318,12 +333,13 @@
         else if ($doesAvailabeToAnswer && $doesSubmittedAndGraded == false
             && $assignmentEnded == true) {
 
-            $buttontext = "Assignment Ended";
+            $buttontext = "Assignment Due";
             $button_name = "";
             $button_type = "button";
         } 
         else if ($doesNotAvailableToAnswer == false
-            && $doesAvailabeToAnswer && $doesSubmittedAndGraded == true) {
+            && $doesAvailabeToAnswer 
+            && $doesSubmittedAndGraded == true) {
             $buttontext = "Graded";
             $button_name = "";
             $button_type = "button";
@@ -333,9 +349,453 @@
             $button_name = "";
             $button_type = "button";
         } 
+
+        // $statusSubmission == NULL && $assignmentEnded
   
+        // var_dump($assignmentEnded);
+
         ?>
 
+            <div class="content">
+
+                <div class="sidebar-nav">
+                    <div class="navigationContainer">
+                        <div class="navigationItem">
+                            <a href="#">
+                            <span class="badge">5</span>
+                            <i class="bi bi-clipboard-data">
+                                <span>Dashboard</span>
+                            </i>
+                            </a>
+                        </div>
+                        <div class="navigationItem">
+                            <a href="#">
+                            <span class="badge">5</span>
+                            <i class="bi bi-bell-fill">
+                                <span>Notification</span>
+                            </i>
+                            </a>
+                        </div>
+                        <div class="navigationItem">
+                            <a href="#">
+                            <i class="bi bi-person-circle">
+                                <span>User</span>
+                            </i>
+                            </a>
+                        </div>
+                        <div class="navigationItem">
+                            <a href="#">
+                            <i class="bi bi-box-arrow-in-left">
+                                <span>Log-out</span>
+                            </i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="icons">
+                    <button class="sidebar">
+                        <i class="bi bi-list"></i>
+                    </button>
+
+                    <div class="notif">
+                        <button
+                            class="icon"
+                            data-toggle="tooltip"
+                            data-placement="bottom"
+                            title="Notification">
+                                <i class="bi bi-bell-fill"></i>
+                            <span class="badge-1">3</span>
+                        </button>
+                        <div class="notif-menu">
+                            <a href="#" class="notif-item">
+                            <div class="col">
+                                <header>
+                                <div class="title">
+                                    <h5>Teacher</h5>
+                                    <span
+                                    >You have completed the course Workplace Etiquette</span
+                                    >
+                                    <small>Oct 12, 7:27pm</small>
+                                </div>
+                                </header>
+                            </div>
+                            </a>
+                            <a href="#" class="notif-item">
+                            <div class="col">
+                                <header>
+                                <div class="title">
+                                    <h5>Teacher</h5>
+                                    <span
+                                    >You are now enrolled in course Workplace Etiquette</span
+                                    >
+                                    <small>Oct 12, 7:27pm</small>
+                                </div>
+                                </header>
+                            </div>
+                            </a>
+                            <a href="#" class="notif-item">
+                            <div class="col">
+                                <header>
+                                <div class="title">
+                                    <h5>Teacher</h5>
+                                    <span
+                                    >Due soon: assignment '05 Activity 1 - ARG' in class
+                                    'Technopreneurship'</span
+                                    >
+                                    <small>Oct 12, 5:33pm</small>
+                                </div>
+                                </header>
+                            </div>
+                            </a>
+                            <a href="#" class="notif-item">
+                            <div class="col">
+                                <header>
+                                <div class="title">
+                                    <h5>Teacher</h5>
+                                    <span
+                                    >Given: assignment '05 Task Performance 1' in course
+                                    'Software Quality Assurance'</span
+                                    >
+                                    <small>Oct 12, 7:27pm</small>
+                                </div>
+                                </header>
+                            </div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="username">
+                        <a href="#" title="Profile">Cultura, Dhan Exeq...</a>
+                    </div>
+                    
+                </div>
+
+                <div class="content-header">
+
+                    <header>
+                        <div class="title">
+                            <h2><?php echo $topic_name; ?> : <em><?php echo $assignment_name ?></em></h2>
+                        </div>
+                    </header>
+                    <div class="cards">
+                        <div class="card">
+                            <sup>Type</sup>
+                            <sub><?php echo $assignment_type === "upload" ? "Dropbox" : "Text" ?></sub>
+                        </div>
+                        <div class="card">
+                            <sup>Max Score</sup>
+                            <sub><?= $assignment_max_score; ?></sub>
+                        </div>
+                        <div class="card">
+                            <sup>Category</sup>
+                            <sub><?= $taskname;?></sub>
+                        </div>
+                        <div class="card">
+                            <sup>Start</sup>
+                            <sub><?php echo $assignment_creation ?></sub>
+                        </div>
+                        <div class="card">
+                            <sup>Due</sup>
+                            <sub><?php 
+                            
+                                $result = date("M d, h:i a", strtotime($assignment_due_db));
+                                echo $result; 
+                            ?>
+                            </sub>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tabs">
+                    <button
+                    class="tab"
+                    style="background-color: var(--mainContentBG); color: black"
+                    onclick="window.location.href = 'task_submission.php?sc_id=<?php echo $subject_code_assignment_id; ?>&ss_id=<?= $student_subject_id;?>'"
+
+                    >
+                    Instructions
+                    </button>
+                    <button
+                    class="tab"
+                    style="background-color: var(--theme); color: white"
+                    onclick="location.href= 'submission_view.php?sc_id=<?php echo $subject_code_assignment_id; ?>&s_id=<?php echo $get_subject_assignment_submission_id; ?>&ss_id=<?= $student_subject_id;?>'" 
+                    >
+                    Submissions
+                    </button>
+                </div>
+
+                <nav>
+                    <a href="<?= $back_url;?>"
+                    ><i class="bi bi-arrow-return-left"></i>Back</a
+                    >
+                </nav>
+
+                <main>
+                    <div class="bars">
+
+                        <div class="floating">
+                            <header>
+                                <div class="title">
+                                    <!-- <h3>Score: <em>50/100</em></h3> -->
+                                    <h3 >Score</h3> <em>
+
+                                        <?php if ($submission_remarks !== NULL && $submission_remark_percentage !== NULL) : ?>
+                                            <p><?php echo "$submission_remarks / $assignment_max_score ($submission_remark_percentage%)" ?></p>
+
+                                        <?php elseif ($statusSubmission == NULL 
+                                            // && $assignmentEnded == true
+                                        ) : ?>
+                                            <p><i style="color: orangered;" class="fas fa-times"></i> Nothing submitted yet</p>
+
+                                        <?php elseif ($statusSubmission != NULL) : ?>
+                                            <p>Waiting for Grade</p>
+                                        <?php endif; ?>
+                                    </em>
+                                </div>
+                            </header>
+                            <main>
+                                <?php if($submission_remark_percentage != NULL):?>
+                                    <div class="progress" style="position: relative; height: 20px">
+                                        <div class="progress-bar" style="position: absolute; top:0; height: 30px;  width: <?= $submission_remark_percentage;?>px"><?=$submission_remark_percentage;?>%</div>
+                                    </div>
+                                <?php endif;?>
+                            </main>
+                        </div>
+
+                        <div class="floating">
+                            <header>
+                            <div class="title">
+                                <h3>Submission</h3>
+                                <small>Submitted: <em>
+                                    <?php 
+                                        $get_subject_assignment_submission_date =  $get_subject_assignment_submission_date; 
+
+
+                                        if($get_subject_assignment_submission_date == NULL){
+                                            echo "
+                                                <i style='color:orangered;'class='fas fa-times'></i>
+                                            ";
+                                        }else{
+                                            echo $submission_creation = date("M d, h:i a", strtotime($get_subject_assignment_submission_date));
+                                        }
+                                    
+                                    ?>
+                                </em></small>
+                                <small>Attempts: <em>
+                                    <?php echo $assignmentAttempts; ?>
+                                </em></small>
+                                <small>Max Attempts: <em>
+                                    <?php echo $assignment_max_attempt; ?>
+                                </em></small>
+                            </div>
+                            </header>
+                        </div>
+                    </div>
+
+                    <div class="floating">
+
+                        <header>
+                            <div class="title">
+                                <h3 style="font-size: 22px;">Instructions</h3>
+                                <textarea class="form-control summernote_disable" type='text' 
+                                    id="description" name='description'><?php echo $assignment_description; ?></textarea>
+                            </div>
+                        </header>
+
+                        <main>
+                            <form method='POST' enctype="multipart/form-data">
+                                <div class="row">
+                                    <span>
+                                        <div>
+                                        <?php 
+
+                                            if($assignment_type === "upload" && $subject_code_assignment_template_id === NULL){
+
+                                                if(count($assignment_upload_files) > 0){
+
+                                                    $image_extensions = ['jpg', 'jpeg', 'png'
+                                                    // , 'gif', 'bmp', 'svg', 'webp'
+                                                    ];
+
+                                                    foreach ($assignment_upload_files as $key => $photo) {
+
+                                                        $uploadFile = $photo['image'];
+
+                                                        $extension = pathinfo($uploadFile, PATHINFO_EXTENSION);
+
+                                                        $pos = strpos($uploadFile, "img_");
+                                                        $original_file_name = "";
+
+                                                        // Check if "img_" was found
+                                                        if ($pos !== false) {
+                                                            $original_file_name = substr($uploadFile, $pos + strlen("img_"));
+                                                        }
+
+                                                        if (in_array(strtolower($extension), ['jpg', 'jpeg', 'png'])) {
+                                                        ?>
+                                                            <a title="View File" href='<?php echo "../../".  $photo['image'] ?>' target='__blank' rel='noopener noreferrer'>
+                                                                <img style="margin-left:8px; width: 120px;" 
+                                                                    src='<?php echo "../../".$photo['image']; ?>' alt='Given Photo' class='preview-image'>
+                                                            </a>
+                                                            <br>
+                                                        <?php
+                                                        } elseif (in_array(strtolower($extension), ['pdf', 'docx', 'doc', 'txt'])) {
+                                                            ?>
+                                                                <a title="View File" href='<?php echo "../../".  $photo['image'] ?>' target='__blank' rel='noopener noreferrer'>
+                                                                    <?php echo $original_file_name; ?>
+                                                                </a>
+                                                                <br>
+                                                            <?php
+                                                        }
+                                                        
+                                                    }
+                                                } 
+
+                                                if(($doesSubmittedAndGraded == false && $assignmentEnded == false) 
+                                                    || $assignmentEnded == false){
+                                                
+                                                    # Assignment Button hide includes when:
+
+                                                    # Deadline TRUE
+                                                    # Graded TRUE
+
+                                                    // var_dump($doesSubmittedAndGraded);
+
+                                                    ?>
+                                                        <div class='form-group mb-2'>
+                                                            <label for="assignment_images" class='mb-2'> Upload Image, PDF, Word, .txt</label>
+                                                            <input class='form-control' type='file' id="assignment_images" 
+                                                                multiple name='assignment_images[]'>
+                                                        </div>
+                                                    <?php
+                                                }
+
+                                            }
+
+                                            if($subject_code_assignment_template_id !== NULL){
+
+                                                if(count($getAllTemplateUploadFiles) > 0){
+
+                                                    $image_extensions = ['jpg', 'jpeg', 'png'
+                                                    // , 'gif', 'bmp', 'svg', 'webp'
+                                                    ];
+
+                                                    foreach ($getAllTemplateUploadFiles as $key => $photo) {
+
+                                                        $uploadFile = $photo['image'];
+
+                                                        $extension = pathinfo($uploadFile, PATHINFO_EXTENSION);
+
+                                                        if (strtolower($extension) === 'pdf') {
+
+                                                            $parts = explode('_', $uploadFile);
+
+                                                            // Get the last part of the resulting array (the original file name)
+                                                            $original_file_name = end($parts);
+                                                            // echo $original_file_name;
+                                                            ?>
+                                                                <a title="View File" href='<?php echo "../../".  $photo['image'] ?>' target='__blank' rel='noopener noreferrer'>
+                                                                    <?php echo $original_file_name; ?>
+                                                                </a>
+                                                            <?php
+                                                            // echo 'The file has a .pdf extension.';
+                                                        }
+
+                                                        if (strtolower($extension) === 'docx' ||
+                                                            strtolower($extension) === 'doc') {
+
+                                                            $parts = explode('_', $uploadFile);
+
+                                                            // Get the last part of the resulting array (the original file name)
+                                                            $original_file_name = end($parts);
+                                                            // echo $original_file_name;
+                                                            ?>
+                                                                <a title="View File" href='<?php echo "../../".  $photo['image'] ?>' target='__blank' rel='noopener noreferrer'>
+                                                                    <?php echo $original_file_name; ?>
+                                                                </a>
+                                                            <?php
+                                                            // echo 'The file has a .docx, .doc extension.';
+                                                        }
+
+                                                        if (in_array(strtolower($extension), $image_extensions)) {
+                                                            ?>
+                                                                <a title="View File" href='<?php echo "../../". $photo['image'] ?>' target='__blank' rel='noopener noreferrer'>
+                                                                    <img style="margin-left:8px; width: 120px;" 
+                                                                        src='<?php echo "../../".$photo['image']; ?>' alt='Given Photo' class='preview-image'>
+                                                                </a>
+                                                            <?php
+                                                        }
+                                                    }
+                                                    
+                                                } 
+
+                                                if(($doesSubmittedAndGraded == false && $assignmentEnded == false) 
+                                                    || $assignmentEnded == false){
+                                                
+                                                    ?>
+                                                        <div class='form-group mb-2'>
+                                                            <label for="assignment_images" class='mb-2'> Upload Image, PDF, Word, .txt</label>
+                                                            <input class='form-control' type='file' id="assignment_images" 
+                                                                multiple name='assignment_images[]'>
+                                                        </div>
+                                                    <?php
+                                                }
+
+                                            }
+                                        ?>
+                                        </div>
+
+                                        
+
+                                    </span>
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button type='<?php echo $button_type; ?>' class='btn btn-primary' name="<?php echo $button_name;?>">
+                                        <?php echo $buttontext; ?>
+                                    </button>
+                                </div>
+
+                            </form>
+                        </main>
+
+                    </div>
+                </main>
+
+
+            </div>
+
+
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
             <div class='content'>
 
                 <nav>
@@ -564,9 +1024,14 @@
                                 <!-- <p class="text-info text-center">Assignment type: <?php echo $assignment_type; ?></p> -->
                                 <p>Type: <?php echo $assignment_type === "upload" ? "Dropbox" : "Text" ?></p>
                                 <p>Max Score: <?= $assignment_max_score; ?></p>
-                                <p>Category: Assignment</p>
+                                <p>Category: <?= $taskname;?></p>
                                 <p>Start: <?php echo $assignment_creation ?></p>
-                                <p>Due: <?php echo $assignment_due ?></p>
+                                <p>Due: <?php 
+                                    
+                                    $result = date("M d, h:i a", strtotime($assignment_due_db));
+
+                                    echo $assignment_due_db; ?>
+                                </p>
                             </div>
                         </div>
 

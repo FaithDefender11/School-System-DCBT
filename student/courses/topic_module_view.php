@@ -6,6 +6,9 @@
     include_once('../../includes/classes/SubjectCodeHandoutStudent.php');
     include_once('../../includes/classes/SubjectPeriodCodeTopic.php');
 
+    echo Helper::RemoveSidebar();
+
+
     if(
         
         isset($_GET['id']) &&
@@ -42,7 +45,8 @@
 
         // $back_url = "index.php?c_id=$topic_course_id&c=$topic_subject_code";
 
-        $back_url = "index.php?id=$student_subject_id";
+        // $back_url = "index.php?id=$student_subject_id";
+        $back_url = "subject_module.php?id=$student_subject_id";
      
         # Check If student had goes in to this page.
         $pushToHandoutView = $subjectCodeHandoutStudent->MarkStudentViewedHandout($subject_code_handout_id,
@@ -50,6 +54,127 @@
         
 
         ?>
+
+            <div class="content">
+                <!-- <div class="sidebar-nav">
+                    <div class="navigationContainer">
+                    <div class="navigationItem">
+                        <a href="#">
+                        <span class="badge">5</span>
+                        <i class="bi bi-clipboard-data">
+                            <span>Dashboard</span>
+                        </i>
+                        </a>
+                    </div>
+                    <div class="navigationItem">
+                        <a href="#">
+                        <span class="badge">5</span>
+                        <i class="bi bi-bell-fill">
+                            <span>Notification</span>
+                        </i>
+                        </a>
+                    </div>
+                    <div class="navigationItem">
+                        <a href="#">
+                        <i class="bi bi-person-circle">
+                            <span>User</span>
+                        </i>
+                        </a>
+                    </div>
+                    <div class="navigationItem">
+                        <a href="#">
+                        <i class="bi bi-box-arrow-in-left">
+                            <span>Log-out</span>
+                        </i>
+                        </a>
+                    </div>
+                    </div>
+                </div> -->
+
+            <div class="icons">
+                <button class="sidebar">
+                    <i class="bi bi-list"></i>
+                </button>
+                <div class="notif">
+
+                    <button
+                        class="icon"
+                        data-toggle="tooltip"
+                        data-placement="bottom"
+                        title="Notification">
+                        <i class="bi bi-bell-fill"></i>
+                        <span class="badge-1">3</span>
+                    </button>
+ 
+                </div>
+
+                <div class="username">
+                    <a href="#" title="Profile">Cultura, Dhan Exeq...</a>
+                </div>
+            </div>
+
+            <div class="content-header">
+                <header>
+                <div class="title">
+                    <h1>UCSP Topic 1 <em>Handout</em></h1>
+                </div>
+                </header>
+            </div>
+
+            <nav>
+                <a href="<?=$back_url;?>"
+                ><i class="bi bi-arrow-return-left"></i>Back</a
+                >
+            </nav>
+
+            <main>
+                <div class="floating noBorder">
+                <header>
+                    <div class="title">
+                    <h3><?= $handout_name;?></h3>
+                    </div>
+                </header>
+                <main>
+                    <form action="">
+                    <div class="row">
+                        <span>
+                            <label for="file">File</label>
+                            <div>
+                                <p>
+                                    <?php 
+
+                                        $extension = pathinfo($handout_file, PATHINFO_EXTENSION);
+
+                                        $pos = strpos($handout_file, "img_");
+
+                                        $original_file_name = "";
+
+                                        // Check if "img_" was found
+                                        if ($pos !== false) {
+                                            $original_file_name = substr($handout_file, $pos + strlen("img_"));
+                                        }
+
+                                        if (in_array(strtolower($extension), ['pdf', 'docx', 'doc'])) {
+                                            ?>
+                                                
+                                                <a title="View File" href='<?php echo "../../".  $handout_file ?>' target='__blank' rel='noopener noreferrer'>
+                                                    <?php echo $original_file_name; ?>
+                                                </a>
+                                                <br>
+                                            <?php
+                                        }
+                                    ?>
+                                </p>
+                            </div>
+                        </span>
+                    </div>
+                    </form>
+                </main>
+                </div>
+            </main>
+            </div>
+
+            <br>
             <div class='content'>
 
                 <nav>
@@ -71,9 +196,9 @@
                             <form method='POST' enctype="multipart/form-data">
 
                                  <div class='form-group mb-2'>
-                                    <label for="handout_name" class='mb-2'>* Handout Name</label>
+                                    <label for="handout_name" class='mb-2'>Handout Name</label>
 
-                                    <input value="<?php echo $handout_name ?>" required class='form-control' type='text' 
+                                    <input disabled value="<?php echo $handout_name ?>" required class='form-control' type='text' 
                                         placeholder='Add Handout' id="handout_name" name='handout_name'>
                                 </div>
 
@@ -82,18 +207,22 @@
                                     
                                     <?php if ($handout_template_id == NULL): ?>
                                         <input value="<?php echo $handout_file; ?>" id="assignment_image" class='form-control' type='file' placeholder='' name='assignment_image'>
-
                                     <?php endif; ?>
+
                                     <p>
                                         <?php 
 
-                                            // $uploadFile = $photo['image'];
-
                                             $extension = pathinfo($handout_file, PATHINFO_EXTENSION);
-                                            
-                                            $parts = explode('_', $handout_file);
 
-                                            $original_file_name = end($parts);
+                                            $pos = strpos($handout_file, "img_");
+
+                                            $original_file_name = "";
+
+                                            // Check if "img_" was found
+                                            if ($pos !== false) {
+                                                $original_file_name = substr($handout_file, $pos + strlen("img_"));
+                                            }
+
                                             if (in_array(strtolower($extension), ['pdf', 'docx', 'doc'])) {
                                                 ?>
                                                     
@@ -105,21 +234,15 @@
                                             }
                                         ?>
                                     </p>
-                                </div>
-<!--                          
-                                
-                                <div class="modal-footer">
-                                    <button type='submit' class='btn btn-success' name='edit_handout_<?php echo $subject_code_handout_id; ?>'>Save Changes</button>
-                                </div> -->
 
+                                </div>
                             </form>
                         </div>
-
                     </div>
                 </div>
-                
-
             </div>
+
+
         <?php
     }
 ?>

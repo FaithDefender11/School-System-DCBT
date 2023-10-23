@@ -7,6 +7,7 @@
     include_once('../../includes/classes/SchoolYear.php');
     include_once('../../includes/classes/Announcement.php');
 
+    // echo Helper::RemoveSidebar();
 
 
     $teacher = new Teacher($con);
