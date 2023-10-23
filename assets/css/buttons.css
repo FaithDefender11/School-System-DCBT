@@ -48,6 +48,7 @@ button {
 
 .content button.default.large-s:hover {
   background: #00bd68;
+ 
 }
 
 /* fixed class if you want fixed size buttons */
@@ -58,7 +59,7 @@ button {
 }
 
 /* overide for table buttons */
-.content td > button {
+.content td>button {
   margin: 2px;
   /* min-width: 70px; */
 }
@@ -150,6 +151,12 @@ button {
   margin: 0px;
   background-color: transparent;
   border: none;
+}
+
+.icon-sub {
+  background-color: var(--clean);
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 .icon-sub {
