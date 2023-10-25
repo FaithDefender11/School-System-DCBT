@@ -21,6 +21,7 @@
             .red{
                 color: red;
             }
+            <?php include "../../assets/css/student-form-responsive.css"  ?>
          </style>
     <?php
 
