@@ -186,10 +186,11 @@ if($_SERVER['REQUEST_METHOD'] === "POST"
         $_SESSION["email"] = $verifyNewEnrolleeCredentials[4];
         $_SESSION["studentLoggedIn"] = $verifyNewEnrolleeCredentials[0];
 
-  if(isset($_SESSION['modal_gatepass'])){
-        unset($_SESSION['modal_gatepass']);
-    
-  }
+        if(isset($_SESSION['modal_gatepass'])){
+            unset($_SESSION['modal_gatepass']);
+
+        }
+        
         # If New Enrollee has finished the form.
         if($verifyNewEnrolleeCredentials[5] == 1){
 

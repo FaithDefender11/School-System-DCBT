@@ -1,5 +1,6 @@
 <?php 
 
+
     include_once('../../includes/registrar_header.php');
     include_once('../../includes/classes/Student.php');
     include_once('../../includes/classes/Pending.php');

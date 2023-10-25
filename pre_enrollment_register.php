@@ -28,6 +28,31 @@
     $current_school_year_period = $school_year_obj['period'];
     $current_school_year_id = $school_year_obj['school_year_id'];
 
+
+    // $email = "hypersirios15@gmail.com";
+    // $surname2 = "Gomez de liano";
+    // $result1 = Helper::ValidateEnrolleeEmail($email, true, $con);
+    // var_dump(Helper::$errorArray);
+    
+    // var_dump($result1);
+
+
+    // $result2 = Helper::validateSurnameTest($surname2);
+
+    // if ($result1 === true) {
+    //     echo "$surname1 is valid. ";
+    // } 
+    // else {
+    //     echo "$surname1 is not valid: ";
+    // }
+
+    // if ($result2 === true) {
+    //     echo "Surname 2 is valid.";
+    // } else {
+    //     echo "Surname 2 is not valid: " . implode(", ", $result2);
+    // }
+
+
     ?>
         <!-- Include jQuery -->
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -61,7 +86,7 @@
 
         $pending_firstname = Helper::ValidateFirstname($_POST['pending_firstname']);
 
-        $pending_lastname = Helper::ValidateLastname($_POST['pending_lastname']);
+        $pending_lastname = Helper::ValidateLastName($_POST['pending_lastname']);
 
         $pending_mi = Helper::ValidateMiddlename($_POST['pending_mi']);
 
@@ -218,7 +243,8 @@
                             Helper::EchoErrorField(
                                 Constants::$lastNameRequired,
                                 Constants::$invalidLastNameCharacters,
-                                Constants::$lastNameIsTooShort, Constants::$lastNameIsTooLong
+                                Constants::$lastNameIsTooShort,
+                                Constants::$lastNameIsTooLong
                             );
                         ?>
 
@@ -239,7 +265,7 @@
                         <label for="middle_name">Middle Name</label>
                         
                         <input  type="text" id="middle_name"
-                            name="pending_mi" placeholder="Middle Initial" 
+                            name="pending_mi" placeholder="Middle Name" 
                             utocomplete="off"
                             value="<?php  
                                 echo Helper::DisplayText('pending_mi', $pending_mi);
@@ -258,16 +284,22 @@
                             ?>">
 
                         <label for="password">Password</label>
+
                         <input type="password" id="password" name="pending_password" value="123456" placeholder="Password" autocomplete="off">
 
                         <div style="margin-top:10px; display: flex;flex-direction: center;align-items: center;justify-content: center;" class="register_div">
                             <button style="width: 180px;" type="submit" name="pending_submit_btn" class="btn btn-success">Register</button>
                         </div>
+
                         <br>
-                        <a class="signInMessage" href="pre_enrollment_login.php">Have an account? Sign in here!</a>
+
+                        <!-- <a class="signInMessage" href="pre_enrollment_login.php">Have an account? Sign in here!</a> -->
+                        <a class="signInMessage" href="enrollment_login.php">Have an account? Sign in here!</a>
 
                     </form>
+
                 </div>
+                
             </div>
         </div>
     </body>

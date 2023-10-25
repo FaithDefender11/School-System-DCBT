@@ -53,6 +53,15 @@
     $mother_occupation = $parent->GetMotherOccupation();
 
 
+    // $adresx = "49 Pechay st";
+    
+    // $address1 = "!49 Pechay St Napico Manggahan, Pasig City";
+    // $address2 = "Apt 12, 123 Main St, Townsville";
+
+    // $address = Helper::ValidateAddress($address2);
+    // var_dump(Helper::$errorArray);
+
+
     if($_SERVER["REQUEST_METHOD"] === "POST"
         && isset($_POST['student_details_btn_' . $pending_enrollees_id])
         && isset($_POST['firstname'])
@@ -94,7 +103,9 @@
 
         $nationality = Helper::ValidateNationality($_POST['nationality']);
 
-        $religion = isset($_POST['religion']) ? Helper::ValidateReligion($_POST['religion']) : '';
+        // $religion = isset($_POST['religion']) ? Helper::ValidateReligion($_POST['religion']) : '';
+
+        $religion = isset($_POST['religion']) ? $_POST['religion'] : '';
 
         $contact_number = Helper::ValidateContactNumber($_POST['contact_number']);
 
@@ -146,7 +157,6 @@
                 $religion, $pending_enrollees_id
             );
       
-            
             if($enrolleeSuccess){
 
 
@@ -176,8 +186,9 @@
                 header("Location: $url");
                 exit();
             }
+
         }else{
-            echo "Error";
+            // echo "Error";
         }
     }
 
@@ -221,7 +232,7 @@
                             <div class="row">
                                 <span style="margin-left: 660px;">
                                     <label for="lrn">LRN</label>
-                                    <input class="form-control" style="width: 250px;" id="lrn" type="text" name="lrn" 
+                                    <input class="form-control" placeholder="236-736-050-357" style="width: 250px;" id="lrn" type="text" name="lrn" 
                                     value="<?php echo ($lrn != "") ? $lrn : ''; ?>"id="lrn">
                                 </span>
                             </div>
@@ -353,17 +364,17 @@
 
                         <span>
                             <?php
-                                echo Helper::getError(Constants::$religionRequired);
-                                echo Helper::getError(Constants::$invalidReligionCharacters);
+                                // echo Helper::getError(Constants::$religionRequired);
+                                // echo Helper::getError(Constants::$invalidReligionCharacters);
                             ?>
                         <label for="religion">Religion</label>
                         <div>
-                            <select class="form-control" name="religion" id="religion">
+                            <!-- <select class="form-control" name="religion" id="religion">
                                 <option value="Catholic"<?php echo ($religion == "Catholic") ? " selected" : ""; ?>>Catholic</option>
                                 <option value="Christian"<?php echo ($religion == "Christian") ? " selected" : ""; ?>>Christian</option>
                                 <option value="Other"<?php echo ($religion == "Other") ? " selected" : ""; ?>>Other</option>
-                            </select>
-                            <!-- <input type="text" id="religion" name="religion" class="form-control" value="<?php echo ($religion != "") ? $religion : "None"; ?>"> -->
+                            </select> -->
+                            <input placeholder="Catholic, Christian" type="text" id="religion" name="religion" class="form-control" value="<?php echo ($religion != "") ? $religion : ""; ?>">
                         </div>
                         </span>
                         <span>
@@ -419,6 +430,7 @@
                             <div>
                                 <input type="tel" id="contact_number"
                                     name="contact_number" class="form-control"
+                                    placeholder="09151516123"
                                     value="<?php
                                         echo Helper::DisplayText('contact_number', $contact_number);
                                     ?>">

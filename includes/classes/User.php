@@ -61,9 +61,14 @@ class User {
     }
 
     public static function IsStudentPendingAuthenticated(){
-        return isset($_SESSION['studentLoggedIn']) 
-            && isset($_SESSION['status']) && $_SESSION['status'] == "pending";
+        
+        // return isset($_SESSION['studentLoggedIn']) 
+        //     && isset($_SESSION['status']) && $_SESSION['status'] == "pending";
+
+        return isset($_SESSION['status']) && $_SESSION['status'] == "pending";
     }
+
+
 
     public static function isAdminLoggedIn(){
         return isset($_SESSION['adminLoggedIn']);
@@ -128,6 +133,103 @@ class User {
             return true;
         }
         return false;
+
+    }
+
+    public function GenerateUniqueUsersId() {
+
+        // Loop until a unique number is generated
+
+        $lastUsersUniqueID = "";
+
+        $result = $this->con->prepare("SELECT unique_id 
+            FROM users
+
+            -- WHERE unique_id IS NOT NULL
+            ORDER BY user_id DESC
+            LIMIT 1
+
+        ");
+
+        $result->execute();
+
+        if ($result->rowCount() > 0) {
+
+            $row = $result->fetch(PDO::FETCH_ASSOC);
+
+            $lastUsersUniqueID = $row['unique_id'];
+
+
+            // Increment the last student ID and remove leading zeros
+            // $nextStudentID = ltrim((int)$lastUsersUniqueID + 1, '0');
+
+            // // Add leading zeros to ensure it's 6 characters
+            // $nextStudentID = str_pad($nextStudentID, 6, '0', STR_PAD_LEFT);
+
+        }
+
+        if($lastUsersUniqueID == ""){
+            $lastUsersUniqueID = '000001';
+
+
+        }
+
+        if($lastUsersUniqueID != ""){
+
+            while (false) {
+
+                // Generate the next student number
+                // Get the last student_unique_id
+
+                $result = $this->con->prepare("SELECT unique_id 
+                    FROM users
+
+                    -- WHERE unique_id IS NOT NULL
+                    ORDER BY user_id DESC
+                    LIMIT 1
+
+                ");
+
+                $result->execute();
+
+                if ($result->rowCount() > 0) {
+
+                    $row = $result->fetch(PDO::FETCH_ASSOC);
+
+                    $lastUsersUniqueID = $row['unique_id'];
+
+                    // var_dump($lastUsersUniqueID);
+
+                    // Increment the last student ID and remove leading zeros
+                    $nextStudentID = ltrim((int)$lastUsersUniqueID + 1, '0');
+
+                    // Add leading zeros to ensure it's 6 characters
+                    $nextStudentID = str_pad($nextStudentID, 6, '0', STR_PAD_LEFT);
+
+                } else {
+                    // If no students are found, generate the first student ID
+                    $nextStudentID = '000001';
+                }
+
+                // Check if the generated student number is unique
+
+                // $result = $this->con->prepare("SELECT student_id 
+                
+                //     FROM student 
+                //     WHERE student_unique_id = :nextStudentID
+                // ");
+
+                // $result->bindParam(':nextStudentID', $nextStudentID);
+                // $result->execute();
+
+                // if ($result->rowCount() == 0) {
+                //     return $nextStudentID; // Unique student number
+                // }
+                
+            }
+
+        }
+
 
     }
 

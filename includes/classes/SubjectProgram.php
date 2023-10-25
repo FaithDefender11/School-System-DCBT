@@ -845,7 +845,7 @@ class SubjectProgram{
            return $sql->fetchColumn();
         }
 
-        return [];
+        return NULL;
     }
     
     public function CheckSubjectProgramIsWithinSemesterOffered(

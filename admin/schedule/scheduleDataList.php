@@ -275,10 +275,13 @@ if ($row != null) {
         ";
 
         $button_url = "
-            <button onclick='window.location.href=\"edit.php?id=$subject_schedule_id\"'
+            <a href='edit.php?id=$subject_schedule_id'>
+                <button 
                 class='btn btn-primary btn-sm'>
                     <i class='fas fa-pen'></i>
                 </button>
+            </a>
+            
         ";
 
         $data[] = array(

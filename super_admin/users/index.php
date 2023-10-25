@@ -1,5 +1,16 @@
  
-<?php include_once('../../includes/super_admin_header.php');
+<?php 
+
+    include_once('../../includes/super_admin_header.php');
+    include_once('../../includes/classes/User.php');
+
+
+    $user = new User($con);
+
+
+    $check = $user->GenerateUniqueUsersId();
+
+    // var_dump($check);
 
     // echo $_SESSION['adminUserId'];
 ?>

@@ -18,7 +18,6 @@
         $school_year_id);
 
     if($student_requirement_id == NULL){
-
         # Create.
         $initNewEnrolleeStudentRequirement = $studentRequirement
             ->InitializedPendingEnrolleeRequirement($pending_enrollees_id,

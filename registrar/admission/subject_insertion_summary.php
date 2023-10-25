@@ -17,9 +17,8 @@
  
     // require_once __DIR__ . '../../../includes/config.php';
     // require_once __DIR__ . '../../../vendor/autoload.php';
-    include_once('../../vendor/autoload.php');
-
-    use Dompdf\Dompdf;
+    // include_once('../../vendor/autoload.php');
+    // use Dompdf\Dompdf;
 
     ?>
         <style>
@@ -76,6 +75,7 @@
 
         $processEnrolled = false;
 
+
         // $promptIDIfDoesntExists = $student->CheckIdExists($student_id);
 
         $student_course_level = $student->GetStudentLevel($student_id);
@@ -109,6 +109,11 @@
 
         $student_unique_id = $student->GetStudentUniqueId();
 
+        # Getting pending email.
+
+        $student_pending_enrollee_id = $student->GetPendingEnrolleeId($student_email, $current_school_year_id);
+
+        // var_dump($student_pending_enrollee_id);
 
         # By Student ID
         // $enrollment_id = $enrollment->GetEnrollmentIdNonDependent($student_id,
@@ -715,18 +720,19 @@
 
                                     <h4>
 
-                                       <a style="all: unset;" href='../section/show.php?id=<?php echo $student_enrollment_course_id; ?>'>
+                                       <a style="all: unset;">
                                             <?php echo $enrollment_course_section_name; ?>
                                         </a> 
 
-                                        <form style="display: none;" action="print_enrolled_subject.php" method="POST" id="printForm">
+                                        <!-- This for manually clicking, Only for enrolled student. -->
 
-                                     
+                                        <form style="text-align: right;display: none;" action="print_enrolled_subject.php" method="POST" id="printForm">
+
                                             <input type="hidden" name="enrollment_id" id="enrollment_id" value="<?php echo $enrollment_id;?>">
                                             <input type="hidden" name="student_id" id="student_id" value="<?php echo $student_id;?>">
                                             <input type="hidden" name="school_year_id" id="school_year_id" value="<?php echo $current_school_year_id;?>">
                                             
-                                            <button name="print_enrolled_subject" id="toClickButton" class="btn btn-sm btn-success">Print</button>
+                                            <button name="print_enrolled_subject" id="toClickButton" class="btn btn btn-sm btn-primary">Send email</button>
 
                                         </form>
 
@@ -737,50 +743,90 @@
 
                                 <?php
 
-                                    if(isset($_POST['subjexct_load_btn']) 
-                                        && isset($_POST['unixque_enrollment_form_id'])){
+                                    if(isset($_POST['zsubject_load_btn']) 
+                                        && isset($_POST['unique_enrollment_form_id'])){
 
 
-                                        # TRIGGERED
-                                        $processEnrolled = true;
+                                        // $created_student_unique_id = $student->GenerateUniqueStudentNumberV2();
 
-                                        if($processEnrolled == true){
-                                            Alert::success("Student has been enrolled.", "");
+                                        // $created_student_username = $student->GenerateStudentUsername(
+                                        //     $student_lastname,
+                                        //     $created_student_unique_id);
+
+                                        // var_dump($created_student_username);
+
+                                        #TRIGGERED
+                                        // $processEnrolled = true;
+
+
+
+                                        // if($processEnrolled == true){
+
+                                            // Alert::success("Student enrollment form has been enrolled", "");
                                             // exit();
 
-                                            ?>
-                                                <script>
+                                        // }
 
-                                                    // let processEnrolledJs = `
-                                                    //     <?php echo $processEnrolled;?>
-                                                    // `;
+                                        # 
+                                        Alert::success("Student enrollment form has been enrolled", "");
+                                        
+                                        $student_subject->SendingEmailAfterSuccessfulEnrollment($processEnrolled);
 
-                                                    // processEnrolledJs = processEnrolledJs.trim();
+                                        ?>
+                                            <script>
 
-                                                    // // console.log(processEnrolledJs);
+                                                // let processEnrolledJs = `
+                                                //     <?php echo $processEnrolled;?>
+                                                // `;
 
-                                                    // if(processEnrolledJs == true){
-                                                    
-                                                    //     var buttonToClick = document.getElementById('toClickButton');
-                                                    //     buttonToClick.click();
-                                                    // }
+                                                // processEnrolledJs = processEnrolledJs.trim();
 
-                                                </script>
-                                            <?php
+                                                // // console.log(processEnrolledJs);
 
-                                        }
+                                                // if(processEnrolledJs == false){
+                                                
+                                                //     var buttonToClick = document.getElementById('toClickButton');
+                                                //     buttonToClick.click();
+
+                                                //     $processEnrolled = false;
+                                                // }
+
+                                            </script>
+                                        <?php
+
+                                        # Did not worked because of the result of blank page 
+                                        # in print_enrolled_subject.php
+
+                                        // if($processEnrolled == false){
+
+                                        //     Alert::success("Enrollment email sending is not working.", "");
+                                        //     // exit();
+                                        // }
+
+                                        // if(isset($_SESSION['enrollment_printed_success'])
+                                        //     && isset($_SESSION['enrollment_printed_success']) == true){
+                                            
+                                        //     Alert::success("Success", "");
+
+                                        //     # Reset the session 
+                                        //     unset($_SESSION['enrollment_printed_success']);
+
+                                        //     exit();
+                                        // }
+
+                                        
+
+                                        // if($processEnrolled == false){
+                                        //     Alert::error("Did not enrolled", "");
+                                        //     exit();
+                                        // }
 
                                     }
                                         
 
                                     if(isset($_POST['subject_load_btn']) 
                                         && isset($_POST['unique_enrollment_form_id'])){
-
-
                                        
-                                        // echo "Qweqew";
-
-                                    
                                     
                                         $array_success = [];
 
@@ -790,9 +836,6 @@
                                             $enrollment_id, 
                                             $student_id,
                                             $current_school_year_id);
-
-
-                                        
 
                                         $isAllFinalized = false;
                                         $successEnrollmentEnrolled = false;
@@ -887,7 +930,7 @@
                                                             if($get_student_new_pending_id !== NULL){
 
 
-                                                                $processEnrolled = true;
+                                                                // $processEnrolled = true;
                                                             
                                                                 # Once officially enrolled,
                                                                 # 1. Pending Enrollee Account -> Removed.
@@ -911,8 +954,12 @@
 
                                                             }
                                                         
-                                                            $initRequirement = $requirement->InitializedStudentRequirementTable(
-                                                                $student_id, $type);
+                                                            if($student_pending_enrollee_id != NULL){
+
+                                                                $updateStudentIdOnRequirement = $requirement->UpdateStudentIdOnRequirement(
+                                                                    $student_id, $student_pending_enrollee_id);
+                                                            }
+
                                                         }
                                                     }
 
@@ -996,13 +1043,13 @@
 
                                                                 // Alert::success("Enrollment Form ID: $student_enrollment_form_id is now enrolled. This section is now full,
                                                                 //     System has created new section.", "../student/record_details.php?id=$student_id&enrolled_subject=show");
-
                                                                 // $processEnrolled = true;
 
                                                                 Alert::success("Enrollment Form ID: $student_enrollment_form_id is now enrolled and New section has been created.", "../student/record_details.php?id=$student_id&enrolled_subject=show");
-                                                                // exit();
+                                                                exit();
                                                             }
                                                         }
+                                                        
                                                     }
 
                                                     if(
@@ -1010,32 +1057,11 @@
                                                         $successCreateNewSection == false
                                                         ){
 
-                                                        if($processEnrolled){
-                                                            Alert::success("Enrollment Form ID: $student_enrollment_form_id is now enrolled.", "../student/record_details.php?id=$student_id&enrolled_subject=show");
+                                                        // Alert::success("Enrollment Form ID: $student_enrollment_form_id is now enrolled.", "../student/record_details.php?id=$student_id&enrolled_subject=show");
+                                                    
+                                                        Alert::success("Enrollment Form ID: $student_enrollment_form_id is now enrolled.", "../student/record_details.php?id=$student_id&enrolled_subject=show");
+                                                        $student_subject->SendingEmailAfterSuccessfulEnrollment($processEnrolled);
 
-                                                                ?>
-                                                                    <script>
-
-                                                                        let processEnrolledJs = `
-                                                                            <?php echo $processEnrolled;?>
-                                                                        `;
-
-                                                                        processEnrolledJs = processEnrolledJs.trim();
-
-                                                                        // console.log(processEnrolledJs);
-
-                                                                        if(processEnrolledJs == true){
-                                                                        
-                                                                            var buttonToClick = document.getElementById('toClickButton');
-                                                                            buttonToClick.click();
-                                                                        }
-
-                                                                    </script>
-                                                                <?php
-
-                                                            // exit();
-
-                                                        }
 
                                                     }
 
@@ -1043,9 +1069,6 @@
                                             }
 
                                         }
-
-
-
                                     }
 
                                     $student_enrollment_program_id = $section->

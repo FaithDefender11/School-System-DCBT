@@ -19,15 +19,16 @@
         $current_term = $_POST['current_term'];
         $current_period = $_POST['current_period'];
 
-        $pending = new Pending($con, $pending_enrollees_id);
+        $pending = new Pending($con);
 
-        $markAsValidated = $pending->MarkAsValidated($pending_enrollees_id,
-            $current_school_year_id, $current_term, $current_period);
+        $markAsValidated = $pending->MarkAsValidated($pending_enrollees_id, $current_school_year_id);
 
         if($markAsValidated == true){
             echo "success";
+            // return;
         }else{
             echo "not_success";
+            // return;
         }
 
     }

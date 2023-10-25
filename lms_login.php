@@ -83,6 +83,7 @@
             exit();
 
         }
+        
         else if(sizeof($wasSuccess) > 0
             && $wasSuccess[1] == "student" ){
 

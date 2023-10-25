@@ -132,7 +132,6 @@ class Notification{
         $get->execute();
 
         if($get->rowCount() > 0){
-            echo "hey";
             return $get->fetchAll(PDO::FETCH_ASSOC);
         }
 

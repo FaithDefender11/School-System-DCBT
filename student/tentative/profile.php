@@ -24,6 +24,7 @@
         && $_SESSION['status'] == 'pending'
         // && $_SESSION['status'] != 'enrolled'
         )
+        
         {
         # Pending firstname;
 

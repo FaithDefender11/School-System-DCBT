@@ -187,12 +187,17 @@
             $nationality = Helper::ValidateNationality($_POST['nationality']);
             $sex = Helper::ValidateGender($_POST['sex']);
             $birthday = Helper::sanitizeFormString($_POST['birthday']);
-            $religion = isset($_POST['religion']) ? Helper::ValidateReligion($_POST['religion']) : '';
+
+            // $religion = isset($_POST['religion']) ? Helper::ValidateReligion($_POST['religion']) : '';
+
+            $religion = isset($_POST['religion']) ?$_POST['religion'] : '';
+
             $birthplace = Helper::ValidateBirthPlace($_POST['birthplace']);
             $address = Helper::ValidateAddress($_POST['address']);
             $contact_number = Helper::ValidateContactNumber($_POST['contact_number']);
             $email = Helper::ValidateEmail($_POST['email'], false, $con);
-            $lrn = Helper::ValidateLRN($_POST['lrn'], false, $con);
+            // $lrn = Helper::ValidateLRN($_POST['lrn'], false, $con);
+            $lrn = isset($_POST['lrn']) ? $_POST['lrn'] : "";
 
             // echo "Last Name: $lastname <br>";
             // echo "First Name: $firstname <br>";
@@ -349,19 +354,19 @@
                 if($father_contact_number === NULL){
 
                     $father_contact_number = $parent->ValidateFatherContactNumber(
-                        $_POST['father_contact_number'], true);
+                        $_POST['father_contact_number'], false);
                 }
 
                 if($father_firstname === ""){
 
                     $father_firstname = $parent->ValidateFatherFirstname(
-                        $_POST['father_firstname'], true);
+                        $_POST['father_firstname'], false);
                 }
 
                 if($father_lastname === ""){
 
                     $father_lastname = $parent->ValidateFatherLastname(
-                        $_POST['father_lastname'], true);
+                        $_POST['father_lastname'], false);
                 }
 
             }
@@ -735,7 +740,7 @@
             <div class="floating noBorder">
                 <header>
                     <div class="title">
-                        <h2 style="color: var(--titleTheme)">Enrollment Form # <?php echo $enrollment_form_id;?></h2>
+                        <h2 class="text-muted" style="color: var(--titleTheme)">Enrollment Form <?php echo $enrollment_form_id;?></h2>
                         <small class="mt-1">SY <?php echo $current_school_year_term ?> &nbsp; <?php echo $current_school_year_period?> Semester</small>
                     </div>
                 </header>

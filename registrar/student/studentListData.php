@@ -50,12 +50,12 @@
         $lastName = trim(strtolower($lastName));
         
         $searchQuery = " AND (
-            (firstname LIKE '%" . $firstName . "%' AND lastname LIKE '%" . $lastName . "%') OR 
-            firstname LIKE '%" . $searchValue . "%' OR 
-            lastname LIKE '%" . $searchValue . "%' OR 
-            admission_status LIKE '%" . $searchValue . "%' OR
-            student_unique_id LIKE '%" . $searchValue . "%' OR
-            program_section LIKE '%" . $searchValue . "%'
+            (t1.firstname LIKE '%" . $firstName . "%' AND t1.lastname LIKE '%" . $lastName . "%') OR 
+            t1.firstname LIKE '%" . $searchValue . "%' OR 
+            t1.lastname LIKE '%" . $searchValue . "%' OR 
+            t1.admission_status LIKE '%" . $searchValue . "%' OR
+            t1.student_unique_id LIKE '%" . $searchValue . "%' OR
+            t2.program_section LIKE '%" . $searchValue . "%'
             
         )";
 

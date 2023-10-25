@@ -1,17 +1,14 @@
+//
+//
 $(document).ready(function () {
-  var admission_type = null;
-  var department_type = null;
-
-  var department_type = null;
-  var department_type = null;
-  var department_type = null;
-
   var checked_admission = document.querySelector(
     'input[name="admission_type"]:checked'
   );
 
   var selected_admission_type = $('input[name="admission_type"]:checked').val();
+
   // console.log(selected_admission_type);
+
   // var checked_department_type = document.querySelector(
   //   'input[name="department_type"]:checked'
   // );
@@ -58,10 +55,17 @@ $(document).ready(function () {
   //
   //
 
+  var admission_type = null;
+  var admission_typex = null;
+  var department_type = null;
+
   $('input[name="department_type"]').on('change', function () {
+    //
     department_type = $(this).val();
 
-    // console.log(department_type);
+    // console.log(admission_typex);
+
+    // console.log(admission_type);
 
     if (admission_type != null) {
       admission_type = admission_type.trim();
@@ -71,27 +75,42 @@ $(document).ready(function () {
       RemoveLevelRadios();
     }
 
-    if (admission_type == 'Transferee' && admission_type != 'New') {
-      document.getElementById('transferee_details').style.display = 'block';
+    // if (admission_type == 'Transferee' && admission_type != 'New') {
+    //   //
+    //   document.getElementById('transferee_details').style.display = 'block';
 
-      if (department_type == 'Senior High School') {
-        document.getElementById('college_checkbox').style.display = 'none';
-        document.getElementById('shs_checkbox').style.display = 'block';
-      } else if (department_type == 'Tertiary') {
-        document.getElementById('college_checkbox').style.display = 'block';
-        document.getElementById('shs_checkbox').style.display = 'none';
-      }
-    }
+    //   if (department_type == 'Senior High School') {
+    //     //
+    //     document.getElementById('college_checkbox').style.display = 'none';
+
+    //     document.getElementById('shs_checkbox').style.display = 'block';
+
+    //     //
+    //   } else if (department_type == 'Tertiary') {
+    //     //
+    //     document.getElementById('college_checkbox').style.display = 'block';
+    //     document.getElementById('shs_checkbox').style.display = 'none';
+    //   }
+    // }
+
+    //
+    //
 
     $.ajax({
       url: '../../ajax/tentative/get_course_strand.php',
       type: 'POST',
       data: {
         department_type,
+        admission_typex,
+        // selected_admission_type
       },
       dataType: 'json',
 
       success: function (response) {
+        //
+
+        console.log(admission_typex);
+
         var options = '<option selected value="">Select Program</option>';
 
         $.each(response, function (index, value) {
@@ -105,7 +124,23 @@ $(document).ready(function () {
 
         $('#program_id').html(options);
 
-        if (department_type == 'Senior High School') {
+        // console.log(department_type);
+        // console.log(selected_admission_type);
+
+        if (
+          department_type == 'Senior High School' &&
+          admission_typex == 'New'
+        ) {
+          var level_options = '<option selected value="">Choose Level</option>';
+
+          level_options += '<option  value="11">Grade 11</option>';
+          // level_options += '<option  value="12">Grade 12</option>';
+
+          $('#choose_level').html(level_options);
+        } else if (
+          department_type == 'Senior High School' &&
+          admission_typex != 'New'
+        ) {
           var level_options = '<option selected value="">Choose Level</option>';
 
           level_options += '<option  value="11">Grade 11</option>';
@@ -113,7 +148,18 @@ $(document).ready(function () {
 
           $('#choose_level').html(level_options);
         }
-        if (department_type == 'Tertiary') {
+
+        // if (department_type == 'Senior High School') {
+        //   var level_options = '<option selected value="">Choose Level</option>';
+
+        //   level_options += '<option  value="11">Grade 11</option>';
+        //   level_options += '<option  value="12">Grade 12</option>';
+
+        //   $('#choose_level').html(level_options);
+        // }
+
+        if (department_type == 'Tertiary' && admission_typex != 'New') {
+          //
           var level_options = '<option selected value="">Choose Level</option>';
 
           level_options += '<option  value="1">1st Year</option>';
@@ -122,11 +168,77 @@ $(document).ready(function () {
           level_options += '<option  value="4">4th Year</option>';
 
           $('#choose_level').html(level_options);
+          //
+        } else if (department_type == 'Tertiary' && admission_typex == 'New') {
+          //
+          var level_options = '<option selected value="">Choose Level</option>';
+
+          level_options += '<option  value="1">1st Year</option>';
+          // level_options += '<option  value="2">2nd Year</option>';
+          // level_options += '<option  value="3">3rd Year</option>';
+          // level_options += '<option  value="4">4th Year</option>';
+
+          $('#choose_level').html(level_options);
+          //
         }
       },
+      //
     });
 
     //
+  });
+
+  $('input[name="admission_type"]').on('change', function () {
+    //
+    admission_typex = $(this).val();
+
+    console.log(admission_typex);
+    console.log(department_type);
+
+    if (department_type == 'Senior High School' && admission_typex == 'New') {
+      //
+      var level_options = '<option selected value="">Choose Level</option>';
+
+      level_options += '<option  value="11">Grade 11</option>';
+      // level_options += '<option  value="12">Grade 12</option>';
+
+      $('#choose_level').html(level_options);
+    } else if (
+      department_type == 'Senior High School' &&
+      admission_typex != 'New'
+    ) {
+      //
+      var level_options = '<option selected value="">Choose Level</option>';
+
+      level_options += '<option  value="11">Grade 11</option>';
+      level_options += '<option  value="12">Grade 12</option>';
+
+      $('#choose_level').html(level_options);
+    }
+
+    if (department_type == 'Tertiary' && admission_typex == 'New') {
+      //
+      var level_options = '<option selected value="">Choose Level</option>';
+
+      level_options += '<option  value="1">1st Year</option>';
+      // level_options += '<option  value="2">2nd Year</option>';
+      // level_options += '<option  value="3">3rd Year</option>';
+      // level_options += '<option  value="4">4th Year</option>';
+
+      $('#choose_level').html(level_options);
+      //
+    } else if (department_type == 'Tertiary' && admission_typex != 'New') {
+      //
+      var level_options = '<option selected value="">Choose Level</option>';
+
+      level_options += '<option  value="1">1st Year</option>';
+      level_options += '<option  value="2">2nd Year</option>';
+      level_options += '<option  value="3">3rd Year</option>';
+      level_options += '<option  value="4">4th Year</option>';
+
+      $('#choose_level').html(level_options);
+      //
+    }
   });
 
   function UncheckedDepartmentType() {
@@ -147,6 +259,7 @@ $(document).ready(function () {
 function PreferredBtn(pending_enrollees_id) {
   var pending_enrollees_id = parseInt(pending_enrollees_id);
 
+  // console.log('qwe')
   var selected_department_type = $(
     'input[name="department_type"]:checked'
   ).val();
@@ -216,12 +329,11 @@ function PreferredBtn(pending_enrollees_id) {
     selected_program_id = parseInt(selected_program_id);
     selected_choose_level = parseInt(selected_choose_level);
 
-    // console.log(selected_admission_type);
-    // console.log(selected_department_type);
-    // console.log(selected_choose_level);
-    // console.log(selected_program_id);
-
-    // console.log(pending_enrollees_id);
+    console.log(selected_admission_type);
+    console.log(selected_department_type);
+    console.log(selected_choose_level);
+    console.log(selected_program_id);
+    console.log(pending_enrollees_id);
 
     $.ajax({
       url: '../../ajax/tentative/add_preferred_course.php',
@@ -255,7 +367,7 @@ function PreferredBtn(pending_enrollees_id) {
           });
         } else if (response[0].output == '') {
           var url = 'process.php?new_student=true&step=enrollee_information';
-            window.location.href = url;
+          window.location.href = url;
         }
 
         if (response[0].departmentRequiredError) {
@@ -297,25 +409,6 @@ function PreferredBtn(pending_enrollees_id) {
             `* ${response[0].courseLevelInvalidError}`
           );
         }
-
-        // if (response == 'preferred_update_success') {
-        //   Swal.fire({
-        //     icon: 'success',
-        //     title: 'Successfully Save Changes',
-        //     timer: 1200,
-        //     showCancelButton: false,
-        //     confirmButtonText: 'Wait',
-        //   }).then(() => {
-        //     var url = 'process.php?new_student=true&step=enrollee_information';
-        //     window.location.href = url;
-        //     // location.reload();
-        //   });
-        // }
-        // else if (response == '') {
-        //   var url = 'process.php?new_student=true&step=enrollee_information';
-        //   window.location.href = url;
-        // }
-        //
       },
     });
   }

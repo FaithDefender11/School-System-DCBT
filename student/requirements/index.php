@@ -25,9 +25,24 @@
     $studentRequirement = new StudentRequirement($con);
     $student = new Student($con, $student_id);
 
+
+
+    $student_type = $student->GetIsTertiary() == 1 ? "Tertiary" : "SHS";
+
     $student_requirement_id = $studentRequirement
         ->GetEnrollledStudentRequirement($student_id,
             $school_year_id);
+
+
+    // if($student_requirement_id == NULL){
+
+    //     # Create.
+    //     $initNewEnrolleeStudentRequirement = $studentRequirement
+    //         ->InitializedStudentRequirementTable($studentLoggedInId,
+    //         $student_type, $school_year_id);
+    // }
+
+    // var_dump($student_requirement_id);
 
     $studentRequirement = new StudentRequirement($con, $student_requirement_id);
 
@@ -124,54 +139,70 @@
 
         foreach ($standardRequirements as $key => $value) {
 
-            $acronym = $value['acronym'];
-            $requirement_id = $value['requirement_id'];
+            if($value['status'] === $student_admission_status){
 
-            if (isset($_FILES[$acronym]) && is_array($_FILES[$acronym]['name'])) {
- 
-                $fileCount = count($_FILES[$acronym]['name']);
 
-                $uploadDirectory = '../../assets/images/student_requirements_files/';
-                
-                if ($fileCount <= $maxUploadAllowed) {
+                 if ($value['education_type'] == $student_type 
+                    || ($value['education_type'] == "Universal"
+                    //  && $value['education_type'] == "Transferee"
+                    )
 
-                    // Loop through each uploaded file
-                    for ($i = 0; $i < $fileCount; $i++) {
+                    ){
 
-                        $originalFilename = $_FILES[$acronym]['name'][$i];
+                        $acronym = $value['acronym'];
+                        $requirement_id = $value['requirement_id'];
+                    
 
-                        // echo "originalFilename: $originalFilename is for $acronym ID: $requirement_id";
-                        // echo "<br>";
+                    if (isset($_FILES[$acronym]) && is_array($_FILES[$acronym]['name'])) {
+        
+                        $fileCount = count($_FILES[$acronym]['name']);
 
-                        // Generate a unique filename
-                        $uniqueFilename = uniqid() . '_' . time() . '_img_' . $originalFilename;
-                        $targetPath = $uploadDirectory . $uniqueFilename;
+                        $uploadDirectory = '../../assets/images/student_requirements_files/';
+                        
+                        if ($fileCount <= $maxUploadAllowed) {
 
-                        // if (move_uploaded_file($originalFilename, $targetPath)) {
-                        if (move_uploaded_file($_FILES[$acronym]['tmp_name'][$i], $targetPath)) {
+                            // Loop through each uploaded file
+                            for ($i = 0; $i < $fileCount; $i++) {
 
-                            $imagePath = $targetPath;
+                                $originalFilename = $_FILES[$acronym]['name'][$i];
 
-                            // Remove Directory Path in the Database.
-                            $imagePath = str_replace('../../', '', $imagePath);
+                                // echo "originalFilename: $originalFilename is for $acronym ID: $requirement_id";
+                                // echo "<br>";
 
-                            $fileUpload = $studentRequirement->InsertStudentRequirement(
-                                $student_requirement_id, $requirement_id, $imagePath, $maxUploadAllowed
-                            );
+                                // Generate a unique filename
+                                $uniqueFilename = uniqid() . '_' . time() . '_img_' . $originalFilename;
+                                $targetPath = $uploadDirectory . $uniqueFilename;
 
-                            if($fileUpload){
-                                $hasInserted = true;
-                                $redirectOnly = true;
+                                // if (move_uploaded_file($originalFilename, $targetPath)) {
+                                if (move_uploaded_file($_FILES[$acronym]['tmp_name'][$i], $targetPath)) {
+
+                                    $imagePath = $targetPath;
+
+                                    // Remove Directory Path in the Database.
+                                    $imagePath = str_replace('../../', '', $imagePath);
+
+                                    $fileUpload = $studentRequirement->InsertStudentRequirement(
+                                        $student_requirement_id, $requirement_id, $imagePath, $maxUploadAllowed
+                                    );
+
+                                    if($fileUpload){
+                                        $hasInserted = true;
+                                        $redirectOnly = true;
+                                    }
+
+                                    // Process $imagePath as needed (e.g., store in a database).
+                                } else {
+                                    // Handle the case where file upload failed.
+                                    // echo "Error uploading file: " . $originalFilename . "<br>";
+                                }
+
                             }
-
-                            // Process $imagePath as needed (e.g., store in a database).
-                        } else {
-                            // Handle the case where file upload failed.
-                            // echo "Error uploading file: " . $originalFilename . "<br>";
                         }
-
                     }
+
                 }
+
+
             }
 
         }
@@ -180,14 +211,26 @@
 
             if($value['status'] === $student_admission_status){
 
-                $requirement_id_true = $value['requirement_id'];
-                $acronym = $value['acronym'];
-
-             
+                // var_dump($student_type);
+                # student_type = SHS | Tertiary or Universal
 
                 if ($value['education_type'] == $student_type 
-                    || $value['education_type'] == "Universal"){
+                    || ($value['education_type'] == "Universal"
+                    //  && $value['education_type'] == "Transferee"
+                    )
 
+                    ){
+
+                        $requirement_id_true = $value['requirement_id'];
+                        $requirement_trans = new StudentRequirement($con, $requirement_id_true);
+
+                        $require_status = $requirement_trans->GetAdmissionStatus();
+
+                        // if($require_status != "Transferee"){
+                        //     continue;
+                        // }
+
+                        $acronym = $value['acronym'];
 
                         // $acronym = $value['acronym'];
 
@@ -217,11 +260,12 @@
                             if ($fileCount <= $maxUploadAllowed) {
 
                                 // Loop through each uploaded file
+
                                 for ($i = 0; $i < $fileCount; $i++) {
 
                                     $originalFilename = $_FILES[$acronym]['name'][$i];
 
-                                    // echo "originalFilename: $originalFilename is for $acronym ID: $requirement_id";
+                                    // echo "originalFilename: $originalFilename is for $acronym ID: $requirement_id_true";
                                     // echo "<br>";
 
                                     // echo "acronym: $acronym, requirement_id: $requirement_id_true" ;
@@ -231,7 +275,12 @@
                                     $uniqueFilename = uniqid() . '_' . time() . '_img_' . $originalFilename;
                                     $targetPath = $uploadDirectory . $uniqueFilename;
 
+                                    // $fileUpload = $studentRequirement->InsertStudentRequirement(
+                                    //     $student_requirement_id, $requirement_id_true, $imagePath, $maxUploadAllowed
+                                    // );
+
                                     // if (move_uploaded_file($originalFilename, $targetPath)) {
+
                                     if (move_uploaded_file($_FILES[$acronym]['tmp_name'][$i], $targetPath)) {
 
                                         $imagePath = $targetPath;
@@ -253,11 +302,10 @@
                                         }
 
                                         // Process $imagePath as needed (e.g., store in a database).
-                                    } else {
-                                        // Handle the case where file upload failed.
-                                        // echo "Error uploading file: " . $originalFilename . "<br>";
-                                    }
+                                    } 
+
                                 }
+
                             }
                         }
                 }

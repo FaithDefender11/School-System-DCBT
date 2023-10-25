@@ -784,7 +784,9 @@ class Student{
 
     public function GenerateStudentUsername($lastname, $generateStudentUniqueId){
                         
-        $username = strtolower($lastname) . '.' . $generateStudentUniqueId . '@dcbt.ph';
+        $username_student_role = "S";
+
+        $username = strtolower($lastname) . '.' . $generateStudentUniqueId . $username_student_role . '@dcbt.ph';
         return $username;
     }
 
@@ -1025,7 +1027,7 @@ class Student{
             // $checkUniqueStudentUsername === true 
             // && $firstLastMiddleBirthdayEmailUnique === true
             $checkUniqueStudentEmail === true
-            && $checkUniqueStudentLRN === true
+            // && $checkUniqueStudentLRN === true
             ){
             return true;
         }
@@ -1077,7 +1079,7 @@ class Student{
 
         $query = $this->con->prepare("SELECT * FROM student
             WHERE email = :email
-            
+            AND is_graduated = 0
             ");
 
         $query->bindParam(":email", $email);
@@ -1342,6 +1344,33 @@ class Student{
         }
         
         return false;
+    }
+
+    public function GetPendingEnrolleeId($student_email,
+        $school_year_id){
+
+
+        $update = $this->con->prepare("SELECT pending_enrollees_id 
+        
+            FROM pending_enrollees 
+
+            WHERE email = :email
+            AND school_year_id = :school_year_id
+
+        ");
+
+        $update->bindValue(":email", $student_email);
+        $update->bindValue(":school_year_id", $school_year_id);
+
+        $update->execute();
+
+        if($update->rowCount() > 0){
+
+           return $update->fetchColumn();
+
+        }
+
+        return NULL;
     }
 
     // public function UpdateWithDrawNewStudent($student_id){

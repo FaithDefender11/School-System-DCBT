@@ -2152,6 +2152,22 @@
         return 0;
     }
 
+    public function SendingEmailAfterSuccessfulEnrollment(
+        $processEnrolled){
+
+        echo "<script>\n";
+        echo "let processEnrolledJs = `$processEnrolled`;\n";
+        echo "processEnrolledJs = processEnrolledJs.trim();\n";
+        echo "if (processEnrolledJs == false) {\n";
+        echo "var buttonToClick = document.getElementById('toClickButton');\n";
+        echo "buttonToClick.click();\n";
+        echo "\$processEnrolled = true;\n";
+        echo "}\n";
+        echo "</script>";
+
+    }
+
+
     public function AddSubjectProgramIntoStudentSubjectList(
 
         $student_id, $subject_code, $enrollment_id,

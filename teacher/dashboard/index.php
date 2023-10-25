@@ -59,6 +59,7 @@
         </head>
     <?php
 
+
  
     $school_year = new SchoolYear($con);
     $school_year_obj = $school_year->GetActiveSchoolYearAndSemester();
@@ -206,7 +207,7 @@
         $logout_url = "$new_url/lms_logout.php";
     }
 
-    var_dump($logout_url);
+    // var_dump($logout_url);
     
 ?>
 
@@ -222,7 +223,6 @@
                 "second",
                 $logout_url
             );
-            
         ?>
 
         <div class="content-header">
@@ -273,21 +273,24 @@
             <div class="bars right">
                 <div class="floating">
                     <main>
-                    <div class="calendar">
-                        <div class="header">
-                        <button class="prev-btn" onclick="previousMonth()">
-                            &lt;
-                        </button>
-                        <h1 id="current-month"></h1>
-                        <button class="next-btn" onclick="nextMonth()">&gt;</button>
+                        <div class="calendar">
+                            <div class="header">
+                            <button class="prev-btn" onclick="previousMonth()">
+                                &lt;
+                            </button>
+                            <h1 id="current-month"></h1>
+                            <button class="next-btn" onclick="nextMonth()">&gt;</button>
+                            </div>
+                            <div class="days"></div>
                         </div>
-                        <div class="days"></div>
-                    </div>
+                        <button onclick="window.location.href = 'calendar.php' " class="btn btn-sm btn-info">View all</button>
                     </main>
                 </div>
 
                 <div class="floating">
+
                     <header>
+
                         <div class="title">
 
                             <?php if(count($ungradedSubmissionArr)>0): ?>
@@ -298,6 +301,7 @@
                             <?php endif;?>
 
                         </div>
+
                     </header>
 
                     <ul>
@@ -378,9 +382,11 @@
                             <h3>Announcements <em>(<?= $teachingSubjectCodeAnnouncementCount;?>)</em></h3>
                         </div>
                     </header>
+
                         <!-- <ul>
                             <li></li>
                         </ul> -->
+
                     <button onclick="window.location.href = 'announcement_index.php?sy_id=<?= $current_school_year_id;?>'" class="btn btn-sm btn-primary">View all</button>
                 </div>
 

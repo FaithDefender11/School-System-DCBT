@@ -254,6 +254,10 @@
         
         $hash_password = password_hash($password, PASSWORD_BCRYPT);
 
+        $fname = ucwords($fname);
+        $lname = ucwords($lname);
+        $mi = ucwords($mi);
+
         $query->bindValue(":firstname", $fname);
         $query->bindValue(":lastname", $lname);
         $query->bindValue(":middle_name", $mi);
@@ -447,7 +451,7 @@
 
         $query = $this->con->prepare("SELECT * FROM pending_enrollees
             WHERE email = :email
-            
+            AND is_graduated = 0
             ");
 
         $query->bindParam(":email", $email);
@@ -1377,15 +1381,14 @@
         return false;
 
     }
-    public function MarkAsValidated($pending_enrollees_id,
-        $current_school_year_id, $current_term, $current_period) {
+    public function MarkAsValidated($pending_enrollees_id, $school_year_id) {
 
         $set_student_status = "EVALUATION";
 
-        $pending = new Pending($this->con, $pending_enrollees_id);
+        $pending = new Pending($this->con);
 
-        $pending_program_id = $pending->GetPendingProgramId();
-        $pending_level = $pending->GetCourseLevel();
+        // $pending_program_id = $pending->GetPendingProgramId();
+        // $pending_level = $pending->GetCourseLevel();
 
         $query = $this->con->prepare("UPDATE pending_enrollees
         
@@ -1395,34 +1398,21 @@
             WHERE pending_enrollees_id = :pending_enrollees_id
             AND is_finished = 0
             AND activated = 1
-            AND student_status != 'APPROVED'
+            AND student_status IS NULL
+            AND school_year_id =:school_year_id
             ");
 
         $query->bindValue(":set_is_finished", 1);
         $query->bindParam(":set_student_status", $set_student_status);
-        $query->bindParam(":pending_enrollees_id", $pending_enrollees_id, PDO::PARAM_INT);
+        $query->bindParam(":pending_enrollees_id", $pending_enrollees_id);
+        $query->bindParam(":school_year_id", $school_year_id);
 
         $query->execute();
 
         if($query->rowCount() > 0){
-
-            # If applied Program Level is currently out of room,
-            # 
-            // $programLevelAvailable = $this->PendingProgramLevelSectionAvailable(
-            //     $pending_program_id, $pending_level,
-            //     $current_term, $current_period
-            // );
-
-            // if($programLevelAvailable){
-       
-            // } 
-            # That student should automatically registered in the waiting list.
-       
             return true;
-
-        }else{
-            echo "qwe";
         }
+
         return false;
     }
 

@@ -8,8 +8,6 @@
 
 <div class="content">
 
-    <nav>
-
     <main>
         <div class="floating" id="shs-sy">
             <header>

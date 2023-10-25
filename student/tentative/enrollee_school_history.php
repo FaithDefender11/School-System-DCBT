@@ -200,7 +200,7 @@
                             ?>
                             <label for="school_name">School Name <span class="red">*</span></label>
                             <div>
-                                <input required type="text" id="school_name" name="school_name" class="form-control" 
+                                <input placeholder="Sta Lucia High School" required type="text" id="school_name" name="school_name" class="form-control" 
                                 value="<?php
                                         echo Helper::DisplayText('school_name', $school_name);
                                     ?>">
@@ -235,7 +235,7 @@
                                     class="form-control" value="<?php
                                     echo Helper::DisplayText('year_started', $year_started);
                                 ?>"> -->
-                                <input maxlength="4" required type="text" id="year_started" name="year_started"
+                                <input autocomplete="off" maxlength="4" required type="text" id="year_started" name="year_started"
                                     class="form-control" placeholder="e.g. 2020" value="<?php
                                     echo Helper::DisplayText('year_started', $year_started);
                                 ?>">
@@ -250,7 +250,7 @@
                                 class="form-control" value="<?php
                                     echo Helper::DisplayText('year_started', $year_ended);
                                 ?>"> -->
-                                <input  maxlength="4" required type="text" id="year_ended" name="year_ended"
+                                <input autocomplete="off" maxlength="4" required type="text" id="year_ended" name="year_ended"
                                     class="form-control" placeholder="e.g. 2022" value="<?php
                                     echo Helper::DisplayText('year_ended', $year_ended);
                                 ?>">

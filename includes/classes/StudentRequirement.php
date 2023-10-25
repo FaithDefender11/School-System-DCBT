@@ -178,7 +178,33 @@
 
     }
 
-    public function InitializedStudentRequirementTable($student_id, $student_type) {
+    public function UpdateStudentIdOnRequirement($student_id,
+        $pending_enrollees_id) {
+
+
+        // if($this->CheckStudentExisted($student_id) == true){
+            
+            $update = $this->con->prepare("UPDATE student_requirement
+                
+                SET student_id=:student_id
+
+                WHERE pending_enrollees_id=:pending_enrollees_id
+
+            ");
+
+            $update->bindParam(':student_id', $student_id);
+            $update->bindParam(':pending_enrollees_id', $pending_enrollees_id);
+            $update->execute();
+
+            if ($update->rowCount() > 0) {
+                return true;
+            }
+        // }
+
+        return false;
+    }
+    public function InitializedStudentRequirementTable($student_id,
+        $student_type) {
 
 
         if($this->CheckStudentExisted($student_id) == false){
@@ -198,6 +224,8 @@
 
         return false;
     }
+
+
 
     public function InitializedPendingEnrolleeRequirement(
         $pending_enrollees_id, $school_year_id ) {
@@ -225,14 +253,16 @@
     }
 
     public function InsertStudentRequirement(
-        $student_requirement_id, $requirement_id, $file, $maxUploadAllowed) {
+        $student_requirement_id, $requirement_id_true, $file, $maxUploadAllowed) {
 
     
-        // var_dump($requirement_id);
+        // echo "requirement_id_true: $requirement_id_true";
+        // echo "<br>";
         // return;
+
         $now = date("Y-m-d H:i:s");
 
-        if($this->CheckSubmittedRequirementCount($requirement_id,
+        if($this->CheckSubmittedRequirementCount($requirement_id_true,
             $student_requirement_id, $maxUploadAllowed) === true){
 
             $create = $this->con->prepare("INSERT INTO student_requirement_list
@@ -240,7 +270,7 @@
                     VALUES (:student_requirement_id, :requirement_id, :date_creation, :file)");
 
             $create->bindParam(':student_requirement_id', $student_requirement_id);
-            $create->bindParam(':requirement_id', $requirement_id);
+            $create->bindParam(':requirement_id', $requirement_id_true);
             $create->bindParam(':date_creation', $now);
             $create->bindParam(':file', $file);
             $create->execute();
@@ -321,12 +351,84 @@
         $update->execute();
 
         if($update->rowCount() > 0){
+
+            # Remove all student_requirement_list if there`s
+            $wasSuccess = $this->RemovingRequirementList($pending_enrollees_id,
+                $student_requirement_id);
+
             return true;
         }
 
         return false;
     }
 
+    public function RemovingRequirementList($pending_enrollees_id,
+        $student_requirement_id) {
+        
+        $get = $this->con->prepare("SELECT * FROM student_requirement_list as t1
+
+            INNER JOIN student_requirement AS t2 ON t2.student_requirement_id = t1.student_requirement_id
+
+            WHERE t2.pending_enrollees_id=:pending_enrollees_id
+            AND t2.student_requirement_id=:student_requirement_id
+
+        ");
+
+        $get->bindParam(":pending_enrollees_id", $pending_enrollees_id);
+        $get->bindParam(":student_requirement_id", $student_requirement_id);
+        $get->execute();
+
+        $doesFinisheRemoval = false;
+
+        if($get->rowCount() > 0){
+
+
+            while($row = $get->fetch(PDO::FETCH_ASSOC)){
+
+                $student_requirement_list_id = $row['student_requirement_list_id'];
+
+                $requirement = new StudentRequirement($this->con,
+                    $student_requirement_id);
+
+                $file = $requirement->GetStudentRequirementListFile(
+                    $student_requirement_list_id);
+                
+                // var_dump($file);
+                // echo "<br>";
+
+                if($file !== NULL){
+
+                    // echo $selected_uploaded_photo;
+                    // return;
+
+                    $file = "../../" . $file;
+
+                    if (file_exists($file)) {
+                        if(unlink($file)){
+                            // echo $file;
+                            // $hasRemoved = true;
+
+                            $wasRemoveSuccess = $requirement->RemoveSelectedRequirement(
+                                $student_requirement_list_id, $student_requirement_id);
+                            
+                            if($wasRemoveSuccess){
+                                // echo "success_delete";
+                                // return;
+                                $doesFinisheRemoval = true;
+
+                            }
+                        }
+
+                        // echo "deletion_error";
+                        // return;
+                    }
+                }
+            }
+        }
+
+        return $doesFinisheRemoval;
+
+    }
 
     public function RemovingGoodMoral($student_id,
         $student_requirement_id) {

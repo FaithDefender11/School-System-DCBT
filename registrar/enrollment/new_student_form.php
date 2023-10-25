@@ -19,8 +19,8 @@
                     <span style="margin-left: 500px;">
                         <small style="font-weight: bold;">LRN</small>
                         <?php 
-                            echo Helper::getError(Constants::$LRNRequired);
-                            echo Helper::getError(Constants::$LRNUnique);
+                            // echo Helper::getError(Constants::$LRNRequired);
+                            // echo Helper::getError(Constants::$LRNUnique);
                         ?>
                         <input class="form-control" style="width: 250px;"
                             type="text" name="lrn" id="lrn"    
@@ -160,8 +160,8 @@
             </span>
             <span>
                 <?php
-                    echo Helper::getError(Constants::$religionRequired);
-                    echo Helper::getError(Constants::$invalidReligionCharacters);
+                    // echo Helper::getError(Constants::$religionRequired);
+                    // echo Helper::getError(Constants::$invalidReligionCharacters);
                 ?>
 
                 <label for="religion">Religion</label>

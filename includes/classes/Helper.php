@@ -140,21 +140,22 @@ class Helper {
 
         $trimmed = trim($text);
 
-        $pattern = '/^[A-Za-z]+$/';
+        // $pattern = '/^[A-Za-z]+$/';
 
-        // echo $text;
+        // echo $trimmed;
+        // echo "<br>";
 
         if (empty($text)) {
             array_push(self::$errorArray, Constants::$lastNameRequired);
             return;
         } 
-        else if (!preg_match($pattern, $trimmed)) {
-            array_push(self::$errorArray, Constants::$invalidLastNameCharacters);
-            return;
-        }
+        // else if (!preg_match($pattern, $trimmed)) {
+        //     array_push(self::$errorArray, Constants::$invalidLastNameCharacters);
+        //     return;
+        // }
         // John doe -> John Doe
         // Exclamation Marks and others are not valid here. (!@#$%^&*()<>)
-        else if (!preg_match("/^[a-zA-Z ]+$/", $trimmed)) {
+        else if (!preg_match("/^[a-zA-Z\s]+$/", $trimmed)) {
             array_push(self::$errorArray, Constants::$invalidLastNameCharacters);
             return;
         }
@@ -172,9 +173,17 @@ class Helper {
             $output = self::sanitizeFormString($text);
             return $output;
         }
-
     }
- 
+
+    public static function validateSurnameTest($trimmed) {
+        if (!preg_match("/^[a-zA-Z\s]+$/", $trimmed)) {
+            array_push(self::$errorArray, "Invalid last name characters");
+            return self::$errorArray;
+        }
+
+        // Surname is valid
+        return true;
+    }
 
     public static function ValidateMotherLastname($text) {
 
@@ -272,7 +281,7 @@ class Helper {
             array_push(self::$errorArray, Constants::$addressRequired);
             return;
         } 
-        else if (!preg_match("/^[a-zA-Z0-9 ]+$/", $text)) {
+        else if (!preg_match("/^[a-zA-Z0-9, ]+$/", $text)) {
             array_push(self::$errorArray, Constants::$invalidAddressCharacters);
             return;
         }
@@ -455,6 +464,7 @@ class Helper {
         $student = new Student($con);
             
         $student_unique_email = $student->CheckUniqueStudentEmail($userEmail);
+        // $student_unique_email = true;
         
         // var_dump($student_unique_email);
 
@@ -2502,6 +2512,10 @@ class Helper {
 
             </div>
         <?php
+    }
+
+    public static function DoesEnrollmentPrinted($printed = null) {
+        return $printed;
     }
 }
 ?>

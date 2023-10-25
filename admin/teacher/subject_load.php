@@ -32,8 +32,8 @@
     $userScheduleDay = 'M';
 
     # NEW
-    $check1 = $schedule->CheckTeacherScheduleConflicted(
-        $userTimeFrom, $userTimeTo, $userScheduleDay, $teacher_id);
+    // $check1 = $schedule->CheckTeacherScheduleConflicted(
+    //     $userTimeFrom, $userTimeTo, $userScheduleDay, $teacher_id, $current_school_year_id);
 
     # OLD
     // $check1 = $schedule->CheckTeacherScheduleConflictedH(

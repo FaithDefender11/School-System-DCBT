@@ -22,7 +22,8 @@
     
         $wasSuccess = $student->verifyStudentLoginCredentials($username, $password);
 
-        if(sizeof($wasSuccess) > 0 && $wasSuccess[1] == true 
+        if(sizeof($wasSuccess) > 0 
+            && $wasSuccess[1] == true 
             && $wasSuccess[2] == "enrolled" ){
 
             $_SESSION['username'] = $wasSuccess[0];

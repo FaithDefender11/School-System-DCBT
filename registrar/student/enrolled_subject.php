@@ -366,6 +366,20 @@
                                                                         </button>
                                                                     </form>
 
+                                                                    <form style="text-align: right;display: block;"
+                                                                        action="../admission/print_enrolled_subject.php" method="POST" id="printForm">
+
+                                                                        <input type="hidden" name="enrollment_id" id="enrollment_id" value="<?php echo $enrollment_id;?>">
+                                                                        <input type="hidden" name="student_id" id="student_id" value="<?php echo $student_id;?>">
+                                                                        <input type="hidden" name="school_year_id" id="school_year_id" value="<?php echo $current_school_year_id;?>">
+                                                                        
+                                                                        <button name="print_enrolled_subject" id="toClickButton"
+                                                                            class="dropdown-item text-primary">
+                                                                            <i class='bi bi-file-earmark-x'></i>&nbsp Send email
+                                                                        </button>
+
+                                                                    </form>
+
                                                                 </div>
                                                             </div>
                                                         </div>

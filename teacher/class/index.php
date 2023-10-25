@@ -100,6 +100,8 @@
 
         $subject_title = $subjectProgram->GetSubjectProgramTitleByRawCode($program_code);
         
+        // var_dump($subject_title);
+        
 
         $announcementList = $announcement->GetAnnouncementsWithinSubjectCode($subject_code, $teacher_id);
             
@@ -200,11 +202,27 @@
             $teacherLoggedInId);
     
         // var_dump($adminAnnouncement);
+        
+        $logout_url = 'http://localhost/school-system-dcbt/lms_logout.php';
+
+        if ($_SERVER['SERVER_NAME'] === 'localhost') {
+
+            $base_url = 'http://localhost/school-system-dcbt/teacher/';
+        } else {
+
+            $base_url = 'http://' . $_SERVER['HTTP_HOST'] . '/teacher/';
+        }
+
+        if ($_SERVER['SERVER_NAME'] !== 'localhost') {
+
+            $new_url = str_replace("/teacher/", "", $base_url);
+            $logout_url = "$new_url/lms_logout.php";
+        }
+
 
         ?>
 
             <div style="min-width: 100%;" class="content">
-
                 
                 <?php 
                     echo Helper::lmsTeacherNotificationHeader(
@@ -213,7 +231,8 @@
                         $teachingSubjects,
                         "second",
                         "first",
-                        "second");
+                        "second",
+                    $logout_url);
                     
                 ?>
 
@@ -222,7 +241,7 @@
                     <header>
 
                         <div class="title">
-                            <h1><span style="font-size: 27px;"><?= $subject_title?></span>  <em style="font-size: 27px;">SY2324-1T</em></h1>
+                            <h1><span style="font-size: 27px;"><?= $subject_title?></span>  <em style="font-size: 27px;"><?= "SY$fomatTerm-$period_short";?></em></h1>
                         </div>
 
                         <div class="action">

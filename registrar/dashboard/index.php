@@ -7,98 +7,32 @@
     include_once('../../includes/classes/Student.php');
     include_once('../../includes/classes/Task.php');
 
-    // $task = new Task($con);
-    // $task->MarkStudentAsApplicable();
+ 
+    $processEnrolled = true;
 
-    // $school_year_obj = $school_year->GetActiveSchoolYearAndSemester();
-
-    // $current_school_year_term = $school_year_obj['term'];
-    // $current_school_year_period = $school_year_obj['period'];
-    // $current_school_year_id = $school_year_obj['school_year_id'];
-
-    // $studentQuery = $con->prepare("SELECT *
-        
-    // echo web_root;
-    // echo "Qweqwe";
-
-    // echo currentURL;
-
+    $originalValueIsFalse = false;
     
-    // $currentURL = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https://" : "http://";
-    // echo web_root;
+    ?>
+        <script>
 
-    $url = "https://sub.dcbt.online/registrar/dashboard/index.php";
+            let processEnrolledJs = `
+                <?php echo $processEnrolled;?>
+            `;
 
-    // Parse the URL
-    $parsedUrl = parse_url($url);
+            processEnrolledJs = processEnrolledJs.trim();
+            // console.log(processEnrolledJs);
 
-    // Reconstruct the base URL
-    $base_url = $parsedUrl['scheme'] . '://' . $parsedUrl['host'] . '/';
+            if(processEnrolledJs == true){
+                <?php $originalValueIsFalse = true; ?>
+            }
 
-    // echo $base_url;
+        </script>
+    <?php
 
-    // echo "base_url: $base_url";
-    // echo "<br>";
-    // echo "domainName: $domainName";
-    // echo "<br>";
-
-
-    //     FROM student as t1
-
-    //     INNER JOIN enrollment as t2 ON t2.student_id = t1.student_id
-    //     AND school_year_id=:school_year_id
-    //     AND enrollment_status=:enrollment_status
-
-
-    //     WHERE t1.active = 1
-    //     AND t1.nsy_applicable = 0
-        
-    // ");
-    // $studentQuery->bindParam(":school_year_id", $current_school_year_id);
-    // $studentQuery->bindValue(":enrollment_status", "enrolled");
-    // $studentQuery->execute();
-
-    // if($studentQuery->rowCount() > 0){
-
-    //     $enrollment = new Enrollment($con);
-    //     $student_subject = new StudentSubject($con);
-
-    //     while($row = $studentQuery->fetch(PDO::FETCH_ASSOC)){
-
-    //         $student_name = $row['firstname'];
-    //         $student_id = $row['student_id'];
-
-    //         // Get student enrollment form id within current semester & S.Y
-    //         $student_enrollment_id = $enrollment->GetEnrollmentIdNonDependent($student_id,
-    //             $current_school_year_id);
-
-    //         // echo $student_enrollment_id;
-    //         // echo "<br>";
-
-    //         $applicableStudentId = $student_subject->CheckCurrentSemesterSubjectAllPassed($student_enrollment_id,
-    //             $student_id, $current_school_year_id);
-
-    //         if($applicableStudentId != 0){
-
-    //             $student = new Student($con, $applicableStudentId);
-
-    //             $applicable = $student->DoesApplicableToApplyNextYear();
-
-    //             if($applicable == 0){
-
-    //                 if($student->UpdateStudentApplicableApplyNextSY($applicableStudentId) == true){
-
-    //                     // Student id that has qualified requirements.
-    //                     // Enrollment form based.
-    //                     echo $applicableStudentId . "has been eligible to apply next s_y";
-
-    //                 }
-    //             }
-    //         }
-    //         else{
-    //             // echo "nothing eligible";
-    //         }
-    //     }
+    // var_dump($originalValueIsFalse);
+    
+    // if($originalValueIsFalse == true){
+    //     echo "nice";
     // }
 
 

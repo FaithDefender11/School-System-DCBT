@@ -9,15 +9,24 @@
     require_once("../../includes/classes/StudentRequirement.php");
     require_once("../../includes/classes/SchoolYear.php");
     
+
+    // selected_admission_type,
+    //     selected_department_type,
+    //     selected_choose_level,
+    //     selected_program_id,
+    //     pending_enrollees_id,
+
     if (
-        $_SERVER['REQUEST_METHOD'] === 'POST'
-        && isset($_POST['selected_program_id'])
-        && isset($_POST['selected_admission_type'])
+        // $_SERVER['REQUEST_METHOD'] == 'POST'
+        isset($_POST['selected_admission_type'])
         && isset($_POST['selected_department_type'])
         && isset($_POST['selected_choose_level'])
+        && isset($_POST['selected_program_id'])
         && isset($_POST['pending_enrollees_id'])
     ) {
 
+        // echo "hey";
+        // return;
         $school_year = new SchoolYear($con);
 
         $school_year_obj = $school_year->GetActiveSchoolYearAndSemester();
@@ -84,19 +93,19 @@
                     $pending_enrollees_id,
                     $school_year_id);
 
-                if($student_requirement_id == NULL){
+                // if($student_requirement_id == NULL){
 
-                    # Create.
-                    $initNewEnrolleeStudentRequirement = $studentRequirement
-                        ->InitializedPendingEnrolleeRequirement(
-                        $pending_enrollees_id, $school_year_id);
+                //     # Create.
+                //     $initNewEnrolleeStudentRequirement = $studentRequirement
+                //         ->InitializedPendingEnrolleeRequirement(
+                //         $pending_enrollees_id, $school_year_id);
                     
-                }
+                // }
 
                 $updateRequirements = $studentRequirement
                     ->UpdateStudentRequirementAdmission(
-                        $pending_enrollees_id, $student_requirement_id,
-                            $type, $admission_status);
+                    $pending_enrollees_id, $student_requirement_id,
+                    $type, $admission_status);
     
             
             if($wasSuccess){
@@ -143,15 +152,9 @@
                 echo json_encode($data);
                 return;
             }
-
-            ?>
-                
-            <?php
+ 
             
         }
-
-
-        
 
     }
 

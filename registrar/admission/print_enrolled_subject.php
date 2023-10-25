@@ -42,6 +42,9 @@
             $student = new Student($con, $student_id);
 
             $studentEmail = $student->GetEmail();
+            $firstname = $student->GetFirstName();
+            $lastname = $student->GetLastName();
+            $middle = $student->GetMiddleName();
 
             $enrollment = new Enrollment($con);
             
@@ -74,7 +77,7 @@
                 $school_year_id);
 
 
-
+            $now = date("Y-m-d H:i:s");
             
 
             $html = '
@@ -113,6 +116,9 @@
                     </head>
 
                     <body>
+
+                        <span style="margin-bottom: 5px">Date printed: '.$now.'</span>
+
                         <table class="a">
                             <thead>
                                 <tr>
@@ -244,47 +250,6 @@
 
                 try {
 
-                    // // Create a new Dompdf instance
-                    // $dompdf = new Dompdf();
-
-                    // // Load the HTML content
-                    // $dompdf->loadHtml($html);
-
-                    // // (Optional) Set the paper size and orientation
-                    // $dompdf->setPaper('A4', 'portrait');
-
-                    // // Render the PDF
-                    // $dompdf->render();
-
-                    // // Get the rendered PDF content
-                    // $pdfContent = $dompdf->output();
-
-                    // // Create a temporary file path
-                    // $tempFilePath = sys_get_temp_dir() . "/file.pdf";
-
-                    // // Save the PDF content to the temporary file
-                    // file_put_contents($tempFilePath, $pdfContent);
-
-                    // // Send headers to trigger the download
-                    // header("Content-type: application/pdf");
-
-                    // # 2324S1-HUMSS11-USCP Einstein, Albert
-
-                    // $pdfName = "enrolled_subjects.pdf";
-
-                    // // header("Content-Disposition: attachment; filename=\"Class_list_by_teacher.pdf\"");
-                    // header("Content-Disposition: attachment; filename=\"$pdfName\"");
-                    // header("Content-Length: " . filesize($tempFilePath));
-
-                    // // Output the PDF content to the browser
-                    // readfile($tempFilePath);
-
-                    // // Clean up: delete the temporary file
-
-                    // unlink($tempFilePath);
-
-                    #
-
                     $dompdf = new Dompdf();
 
                     // Load the HTML content
@@ -301,7 +266,9 @@
 
                     // $pdfName = "enrolled_subjects.pdf";
 
-                    $pdfName = "$enrollment_form_id $programName .pdf";
+                    $studentFullname = ucwords($lastname) . ", " . ucwords($firstname) . " " . ucfirst($middle);
+
+                    $pdfName = "$enrollment_form_id $studentFullname, Section: $programName.pdf";
 
                     $email = new Email();
 
@@ -314,14 +281,48 @@
                     $url = "../student/record_details.php?id=$student_id&enrolled_subject=show";
 
                     if ($isEmailSent) {
+
+                        // $_SESSION['enrollment_printed_success'] = true;
+                        // text: 'Student has been enrolled and enrollment confirmation has been sent.',
+
+                        # should return as true or false
+
+                        echo "
+                            <script>
+
+                            $(document).ready(function() {
+                                Swal.fire({
+
+                                    icon: 'success',
+                                    title: 'Email Sent!',
+                                    text: 'Enrollment confirmation has been sent to verified email.',
+                                    backdrop: false,
+                                    allowEscapeKey: false,
+
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        window.location.href = '$url';
+                                    }
+                                });
+                            });
+
+                            </script>";
+
+                        exit(); 
+
+                    }else{
+
+                        $errorUrl = "subject_insertion_summary.php?id=$enrollment_id&enrolled_subject=show";
+
                         echo "
                             <script>
                             $(document).ready(function() {
                                 Swal.fire({
-                                    icon: 'success',
-                                    title: 'Email Sent!',
-                                    text: 'Student has been enrolled and enrollment confirmation has been sent.',
+                                    icon: 'error',
+                                    title: 'Oh no!',
+                                    text: 'Email is not delivered. Kindly manually send.',
                                     backdrop: false,
+                                    allowEscapeKey: false,
                                 }).then((result) => {
                                     if (result.isConfirmed) {
                                         window.location.href = '$url';
@@ -330,8 +331,7 @@
                             });
                             </script>";
                         exit(); 
-
-                    }  
+                    } 
 
                 } catch (Exception $e) {
 

@@ -1,6 +1,7 @@
 
-
 <?php  
+
+        // var_dump($does_enrollee_finished_input);
 
         ?>
             <style>
@@ -479,7 +480,7 @@
                                 Return
                             </button>
 
-                            <?php if($does_enrollee_finished_input !== 1): ?>
+                            <?php if($does_enrollee_finished_input !=  true): ?>
                                 <button
                                     class="default success large"
                                     onclick="MarkAsValidated(<?php echo $pending_enrollees_id; ?>, <?php echo $school_year_id; ?>, '<?php echo $current_term; ?>', '<?php echo $current_semester; ?>')"
@@ -526,18 +527,39 @@
             // dataType: 'json',
                 success: function (response) {
 
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Request has made.',
-                        timer: 1200,
-                        showCancelButton: false,
-                        confirmButtonText: 'Wait',
-                    }).then(() => {
+                    response = response.trim();
+                    console.log(response)
 
-                        var url = 'process.php?new_student=true&step=4';
-                        window.location.href = url;
+                    if(response == "success"){
 
-                    });
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Pre enrollment inputs has been completed.',
+                            timer: 1200,
+                            showCancelButton: false,
+                            confirmButtonText: 'Wait',
+                        }).then(() => {
+
+                            var url = 'process.php?new_student=true&step=4';
+                            window.location.href = url;
+
+                        });
+
+                    }else{
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Something went wrong.',
+                            timer: 1200,
+                            showCancelButton: false,
+                            confirmButtonText: 'Wait',
+                        }).then(() => {
+
+                            var url = 'process.php?new_student=true&step=enrollee_summary_details';
+                            window.location.href = url;
+
+                        });
+                    }
+
                 },
 
                 });
