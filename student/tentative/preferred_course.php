@@ -27,6 +27,9 @@
     }
 ?>
 
+<style>
+    <?php include "../../assets/css/student-form-responsive.css";  ?>
+</style>
 <div class="content">
 
     <!-- <div class="container mt-5">
