@@ -160,9 +160,6 @@
     </nav>
     <main>
         <div class="floating noBorder">
-
-            
-
             <header>
                 <div class="title">
                     <h2 style="color: var(--titleTheme)">New enrollment form</h2>
@@ -180,14 +177,13 @@
                 <span class="dot inactive"> <p>Finished</p></span>
             </div>
 
-            <form method="POST">
-                <main>
+            <main>
+                <form method="POST">
                     <header>
                         <div class="title">
                             <h4 style="font-weight: bold;">Previous School Information</h4>
                         </div>
                     </header>
-                    <br>
                     <div class="row">
                         <span>
                             <?php
@@ -226,7 +222,6 @@
                             </div>
                         </span>
                     </div>
-
                     <div class="row">
                         <span>
                             <label for="year_started">Admission Year <span class="red">*</span></label>
@@ -243,7 +238,6 @@
                         </span>
 
                         <span>
-                            
                             <label for="year_ended">Graduation Year <span class="red">*</span></label>
                             <div>
                                 <!-- <input required type="date" id="year_ended" name="year_ended" 
@@ -257,26 +251,25 @@
                             </div>
                         </span>
                     </div>
-                </main>
-
-                <div class="action">
-                    <button style="margin-right: 9px;"
-                    type="button"
-                        class="default large"
-                        onclick="window.location.href = 'process.php?new_student=true&step=enrollee_requirements';"
+                    <div class="action">
+                        <button style="margin-right: 9px;"
+                        type="button"
+                            class="default large"
+                            onclick="window.location.href = 'process.php?new_student=true&step=enrollee_requirements';"
+                            >
+                        Return
+                        </button>
+                        <button
+                            class="default success large"
+                            name="student_school_history_btn_<?php echo $pending_enrollees_id ?>" 
+                            type="submit"
                         >
-                    Return
-                    </button>
-                    <button
-                        class="default success large"
-                        name="student_school_history_btn_<?php echo $pending_enrollees_id ?>" 
-                        type="submit"
-                    >
-                    Proceed
-                    </button>
-                </div>
-
-            </form>
+                        Proceed
+                        </button>
+                    </div>
+                </form>
+                
+            </main>
         </div>
     </main>
 </div>

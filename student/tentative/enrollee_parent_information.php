@@ -596,15 +596,13 @@
                     <span class="dot inactive"> <p>Finished</p></span>
                 </div>
 
-                <form method="POST">
-                    <main>
+                <main>
+                    <form action="POST">
                         <header>
                             <div class="title">
                                 <h4 style="font-weight: bold;">Enrollee Parent Information</h4>
                             </div>
                         </header>
-                        <hr>
-
                         <!-- FATHER DD -->
                         <div id="father_info">
                             <header>
@@ -720,7 +718,6 @@
                                 </span>
                             </div>
                         </div>
-
                         <!-- MOTHER DD -->
                         <div id="mother_info">
                             <header>
@@ -830,9 +827,7 @@
                                     </div>
                                 </span>
                             </div>
-
                         </div>
-
                         <div class="guardian_info">
                             <header>
                                 <div class="title">
@@ -967,29 +962,24 @@
                                 </span>
                             </div>
                         </div>
+                        <div class="action">
+                            <button style="margin-right: 9px;"
+                                type="button"
+                                class="default large"
+                                onclick="window.location.href = 'process.php?new_student=true&step=enrollee_school_history';"
 
-                    </main>
-
-                    <div class="action">
-                        <button style="margin-right: 9px;"
-                            type="button"
-                            class="default large"
-                            onclick="window.location.href = 'process.php?new_student=true&step=enrollee_school_history';"
-
-                            >Return
-                        </button>
-                        <button
-                            class="default success large"
-                            name="parent_details_btn_<?php echo $pending_enrollees_id ?>" 
-                            type="submit">
-                            Proceed
-                        </button>
-                    </div>
-
-                </form>
-
+                                >Return
+                            </button>
+                            <button
+                                class="default success large"
+                                name="parent_details_btn_<?php echo $pending_enrollees_id ?>" 
+                                type="submit">
+                                Proceed
+                            </button>
+                        </div>
+                    </form>
+                </main>
             </div>
-
         </main>
     </div>
     
