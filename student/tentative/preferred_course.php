@@ -185,7 +185,7 @@
 
                         <span>
 
-                            <div>
+                            <div class="form-element">
                                 <label for="">Course/Strand</label>
                                 <select style="width: 450px" class="form-control" name="program_id" id="program_id">
                                     <?php 
