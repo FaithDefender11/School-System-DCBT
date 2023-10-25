@@ -57,8 +57,8 @@
         <link rel="stylesheet" type="text/css" href="../../assets/css/fonts.css">
         <link rel="stylesheet" type="text/css" href="../../assets/css/table.css">
         <link rel="stylesheet" type="text/css" href="../../assets/css/scheduler.css">
+        <link rel="stylesheet" type="text/css" href="../../assets/css/student-form-responsive.css">
         <link rel="stylesheet" href="../../assets/css/others/toggle-switch.css">
-        <link rel="stylesheet" href="../../assets/css/student-form-responsive.css">
 
         <!-- Google Fonts -->
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
