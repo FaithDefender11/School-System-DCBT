@@ -120,9 +120,9 @@
                         <span class="dot inactive"> <p>Finished</p></span>
                     </div>
 
-                    <form method="POST">
-                        <main>
-                            <header>
+                    <main>
+                        <form method="POST">
+                           <header>
                                 <div class="title">
                                     <h4 style="font-weight: bold;">Enrollee Information</h4>
                                     <div class="row">
@@ -133,8 +133,7 @@
                                         </span>
                                     </div>
                                 </div>
-                            </header>
-
+                            </header> 
                             <div class="row">
                                 <span>
                                 <label for="name">Name</label>
@@ -233,23 +232,11 @@
                                 </div>
                                 </span>
                             </div>
-
-                            <?php 
-
-                                // include_once('./enrollee_parent_info.php');
-                            ?>
-
-                        </main>
-
-                        <hr>
-
-                        <main>
                             <header>
                                 <div class="title">
                                     <h4 style="font-weight: bold;">Previous School Information</h4>
                                 </div>
                             </header>
-                            <br>
                             <div class="row">
                                 <span>
                                     <label for="school_name">School Name</label>
@@ -268,7 +255,6 @@
                                     </div>
                                 </span>
                             </div>
-
                             <div class="row">
                                 <span>
                                     <label for="year_started">Admission Year</label>
@@ -279,7 +265,6 @@
                                 </span>
 
                                 <span>
-                                    
                                     <label for="year_ended">Graduation Year</label>
                                     <div>
                                         <input  required type="text" id="year_ended" name="year_ended" 
@@ -287,18 +272,11 @@
                                     </div>
                                 </span>
                             </div>
-                        </main>
-
-                        <hr>
-                       
-                        <main>
                             <header>
                                 <div class="title">
                                     <h4 style="font-weight: bold;">Enrollee Parent Information</h4>
                                 </div>
                             </header>
-                            <hr>
-
                             <!-- FATHER DD -->
                             <div id="father_info">
                                 <header>
@@ -351,7 +329,6 @@
                                     </span>
                                 </div>
                             </div>
-
                             <!-- MOTHER DD -->
                             <div id="mother_info">
                                 <header>
@@ -408,8 +385,6 @@
                                     </span>
                                 </div>
                             </div>
-
-
                             <div class="guardian_info">
                                 <header>
                                     <div class="title">
@@ -468,10 +443,7 @@
                                     <span>
                                 </div>
                             </div>
-
-                        </main>
-
-                        <div class="action">
+                            <div class="action">
                             <button style="margin-right: 9px;"
                             type="button"
                                 class="default large"
@@ -490,8 +462,8 @@
                             <?php endif;?>
                             
                         </div>
-                    </form>
-                                <!-- onclick="window.location.href ='process.php?new_student=true&step=4'" -->
+                        </form>
+                    </main>
                 </div>
             </main>
         </div>

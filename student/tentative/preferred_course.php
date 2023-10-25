@@ -26,6 +26,9 @@
     }
 ?>
 
+<style>
+    <?php include "../../assets/css/student-form-responsive.css";  ?>
+</style>
 <div class="content">
 
     <!-- <div class="container mt-5">
@@ -94,7 +97,7 @@
 
                     </div>
                 </header>
-                <div class="row mt-3">
+                <div class="row">
                     <span>
                         <div class="form-element">
                             <label for="new">New Student</label>
@@ -181,9 +184,10 @@
 
                         <span>
 
-                            <div>
+                            <div class="form-element">
                                 <label for="">Course/Strand</label>
-                                <select style="width: 450px" class="form-control" name="program_id" id="program_id">
+                                <div>
+                                    <select style="width: 450px" class="form-control" name="program_id" id="program_id">
                                     <?php 
 
                                         $type = $pending_type == "SHS" ? "Senior High School" 
@@ -229,17 +233,21 @@
                                         }
                                     
                                     ?>
-                                </select>
+                                    </select>
+                                </div>
+                                
                             </div>
 
                             <div>
                                 <label for="">Level &nbsp;<span class="errorMessage course_level_error" 
                                     ></span>
                                 </label>
-                                <?php 
+                                <div>
+                                   <?php 
                                     echo $pending->PendingCourseLevelDropdown($pending_type, 
                                         $course_level);
-                                ?>
+                                    ?> 
+                                </div>
                             </div>
                         </span>
 

@@ -203,9 +203,6 @@
     </nav>
     <main>
         <div class="floating noBorder">
-
-            
-
             <header>
                 <div class="title">
                     <h2 style="color: var(--titleTheme)">New Enrollment Form</h2>
@@ -223,9 +220,8 @@
                 <span class="dot inactive"> <p>Finished</p></span>
             </div>
 
-            <form method="POST">
-
-                <main>
+            <main>
+                <form method="POST">
                     <header>
                         <div class="title">
                             <h4 style="font-weight: bold;">Student Information</h4>
@@ -238,7 +234,6 @@
                             </div>
                         </div>
                     </header>
-
                     <div class="row">
                         <span>
                             <label for="name">Name</label>
@@ -300,7 +295,6 @@
                         </div>
                         </span>
                     </div>
-
                     <div class="row">
                         <span>
                             <?php
@@ -353,7 +347,6 @@
                             </div>
                         </span>
                     </div>
-
                     <div class="row">
                         <span>
                             <label for="birthdate">Birthdate <span class="red">*</span></label>
@@ -397,7 +390,6 @@
                             </div>
                         </span>
                     </div>
-
                     <div class="row">
                         <span>
                             <?php
@@ -418,7 +410,6 @@
                             </div>
                         </span>
                     </div>
-
                     <div class="row">
                         <span>
                             <?php
@@ -451,31 +442,24 @@
                             </div>
                         </span>
                     </div>
-
-                    <?php 
-                        // include_once('./enrollee_parent_info.php');
-                    ?>
-
-                </main>
-                <div class="action">
-                    <button style="margin-right: 9px;"
-                    type="button"
-                        class="default large"
-                        onclick="window.location.href = 'process.php?new_student=true&step=preferred_course';"
-                        >
-                    Return
-                    </button>
-                    <button
-                    class="default success large"
-                    name="student_details_btn_<?php echo $pending_enrollees_id ?>" 
-                    type="submit"
-                    >
-                    Proceed
-                    </button>
-                </div>
-
-            </form>
-
+                    <div class="action">
+                        <button style="margin-right: 9px;"
+                            type="button"
+                                class="default large"
+                                onclick="window.location.href = 'process.php?new_student=true&step=preferred_course';"
+                                >
+                                Return
+                        </button>
+                        <button
+                            class="default success large"
+                            name="student_details_btn_<?php echo $pending_enrollees_id ?>" 
+                            type="submit"
+                            >
+                            Proceed
+                        </button>
+                    </div>
+                </form>
+            </main>
         </div>
     </main>
 </div>
