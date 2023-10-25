@@ -95,7 +95,7 @@
 
                     </div>
                 </header>
-                <div class="row mt-3">
+                <div class="row">
                     <span>
                         <div class="form-element">
                             <label for="new">New Student</label>
