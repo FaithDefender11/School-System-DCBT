@@ -117,7 +117,7 @@
 
         <br>
 
-        <div class="floating">
+        <div style="display: none;" class="floating">
             <header>
                 <div class="title">
                 <h3>Student Requirements Checklist</h3>

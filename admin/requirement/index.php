@@ -80,6 +80,8 @@
                                 }
 
 
+                                $url = "edit.php?id=";
+
                                 echo "
                                 <tr>
                                     <td>$requirement_name</td>
@@ -87,7 +89,7 @@
                                     <td>$is_enabled_output</td>
                                     <td>
 
-                                        <a href='edit.php?id='>
+                                        <a href='#'>
                                             <button class='btn btn-sm btn-primary'>
                                                 <i class='fas fa-pen'></i>
                                             </button>

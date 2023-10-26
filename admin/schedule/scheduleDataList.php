@@ -268,10 +268,11 @@ if ($row != null) {
         $days = $schedule->convertToDays($schedule_day);
 
         $url = "../section/show.php?id=1213&term=$term&per_semester=$period";
+
         // $url = "#";
         
         $program_section = "
-           <a id='clickSectionRedirect' style='color: inherit' href='$url'>$program_section</a>
+           <a id='clickSectionRedirect' style='color: inherit' href='$url'>($subject_schedule_id) $program_section</a>
         ";
 
         $button_url = "

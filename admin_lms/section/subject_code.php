@@ -69,7 +69,8 @@
         // $sectionLevel = 12;
 
         $sectionSubjectCodes = $section->GetSectionSubjectCodes(
-            $sectionProgramId, $current_school_year_period, $sectionLevel, "SHS");
+            $sectionProgramId, $current_school_year_period,
+            $sectionLevel, "SHS");
 
             // var_dump($sectionSubjectCodes);
 
@@ -135,9 +136,11 @@
                                             // $totalStudent = $section->GetTotalNumberOfStudentInSection($course_id, $current_school_year_id);
 
                                             $teacher_id = $subjectSchedule->GetScheduleTeacherBySectionSubjectCode(
-                                                $section_subject_code);
+                                                $section_subject_code, $current_school_year_id);
 
-                                                // var_dump($teacher_id);
+                                            // var_dump($teacher_id);
+                                            // var_dump($section_subject_code);
+                                            // echo "<br>";
 
                                             $teacher = new Teacher($con, $teacher_id);
 

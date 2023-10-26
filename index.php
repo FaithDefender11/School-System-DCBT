@@ -315,33 +315,36 @@
       </div>
     </footer>
 
-    <div class="popup" id="login-form">
 
+
+
+    <div class="popup" id="login-form">
       <div class="close-btn">&times;</div>
-      <form method="POST">
-        <div class="form">
-        <h2>Log-in</h2>
-        <p>Log-in with your school email</p>
-        <div class="form-element">
-          <label for="email">Email</label>
-          <input name="username" type="text" id="email">
+
+      <div class="form">
+
+        <h2>Choose section log-in</h2>
+      
+
+        <div class="row col-md-12">
+
+          <div class="col-md-6">
+            <div class="form-element">
+              <button type="button" onclick="window.location.href ='lms_login.php'" name="samp_btn">LMS</button>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-element">
+              <button  type="button" onclick="window.location.href ='online_application.php'" name="samp_btn">Enrollment</button>
+            </div>
+          </div>
         </div>
-        <div class="form-element">
-          <a class="forgot-email">Forgot email?</a>
-        </div>
-        <div class="form-element">
-          <label for="password">Password</label>
-          <input value="123456" type="password" name="password" id="password">
-        </div>
-        <div class="form-element">
-          <a class="forgot-password">Forgot password?</a>
-        </div>
-        <div class="form-element">
-          <button name="samp_btn" type="submit">Confirm</button>
-        </div>
-      </form>
+        
+      </div>
 
     </div>
+
 
     <script>
       let slideIndex = [1, 1];

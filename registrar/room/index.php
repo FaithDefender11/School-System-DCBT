@@ -24,11 +24,11 @@
                 </div>
 
                 <div class="action">
-                        <button type="button"
+                        <!-- <button type="button"
                             onclick="window.location.href='opened_section.php?id=<?php echo $current_school_year_id; ?>'"
                         class="information default large">
                             Room Section
-                        </button>
+                        </button> -->
                 </div>
             </header>
             <main>

@@ -85,18 +85,30 @@
         }
 
         
-        public function GetScheduleTeacherBySectionSubjectCode($subject_code) {
+        public function GetScheduleTeacherBySectionSubjectCode(
+            $subject_code, $school_year_id) {
 
-            $query = $this->con->prepare("SELECT teacher_id FROM subject_schedule
-                WHERE subject_code=:subject_code");
+            $query = $this->con->prepare("SELECT teacher_id FROM 
+            
+                subject_schedule
+
+                WHERE subject_code=:subject_code
+                AND school_year_id=:school_year_id
+                
+                AND teacher_id IS NOT NULL
+
+            ");
 
             $query->bindValue(":subject_code", $subject_code);
+            $query->bindValue(":school_year_id", $school_year_id);
             $query->execute();
 
             if($query->rowCount() > 0){
                 return $query->fetchColumn();
+                // return $query->fetchAll(PDO::FETCH_ASSOC);
+
             }
-            return 0;
+            return NULL;
         }
 
     }

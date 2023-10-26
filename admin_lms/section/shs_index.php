@@ -105,9 +105,7 @@
                                     echo "
                                         <tr>
                                             <td>
-                                                <a href='enrolled_students.php?id=$course_id&sy_id=$school_year_id' style='color: inherit'>
-                                                    $program_section
-                                                </a>
+                                                $program_section
                                             </td>
                                             <td>$totalStudent</td>
                                             <td>$capacity</td>

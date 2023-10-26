@@ -82,6 +82,7 @@
                     New student
                 </button>
          
+          <!-- <button type="button" onclick="enrolledStudentURL()" class="type-btn">Old student</button> -->
           <button type="button" onclick="enrolledStudentURL()" class="type-btn">Old student</button>
         </div>
       </div>
@@ -111,24 +112,11 @@
 
     <div class="popup" id="login-form">
       <div class="close-btn">&times;</div>
+
       <div class="form">
 
         <h2>Choose section log-in</h2>
-
-        <!-- <div class="form-element">
-          <label for="email">Email</label>
-          <input type="text" id="email" />
-        </div>
-        <div class="form-element">
-          <a class="forgot-email">Forgot email?</a>
-        </div>
-        <div class="form-element">
-          <label for="password">Password</label>
-          <input type="text" id="password" />
-        </div>
-        <div class="form-element">
-          <a class="forgot-password">Forgot password?</a>
-        </div> -->
+      
 
         <div class="row col-md-12">
 
@@ -144,12 +132,9 @@
             </div>
           </div>
         </div>
-       
-        <!-- <div class="form-element">
-          <button type="button">Confirm</button>
-        </div> -->
         
       </div>
+
     </div>
 
     <script>
@@ -202,7 +187,8 @@
                 echo domainName;
             ?>`;
 
-        window.location.href = `${root}/student_enrollment.php`
+        // window.location.href = `${root}/student_enrollment.php`
+        window.location.href = `${root}/enrollment_login.php`
     }
     
 </script>
