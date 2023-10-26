@@ -597,7 +597,7 @@
                 </div>
 
                 <main>
-                    <form action="POST">
+                    <form method="POST">
                         <header>
                             <div class="title">
                                 <h4 style="font-weight: bold;">Enrollee Parent Information</h4>
@@ -973,7 +973,8 @@
                             <button
                                 class="default success large"
                                 name="parent_details_btn_<?php echo $pending_enrollees_id ?>" 
-                                type="submit">
+                                type="submit"
+                                >
                                 Proceed
                             </button>
                         </div>
