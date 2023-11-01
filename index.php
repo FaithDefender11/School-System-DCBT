@@ -86,21 +86,21 @@
       </label>
       <label class="logo">
         <a href="DCBT-landing-page.html">
-          <img src="assets/images/DCBT-Logo.jpg" alt="DCBT" />
+          <img src="assets/images/home/DCBT-Logo.jpg" alt="DCBT" />
         </a>
       </label>
       <ul>
         <li><a href="#">ADMISSIONS</a></li>
         <li><a href="#">ACADEMICS</a></li>
         <li><a href="#">ABOUT</a></li>
-        <li><a id="show-login">LOGIN</a></li>
+        <li><a href="#" id="show-login">LOGIN</a></li>
       </ul>
     </nav>
 
     <div class="content">
       <div class="content-header">
         <div class="logo-title">
-          <img src="assets/images/DCBT-Logo.jpg" alt="DCBT" />
+          <img src="assets/images/home/DCBT-Logo.jpg" alt="DCBT" />
         </div>
         <div class="title">
           <h2>DAEHAN COLLEGE OF BUSINESS AND TECHNOLOGY</h2>
@@ -109,7 +109,7 @@
       <main>
         <div class="slide-1">
           <div class="carousel">
-            <img src="assets/images/DCBT-Cover.jpg" alt="Cover" />
+            <img src="assets/images/home/DCBT-Cover.jpg" alt="Cover" />
           </div>
           <div class="carousel">
             <h2>Be a DAEHAN student TODAY!</h2>
@@ -140,11 +140,11 @@
         <div class="slide-2">
           <header>
             <div class="title">
-              <img src="assets/images/DCBT-SHS-Logo.jpg" alt="" />
+              <img src="assets/images/home/DCBT-SHS-Logo.jpg" alt="" />
               <h3 style="font-weight: 400; font-style: italic">Senior High</h3>
             </div>
             <div class="title">
-              <img src="assets/images/DCBT-Logo.jpg" alt="" />
+              <img src="assets/images/home/DCBT-Logo.jpg" alt="" />
               <h3 style="font-weight: 400; font-style: italic">College</h3>
             </div>
           </header>
@@ -270,22 +270,22 @@
 
               <div class="slider">
                 <div>
-                  <img src="assets/images/slide-1.jpg" alt="" />
+                  <img src="assets/images/home/slide-1.jpg" alt="" />
                 </div>
                 <div>
-                  <img src="assets/images/slide-2.jpg" alt="" />
+                  <img src="assets/images/home/slide-2.jpg" alt="" />
                 </div>
                 <div>
-                  <img src="assets/images/slide-3.jpg" alt="" />
+                  <img src="assets/images/home/slide-3.jpg" alt="" />
                 </div>
                 <div>
-                  <img src="assets/images/slide-4.jpg" alt="" />
+                  <img src="assets/images/home/slide-4.jpg" alt="" />
                 </div>
                 <div>
-                  <img src="assets/images/slide-5.jpg" alt="" />
+                  <img src="assets/images/home/slide-5.jpg" alt="" />
                 </div>
                 <div>
-                  <img src="assets/images/slide-6.jpg" alt="" />
+                  <img src="assets/images/home/slide-6.jpg" alt="" />
                 </div>
               </div>
 
