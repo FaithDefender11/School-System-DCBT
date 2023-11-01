@@ -197,7 +197,7 @@
                 nonce="zL2X8O3d"
               ></script>
               <div
-                class="fb-post"
+                class="fb-post custom-fb-post"
                 data-href="https://www.facebook.com/daehanedu/posts/pfbid0JbyAYoEjVhk4n2oshdMmiz2xuC3vFxouhm8Zir5Kudj1XyGTK5PUkpDgKCM1Q4pEl"
                 data-width="auto"
                 data-show-text="true"

@@ -872,3 +872,7 @@ nav>ul.active {
 .no-scroll {
   overflow: hidden;
 }
+
+.custom-fb-post {
+  min-width: 320px !important;
+}
