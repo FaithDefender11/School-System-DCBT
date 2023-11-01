@@ -60,7 +60,7 @@
     <meta name="viewport" content="width=device-width, inital-scale=1" />
     <title>Daehan College of Business & Technology</title>
     <!--Link stylesheets-->
-    <link rel="stylesheet" href="assets/css/DCBT-landing-page.css" />
+    <link rel="stylesheet" href="assets/css/home.css" />
     <link rel="stylesheet" href="assets/css/fonts.css" />
     <link
       rel="stylesheet"
