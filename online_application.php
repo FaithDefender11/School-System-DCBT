@@ -42,7 +42,7 @@
       </label>
       <label class="logo">
         <a href="index.php">
-          <img src="assets/images/DCBT-Logo.jpg" alt="DCBT" />
+          <img src="assets/images/home/DCBT-Logo.jpg" alt="DCBT" />
         </a>
       </label>
       <ul>
