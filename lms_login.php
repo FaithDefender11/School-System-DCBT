@@ -214,32 +214,47 @@
         
         <link rel="icon" href="assets/images/icons/DCBT-Logo.jpg" type="image/png">
 
-        <link rel="stylesheet" href="assets/css/main_style.css">
+        <link rel="stylesheet" href="assets/css/home.css">
     </head>
 
     <body>
-        <div class="signInContainer">
-            <div style="width: 520px;" class="column">
-                <div class="header">
-
-                    <h3 class="text-center text-muted"><i class="fas fa-lock"></i> LMS Sign in</h3>
+        <div class="login-element">
+            <div class="floating">
+                <div class="close-btn">
+                    <button><a href="DCBT-landing-page.html">&times;</a></button>
                 </div>
-             
-                <div class="loginForm" style="margin-bottom: 15px; padding-bottom: 15px;">
-                    <form method="POST">
-
-                        <label for="">Username</label>
-                        <input  type="text" name="username" placeholder="Username" autocomplete="off">
-
-                        <label for="">Password</label>
-                        <input type="password" name="password" value="123456" placeholder="Password" autocomplete="off">
-
-                        <div style="margin-top:10px; display: flex;flex-direction: center;align-items: center;justify-content: center;" class="register_div">
-                            <button style="width: 180px;" type="submit" name="teacher_lms_btn" class="btn btn-primary">Submit</button>
+                <header>
+                    <div class="title">
+                        <h2>ELMS Sign in</h2>
+                    </div>
+                </header>
+                <main>
+                    <form action="POST">
+                        <div class="form-element">
+                            <label for="username">Username</label>
+                            <div>
+                                <input type="text" name="username" id="username" value="" required />
+                            </div>
+                            <small><a href="#">Forgot username?</a></small>
                         </div>
-
+                        <div class="form-element">
+                            <label for="password">Password</label>
+                            <div>
+                                <input
+                                type="password"
+                                name="password"
+                                id="password"
+                                value="123456"
+                                required
+                                />
+                            </div>
+                            <small><a href="#">Forgot password?</a></small>
+                        </div>
+                        <div class="action">
+                            <input type="submit" value="Submit" />
+                        </div>
                     </form>
-                </div>
+                </main>
             </div>
         </div>
     </body>
