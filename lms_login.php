@@ -229,7 +229,7 @@
         <div class="login-element">
             <div class="floating">
                 <div class="close-btn">
-                    <button><a href="DCBT-landing-page.html">&times;</a></button>
+                    <button><a href="index.php">&times;</a></button>
                 </div>
                 <header>
                     <div class="title">
