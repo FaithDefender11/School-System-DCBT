@@ -278,7 +278,7 @@ function getInputValue($name) {
         </header>
         <main>
           <form action="POST">
-            <?php $account->getError(Constants::$loginFailed); ?>
+            <?php echo $account->getError(Constants::$loginFailed); ?>
             <div class="form-element">
               <label for="username">Username</label>
               <div>
