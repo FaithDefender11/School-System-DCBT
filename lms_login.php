@@ -259,7 +259,7 @@
                             <small><a href="#">Forgot password?</a></small>
                         </div>
                         <div class="action">
-                            <input type="submit" value="Submit" />
+                            <input type="submit" name="teacher_lms_btn" value="Submit" />
                         </div>
                     </form>
                 </main>

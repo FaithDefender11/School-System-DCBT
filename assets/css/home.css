@@ -850,7 +850,7 @@ nav>ul>li>a:hover {
 
 #login-form {
   position: fixed;
-  display: flex;
+  display: none;
   justify-content: center;
   width: 100%;
   opacity: 0;
@@ -860,6 +860,7 @@ nav>ul>li>a:hover {
 }
 
 #login-form.active {
+  display: flex;
   top: 50%;
   left: 50%;
   opacity: 1;
