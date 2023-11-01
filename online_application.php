@@ -46,9 +46,9 @@
         </a>
       </label>
       <ul>
-        <li><a href="index.php/#admissions">ADMISSIONS</a></li>
-        <li><a href="index.php/#academics">ACADEMICS</a></li>
-        <li><a href="index.php/#about">ABOUT</a></li>
+        <li><a href="index.php#admissions">ADMISSIONS</a></li>
+        <li><a href="index.php#academics">ACADEMICS</a></li>
+        <li><a href="index.php#about">ABOUT</a></li>
         <li><a href="#" id="show-login">LOGIN</a></li>
       </ul>
     </nav>
