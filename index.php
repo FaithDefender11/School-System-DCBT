@@ -91,9 +91,9 @@
         </a>
       </label>
       <ul>
-        <li><a href="#">ADMISSIONS</a></li>
-        <li><a href="#">ACADEMICS</a></li>
-        <li><a href="#">ABOUT</a></li>
+        <li><a href="#admissions">ADMISSIONS</a></li>
+        <li><a href="#academics">ACADEMICS</a></li>
+        <li><a href="#about">ABOUT</a></li>
         <li><a href="#" id="show-login">LOGIN</a></li>
       </ul>
     </nav>
@@ -108,7 +108,7 @@
         </div>
       </div>
       <main>
-        <div class="slide-1">
+        <div class="slide-1" id="admissions">
           <div class="carousel">
             <img src="assets/images/home/DCBT-Cover.jpg" alt="Cover" />
           </div>
@@ -131,7 +131,7 @@
           </div>
         </div>
 
-        <div class="slide-2">
+        <div class="slide-2" id="academics">
           <header>
             <div class="title">
               <h2>Courses Offered</h2>
@@ -221,7 +221,7 @@
           </main>
         </div>
 
-        <div class="slide-2">
+        <div class="slide-2" id="about">
           <header>
             <div class="title">
               <h2>About</h2>
@@ -349,11 +349,15 @@
         .querySelector("#show-login")
         .addEventListener("click", function () {
           document.querySelector("#login-form").classList.add("active");
+          document.querySelector("nav > ul").classList.add("active");
+          document.body.classList.add("no-scroll");
         });
       document
         .querySelector("#login-form .close-btn")
         .addEventListener("click", function () {
           document.querySelector("#login-form").classList.remove("active");
+          document.querySelector("nav > ul").classList.remove("active");
+          document.body.classList.remove("no-scroll");
         });
     </script>
     <script>
