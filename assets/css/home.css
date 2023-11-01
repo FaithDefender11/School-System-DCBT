@@ -123,7 +123,7 @@ nav>ul>li>a:hover {
 }
 
 .content-header {
-  background: url(assets/images/home/DCBT-Building.jpg) no-repeat;
+  background: url(others/DCBT-Building.jpg) no-repeat;
   background-size: cover;
   height: calc(100vh - 120px);
 }
