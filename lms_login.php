@@ -237,7 +237,7 @@
                     </div>
                 </header>
                 <main>
-                    <form action="POST">
+                    <form method="POST">
                         <div class="form-element">
                             <label for="username">Username</label>
                             <div>
