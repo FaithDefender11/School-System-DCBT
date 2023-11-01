@@ -11,7 +11,7 @@
     <link rel="icon" href="assets/images/icons/DCBT-Logo.jpg" type="image/png">
     <title>Daehan College of Business & Technology</title>
     <!--Link stylesheets-->
-    <link rel="stylesheet" href="assets/css/DCBT-landing-page.css" />
+    <link rel="stylesheet" href="assets/css/home.css" />
     <link rel="stylesheet" href="assets/css/fonts.css" />
     <link
       rel="stylesheet"
