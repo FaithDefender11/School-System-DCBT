@@ -46,9 +46,9 @@
         </a>
       </label>
       <ul>
-        <li><a href="#">ADMISSIONS</a></li>
-        <li><a href="#">ACADEMICS</a></li>
-        <li><a href="#">ABOUT</a></li>
+        <li><a href="index.php/#admissions">ADMISSIONS</a></li>
+        <li><a href="index.php/#academics">ACADEMICS</a></li>
+        <li><a href="index.php/#about">ABOUT</a></li>
         <li><a href="#" id="show-login">LOGIN</a></li>
       </ul>
     </nav>
@@ -131,11 +131,15 @@
         .querySelector("#show-login")
         .addEventListener("click", function () {
           document.querySelector("#login-form").classList.add("active");
+          document.querySelector("nav > ul").classList.add("active");
+          document.body.classList.add("no-scroll");
         });
       document
         .querySelector("#login-form .close-btn")
         .addEventListener("click", function () {
           document.querySelector("#login-form").classList.remove("active");
+          document.querySelector("nav > ul").classList.remove("active");
+          document.body.classList.remove("no-scroll");
         });
     </script>
     <script>
