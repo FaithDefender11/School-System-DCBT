@@ -298,7 +298,7 @@ function getInputValue($name) {
               </div>
             </div>
             <div class="action">
-              <input type="submit" value="Submit" />
+              <input type="submit" name="enrollment_log_in_btn" value="Submit" />
             </div>
             <div class="form-element">
                 <small><a href="pre_enrollment_register.php">Need an account? Sign up here!</a></small>
