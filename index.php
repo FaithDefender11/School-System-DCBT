@@ -58,6 +58,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, inital-scale=1" />
+    <link rel="icon" href="assets/images/icons/DCBT-Logo.jpg" type="image/png">
     <title>Daehan College of Business & Technology</title>
     <!--Link stylesheets-->
     <link rel="stylesheet" href="assets/css/home.css" />
