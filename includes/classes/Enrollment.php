@@ -27,6 +27,118 @@
         }
     }
 
+    public function GetEnrollmentLevel($enrollment_id){
+
+        $sql = $this->con->prepare("SELECT t2.course_level
+
+            FROM enrollment as t1
+
+            INNER JOIN course as t2 ON t2.course_id = t1.course_id
+
+            WHERE t1.enrollment_id=:enrollment_id
+        ");
+
+        $sql->bindParam(":enrollment_id", $enrollment_id);
+        $sql->execute();
+
+        if ($sql->rowCount() > 0) {
+            $value = $sql->fetchColumn();
+        } else {
+            $value = NULL; // You can set $value to NULL only if no rows were found.
+        }
+
+        return $value;
+    }
+    public function GetEnrollmentCourse($enrollment_id){
+
+        $sql = $this->con->prepare("SELECT t3.acronym
+
+            FROM enrollment as t1
+
+            INNER JOIN course as t2 ON t2.course_id = t1.course_id
+            INNER JOIN program as t3 ON t3.program_id = t2.program_id
+
+            WHERE t1.enrollment_id=:enrollment_id
+        ");
+
+        $sql->bindParam(":enrollment_id", $enrollment_id);
+        $sql->execute();
+
+        if ($sql->rowCount() > 0) {
+            $value = $sql->fetchColumn();
+        } else {
+            $value = NULL; // You can set $value to NULL only if no rows were found.
+        }
+
+        return $value;
+    }
+    public function GetEnrollmentTrack($enrollment_id){
+
+        $sql = $this->con->prepare("SELECT t3.track
+
+            FROM enrollment as t1
+
+            INNER JOIN course as t2 ON t2.course_id = t1.course_id
+            INNER JOIN program as t3 ON t3.program_id = t2.program_id
+
+            WHERE t1.enrollment_id=:enrollment_id
+        ");
+
+        $sql->bindParam(":enrollment_id", $enrollment_id);
+        $sql->execute();
+
+        if ($sql->rowCount() > 0) {
+            $value = $sql->fetchColumn();
+        } else {
+            $value = NULL; // You can set $value to NULL only if no rows were found.
+        }
+
+        return $value;
+    }
+    public function GetEnrollmentSyTerm($enrollment_id){
+
+        $sql = $this->con->prepare("SELECT t2.term
+
+            FROM enrollment as t1
+
+            INNER JOIN school_year as t2 ON t2.school_year_id = t1.school_year_id
+            WHERE t1.enrollment_id=:enrollment_id
+
+        ");
+
+        $sql->bindParam(":enrollment_id", $enrollment_id);
+        $sql->execute();
+
+        if ($sql->rowCount() > 0) {
+            $value = $sql->fetchColumn();
+        } else {
+            $value = NULL; // You can set $value to NULL only if no rows were found.
+        }
+
+        return $value;
+    }
+    public function GetEnrollmentSyPeriod($enrollment_id){
+
+        $sql = $this->con->prepare("SELECT t2.period
+
+            FROM enrollment as t1
+
+            INNER JOIN school_year as t2 ON t2.school_year_id = t1.school_year_id
+            WHERE t1.enrollment_id=:enrollment_id
+
+        ");
+
+        $sql->bindParam(":enrollment_id", $enrollment_id);
+        $sql->execute();
+
+        if ($sql->rowCount() > 0) {
+            $value = $sql->fetchColumn();
+        } else {
+            $value = NULL; // You can set $value to NULL only if no rows were found.
+        }
+
+        return $value;
+    }
     public function GetStudentEnrolled($course_id, $school_year_id = null){
 
         $value = 0;
@@ -803,10 +915,14 @@
 
     public function GenerateEnrollmentFormId($school_year_id = null){
 
-        $school_year = new SchoolYear($this->con, $school_year_id);
+        $school_year = new SchoolYear($this->con);
+
+        $school_year_obj = $school_year->GetActiveSchoolYearAndSemester();
+
+        $period = $school_year_obj['period'];
 
         $term = $school_year->GetTerm();
-        $period = $school_year->GetPeriod();
+        // $period = $school_year->GetPeriod();
 
         $period_short = $period === "First" ? "S1" : ($period === "Second" ? "S2" : "");
 
@@ -843,8 +959,18 @@
     }
 
     public function changeYearFormat($dateRange) {
+
+        $school_year = new SchoolYear($this->con);
+
+        $school_year_obj = $school_year->GetActiveSchoolYearAndSemester();
+
+        $current_school_year_period = $school_year_obj['period'];
+        $current_school_year_term = $school_year_obj['term'];
+
+        $current_school_year_period = $school_year->GetPeriod();
+
         // Split the input date range by the hyphen
-        $dateParts = explode("-", $dateRange);
+        $dateParts = explode("-", $current_school_year_term);
 
         // Check if there are two valid parts
         if (count($dateParts) == 2) {
@@ -1141,6 +1267,56 @@
 
         return $student_status;
 
+    }
+
+    public function GetEnrollmentRegistrarId($student_id, $enrollment_id) {
+
+        $student_status = "";
+
+        // Check if the enrollment form ID already exists in the database
+
+        $sql = $this->con->prepare("SELECT registrar_id FROM enrollment 
+
+            WHERE enrollment_id = :enrollment_id
+            AND student_id = :student_id
+            -- AND school_year_id = :school_year_id
+            
+        ");
+ 
+        $sql->bindValue(":enrollment_id", $enrollment_id);
+        $sql->bindValue(":student_id", $student_id);
+        $sql->execute();
+
+        if($sql->rowCount() > 0){
+            $student_status = $sql->fetchColumn();
+        }
+
+        return $student_status;
+    }
+
+    public function GetEnrollmentCashierId($student_id, $enrollment_id) {
+
+        $student_status = "";
+
+        // Check if the enrollment form ID already exists in the database
+
+        $sql = $this->con->prepare("SELECT cashier_id FROM enrollment 
+
+            WHERE enrollment_id = :enrollment_id
+            AND student_id = :student_id
+            -- AND school_year_id = :school_year_id
+            
+        ");
+ 
+        $sql->bindValue(":enrollment_id", $enrollment_id);
+        $sql->bindValue(":student_id", $student_id);
+        $sql->execute();
+
+        if($sql->rowCount() > 0){
+            $student_status = $sql->fetchColumn();
+        }
+
+        return $student_status;
     }
 
     public function GetEnrollmentMadeDateForm($student_id, $enrollment_id,
@@ -1543,6 +1719,27 @@
         return $new_enrollment_form_id;
     }
 
+    public function CheckAlreadyHasEnrollmentForm($student_id, $school_year_id){
+
+        // $new_enrollment_form_id = $enrollment_form_id;
+        
+        $query = $this->con->prepare("SELECT enrollment_form_id 
+        
+            FROM enrollment
+            
+            WHERE student_id = :student_id
+            AND school_year_id = :school_year_id
+
+        ");
+
+        $query->bindParam(":student_id", $student_id);
+        $query->bindParam(":school_year_id", $school_year_id);
+        $query->execute();
+
+        return $query->rowCount() > 0;
+
+    }
+
     public function CheckStudentEnrollmentFormExists($school_year_id, $student_id){
 
         $query = $this->con->prepare("SELECT enrollment_id FROM enrollment
@@ -1867,7 +2064,7 @@
 
     public function MarkAsRegistrarEvaluated($current_school_year_id,
         $student_course_id,
-        $student_id, $enrollment_form_id, $enrollment_payment = null){
+        $student_id, $enrollment_form_id, $enrollment_payment = null, $registrarUserId = null){
 
         $registrar_evaluated = "yes";
         $now = date("Y-m-d H:i:s");
@@ -1879,7 +2076,8 @@
         $update_tentative = $this->con->prepare("UPDATE enrollment
             SET registrar_evaluated=:registrar_evaluated,
                 registrar_confirmation_date=:registrar_confirmation_date,
-                enrollment_payment=:enrollment_payment
+                enrollment_payment=:enrollment_payment,
+                registrar_id=:registrar_id
             
             -- WHERE student_id=:student_id
             WHERE school_year_id=:school_year_id
@@ -1891,6 +2089,7 @@
         $update_tentative->bindParam(":registrar_evaluated", $registrar_evaluated);
         $update_tentative->bindParam(":registrar_confirmation_date", $now);
         $update_tentative->bindParam(":enrollment_payment", $enrollment_payment);
+        $update_tentative->bindParam(":registrar_id", $registrarUserId);
         // $update_tentative->bindParam(":student_id", $student_id);
         $update_tentative->bindParam(":school_year_id", $current_school_year_id);
         $update_tentative->bindParam(":enrollment_form_id", $enrollment_form_id);
@@ -2291,11 +2490,15 @@
     }
 
 
-    public function EnrollmentFormMarkAsPaid($current_school_year_id,
-        $student_id, $enrollment_form_id,
+    public function EnrollmentFormMarkAsPaid(
+        $current_school_year_id,
+        $student_id,
+        $enrollment_form_id,
         $enrollment_payment,
         $payment_status,
-        $payment_method){
+        $payment_method
+        // $cashierUserId
+        ){
 
         $cashier_evaluated = "yes";
         $now = date("Y-m-d H:i:s");
@@ -2303,9 +2506,10 @@
         $update_tentative = $this->con->prepare("UPDATE enrollment
             SET cashier_evaluated=:cashier_evaluated,
                 cashier_confirmation_date=:cashier_confirmation_date,
-                enrollment_payment=:enrollment_payment,
+                -- enrollment_payment=:enrollment_payment,
                 payment_status=:payment_status,
                 payment_method=:payment_method
+                -- cashier_id=:cashier_id
             
             WHERE student_id=:student_id
             AND school_year_id=:school_year_id
@@ -2314,12 +2518,14 @@
 
         $update_tentative->bindParam(":cashier_evaluated", $cashier_evaluated);
         $update_tentative->bindParam(":cashier_confirmation_date", $now);
-        $update_tentative->bindParam(":enrollment_payment", $enrollment_payment);
+        // $update_tentative->bindParam(":enrollment_payment", $enrollment_payment);
         $update_tentative->bindParam(":student_id", $student_id);
         $update_tentative->bindParam(":school_year_id", $current_school_year_id);
         $update_tentative->bindParam(":enrollment_form_id", $enrollment_form_id);
         $update_tentative->bindParam(":payment_status", $payment_status);
         $update_tentative->bindParam(":payment_method", $payment_method);
+        // $update_tentative->bindParam(":cashier_id", $cashierUserId);
+        
         $update_tentative->execute();
 
         if($update_tentative->rowCount() > 0){
@@ -2688,7 +2894,8 @@
         return [];
     }
 
-    public function ApplyEnrollmentOS($student_id, $course_id, $school_year_id,
+    public function ApplyEnrollmentOS(
+        $student_id, $course_id, $school_year_id,
         $enrollment_form_id, $isRegular, $type){
 
         $now = date("Y-m-d H:i:s");
@@ -2696,28 +2903,48 @@
         // $registrar_evaluated = $isRegular == "Regular" ? "yes" : "no";
         $registrar_evaluated = "no";
         // $student_status = $isRegular == "Regular" ? "Regular" : "Irregular";
-        $student_status = $isRegular == "Regular" ? "Regular" : "";
+        $student_status = $isRegular == "Regular" ? "Regular" : "Irregular";
         $is_tertiary = $type == "Tertiary" ? 1 : 0;
 
-        $sql = $this->con->prepare("INSERT INTO enrollment
-            (student_id, course_id, school_year_id, enrollment_form_id, enrollment_approve, enrollment_date,
-                is_transferee, registrar_evaluated, student_status, is_tertiary)
-            VALUES(:student_id, :course_id, :school_year_id, :enrollment_form_id, :enrollment_approve, :enrollment_date,
-                :is_transferee, :registrar_evaluated, :student_status, :is_tertiary)");
 
-        $sql->bindParam(":student_id", $student_id);
-        // Registrar would select the course
-        $sql->bindValue(":course_id", 0);
-        $sql->bindParam(":school_year_id", $school_year_id);
-        $sql->bindParam(":enrollment_form_id", $enrollment_form_id);
-        $sql->bindParam(":enrollment_date", $now);
-        $sql->bindValue(":enrollment_approve", NULL, PDO::PARAM_NULL);
-        $sql->bindValue(":is_tertiary", $is_tertiary);
-        $sql->bindValue(":is_transferee", 0);
-        $sql->bindParam(":registrar_evaluated", $registrar_evaluated);
-        $sql->bindParam(":student_status", $student_status);
+        if($this->CheckAlreadyHasEnrollmentForm($student_id,
+            $school_year_id)){
+            
+            Alert::error("You already have an enrollment form for this semester",
+                "");
+            exit();
+        }else{
 
-        return $sql->execute();
+
+            $sql = $this->con->prepare("INSERT INTO enrollment
+                (student_id, course_id, school_year_id, enrollment_form_id, enrollment_approve, enrollment_date,
+                    is_transferee, registrar_evaluated, student_status, is_tertiary)
+                VALUES(:student_id, :course_id, :school_year_id, :enrollment_form_id, :enrollment_approve, :enrollment_date,
+                    :is_transferee, :registrar_evaluated, :student_status, :is_tertiary)");
+
+            # Check if enrollment form is exists within semester.
+
+
+            $sql->bindParam(":student_id", $student_id);
+            // Registrar would select the course
+            $sql->bindValue(":course_id", 0);
+            $sql->bindParam(":school_year_id", $school_year_id);
+            $sql->bindParam(":enrollment_form_id", $enrollment_form_id);
+            $sql->bindParam(":enrollment_date", $now);
+            $sql->bindValue(":enrollment_approve", NULL, PDO::PARAM_NULL);
+            $sql->bindValue(":is_tertiary", $is_tertiary);
+            $sql->bindValue(":is_transferee", 0);
+            $sql->bindParam(":registrar_evaluated", $registrar_evaluated);
+            $sql->bindParam(":student_status", $student_status);
+
+            $sql->execute();
+
+            if($sql->rowCount() > 0){
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function InsertEnrollmentManualNewStudent($student_id, $course_id, $school_year_id,
@@ -2743,8 +2970,16 @@
         // }
 
         // Check if Enrollment Form Id is Unique
-        // If not generate another one.
+        // If not, generate another one.
         $enrollment_form_id = $this->CheckEnrollmentFormIdExists($enrollment_form_id);
+
+        // var_dump($enrollment_form_id);
+        // return;
+        
+        // Invalid date format
+
+        // var_dump($enrollment_form_id);
+        // return;
 
         $sql = $this->con->prepare("INSERT INTO enrollment
             (student_id, course_id, school_year_id, enrollment_form_id, enrollment_approve, enrollment_date,

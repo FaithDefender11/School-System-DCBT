@@ -22,6 +22,7 @@
     // echo $selected_program_id;
 ?>
 
+  
     <head>
         <style>
             .show_search{
@@ -32,6 +33,9 @@
             div.dataTables_length {
                 display: none;
             }
+            .dropdown-menu.show{
+            margin-left: -170px;
+        }
         </style>
         <link href='https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css' rel='stylesheet' type='text/css'>
         <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
@@ -179,18 +183,41 @@
             <div class="floating">
 
                 <div class="action">
+
+                        <div class='dropdown'>
+
+                            <button class='icon'>
+                                <i class='bi bi-three-dots-vertical'></i>
+                            </button>
+
+                            <div class='dropdown-menu'>
+ 
+                                <a href='manual_create.php' class='dropdown-item' style='color: black'>
+                                    <i class='fas fa-plus'></i>
+                                    Process form
+                                </a>
+
+                                <a href='rejected_enrollees.php' class='dropdown-item' style='color: yellowgreen'>
+                                    <i class='fas fa-eye'></i>
+                                    Previous enrollees
+                                </a>
+
+                            </div>
+
+                        </div>
     
-                    <button onclick="window.location.href = 'manual_create.php' " 
-                        class="clean large success">+ Enroll new
-                    </button>
+                  
+
                 </div>
 
                 <!-- <div class="title">
                     <button onclick="window.location.href = 'manual_create.php' " class="btn btn-success">Enroll Here</button>
-                </div>
-                <div class="title">
+                    </div>
+                -->
+                
+                <!-- <div class="title">
                     <button onclick="window.location.href = 'rejected_enrollees.php' " class="btn btn-info">Rejected Enrollee</button>
-                </div> -->
+                </div>  -->
 
                 <div class="filters">
                     <table>
@@ -327,6 +354,20 @@
             'ordering': true
         });
      
+    });
+
+var dropBtns = document.querySelectorAll(".icon");
+
+    dropBtns.forEach(btn => {
+        btn.addEventListener("click", (e) => {
+            const dropMenu = e.currentTarget.nextElementSibling;
+            if (dropMenu.classList.contains("show")) {
+                dropMenu.classList.toggle("show");
+            } else {
+                document.querySelectorAll(".dropdown-menu").forEach(item => item.classList.remove("show"));
+                dropMenu.classList.add("show");
+            }
+        });
     });
 
 </script>

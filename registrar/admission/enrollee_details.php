@@ -76,7 +76,9 @@
             $admission_status);
         ?>
 
-        <?php echo Helper::ProcessPendingCards($enrollment_form_id, $date_creation, $admission_status); ?>
+        <?php echo Helper::ProcessPendingCards($enrollment_form_id,
+            $date_creation, $admission_status); ?>
+            
     </div>
     
     <main>

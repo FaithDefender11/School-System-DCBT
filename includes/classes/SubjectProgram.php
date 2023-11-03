@@ -290,7 +290,7 @@ class SubjectProgram{
 
 
     public function GetStudentEnrolledSubjectCodeBase($program_id,
-        $student_id, $GRADE_ELEVEN, $SELECTED_SEMESTER){
+        $student_id, $GRADE_LEVEL, $SELECTED_SEMESTER){
 
             // echo $program_id;
         // Enrollment student course_id
@@ -338,10 +338,7 @@ class SubjectProgram{
             LEFT JOIN course as t3 ON t3.course_id = t2.course_id
             LEFT JOIN student_subject_grade as t4 ON t4.student_subject_id = t2.student_subject_id
             
-            -- LEFT JOIN subject_schedule as t5 ON t5.subject_code = t2.subject_code
-            -- AND t5.course_id = t2.course_id
-
-            -- LEFT JOIN teacher as t6 ON t6.teacher_id = t5.teacher_id
+ 
             WHERE t1.semester=:semester
             AND t1.program_id=:program_id
             AND t1.course_level=:course_level
@@ -350,7 +347,7 @@ class SubjectProgram{
 
         $subject_query->bindParam(":semester", $SELECTED_SEMESTER); 
         $subject_query->bindParam(":program_id", $program_id); 
-        $subject_query->bindParam(":course_level", $GRADE_ELEVEN); 
+        $subject_query->bindParam(":course_level", $GRADE_LEVEL); 
         $subject_query->bindParam(":student_id", $student_id); 
         $subject_query->execute();
 
@@ -397,13 +394,15 @@ class SubjectProgram{
             $third = $value['third'];
             $fourth = $value['fourth'];
 
+            // var_dump($program_section);
+
             // $first = $value['first'] == 0 ? "-" : $value['first'];
             // $second = $value['second'] == 0 ? "-" : $value['second'];
             // $third = $value['third'] == 0 ? "-" : $value['third'];
             // $fourth = $value['fourth'] == 0 ? "-" : $value['fourth'];
 
 
-            $doesEnrollmentRetakeIsZero = $this->DoesEnrollmentRetakeIsZero($db_enrollment_id);
+            // $doesEnrollmentRetakeIsZero = $this->DoesEnrollmentRetakeIsZero($db_enrollment_id);
             
             // if($doesEnrollmentRetakeIsZero == true){
 
@@ -536,11 +535,117 @@ class SubjectProgram{
 
     }
 
+     public function SubjectToShow($department_type,
+        $current_school_year_period, $current_school_year_term,
+        $student_id, $student_program_id, $enrollment_section_level){
+
+
+        $subject_program = new SubjectProgram($this->con);
+
+        // var_dump($arrayOfSubjectCode);
+        // echo "<br>";
+
+        $arrayOfSubjectCode = $subject_program->GetProgramSemesterAvailableSubjectCodes(
+            $student_program_id, $current_school_year_period, $enrollment_section_level);
+ 
+
+        var_dump($arrayOfSubjectCode);
+        echo "<br>";
+        // echo "<br>";
+
+        $subjectCodePlaceholders = implode(', ', array_map(function($subjectCode) {
+            return ':subject_code_' . $subjectCode;
+        }, $arrayOfSubjectCode));
+
+
+        // var_dump($subjectCodePlaceholders);
+        // echo "<br>";
+        // echo "<br>";
+
+        $sql = $this->con->prepare("SELECT 
+
+            t1.*
+
+            ,t2.program_section
+            ,t2.course_id,
+
+            t3.student_subject_id,
+            t3.is_final AS ss_is_final,
+            t3.enrollment_id AS ss_enrollment_id,
+            t3.subject_program_id AS ss_subject_program_id,
+
+            t3.is_transferee AS ss_is_transferee,
+            t3.school_year_id AS ss_school_year_id,
+            t3.course_id AS ss_course_id,
+            t3.student_id AS ss_student_id,
+
+            t4.student_subject_id AS ssg_student_subject_id
+
+            FROM subject_program AS t1
+
+            INNER JOIN course as t2 ON t2.program_id = t1.program_id
+            
+            
+            AND (
+                t2.program_id = :student_program_id
+                OR (
+                    t1.program_id != :student_program_id
+                    AND t1.subject_type = 'Core'
+                    --   AND t1.subject_code IN ($subjectCodePlaceholders)
+                )
+            )
+            
+
+            LEFT JOIN student_subject as t3 ON t1.subject_program_id = t3.subject_program_id
+            AND t3.student_id=:student_id
+
+            LEFT JOIN student_subject_grade AS t4 ON t4.student_subject_id = t3.student_subject_id
+            AND t4.remarks = 'Passed'
+            
+
+            WHERE t1.department_type = :department_type
+            AND t1.semester = :semester
+            AND t2.active = 'yes'
+            AND t2.school_year_term = :school_year_term
+            AND t2.is_full = 'no'
+            
+
+            GROUP BY t1.subject_program_id, t2.course_id
+            ORDER BY t1.course_level, t1.semester, t2.program_section DESC
+
+        ");
+
+        $sql->bindParam(":department_type", $department_type);
+        $sql->bindParam(":semester", $current_school_year_period);
+      
+        $sql->bindParam(":school_year_term", $current_school_year_term);
+        $sql->bindParam(":student_id", $student_id);
+        $sql->bindParam(":student_program_id", $student_program_id);
+
+        // foreach ($arrayOfSubjectCode as $index => $subjectCode) {
+        //     // $extra = ":subject_code_$subjectCode";
+        //     // var_dump($extra);
+
+        //     // echo "<br>";
+        //     $sql->bindParam(":subject_code_$subjectCode", $subjectCode);
+        // }
+
+
+        $sql->execute();
+
+        if ($sql->rowCount() > 0) {
+            return $sql->fetchAll(PDO::FETCH_ASSOC);
+        }
+        
+        
+    }
 
     public function GetAvailableSubjectCodeWithinSemester($department_type,
         $current_school_year_period, $current_school_year_term,
         $student_id, $student_program_id, $selected_subject_program_id = null){
  
+
+
             if($selected_subject_program_id != null){
                 $sql = $this->con->prepare("SELECT 
                                                 
@@ -616,9 +721,9 @@ class SubjectProgram{
                     t3.is_transferee AS ss_is_transferee,
                     t3.school_year_id AS ss_school_year_id,
                     t3.course_id AS ss_course_id,
-                    t3.student_id AS ss_student_id,
+                    t3.student_id AS ss_student_id
 
-                    t4.student_subject_id AS ssg_student_subject_id
+                    -- t4.student_subject_id AS ssg_student_subject_id
                     
                     FROM subject_program AS t1
 
@@ -626,15 +731,18 @@ class SubjectProgram{
                     AND t2.course_level = t1.course_level
                     AND (
                         t2.program_id = :student_program_id
+
                         OR t1.program_id != :student_program_id
                             AND t1.subject_type='Core'
+                            -- AND t1.subject_code = array of my subject code 'Core'
+
                         )
 
                     LEFT JOIN student_subject as t3 ON t1.subject_program_id = t3.subject_program_id
                     AND t3.student_id=:student_id
 
-                    LEFT JOIN student_subject_grade AS t4 ON t4.student_subject_id = t3.student_subject_id
-                    AND t4.remarks = 'Passed'
+                    -- LEFT JOIN student_subject_grade AS t4 ON t4.student_subject_id = t3.student_subject_id
+                    -- AND t4.remarks = 'Passed'
                     
                     WHERE t1.department_type = :department_type
                     AND t1.semester=:semester
@@ -662,6 +770,7 @@ class SubjectProgram{
                 $sql->execute();
 
                 if($sql->rowCount() > 0){
+
                     return $sql->fetchAll(PDO::FETCH_ASSOC);
                 }
                 
@@ -902,5 +1011,35 @@ class SubjectProgram{
         return [];
 
     }
+
+    public function GetProgramSemesterAvailableSubjectCodes(
+        $program_id, $current_school_year_period, $course_level){
+     
+        $query = $this->con->prepare("SELECT 
+
+            t1.subject_code
+            
+            FROM subject_program as t1
+
+         
+            WHERE t1.program_id =:program_id
+            AND t1.semester =:semester
+            AND t1.course_level =:course_level
+
+        ");
+
+        $query->bindValue(":program_id", $program_id);
+        $query->bindValue(":semester", $current_school_year_period);
+        $query->bindValue(":course_level", $course_level);
+        $query->execute();
+
+        if($query->rowCount() > 0){
+            return $query->fetchAll(PDO::FETCH_COLUMN);
+        }
+
+        return [];
+
+    }
+
 }
 ?>

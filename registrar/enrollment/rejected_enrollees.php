@@ -35,8 +35,7 @@
                             </th>
                             <th><button>Enrollment ID</button></th>
                             <th><button>Name</button></th>
-                            <th><button>Section</button></th>
-                            <th><button>A.Y</button></th>
+                            <th><button>Program</button></th>
                         </tr>
                     </table>
                 </div>
@@ -53,8 +52,9 @@
                         <thead>
                             <tr>
                                 <th>Name</th>
-                                <th>A.Y</th>  
+                                <th>A.Y Term</th>  
                                 <th>Status</th>  
+                                <th>Applying for</th>  
                                 <th>Action</th>  
                             </tr>
                         </thead>
@@ -93,6 +93,7 @@
                 { data: 'name' , orderable: false },
                 { data: 'term', orderable: false},
                 { data: 'status', orderable: false},
+                { data: 'applying_to', orderable: false},
                 { data: 'view_button', orderable: false}
             ],
             'ordering': true

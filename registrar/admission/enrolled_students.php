@@ -227,7 +227,7 @@
 
                     </div>
                                     
-                    <div class="floating ">
+                    <div style="display: none;" class="floating ">
                         <header>
                             <div class="title">
                                 <h3>Form details</h3>

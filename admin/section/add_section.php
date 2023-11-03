@@ -122,7 +122,7 @@
 
             if($section->CheckSetionExistsWithinCurrentSY($program_section,
                 $selected_term) == true){
-                Alert::error("$program_section already exists within $term term", "add_section.php?id=$program_id&level=$course_level&term=$selected_term");
+                Alert::error("$program_section already exists within A.Y $current_school_year_term term", "add_section.php?id=$program_id&level=$course_level&term=$selected_term");
                 exit();
             }
 
@@ -227,7 +227,7 @@
                             <span>
                                 <label for="program_section">Section Name</label>
                                 <div>
-                                    <input type="text" name="program_section" value="<?php echo $program->GetProgramSectionName();?><?php echo $course_level;?>" placeholder="e.g: STEM11-A, ABM11-A">
+                                    <input class="form-control" type="text" name="program_section" value="<?php echo $program->GetProgramSectionName();?><?php echo "$course_level-";?>" placeholder="e.g: STEM11-A, ABE-1-A">
                                 </div>
                             </span>
                         </div>
@@ -235,13 +235,13 @@
                             <span>
                                 <label for="min_student">Minimum Capacity</label>
                                 <div>
-                                    <input type="number" name="min_student" value="<?php echo $db_min_capacity; ?>" placeholder="Minimum Capacity">
+                                    <input class="form-control" type="number" name="min_student" value="15" placeholder="Minimum Capacity">
                                 </div>
                             </span>
                             <span>
                                 <label for="capacity">Maximum Capacity</label>
                                 <div>
-                                    <input type="number" name="capacity" value="30" placeholder="Room Capacity">
+                                    <input class="form-control" class="form-control" type="number" name="capacity" value="30" placeholder="Room Capacity">
                                 </div>
                             </span>
                         </div>
@@ -249,7 +249,7 @@
                             <span>
                                 <label for="adviser_teacher_id">Adviser Name</label>
                                 <div>
-                                    <select name="adviser_teacher_id" id="adviser_teacher_id">
+                                    <select class="form-control" name="adviser_teacher_id" id="adviser_teacher_id">
                                         <?php
                                             $query = $con->prepare("SELECT * FROM teacher");
                                             $query->execute();

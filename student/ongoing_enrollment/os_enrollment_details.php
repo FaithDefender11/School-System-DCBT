@@ -6,9 +6,10 @@
             <header>
                 <div class="title">
                 <h2 style="color: var(--titleTheme)">Existing Student Form</h2>
-                <p class="text-right mt-0">Generated Form ID: <?php echo $enrollment_form_id;?></p>
+                    <p class="text-right mt-0">Generated Form ID: <?php echo $enrollment_form_id;?> &nbsp; Status: &nbsp;  <em style="font-size: 15px;"><?= $student_student_status;?></em></p>
                 </div>
             </header>
+            
             <div class="progress">
                 <span class="dot active"><p>View Information</p></span>
                 <span class="line active"></span>
@@ -65,7 +66,7 @@
 
                     <header>
                         <div class="title" id="transferee-details">
-                            <h5 style="color: var(--titleTheme)">Grade Level</h5>
+                            <h5 style="color: var(--titleTheme)">Current Grade Level</h5>
                         </div>
                     </header>
 

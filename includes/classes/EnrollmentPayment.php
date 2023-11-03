@@ -37,7 +37,8 @@
     
     public function AddEnrollmentPayment(
         $enrollment_id, $amount_paid,
-        $enrollment_form_student_id, $payment_method){
+        $enrollment_form_student_id, $payment_method,
+        $cashier_id){
 
         $now = date("Y-m-d H:i:s");
 
@@ -94,14 +95,15 @@
         $enroll_payment_inserted = false;
 
         $sql = $this->con->prepare("INSERT INTO enrollment_payment
-            (enrollment_id, amount_paid, date_creation)
-            VALUES(:enrollment_id, :amount_paid, :date_creation)
+            (enrollment_id, amount_paid, date_creation, cashier_id)
+            VALUES(:enrollment_id, :amount_paid, :date_creation, :cashier_id)
         ");
 
         // $sql->bindParam(":room", $room);
         $sql->bindValue(":enrollment_id", $enrollment_id);
         $sql->bindValue(":amount_paid", $amount_paid);
         $sql->bindValue(":date_creation", $now);
+        $sql->bindValue(":cashier_id", $cashier_id);
         $sql->execute();
 
         if($sql->rowCount() > 0){

@@ -5,6 +5,7 @@
     include_once('../../includes/classes/Schedule.php');
     include_once('../../includes/classes/SchoolYear.php');
     include_once('../../includes/classes/Program.php');
+    include_once('../../includes/classes/SubjectPeriodCodeTopic.php');
 
     ?>
         <head>
@@ -47,6 +48,15 @@
 
     $schedule = new Schedule($con);
 
+    $school_year = new SchoolYear($con);
+    $school_year_obj = $school_year->GetActiveSchoolYearAndSemester();
+
+    $current_school_year_term = $school_year->getSchoolYearValue($school_year_obj, 'term');
+    $current_school_year_period = $school_year->getSchoolYearValue($school_year_obj, 'period');
+    $current_school_year_id = $school_year->getSchoolYearValue($school_year_obj, 'school_year_id');
+
+
+
     $userTimeFrom = '11:29';
     $userTimeTo = '13:00';
     $userScheduleDay = 'M';
@@ -54,8 +64,11 @@
     // $room_id = NULL;
 
 
+
+
     $check = $schedule->CheckScheduleDayWithRoomConflict(
         $userTimeFrom, $userTimeTo, $userScheduleDay, $room_id);
+
 
     // var_dump($check);
 
@@ -63,6 +76,7 @@
     $selected_program_id = "";
     $school_year_search = "";
     $selected_course_id = "";
+
 
 
     
@@ -96,7 +110,96 @@
         $sy_id = NULL;
         $selected_program_id = NULL;
     }
+
+    $subjectPeriodCodeTopic = new SubjectPeriodCodeTopic($con);
     
+
+    $getTeacherScheduleCount = $schedule
+        ->GetSubjectScheduleCountForTeacher("STEM11-B-STEM201",
+        $current_school_year_id);
+
+    // $cheq = $subjectPeriodCodeTopic
+    //     ->RemovingTeachingCodeTopic(23, "STEM11-B-STEM201",
+    //     $current_school_year_id);
+
+    // var_dump($getTeacherScheduleCount);
+    
+    
+    $check_subject_schedule_assigned_teacher_id = $schedule
+        ->GetAssignedSubjectScheduleTeacherId("STEM11-B-STEM201",
+        $current_school_year_id);
+
+    $check_assigned_subject_topic_teacher_id = $subjectPeriodCodeTopic
+        ->GetAssignedSectionCodeTeacherId("STEM11-B-STEM201",
+        $current_school_year_id);
+
+    $previous_teacher_id = 23;
+
+    if(
+        $check_assigned_subject_topic_teacher_id != NULL &&
+        $check_subject_schedule_assigned_teacher_id != NULL &&
+        $check_assigned_subject_topic_teacher_id == $check_subject_schedule_assigned_teacher_id){
+
+        # Should only add subject_schedule data.
+        # subject_period_code_topic still the same
+
+        // echo "only add subject_schedule";
+
+    }
+
+    if(
+        $check_assigned_subject_topic_teacher_id != NULL &&
+        $check_subject_schedule_assigned_teacher_id != NULL &&
+        $check_assigned_subject_topic_teacher_id !== $check_subject_schedule_assigned_teacher_id){
+
+        # You`re about to place a other teacher to the subject_code,
+        # considering there`s a previous selected teacher to that subject_code
+
+        # Prompt user, it should clean all subject_schedule of assigned teacher first
+        # before adding another teacher.
+
+    }
+
+    // var_dump($check_assigned_subject_topic_teacher_id);
+    // var_dump($check_subject_schedule_assigned_teacher_id);
+
+    if(
+        $check_assigned_subject_topic_teacher_id != NULL &&
+        $check_subject_schedule_assigned_teacher_id != NULL &&
+        $check_assigned_subject_topic_teacher_id != $previous_teacher_id &&
+        $check_subject_schedule_assigned_teacher_id != $previous_teacher_id
+    ){
+
+    # You`re about to place a other teacher to the subject_code,
+    # considering there`s a previous selected teacher to that subject_code
+
+    # Prompt user, it should clean all subject_schedule of assigned teacher first
+    # before adding another teacher.
+
+    // echo "You`re about to place with other teacher to the subject_code";
+    // exit();  
+        
+}
+
+    if($check_assigned_subject_topic_teacher_id == NULL &&
+        $check_subject_schedule_assigned_teacher_id == NULL 
+    ){
+
+        # It means, no subject_period_code_topic data and no subject_schedule data
+
+        # Add subject_schedule
+
+        # Add subject_period_code_topic (only once)
+
+    }
+
+    # To remove totally the subject_period_code_topic data from the
+    # insertion of subject_schedule
+    # It should subject_schedule data count is EQUAL to ONE
+    # Then the subject_period_code_topic can be remove.
+    
+
+
 ?>
 
     
@@ -277,8 +380,8 @@
 
 
                                     ORDER BY t2.program_section,
-                                    t3.term DESC,
-                                    t3.period ASC
+                                        t3.term DESC,
+                                        t3.period ASC
                                 ");
 
                                 // $query->bindParam(":condition2", $Tertiary);
@@ -429,8 +532,97 @@
         });
     });
 
+    function removeSchedule(subject_schedule_id){
+
+        var subject_schedule_id = parseInt(subject_schedule_id);
+
+        Swal.fire({
+                icon: 'question',
+                title: `Are you sure you want to remove selected schedule?`,
+                text: 'Important! This action cannot be undone.',
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'Cancel'
+
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    $.ajax({
+                        url: "../../ajax/schedule/remove_schedule.php",
+                        type: 'POST',
+                        data: {
+                            subject_schedule_id
+                        },
+                        success: function(response) {
+
+                            response = response.trim();
+
+                            console.log(response);
+
+                            if(response == "success_delete"){
+                                Swal.fire({
+                                icon: 'success',
+                                title: `Selected schedule has been deleted`,
+                                showConfirmButton: false,
+                                timer: 1500, // Adjust the duration of the toast message in milliseconds (e.g., 3000 = 3 seconds)
+                                toast: true,
+                                position: 'top-end',
+                                showClass: {
+                                popup: 'swal2-noanimation',
+                                backdrop: 'swal2-noanimation'
+                                },
+                                hideClass: {
+                                popup: '',
+                                backdrop: ''
+                                }
+                            }).then((result) => {
+
+                                // $('#schedule_table_list').load(
+                                //     location.href + ' #schedule_table_list'
+                                // );
+
+                                location.reload();
+                            });}
+
+                            if(response == "success_delete_with_subject_topic"){
+                                Swal.fire({
+                                icon: 'success',
+                                title: `Selected schedule and LMS topics has been deleted`,
+                                showConfirmButton: false,
+                                timer: 1500, // Adjust the duration of the toast message in milliseconds (e.g., 3000 = 3 seconds)
+                                toast: true,
+                                position: 'top-end',
+                                showClass: {
+                                popup: 'swal2-noanimation',
+                                backdrop: 'swal2-noanimation'
+                                },
+                                hideClass: {
+                                popup: '',
+                                backdrop: ''
+                                }
+                            }).then((result) => {
+
+                                // $('#schedule_table_list').load(
+                                //     location.href + ' #schedule_table_list'
+                                // );
+
+                                location.reload();
+                            });}
+
+                        },
+                        error: function(xhr, status, error) {
+                            // handle any errors here
+                        }
+                    });
+                } else {
+                    // User clicked "No," perform alternative action or do nothing
+                }
+        });
+    }
+
     $(document).ready(function() {
-        console.log('Document is ready'); 
+
+        // console.log('Document is ready'); 
 
         $("#clickSectionRedirect").click(function(e) {
                 e.preventDefault(); // Prevent the default link behavior
@@ -456,6 +648,7 @@
 
         selected_sy_id = selected_sy_id.trim();
         selected_program_id = selected_program_id.trim();
+        selected_course_id = selected_course_id.trim();
 
         var table = $('#schedule_table_list').DataTable({
 

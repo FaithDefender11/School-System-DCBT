@@ -665,7 +665,7 @@
 
                 $html = "<label for='program_id'>Program</label>
                     <div>
-                    <select id='program_id' name='program_id'>";
+                    <select class='form-control' id='program_id' name='program_id'>";
 
                 $html .= "<option value='Course-Section' disabled selected>Select-Program</option>";
 
@@ -1161,6 +1161,11 @@
 
                 $course_id = $value['course_id'];
 
+               # Check if course id has atleast 1 enrolled student
+                # if so, it moved-up, else
+                # it deactivated or remove ??
+
+
                 $sql->bindValue(":change_to", "no");
                 $sql->bindParam(":course_id", $course_id);
                 $sql->execute();
@@ -1194,6 +1199,11 @@
 
             foreach ($activeSectionIn2ndSem as $key => $value) {
                 # code...
+
+                # Check if course id has atleast 1 enrolled student
+                # if so, it moved-up, else
+                # it deactivated or remove ??
+
 
                 $course_id = $value['course_id'];
                 $program_section = $value['program_section'];
@@ -1386,6 +1396,8 @@
             return $activeSection;
         }
 
+      
+
         public function GetAllActiveSectionWithinYear($school_year_term){
 
             $activeSection = [];
@@ -1414,7 +1426,7 @@
 
 
         public function GetRegularOldSectionList($student_program_id,
-            $current_school_year_term, $student_course_level){
+            $current_school_year_term, $student_course_level = null){
 
             $activeSection = [];
 
@@ -1426,13 +1438,13 @@
                 AND active=:active
                 AND is_remove = 0
                 AND school_year_term=:school_year_term
-                AND course_level=:course_level
+                -- AND course_level=:course_level
             ");
 
             $sql->bindParam(":program_id", $student_program_id);
             $sql->bindParam(":active", $active);
             $sql->bindParam(":school_year_term", $current_school_year_term);
-            $sql->bindParam(":course_level", $student_course_level);
+            // $sql->bindParam(":course_level", $student_course_level);
 
             $sql->execute();
         
@@ -2007,6 +2019,34 @@
         }
 
      
+        public function GetAccurateLevelForRegularStudent(
+            $student_previous_course_level, $previous){
+
+            
+
+            // $sql = $this->con->prepare("SELECT 
+
+            //     t2.*, t1.program_section, t1.course_id
+                
+            //     FROM course as t1
+
+            //     INNER JOIN subject_program as t2 ON t2.program_id = t1.program_id
+
+            //     WHERE t2.semester = :semester
+            //     AND t1.course_id = :course_id
+            //     AND t2.course_level = :course_level
+            //     ");
+                
+            // $sql->bindParam(":semester", $period);
+            // $sql->bindParam(":course_id", $course_id);
+            // $sql->bindParam(":course_level", $student_course_level);
+            // $sql->execute();
+
+            // if($sql->rowCount() > 0)
+            //     return $sql->fetchAll(PDO::FETCH_ASSOC);
+            
+            // return [];
+        }
 
     }
 

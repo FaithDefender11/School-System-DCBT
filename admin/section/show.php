@@ -219,7 +219,7 @@
                                             <th>Subject</th>
                                             <th>Code</th>
                                             <th>Days</th>
-                                            <th>Time</th>
+                                            <th style="min-width: 192px;">Time</th>
                                             <th>Enrolled</th>
                                             <th>Room</th>
                                             <th>Instructor</th>
@@ -228,6 +228,7 @@
                                     </thead>
                                     <tbody>
                                         <?php 
+
 
                                             $sql = $con->prepare("SELECT 
                                             
@@ -261,7 +262,6 @@
 
                                                 ,t6.room_number
 
-
                                                 FROM subject_program as t1
                                                 
                                                 INNER JOIN course as t2 ON t2.program_id = t1.program_id
@@ -269,14 +269,10 @@
                                                 -- LEFT JOIN student_subject as t3 ON t3.course_id = t2.course_id
                                                 -- AND t3.subject_program_id = t1.subject_program_id
 
-
-
                                                 LEFT JOIN subject_schedule as t4 ON t4.course_id = t2.course_id
                                                 AND t4.subject_program_id = t1.subject_program_id
 
                                                 LEFT JOIN teacher as t5 ON t5.teacher_id = t4.teacher_id
-
-
                                                 LEFT JOIN room as t6 ON t6.room_id = t4.room_id
 
 
@@ -308,7 +304,6 @@
 
                                                 while($row = $sql->fetch(PDO::FETCH_ASSOC)){
 
-                                                    
                                                     $course_id = $row['course_id'];
                                                     $section = new Section($con, $course_id);
                                                     $program_section = $row['program_section'];
@@ -329,9 +324,9 @@
 
 
                                                     $add_teacher_url = "
-                                                        <button class='btn btn-sm btn-primary'>
-                                                            <i class='fas fa-pencil'></i>
-                                                        </button>
+                                                            <button class='btn btn-sm btn-primary'>
+                                                                <i class='fas fa-pencil'></i>
+                                                            </button>
                                                     ";
                                                     $teacher_id = $row['teacher_id'];
                                                     $teacherFullName = $row['teacher_id'] != 0 ? ucfirst($row['firstname']) . " " . ucfirst($row['lastname']) : "-";
@@ -361,24 +356,41 @@
                                                     $schedule_course_id = $row['schedule_course_id'];
                                                     $subject_schedule_id = $row['subject_schedule_id'];
 
-
                                                     $haveSchedule = "";
 
                                                     $statuss = "N/A";
 
                                                     $type_level = $department_type_section == "Tertiary" ? "Year" : ($department_type_section == "Senior High School" ? "Grade" : "");
 
-                                                    $add_schedule_url = "add_schedule_code.php?sp_id=$subject_program_id&id=$course_id";
-                                                    $edit_schedule_url = "edit_schedule_code.php?s_id=$subject_schedule_id";
+                                                    // $add_schedule_url = "add_schedule_code.php?sp_id=$subject_program_id&id=$course_id";
+
+                                                    $sp = new SubjectProgram($con, $subject_program_id);
+
+                                                    $sp_code = $sp->GetSubjectProgramRawCode();
+
+                                                    $add_schedule_url = "../schedule/create.php?course_id=$course_id&sp_id=$subject_program_id";
+
+                                                    // $edit_schedule_url = "edit_schedule_code.php?s_id=$subject_schedule_id";
+
+                                                    $edit_schedule_url = "../schedule/edit.php?id=$subject_schedule_id&course_id=$course_id&sp_id=$subject_program_id&t_id=$teacher_id";
 
                                                     $deleteSchedule = "";
+                                                    $removeScheduleBtn = "";
+                                                    $removeSchedule = "";
+
                                                     if($schedule_course_id != NULL && $schedule_course_id == $course_id){
 
+                                                        // onclick=\"window.location.href = '" . $edit_schedule_url . "'\"
+
                                                         $haveSchedule = "
-                                                            <button class='btn btn-sm btn-primary'
-                                                                onclick=\"window.location.href = '" . $edit_schedule_url . "'\">
-                                                                <i class='bi bi-pencil'></i>
-                                                            </button>
+                                                        
+                                                            <a href='$edit_schedule_url'>
+                                                                <button class='btn btn-sm btn-primary'
+                                                                    >
+                                                                    <i class='bi bi-pencil'></i>
+                                                                </button>
+
+                                                            </a>
                                                         "; 
                                                         
                                                         $deleteScheduleBtn = "deleteScheduleBtn($subject_schedule_id)";
@@ -393,6 +405,13 @@
                                                             </form>
                                                            
                                                         "; 
+
+                                                        $removeSchedule = "removeSchedule($subject_schedule_id)";
+                                                        $removeScheduleBtn = "
+                                                            <button onclick='$removeSchedule' style='margin-left: 5px;' class='btn btn-danger btn-sm'>
+                                                                <i class='fas fa-trash'></i>
+                                                            </button>
+                                                        ";
 
                                                     }else if($schedule_course_id == NULL){
 
@@ -424,12 +443,26 @@
                                                     //     $current_school_year_id);
                                                     
                                                     // echo $asd;
+
+
+                                                    // $add_schedule_url = "../schedule/create.php?course_id=$course_id&sp_id=$subject_program_id";
+
+                                                    $add_schedule_with_teacher_url = "";
+
+                                                    if($teacher_id != NULL){
+
+                                                        $add_schedule_with_teacher_url = "../schedule/create.php?course_id=$course_id&sp_id=$subject_program_id&t_id=$teacher_id";
+                                                    }else{
+
+                                                        $add_schedule_with_teacher_url = "../schedule/create.php?course_id=$course_id&sp_id=$subject_program_id";
+                                                    }
+
                                                     
                                                     echo "
                                                         <tr class='text-center'>
                                                             <td>$subject_title</td>
                                                             <td>
-                                                                <a style='color: #333' href='$add_schedule_url'>
+                                                                <a style='color: #333' href='$add_schedule_with_teacher_url'>
                                                                     $section_subject_code
                                                                 </a>
                                                             </td>
@@ -442,7 +475,7 @@
                                                             <td>
                                                                 <div style='display: flex;'>
                                                                     $haveSchedule
-                                                                    $deleteSchedule
+                                                                    $removeScheduleBtn
                                                                 </div>
                                                                
                                                             </td>
@@ -467,6 +500,95 @@
 ?>
 
 <script>
+
+    function removeSchedule(subject_schedule_id){
+
+        var subject_schedule_id = parseInt(subject_schedule_id);
+
+        Swal.fire({
+                icon: 'question',
+                title: `Are you sure you want to remove selected schedule?`,
+                text: 'Important! This action cannot be undone.',
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'Cancel'
+
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    $.ajax({
+                        url: "../../ajax/schedule/remove_schedule.php",
+                        type: 'POST',
+                        data: {
+                            subject_schedule_id
+                        },
+                        success: function(response) {
+
+                            response = response.trim();
+
+                            console.log(response);
+
+                            if(response == "success_delete"){
+                                Swal.fire({
+                                icon: 'success',
+                                title: `Selected schedule has been deleted`,
+                                showConfirmButton: false,
+                                timer: 1500, // Adjust the duration of the toast message in milliseconds (e.g., 3000 = 3 seconds)
+                                toast: true,
+                                position: 'top-end',
+                                showClass: {
+                                popup: 'swal2-noanimation',
+                                backdrop: 'swal2-noanimation'
+                                },
+                                hideClass: {
+                                popup: '',
+                                backdrop: ''
+                                }
+                            }).then((result) => {
+
+                                // $('#schedule_table_list').load(
+                                //     location.href + ' #schedule_table_list'
+                                // );
+
+                                location.reload();
+                            });}
+
+                            if(response == "success_delete_with_subject_topic"){
+                                Swal.fire({
+                                icon: 'success',
+                                title: `Selected schedule and LMS topics has been deleted`,
+                                showConfirmButton: false,
+                                timer: 1500, // Adjust the duration of the toast message in milliseconds (e.g., 3000 = 3 seconds)
+                                toast: true,
+                                position: 'top-end',
+                                showClass: {
+                                popup: 'swal2-noanimation',
+                                backdrop: 'swal2-noanimation'
+                                },
+                                hideClass: {
+                                popup: '',
+                                backdrop: ''
+                                }
+                            }).then((result) => {
+
+                                // $('#schedule_table_list').load(
+                                //     location.href + ' #schedule_table_list'
+                                // );
+
+                                location.reload();
+                            });}
+
+                        },
+                        error: function(xhr, status, error) {
+                            // handle any errors here
+                        }
+                    });
+                } else {
+                    // User clicked "No," perform alternative action or do nothing
+                }
+        });
+    }
+
     // function deleteScheduleBtn(schedule_id){
     //     Swal.fire({
     //             icon: 'question',

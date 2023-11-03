@@ -336,7 +336,7 @@ function PreferredBtn(pending_enrollees_id) {
     console.log(pending_enrollees_id);
 
     $.ajax({
-      url: '../../ajax/tentative/add_preferred_course.php',
+    url: '../../ajax/tentative/add_preferred_course.php',
       type: 'POST',
       data: {
         selected_admission_type,

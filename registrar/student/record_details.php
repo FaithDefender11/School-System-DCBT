@@ -208,6 +208,7 @@
             $check = $student_subject->CheckCurrentSemesterSubjectAllPassed(
                 $student_enrollment_id, $student_id, $current_school_year_id
             );
+            
             include_once('./grade_record.php');
 
         }

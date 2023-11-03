@@ -248,10 +248,10 @@ if ($row != null) {
         $sectionAcronym = $section->GetAcronymByProgramId($sectionProgramId);
 
         if($new_enrollee == 0
-            && $enrollment_is_new_enrollee == 0 
-            && $enrollment_is_transferee == 0
-            && $student_statusv2 == "Irregular"
-            && ($enrollment_student_status == "" || $enrollment_student_status == "Irregular")
+            // && $enrollment_is_new_enrollee == 0 
+            // && $enrollment_is_transferee == 0
+            // && $student_statusv2 == "Irregular"
+            && $enrollment_student_status == "Irregular"
             ){
 
             $updated_type = "Old Irregular";
@@ -265,9 +265,9 @@ if ($row != null) {
         }
 
         else if($new_enrollee == 0
-            && $enrollment_is_new_enrollee == 0 
-            && $enrollment_is_transferee == 0
-            && $student_statusv2 == "Regular"
+            // && $enrollment_is_new_enrollee == 0 
+            // && $enrollment_is_transferee == 0
+            // && $student_statusv2 == "Regular"
             && $enrollment_student_status == "Regular"
             ){
 
@@ -335,10 +335,8 @@ if ($row != null) {
         $data[] = array(
             "student_id" => $row['student_unique_id'],
             "name" => $fullname,
-            // "email" => $row['email'],
             "type" => $updated_type,
             "acronym" => $sectionAcronym,
-            // "waiting_result" => $waiting_result,
             "registrar_confirmation_date" => $registrar_confirmation_date,
             "button_url" => $button_url,
         );

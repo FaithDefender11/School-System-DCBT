@@ -8,9 +8,12 @@
         }
     }
 
+
+    
 ?>
 
 <div class="enrollment_new">
+
     <main >
         <header>
             <div class="title">
@@ -255,11 +258,92 @@
         </div>
 
         <hr>
-        <!-- FATHER -->
-        <div id="father_info">
+        <!-- SCHOOL -->
+
+        <div id="school_history_info">
+
             <header>
                 <div class="title">
-                    <h4>Father's Information</h4>
+                    <h4 style="font-weight: bold;">Previous School Information</h4>
+                </div>
+            </header>
+
+            <div class="row">
+                <span>
+                    <?php
+                        Helper::EchoErrorField(
+                        Constants::$schoolRequired,
+                        Constants::$invalidSchoolCharacters,
+                        Constants::$schoolIsTooShort,
+                        Constants::$schoolIsTooLong
+                        );
+                    ?>
+                    <label for="school_name">School Name <span class="red">*</span></label>
+                    <div>
+                        <input placeholder="Sta Lucia High School" required type="text" id="school_name" name="school_name" class="form-control" 
+                        value="<?php
+                                echo Helper::DisplayText('school_name', $school_name);
+                            ?>">
+                    </div>
+                </span>
+            </div>
+            <div class="row">
+                <span>
+                    <?php
+                        Helper::EchoErrorField(
+                        Constants::$addressRequired,
+                        Constants::$invalidAddressCharacters,
+                        Constants::$addressIsTooShort,
+                        Constants::$addressIsTooLong
+                        );
+                    ?>
+                    <label for="school_address">Address <span class="red">*</span></label>
+                    <div>
+                        <input required type="text" id="school_address" name="school_address"
+                        class="form-control" placeholder="House No Street Name Barangay City/Municipality" value="<?php
+                            echo Helper::DisplayText('school_address', $school_address);
+                        ?>">
+                    </div>
+                </span>
+            </div>
+            <div class="row">
+                <span>
+                    <label for="year_started">Admission Year <span class="red">*</span></label>
+                    <div>
+                        <!-- <input required type="date" id="year_started" name="year_started"
+                            class="form-control" value="<?php
+                            echo Helper::DisplayText('year_started', $year_started);
+                        ?>"> -->
+                        <input autocomplete="off" maxlength="4" required type="text" id="year_started" name="year_started"
+                            class="form-control" placeholder="e.g. 2020" value="<?php
+                            echo Helper::DisplayText('year_started', $year_started);
+                        ?>">
+                    </div>
+                </span>
+
+                <span>
+                    <label for="year_ended">Graduation Year <span class="red">*</span></label>
+                    <div>
+                        <!-- <input required type="date" id="year_ended" name="year_ended" 
+                        class="form-control" value="<?php
+                            echo Helper::DisplayText('year_started', $year_ended);
+                        ?>"> -->
+                        <input autocomplete="off" maxlength="4" required type="text" id="year_ended" name="year_ended"
+                            class="form-control" placeholder="e.g. 2022" value="<?php
+                            echo Helper::DisplayText('year_ended', $year_ended);
+                        ?>">
+                    </div>
+                </span>
+            </div>
+        </div>
+
+
+        <hr>
+        <!-- FATHER -->
+        <div style="display: none;" id="father_info">
+            <header>
+                <div class="title">
+                    <h4 style="font-weight: bold;">Father's Information</h4>
                 </div>
             </header>
 
@@ -373,7 +457,7 @@
 
         <hr>
         <!-- MOTHER -->
-        <div id="mother_info">
+        <div  style="display: none;" id="mother_info">
             <header>
                 <div class="title">
                 <h4>Mother's Information</h4>
@@ -488,7 +572,7 @@
         <div class="guardian_info">
             <header>
                 <div class="title">
-                <h3>Guardian's Information</h3>
+                <h4 style="font-weight: bold;" class="mb-1">Guardian's Information</h4>
                 </div>
             </header>
 

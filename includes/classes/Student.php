@@ -127,6 +127,21 @@ class Student{
 
     }
 
+    public function GetStudentIdByUniqueId($student_unique_id) {
+
+        $query = $this->con->prepare("SELECT student_id FROM student
+                WHERE student_unique_id=:student_unique_id");
+
+        $query->bindParam(":student_unique_id", $student_unique_id);
+        $query->execute();
+
+        if($query->rowCount() > 0){
+            return $query->fetchColumn();
+        }
+        return NULL;
+
+    }
+
     public function GetMiddleName() {
         return isset($this->sqlData['middle_name']) ? ucfirst($this->sqlData["middle_name"]) : ""; 
     }
@@ -394,13 +409,15 @@ class Student{
     }
 
     public function UpdateOldStudentEnrollmentForm($student_id,
-        $student_enrollment_course_level, $to_change_course_id){
+        $student_enrollment_course_level, $to_change_course_id,
+        $student_enrollment_student_status){
 
         // Update the student's password in the database
 
         $query = $this->con->prepare("UPDATE student 
             SET course_id=:change_course_id,
-                course_level=:change_course_level
+                course_level=:change_course_level,
+                student_statusv2=:change_student_statusv2
 
             WHERE student_id=:student_id
             AND student_unique_id IS NOT NULL
@@ -409,6 +426,7 @@ class Student{
 
         $query->bindParam(":change_course_id", $to_change_course_id);
         $query->bindParam(":change_course_level", $student_enrollment_course_level);
+        $query->bindParam(":change_student_statusv2", $student_enrollment_student_status);
 
         $query->bindParam(":student_id", $student_id);
         $query->execute();
@@ -869,18 +887,23 @@ class Student{
         $middle_name, $password, $civil_status, $nationality,
         $contact_number, $birthday, $age, $sex, $course_id,
         $student_unique_id, $course_level, $username, $address, $lrn,
-        $religion, $birthplace, $email, $is_tertiary, $new_enrollee) {
+        $religion, $birthplace, $email, $is_tertiary, $new_enrollee, $suffix = "") {
 
         $lrn = $lrn ?? "";
         $hash_password = password_hash($password, PASSWORD_BCRYPT);
 
         $student_statusv2 = "";
 
-        $firstname = strtolower($firstname);
-        $lastname = strtolower($lastname);
-        $username = strtolower($username);
+        $firstname = ucwords($firstname);
+        $lastname = ucwords($lastname);
+
+        // $username = ucwords($username);
+
         $email = strtolower($email);
-        $nationality = strtolower($nationality);
+        $nationality = ucwords($nationality);
+        $suffix = ucfirst($suffix);
+        $address = ucwords($address);
+
 
         # Check student firstname, lastname and email to be unique
 
@@ -895,12 +918,12 @@ class Student{
                 (firstname, lastname, middle_name, password, civil_status, nationality,
                 contact_number, birthday, sex, course_id, student_unique_id,
                 course_level, username, address, lrn, religion, birthplace, email,
-                student_statusv2, is_tertiary, new_enrollee, active_search, admission_status) 
+                student_statusv2, is_tertiary, new_enrollee, active_search, admission_status, suffix) 
                 
                 VALUES (:firstname, :lastname, :middle_name, :password, :civil_status, 
                 :nationality, :contact_number, :birthday, :sex, :course_id,
                 :student_unique_id, :course_level, :username, :address, :lrn, :religion,
-                :birthplace, :email, :student_statusv2, :is_tertiary,:new_enrollee, :active_search, :admission_status)");
+                :birthplace, :email, :student_statusv2, :is_tertiary,:new_enrollee, :active_search, :admission_status, :suffix)");
 
             $stmt_insert->bindParam(':firstname', $firstname);
             $stmt_insert->bindParam(':lastname', $lastname);
@@ -926,6 +949,7 @@ class Student{
             $stmt_insert->bindValue(':new_enrollee', $new_enrollee);
             $stmt_insert->bindValue(':active_search', "Active");
             $stmt_insert->bindValue(':admission_status', "New");
+            $stmt_insert->bindValue(':suffix', $suffix);
 
             // Execute the prepared statement
             $stmt_insert->execute();

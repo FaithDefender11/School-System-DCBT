@@ -94,6 +94,7 @@
             $student_contact = $student->GetContactNumber();
             $student_address = $student->GetStudentAddress();
             $admission_status = $student->GetAdmissionStatus();
+            $student_student_status = $student->GetStudentStatus();
             $student_civil_status = $student->GetCivilStatus();
             $student_nationality = $student->GetNationality();
             $student_birthday = $student->GetStudentBirthdays();
@@ -110,7 +111,18 @@
 
             $student_level = $student_admission_status == "Old" 
                 && $current_semester == "First" 
+                && $student_student_status == "Regular" 
+
                 ? $student_level + 1 : $student_level;
+
+
+            $current_student_level = $student->GetStudentLevel($student_id);
+
+            // var_dump($current_student_level);
+
+            $apply_to_level = $student_admission_status == "Old" 
+                && $current_semester == "First" 
+                ? $current_student_level + 1 : $current_student_level;
             
             // echo $student_level;
             $student_lrn = $student->GetStudentLRN();
@@ -147,6 +159,12 @@
 
             // echo "qweqwe";
 
+
+            // $checkHasForm = $enrollment->CheckAlreadyHasEnrollmentForm(
+            //     $student_id, $school_year_id);
+
+            // var_dump($checkHasForm);
+
             if(isset($_GET['information']) && $_GET['information'] == "show"){
                 include_once("./os_information.php");
             }
@@ -160,6 +178,11 @@
             }
 
             if(isset($_GET['subject_summary']) && $_GET['subject_summary'] == "show"){
+
+
+               
+
+                    // var_dump($check);
 
                 if(isset($_POST['apply_next_semester_os_' . $student_id])){
 
@@ -187,6 +210,8 @@
 
                     }
                     else if($current_semester == "Second"){
+
+                    
                         $enrollment_request_success = $enrollment->ApplyEnrollmentOS($student_id, $student_course_id,
                             $school_year_id, $enrollment_form_id, $student_status, $type);
                         
@@ -212,7 +237,8 @@
                                 <header>
                                     <div class="title row">
                                         <h2 style="color: var(--titleTheme)">Existing Student Form</h2>
-                                        <p class="text-right mt-0">Generated Form ID: <?php echo $enrollment_form_id;?></p>
+                    <p class="text-right mt-0">Generated Form ID: <?php echo $enrollment_form_id;?> &nbsp; Status: &nbsp;  <em style="font-size: 15px;"><?= $student_student_status;?></em></p>
+                                    
                                     </div>
                                 </header>
 
@@ -337,6 +363,7 @@
 
                                                         <form method="post">
 
+
                                                             <div style="margin-top: 20px;" class="action">
                                                                 <button
                                                                 type="button"
@@ -344,12 +371,14 @@
                                                                     onclick="window.location.href = 'procedure.php?validate_details=show'">
                                                                     Return
                                                                 </button>
-                                                                <button
-                                                                    class="default large success"
-                                                                    name="apply_next_semester_os_<?php echo $student_id;?>"
-                                                                    type="submit">
-                                                                    Apply for Next Semester
-                                                                </button>
+                                                                <?php if($checkHasEnrollment == false):?>
+                                                                    <button
+                                                                        class="default large success"
+                                                                        name="apply_next_semester_os_<?php echo $student_id;?>"
+                                                                        type="submit">
+                                                                        Apply for Next Semester
+                                                                    </button>
+                                                                <?php endif ?>
                                                             </div>
                                                         </form>
                                                     <?php

@@ -1396,7 +1396,9 @@ class Helper {
         $type,
         //  $doesGraduate = null,
         $enrolle_enrollment_status = null,
-        $admission_status = null){
+        $admission_status = null,
+        $student_status = null
+        ){
 
         $output = "";
 
@@ -1410,9 +1412,10 @@ class Helper {
             $output = "Tertiary";
         }
 
+        
         return "
             <div class='title'>
-                <small><em>$output &nbsp &nbsp </em></small>
+                <small><em>$output &nbsp</em></small>
                 <small><em>$enrolle_enrollment_status &nbsp </em></small>
                 <small><em>$admission_status &nbsp </em></small>
              

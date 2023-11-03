@@ -98,13 +98,7 @@ class SubjectPeriodCodeTopic{
                 return true;
             }
         }
-
-        // else{
-        //     echo "Not exec";
-        //     return;
-        // }
-
-       
+ 
 
         return false;
 
@@ -139,6 +133,77 @@ class SubjectPeriodCodeTopic{
         return false;
 
     }
+
+    public function AdjustmentOfAssignTeacherOnSubjectCodeTopic(
+        $course_id, $teacher_id,
+        $school_year_id, $to_change_subject_code,
+        $existing_subject_code, $existing_program_code) {
+
+        // $teacher_id = $teacher_id == 0 ? NULL : $teacher_id;
+     
+        $updateTopic = $this->con->prepare("UPDATE subject_period_code_topic
+
+            SET teacher_id=:teacher_id,
+                subject_code=:to_change_subject_code,
+                program_code=:to_change_program_code
+
+            WHERE course_id=:course_id
+            AND school_year_id=:school_year_id
+            AND subject_code=:existing_subject_code
+        ");
+            
+        $updateTopic->bindValue(":teacher_id", $teacher_id);
+        $updateTopic->bindValue(":to_change_subject_code", $to_change_subject_code);
+        $updateTopic->bindValue(":to_change_program_code", $existing_program_code);
+
+        $updateTopic->bindValue(":course_id", $course_id);
+        $updateTopic->bindValue(":school_year_id", $school_year_id);
+        $updateTopic->bindValue(":existing_subject_code", $existing_subject_code);
+
+        $updateTopic->execute();
+
+        if($updateTopic->rowCount() > 0){
+            return true;
+        }
+
+        return false;
+
+    }
+
+    // public function CreateAssignTeacherOnSubjectCodeTopic(
+    //     $course_id, $teacher_id,
+    //     $school_year_id, $subject_code) {
+
+    //     $teacher_id = $teacher_id == 0 ? NULL : $teacher_id;
+     
+    //     $updateTopic = $this->con->prepare("INSERT INTO subject_period_code_topic
+
+    //         (course_id, teacher_id, school_year_id. subject_program_id, topic, description)
+    //     ");
+
+    //     $updateTopic = $this->con->prepare("UPDATE subject_period_code_topic
+
+    //         SET teacher_id=:teacher_id
+
+    //         WHERE course_id=:course_id
+    //         AND school_year_id=:school_year_id
+    //         AND subject_code=:subject_code
+    //     ");
+            
+    //     $updateTopic->bindValue(":teacher_id", $teacher_id);
+    //     $updateTopic->bindValue(":course_id", $course_id);
+    //     $updateTopic->bindValue(":school_year_id", $school_year_id);
+    //     $updateTopic->bindValue(":subject_code", $subject_code);
+
+    //     $updateTopic->execute();
+
+    //     if($updateTopic->rowCount() > 0){
+    //         return true;
+    //     }
+
+    //     return false;
+
+    // }
     
 
     public function AddTopicSingle($course_id,$teacher_id, $school_year_id,
@@ -641,5 +706,76 @@ class SubjectPeriodCodeTopic{
 
         return $subjectCodeAssignmentSubmissionArray;
     }
+
+    public function GetAssignedSectionCodeTeacherId($subject_code,
+        $school_year_id){
+
+        $check = $this->con->prepare("SELECT teacher_id 
+        
+            FROM subject_period_code_topic
+            
+            WHERE subject_code=:subject_code
+            AND school_year_id=:school_year_id
+
+        ");
+
+        $check->bindValue(":subject_code", $subject_code);
+        $check->bindValue(":school_year_id", $school_year_id);
+        $check->execute();
+
+        if($check->rowCount() > 0){
+            return $check->fetchColumn();
+        }
+        return NULL;
+
+    }
+
+    
+
+    public function RemovingTeachingCodeTopic(
+        $teacher_id,
+        $subject_code,
+        $school_year_id){
+
+        $check = $this->con->prepare("SELECT * FROM subject_period_code_topic
+            
+            WHERE subject_code=:subject_code
+            AND school_year_id=:school_year_id
+            AND teacher_id=:teacher_id
+
+        ");
+
+        $check->bindValue(":subject_code", $subject_code);
+        $check->bindValue(":school_year_id", $school_year_id);
+        $check->bindValue(":teacher_id", $teacher_id);
+        $check->execute();
+
+        $doesFinished = false;
+        if($check->rowCount() > 0){
+            
+            # Remove.
+            $remove = $this->con->prepare("DELETE FROM subject_period_code_topic
+            
+                WHERE subject_code=:subject_code
+                AND school_year_id=:school_year_id
+                AND teacher_id=:teacher_id
+
+            ");
+
+            $remove->bindValue(":subject_code", $subject_code);
+            $remove->bindValue(":school_year_id", $school_year_id);
+            $remove->bindValue(":teacher_id", $teacher_id);
+            $remove->execute();
+
+            if($remove->rowCount() > 0){
+                $doesFinished = true;
+            }
+        }
+        
+        return $doesFinished;
+
+    }
+
+
 
 }

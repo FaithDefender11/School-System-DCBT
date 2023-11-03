@@ -30,7 +30,9 @@
 
 
     // $email = "hypersirios15@gmail.com";
+
     // $surname2 = "Gomez de liano";
+
     // $result1 = Helper::ValidateEnrolleeEmail($email, true, $con);
     // var_dump(Helper::$errorArray);
     

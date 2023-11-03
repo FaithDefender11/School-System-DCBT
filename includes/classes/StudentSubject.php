@@ -113,6 +113,7 @@
         $add_student_subject = $this->con->prepare("INSERT INTO student_subject
             (student_id, subject_code, enrollment_id, course_id, subject_program_id,
             school_year_id, is_transferee, is_final, program_code)
+
             VALUES (:student_id, :subject_code, :enrollment_id, :course_id, :subject_program_id,
             :school_year_id, :is_transferee, :is_final, :program_code)");
         
@@ -159,6 +160,7 @@
                     // $hasError = true;
                     continue;
                 }
+                
                 if($checkIfSubjectAlreadyPassed == true){
                     // $hasError = true;
                     continue;
@@ -1393,56 +1395,36 @@
         return $isPreRequisiteTaken;
     }
 
-    public function CheckIfPreRequisiteIsNotTaken($student_id,
-        $pre_requisite_code, $current_school_year_id,
-        $subject_code){
+    public function CheckIfPreRequisiteIsNotTaken(
+        $student_id,
+        $pre_requisite_code){
 
-            // echo $pre_requisite_code;
+        // echo $pre_requisite_code;
 
         $isPreRequisiteNotTaken = false;
 
         if($pre_requisite_code == "None" ) return false;
+        if($pre_requisite_code == "" ) return false;
 
-        if($pre_requisite_code != "None"){
+        if($pre_requisite_code != "None"
+           || $pre_requisite_code != "" ){
 
-            $sql = $this->con->prepare("SELECT t2.remarks
+            $sql = $this->con->prepare("SELECT t1.student_subject_id
 
                 FROM student_subject AS t1
 
-                LEFT JOIN student_subject_grade as t2 
-                ON t2.student_subject_id = t1.student_subject_id
-
                 WHERE t1.student_id=:student_id
                 AND t1.program_code = :program_code
-                AND t1.is_final = 1
-                AND t1.is_transferee = 0
-                AND t1.school_year_id != :current_school_year_id
                 
-                ORDER BY t1.student_subject_id DESC
                 LIMIT 1
             ");
 
             $sql->bindParam(":student_id", $student_id);
             $sql->bindParam(":program_code", $pre_requisite_code);
-            $sql->bindParam(":current_school_year_id", $current_school_year_id);
             $sql->execute();
 
-            // return $sql->rowCount() > 0;
-
-            if($sql->rowCount() > 0){
-
-                // echo "hmm";
-                $remarks = $sql->fetchColumn();
-              
-                if($remarks == null){
-                    $isPreRequisiteNotTaken = true;
-                }
-               
-                // if($remarks != null && $remarks == "Passed"){
-                //     // echo "You have already passed the subject $pre_requisite_code, so you can get $subject_code";
-                //     $isPreRequisiteNotTaken = true;
-                // }
-            } 
+            return $sql->rowCount() == 0;
+            
         }
 
         
@@ -1496,6 +1478,33 @@
         
         return $isValidCoreSubject;
     }
+
+    public function CheckSubjectProgramHasBeenSelectedWithinSY($student_id,
+        $subject_program_id, $school_year_id, $subject_code = null){
+
+ 
+        $sql = $this->con->prepare("SELECT t1.student_subject_id
+
+            FROM student_subject AS t1
+
+            WHERE t1.student_id = :student_id
+            AND subject_program_id = :subject_program_id
+            AND subject_code = :subject_code
+            AND t1.school_year_id = :school_year_id
+
+        ");
+
+                
+        $sql->bindParam(":student_id", $student_id);
+        $sql->bindParam(":subject_program_id", $subject_program_id);
+        $sql->bindParam(":school_year_id", $school_year_id);
+        $sql->bindParam(":subject_code", $subject_code);
+        $sql->execute();
+
+        return $sql->rowCount() > 0;
+        
+    }
+
 
     public function CheckIfChosenSubjectAlreadyCredited($student_id,
         $program_code){

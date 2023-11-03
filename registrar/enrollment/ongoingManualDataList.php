@@ -99,6 +99,7 @@ $totalRecords = $records['allcount'];
 $stmt = $con->prepare("SELECT COUNT(*) AS allcount 
 
     FROM student as t1
+
     LEFT JOIN course as t2 ON t2.course_id = t1.course_id
 
     WHERE 1 $searchQuery
@@ -106,7 +107,7 @@ $stmt = $con->prepare("SELECT COUNT(*) AS allcount
     AND new_enrollee = :new_enrollee
     AND t1.course_id != 0
     AND t1.active = 1
-   
+    
 ");
 
 $stmt->bindValue(":new_enrollee", 0);
@@ -156,6 +157,9 @@ if ($row != null) {
                 $student_unique_id
             </a>
         ";
+
+        $student_statusv2 = $row['student_statusv2'];
+
                                                       
         $processForm = "processForm(\"$enrollment_form_id\", $student_id, $current_school_year_id)";
         
@@ -169,7 +173,8 @@ if ($row != null) {
             "student_id" => $student_unique_id,
             "name" => $name,
             "section_name" => $program_section,
-            "status" => $admission_status,
+            "type" => $admission_status,
+            "status" => $student_statusv2,
             "button_url" => $button_url,
         );
 

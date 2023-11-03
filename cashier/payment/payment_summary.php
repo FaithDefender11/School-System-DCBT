@@ -11,6 +11,7 @@
     include_once('../../includes/classes/StudentRequirement.php');
     include_once('../../includes/classes/Schedule.php');
     include_once('../../includes/classes/EnrollmentPayment.php');
+    include_once('../../includes/classes/User.php');
 
     $department = new Department($con, null);
     $school_year = new SchoolYear($con, null);
@@ -36,6 +37,7 @@
 
         $enrollment_form_id_url = $_GET['id'];
 
+        // echo $cashierUserId;
 
         $enrollmentPayment = new EnrollmentPayment($con);
 
@@ -67,6 +69,7 @@
         $SHS_REGULAR_TUITION_FEE = NULL;
         $SHS_IRREGULAR_TUITION_FEE = NULL;
 
+        // $TERTIARY_TUITION_FEE = NULL;
         $TERTIARY_TUITION_FEE = NULL;
 
         # Student is SHS
@@ -88,7 +91,9 @@
 
         }
         
-
+        if($enrollment_form_is_tertiary === 1){
+            $TERTIARY_TUITION_FEE = 10000;
+        }
         // var_dump($enrollment_form_is_tertiary);
 
         $student_id = $enrollment_form_student_id;
@@ -206,6 +211,7 @@
             <style>
                 <?php include "../../assets/css/content.css" ?>
             </style>
+
                 <div class="content">
 
                     <nav>
@@ -291,7 +297,6 @@
                             ";
                         ?>
                     </div>
-
 
                     <main>
                         <div class="floating">
@@ -406,7 +411,6 @@
                             </form>
                         </div>
                     </main>
-
                      
                 </div>
             <?php
@@ -416,11 +420,18 @@
         if(isset($_GET['enrolled_subject']) 
             && $_GET['enrolled_subject'] == "show"){
 
+
+            // echo "enrollment_form_is_tertiary: $enrollment_form_is_tertiary";
+            // echo "<br>";
+
             if(isset($_POST['subject_load_btn']) 
                 && isset($_POST['unique_enrollment_form_id'])
                 && isset($_POST['enrollment_payment'])
                 ){
             
+                // echo "qwe";
+                // return;
+
                 $array_success = [];
 
                 $unique_enrollment_form_id = $_POST['unique_enrollment_form_id'];
@@ -483,7 +494,7 @@
                     $payment_status = NULL;
                     $payment_method = NULL;
 
-                    if($enrollment_form_is_tertiary === 0 
+                    if($enrollment_form_is_tertiary == 0 
 
                         // && $inserted_payment < $SHS_REGULAR_TUITION_FEE
                         ){
@@ -494,7 +505,25 @@
                         $payment_method = $inserted_payment < $SHS_REGULAR_TUITION_FEE ? "Partial" 
                             : ($inserted_payment == $SHS_REGULAR_TUITION_FEE ? "Cash" : NULL);
 
+                    }
+                    if($enrollment_form_is_tertiary == 1 
+
+                        // && $inserted_payment < $SHS_REGULAR_TUITION_FEE
+                        ){
+
+                        $payment_status = $inserted_payment < $TERTIARY_TUITION_FEE ? "Incomplete" 
+                            : ($inserted_payment == $TERTIARY_TUITION_FEE ? "Complete" : NULL);
                         
+                        $payment_method = $inserted_payment < $TERTIARY_TUITION_FEE ? "Partial" 
+                            : ($inserted_payment == $TERTIARY_TUITION_FEE ? "Cash" : NULL);
+
+                            // echo "TERTIARY_TUITION_FEE: $TERTIARY_TUITION_FEE";
+
+                    }
+                        
+                        // echo "payment_status: $payment_status";
+                        // echo "<br>";
+
                         // echo "payment_method: $payment_method";
                         // echo "<br>";
 
@@ -510,10 +539,13 @@
                             $current_school_year_id,
                             $student_id,
                             $student_enrollment_form_id,
-                            $SHS_REGULAR_TUITION_FEE,
+                            "5000",
                             $payment_status,
                             $payment_method
                         );
+
+                        // var_dump($markAsPaid);
+                        // return;
                         
                         if(($markAsPaid) == true && $payment_method === "Cash"){
 
@@ -521,12 +553,15 @@
                             $wasSuccessPayment = $enrollmentPayment->AddEnrollmentPayment(
                                 $enrollment_id, $inserted_payment,
                                 $enrollment_form_student_id,
-                                $payment_method
+                                $payment_method, $cashierUserId
                             );
 
                             if($wasSuccessPayment === "cash_complete_enrollment_payment_success"){
-                                Alert::success("Enrollment Form ID: $student_enrollment_form_id. has been approved and payment is fully settled.", "index.php");
+                                // Alert::success("Enrollment Form ID: $student_enrollment_form_id. has been approved and payment is fully settled.", "index.php");
+
+                                Alert::success("Enrollment Form ID: $student_enrollment_form_id. has been approved and payment is fully settled.", "payment_summary.php?id=$enrollment_id&enrolled_subject=show");
                                 exit();
+                                
                             }
                         }
 
@@ -536,20 +571,25 @@
                             $wasSuccessPayment = $enrollmentPayment->AddEnrollmentPayment(
                                 $enrollment_id, $inserted_payment,
                                 $enrollment_form_student_id,
-                                $payment_method);
+                                $payment_method, $cashierUserId);
 
                             if($wasSuccessPayment === "payment_incomplete_enrollment_payment_success"){
-                                Alert::success("Enrollment Form ID: $student_enrollment_form_id. has been approved with remaining balance.", "index.php");
+                                // Alert::success("Enrollment Form ID: $student_enrollment_form_id. has been approved with remaining balance.", "index.php");
+                                
+                                Alert::success("Enrollment Form ID: $student_enrollment_form_id. has been approved with remaining balance.", "payment_summary.php?id=$enrollment_id&enrolled_subject=show");
+                                
                                 exit();
                             }
+
                             if($wasSuccessPayment === "payment_completed_enrollment_payment_success"){
-                                Alert::success("Enrollment Form ID: $student_enrollment_form_id. has been approved and payment is fully settled.", "index.php");
+                                // Alert::success("Enrollment Form ID: $student_enrollment_form_id. has been approved and payment is fully settled.", "index.php");
+                                
+                                Alert::success("Enrollment Form ID: $student_enrollment_form_id. has been approved and payment is fully settled.", "payment_summary.php?id=$enrollment_id&enrolled_subject=show");
                                 exit();
                             }
                         }
 
 
-                    }
                 }
             }
            
@@ -1060,12 +1100,20 @@
                                                         $total_amount += $value['amount_paid'];
 
                                                         $date_creation = $value['date_creation'];
+                                                        $cashier_id = $value['cashier_id'];
                                                         # code...
                                                         $date_creation = date("M d, Y h:i a", strtotime($date_creation));
 
+                                                        
+                                                        $user = new User($con, $cashier_id);
+
+                                                        $cashierName = $user->getName();
+
                                                         ?>
                                                             <span><?= $i; ?>. Paid Amount: <span style="font-weight:bold;">₱</span> <?php echo $value['amount_paid']; ?>, &nbsp;</span>
-                                                            <span>Transaction Date: <?php echo $date_creation; ?></span>
+                                                            <span>Transaction Date: <?php echo $date_creation; ?></span>,
+                                                            <em>Process by: <?php echo $cashierName; ?></em>
+                                                            
                                                             <br>
                                                         <?php
                                                     }
@@ -1092,12 +1140,20 @@
                                                         $total_amount += $value['amount_paid'];
 
                                                         $date_creation = $value['date_creation'];
+
+                                                        $cashier_id = $value['cashier_id'];
+
+                                                        $user = new User($con, $cashier_id);
+
+                                                        $cashierName = $user->getName();
+
                                                         # code...
                                                         $date_creation = date("M d, Y h:i a", strtotime($date_creation));
 
                                                         ?>
                                                             <span>Paid Amount: <span style="font-weight:bold;">₱</span> <?php echo $value['amount_paid']; ?>, &nbsp;</span>
                                                             <span>Transaction Date: <?php echo $date_creation; ?></span>
+                                                            <span>Process by:: <?php echo $cashierName; ?></span>
                                                             <br>
                                                         <?php
                                                     }

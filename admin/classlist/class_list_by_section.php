@@ -224,8 +224,6 @@
                         </select>
                 </div>
 
-                
- 
 
                 <div class="col-sm-0 invoice-col"> 
                     <br>
@@ -253,138 +251,139 @@
 
     <div class="content">
 
-            <div class="floating">
-                <main>
-                    <header>
 
-                        <div class="title">
+        <main>
 
-                            <div class="row col-md-12">
+            <header>
 
-                                <div class="col-md-6">
-                                    <h4 style="margin-bottom: 13px;" id="clickSchedule">Class list by Section</h4>
-                                </div>
+                <div class="title">
 
-                                <div class="text-right col-md-6">
+                    <div class="row col-md-12">
 
-                                    <?php 
-                                        if($selected_school_year_id != "" 
-                                            && ($selected_program_id != "" 
-                                                || $selected_course_id != "")){
-
-                                            ?>
-                                                <form action='print_classlist_by_section.php' 
-                                                    method='POST'>
-
-                                                    <input type="hidden" name="selected_school_year_id" id="selected_school_year_id" value="<?php echo $selected_school_year_id;?>">
-                                                    <input type="hidden" name="selected_program_id" id="selected_program_id" value="<?php echo $selected_program_id;?>">
-                                                    <input type="hidden" name="selected_course_id" id="selected_course_id" value="<?php echo $selected_course_id;?>">
-                                                    <input type="hidden" name="selected_course_level" id="selected_course_level" value="<?php echo $selected_course_level;?>">
-                                                
-                                                    <button title="Export as pdf" style="cursor: pointer;"
-                                                        type='submit' 
-                                                        
-                                                        href='#' name="print_classlist_by_section"
-                                                        class='btn-sm btn btn-primary'>
-                                                        <i class='bi bi-file-earmark-x'></i>&nbsp Print
-                                                    </button>
-
-                                                    <button style="cursor: pointer;"
-                                                        type='submit' 
-                                                        title="Export as excel"
-                                                        href='#' name="print_excel"
-                                                        class='btn-sm btn btn-success'>
-                                                        <i class='bi bi-file-earmark-x'></i>&nbsp Excel
-                                                    </button>
-
-                                                </form>
-                                            <?php
-                                        }
-                                    ?>
-                                </div>
-
-                            </div>
-                            
-                         
-
+                        <div class="col-md-6">
+                            <h4 style="margin-bottom: 13px;" id="clickSchedule">Class list by Section</h4>
                         </div>
-                        
-                    </header>
 
-                    <?php if($selected_program_id !== NULL):?>
+                        <div class="text-right col-md-6">
 
-                        <?php 
-
-                            $course_query = "";
-                            $course_level_query = "";
-
-                            if($selected_course_id != ""){
-                                $course_query = "AND t1.course_id = :course_id";
-                            }
-
-                            if($selected_course_level != ""){
-                                $course_level_query = "AND t3.course_level = :course_level";
-                            }
-
-                            $get = $con->prepare("SELECT 
-
-                                t1.student_subject_id,
-                                t1.course_id,
-                                t3.program_section
-                                
-                                FROM student_subject as t1
-
-                                -- INNER JOIN student_subject as t2 ON t2.student_subject_id = t1.student_subject_id
-                                INNER JOIN course as t3 ON t3.course_id = t1.course_id
-
-                                AND t3.program_id=:program_id
-                                AND t1.is_final = 1
-                                AND t1.school_year_id=:school_year_id
-                                $course_query
-                                $course_level_query
-
-                                GROUP BY t1.course_id
-                            ");
-
-                            $get->bindValue(":program_id", $selected_program_id);
-                            $get->bindValue(":school_year_id", $selected_school_year_id);
-                            
-                            if($selected_course_id != ""){
-                                $get->bindValue(":course_id", $selected_course_id);
-                            }
-                            if($selected_course_level != ""){
-                                $get->bindValue(":course_level", $selected_course_level);
-                            }
-
-                            
-                            $get->execute();
-
-                            if($get->rowCount() > 0){
-
-                             
-
-
-                                $sectionsByProgramList = $get->fetchAll(PDO::FETCH_ASSOC);
-
-                                // echo "Count: " . $get->rowCount();
-                                // echo "<br>";
-                                // return;
-
-                                foreach ($sectionsByProgramList as $key => $value) {
-
-                                    # code...
-
-                                    $enrolled_course_id = $value['course_id'];
-                                    $section = new Section($con, $enrolled_course_id);
-
-                                    $sectionName = $section->GetSectionName();
-                                    $enrolled_course_level = $section->GetSectionGradeLevel();
-                                    $enrolled_course_capacity = $section->GetSectionCapacity();
-                                    $enrolled_course_program_id = $section->GetSectionProgramId($enrolled_course_id);
+                            <?php 
+                                if($selected_school_year_id != "" 
+                                    && ($selected_program_id != "" 
+                                        || $selected_course_id != "")){
 
                                     ?>
+                                        <form action='print_classlist_by_section.php' 
+                                            method='POST'>
 
-                                    <em style="margin-bottom: 28px;" >Class section &nbsp; &nbsp; &nbsp; </em> <span style="font-weight: bold;"><?php
+                                            <input type="hidden" name="selected_school_year_id" id="selected_school_year_id" value="<?php echo $selected_school_year_id;?>">
+                                            <input type="hidden" name="selected_program_id" id="selected_program_id" value="<?php echo $selected_program_id;?>">
+                                            <input type="hidden" name="selected_course_id" id="selected_course_id" value="<?php echo $selected_course_id;?>">
+                                            <input type="hidden" name="selected_course_level" id="selected_course_level" value="<?php echo $selected_course_level;?>">
+                                        
+                                            <button title="Export as pdf" style="cursor: pointer;"
+                                                type='submit' 
+                                                
+                                                href='#' name="print_classlist_by_section"
+                                                class='btn-sm btn btn-primary'>
+                                                <i class='bi bi-file-earmark-x'></i>&nbsp Print
+                                            </button>
+
+                                            <button style="cursor: pointer;"
+                                                type='submit' 
+                                                title="Export as excel"
+                                                href='#' name="print_excel"
+                                                class='btn-sm btn btn-success'>
+                                                <i class='bi bi-file-earmark-x'></i>&nbsp Excel
+                                            </button>
+
+                                        </form>
+                                    <?php
+                                }
+                            ?>
+                        </div>
+
+                    </div>
+                    
+                    
+
+                </div>
+                
+            </header>
+
+            <?php if($selected_program_id !== NULL):?>
+
+                <?php 
+
+                    $course_query = "";
+                    $course_level_query = "";
+
+                    if($selected_course_id != ""){
+                        $course_query = "AND t1.course_id = :course_id";
+                    }
+
+                    if($selected_course_level != ""){
+                        $course_level_query = "AND t3.course_level = :course_level";
+                    }
+
+                    $get = $con->prepare("SELECT 
+
+                        t1.student_subject_id,
+                        t1.course_id,
+                        t3.program_section
+                        
+                        FROM student_subject as t1
+
+                        -- INNER JOIN student_subject as t2 ON t2.student_subject_id = t1.student_subject_id
+                        INNER JOIN course as t3 ON t3.course_id = t1.course_id
+
+                        AND t3.program_id=:program_id
+                        AND t1.is_final = 1
+                        AND t1.school_year_id=:school_year_id
+                        $course_query
+                        $course_level_query
+
+                        GROUP BY t1.course_id
+                    ");
+
+                    $get->bindValue(":program_id", $selected_program_id);
+                    $get->bindValue(":school_year_id", $selected_school_year_id);
+                    
+                    if($selected_course_id != ""){
+                        $get->bindValue(":course_id", $selected_course_id);
+                    }
+                    if($selected_course_level != ""){
+                        $get->bindValue(":course_level", $selected_course_level);
+                    }
+
+                    
+                    $get->execute();
+
+                    if($get->rowCount() > 0){
+
+
+                        $sectionsByProgramList = $get->fetchAll(PDO::FETCH_ASSOC);
+
+                        // echo "Count: " . $get->rowCount();
+                        // echo "<br>";
+                        // return;
+
+                        foreach ($sectionsByProgramList as $key => $value) {
+
+                            # code...
+
+                            $enrolled_course_id = $value['course_id'];
+                            $section = new Section($con, $enrolled_course_id);
+
+                            $sectionName = $section->GetSectionName();
+                            $enrolled_course_level = $section->GetSectionGradeLevel();
+                            $enrolled_course_capacity = $section->GetSectionCapacity();
+                            $enrolled_course_program_id = $section->GetSectionProgramId($enrolled_course_id);
+
+                            ?>
+                                <div class="floating">
+
+
+                                    <em style="margin-bottom: 28px;" >Class section &nbsp;  </em> <span style="font-weight: bold;"><?php
                                         echo "$sectionName <br>";
                                     ?></span>
 
@@ -504,13 +503,13 @@
 
                                                     $schedule_day = $row['schedule_day'] ?? "-";
                                                     $room_number = $row['room_number'] ?? "-";
- 
+
                                                     $teacher_id = $row['teacher_id'];
                                                     $teacherFullName = $row['teacher_id'] != 0 ? ucfirst($row['firstname']) . " " . ucfirst($row['lastname']) : "-";
 
                                                     $schedule->filterSubsequentOccurrences($subject_titles_occurrences, $subject_title);
                                                     $schedule->filterSubsequentOccurrences($subject_code_occurrences, $subject_code);
-                                                  
+                                                    
                                                     $subject_program_id = $row['subject_program_id'];
                                                     $course_level = $row['course_level'];
                                                     $semester = $row['semester'];
@@ -544,7 +543,7 @@
                                                     $student_subject_enrolled = $student_subject_enrolled == 0 ? "" : $student_subject_enrolled;
                                                     
 
-                                              
+                                                
                                                     echo "
                                                         <tr class='text-center'>
                                                             <td>
@@ -572,23 +571,21 @@
                                 
                                     </table>
 
-                                    <br>
-                                    <br>
-                                    <?php
-                                }
-
-                            }
- 
-                        ?>
+                                </div>
 
 
-                        
+                            <?php
+                        }
 
-                    <?php endif;?>
-                </main>
-            </div>
+                    }
+
+                ?>
+
+            <?php endif;?>
 
         </main>
+
+
     </div>
 
 <script>

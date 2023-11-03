@@ -64,6 +64,10 @@
 
         }
 
+
+        
+
+
         $query = "INSERT INTO teacher (password, firstname, middle_name, lastname, suffix, department_id, profilePic, gender, email, contact_number,
                 address, citizenship, birthplace, birthday, religion, teacher_status) 
 

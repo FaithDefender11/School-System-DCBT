@@ -234,7 +234,7 @@
 
     }
 
-    public function InsertParentInformation(
+    public function InsertParentInformationNewOnlineForm(
         $pending_enrollees_id = null,
         $firstname,
         $lastname,
@@ -258,7 +258,8 @@
         $mother_contact_number,
         $mother_email,
         $mother_occupation,
-        $student_id = null) {
+        $student_id = null
+        ) {
 
         $query = $this->con->prepare("INSERT INTO parent (
             pending_enrollees_id,
@@ -284,7 +285,6 @@
             mother_contact_number,
             mother_email,
             mother_occupation,
-
             student_id
         ) VALUES (
             :pending_enrollees_id,
@@ -337,6 +337,127 @@
         $query->bindValue(":mother_email", $mother_email ?? "");
         $query->bindValue(":mother_occupation", $mother_occupation ?? "");
         $query->bindValue(":student_id", $student_id ?? null);
+
+        $query->execute();
+
+        if($query->rowCount() > 0){
+            return true;
+        }
+        return false;
+
+    }
+
+    public function InsertParentInformation(
+        $pending_enrollees_id = null,
+        $firstname,
+        $lastname,
+        $middle_name,
+        $suffix,
+        $contact_number,
+        $email,
+        $occupation,
+        $relationship,
+        $father_firstname,
+        $father_lastname,
+        $father_middle_name,
+        $father_suffix,
+        $father_contact_number,
+        $father_email,
+        $father_occupation,
+        $mother_firstname,
+        $mother_lastname,
+        $mother_middle_name,
+        $mother_suffix,
+        $mother_contact_number,
+        $mother_email,
+        $mother_occupation,
+        $student_id = null,
+        $school_name, $school_address, $year_started, $year_ended
+        ) {
+
+        $query = $this->con->prepare("INSERT INTO parent (
+            pending_enrollees_id,
+            firstname,
+            lastname,
+            middle_name,
+            suffix,
+            contact_number,
+            email,
+            occupation,
+            relationship,
+            father_firstname,
+            father_lastname,
+            father_middle,
+            father_suffix,
+            father_contact_number,
+            father_email,
+            father_occupation,
+            mother_firstname,
+            mother_lastname,
+            mother_middle,
+            mother_suffix,
+            mother_contact_number,
+            mother_email,
+            mother_occupation,
+
+            student_id, school_name, school_address, year_started, year_ended
+        ) VALUES (
+            :pending_enrollees_id,
+            :firstname,
+            :lastname,
+            :middle_name,
+            :suffix,
+            :contact_number,
+            :email,
+            :occupation,
+            :relationship,
+            :father_firstname,
+            :father_lastname,
+            :father_middle,
+            :father_suffix,
+            :father_contact_number,
+            :father_email,
+            :father_occupation,
+            :mother_firstname,
+            :mother_lastname,
+            :mother_middle,
+            :mother_suffix,
+            :mother_contact_number,
+            :mother_email,
+            :mother_occupation,
+            :student_id, :school_name, :school_address, :year_started, :year_ended
+        )");
+
+        $query->bindValue(":pending_enrollees_id", $pending_enrollees_id);
+        $query->bindValue(":firstname", $firstname  ?? "");
+        $query->bindValue(":lastname", $lastname ?? "");
+        $query->bindValue(":middle_name", $middle_name ?? "");
+        $query->bindValue(":suffix", $suffix ?? "");
+        $query->bindValue(":contact_number", $contact_number ?? "");
+        $query->bindValue(":email", $email ?? "");
+        $query->bindValue(":occupation", $occupation ?? "");
+        $query->bindValue(":relationship", $relationship ?? "");
+        $query->bindValue(":father_firstname", $father_firstname ?? "");
+        $query->bindValue(":father_lastname", $father_lastname ?? "");
+        $query->bindValue(":father_middle", $father_middle_name ?? "");
+        $query->bindValue(":father_suffix", $father_suffix ?? "");
+        $query->bindValue(":father_contact_number", $father_contact_number ?? "");
+        $query->bindValue(":father_email", $father_email ?? "");
+        $query->bindValue(":father_occupation", $father_occupation ?? "");
+        $query->bindValue(":mother_firstname", $mother_firstname ?? "");
+        $query->bindValue(":mother_lastname", $mother_lastname ?? "");
+        $query->bindValue(":mother_middle", $mother_middle_name ?? "");
+        $query->bindValue(":mother_suffix", $mother_suffix ?? "");
+        $query->bindValue(":mother_contact_number", $mother_contact_number ?? "");
+        $query->bindValue(":mother_email", $mother_email ?? "");
+        $query->bindValue(":mother_occupation", $mother_occupation ?? "");
+        $query->bindValue(":student_id", $student_id ?? null);
+
+        $query->bindValue(":school_name", $school_name ?? "");
+        $query->bindValue(":school_address", $school_address ?? "");
+        $query->bindValue(":year_started", $year_started ?? "");
+        $query->bindValue(":year_ended", $year_ended ?? "");
+
 
         $query->execute();
 

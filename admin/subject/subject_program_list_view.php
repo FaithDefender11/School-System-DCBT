@@ -90,8 +90,65 @@
 
         $dynamicCourseLevelDropdown = $section->CreateCourseLevelDropdownDepartmentBased($department_name);
 
+
+        $abe_program_id = 25;
+        $bse_program_id = 34;
+
+        $bseArr = [];
+        $abeArr = [];
+
+        $query1 = $con->prepare("SELECT subject_code FROM subject_program
+                WHERE program_id=:program_id
+                
+                ");
+
+        $query1->bindValue(":program_id", $abe_program_id);
+        $query1->execute();
+
+
+        if($query1->rowCount() > 0){
+
+            $abeArr = $query1->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        $query2 = $con->prepare("SELECT subject_code FROM subject_program
+                WHERE program_id=:program_id
+                
+                ");
+
+        $query2->bindValue(":program_id", $bse_program_id);
+        $query2->execute();
+
+
+        if($query2->rowCount() > 0){
+            $bseArr = $query2->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        // print_r($bseArr);
+
+        $resultArr = [];
+
+        foreach ($abeArr as $key => $value1) {
+            # code...
+            $subject_code_1 = $value1['subject_code'];
+
+            foreach ($bseArr as $key => $value2) {
+                # code...
+
+                $subject_code_2 = $value2['subject_code'];
+                
+                if($subject_code_1 == $subject_code_2){
+
+                    array_push($resultArr, $subject_code_1);
+                }
+            }
+        }
+
+        // print_r($resultArr);
+
         require_once('./strand_subject_add_modal.php');
         require_once('./strand_subject_edit_modal.php');
+
 
         ?>
             <div class="content">
@@ -143,8 +200,9 @@
 
                                     <!-- <?php 
 
-                                        $query = $con->prepare("SELECT * FROM subject_program
-
+                                        $query = $con->prepare("SELECT * 
+                                        
+                                            FROM subject_program
                                             WHERE program_id=:program_id
                                             ORDER BY course_level,
                                             semester");
@@ -172,7 +230,7 @@
 
                                                 echo "
                                                     <tr class='text-center'>
-                                                        <td>$subject_title</td>
+                                                        <td> $subject_title</td>
                                                         <td>$subject_code</td>
                                                         <td>$unit</td>
                                                         <td>$pre_req_subject_title</td>
@@ -298,9 +356,12 @@
                                 }
                             }).then((result) => {
 
-                                $('#strand_subject_view_table').load(
-                                    location.href + ' #strand_subject_view_table'
-                                );
+                                // $('#strand_subject_view_table').load(
+                                //     location.href + ' #strand_subject_view_table'
+                                // );
+
+                                location.reload();
+
                             });
 
                             }

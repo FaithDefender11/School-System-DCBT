@@ -255,8 +255,6 @@ if ($row != null) {
             $teacherName = "TBA";
         }
 
-
-         
         $department_type = $row['department_type'];
 
 
@@ -275,13 +273,27 @@ if ($row != null) {
            <a id='clickSectionRedirect' style='color: inherit' href='$url'>($subject_schedule_id) $program_section</a>
         ";
 
+        $role = $_SESSION['role'];
+        $removeSchedule = "removeSchedule($subject_schedule_id)";
+
+        $removeScheduleBtn = "
+            <button onclick='$removeSchedule' style='margin-left: 5px;' class='btn btn-danger btn-sm'>
+                <i class='fas fa-trash'></i>
+            </button>
+        ";
         $button_url = "
-            <a href='edit.php?id=$subject_schedule_id'>
-                <button 
-                class='btn btn-primary btn-sm'>
-                    <i class='fas fa-pen'></i>
-                </button>
-            </a>
+
+            <div style='min-width: 125px;' class='row col-md-12'>
+                <a href='edit.php?id=$subject_schedule_id'>
+                    <button 
+                    class='btn btn-primary btn-sm'>
+                        <i class='fas fa-pen'></i>
+                    </button>
+                </a>
+
+                $removeScheduleBtn
+                
+            </div>
             
         ";
 

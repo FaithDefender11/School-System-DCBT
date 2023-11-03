@@ -84,7 +84,7 @@ class User {
     }
 
     public function getName() {
-        return $this->sqlData["firstName"] . " " . $this->sqlData["lastName"];
+        return ucwords($this->sqlData["firstName"]) . " " . ucwords($this->sqlData["lastName"]);
     }
 
     public function getFirstName() {

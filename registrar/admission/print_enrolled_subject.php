@@ -268,6 +268,7 @@
 
                     $studentFullname = ucwords($lastname) . ", " . ucwords($firstname) . " " . ucfirst($middle);
 
+                    // $message = "Yo";
                     $pdfName = "$enrollment_form_id $studentFullname, Section: $programName.pdf";
 
                     $email = new Email();

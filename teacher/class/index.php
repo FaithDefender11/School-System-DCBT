@@ -465,7 +465,7 @@
 
                                     ?>
 
-                                        <div style="width: 80%;" class="floating">
+                                        <div style="width: 98%;" class="floating">
 
                                             <header>
 

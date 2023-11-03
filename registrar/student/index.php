@@ -87,6 +87,8 @@
                                 class="form-control" onchange="handleCheckboxChange('inactive')" <?php if (isset($_POST["student_filter"]) && in_array("0", $_POST["student_filter"])) echo "checked"; ?>>
 
                         </div>
+
+                        
                     </form>
                 </div>
 

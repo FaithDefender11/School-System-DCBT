@@ -17,7 +17,7 @@
     ?>
     <style>
         .dropdown-menu.show{
-            margin-left: -120px;
+            margin-left: -100px;
         }
     </style>
     <?php
@@ -747,7 +747,7 @@
         $student_admission_status = $student->GetAdmissionStatus();
         $student_active_status= $student->CheckIfActive();
 
-        // echo $student_admission_status;
+        // echo $student_course_level;
 
         // echo $student_status_st;
 
@@ -829,6 +829,8 @@
         $student_enrollment_course_level = $section->GetSectionGradeLevel(
             $student_enrollment_course_id === 0 
             ? $student_course_id : $student_enrollment_course_id);
+
+            // var_dump($student_course_level);
 
         $program = new Program($con, $student_program_id);
 

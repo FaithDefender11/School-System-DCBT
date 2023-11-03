@@ -2,13 +2,30 @@
 
     $c_id = $_GET['c_id'];
 
+
+    // var_dump($student_enrollment_course_level);
+    
     $checkSectionAlreadyAssigned = $student_subject->
         CheckStudentSectionSubjectAssignedWithinSY($student_enrollment_id,
             $student_enrollment_course_id, $student_id, $current_school_year_id);
 
+        
+    
+    if($student_admission_status == "Old" 
+        && $current_school_year_period == "First"
+        && $student_status_st == "Regular"
+        ){
+        $student_enrollment_course_level = $student_course_level + 1;
+    }
+
+    // var_dump($student_enrollment_course_id);
+
     if(isset($_POST['student_choose_section']) && isset($_POST['find_selected_course_id'])){
 
         $chosen_course_id = intval($_POST['find_selected_course_id']);
+
+
+
 
         if($student_enrollment_course_id != 0 && 
             $student_enrollment_course_id == $chosen_course_id){
@@ -23,7 +40,7 @@
 
         if($student_enrollment_course_id == 0 
             && $student_enrollment_course_id != $chosen_course_id 
-            && $student_enrollment_student_status === "Regular"
+            && $student_enrollment_student_status == "Regular"
             
             ){
 
@@ -49,11 +66,17 @@
                     exit();
                 }
             }
+
         }
 
-        if($student_enrollment_course_id != 0  
-            && $student_enrollment_course_id != $chosen_course_id
+        if(
+            // $student_enrollment_course_id == 0  
+            // &&
+            $student_enrollment_course_id != $chosen_course_id
             ){
+
+                // echo "hey";
+                // return;
 
             $change_enrollment_course_id_success = $enrollment->ChangeEnrollmentCourseId($current_school_year_id,
                 $student_id, $student_enrollment_form_id, $student_enrollment_course_id,
@@ -64,11 +87,14 @@
                 // Regular In the Previous Semester
                 // The subjects offered in todays semester should be all populated.
 
-                if($student_enrollment_student_status === "Regular"){
+                if($student_enrollment_student_status == "Regular"){
 
-                    $update_student_subject_success = $student_subject->UpdateStudentSubjectCourseId($student_id, $student_enrollment_course_id,
-                            $chosen_course_id, $student_enrollment_id, $current_school_year_id,
-                            $current_school_year_period);
+                    $update_student_subject_success = $student_subject->UpdateStudentSubjectCourseId(
+                        $student_id, $student_enrollment_course_id,
+                        $chosen_course_id, $student_enrollment_id,
+                        $current_school_year_id,
+                        $current_school_year_period
+                    );
 
                     // if($update_student_subject_success){
 
@@ -77,12 +103,16 @@
 
                     // }
                 }
+                // if($student_enrollment_student_status === "Irregular"){
+
+                // }
 
                 Alert::success("Successfully section changed.", "process_enrollment.php?subject_review=show&st_id=$student_id&selected_course_id=$chosen_course_id");
                 exit();
             }
         }
     }
+
 
     ?>
         <div class="content">
@@ -172,7 +202,7 @@
 
                     <header>
                         <div class="title">
-                            <h4>Enrollment Details</h4>
+                            <h4>Enrollment details</h4>
                         </div>
 
                     </header>
@@ -182,7 +212,7 @@
                             <div class="row">
 
                                 <span>
-                                    <label for="sy">S.Y.</label>
+                                    <label for="sy">A.Y</label>
                                     <div>
                                         <input style="pointer-events: none;"
                                             class="form-control text-center" type="text" name="sy" id="sy" value="<?php echo $current_school_year_term; ?>" />
@@ -229,7 +259,7 @@
                                             </span>
 
                                             <span>
-                                                <label for="strand">Strand</label>
+                                                <label for="strand">Course</label>
 
                                                 <select onchange="chooseStrand(this, <?php echo $pending_enrollees_id;?>)" 
                                                     name="strand" id="strand" class="form-select form-control">
@@ -346,6 +376,7 @@
                                         <select class="form-control" name="grade" id="grade">
                                             <!-- <option class="text-center" value="11"<?php echo ($admission_status == "Standard" && $type == "SHS") ? " selected" : ""; ?>>11</option>
                                             <option class="text-center" value="1"<?php echo ($admission_status == "Standard" && $type == "Tertiary") ? " selected" : ""; ?>>1</option> -->
+                                            
                                             <option class="text-center" value="<?php echo $student_enrollment_course_level;?>"><?php echo $student_enrollment_course_level;?></option>
                                         </select>
                                     </div>
@@ -378,11 +409,16 @@
                     
 
                     <?php 
+
+                        # Regular, Irregular, New, Old
+                        # List of available section based on the program.
+
+
                     
                         if($student_enrollment_is_new == 1 && $student_enrollment_course_level != 0){
-                                $regularOldSections = $section->GetIrregularOldSectionList(
-                                        $student_program_id, $current_school_year_term,
-                                        $student_enrollment_course_level);
+
+                            $regularOldSections = $section->GetIrregularOldSectionList(
+                                $student_program_id, $current_school_year_term);
 
                             if(count($regularOldSections) > 0){
                                 ?>
@@ -471,6 +507,8 @@
                         // echo $student_enrollment_course_level;
 
                         if($student_enrollment_is_new == 0 && $student_enrollment_course_level != 0){
+                            
+                            // echo "qwe";
 
                             # In enrollment process of every new S.Y first semester
                             # Registrar should choose accordingly of section level of students
@@ -481,8 +519,7 @@
                             if($current_school_year_period == "First"){
 
                                 $irregularOldSections = $section->GetIrregularOldSectionList(
-                                    $student_program_id, $current_school_year_term, 
-                                    $student_enrollment_course_level);
+                                    $student_program_id, $current_school_year_term);
 
                                 $provideSection = $irregularOldSections;
 
@@ -500,8 +537,11 @@
 
                             if($current_school_year_period == "Second"){
 
-                                $regularOldSections = $section->GetRegularOldSectionList($student_program_id, $current_school_year_term,
-                                    $student_enrollment_course_level);
+                                $regularOldSections = $section->GetRegularOldSectionList(
+                                    $student_program_id,
+                                    $current_school_year_term
+                                    // $student_enrollment_course_level
+                                );
 
                                 $provideSection = $regularOldSections;
                             }
@@ -616,145 +656,6 @@
                         }
 
                     ?>
-
-                    <!-- <form method="post">
-
-                        <main>
-                            <table class="a">
-                                <thead>
-                                    <tr class="text-center"> 
-                                        <th rowspan="2">Section Id</th>
-                                        <th rowspan="2">Section Name</th>
-                                        <th rowspan="2">Student</th>
-                                        <th rowspan="2">Capacity</th>
-                                        <th rowspan="2">Term</th>
-                                        <th rowspan="2"></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php
-
-                                        // echo $student_enrollment_course_id;
-
-                                        $provideSection = [];
-
-
-                                        // If student is new and his student table course id is zero (as dafault)
-                                        # we will used the enrollment course id as the basis of available section.
-
-                                        if($student_enrollment_is_new == 1){
-
-                                            # Get Available section based on student_enrollment_course_level
-                                            # and student_enrollment_course program
-                                            $regularOldSections = $section->GetIrregularOldSectionList(
-                                                $student_program_id, $current_school_year_term,
-                                                $student_enrollment_course_level);
-
-                                            $provideSection = $regularOldSections;
-
-                                        }
-                                        
-                                        // Should have filter in selecting course level section.
-                                        
-                                        if($student_enrollment_is_new == 0){
-
-                                            # In enrollment process of every new S.Y first semester
-                                            # Registrar should choose accordingly of section level of students
-                                            # Based on student Grade Records.
-
-                                            if($current_school_year_period == "First" 
-                                                ){
-
-                                                $irregularOldSections = $section->GetIrregularOldSectionList(
-                                                    $student_program_id, $current_school_year_term, 
-                                                    $student_enrollment_course_level);
-
-                                                $provideSection = $irregularOldSections;
-                                            }
-
-                                            if($current_school_year_period == "Second"){
-
-                                                $regularOldSections = $section->GetRegularOldSectionList(
-                                                    $student_program_id, $current_school_year_term,
-                                                    $student_enrollment_course_level);
-
-                                                // echo $student_enrollment_course_level;
-
-                                                $provideSection = $regularOldSections;
-                                            }
-                                        }
-
-
-                                        if(count($provideSection) > 0){
-
-                                            foreach ($provideSection as $key => $get_course) {
-
-                                                $course_id = $get_course['course_id'];
-
-                                                $program_section = $get_course['program_section'];
-                                                $capacity = $get_course['capacity'];
-                                                $school_year_term = $get_course['school_year_term'];
-
-                                                $section = new Section($con, $course_id);
-
-                                                $totalStudent = $section->GetTotalNumberOfStudentInSection($course_id, $current_school_year_id);
-
-                                                $capacity = $section->GetSectionCapacity();
-
-                                                $program_id = $section->GetSectionProgramId($course_id);
-                                                $course_level = $section->GetSectionGradeLevel();
-
-                                                echo "
-                                                    <tr class='text-center'>
-                                                        <td>$course_id</td>
-                                                        <td>$program_section</td>
-                                                        <td>$totalStudent</td>
-                                                        <td>$capacity</td>
-                                                        <td>$school_year_term</td>
-                                                        <td>
-                                                            <input name='find_selected_course_id' class='radio' value='$course_id' 
-                                                            type='radio'" . ($course_id == $student_enrollment_course_id ? " checked" : "") . ">
-                                                        </td>
-                                                    </tr>
-                                                ";
-                                                
-                                            }
-                                        }
-
-                                        else{
-                                            // TODO. 
-                                            // It means Enrollment Course Id or Student Course Id is zero
-                                            // Should based on the student program ex STEM,HUMMS etc
-                                            // 1. Provide Program Selection
-                                            // 2. Provide list of available section based on the program selected.
-                                            // 3. Update the enrollment course_id.
-                                            echo "
-
-                                                <div class='col-md-12'>
-                                                    <h4 class='text-center text-muted'>No currently available section for $student_program_acronym</h4>
-                                                </div>
-                                            ";
-                                        }
-                                    ?>
-
-                                </tbody>
-                            </table>
-                        </main>
-                        
-                        <div style="margin-top: 20px;" class="action">
-                            <button
-                                type="button"
-                                class="default large "
-                                onclick="window.location.href = 'process_enrollment.php?details=show&st_id=<?php echo $student_id; ?>'">
-                                Return
-                            </button>
-                            <button class="default large success"
-                                name="student_choose_section" type="submit">
-                                Proceed
-                            </button>
-                        </div>
-                        
-                    </form> -->
 
                 </div>
             </main>

@@ -272,13 +272,13 @@
                                     </div>
                                 </span>
                             </div>
-                            <header>
+                            <!-- <header>
                                 <div class="title">
                                     <h4 style="font-weight: bold;">Enrollee Parent Information</h4>
                                 </div>
-                            </header>
+                            </header> -->
                             <!-- FATHER DD -->
-                            <div id="father_info">
+                            <div style="display: none;" id="father_info">
                                 <header>
                                     <div class="title">
                                     <h3>Father's Information</h3>
@@ -330,7 +330,7 @@
                                 </div>
                             </div>
                             <!-- MOTHER DD -->
-                            <div id="mother_info">
+                            <div style="display: none;" id="mother_info">
                                 <header>
                                     <div class="title">
                                     <h3>Mother's Information</h3>
@@ -386,9 +386,9 @@
                                 </div>
                             </div>
                             <div class="guardian_info">
-                                <header>
+                                <header class="m-2">
                                     <div class="title">
-                                    <h3>Guardian's Information</h3>
+                                    <h4 style="font-weight: bold;">Guardian Information</h4>
                                     </div>
                                 </header>
 

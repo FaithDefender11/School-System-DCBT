@@ -179,11 +179,13 @@
 
             <main>
                 <form method="POST">
+                    
                     <header>
                         <div class="title">
                             <h4 style="font-weight: bold;">Previous School Information</h4>
                         </div>
                     </header>
+
                     <div class="row">
                         <span>
                             <?php
@@ -267,6 +269,7 @@
                         Proceed
                         </button>
                     </div>
+
                 </form>
                 
             </main>

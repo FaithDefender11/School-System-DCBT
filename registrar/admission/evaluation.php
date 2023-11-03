@@ -146,7 +146,7 @@
     <div class="content-header">
       <header>
         <div class="title">
-          <h1>Enrollment form <em>SHS</em></h1>
+          <h1>Enrollment form <em>SHS |</em>  <em>Tertiary</em></h1>
           <small
             >Note: Numbers on tabs only count current school year and
             semester</small

@@ -11,6 +11,7 @@
 
         </head>
     <?php
+
     $subject = new Subject($con, null);
     $program = new Program($con, null);
 
@@ -176,8 +177,8 @@
 
             $pre_requisite_title = $_POST['pre_requisite_title'];
 
-            var_dump($pre_requisite_title);
-            return;
+            // var_dump($pre_requisite_title);
+            // return;
             $subject_title = $_POST['subject_title'];
             $subject_type = $_POST['subject_type'];
             $unit = $_POST['unit'];
@@ -244,10 +245,10 @@
                                 <textarea required class='form-control' placeholder='Subject Description' name='description'></textarea>
                             </div>
                     
-                            <!-- <div class='form-group mb-2'>
+                            <div class='form-group mb-2'>
                                 <label for=''>Pre-requisite</label>
                                 <input required class='form-control' type='text' placeholder='Pre-Requisite' name='pre_requisite_title'>
-                            </div> -->
+                            </div>
         
                             <div class='form-group mb-2'>
                                 

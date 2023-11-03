@@ -192,10 +192,12 @@
       </table>
     </div>
   </main>  
+  
 </div>
 
 
 <script>
+
   function changeSchoolYear(selected_school_year_id, current_school_year_id) {
 
     var selected_school_year_id = parseInt(selected_school_year_id);

@@ -226,10 +226,36 @@
     }
 
 
+    public function InitializedPendingEnrolleeRequirementFromManual(
+        $pending_enrollees_id, $school_year_id, $admission_status, $student_type) {
+
+        // $admission_status = $admission_status == 1 ? "Tertoary" : "SHS";
+
+        $student_type = $student_type == 1 ? "Tertiary" : "SHS";
+
+        if($this->CheckEnrolleeExisted($pending_enrollees_id) == false){
+
+            $create = $this->con->prepare("INSERT INTO student_requirement
+                    (pending_enrollees_id, school_year_id, admission_status, student_type)
+                    VALUES (:pending_enrollees_id, :school_year_id, :admission_status, :student_type)");
+
+            $create->bindParam(':pending_enrollees_id', $pending_enrollees_id);
+            $create->bindParam(':admission_status', $admission_status);
+            $create->bindParam(':student_type', $student_type);
+            
+            $create->bindParam(':school_year_id', $school_year_id);
+            $create->execute();
+
+            if ($create->rowCount() > 0) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     public function InitializedPendingEnrolleeRequirement(
         $pending_enrollees_id, $school_year_id ) {
-
 
         if($this->CheckEnrolleeExisted($pending_enrollees_id) == false){
 

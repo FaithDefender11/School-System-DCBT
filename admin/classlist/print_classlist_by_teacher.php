@@ -358,77 +358,77 @@
             }
 
 
-            try {
-                // Create a new Dompdf instance
-                $dompdf = new Dompdf();
+            // try {
+            //     // Create a new Dompdf instance
+            //     $dompdf = new Dompdf();
 
-                // Load the HTML content
-                $dompdf->loadHtml($html);
+            //     // Load the HTML content
+            //     $dompdf->loadHtml($html);
 
-                // (Optional) Set the paper size and orientation
-                $dompdf->setPaper('A4', 'portrait');
+            //     // (Optional) Set the paper size and orientation
+            //     $dompdf->setPaper('A4', 'portrait');
 
-                // Render the PDF
-                $dompdf->render();
+            //     // Render the PDF
+            //     $dompdf->render();
 
-                // Get the rendered PDF content
-                $pdfContent = $dompdf->output();
+            //     // Get the rendered PDF content
+            //     $pdfContent = $dompdf->output();
 
-                # PDF NAME.
+            //     # PDF NAME.
                 
-                $pdfName = "$termFormat$period_short-$programName-$rawCode $lastname, $firstname.pdf";
+            //     $pdfName = "$termFormat$period_short-$programName-$rawCode $lastname, $firstname.pdf";
 
-                $email = new Email();
+            //     $email = new Email();
 
-                $isEmailSent = $email->SendEnrolledSubjectListViaPdf(
-                    "justinesirios15@gmail.com",
-                    $pdfContent, // Send the PDF content directly
-                    $pdfName
-                );
+            //     $isEmailSent = $email->SendEnrolledSubjectListViaPdf(
+            //         "justinesirios15@gmail.com",
+            //         $pdfContent, // Send the PDF content directly
+            //         $pdfName
+            //     );
 
-                if ($isEmailSent) {
-                    echo "
-                        <script>
-                        $(document).ready(function() {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Email Sent!',
-                                text: 'Pdf was sent to the provided email',
-                                backdrop: false,
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    window.location.href = 'index.php';
-                                }
-                            });
-                        });
-                        </script>";
-                    exit(); 
+            //     if ($isEmailSent) {
+            //         echo "
+            //             <script>
+            //             $(document).ready(function() {
+            //                 Swal.fire({
+            //                     icon: 'success',
+            //                     title: 'Email Sent!',
+            //                     text: 'Pdf was sent to the provided email',
+            //                     backdrop: false,
+            //                 }).then((result) => {
+            //                     if (result.isConfirmed) {
+            //                         window.location.href = 'index.php';
+            //                     }
+            //                 });
+            //             });
+            //             </script>";
+            //         exit(); 
 
 
-                } else {
-                    echo "
-                        <script>
-                        $(document).ready(function() {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Email could not Sent',
-                                text: 'Sending email failed, Please contact administrator.',
-                                backdrop: false,
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    window.location.href = 'index.php';
-                                }
-                            });
-                        });
-                        </script>";
-                    exit();
-                }
+            //     } else {
+            //         echo "
+            //             <script>
+            //             $(document).ready(function() {
+            //                 Swal.fire({
+            //                     icon: 'error',
+            //                     title: 'Email could not Sent',
+            //                     text: 'Sending email failed, Please contact administrator.',
+            //                     backdrop: false,
+            //                 }).then((result) => {
+            //                     if (result.isConfirmed) {
+            //                         window.location.href = 'index.php';
+            //                     }
+            //                 });
+            //             });
+            //             </script>";
+            //         exit();
+            //     }
 
-                // You don't need to unlink a temporary file since you're not saving it in this version.
+            //     // You don't need to unlink a temporary file since you're not saving it in this version.
 
-            } catch (Exception $e) {
-                $errorLog = "Email Sending Error: " . $e->getMessage();
-            }
+            // } catch (Exception $e) {
+            //     $errorLog = "Email Sending Error: " . $e->getMessage();
+            // }
 
             // End the script execution
             exit;

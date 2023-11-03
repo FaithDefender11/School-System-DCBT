@@ -14,6 +14,8 @@
     include_once('../../includes/classes/Helper.php');
     include_once('../../includes/classes/Constants.php');
     include_once('../../includes/classes/PendingParent.php');
+    include_once('../../includes/classes/Pending.php');
+    include_once('../../includes/classes/StudentRequirement.php');
 
     echo Helper::RemoveSidebar();
 
@@ -24,6 +26,7 @@
         <script src="../../assets/js/enrollment/manual_create.js"></script>
          
     </head>
+
 
     <?php
 
@@ -42,8 +45,8 @@
 
         $generateFormId = $enrollment->GenerateEnrollmentFormId($current_school_year_id);
         $enrollment_form_id = $enrollment->CheckEnrollmentFormIdExists($generateFormId);
+        
         if (!isset($_SESSION['enrollment_form_id'])) {
-            
             $_SESSION['enrollment_form_id'] = $enrollment_form_id;
         } else {
             $enrollment_form_id = $_SESSION['enrollment_form_id'];
@@ -147,6 +150,11 @@
         $parent_occupation = "";
         $parent_relationship = "";
 
+        $year_ended = "";
+        $year_started = "";
+        $school_name = "";
+        $school_address = "";
+
         if($_SERVER['REQUEST_METHOD'] === 'POST' &&
             isset($_POST['enrollment_btn_' . $enrollment_form_id])
             && isset($_POST['admission_type'])
@@ -189,15 +197,27 @@
             $birthday = Helper::sanitizeFormString($_POST['birthday']);
 
             // $religion = isset($_POST['religion']) ? Helper::ValidateReligion($_POST['religion']) : '';
-
             $religion = isset($_POST['religion']) ?$_POST['religion'] : '';
-
+ 
             $birthplace = Helper::ValidateBirthPlace($_POST['birthplace']);
             $address = Helper::ValidateAddress($_POST['address']);
             $contact_number = Helper::ValidateContactNumber($_POST['contact_number']);
             $email = Helper::ValidateEmail($_POST['email'], false, $con);
             // $lrn = Helper::ValidateLRN($_POST['lrn'], false, $con);
             $lrn = isset($_POST['lrn']) ? $_POST['lrn'] : "";
+
+
+            $school_name = isset($_POST['school_name']) ? $_POST['school_name'] : "";
+            $school_address = isset($_POST['school_address']) ? $_POST['school_address'] : "";
+
+            $year_started = isset($_POST['year_started']) ? $_POST['year_started'] : "";
+            $year_ended = isset($_POST['year_ended']) ? $_POST['year_ended'] : "";
+
+            // echo "school_name: $school_name <br>";
+            // echo "school_address: $school_address <br>";
+            // echo "year_started: $year_started <br>";
+            // echo "year_ended: $year_ended <br>";
+            // return;
 
             // echo "Last Name: $lastname <br>";
             // echo "First Name: $firstname <br>";
@@ -570,8 +590,7 @@
 
             $parent_relationship = isset($_POST['parent_relationship']) ?
                 $parent->ValidateGuardianRelationship($_POST['parent_relationship']
-                , $relationship_bool) : '';
-
+                ,$relationship_bool) : '';
 
             // echo "parent's Last Name: $parent_lastname <br>";
             // echo "parent's First Name: $parent_firstname <br>";
@@ -611,14 +630,14 @@
                     && $guardianError == false){
                     
                     $student_unique_id = NULL;
-                    $username = "";
+                    $username = NULL;
                     
                     $addStudent = $student->InsertStudentFromEnrollmentForm(
                         $firstname, $lastname, $middle_name,
                         $password, $civil_status, $nationality, $contact_number, $birthday,
                         $age, $sex, $default_course_id, $student_unique_id, $default_course_level, 
                         $username, $address, $lrn, $religion, $birthplace,
-                        $email, $is_tertiary, $is_new_enrollee);
+                        $email, $is_tertiary, $is_new_enrollee, $suffix);
 
                     if($addStudent == false){
                         Alert::error("Something went wrong in adding student", "");
@@ -627,16 +646,40 @@
 
                     // if(false){
 
+                    $student_id = 0;
                     if($addStudent){
 
                         $student_id = $con->lastInsertId();
+
+                        # Add Pending.
+                        $pending = new Pending($con);
+
+                        $admission_type_pending = $admission_type == 1 ? "Standard" : "Transferee";
+
+                        $pendingSuccess = $pending->InitializePendingDataFromManualEnrollment(
+                            $firstname, $lastname, $middle_name, $password,
+                            $civil_status, $nationality, $contact_number,
+                            $birthday, $birthplace, $sex, $suffix, $program_id, $religion,
+                            $course_level, $is_tertiary, $admission_type_pending,
+                            $current_school_year_id, $lrn, $email, $address);
+
+                        // var_dump($pendingSuccess);
+                        // echo "<br>";
+                        // return;
+
+                        $pending_enrollees_id = $con->lastInsertId();
+
+                        if($pending_enrollees_id == 0){
+                            Alert::error("Something went wrong in adding New Enrollee", "");
+                            exit();
+                        }
 
                         $father_email = "";
                         $mother_email = "";
                         $parent_email = "";
                         
                         $wasParentInserted = $parent->InsertParentInformation(
-                            null, $parent_firstname, $parent_lastname, $parent_middle_name,
+                            $pending_enrollees_id, $parent_firstname, $parent_lastname, $parent_middle_name,
                             $parent_suffix, $parent_contact_number, $parent_email,
                             $parent_occupation, $parent_relationship,
 
@@ -644,8 +687,11 @@
                             $father_contact_number, $father_email, $father_occupation,
 
                             $mother_firstname, $mother_lastname, $mother_middle, $mother_suffix,
-                            $mother_contact_number, $mother_email, $mother_occupation, $student_id
+                            $mother_contact_number, $mother_email, $mother_occupation, null,
+                            
+                            $school_name, $school_address, $year_started, $year_ended
                         );
+
 
                         // if(false){
                         if(true){
@@ -670,11 +716,25 @@
                             $is_transferee = $admission_type == 2 ? 1 : 0;
                             // $is_tertiary = "";
 
+
+
+                            
+                            $studentRequirement = new StudentRequirement($con);
+
+                            
+                            # Pending Id should inserted because we cant guaranteed the student enrollment go through.
+                            $wasStudentRequirementInserted = $studentRequirement
+                                ->InitializedPendingEnrolleeRequirementFromManual(
+                                $pending_enrollees_id,
+                                $current_school_year_id, $admission_type_pending, $is_tertiary);
+                            
                             $newEnrollmentSuccess = $enrollment->InsertEnrollmentManualNewStudent(
-                                $student_id,$course_id, $current_school_year_id,
+                                $student_id, $course_id, $current_school_year_id,
                                 $enrollment_form_id,
                                 $enrollment_student_status, $is_tertiary, 
                                 $is_transferee, $is_new_enrollee);
+
+                            $student_enrollment_id = 0;
 
                             if($newEnrollmentSuccess){
 
@@ -691,30 +751,48 @@
                                 // If New Standard Grade 11 and 1st Year Only
                                 //  -> Subject Populated 
 
-                                # It used for giving section subject loads for student with default section.
+                                # It used for giving section subject loads for student with blcoked section.
+                                
                                 if($admission_type == 1){
 
-                                    $wasStudentSubjectPopulated = $student_subject->AddNonFinalDefaultEnrolledSubject($student_id, 
-                                        $student_enrollment_id, $course_id, $current_school_year_id,
-                                        $current_school_year_period);
+                                    if($student_enrollment_id != 0 && $student_id != 0 && $course_id != 0 ){
 
-                                    if($wasStudentSubjectPopulated){
+                                        $wasStudentSubjectPopulated = $student_subject
+                                            ->AddNonFinalDefaultEnrolledSubject(
+                                            $student_id, 
+                                            $student_enrollment_id, $course_id,
+                                            $current_school_year_id, $current_school_year_period);
 
-                                        $url = "../admission/process_enrollment.php?subject_review=show&st_id=$student_id&selected_course_id=$course_id";
+                                        if($wasStudentSubjectPopulated){
 
-                                        Alert::successAutoRedirect("Proceeding to Subject Review", 
-                                            "$url");
-                                        exit();
-                                        
+                                            $url = "../admission/process_enrollment.php?subject_review=show&st_id=$student_id&selected_course_id=$course_id";
+
+                                            Alert::success("Proceeding to Subject Review", 
+                                                "$url");
+
+                                            exit();
+                                        }
+
                                     }
+
+
+                                    // $url = "../admission/process_enrollment.php?subject_review=show&st_id=$student_id&selected_course_id=$course_id";
+
+                                    // Alert::successAutoRedirect("Proceeding to Subject Review", 
+                                    //     "$url");
+
+                                    // exit();
                                 }
                                 
                                 if($admission_type == 2){
                                     
                                     $url = "../admission/process_enrollment.php?subject_review=show&st_id=$student_id&selected_course_id=$course_id";
-                                    Alert::success("Proceeding to Subject Review", 
+                                    
+                                    Alert::successAutoRedirect("Proceeding to Subject Review", 
                                         "$url");
+
                                     exit();
+
                                 }
 
                             }
@@ -810,8 +888,12 @@
                             # All adjustment in form section should be in one location student_find_section
                             include_once('./new_student_type.php'); 
                         ?>
+                        
+
                         <hr>
                         <?php include_once('./new_student_form.php'); ?>
+                         
+
  
                         <div class="action">
                             <button type="submit"

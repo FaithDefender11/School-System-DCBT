@@ -274,6 +274,70 @@
         return false;
     }
 
+    public function InitializePendingDataFromManualEnrollment($firstname, $lastname,
+        $middle_name, $password, $civil_status, $nationality,
+        $contact_number, $birthday, $birthplace, $sex, $suffix, $program_id,
+        $religion, $course_level, $type, $admission_status,
+        $school_year_id, $lrn, $email, $address)
+        {
+
+        $type = $type == 1 ? "Tertiary" : "SHS";
+
+        $enrollment_status = $admission_status == "Transferee" ? "Irregular" : "Regular";
+
+        $query = $this->con->prepare("INSERT INTO pending_enrollees 
+            (firstname, lastname, middle_name, password, email, civil_status, nationality,
+                contact_number, birthday, birthplace, sex, religion, lrn, suffix, program_id, course_level,
+                type, admission_status, school_year_id, activated, is_finished, condition_acceptance,
+                student_status, enrollment_status, address) 
+
+            VALUES (:firstname, :lastname, :middle_name, :password, :email, :civil_status, :nationality,
+                :contact_number, :birthday, :birthplace, :sex, :religion, :lrn, :suffix, :program_id, :course_level,
+                :type, :admission_status, :school_year_id, :activated, :is_finished, :condition_acceptance,
+                :student_status, :enrollment_status, :address)");
+        
+        $hash_password = password_hash($password, PASSWORD_BCRYPT);
+
+        $fname = ucwords($firstname);
+        $lname = ucwords($lastname);
+        $mi = ucwords($middle_name);
+        $address = ucwords($address);
+
+        $query->bindValue(":firstname", $fname);
+        $query->bindValue(":lastname", $lname);
+        $query->bindValue(":middle_name", $mi);
+        $query->bindValue(":password", $hash_password);
+        $query->bindValue(":email", $email);
+        $query->bindValue(":civil_status", $civil_status);
+        $query->bindValue(":nationality", $nationality);
+        $query->bindValue(":contact_number", $contact_number);
+        $query->bindValue(":birthday", $birthday);
+        $query->bindValue(":birthplace", $birthplace);
+        $query->bindValue(":sex", $sex);
+        $query->bindValue(":religion", $religion);
+        $query->bindValue(":lrn", $lrn);
+        $query->bindValue(":suffix", $suffix);
+        $query->bindValue(":program_id", $program_id);
+        $query->bindValue(":course_level", $course_level);
+        $query->bindValue(":type", $type);
+        $query->bindValue(":admission_status", $admission_status);
+        $query->bindValue(":school_year_id", $school_year_id);
+        $query->bindValue(":activated", 1);
+        $query->bindValue(":is_finished", 1);
+        $query->bindValue(":condition_acceptance", 1);
+        $query->bindValue(":student_status", "APPROVED");
+        $query->bindValue(":enrollment_status", $enrollment_status);
+        $query->bindValue(":address", $address);
+        
+
+
+        $query->execute();
+        if($query->rowCount() > 0){
+            return true;
+        }
+        return false;
+    }
+
     public function UpdateStudentInformation(
         $firstname,
         $lastname,

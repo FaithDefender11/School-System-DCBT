@@ -331,7 +331,8 @@
                                                         <th>Student ID</th>
                                                         <th>Name</th>
                                                         <th>Section</th>
-                                                        <th>Status</th>
+                                                        <th>Type</th>
+                                                        <th>Previous status</th>
                                                         <th>Action</th>
                                                     </tr>
                                                 </thead>
@@ -345,6 +346,7 @@
                                                             $student_id = $row['student_id'];
                                                             $program_section = $row['program_section'];
                                                             $admission_status = $row['admission_status'];
+                                                            $student_statusv2 = $row['student_statusv2'];
                                                             $name = ucfirst($row['firstname']) . " " . ucfirst($row['lastname']);
 
                                                             
@@ -356,6 +358,7 @@
                                                                     <td>$name</td>
                                                                     <td>$program_section</td>
                                                                     <td>$admission_status</td>
+                                                                    <td>$student_statusv2</td>
                                                                     <td>
                                                                         <button type='button' onclick='$processForm' class='btn btn-primary'>
                                                                             Create form
@@ -407,6 +410,7 @@
                                                         <th>Student ID</th>
                                                         <th>Name</th>
                                                         <th>Section</th>
+                                                        <th>Type</th>
                                                         <th>Status</th>
                                                         <th>Action</th>
                                                     </tr>
@@ -487,7 +491,9 @@
 
                             Swal.fire({
                                 icon: 'success',
-                                title: `Enrollment Form has been created..`,
+                                title: `Enrollment form for Ongoing student successfully processed.`,
+                                backdrop: false,
+                                allowEscapeKey: false,
                             });
 
                             setTimeout(() => {
@@ -518,6 +524,8 @@
         return;
     }
 
+    
+
     $(document).ready(function() {
 
         var table = $('#ongoing_table').DataTable({
@@ -544,6 +552,7 @@
                 { data: 'student_id', orderable: false },  
                 { data: 'name', orderable: false },  
                 { data: 'section_name', orderable: false },  
+                { data: 'type', orderable: false },  
                 { data: 'status', orderable: false },  
                 { data: 'button_url', orderable: false }
             ],

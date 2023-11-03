@@ -20,7 +20,6 @@
     $current_school_year_period = $school_year_obj['period'];
     $current_school_year_id = $school_year_obj['school_year_id'];
 
-
     ?>
         <head>
             <script src=
@@ -46,6 +45,10 @@
     <?php
 
 
+    $time_from = "";
+    $time_to = "";
+
+
     if(isset($_GET['id'])){
 
         $subject_schedule_id = $_GET['id'];
@@ -53,6 +56,26 @@
         $schedule = new Schedule($con, $subject_schedule_id);
 
         $section = new Section($con);
+
+        $url_course_id = null;
+        $url_sp_id = null;
+        $url_t_id = null;
+
+        $back_url = "index.php";
+
+        if(isset($_GET['course_id'])
+            && isset($_GET['sp_id'])
+            && isset($_GET['t_id'])
+            ){
+
+            $url_course_id = $_GET['course_id'];
+            $url_sp_id = $_GET['sp_id'];
+            $url_t_id = $_GET['t_id'];
+
+            // echo "hey";
+            
+            $back_url = "../section/show.php?id=$url_course_id&per_semester=$current_school_year_period&term=$current_school_year_term";
+        }
 
 
         $schedule_course_id = $schedule->GetScheduleCourseId();
@@ -73,9 +96,44 @@
 
         // echo $schedule_subject_code;
 
-        $back_url = "index.php";
 
         $allSection = $section->GetAllCreatedSectionWithinSYSemester($current_school_year_term);
+
+        # SUBJECCT , TEACHER, subject_period_code_topic data
+
+        # 1. STEM201 -> Kick Buttowskie -> Has data
+        # 2. STEM201 -> TBA -> No data
+
+        # Scenario.
+
+        # 1. Wanted to change into  STEM201 -> Albert Eistein.
+        # If teacher subject_schedule data is greater to 1
+        # Prompt Only,
+
+        # If teacher subject_schedule data is equal/less to 1
+        # subject_period_code_topic adjustment, subject_schedule adjustment
+
+
+        $getTeacherScheduleCount = $schedule
+            ->GetSubjectScheduleCountForTeacher(
+            "STEM11-B-STEM201",
+            $current_school_year_id);
+
+        // var_dump($getTeacherScheduleCount);
+            
+        
+        
+        # 1. STEM201 -> Albert Eistein -> Has data 1
+        # 2. PE201 -> Kick Buttowskie -> Has data 1
+
+        # STEM201 to Kick Buttowskie -> its okay, adjustment of subject_schedule and subject_period_code
+
+        # 1. STEM201 -> Albert Eistein -> Has data 2
+        # 2. PE201 -> Kick Buttowskie -> Has data 1
+
+        # STEM201 to Kick Buttowskie -> Should not be performed.
+
+
 
         if($_SERVER['REQUEST_METHOD'] === "POST" 
             && isset($_POST['edit_section_subject_code_schedule_' . $subject_schedule_id])
@@ -104,6 +162,10 @@
 
             $checkIfTimeFromIsGreaterPrompt = $schedule->CheckIfTimeFromIsGreater($time_from,
                 $time_to);
+
+
+            var_dump($checkIfTimeFromIsGreaterPrompt);
+            
 
             // $time_to = str_replace(["AM", "PM"], "", $time_to);
 
@@ -141,17 +203,22 @@
             $section_subject_code = $section->CreateSectionSubjectCode(
                 $sectionName, $get_subject_code);
 
-            $wasSuccessUpdate = $schedule->UpdateSubjectSchedule($subject_schedule_id,
-                $schedule_day, $time_from, $time_to, $raw_time_from, $raw_time_to,
-                $current_school_year_id,
-                $course_id, $teacher_id, $section_subject_code,
-                $subject_program_id, $room_id, $get_subject_code, $current_school_year_id);
+            if($checkIfTimeFromIsGreaterPrompt == true){
 
-            if($wasSuccessUpdate){
-                Alert::success("Schedule Update executed.", "index.php");
-                exit();
+                // $wasSuccessUpdate = $schedule->UpdateSubjectSchedule($subject_schedule_id,
+                //     $schedule_day, $time_from, $time_to, $raw_time_from, $raw_time_to,
+                //     $current_school_year_id,
+                //     $course_id, $teacher_id, $section_subject_code,
+                //     $subject_program_id, $room_id, $get_subject_code, $current_school_year_id, $back_url);
+
+                // if($wasSuccessUpdate){
+                //     Alert::success("Schedule Update executed.", "index.php");
+                //     exit();
+                // }
+                
             }
             
+
         }
 
         ?>
@@ -176,11 +243,11 @@
 
                                 <div class="form-group mb-3" style="position: relative">
                                     <label for="course_id">* Section</label>
-                                    <select required name="course_id" id="course_id" class="form-control">
+                                    <select style="pointer-events: none;" required name="course_id" id="course_id" class="form-control">
                                         <?php 
                                             if(count($allSection) > 0){
 
-                                                echo "<option value='' disabled selected>Select Section</option>";
+                                                echo "<option value='' selected>Select Section</option>";
 
                                                 foreach ($allSection as $key => $value) {
 
@@ -202,7 +269,7 @@
 
                                 <div class="form-group mb-3">
                                     <label for="subject_program_id">* Subject Code</label>
-                                    <select required name="subject_program_id" id="subject_program_id" class="form-control">
+                                    <select style="pointer-events: none;" required name="subject_program_id" id="subject_program_id" class="form-control">
                                         <option value="<?php echo $schedule_subject_program_id; ?>"><?php echo $schedule_subject_code; ?></option>
                                     </select>
                                     <!-- <input type="hidden" id="subject_program_id" name="subject_program_id"> -->
@@ -223,9 +290,11 @@
 
                                                 if($schedule_room_id === NULL){
                                                     echo "<option selected value='0'>TBA</option>";
-                                                }else{
+                                                }
+                                                else{
                                                     echo "<option value='0'>TBA</option>";
                                                 }
+
                                                 while($row = $query->fetch(PDO::FETCH_ASSOC)) {
 
                                                     $room_id = $row['room_id'];
@@ -252,17 +321,40 @@
 
                                 <div class="mb-3 form-group" style="position: relative">
                                     <label for="">* Time from</label>
-                                    <input id="datetime" type="text" required value="<?= $time_from;?>" placeholder=""
+                                    <input id="datetime" type="text" required 
+                                    
+                                        value="<?php 
+                                            echo Helper::DisplayText('time_from', $time_from);
+                                        ?>"
+                                        
+                                        placeholder=""
                                         name="time_from" id="time_from" class="form-control" />
                                 </div>
 
                                 <div class="mb-3 form-group" style="position: relative">
                                     <label for="">* Time to</label>
-                                    <input id="datetimex" required type="text" value="<?= $time_to;?>" placeholder="(7:00)" name="time_to" id="time_to" class="form-control" />
+                                    <input id="datetimex" required type="text"
+                                    value="<?= $time_to;?>" 
+                                    
+                                    
+                                    placeholder="(7:00)" name="time_to" id="time_to" class="form-control" />
                                 </div>
 
                                 <div class="mb-3">
                                     <label for=""> Instructor</label>
+
+                                    <?php 
+                                    
+                                        $disabled = "";
+
+                                        if($url_t_id != NULL && $url_t_id == $schedule_teacher_id){
+                                            $disabled = "pointer-events: none;";
+                                            // echo "hey";
+                            // style="<?= $disabled;  
+
+                                        }
+                                    ?>
+
                                     <select class="form-control" name="teacher_id" id="teacher_id">
                                         <?php
                                             $query = $con->prepare("SELECT * FROM teacher
@@ -302,6 +394,8 @@
                                                     // }else{
                                                     //     echo "<option $selected value='$teacher_id'>$fullname</option>";
                                                     // }
+
+                                                    
 
                                                     echo "<option $selected value='$teacher_id'>$fullname</option>";
                                                 }

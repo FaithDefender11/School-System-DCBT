@@ -7,6 +7,8 @@
     include_once('../../includes/classes/Section.php');
     include_once('../../includes/classes/SubjectProgram.php');
     include_once('../../includes/classes/Room.php');
+    include_once('../../includes/classes/SubjectPeriodCodeTopicTemplate.php');
+    include_once('../../includes/classes/SubjectPeriodCodeTopic.php');
 
 
     $school_year = new SchoolYear($con, null);
@@ -24,6 +26,37 @@
 
     $allSection = $section->GetAllCreatedSectionWithinSYSemester($current_school_year_term);
 
+    $url_course_id = null;
+    $url_sp_id = null;
+    $url_t_id = null;
+
+
+    $time_from = "";
+    $time_to = "";
+
+    ?>
+        <head>
+       
+
+        </head>
+    <?php
+
+
+    if(isset($_GET['course_id'])
+        && isset($_GET['sp_id'])){
+
+        $url_course_id = $_GET['course_id'];
+        $url_sp_id = $_GET['sp_id'];
+        
+        if(isset($_GET['t_id'])){
+
+            $url_t_id = $_GET['t_id'];
+
+        }
+
+        $back_url = "../section/show.php?id=$url_course_id&per_semester=$current_school_year_period&term=$current_school_year_term";
+    }
+
     
     if($_SERVER['REQUEST_METHOD'] === "POST" 
         && isset($_POST['add_section_subject_code_schedule'])
@@ -32,10 +65,13 @@
         && isset($_POST['time_from'])
         && isset($_POST['time_to'])
         && isset($_POST['schedule_day'])
+        // && isset($_POST['searchInputTeacher'])
         
         ){
 
         $course_id = $_POST['course_id']; 
+
+
         // $course_id = 1253;
 
         $section = new Section($con, $course_id);
@@ -45,6 +81,7 @@
         // $subject_code = $_POST['subject_code'];
         // $time_from = $_POST['time_from'];
         // $time_to = $_POST['time_to'];
+
         $schedule_day = $_POST['schedule_day'];
 
         $subject_program_id = $_POST['subject_program_id'];
@@ -54,9 +91,23 @@
         $get_subject_code = $subjectProgram->GetSubjectProgramRawCode();
 
     
-        $room_id = isset($_POST['room_id']) && $_POST['room_id'] == 0 ? NULL : intval($_POST['room_id']);
-        $teacher_id = $_POST['teacher_id']  == 0 ? NULL : intval($_POST['teacher_id']);
-            
+        // $room_id = isset($_POST['room_id']) && $_POST['room_id'] == 0 ? NULL : intval($_POST['room_id']);
+
+        $room_id = !isset($_POST['room_id']) ? NULL : intval($_POST['room_id']);
+        $room_id = $room_id == 0 ? NULL : $room_id;
+
+        # SIMPLIFY ABOUVE.
+        // $room_id = isset($_POST['room_id']) ? (intval($_POST['room_id']) ?: NULL) : NULL;
+
+        // $teacher_id = $_POST['teacher_id']  == 0 ? NULL : intval($_POST['teacher_id']);
+
+        $selectedTeacherId = $_POST['selectedTeacherId'] == "" ? NULL : intval($_POST['selectedTeacherId']);
+
+        // $searchInputTeacher = $_POST['searchInputTeacher']; 
+
+        // var_dump($room_id);
+        // return;
+        
         // $room_id = isset($_POST['room_id']) ?? NULL;
         // $teacher_id = isset($_POST['teacher_id']) ?? NULL;
 
@@ -72,6 +123,7 @@
 
         // Format the DateTime object into military (24-hour) format
         // 14:00
+
         $time_from_meridian_military = $date->format("H:i");
 
  
@@ -101,22 +153,23 @@
         $checkIfTimeFromIsGreaterPrompt = $schedule->CheckIfTimeFromIsGreater($time_from_meridian,
             $time_to_meridian);
 
-
         // echo "time_to_meridian: " . $time_to_meridian . "<br>";
         // echo "time_to_meridian_military: " . $time_to_meridian_military . "<br>";
         // echo "schedule_time: " . $schedule_time . "<br>";
+
+            // var_dump($checkIfTimeFromIsGreaterPrompt);
 
         $addScheduleSuccess = $schedule->AddSubjectCodeSchedule(
             $time_from_meridian, $time_to_meridian,$schedule_day,
             $time_from_meridian_military, $time_to_meridian_military,
             $schedule_time, $current_school_year_id, $course_id,
-            $teacher_id, $section_subject_code, $subject_program_id, $room_id
+            $selectedTeacherId, $section_subject_code, $subject_program_id, $room_id, $back_url
         );
 
-        if($addScheduleSuccess){
-            Alert::success("Schedule has been added successfully.", $back_url);
-            exit();
-        }
+        // if($addScheduleSuccess){
+        //     Alert::success("Schedule has been added successfully.", $back_url);
+        //     exit();
+        // }
 
     }
 
@@ -141,6 +194,12 @@
     <script src=
         "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js">
         </script>
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <!-- <script src="https://code.jquery.com/jquery-3.6.0.js"></script> -->
+
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+
         
 </head>
 
@@ -164,36 +223,94 @@
 
                 <form method='POST'>
 
-                    <div class="form-group mb-3" style="position: relative">
-                        <label for="course_id">* Section</label>
-                        <select required name="course_id" id="course_id" class="form-control">
-                            <?php 
-                                if(count($allSection) > 0){
 
-                                    echo "<option value='' disabled selected>Select Section</option>";
+                    <?php if($url_course_id != NULL && $url_sp_id != NULL): ?>
 
-                                    foreach ($allSection as $key => $value) {
+                        <div class="form-group mb-3" style="position: relative">
 
-                                        $course_id = $value['course_id'];
-                                        $program_section = $value['program_section'];
+                            <label for="course_id">* Section</label>
+
+                            <select required name="course_id" id="course_id" class="form-control">
+
+                                <?php 
+
+                                    $section_url = new Section($con, $url_course_id);
+                                    $section_url_program_section = $section_url->GetSectionName();
+
+                                    // echo "<option value='' selected>Select Section</option>";
+                                    echo "<option selected value='$url_course_id'>$section_url_program_section</option>";
+
+                                    // foreach ($allSection as $key => $value) {
+
+                                    //     $course_id = $value['course_id'];
+                                    //     $program_section = $value['program_section'];
                                         
-                                        echo "<option value='$course_id'>$program_section</option>";
+                                    //     echo "<option value='$course_id'>$program_section</option>";
+                                    // }
+                                ?>
+
+                            </select>
+                        </div>
+
+
+                        <div class="form-group mb-3">
+                            <label for="subject_program_id">* Subject Code</label>
+
+                            <select required name="subject_program_id" id="subject_program_id" class="form-control">
+
+                                <?php 
+
+                                    $sp = new SubjectProgram($con, $url_sp_id);
+                                    $sp_code = $sp->GetSubjectProgramRawCode();
+                                    $sp_title = $sp->GetTitle();
+
+                                    // echo "<option value='' selected>Select Section</option>";
+                                    echo "<option selected value='$url_sp_id'>$sp_title ($sp_code)</option>";
+                                
+                                ?>
+                            </select>
+                        </div>
+
+                    <?php endif;?>
+
+                    <?php if($url_course_id == NULL && $url_sp_id == NULL): ?>
+                        
+                        <div class="form-group mb-3" style="position: relative">
+
+                            <label for="course_id">* Section</label>
+
+                            <select required name="course_id" id="course_id" class="form-control">
+
+                                <?php 
+                                    if(count($allSection) > 0){
+
+                                        echo "<option value='' selected>Select Section</option>";
+
+                                        foreach ($allSection as $key => $value) {
+
+                                            $course_id = $value['course_id'];
+                                            $program_section = $value['program_section'];
+                                            
+                                            echo "<option value='$course_id'>$program_section</option>";
+                                        }
                                     }
-                                }
-                            ?>
-                        </select>
-                    </div>
+                                ?>
+
+                            </select>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="subject_program_id">* Subject Code</label>
+                            <select required name="subject_program_id" id="subject_program_id" class="form-control">
+                            </select>
+                        </div>
+
+                    <?php endif;?>
+
 
                     <div class="form-group mb-3">
-                        <label for="subject_program_id">* Subject Code</label>
-                        <select required name="subject_program_id" id="subject_program_id" class="form-control">
-                        </select>
-                        <!-- <input type="hidden" id="subject_program_id" name="subject_program_id"> -->
-                    </div>
-
-                    <div class="form-group mb-3">
-                        <label for="room_id">* Room</label>
-                        <select required name="room_id" id="room_id" class="form-control">
+                        <label for="room_id">* Room ( Note: Leave it blank serves as TBA )</label>
+                        <select name="room_id" id="room_id" class="form-control">
                             
                             <?php
                                 $query = $con->prepare("SELECT * FROM room
@@ -203,7 +320,7 @@
                                 if($query->rowCount() > 0){
                                 
                                     echo "<option value='' disabled selected>Select Room</option>";
-                                    echo "<option value='0'>TBA</option>";
+                                    // echo "<option value='0'>TBA</option>";
 
                                     while($row = $query->fetch(PDO::FETCH_ASSOC)) {
 
@@ -225,7 +342,12 @@
 
                     <div class="mb-3 form-group" style="position: relative">
                         <label for="">* Time from</label>
-                        <input id="datetime" type="text" required value="8:00" placeholder=""
+
+                        <input id="datetime" type="text" required 
+                           
+                            value="8:00"
+
+                            placeholder=""
                             name="time_from" id="time_from" class="form-control" />
                     </div>
 
@@ -234,9 +356,18 @@
                         <input id="datetimex" required type="text" value="9:30" placeholder="(7:00)" name="time_to" id="time_to" class="form-control" />
                     </div>
 
-                    <div class="mb-3">
+                    <div style="display: none;" class="mb-3">
                         <label for=""> Instructor</label>
-                        <select required class="form-control" name="teacher_id" id="teacher_id">
+
+                        <?php 
+                            $disabled = "";
+
+                            if($url_t_id != NULL){
+                                $disabled = "pointer-events: none;";
+                                // echo "hey";
+                            }
+                        ?>
+                        <select style="<?= $disabled; ?>" class="form-control" name="teacher_id" id="teacher_id">
                             <?php
                                 $query = $con->prepare("SELECT * FROM teacher
                                     WHERE teacher_status = :teacher_status
@@ -259,7 +390,13 @@
 
                                         $fullname = $teacher->GetTeacherFullName();
 
-                                        echo "<option value='$teacher_id'>$fullname</option>";
+                                        $selected = "";
+
+                                        if($teacher_id == $url_t_id){
+                                            $selected = "selected";
+                                        }
+
+                                        echo "<option $selected value='$teacher_id'>$fullname</option>";
                                     }
                                 }else{
                                     echo "<option value=''>No Available Teacher. Please Contact the Admin.</option>";
@@ -270,6 +407,14 @@
                         </select>
                     </div>
 
+                    <div class="mb-3">
+                        <label for="searchInputTeacher">* Teacher ( Note: Leave it blank serves as TBA )</label>
+                        <input class="form-control" type="text" name="searchInputTeacher" id="searchInputTeacher" placeholder="Search teacher...">
+                        <input type="hidden" id="selectedTeacherId" name="selectedTeacherId">
+
+                    </div>
+
+                  
                     <div class="mb-3">
                         <label for="schedule_day">* Schedule Day</label>
                         <select required name="schedule_day" id="schedule_day" class="form-control">
@@ -300,7 +445,81 @@
 
 </div>
 
+<!-- <script>
+  $( function() {
+    var availableTags = [
+      "ActionScript",
+      "AppleScript",
+      "Asp",
+      "BASIC",
+      "C",
+      "C++",
+      "Clojure",
+      "COBOL",
+      "ColdFusion",
+      "Erlang",
+      "Fortran",
+      "Groovy",
+      "Haskell",
+      "Java",
+      "JavaScript",
+      "Lisp",
+      "Perl",
+      "PHP",
+      "Python",
+      "Ruby",
+      "Scala",
+      "Scheme"
+    ];
+
+    $( "#tags" ).autocomplete({
+      source: availableTags
+    });
+
+  } );
+</script> -->
+
 <script>
+
+        $(document).ready(function() {
+            
+            const searchInputTeacher = $('#searchInputTeacher');
+
+            searchInputTeacher.autocomplete({
+                source: function(request, response) {
+                    $.ajax({
+                        url: '../../ajax/schedule/typeahead.php',
+                        dataType: 'json',
+                        data: {
+                            query: request.term
+                        },
+                        success: function(data) {
+                            response(data);
+                            console.log(data)
+                        }
+                    });
+                },
+                minLength: 1,
+                select: function(event, ui) {
+                    // Handle selection, e.g., redirect to a page or perform an action.
+                    // console.log(ui.item.teacher_id);
+                    $('#selectedTeacherId').val(ui.item.teacher_id);
+                },
+                change: function(event, ui) {
+                    // If the user clears the input or doesn't choose a teacher, set the teacher_id to 0
+                    if (!ui.item) {
+                        $('#selectedTeacherId').val(0);
+                    }
+                }
+            });
+
+            // Attach focus event to open the autocomplete dropdown (didnt worked)
+
+            searchInputTeacher.on('focus', function() {
+                searchInputTeacher.autocomplete('search', ''); // Open the dropdown with an empty query
+            });
+
+        });
 
     $('#course_id').on('change', function() {
 
@@ -359,4 +578,7 @@
     $('#datetimex').datetimepicker({
         format: 'hh:mm A'
     });
+
+     
+
 </script>

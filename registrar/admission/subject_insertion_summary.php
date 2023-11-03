@@ -100,6 +100,8 @@
 
         $student_admission_status = $student->GetAdmissionStatus();
 
+        
+
         // echo $student_admission_status;
         $student_active_status = $student->CheckIfActive();
         
@@ -129,6 +131,17 @@
 
         $student_enrollment_status = $enrollment->GetEnrollmentFormEnrollmentStatus($student_id,
             $enrollment_id, $current_school_year_id);
+
+    
+        $registrar_id = $enrollment->GetEnrollmentRegistrarId($student_id, $enrollment_id);
+
+        $user = new User($con, $registrar_id);
+
+        $registrarName = $user->getName();
+
+        // var_dump($registrarName);
+        // var_dump($student_enrollment_status);
+
 
 
         $student_enrollment_made_date = $enrollment->GetEnrollmentMadeDateForm($student_id,
@@ -318,6 +331,10 @@
 
         // echo $student_enrollment_form_id;
 
+
+
+ 
+
         include_once('./changeEnrolledStudentProgramModal.php');
         
         if(isset($_GET['student_details']) && $_GET['student_details'] == "show"){
@@ -342,6 +359,7 @@
 
                         <header>
                             <div class="title">
+                                <em>Processed by: <?= $registrarName;?></em>
                                 <h1>Enrollment form</h1>
                             </div>
 
@@ -351,6 +369,7 @@
                                     <button class="icon">
                                         <i class="bi bi-three-dots-vertical"></i>
                                     </button>
+                                    
                                     <div class="dropdown-menu">
 
                                         <?php 
@@ -491,6 +510,23 @@
 
                     <main>
 
+                        <?php 
+                        
+                            // echo $student_enrollment_form_id;
+
+                            $enrollment_exec = new Enrollment($con);
+
+
+                            $enrollment_details_grade_level = $enrollment_exec->GetEnrollmentLevel($enrollment_form_id_url);
+                            $enrollment_details_sy_term = $enrollment_exec->GetEnrollmentSyTerm($enrollment_form_id_url);
+                            $enrollment_details_sy_period = $enrollment_exec->GetEnrollmentSyPeriod($enrollment_form_id_url);
+                            
+                            $enrollment_details_acronym = $enrollment_exec->GetEnrollmentCourse($enrollment_form_id_url);
+                            $enrollment_details_track = $enrollment_exec->GetEnrollmentTrack($enrollment_form_id_url);
+
+                            // var_dump($enrollment_details_grade_level);
+                        
+                        ?>
                         <div class="floating">
                             <header>
                                 <div class="title">
@@ -506,7 +542,7 @@
                                         <span>
                                             <label for="sy">S.Y.</label>
                                             <div>
-                                                <input style="pointer-events: none;" class="text-center form-control" type="text" name="sy" id="sy" value="<?php echo $enrollment_sy_term; ?>" />
+                                                <input style="pointer-events: none;" class="text-center form-control" type="text" name="sy" id="sy" value="<?php echo $enrollment_details_sy_term; ?>" />
                                             </div>
                                         </span>
 
@@ -514,72 +550,40 @@
                                         
                                             if($type == "Tertiary"){
                                                 ?>
-                                                    <span>
-                                                        <label label for="track">Track</label>
-
-                                                        <div>
-                                                            <select id="inputTrack" class="form-control form-select">
-                                                                <?php 
-                                                                
-                                                                    $track_sql = $con->prepare("SELECT 
-                                                                        program_id, track, acronym 
-                                                                        
-                                                                        FROM program 
-
-                                                                        WHERE department_id !=:department_id
-                                                                        GROUP BY track
-                                                                    ");
-
-                                                                    $track_sql->bindValue(":department_id", $department_id);
-                                                                    $track_sql->execute();
-                                                                    
-                                                                    while($row = $track_sql->fetch(PDO::FETCH_ASSOC)){
-
-                                                                        $row_program_id = $row['program_id'];
-
-                                                                        $track = $row['track'];
-
-                                                                        $selected = ($row_program_id == $program_id) ? "selected" : "";
-
-                                                                        echo "<option class='text-center' value='$row_program_id' $selected>$track</option>";
-                                                                    }
-                                                                ?>
-                                                            
-                                                            </select>
-                                                        </div>
-                                                    </span>
 
                                                     <span>
-                                                        <label for="strand">Strand</label>
+                                                        <label for="strand">Course</label>
 
                                                         <select onchange="chooseStrand(this, <?php echo $pending_enrollees_id;?>)" 
                                                             name="strand" id="strand" class=" form-control form-select">
                                                             <?php 
 
-                                                                $SHS_DEPARTMENT = 4;
+                                                                // $SHS_DEPARTMENT = 4;
                                                             
-                                                                $track_sql = $con->prepare("SELECT 
-                                                                    program_id, track, acronym 
+                                                                // $track_sql = $con->prepare("SELECT 
+                                                                //     program_id, track, acronym 
                                                                     
-                                                                    FROM program 
-                                                                    WHERE department_id !=:department_id
-                                                                    GROUP BY acronym
-                                                                ");
+                                                                //     FROM program 
+                                                                //     WHERE department_id !=:department_id
+                                                                //     GROUP BY acronym
+                                                                // ");
 
-                                                                $track_sql->bindValue(":department_id", $department_id);
-                                                                $track_sql->execute();
+                                                                // $track_sql->bindValue(":department_id", $department_id);
+                                                                // $track_sql->execute();
 
-                                                                while($row = $track_sql->fetch(PDO::FETCH_ASSOC)){
+                                                                // while($row = $track_sql->fetch(PDO::FETCH_ASSOC)){
 
-                                                                    $row_program_id = $row['program_id'];
+                                                                //     $row_program_id = $row['program_id'];
 
-                                                                    $acronym = $row['acronym'];
+                                                                //     $acronym = $row['acronym'];
 
-                                                                    $selected = ($row_program_id == $program_id) ? "selected" : "";
+                                                                //     $selected = ($row_program_id == $program_id) ? "selected" : "";
 
-                                                                    echo "<option class='text-center' value='$row_program_id' $selected>$acronym</option>";
-                                                                }
+                                                                //     echo "<option class='text-center' value='$row_program_id' $selected>$acronym</option>";
+                                                                // }
                                                             ?>
+
+                                                            <option value='<?= $enrollment_details_acronym;?>' selected> <?= $enrollment_details_acronym?></option>
 
                                                         </select>
                                                     </span>
@@ -595,33 +599,35 @@
                                                             <select  style="pointer-events: none;" id="inputTrack"
                                                                 class=" form-control form-select">
                                                                 <?php 
-                                                                    $SHS_DEPARTMENT = 4;
+                                                                    // $SHS_DEPARTMENT = 4;
 
-                                                                    // echo $department_id;
+                                                                    // // echo $department_id;
                                                                 
-                                                                    $track_sql = $con->prepare("SELECT 
-                                                                        program_id, track, acronym 
+                                                                    // $track_sql = $con->prepare("SELECT 
+                                                                    //     program_id, track, acronym 
                                                                         
-                                                                        FROM program 
+                                                                    //     FROM program 
 
-                                                                        WHERE department_id =:department_id
-                                                                        GROUP BY track
-                                                                    ");
+                                                                    //     WHERE department_id =:department_id
+                                                                    //     GROUP BY track
+                                                                    // ");
 
-                                                                    $track_sql->bindValue(":department_id", $shs_department_id);
-                                                                    $track_sql->execute();
+                                                                    // $track_sql->bindValue(":department_id", $shs_department_id);
+                                                                    // $track_sql->execute();
 
-                                                                    while($row = $track_sql->fetch(PDO::FETCH_ASSOC)){
+                                                                    // while($row = $track_sql->fetch(PDO::FETCH_ASSOC)){
 
-                                                                        $row_program_id = $row['program_id'];
+                                                                    //     $row_program_id = $row['program_id'];
 
-                                                                        $track = $row['track'];
+                                                                    //     $track = $row['track'];
 
-                                                                        $selected = ($row_program_id == $student_program_id) ? "selected" : "";
+                                                                    //     $selected = ($row_program_id == $student_program_id) ? "selected" : "";
 
-                                                                        echo "<option value='$row_program_id' $selected>$track</option>";
-                                                                    }
+                                                                    //     echo "<option value='$row_program_id' $selected>$track</option>";
+                                                                    // }
                                                                 ?>
+
+                                                                <option value='<?= $enrollment_details_track;?>' selected> <?= $enrollment_details_track?></option>
                                                                 
                                                             </select>
                                                         </div>
@@ -633,28 +639,31 @@
                                                             name="strand" id="strand" class=" form-control form-select">
                                                             <?php 
                                                             
-                                                                $track_sql = $con->prepare("SELECT 
-                                                                    program_id, track, acronym 
+                                                                // $track_sql = $con->prepare("SELECT 
+                                                                //     program_id, track, acronym 
                                                                     
-                                                                    FROM program 
-                                                                    WHERE department_id =:department_id
-                                                                    GROUP BY acronym
-                                                                ");
+                                                                //     FROM program 
+                                                                //     WHERE department_id =:department_id
+                                                                //     GROUP BY acronym
+                                                                // ");
 
-                                                                $track_sql->bindParam(":department_id", $shs_department_id);
-                                                                $track_sql->execute();
+                                                                // $track_sql->bindParam(":department_id", $shs_department_id);
+                                                                // $track_sql->execute();
 
-                                                                while($row = $track_sql->fetch(PDO::FETCH_ASSOC)){
+                                                                // while($row = $track_sql->fetch(PDO::FETCH_ASSOC)){
 
-                                                                    $row_program_id = $row['program_id'];
+                                                                //     $row_program_id = $row['program_id'];
 
-                                                                    $acronym = $row['acronym'];
+                                                                //     $acronym = $row['acronym'];
 
-                                                                    $selected = ($row_program_id == $student_program_id) ? "selected" : "";
+                                                                //     $selected = ($row_program_id == $student_program_id) ? "selected" : "";
 
-                                                                    echo "<option value='$row_program_id' $selected>$acronym</option>";
-                                                                }
+                                                                //     echo "<option value='$row_program_id' $selected>$acronym</option>";
+                                                                // }
                                                             ?>
+
+                                                             
+                                                                <option value='<?= $enrollment_details_acronym;?>' selected> <?= $enrollment_details_acronym?></option>
 
                                                         </select>
                                                     </span>
@@ -670,10 +679,9 @@
                                             <label for="grade">Level</label>
                                             <div>
                                                 <select class=" form-control" style="pointer-events: none;" name="grade" id="grade">
-                                                    <!-- <option class="text-center" value="11"<?php echo ($admission_status == "Standard" && $type == "SHS") ? " selected" : ""; ?>>11</option>
-                                                    <option class="text-center" value="1"<?php echo ($admission_status == "Standard" && $type == "Tertiary") ? " selected" : ""; ?>>1</option> -->
-                                                    <?php if($student_course_level): ?>
-                                                        <option class="text-center" value="<?php echo $student_course_level ?>"><?php echo $student_course_level ?></option>
+                                                    
+                                                    <?php if($enrollment_details_grade_level): ?>
+                                                        <option class="text-center" value="<?php echo $enrollment_details_grade_level ?>"><?php echo $enrollment_details_grade_level ?></option>
                                                     <?php endif;?>
                                                 </select>
                                             </div>
@@ -683,12 +691,13 @@
                                             <label for="semester">Semester</label>
                                             <div>
                                                 <select class=" form-control" style="pointer-events: none;" name="semester" id="semester">
-                                                    <option class="text-center" value=""<?php echo ($enrollment_sy_period == "First") ? " selected" : ""; ?>>1st</option>
-                                                    <option class="text-center" value=""<?php echo ($enrollment_sy_period == "Second") ? " selected" : ""; ?>>2nd</option>
+                                                    <option class="text-center" value=""<?php echo ($enrollment_details_sy_term == "First") ? " selected" : ""; ?>>1st</option>
+                                                    <option class="text-center" value=""<?php echo ($enrollment_details_sy_term == "Second") ? " selected" : ""; ?>>2nd</option>
                                                 </select>
                                             </div>
                                         </span>
                                     </div>
+
                                 </form>
 <!-- 
                                 <div style="margin-top: 20px;" class="action">
@@ -743,7 +752,7 @@
 
                                 <?php
 
-                                    if(isset($_POST['zsubject_load_btn']) 
+                                    if(isset($_POST['xsubject_load_btn']) 
                                         && isset($_POST['unique_enrollment_form_id'])){
 
 
@@ -768,8 +777,7 @@
                                         // }
 
                                         # 
-                                        Alert::success("Student enrollment form has been enrolled", "");
-                                        
+                                        Alert::successEnrollment("Student enrollment form has been enrolled", "");
                                         $student_subject->SendingEmailAfterSuccessfulEnrollment($processEnrolled);
 
                                         ?>
@@ -883,8 +891,8 @@
                                                 # Check if student has enrolled form, if has removed the form
                                                 # and enrolled the new tentative form
                                                 
-                                                $checkPreviousEnrolled = $enrollment->CheckStudentHasEnrolledFormAndRemove(
-                                                    $student_id, $current_school_year_id);
+                                                // $checkPreviousEnrolled = $enrollment->CheckStudentHasEnrolledFormAndRemove(
+                                                //     $student_id, $current_school_year_id);
 
                                                 // if(($markEnrolled) == true){
 
@@ -907,7 +915,7 @@
 
                                                     $updateStudentEnrollmentFormBasedSuccess = false;
 
-                                                    if($enrollment_is_new === 1 && $student_admission_status === "New"){
+                                                    if($enrollment_is_new == 1 && $student_admission_status === "New"){
 
                                                         $updateStudentEnrollmentFormBasedSuccess = $student->UpdateStudentEnrollmentFormBased(
                                                             $student_id,
@@ -964,16 +972,18 @@
                                                     }
 
                                                     # RFR
-                                                    if($enrollment_is_new === 0 && $student_admission_status === "Old"){
+                                                    if($enrollment_is_new == 0 && $student_admission_status === "Old"){
 
                                                         # Updating Student Course Id Scenario is Either on
                                                         # 1. Ongoing student decided to change program
                                                         # 2. Moving Up to Higher Program Level (STEM11-A -> STEM12-A)
+                                                        # 3. Has previous regular form but now is Irregular
                                                         
                                                         $wasSuccess = $student->UpdateOldStudentEnrollmentForm(
                                                             $student_id,
                                                             $enrollment_course_section_level,
-                                                            $student_enrollment_course_id);
+                                                            $student_enrollment_course_id,
+                                                            $student_enrollment_student_status);
 
                                                         // if($wasSuccess){
                                                         //     $updateStudentEnrollmentFormBasedSuccess = true;
@@ -1045,8 +1055,13 @@
                                                                 //     System has created new section.", "../student/record_details.php?id=$student_id&enrolled_subject=show");
                                                                 // $processEnrolled = true;
 
-                                                                Alert::success("Enrollment Form ID: $student_enrollment_form_id is now enrolled and New section has been created.", "../student/record_details.php?id=$student_id&enrolled_subject=show");
-                                                                exit();
+                                                                // Alert::success("Enrollment Form ID: $student_enrollment_form_id is now enrolled and New section has been created.", "../student/record_details.php?id=$student_id&enrolled_subject=show");
+                                                                
+                                                                Alert::successEnrollment("Enrollment Form ID: $student_enrollment_form_id is now enrolled and New section has been created.", "");
+                                                                $student_subject->SendingEmailAfterSuccessfulEnrollment($processEnrolled);
+                                                                
+                                                                // exit();
+                                                            
                                                             }
                                                         }
                                                         
@@ -1059,9 +1074,8 @@
 
                                                         // Alert::success("Enrollment Form ID: $student_enrollment_form_id is now enrolled.", "../student/record_details.php?id=$student_id&enrolled_subject=show");
                                                     
-                                                        Alert::success("Enrollment Form ID: $student_enrollment_form_id is now enrolled.", "../student/record_details.php?id=$student_id&enrolled_subject=show");
+                                                        Alert::successEnrollment("Enrollment Form ID: $student_enrollment_form_id is now enrolled.", "../student/record_details.php?id=$student_id&enrolled_subject=show");
                                                         $student_subject->SendingEmailAfterSuccessfulEnrollment($processEnrolled);
-
 
                                                     }
 
@@ -1129,7 +1143,7 @@
                                                     <th>Unit</th>
                                                     <th>Section</th>
                                                     <th>Type</th>
-                                                    <th>Time</th>
+                                                    <th style="min-width: 192px;">Time</th>
                                                     <th>Room</th>
                                                     <th>Status</th>
                                                 </tr>

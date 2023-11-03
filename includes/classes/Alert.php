@@ -20,6 +20,23 @@ class Alert{
         </script>";
     }
 
+    public static function successEnrollment($text, $redirectUrl) {
+        echo "<script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: '$text',
+                backdrop: false,
+                allowEscapeKey: false,
+
+            }).then((result) => {
+                if (result.isConfirmed) {
+                     
+                }
+            });
+        </script>";
+    }
+
     public static function successFileUpload($text, $additionalText, $redirectUrl) {
         echo "<script>
             Swal.fire({
@@ -37,7 +54,6 @@ class Alert{
 
         </script>";
     }
-
 
 
     public static function successAutoRedirect($text, $redirectUrl) {
@@ -64,7 +80,9 @@ class Alert{
             Swal.fire({
                 icon: 'error',
                 title: 'Oh no!',
-                text: '$text'
+                text: '$text',
+                backdrop: false,
+                allowEscapeKey: false
             }).then((result) => {
                 if (result.isConfirmed) {
                     window.location.href = '$redirectUrl';
@@ -72,8 +90,22 @@ class Alert{
             });
         </script>";
     }
-    public static function conflictedMessage($mainText, $additionalText, $redirectUrl) {
+    public static function errorNonRedirect($text, $redirectUrl) {
         echo "<script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Oh no!',
+                text: '$text',
+                backdrop: false,
+                allowEscapeKey: false
+            }).then((result) => {
+                
+            });
+        </script>";
+    }
+    public static function conflictedMessage($mainText, $additionalText, $redirectUrl) {
+        echo "
+        <script>
             Swal.fire({
                 icon: 'error',
                 title: 'Oh no! Schedule Conflict',
@@ -81,7 +113,6 @@ class Alert{
                 showCancelButton: false,
                 backdrop: false,
                 allowEscapeKey: false,
-
                 confirmButtonColor: '#3085d6',
                 confirmButtonText: 'OK'
             }).then((result) => {

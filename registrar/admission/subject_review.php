@@ -9,6 +9,11 @@
         // redirect to this page.
     }
 
+
+ 
+    // echo $registrarUserId;
+
+
     $selected_course_id = $_GET['selected_course_id'];
 
     $section = new Section($con, $selected_course_id);
@@ -66,7 +71,6 @@
 
                 <?php echo Helper::RevealStudentTypePending($type,
                     $student_enrollment_student_status); ?>
-
                 <header>
 
                     <div class="title">
@@ -268,13 +272,15 @@
                 ?>
 
                 <div class="floating">
+                    
                     <header>
                         <div class="title">
                             <!-- <h3><?php echo $section_subject_review_section_name;?> <a style="all:unset; cursor: pointer" href="choosing_subject.php?e_id=<?php echo $student_enrollment_id;?>&st_id=<?php echo $student_id?>">Subjects</a></h3> -->
                             <h4><?php echo $section_subject_review_section_name;?> <a style="all:unset; cursor: pointer" href="choosing_subject.php?e_id=<?php echo $student_non_enrolled_enrollment_id;?>&st_id=<?php echo $student_id?>"></a></h4>
                         </div>
 
-                        <?php if($student_enrollment_student_status == "Irregular"):?>
+                        <?php if($student_enrollment_student_status == "Irregular"
+                            || $student_status_st == "Irregular"):?>
                             <a href="choosing_subject.php?e_id=<?php echo $student_non_enrolled_enrollment_id;?>&st_id=<?php echo $student_id?>">
                                 <button type="button" class="default large">+ Add Subjects
                                 </button>
@@ -286,15 +292,14 @@
                     <main>
                         <table class="a" id="irregular_subject_review_table">
                             <thead>
-
                                 <tr class="text-center"> 
-                                    <th rowspan="2">Course Description</th>
-                                    <th rowspan="2">Section</th>
-                                    <th rowspan="2">Type</th>
-                                    <th rowspan="2">Time</th>
-                                    <th rowspan="2">Room</th>
-                                    <th rowspan="2">Unit</th>
-                                    <th rowspan="2">Action</th>
+                                    <th style="min-width: 186px;">Course Description</th>
+                                    <th >Section</th>
+                                    <th >Type</th>
+                                    <th style="min-width: 186px;" >Time</th>
+                                    <th >Room</th>
+                                    <th >Unit</th>
+                                    <th >Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -387,7 +392,7 @@
                                                     $allDays .= $schedule_day;
                                                     $allTime .= $schedule_time;
 
-                                                    $scheduleOutput .= "$schedule_day - $schedule_time <br>";
+                                                    $scheduleOutput .= "○ $schedule_day - $schedule_time <br>";
                                                     // echo "<br>";
 
                                                     $room = $value['room_number'];
@@ -470,7 +475,7 @@
                             <?php
                         }else if($student_evaluated_by_registrar == "no"){
                             ?>
-                                <button onclick='EvaluateRequest("<?php echo $student_enrollment_id;?>", "<?php echo $student_enrollment_form_id;?>", <?php echo $student_enrollment_course_id;?>, <?php echo $current_school_year_id;?>, <?php echo $student_id;?>, "<?php echo $student_enrollment_student_status;?>", <?php echo $totalSubjectList;?>, "<?php echo "Non-Evaluated" ?>", <?php echo $enrollment_payment; ?>)' class="default clean success large">
+                                <button onclick='EvaluateRequest("<?php echo $student_enrollment_id;?>", "<?php echo $student_enrollment_form_id;?>", <?php echo $student_enrollment_course_id;?>, <?php echo $current_school_year_id;?>, <?php echo $student_id;?>, "<?php echo $student_enrollment_student_status;?>", <?php echo $totalSubjectList;?>, "<?php echo "Non-Evaluated" ?>", <?php echo $enrollment_payment; ?>, <?= $registrarUserId; ?>)' class="default clean success large">
                                     Confirm
                                 </button>
                             <?php
@@ -548,7 +553,7 @@
 
     function EvaluateRequest(student_enrollment_id, student_enrollment_form_id,
         student_course_id, current_school_year_id, student_id,
-        student_status, totalSubjectList, remark, enrollment_payment){
+        student_status, totalSubjectList, remark, enrollment_payment, registrarUserId){
 
         var student_id = parseInt(student_id);
         var student_course_id = parseInt(student_course_id);
@@ -627,7 +632,8 @@
                         type: 'POST',
                         data: {student_enrollment_form_id,
                             student_course_id, current_school_year_id,
-                            student_id, enrollment_payment},
+                            student_id, enrollment_payment, registrarUserId
+                        },
 
                         // dataType: "json",
 
@@ -643,7 +649,8 @@
                                         icon: "success",
                                         showCancelButton: false,
                                         confirmButtonText: "OK",
-
+                                          backdrop: false,
+                                        allowEscapeKey: false,
                                 }).then((result) => {
                                     if (result.isConfirmed) {
 

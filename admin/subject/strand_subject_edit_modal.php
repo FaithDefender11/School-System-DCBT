@@ -53,7 +53,7 @@
 
                     <div class='form-group mb-2'>
                         <label for="" class="mb-2">Pre Requisite</label>
-                        <input style="pointer-events: none;" type="text" id="edit_pre_req_subject_title" name="edit_pre_req_subject_title" 
+                        <input type="text" id="edit_pre_req_subject_title" name="edit_pre_req_subject_title" 
                             class="form-control">
                     </div>
 
@@ -87,13 +87,13 @@
             url: "../../ajax/subject/strand_subject_edit_modal.php?id=" + subject_program_id,
             // dataType: "json",
             success: function (response) {
+
                 response = response.trim();
 
-                // console.log(response)
 
                 var res = JSON.parse(response)
 
-                // console.log(res);
+                console.log(res);
 
                 $("#edit_course_level").val(res.course_level);
                 $("#edit_semester").val(res.semester);

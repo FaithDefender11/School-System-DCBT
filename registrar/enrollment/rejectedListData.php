@@ -1,6 +1,7 @@
 <?php
     
     include('../../includes/config.php');
+    include('../../includes/classes/Program.php');
 
     $draw = $_POST['draw'] ?? null;
     $row = $_POST['start'] ?? null;
@@ -68,6 +69,7 @@
     $totalRecordwithFilter = $records['allcount'];
 
     ## Fetch records
+        // AND student_status='REJECTED'
 
     if($row != null){
 
@@ -77,6 +79,8 @@
         ,t1.lastname
         ,t1.pending_enrollees_id
         ,t1.student_status
+        ,t1.email
+        ,t1.program_id
         ,t2.term
         ,t2.period
 
@@ -85,7 +89,6 @@
         LEFT JOIN school_year as t2 ON t2.school_year_id = t1.school_year_id
         
         WHERE 1  " . $searchQuery . "
-        AND student_status='REJECTED'
 
         ORDER BY $sortBy $sortOrder
 
@@ -103,21 +106,61 @@
             $fullname = ucfirst($row['firstname']) . " " . ucfirst($row['lastname']);
             $student_status = $row['student_status'];
             $pending_enrollees_id = $row['pending_enrollees_id'];
-            $term = $row['term'];
-            $period = $row['period'];
+            $email = $row['email'];
+            $program_id = $row['program_id'];
 
-            $button = "
-                <button onclick='processRejectedEnrollees($pending_enrollees_id)' type='button' 
-                    class='default information'
-                    onclick=\"window.location.href='../admission/process_enrollment.php?enrollee_details=true&id=$pending_enrollees_id'\">
-                    Process
-                </button>
-            ";
+            $program = new Program($con, $program_id);
+
+            $applyingAcronym = $program->GetProgramAcronym();
+
+            $term = $row['term'];
+            
+
+            $period = $row['period'];
+            $period_shortcut = $period === "First" ? "S1" : ($period === "Second" ? "S2" : "");
+
+            $ay_term = "$term $period_shortcut";
+
+
+            $button = "";
+
+            $student_status_output = "";
+
+            if($student_status == "APPROVED"){
+
+                $student_status_output = "
+                    <span class='bg-success'>$student_status</span>
+                ";
+
+            }
+
+            if($student_status == "EVALUATION"){
+
+                $student_status_output = "
+                    <span class='bg-primary'>$student_status</span>
+                ";
+
+            }
+
+            if($student_status == "REJECTED"){
+
+                $student_status_output = "
+                    <span class='bg-danger'>$student_status</span>
+                ";
+                $button = "
+                    <button onclick='processRejectedEnrollees($pending_enrollees_id)' type='button' 
+                        class='default information'
+                        onclick=\"window.location.href='../admission/process_enrollment.php?enrollee_details=true&id=$pending_enrollees_id'\">
+                        Process
+                    </button>
+                ";
+            }
 
             $data[] = array(
                 "name"=> $fullname,
-                "term"=> $term,
-                "status"=> $student_status,
+                "term"=> $ay_term,
+                "status"=> $student_status_output,
+                "applying_to"=> $applyingAcronym,
                 "view_button"=> $button
                 
             );

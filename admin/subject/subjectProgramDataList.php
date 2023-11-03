@@ -182,7 +182,7 @@ if ($row != null) {
  
         
         $data[] = array(
-            "description" => $subject_title,
+            "description" => "($subject_program_id) $subject_title",
             "code" => $subject_code,
             "unit" => $unit,
             "requisite" => $pre_req_subject_title,

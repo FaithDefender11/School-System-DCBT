@@ -330,6 +330,7 @@
                                             ';
                                         }
                                     }
+                                    
                                     $html .= '
                                 </tbody>
                             </table>

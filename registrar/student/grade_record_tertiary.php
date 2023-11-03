@@ -13,7 +13,7 @@
 
 
     $enrollmentRecordDetails1_1st = $enrollment->getEnrollmentSectionDetails($student_id,
-            $FIRST_YEAR, $FIRST_SEMESTER);
+        $FIRST_YEAR, $FIRST_SEMESTER);
 
     # 1st Year 1st Sem
     if($enrollmentRecordDetails1_1st != null){
@@ -25,9 +25,13 @@
         $enrollment_student_status1_1st = $enrollmentRecordDetails1_1st['enrollment_student_status'];
     }
 
+    // var_dump($enrollment_date_approved1_1st);
+
+
     # 1st Year 2nd Sem
     $enrollmentRecordDetails1_2nd = $enrollment->getEnrollmentSectionDetails($student_id,
             $FIRST_YEAR, $SECOND_SEMESTER);
+
 
     if($enrollmentRecordDetails1_2nd != null){
 
@@ -40,7 +44,10 @@
 
 
     $enrollmentRecordDetails2_1st = $enrollment->getEnrollmentSectionDetails($student_id,
-            $FIRST_YEAR, $FIRST_SEMESTER);
+            $SECOND_YEAR, $FIRST_SEMESTER);
+
+            // var_dump($enrollmentRecordDetails2_1st);
+        
 
     if($enrollmentRecordDetails2_1st != null){
 
@@ -53,7 +60,8 @@
 
 
     $enrollmentRecordDetails2_2nd = $enrollment->getEnrollmentSectionDetails($student_id,
-            $FIRST_YEAR, $FIRST_SEMESTER);
+            $SECOND_YEAR, $FIRST_SEMESTER);
+
 
     if($enrollmentRecordDetails2_2nd != null){
 
@@ -66,7 +74,7 @@
 
 
     $enrollmentRecordDetails3_1st = $enrollment->getEnrollmentSectionDetails($student_id,
-            $FIRST_YEAR, $FIRST_SEMESTER);
+            $THIRD_YEAR, $FIRST_SEMESTER);
 
     if($enrollmentRecordDetails3_1st != null){
 
@@ -78,7 +86,7 @@
     }
 
     $enrollmentRecordDetails3_2nd = $enrollment->getEnrollmentSectionDetails($student_id,
-            $FIRST_YEAR, $FIRST_SEMESTER);
+            $THIRD_YEAR, $FIRST_SEMESTER);
 
     if($enrollmentRecordDetails3_2nd != null){
 
@@ -92,7 +100,7 @@
 
     # 4th Year 1st Sem
     $enrollmentRecordDetails4_1st = $enrollment->getEnrollmentSectionDetails($student_id,
-            $FIRST_YEAR, $FIRST_SEMESTER);
+            $FOURTH_YEAR, $FIRST_SEMESTER);
 
     if($enrollmentRecordDetails4_1st != null){
 
@@ -105,7 +113,7 @@
 
     # 4th Year 2nd Sem
     $enrollmentRecordDetails4_2nd = $enrollment->getEnrollmentSectionDetails($student_id,
-            $FIRST_YEAR, $FIRST_SEMESTER);
+            $FOURTH_YEAR, $FIRST_SEMESTER);
 
     if($enrollmentRecordDetails4_2nd != null){
 
@@ -138,7 +146,7 @@
             ?>
             
             <main>
-                <!-- <div style="
+               <div style="
                     display: flex;
                     justify-content: space-around;
                     gap: 10px;
@@ -146,12 +154,12 @@
                     text-align: center" class="cards">
                     <?php
                         Helper::renderCard('Semester', $enrollment_period1_1st ?? "");
-                        Helper::renderCard('Grade level', $enrollment_section_level1_1st ?? "");
+                        Helper::renderCard('Year level', $enrollment_section_level1_1st ?? "");
                         Helper::renderCard('Strand', $enrollment_section_acronym1_1st ?? "");
                         Helper::renderCard('Scholastic Status', $enrollment_student_status1_1st ?? "");
                         Helper::renderCard('Added', $enrollment_date_approved1_1st ?? "");
                     ?>
-                </div> -->
+                </div>
                 
                 <table class="a">
                     <thead>
@@ -206,7 +214,7 @@
                     text-align: center" class="cards">
                     <?php
                         Helper::renderCard('Semester', $enrollment_period1_2nd ?? "-");
-                        Helper::renderCard('Grade level', $enrollment_section_level1_2nd ?? "-");
+                        Helper::renderCard('Year level', $enrollment_section_level1_2nd ?? "-");
                         Helper::renderCard('Strand', $enrollment_section_acronym1_2nd ?? "-");
                         Helper::renderCard('Scholastic Status', $enrollment_student_status1_2nd ?? "-");
                         Helper::renderCard('Added', $enrollment_date_approved1_2nd ?? "-");
@@ -233,6 +241,8 @@
                         <?php 
                             $enrolledSubjectsGradeLevelSemesterBased = $subject_program->GetStudentEnrolledSubjectCodeBase($student_program_id, $student_id,
                                 $FIRST_YEAR, $SECOND_SEMESTER);
+
+                                // var_dump($enrolledSubjectsGradeLevelSemesterBased);
 
                             $subject_program->GradeRecordsSHSBody($enrolledSubjectsGradeLevelSemesterBased,
                                 $checkEnrollmentEnrolled, $student_id);
@@ -266,7 +276,7 @@
                     text-align: center" class="cards">
                     <?php
                         Helper::renderCard('Semester', $enrollment_period2_1st ?? "-");
-                        Helper::renderCard('Grade level', $enrollment_section_level2_1st ?? "-");
+                        Helper::renderCard('Year level', $enrollment_section_level2_1st ?? "-");
                         Helper::renderCard('Strand', $enrollment_section_acronym2_1st ?? "-");
                         Helper::renderCard('Scholastic Status', $enrollment_student_status2_1st ?? "-");
                         Helper::renderCard('Added', $enrollment_date_approved2_1st ?? "-");
@@ -325,7 +335,7 @@
                     text-align: center" class="cards">
                     <?php
                         Helper::renderCard('Semester', $enrollment_period2_2nd ?? "-");
-                        Helper::renderCard('Grade level', $enrollment_section_level2_2nd ?? "-");
+                        Helper::renderCard('Year level', $enrollment_section_level2_2nd ?? "-");
                         Helper::renderCard('Strand', $enrollment_section_acronym2_2nd ?? "-");
                         Helper::renderCard('Scholastic Status', $enrollment_student_status2_2nd ?? "-");
                         Helper::renderCard('Added', $enrollment_date_approved2_2nd ?? "-");
@@ -384,7 +394,7 @@
                     text-align: center" class="cards">
                     <?php
                         Helper::renderCard('Semester', $enrollment_period3_1st ?? "-");
-                        Helper::renderCard('Grade level', $enrollment_section_level3_1st ?? "-");
+                        Helper::renderCard('Year level', $enrollment_section_level3_1st ?? "-");
                         Helper::renderCard('Strand', $enrollment_section_acronym3_1st ?? "-");
                         Helper::renderCard('Scholastic Status', $enrollment_student_status3_1st ?? "-");
                         Helper::renderCard('Added', $enrollment_date_approved3_1st ?? "-");
@@ -443,7 +453,7 @@
                     text-align: center" class="cards">
                     <?php
                         Helper::renderCard('Semester', $enrollment_period3_2nd ?? "-");
-                        Helper::renderCard('Grade level', $enrollment_section_level3_2nd ?? "-");
+                        Helper::renderCard('Year level', $enrollment_section_level3_2nd ?? "-");
                         Helper::renderCard('Strand', $enrollment_section_acronym3_2nd ?? "-");
                         Helper::renderCard('Scholastic Status', $enrollment_student_status3_2nd ?? "-");
                         Helper::renderCard('Added', $enrollment_date_approved3_2nd ?? "-");
@@ -502,7 +512,7 @@
                     text-align: center" class="cards">
                     <?php
                         Helper::renderCard('Semester', $enrollment_period4_1st ?? "-");
-                        Helper::renderCard('Grade level', $enrollment_section_level4_1st ?? "-");
+                        Helper::renderCard('Year level', $enrollment_section_level4_1st ?? "-");
                         Helper::renderCard('Strand', $enrollment_section_acronym4_1st ?? "-");
                         Helper::renderCard('Scholastic Status', $enrollment_student_status4_1st ?? "-");
                         Helper::renderCard('Added', $enrollment_date_approved4_1st ?? "-");
@@ -561,7 +571,7 @@
                     text-align: center" class="cards">
                     <?php
                         Helper::renderCard('Semester', $enrollment_period4_2nd ?? "-");
-                        Helper::renderCard('Grade level', $enrollment_section_level4_2nd ?? "-");
+                        Helper::renderCard('Year level', $enrollment_section_level4_2nd ?? "-");
                         Helper::renderCard('Strand', $enrollment_section_acronym4_2nd ?? "-");
                         Helper::renderCard('Scholastic Status', $enrollment_student_status4_2nd ?? "-");
                         Helper::renderCard('Added', $enrollment_date_approved4_2nd ?? "-");

@@ -16,10 +16,16 @@
 
     $registrarLoggedIn = isset($_SESSION["registrarLoggedIn"]) 
         ? $_SESSION["registrarLoggedIn"] : "";
+
+    $registrarUserId = isset($_SESSION["registrarUserId"]) 
+        ? $_SESSION["registrarUserId"] : "";
     
     $registrarLoggedInObj = new User($con, $registrarLoggedIn);
 
-    if (!isset($_SESSION['registrarLoggedIn']) || $_SESSION['registrarLoggedIn'] == '') {
+    if (!isset($_SESSION['registrarLoggedIn']) 
+        || $_SESSION['registrarLoggedIn'] == ''
+        || !isset($_SESSION['registrarUserId']) 
+        || $_SESSION['registrarUserId'] == '') {
 
         // header("Location: /school-system-dcbt/enrollment_login.php");
         $base_url = 'http://' . $_SERVER['HTTP_HOST'];

@@ -29,6 +29,8 @@
         $course_id = 0;
 
 
+        // var_dump($enrollment_student_status);
+        // return;
 
         $doesStudentHasEnrollmentForm = $enrollment->CheckStudentEnrollmentFormExists(
             $school_year_id, $student_id);
@@ -44,8 +46,10 @@
             $enrollment_form_id, $enrollment_student_status,
             $is_tertiary, $is_transferee, $is_new_enrollee);
 
-        if($enrollment_student_status == "Regular" 
-            && $newEnrollmentSuccess){
+        if(
+            // $enrollment_student_status == "Regular" 
+            // && 
+            $newEnrollmentSuccess){
 
             // $student_enrollment_id = $con->lastInsertId();
 

@@ -22,6 +22,7 @@
 
         $subjectProgram = new SubjectProgram($con, $subject_program_id);
         $program_code = $subjectProgram->GetSubjectProgramRawCode();
+        $subject_title = $subjectProgram->GetTitle();
 
         $school_year = new SchoolYear($con);
         $school_year_obj = $school_year->GetActiveSchoolYearAndSemester();
@@ -52,7 +53,7 @@
                         <header>
                             
                             <div class="title">
-                                <h5>Default Topics for: <span style="font-size: 15px;"><?php echo $program_code; ?></span></h5>
+                                <h5>Default Topics for: <span style="font-size: 15px;"><?php echo $subject_title; ?>, Code: <?= $program_code?></span></h5>
                             </div>
 
                             <div class="action">
