@@ -266,7 +266,8 @@ function getInputValue($name) {
 
 </head>
 <body style="background-color: rgb(243, 243, 243)">
-    <div class="login-element">
+  <div class="content">
+      <div class="login-element">
       <div class="floating">
         <div class="close-btn">
           <button><a href="online_application.php">&times;</a></button>
@@ -307,5 +308,7 @@ function getInputValue($name) {
         </main>
       </div>
     </div>
+  </div>
+
   </body>
 </html>

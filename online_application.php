@@ -53,36 +53,42 @@
       </ul>
     </nav>
 
-    <div class="online-application">
-      <div class="row-content">
-        <h3>Online Application</h3>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Saepe, nam
-          modi autem adipisci natus quidem rem assumenda ex suscipit fugit amet
-          nemo voluptatum recusandae officia, minus non nihil, fuga unde.
-        </p>
-      </div>
-      <div class="row-content">
-        <h4>Choose enrollment type</h4>
-
-        <div class="col-btn">
-                <button type="button" onclick="newStudentURL()" class="type-btn">
-                    New student
-                </button>
-         
-          <!-- <button type="button" onclick="enrolledStudentURL()" class="type-btn">Old student</button> -->
-          <button type="button" onclick="enrolledStudentURL()" class="type-btn">Old student</button>
-        </div>
-      </div>
-
-      <div class="row-content">
-        <h4>Or</h4>
-
-        <div class="col-btn">
-          <button type="button" class="type-btn">
-            Check/edit submitted form
-          </button>
-        </div>
+    <div class="content">
+      <div class="slide-3">
+        <header>
+          <div class="title">
+            <h2>Online Application</h2>
+            <small
+              >Lorem ipsum dolor sit amet consectetur adipisicing elit.
+              Consequatur quam optio explicabo asperiores eius qui? Itaque, nemo
+              autem optio iure obcaecati ipsa animi harum inventore, possimus
+              neque rerum quod deserunt.</small
+            >
+          </div>
+        </header>
+        <header>
+          <div class="title">
+            <h3>Choose enrollment type</h3>
+          </div>
+        </header>
+        <main>
+          <div class="action">
+            <a href="#" onclick="newStudentURL()">New student</a>
+          </div>
+          <div class="action">
+            <a href="#" onclick="enrolledStudentURL()">Old student</a>
+          </div>
+        </main>
+        <header>
+          <div class="title">
+            <h3>Or</h3>
+          </div>
+        </header>
+        <main>
+          <div class="action">
+            <a href="#">Check/edit submitted form</a>
+          </div>
+        </main>
       </div>
       <main>
         <div class="footer">
@@ -141,7 +147,7 @@
           var root = `<?php
                   echo domainName;
               ?>`;
-          window.location.href = `${root}/pre_enrollment_register.php`
+          window.location.href = `${root}pre_enrollment_register.php`
       }
 
       function enrolledStudentURL(){
@@ -149,7 +155,7 @@
                   echo domainName;
               ?>`;
           // window.location.href = `${root}/student_enrollment.php`
-          window.location.href = `${root}/enrollment_login.php`
+          window.location.href = `${root}enrollment_login.php`
       }
     </script>
   </body>
