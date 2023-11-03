@@ -1,5 +1,6 @@
 <?php 
 
+
     include_once('../../includes/registrar_header.php');
     include_once('../../includes/classes/StudentSubject.php');
     include_once('../../includes/classes/Program.php');
@@ -134,6 +135,7 @@
 
                                                 WHERE t2.semester = :semester
                                                 AND t2.subject_code = :subject_code
+                                                AND t3.course_id IS NOT NULL
 
                                             ");
 
@@ -148,6 +150,9 @@
 
                                                     $program_section = $row['program_section'];
                                                     $course_id = $row['course_id'];
+
+                                                    // var_dump($course_id);
+                                                    // echo "<br>";
 
                                                     $program_id = $row['program_id'];
                                                     $subject_code = $row['subject_code'];

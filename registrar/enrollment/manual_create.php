@@ -745,7 +745,7 @@
                                 // Alert::successAutoRedirect("Enrollment Successfully Created.", 
                                 //     "$url");
                                 // exit();
-
+                                
                                 $student_subject = new StudentSubject($con); 
 
                                 // If New Standard Grade 11 and 1st Year Only

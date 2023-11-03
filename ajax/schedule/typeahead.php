@@ -23,11 +23,7 @@
 
             // $fullName = $row['firstname'] .' ' . $row['middle_name'] . ' ' . $row['lastname'];
             $fullName = $row['firstname'] .' ' . $row['lastname'];
-
-
-            // Add the full name to the results array
-            // $results[] = $fullName;
-
+ 
             $results[] = array(
                 'label' => $fullName,  // Display name in the autocomplete dropdown
                 'value' => $fullName,  // Value for input field (full name)

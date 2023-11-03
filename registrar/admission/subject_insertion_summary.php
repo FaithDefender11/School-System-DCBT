@@ -432,12 +432,13 @@
 
                                         if($isSectionFull){
                                             ?>
-                                                <!-- <a data-bs-target="#changeSectionModalBtn" 
+                                                <a data-bs-target="#changeSectionModalBtn" 
                                                     data-bs-toggle="modal"
                                                     class="dropdown-item" style="cursor:pointer;color: blue">
                                                     <i class="bi bi-file-earmark-x"></i>
                                                     Change Section
-                                                </a> -->
+                                                </a>
+                                                
                                             <?php
                                         }
 
@@ -1027,6 +1028,7 @@
                                                     //     GetTotalNumberOfStudentInSection($student_enrollment_course_id,
                                                     //         $current_school_year_id);
 
+                                                    #BSIS
                                                     if ($latestStudentNumberInSection >= $capacity &&
                                                         count($hasAvailableRoomWithinSemester) > 0
                                                         && (($checkNextActiveSectionIfExist && !$checkNextActiveSectionIfExistNotFull) 
@@ -1286,14 +1288,14 @@
                                     $checkPreviousEnrolledFormHasSameSectionToCurrrent = $enrollment->CheckPreviousEnrolledFormHasSameSectionToCurrrent(
                                         $student_id, $current_school_year_id);
                                             
-                                    // if($checkIfRegistrarEvalueated){
-                                    //     echo "checkIfRegistrarEvaluated true";
-                                    // }
+                                        // if($checkIfRegistrarEvalueated){
+                                        //     echo "checkIfRegistrarEvaluated true";
+                                        // }
 
-                                    // echo '$isSectionFull == ' . ($isSectionFull ? 'true' : 'false') . "<br>";
-                                    // echo '$checkIfCashierEvaluated == ' . ($checkIfCashierEvaluated ? 'true' : 'false') . "<br>";
-                                    // echo '$checkIfRegistrarEvaluated == ' . ($checkIfRegistrarEvaluated ? 'true' : 'false') . "<br>";
-                                    // echo '$doesStudentEnrolled == ' . ($doesStudentEnrolled ? 'true' : 'false') . "<br>";
+                                        // echo '$isSectionFull == ' . ($isSectionFull ? 'true' : 'false') . "<br>";
+                                        // echo '$checkIfCashierEvaluated == ' . ($checkIfCashierEvaluated ? 'true' : 'false') . "<br>";
+                                        // echo '$checkIfRegistrarEvaluated == ' . ($checkIfRegistrarEvaluated ? 'true' : 'false') . "<br>";
+                                        // echo '$doesStudentEnrolled == ' . ($doesStudentEnrolled ? 'true' : 'false') . "<br>";
 
                                         if($isSectionFull == false 
                                             && $checkIfCashierEvaluated == false 
@@ -1377,10 +1379,11 @@
                                             ?>
                                                 <div style="margin-top: 20px;" class="action">
                                                     <button
-                                                        class="default large information"
+                                                        onclick="createAnotherSection(<?php echo $student_enrollment_course_id; ?>)"
+                                                        class="default large info"
                                                         name="pending_choose_section"
                                                         type="button">
-                                                        Section is full
+                                                        Section is full, Click to create.
                                                     </button>
                                                 </div>
                                             <?php

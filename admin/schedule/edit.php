@@ -40,8 +40,20 @@
             <script src=
                 "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js">
                 </script>
-                
+
+            <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+            <!-- <script src="https://code.jquery.com/jquery-3.6.0.js"></script> -->
+
+            <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+
+            <style>
+                .ui-autocomplete {
+                    max-height: 200px; /* Set the maximum height you desire */
+                    overflow-y: auto; /* Add a vertical scrollbar if necessary */
+                }
+            </style>
         </head>
+
     <?php
 
 
@@ -89,6 +101,12 @@
 
 
         // var_dump($schedule_teacher_id);
+        $teacher = new Teacher($con, $schedule_teacher_id);
+
+        $selectedTeacherFullName = ucwords($teacher->GetTeacherFirstName()) . " " . ucwords($teacher->GetTeacherLastName());
+        $selectedTeacherId = $schedule_teacher_id;
+
+
 
         $room = new Room($con, $schedule_room_id);
 
@@ -135,6 +153,14 @@
 
 
 
+        $getTeacherScheduleCount = $schedule
+            ->GetSubjectScheduleCountForTeacher(
+            $schedule_subject_code,
+            $current_school_year_id);
+
+        // var_dump($getTeacherScheduleCount);
+
+
         if($_SERVER['REQUEST_METHOD'] === "POST" 
             && isset($_POST['edit_section_subject_code_schedule_' . $subject_schedule_id])
             && isset($_POST['course_id'])
@@ -163,8 +189,7 @@
             $checkIfTimeFromIsGreaterPrompt = $schedule->CheckIfTimeFromIsGreater($time_from,
                 $time_to);
 
-
-            var_dump($checkIfTimeFromIsGreaterPrompt);
+            // var_dump($checkIfTimeFromIsGreaterPrompt);
             
 
             // $time_to = str_replace(["AM", "PM"], "", $time_to);
@@ -179,9 +204,24 @@
             // $teacher_id = $_POST['teacher_id'] ?? NULL;
             $schedule_day = $_POST['schedule_day'];
 
-            $room_id = isset($_POST['room_id']) && $_POST['room_id'] == 0 ? NULL : intval($_POST['room_id']);
+            // $room_id2 = $room_id == 0 ? NULL : $room_id;
+
+            $room_id = !isset($_POST['room_id']) ? NULL : intval($_POST['room_id']);
+            $room_id = $room_id == 0 ? NULL : $room_id;
+
+            // $room_id = isset($_POST['room_id']) && $_POST['room_id'] == 0 ? NULL : intval($_POST['room_id']);
+            
+            $selectedTeacherId = $_POST['selectedTeacherId'] == 0 ? NULL : intval($_POST['selectedTeacherId']);
+            
             $teacher_id = $_POST['teacher_id']  == 0 ? NULL : intval($_POST['teacher_id']);
             
+            // var_dump($room_id);
+            // var_dump($room_id);
+            // var_dump($teacher_id);
+
+            // echo "<br>";
+            // return;
+
             $schedule_time = $time_from . " - " . $time_to;
 
             // echo "Course ID: $course_id<br>";
@@ -205,16 +245,16 @@
 
             if($checkIfTimeFromIsGreaterPrompt == true){
 
-                // $wasSuccessUpdate = $schedule->UpdateSubjectSchedule($subject_schedule_id,
-                //     $schedule_day, $time_from, $time_to, $raw_time_from, $raw_time_to,
-                //     $current_school_year_id,
-                //     $course_id, $teacher_id, $section_subject_code,
-                //     $subject_program_id, $room_id, $get_subject_code, $current_school_year_id, $back_url);
+                $wasSuccessUpdate = $schedule->UpdateSubjectSchedule($subject_schedule_id,
+                    $schedule_day, $time_from, $time_to, $raw_time_from, $raw_time_to,
+                    $current_school_year_id,
+                    $course_id, $selectedTeacherId, $section_subject_code,
+                    $subject_program_id, $room_id, $get_subject_code, $current_school_year_id, $back_url);
 
-                // if($wasSuccessUpdate){
-                //     Alert::success("Schedule Update executed.", "index.php");
-                //     exit();
-                // }
+                if($wasSuccessUpdate){
+                    Alert::success("Schedule Update executed.", "index.php");
+                    exit();
+                }
                 
             }
             
@@ -276,7 +316,11 @@
                                 </div>
 
                                 <div class="form-group mb-3">
-                                    <label for="room_id">* Room</label>
+
+                                    <!-- <label for="room_id">* Room</label> -->
+
+                                    <label for="room_id">* Room ( Note: Leave it blank serves as TBA )</label>
+
                                     <select name="room_id" id="room_id" class="form-control">
                                         
                                         <?php
@@ -289,10 +333,10 @@
                                                 echo "<option value='' disabled selected>Select Room</option>";
 
                                                 if($schedule_room_id === NULL){
-                                                    echo "<option selected value='0'>TBA</option>";
+                                                    // echo "<option selected value='0'>TBA</option>";
                                                 }
                                                 else{
-                                                    echo "<option value='0'>TBA</option>";
+                                                    // echo "<option value='0'>TBA</option>";
                                                 }
 
                                                 while($row = $query->fetch(PDO::FETCH_ASSOC)) {
@@ -340,73 +384,99 @@
                                     placeholder="(7:00)" name="time_to" id="time_to" class="form-control" />
                                 </div>
 
-                                <div class="mb-3">
+                                
+
+                                <div style="display: none;" class="mb-3">
                                     <label for=""> Instructor</label>
 
-                                    <?php 
-                                    
-                                        $disabled = "";
+                                        <?php 
 
-                                        if($url_t_id != NULL && $url_t_id == $schedule_teacher_id){
+                                            $disabled = "";
+
+                                            if($getTeacherScheduleCount > 1){
+                                                $disabled = "pointer-events: none;";
+
+                                            }
+                                        ?>
+
+                                        <select style="<?= $disabled; ?>" class="form-control" 
+                                            name="teacher_id" id="teacher_id">
+
+                                            <?php
+                                                $query = $con->prepare("SELECT * FROM teacher
+                                                    WHERE teacher_status = :teacher_status
+                                                ");
+                                                $query->bindValue(":teacher_status", "Active");
+                                                $query->execute();
+
+                                                if($query->rowCount() > 0){
+                                                
+
+                                                    echo "<option value='' disabled selected>Select Instructor</option>";
+
+                                                    if($schedule_teacher_id === NULL){
+                                                        echo "<option selected value='0'>TBA</option>";
+                                                    }else{
+                                                        echo "<option value='0'>TBA</option>";
+                                                    }
+
+                                                    while($row = $query->fetch(PDO::FETCH_ASSOC)) {
+
+                                                        $teacher_id = $row['teacher_id'];
+
+                                                        $teacher = new Teacher($con, $teacher_id);
+
+                                                        $fullname = $teacher->GetTeacherFullName();
+
+                                                        $selected = "";
+
+                                                        if($teacher_id === $schedule_teacher_id){
+                                                            $selected = "selected";
+                                                        }
+
+                                    
+                                                        // if($schedule_teacher_id === NULL){
+                                                        //     echo "<option selected value='0'>TBA</option>";
+                                                        // }else{
+                                                        //     echo "<option $selected value='$teacher_id'>$fullname</option>";
+                                                        // }
+
+                                                        
+
+                                                        echo "<option $selected value='$teacher_id'>$fullname</option>";
+                                                    }
+                                                }else{
+                                                    echo "<option value=''>No Available Teacher. Please Contact the Admin.</option>";
+                                                }
+
+                                                
+                                            ?>
+                                        </select>
+
+
+
+                                </div>
+
+                                <div class="mb-3">
+
+                                    
+                                    <?php 
+
+                                        $disabled = "";
+                                        $text = "* Teacher ( Note: Leave it blank serves as TBA )";
+                                        if($getTeacherScheduleCount > 1){
                                             $disabled = "pointer-events: none;";
-                                            // echo "hey";
-                            // style="<?= $disabled;  
+                                            $text = "* Teacher";
 
                                         }
                                     ?>
+                                    <label for="searchInputTeacher"><?= $text;?></label>
 
-                                    <select class="form-control" name="teacher_id" id="teacher_id">
-                                        <?php
-                                            $query = $con->prepare("SELECT * FROM teacher
-                                                WHERE teacher_status = :teacher_status
-                                            ");
-                                            $query->bindValue(":teacher_status", "Active");
-                                            $query->execute();
-
-                                            if($query->rowCount() > 0){
-                                            
-
-                                                echo "<option value='' disabled selected>Select Instructor</option>";
-
-                                                if($schedule_teacher_id === NULL){
-                                                    echo "<option selected value='0'>TBA</option>";
-                                                }else{
-                                                    echo "<option value='0'>TBA</option>";
-                                                }
-
-                                                while($row = $query->fetch(PDO::FETCH_ASSOC)) {
-
-                                                    $teacher_id = $row['teacher_id'];
-
-                                                    $teacher = new Teacher($con, $teacher_id);
-
-                                                    $fullname = $teacher->GetTeacherFullName();
-
-                                                    $selected = "";
-
-                                                    if($teacher_id === $schedule_teacher_id){
-                                                        $selected = "selected";
-                                                    }
-
-                                 
-                                                    // if($schedule_teacher_id === NULL){
-                                                    //     echo "<option selected value='0'>TBA</option>";
-                                                    // }else{
-                                                    //     echo "<option $selected value='$teacher_id'>$fullname</option>";
-                                                    // }
-
-                                                    
-
-                                                    echo "<option $selected value='$teacher_id'>$fullname</option>";
-                                                }
-                                            }else{
-                                                echo "<option value=''>No Available Teacher. Please Contact the Admin.</option>";
-                                            }
-
-                                            
-                                        ?>
-                                    </select>
+                                    <input style="<?= $disabled; ?>" class="form-control" type="text" name="searchInputTeacher" id="searchInputTeacher" placeholder="Search teacher..." value="<?= htmlspecialchars($selectedTeacherFullName) ?>">
+                                    <input type="hidden" id="selectedTeacherId" name="selectedTeacherId" value="<?= htmlspecialchars($selectedTeacherId) ?>">
+                                
                                 </div>
+
 
                                 <div class="mb-3">
 
@@ -444,6 +514,42 @@
 ?>
 
 <script>
+
+    $(document).ready(function() {
+        const searchInputTeacher = $('#searchInputTeacher');
+
+        searchInputTeacher.autocomplete({
+            source: function(request, response) {
+                $.ajax({
+                    url: '../../ajax/schedule/typeahead.php',
+                    dataType: 'json',
+                    data: {
+                        query: request.term
+                    },
+                    success: function(data) {
+                        response(data);
+                        console.log(data);
+                    }
+                });
+            },
+            minLength: 0,
+            select: function(event, ui) {
+                $('#selectedTeacherId').val(ui.item.teacher_id);
+            },
+            change: function(event, ui) {
+                if (!ui.item) {
+                    $('#selectedTeacherId').val(0);
+                }
+            }
+        });
+
+        // Attach focus event to open the autocomplete dropdown
+        searchInputTeacher.on('focus', function() {
+            searchInputTeacher.autocomplete('search', '');
+        });
+    });
+
+
 
     $('#course_id').on('change', function() {
 

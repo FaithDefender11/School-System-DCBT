@@ -123,6 +123,24 @@ class Alert{
         </script>";
     }
 
+    public static function conflictedMessageNonRedirect($mainText, $additionalText, $redirectUrl) {
+        echo "
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Oh no! Schedule Conflict',
+                html: '<div><p>$mainText</p><p>$additionalText</p></div>',
+                showCancelButton: false,
+                backdrop: false,
+                allowEscapeKey: false,
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'OK'
+            }).then((result) => {
+                
+            });
+        </script>";
+    }
+
 
     // public static function errorToast($text, $redirectUrl) {
     //     echo "<script>

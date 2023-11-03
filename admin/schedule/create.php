@@ -34,12 +34,12 @@
     $time_from = "";
     $time_to = "";
 
-    ?>
-        <head>
-       
 
-        </head>
-    <?php
+    function getInputValue($name, $value) {
+        if (isset($_POST[$name]) && $_POST[$name] === $value) {
+            echo 'selected';
+        }
+    }
 
 
     if(isset($_GET['course_id'])
@@ -101,11 +101,15 @@
 
         // $teacher_id = $_POST['teacher_id']  == 0 ? NULL : intval($_POST['teacher_id']);
 
+        // $selectedTeacherId = !isset($_POST['selectedTeacherId']) ? $teacher_id : intval($_POST['selectedTeacherId']);
+        
         $selectedTeacherId = $_POST['selectedTeacherId'] == "" ? NULL : intval($_POST['selectedTeacherId']);
-
+        
+        
         // $searchInputTeacher = $_POST['searchInputTeacher']; 
 
-        // var_dump($room_id);
+        // var_dump($teacher_id);
+        // var_dump($selectedTeacherId);
         // return;
         
         // $room_id = isset($_POST['room_id']) ?? NULL;
@@ -157,14 +161,19 @@
         // echo "time_to_meridian_military: " . $time_to_meridian_military . "<br>";
         // echo "schedule_time: " . $schedule_time . "<br>";
 
-            // var_dump($checkIfTimeFromIsGreaterPrompt);
+        // var_dump($checkIfTimeFromIsGreaterPrompt);
 
-        $addScheduleSuccess = $schedule->AddSubjectCodeSchedule(
-            $time_from_meridian, $time_to_meridian,$schedule_day,
-            $time_from_meridian_military, $time_to_meridian_military,
-            $schedule_time, $current_school_year_id, $course_id,
-            $selectedTeacherId, $section_subject_code, $subject_program_id, $room_id, $back_url
-        );
+        if($checkIfTimeFromIsGreaterPrompt == true){
+
+            $addScheduleSuccess = $schedule->AddSubjectCodeSchedule(
+                $time_from_meridian, $time_to_meridian,$schedule_day,
+                $time_from_meridian_military, $time_to_meridian_military,
+                $schedule_time, $current_school_year_id, $course_id,
+                $selectedTeacherId, $section_subject_code, $subject_program_id, $room_id, $back_url
+            );
+
+        }
+
 
         // if($addScheduleSuccess){
         //     Alert::success("Schedule has been added successfully.", $back_url);
@@ -200,8 +209,14 @@
 
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 
-        
+    <style>
+        .ui-autocomplete {
+            max-height: 200px; /* Set the maximum height you desire */
+            overflow-y: auto; /* Add a vertical scrollbar if necessary */
+        }
+    </style>
 </head>
+
 
 <div class='content'>
 
@@ -345,15 +360,21 @@
 
                         <input id="datetime" type="text" required 
                            
-                            value="8:00"
-
+                            value="<?php 
+                                echo Helper::DisplayText('time_from', $time_from);
+                            ?>" 
                             placeholder=""
                             name="time_from" id="time_from" class="form-control" />
                     </div>
 
                     <div class="mb-3 form-group" style="position: relative">
                         <label for="">* Time to</label>
-                        <input id="datetimex" required type="text" value="9:30" placeholder="(7:00)" name="time_to" id="time_to" class="form-control" />
+                        <input id="datetimex" required type="text"
+                        value="<?php 
+                            echo Helper::DisplayText('time_to', $time_to);
+                        ?>" 
+                        
+                        placeholder="(7:00)" name="time_to" id="time_to" class="form-control" />
                     </div>
 
                     <div style="display: none;" class="mb-3">
@@ -367,6 +388,7 @@
                                 // echo "hey";
                             }
                         ?>
+
                         <select style="<?= $disabled; ?>" class="form-control" name="teacher_id" id="teacher_id">
                             <?php
                                 $query = $con->prepare("SELECT * FROM teacher
@@ -405,25 +427,90 @@
                                 
                             ?>
                         </select>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="searchInputTeacher">* Teacher ( Note: Leave it blank serves as TBA )</label>
-                        <input class="form-control" type="text" name="searchInputTeacher" id="searchInputTeacher" placeholder="Search teacher...">
-                        <input type="hidden" id="selectedTeacherId" name="selectedTeacherId">
 
                     </div>
 
-                  
+                    <?php
+                    
+                        if($url_t_id == NULL){
+
+                            ?>
+                                <div class="mb-3">
+                                    <label for="searchInputTeacher">* Teacher ( Note: Leave it blank serves as TBA )</label>
+                                    <input class="form-control" type="text" name="searchInputTeacher" id="searchInputTeacher" placeholder="Search teacher...">
+                                    <input type="hidden" id="selectedTeacherId" name="selectedTeacherId">
+                                </div>
+                            <?php
+
+                        }else{
+                            ?>
+                                <div class="mb-3">
+                                    <label for=""> Instructor</label>
+
+                                    <?php 
+                                        $disabled = "";
+                                        if($url_t_id != NULL){
+                                            $disabled = "pointer-events: none;";
+                                            // echo "hey";
+                                        }
+                                    ?>
+
+                                    <select style="<?= $disabled; ?>" class="form-control" name="selectedTeacherId" id="selectedTeacherId">
+                                        <?php
+                                            $query = $con->prepare("SELECT * FROM teacher
+                                                WHERE teacher_status = :teacher_status
+                                                -- AND active=:active
+                                            ");
+                                            $query->bindValue(":teacher_status", "Active");
+                                            $query->execute();
+
+                                            if($query->rowCount() > 0){
+                                            
+
+                                                echo "<option value='' disabled selected>Select Instructor</option>";
+                                                echo "<option value='0'>TBA</option>";
+
+                                                while($row = $query->fetch(PDO::FETCH_ASSOC)) {
+
+                                                    $teacher_id = $row['teacher_id'];
+
+                                                    $teacher = new Teacher($con, $teacher_id);
+
+                                                    $fullname = $teacher->GetTeacherFullName();
+
+                                                    $selected = "";
+
+                                                    if($teacher_id == $url_t_id){
+                                                        $selected = "selected";
+                                                    }
+
+                                                    echo "<option $selected value='$teacher_id'>$fullname</option>";
+                                                }
+                                            }else{
+                                                echo "<option value=''>No Available Teacher. Please Contact the Admin.</option>";
+                                            }
+
+                                            
+                                        ?>
+                                    </select>
+
+                                </div>
+                            <?php
+                        }
+                    ?>
+
                     <div class="mb-3">
                         <label for="schedule_day">* Schedule Day</label>
                         <select required name="schedule_day" id="schedule_day" class="form-control">
                             <option value="">-- Select Day --</option>
-                            <option value="M">Monday</option>
-                            <option value="T">Tuesday</option>
-                            <option value="W">Wednesday</option>
-                            <option value="TH">Thursday</option>
-                            <option value="F">Friday</option>
+
+                            <!-- <option value="M">Monday</option> -->
+                            <option value="M" <?php getInputValue('schedule_day', 'M'); ?>>Monday</option>
+                            <option value="T" <?php getInputValue('schedule_day', 'T'); ?>>Tuesday</option>
+                            <option value="W" <?php getInputValue('schedule_day', 'W'); ?>>Wednesday</option>
+                            <option value="TH" <?php getInputValue('schedule_day', 'TH'); ?>>Thursday</option>
+                            <option value="F" <?php getInputValue('schedule_day', 'F'); ?>>Friday</option>
+                        
                         </select>
                     </div>
 
@@ -481,45 +568,43 @@
 
 <script>
 
-        $(document).ready(function() {
-            
-            const searchInputTeacher = $('#searchInputTeacher');
+    $(document).ready(function() {
+        
+        const searchInputTeacher = $('#searchInputTeacher');
 
-            searchInputTeacher.autocomplete({
-                source: function(request, response) {
-                    $.ajax({
-                        url: '../../ajax/schedule/typeahead.php',
-                        dataType: 'json',
-                        data: {
-                            query: request.term
-                        },
-                        success: function(data) {
-                            response(data);
-                            console.log(data)
-                        }
-                    });
-                },
-                minLength: 1,
-                select: function(event, ui) {
-                    // Handle selection, e.g., redirect to a page or perform an action.
-                    // console.log(ui.item.teacher_id);
-                    $('#selectedTeacherId').val(ui.item.teacher_id);
-                },
-                change: function(event, ui) {
-                    // If the user clears the input or doesn't choose a teacher, set the teacher_id to 0
-                    if (!ui.item) {
-                        $('#selectedTeacherId').val(0);
+        searchInputTeacher.autocomplete({
+            source: function(request, response) {
+                $.ajax({
+                    url: '../../ajax/schedule/typeahead.php',
+                    dataType: 'json',
+                    data: {
+                        query: request.term
+                    },
+                    success: function(data) {
+                        response(data);
+                        console.log(data)
                     }
+                });
+            },
+            minLength: 0,
+            select: function(event, ui) {
+                // Handle selection, e.g., redirect to a page or perform an action.
+                $('#selectedTeacherId').val(ui.item.teacher_id);
+            },
+            change: function(event, ui) {
+                // If the user clears the input or doesn't choose a teacher, set the teacher_id to 0
+                if (!ui.item) {
+                    $('#selectedTeacherId').val(0);
                 }
-            });
-
-            // Attach focus event to open the autocomplete dropdown (didnt worked)
-
-            searchInputTeacher.on('focus', function() {
-                searchInputTeacher.autocomplete('search', ''); // Open the dropdown with an empty query
-            });
-
+            }
         });
+
+        // Attach focus event to open the autocomplete dropdown (didnt worked)
+        searchInputTeacher.on('focus', function() {
+            searchInputTeacher.autocomplete('search', ''); // Open the dropdown with an empty query
+        });
+
+    });
 
     $('#course_id').on('change', function() {
 

@@ -108,6 +108,8 @@
         </div>
       </div>
       <main>
+
+      
         <div class="slide-1" id="admissions">
           <div class="carousel">
             <img src="assets/images/home/DCBT-Cover.jpg" alt="Cover" />
@@ -138,6 +140,8 @@
             </div>
           </header>
         </div>
+
+
         <div class="slide-2">
           <header>
             <div class="title">
@@ -322,6 +326,8 @@
             <h4>Copyright © 2019. All Rights Reserved</h4>
           </div>
         </div>
+
+
       </main>
 
       <div class="login-element" id="login-form">
