@@ -117,6 +117,7 @@ nav>ul>li>a:hover {
 
 /* CONTENT */
 .content {
+  display: flex;
   height: auto;
   flex-direction: column;
   align-items: stretch;
@@ -530,6 +531,215 @@ nav>ul>li>a:hover {
   text-decoration: none;
 }
 
+.content>main>.footer {
+  display: flex;
+  padding: 42px 65px;
+  width: 100%;
+  height: auto;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 10px;
+  align-self: stretch;
+  background-color: var(--mainTheme);
+  z-index: 2;
+  bottom: 0;
+}
+
+.content>main>.footer>.contact {
+  display: flex;
+  padding: 2px 0px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.content>main>.footer>.copyright {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  align-self: stretch;
+}
+
+.content>main>.footer>.contact>h4,
+.content>main>.footer>.copyright>h4 {
+  font-family: IM FELL Double Pica;
+  font-style: normal;
+  font-weight: 400;
+  color: #fff;
+}
+
+.content>main>.footer>.contact>p {
+  font-family: IM FELL Double Pica;
+  font-style: normal;
+  font-weight: 400;
+  color: #fff;
+}
+
+/* LOGIN */
+.content>.login-element {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100%;
+  flex-grow: 1;
+}
+
+.content>.login-element>.floating {
+  display: flex;
+  width: 432px;
+  height: auto;
+  padding: 20px 30px;
+  flex-direction: column;
+  align-items: flex-start;
+  box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.25);
+  background-color: #fff;
+  border-radius: 10px;
+}
+
+.content>.login-element>.floating>.close-btn {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.content>.login-element>.floating>.close-btn>button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 10px;
+  border: none;
+  background-color: #525252;
+}
+
+.content>.login-element>.floating>.close-btn>button>a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  text-decoration: none;
+}
+
+.content>.login-element>.floating>header {
+  justify-content: flex-start;
+  flex-direction: column;
+}
+
+.content>.login-element>.floating>header>.title {
+  flex-wrap: wrap;
+}
+
+.content>.login-element>.floating>header>.title>h2 {
+  color: #EA4040;
+}
+
+.content>.login-element>.floating>main {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+.content>.login-element>.floating>main>form>.form-element {
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  width: 100%;
+}
+
+.content>.login-element>.floating>main>form>.form-element>div {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.content>.login-element>.floating>main>form>.form-element>div>input {
+  height: 25px;
+}
+
+.content>.login-element>.floating>main>form>.form-element>small {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.content>.login-element>.floating>main>form>.form-element>small>a {
+  text-decoration: none;
+  color: red;
+}
+
+.content>.login-element>.floating>main>form>.action,
+.content>.login-element>.floating>main>.action {
+  padding: 5px;
+}
+
+.content>.login-element>.floating>main>form>.action>input,
+.content>.login-element>.floating>main>.action>button {
+  width: 100%;
+  height: 35px;
+  background: #B44;
+  box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.25);
+  border: none;
+  font-size: 20px;
+  font-weight: 400;
+  color: #fff;
+  cursor: pointer;
+  margin: 5px;
+}
+
+.content>.login-element>.floating>main>form>.action>.close {
+  width: 150px;
+  height: 35px;
+  background-color: #b44;
+  box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.25);
+  border: none;
+  font-size: 20px;
+  font-weight: 400;
+  color: #fff;
+  cursor: pointer;
+}
+
+.content>.login-element>.floating>main>form>.action>input:hover,
+.content>.login-element>.floating>main>form>.action>.close:hover,
+.content>.login-element>.floating>main>.action>button:hover {
+  background: rgb(124, 40, 40);
+  transition: .4s;
+}
+
+#login-form {
+  position: fixed;
+  display: none;
+  justify-content: center;
+  width: 100%;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(1.25);
+  transition: top 0ms ease-in-out 200ms, opacity 200ms ease-in-out 0ms,
+    transform 200ms ease-in-out 0ms;
+}
+
+#login-form.active {
+  display: flex;
+  top: 50%;
+  left: 50%;
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+  transition: top 0ms ease-in-out 0ms, opacity 200ms ease-in-out 0ms,
+    transform 200ms ease-in-out 0ms;
+}
+
+nav>ul.active {
+  display: none;
+}
+
+.no-scroll {
+  overflow: hidden;
+}
+
 /* RESPONSIVE CONTENT */
 @media (max-width: 1080px) {
   .content-header {
@@ -647,6 +857,10 @@ nav>ul>li>a:hover {
   .slide-3>main>.action>a {
     font-size: 16px;
   }
+
+  .content>.login-element {
+    width: 100%;
+  }
 }
 
 @media (max-width: 400px) {
@@ -672,211 +886,8 @@ nav>ul>li>a:hover {
   .content>main>.footer {
     padding: 12px 15px;
   }
-}
 
-.content>main>.footer {
-  display: flex;
-  padding: 42px 65px;
-  width: 100%;
-  height: auto;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 10px;
-  align-self: stretch;
-  background-color: var(--mainTheme);
-  z-index: 2;
-  bottom: 0;
-}
-
-.content>main>.footer>.contact {
-  display: flex;
-  padding: 2px 0px;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 4px;
-}
-
-.content>main>.footer>.copyright {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  align-self: stretch;
-}
-
-.content>main>.footer>.contact>h4,
-.content>main>.footer>.copyright>h4 {
-  font-family: IM FELL Double Pica;
-  font-style: normal;
-  font-weight: 400;
-  color: #fff;
-}
-
-.content>main>.footer>.contact>p {
-  font-family: IM FELL Double Pica;
-  font-style: normal;
-  font-weight: 400;
-  color: #fff;
-}
-
-/* LOGIN */
-.login-element {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-}
-
-.login-element>.floating {
-  display: flex;
-  width: 432px;
-  height: auto;
-  padding: 20px 30px;
-  flex-direction: column;
-  align-items: flex-start;
-  box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.25);
-  background-color: #fff;
-  border-radius: 10px;
-}
-
-.login-element>.floating>.close-btn {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-end;
-  width: 100%;
-}
-
-.login-element>.floating>.close-btn>button {
-  width: 18px;
-  height: 18px;
-  border-radius: 10px;
-  border: none;
-  background-color: #525252;
-}
-
-.login-element>.floating>.close-btn>button>a {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #fff;
-}
-
-.login-element>.floating>header {
-  justify-content: flex-start;
-  flex-direction: column;
-}
-
-.login-element>.floating>header>.title {
-  flex-wrap: wrap;
-}
-
-.login-element>.floating>header>.title>h2 {
-  color: #EA4040;
-}
-
-.login-element>.floating>main {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  width: 100%;
-}
-
-.login-element>.floating>main>form>.form-element {
-  justify-content: center;
-  align-items: center;
-  padding: 10px;
-  width: 100%;
-}
-
-.login-element>.floating>main>form>.form-element>div {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-}
-
-.login-element>.floating>main>form>.form-element>div>input {
-  height: 25px;
-}
-
-.login-element>.floating>main>form>.form-element>small {
-  display: flex;
-  justify-content: flex-end;
-}
-
-.login-element>.floating>main>form>.form-element>small>a {
-  text-decoration: none;
-  color: red;
-}
-
-.login-element>.floating>main>form>.action,
-.login-element>.floating>main>.action {
-  padding: 5px;
-}
-
-.login-element>.floating>main>form>.action>input,
-.login-element>.floating>main>.action>button {
-  width: 100%;
-  height: 35px;
-  background: #B44;
-  box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.25);
-  border: none;
-  font-size: 20px;
-  font-weight: 400;
-  color: #fff;
-  cursor: pointer;
-  margin: 5px;
-}
-
-.login-element>.floating>main>form>.action>.close {
-  width: 150px;
-  height: 35px;
-  background-color: #b44;
-  box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.25);
-  border: none;
-  font-size: 20px;
-  font-weight: 400;
-  color: #fff;
-  cursor: pointer;
-}
-
-.login-element>.floating>main>form>.action>input:hover,
-.login-element>.floating>main>form>.action>.close:hover,
-.login-element>.floating>main>.action>button:hover {
-  background: rgb(124, 40, 40);
-  transition: .4s;
-}
-
-#login-form {
-  position: fixed;
-  display: none;
-  justify-content: center;
-  width: 100%;
-  opacity: 0;
-  transform: translate(-50%, -50%) scale(1.25);
-  transition: top 0ms ease-in-out 200ms, opacity 200ms ease-in-out 0ms,
-    transform 200ms ease-in-out 0ms;
-}
-
-#login-form.active {
-  display: flex;
-  top: 50%;
-  left: 50%;
-  opacity: 1;
-  transform: translate(-50%, -50%) scale(1);
-  transition: top 0ms ease-in-out 0ms, opacity 200ms ease-in-out 0ms,
-    transform 200ms ease-in-out 0ms;
-}
-
-nav>ul.active {
-  display: none;
-}
-
-.no-scroll {
-  overflow: hidden;
-}
-
-.custom-fb-post {
-  min-width: 320px !important;
+  .slide-2>main>.item>.fb-post.custom-fb-post {
+    min-width: 320px !important;
+  }
 }

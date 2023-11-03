@@ -23,7 +23,6 @@
 
         <!-- Bootstrap 4 JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-        
         <style>
             .resend-confirm-button{
                 background-color: red;
@@ -117,6 +116,7 @@
         else{
             echo "<script>
                 $(document).ready(function() {
+
                     Swal.fire({
                         icon: 'error',
                         title: 'Wrong credentials',
@@ -226,45 +226,48 @@
     </head>
 
     <body>
-        <div class="login-element">
-            <div class="floating">
-                <div class="close-btn">
-                    <button><a href="index.php">&times;</a></button>
-                </div>
-                <header>
-                    <div class="title">
-                        <h2>ELMS Sign in</h2>
+        <div class="content">
+            <div class="login-element">
+                <div class="floating">
+                    <div class="close-btn">
+                        <button><a href="index.php">&times;</a></button>
                     </div>
-                </header>
-                <main>
-                    <form method="POST">
-                        <div class="form-element">
-                            <label for="username">Username</label>
-                            <div>
-                                <input type="text" name="username" id="username" value="" required />
+                    <header>
+                        <div class="title">
+                            <h2>ELMS Sign in</h2>
+                        </div>
+                    </header>
+                    <main>
+                        <form method="POST">
+                            <div class="form-element">
+                                <label for="username">Username</label>
+                                <div>
+                                    <input type="text" name="username" id="username" value="" required />
+                                </div>
+                                <small><a href="#">Forgot username?</a></small>
                             </div>
-                            <small><a href="#">Forgot username?</a></small>
-                        </div>
-                        <div class="form-element">
-                            <label for="password">Password</label>
-                            <div>
-                                <input
-                                type="password"
-                                name="password"
-                                id="password"
-                                value="123456"
-                                required
-                                />
+                            <div class="form-element">
+                                <label for="password">Password</label>
+                                <div>
+                                    <input
+                                    type="password"
+                                    name="password"
+                                    id="password"
+                                    value="123456"
+                                    required
+                                    />
+                                </div>
+                                <small><a href="#">Forgot password?</a></small>
                             </div>
-                            <small><a href="#">Forgot password?</a></small>
-                        </div>
-                        <div class="action">
-                            <input type="submit" name="teacher_lms_btn" value="Submit" />
-                        </div>
-                    </form>
-                </main>
+                            <div class="action">
+                                <input type="submit" name="teacher_lms_btn" value="Submit" />
+                            </div>
+                        </form>
+                    </main>
+                </div>
             </div>
         </div>
+
     </body>
 </html>
 
