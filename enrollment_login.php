@@ -253,7 +253,7 @@ function getInputValue($name) {
     <title>Authentication Login</title>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="assets/css/main_style.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/home.css">
 
     <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -265,40 +265,47 @@ function getInputValue($name) {
 
 
 </head>
-
-<body>
-    <div class="signInContainer">
-        <div class="column">
-
-            <div class="header">
-                <h3 class="text-center"><i class="fas fa-lock"></i> Enrollment Sign In</h3>
-            </div>
-
-            <div class="loginForm">
-                <form  method="POST">
-
-                    <?php 
-                        echo $account->getError(Constants::$loginFailed); 
-                    ?>
-
-                    <input type="text" value='a.12R@dcbt.edu' name="username" placeholder="Username" value="<?php getInputValue('username'); ?>" 
-                        required autocomplete="off">
-                    
-                    <input type="password" value="123456" name="password" placeholder="Password" required>
- 
-                    <!-- <div class="form-group">
-                        <label for="remember_me">Remember me</label>
-                        <input type="checkbox" name="remember_me" id="remember_me">
-                    </div> -->
-                 
-                    <input type="submit" 
-                        name="enrollment_log_in_btn" value="SUBMIT">
-                        
-                </form>
-            </div>
-            <a class="signInMessage" href="pre_enrollment_register.php">Need an account? Sign up here!</a>
-
+<body style="background-color: rgb(243, 243, 243)">
+    <div class="login-element">
+      <div class="floating">
+        <div class="close-btn">
+          <button><a href="online_application.php">&times;</a></button>
         </div>
+        <header>
+          <div class="title">
+            <h2>Enrollment Sign In</h2>
+          </div>
+        </header>
+        <main>
+          <form method="POST">
+            <?php echo $account->getError(Constants::$loginFailed); ?>
+            <div class="form-element">
+              <label for="username">Username</label>
+              <div>
+                <input type="text" name="username" id="username" value="a.12R@dcbt.edu" value="<?php getInputValue('username'); ?>" required />
+              </div>
+            </div>
+            <div class="form-element">
+              <label for="password">Password</label>
+              <div>
+                <input
+                  type="password"
+                  name="password"
+                  id="password"
+                  value="123456"
+                  required
+                />
+              </div>
+            </div>
+            <div class="action">
+              <input type="submit" name="enrollment_log_in_btn" value="Submit" />
+            </div>
+            <div class="form-element">
+                <small><a href="pre_enrollment_register.php">Need an account? Sign up here!</a></small>
+            </div>
+          </form>
+        </main>
+      </div>
     </div>
-</body>
+  </body>
 </html>

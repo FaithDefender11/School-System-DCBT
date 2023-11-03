@@ -3,66 +3,54 @@
   include('includes/config.php');
 ?>
 
- 
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, inital-scale=1, shrink-to-fit=no"
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, inital-scale=1" />
+    <link rel="icon" href="assets/images/icons/DCBT-Logo.jpg" type="image/png">
+    <title>Daehan College of Business & Technology</title>
+    <!--Link stylesheets-->
+    <link rel="stylesheet" href="assets/css/home.css" />
+    <link rel="stylesheet" href="assets/css/fonts.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
     />
+    <!--Link fonts-->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,700&family=Lato:wght@100;300;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=IM+Fell+Double+Pica&display=swap"
       rel="stylesheet"
     />
     <link
+      href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400&display=swap"
       rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
-      integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N"
-      crossorigin="anonymous"
     />
-
-    <link rel="stylesheet" href="assets/css/home.css" />
-    <link rel="icon" href="assets/images/icons/DCBT-Logo.jpg" type="image/png">
-    <title>Daehan College of Business and Technology</title>
+    <style>
+      body {
+        background-color: #efefef;
+      }
+    </style>
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg navbar-light">
-      <a class="navbar-brand" href="<?php echo domainName . "index.php"?>">
-        <img src="assets/images/home/DCBT-Logo.jpg" alt="DCBT-Logo" />
-      </a>
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-toggle="collapse"
-        data-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item">
-            <a class="nav-link" href="#"><span>ADMISSIONS</span></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#"><span>ACADEMICS</span></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#"><span>ABOUT</span></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" id="show-login"><span>LOGIN</span></a>
-          </li>
-        </ul>
-      </div>
+    <nav>
+      <input type="checkbox" id="check" />
+      <label for="check" class="check-btn">
+        <i class="bi bi-list"></i>
+      </label>
+      <label class="logo">
+        <a href="index.php">
+          <img src="assets/images/home/DCBT-Logo.jpg" alt="DCBT" />
+        </a>
+      </label>
+      <ul>
+        <li><a href="index.php#admissions">ADMISSIONS</a></li>
+        <li><a href="index.php#academics">ACADEMICS</a></li>
+        <li><a href="index.php#about">ABOUT</a></li>
+        <li><a href="#" id="show-login">LOGIN</a></li>
+      </ul>
     </nav>
 
     <div class="online-application">
@@ -95,47 +83,41 @@
             Check/edit submitted form
           </button>
         </div>
-        
       </div>
-    </div>
-
-    <footer>
-      <div class="contact">
-        <h4>DAEHAN COLLEGE OF BUSINESS AND TECHNOLOGY</h4>
-        <p>Nicanor Reyes Street, Sampaloc, Manila</p>
-        <p>Tel No: +63(2)-87777-338</p>
-        <p>Terms and condition | Privacy Policy</p>
-      </div>
-      <div class="copyright">
-        <h4>Copyright © 2019. All Rights Reserved</h4>
-      </div>
-    </footer>
-
-    <div class="popup" id="login-form">
-      <div class="close-btn">&times;</div>
-
-      <div class="form">
-
-        <h2>Choose section log-in</h2>
-      
-
-        <div class="row col-md-12">
-
-          <div class="col-md-6">
-            <div class="form-element">
-              <button type="button">ELMS</button>
-            </div>
+      <main>
+        <div class="footer">
+          <div class="contact">
+            <h4>DAEHAN COLLEGE OF BUSINESS AND TECHNOLOGY</h4>
+            <p>
+              Nicanor Reyes Street, Sampaloc, Manila Tel No: +63 (2)-87777-338
+              (trunkline)
+            </p>
+            <p>Terms and condition | Privacy Policy</p>
           </div>
-
-          <div class="col-md-6">
-            <div class="form-element">
-              <button type="button">Enrollment</button>
-            </div>
+          <div class="copyright">
+            <h4>Copyright © 2019. All Rights Reserved</h4>
           </div>
         </div>
-        
-      </div>
+      </main>
 
+      <div class="login-element" id="login-form">
+        <div class="floating">
+          <div class="close-btn">
+            <button><a href="#">&times;</a></button>
+          </div>
+          <header>
+            <div class="title">
+              <h2>Choose section log-in</h2>
+            </div>
+          </header>
+          <main>
+            <div class="action">
+              <button type="button" class="default" onclick="window.location.href ='lms_login.php'">ELMS</button>
+              <button type="button" class="default" onclick="window.location.href ='online_application.php'">Enrollment</button>
+            </div>
+          </main>
+        </div>
+      </div>
     </div>
 
     <script>
@@ -143,53 +125,32 @@
         .querySelector("#show-login")
         .addEventListener("click", function () {
           document.querySelector("#login-form").classList.add("active");
+          document.querySelector("nav > ul").classList.add("active");
+          document.body.classList.add("no-scroll");
         });
       document
-        .querySelector(".popup .close-btn")
+        .querySelector("#login-form .close-btn")
         .addEventListener("click", function () {
           document.querySelector("#login-form").classList.remove("active");
+          document.querySelector("nav > ul").classList.remove("active");
+          document.body.classList.remove("no-scroll");
         });
     </script>
     <script>
-
-      function new_student() {
-        window.location.href =
-          "/DCBT-2/enrollment-page-main/new-student-form/Student-form.html";
+      function newStudentURL(){
+          var root = `<?php
+                  echo domainName;
+              ?>`;
+          window.location.href = `${root}/pre_enrollment_register.php`
       }
 
+      function enrolledStudentURL(){
+          var root = `<?php
+                  echo domainName;
+              ?>`;
+          // window.location.href = `${root}/student_enrollment.php`
+          window.location.href = `${root}/enrollment_login.php`
+      }
     </script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
-      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct"
-      crossorigin="anonymous"
-    ></script>
   </body>
 </html>
-
-<script>
-
-    function newStudentURL(){
-
-        var root = `<?php
-                echo domainName;
-            ?>`;
-
-        window.location.href = `${root}/pre_enrollment_register.php`
-    }
-
-    function enrolledStudentURL(){
-
-        var root = `<?php
-                echo domainName;
-            ?>`;
-
-        // window.location.href = `${root}/student_enrollment.php`
-        window.location.href = `${root}/enrollment_login.php`
-    }
-    
-</script>

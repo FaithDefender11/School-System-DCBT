@@ -51,100 +51,58 @@
 
 ?>
 
-
 <!DOCTYPE html>
 <html lang="en">
-
   <head>
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, inital-scale=1, shrink-to-fit=no"
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, inital-scale=1" />
+    <link rel="icon" href="assets/images/icons/DCBT-Logo.jpg" type="image/png">
+    <title>Daehan College of Business & Technology</title>
+    <!--Link stylesheets-->
+    <link rel="stylesheet" href="assets/css/home.css" />
+    <link rel="stylesheet" href="assets/css/fonts.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
     />
+    <!--Link fonts-->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,700&family=Lato:wght@100;300;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=IM+Fell+Double+Pica&display=swap"
       rel="stylesheet"
     />
     <link
+      href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400&display=swap"
       rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
-      integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N"
-      crossorigin="anonymous"
     />
-
-    <link rel="stylesheet" href="assets/css/home.css" />
-
-    <link rel="icon" href="assets/images/icons/DCBT-Logo.jpg" type="image/png">
-
-    <title>Daehan College of Business and Technology</title>
   </head>
-    
   <body>
-    <nav class="navbar navbar-expand-lg navbar-light">
-      <a class="navbar-brand" href="<?php echo domainName . "index.php" ?>">
-        <img
-          src="assets/images/home/DCBT-Logo.jpg"
-          alt="DCBT-Logo"
-        />
-      </a>
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-toggle="collapse"
-        data-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item">
-            <a class="nav-link" href="#"><span>ADMISSIONS</span></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#"><span>ACADEMICS</span></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#"><span>ABOUT</span></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" id="show-login"><span>LOGIN</span></a>
-            <!-- <a href="enrollment/student_login.php" class="nav-link"><span>LOGIN</span></a> -->
-          </li>
-        </ul>
-      </div>
+    <nav>
+      <input type="checkbox" id="check" />
+      <label for="check" class="check-btn">
+        <i class="bi bi-list"></i>
+      </label>
+      <label class="logo">
+        <a href="DCBT-landing-page.html">
+          <img src="assets/images/home/DCBT-Logo.jpg" alt="DCBT" />
+        </a>
+      </label>
+      <ul>
+        <li><a href="#admissions">ADMISSIONS</a></li>
+        <li><a href="#academics">ACADEMICS</a></li>
+        <li><a href="#about">ABOUT</a></li>
+        <li><a href="#" id="show-login">LOGIN</a></li>
+      </ul>
     </nav>
 
-    <div class="header">
-      <img
-        src="assets/images/home/DCBT-Logo.jpg"
-        alt="DCBT-Logo"
-      />
-      <h2>DAEHAN COLLEGE OF BUSINESS AND TECHNOLOGY</h2>
-    </div>
-
-    <div class="slide-1">
-      <div class="content-1">
-        <div class="content-img1">
-          <img
-            src="assets/images/home/DCBT-Cover.jpg"
-            alt="DCBT-Cover"
-          />
+    <div class="content">
+      <div class="content-header">
+        <div class="logo-title">
+          <img src="assets/images/home/DCBT-Logo.jpg" alt="DCBT" />
         </div>
-        <div class="content-text1">
-          <h3>Be a DAEHAN student TODAY!</h3>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Obcaecati
-            dignissimos sapiente, officiis iusto saepe itaque delectus beatae
-            quo, vitae sint veniam quos deleniti rem veritatis quasi, eveniet
-            laudantium distinctio ipsa?
-          </p>
-          <button class="enroll" onclick="enroll()">Enroll now!</button>
+        <div class="title">
+          <h2>DAEHAN COLLEGE OF BUSINESS AND TECHNOLOGY</h2>
         </div>
       </div>
     </div>
@@ -264,191 +222,222 @@
 
                 ?>
             </div>
-          </div>
+            <div class="title">
+              <img src="assets/images/home/DCBT-Logo.jpg" alt="" />
+              <h3 style="font-weight: 400; font-style: italic">College</h3>
+            </div>
+          </header>
+          <main>
+            <div class="item">
+              <h3>ACADEMIC TRACK</h3>
+              <div>
+                <p>Accountancy, Business and Management (ABM)</p>
+                <p>Humanities and Social Science (HUMMS)</p>
+                <p>General Academic Strand (GAS)</p>
+              </div>
+              <h3>TECH-VOCATIONAL TRACK</h3>
+              <div>
+                <p>Information and Communication Technology (ICT)</p>
+                <p>
+                  Industrial Arts - Consumer Electronics/Electrical Installation
+                  Maintenance (IA)
+                </p>
+              </div>
+              <h3>ARTS & DESIGN TRACK</h3>
+            </div>
+            <div class="item">
+              <h3>BACHELOR'S DEGREE PROGRAMS</h3>
+              <div>
+                <p>Bachelor of Christian Ministries (BCM)</p>
+                <p>Bachelor of Arts in English (ABE)</p>
+                <p>Bachelor of Science in Entrepreneurship (BSENTREP)</p>
+                <p>Bachelor of Science in Teachers Education (BTTE)</p>
+                <p>Bachelor of Physical Education (BPE)</p>
+              </div>
+            </div>
+          </main>
         </div>
-      </div>
-    </div>
 
-    <div class="slide-3">
-      <h3>News and Events!</h3>
-
-      <div class="slideshow-container">
-        <div class="slide-img fade">
-          <img
-            src="assets/images/home/DCBT-Building.jpg"
-            style="width: 100%"
-          />
+        <div class="slide-2" style="background-color: var(--theme1)">
+          <header>
+            <div class="title">
+              <h2>News and Events!</h2>
+            </div>
+          </header>
+          <main>
+            <div class="item">
+              <div id="fb-root"></div>
+              <script
+                async
+                defer
+                crossorigin="anonymous"
+                src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v17.0"
+                nonce="zL2X8O3d"
+              ></script>
+              <div
+                class="fb-post custom-fb-post"
+                data-href="https://www.facebook.com/daehanedu/posts/pfbid0JbyAYoEjVhk4n2oshdMmiz2xuC3vFxouhm8Zir5Kudj1XyGTK5PUkpDgKCM1Q4pEl"
+                data-width="auto"
+                data-show-text="true"
+              >
+                <blockquote
+                  cite="https://www.facebook.com/daehanedu/posts/740629674733536"
+                  class="fb-xfbml-parse-ignore"
+                >
+                  <p>Happy Father&#039;s Day! 🫶</p>
+                  Posted by
+                  <a href="https://www.facebook.com/daehanedu"
+                    >Daehan College of Business &amp; Technology - DCBT</a
+                  >
+                  on&nbsp;<a
+                    href="https://www.facebook.com/daehanedu/posts/740629674733536"
+                    >Saturday, June 17, 2023</a
+                  >
+                </blockquote>
+              </div>
+            </div>
+          </main>
         </div>
-        <div class="slide-img fade">
-          <img
-            src="assets/images/home/DCBT-Building.jpg"
-            style="width: 100%"
-          />
-        </div>
-        <div class="slide-img fade">
-          <img
-            src="assets/images/home/DCBT-Building.jpg"
-            style="width: 100%"
-          />
-        </div>
-        <div class="slide-img fade">
-          <img
-            src="assets/images/home/DCBT-Building.jpg"
-            style="width: 100%"
-          />
-        </div>
 
-        <a class="prev" onclick="plusSlides(-1, 0)">&#10094;</a>
-        <a class="next" onclick="plusSlides(1, 0)">&#10095;</a>
-      </div>
-    </div>
-
-    <div class="slide-4">
-      <h3>About</h3>
-
-      <div class="container">
-        <div class="row">
-          <div class="col">
-            <div class="mission">
+        <div class="slide-2" id="about">
+          <header>
+            <div class="title">
+              <h2>About</h2>
+            </div>
+          </header>
+          <main>
+            <div class="item">
               <h3>Mission</h3>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic,
-                odio impedit, excepturi quod a molestiae accusamus saepe ab
-                quisquam fuga autem similique nisi aspernatur perspiciatis
-                tenetur eum, nesciunt ratione et.
-              </p>
+              <div>
+                <p>
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quod
+                  corrupti nam, dolores aliquam maxime accusantium quia?
+                  Laboriosam, quisquam. Laborum ea facilis similique tempore
+                  repudiandae necessitatibus fugit temporibus nesciunt incidunt
+                  labore!
+                </p>
+              </div>
             </div>
-          </div>
-          <div class="col">
-            <div class="vision">
+            <div class="item">
               <h3>Vision</h3>
-              <p>
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit. In
-                rerum facilis sunt eum consequatur quasi recusandae repellendus
-                accusamus, voluptate illo nihil minima qui. Laborum eaque,
-                dolore error ab possimus quas.
-              </p>
+              <div>
+                <p>
+                  Lorem, ipsum dolor sit amet consectetur adipisicing elit.
+                  Architecto, laudantium dicta laboriosam sit delectus ipsa
+                  explicabo porro placeat quam tenetur, labore rem debitis
+                  consequuntur dolore tempora necessitatibus earum. Sunt, ad?
+                </p>
+              </div>
             </div>
+          </main>
+        </div>
+
+        <div class="slide-2" style="background-color: var(--theme1)">
+          <header>
+            <div class="title">
+              <h2>Facilities</h2>
+            </div>
+          </header>
+          <main>
+            <div class="slideshow-container">
+              <s id="s1"></s>
+              <s id="s2"></s>
+              <s id="s3"></s>
+              <s id="s4"></s>
+              <s id="s5"></s>
+              <s id="s6"></s>
+
+              <div class="slider">
+                <div>
+                  <img src="assets/images/home/slide-1.jpg" alt="" />
+                </div>
+                <div>
+                  <img src="assets/images/home/slide-2.jpg" alt="" />
+                </div>
+                <div>
+                  <img src="assets/images/home/slide-3.jpg" alt="" />
+                </div>
+                <div>
+                  <img src="assets/images/home/slide-4.jpg" alt="" />
+                </div>
+                <div>
+                  <img src="assets/images/home/slide-5.jpg" alt="" />
+                </div>
+                <div>
+                  <img src="assets/images/home/slide-6.jpg" alt="" />
+                </div>
+              </div>
+
+              <div class="prevNext">
+                <div><a href="#s6"></a><a href="#s4"></a></div>
+                <div><a href="#s1"></a><a href="#s3"></a></div>
+                <div><a href="#s2"></a><a href="#s4"></a></div>
+                <div><a href="#s1"></a><a href="#s1"></a></div>
+                <div><a href="#s3"></a><a href="#s5"></a></div>
+              </div>
+
+              <div class="bullets">
+                <a href="#s1">1</a>
+                <a href="#s2">2</a>
+                <a href="#s3">3</a>
+                <a href="#s4">4</a>
+                <a href="#s5">5</a>
+                <a href="#s6">6</a>
+              </div>
+            </div>
+          </main>
+        </div>
+        <div class="footer">
+          <div class="contact">
+            <h4>DAEHAN COLLEGE OF BUSINESS AND TECHNOLOGY</h4>
+            <p>
+              Nicanor Reyes Street, Sampaloc, Manila Tel No: +63 (2)-87777-338
+              (trunkline)
+            </p>
+            <p>Terms and condition | Privacy Policy</p>
           </div>
+          <div class="copyright">
+            <h4>Copyright © 2019. All Rights Reserved</h4>
+          </div>
+        </div>
+      </main>
+
+      <div class="login-element" id="login-form">
+        <div class="floating">
+          <div class="close-btn">
+            <button><a href="#">&times;</a></button>
+          </div>
+          <header>
+            <div class="title">
+              <h2>Choose section log-in</h2>
+            </div>
+          </header>
+          <main>
+            <div class="action">
+              <button type="button" class="default" onclick="window.location.href ='lms_login.php'">ELMS</button>
+              <button type="button" class="default" onclick="window.location.href ='online_application.php'">Enrollment</button>
+            </div>
+          </main>
         </div>
       </div>
     </div>
-
-    <div class="slide-5">
-      <h3>Facilities</h3>
-
-      <div class="slideshow-container">
-        <div class="slide-img2 fade">
-          <img
-            src="assets/images/home/DCBT-Cover.jpg"
-            style="width: 100%"
-          />
-        </div>
-        <div class="slide-img2 fade">
-          <img
-            src="assets/images/home/DCBT-Cover.jpg"
-            style="width: 100%"
-          />
-        </div>
-        <div class="slide-img2 fade">
-          <img
-            src="assets/images/home/DCBT-Cover.jpg"
-            style="width: 100%"
-          />
-        </div>
-        <div class="slide-img2 fade">
-          <img
-            src="assets/images/home/DCBT-Cover.jpg"
-            style="width: 100%"
-          />
-        </div>
-
-        <a class="prev" onclick="plusSlides(-1, 1)">&#10094;</a>
-        <a class="next" onclick="plusSlides(1, 1)">&#10095;</a>
-      </div>
-    </div>
-
-    
-
-    <footer>
-      <div class="contact">
-        <h4>DAEHAN COLLEGE OF BUSINESS AND TECHNOLOGY</h4>
-        <p>Nicanor Reyes Street, Sampaloc, Manila</p>
-        <p>Tel No: +63(2)-87777-338</p>
-        <p>Terms and condition | Privacy Policy</p>
-      </div>
-      <div class="copyright">
-        <h4>Copyright © 2019. All Rights Reserved</h4>
-      </div>
-    </footer>
-
-
-
-
-    <div class="popup" id="login-form">
-      <div class="close-btn">&times;</div>
-
-      <div class="form">
-
-        <h2>Choose section log-in</h2>
-      
-
-        <div class="row col-md-12">
-
-          <div class="col-md-6">
-            <div class="form-element">
-              <button type="button" onclick="window.location.href ='lms_login.php'" name="samp_btn">LMS</button>
-            </div>
-          </div>
-
-          <div class="col-md-6">
-            <div class="form-element">
-              <button  type="button" onclick="window.location.href ='online_application.php'" name="samp_btn">Enrollment</button>
-            </div>
-          </div>
-        </div>
-        
-      </div>
-
-    </div>
-
 
     <script>
-      let slideIndex = [1, 1];
-      let slideId = ["slide-img", "slide-img2"];
-      showSlides(1, 0);
-      showSlides(1, 1);
-
-      function plusSlides(n, no) {
-        showSlides((slideIndex[no] += n), no);
-      }
-
-      function showSlides(n, no) {
-        let i;
-        let x = document.getElementsByClassName(slideId[no]);
-        if (n > x.length) {
-          slideIndex[no] = 1;
-        }
-        if (n < 1) {
-          slideIndex[no] = x.length;
-        }
-        for (i = 0; i < x.length; i++) {
-          x[i].style.display = "none";
-        }
-        x[slideIndex[no] - 1].style.display = "block";
-      }
+      document
+        .querySelector("#show-login")
+        .addEventListener("click", function () {
+          document.querySelector("#login-form").classList.add("active");
+          document.querySelector("nav > ul").classList.add("active");
+          document.body.classList.add("no-scroll");
+        });
+      document
+        .querySelector("#login-form .close-btn")
+        .addEventListener("click", function () {
+          document.querySelector("#login-form").classList.remove("active");
+          document.querySelector("nav > ul").classList.remove("active");
+          document.body.classList.remove("no-scroll");
+        });
     </script>
-
-    <script>
-      document.querySelector("#show-login").addEventListener("click",function(){
-        document.querySelector("#login-form").classList.add("active");
-      });
-      document.querySelector(".popup .close-btn").addEventListener("click",function(){
-        document.querySelector("#login-form").classList.remove("active");
-      });
-    </script>
-    
-
     <script>
       function enroll(){
         var root = `<?php
@@ -458,17 +447,5 @@
         window.location.href = `${root}/online_application.php`
       }
     </script>
-
-    <script
-      src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
-      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct"
-      crossorigin="anonymous"
-    ></script>
   </body>
 </html>
-
