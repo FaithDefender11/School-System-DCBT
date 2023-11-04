@@ -154,7 +154,7 @@
 
                         </header>
 
-                        <div class="filters">
+                        <div style="display: none;" class="filters">
                             <table>
                                 <tr>
                                     <th rowspan="2" style="border-right: 2px solid black">
@@ -168,7 +168,7 @@
                         <input id="student_enrollment_id" value="<?php echo $enrollment_id ?>" type="hidden">
                         <input id="student_id" value="<?php echo $student_id ?>" type="hidden">
 
-                        <form id="choosingSubjectCodeForm" method="POST" class="p-3">
+                        <form style="display: none;" id="choosingSubjectCodeForm" method="POST" class="p-3">
                             <div class="input-group">
                                 <?php 
                                     $searchText = $search_word !== NULL ? $search_word : "";
@@ -439,10 +439,13 @@
                                 }
                             }).then((result) => {
 
-                                $("#search_subject_code").val('');
-                                $('#choosing_subject_tablex').load(
-                                    location.href + ' #choosing_subject_tablex'
-                                );
+                                // $("#search_subject_code").val('');
+                                // $('#choosing_subject_tablex').load(
+                                //     location.href + ' #choosing_subject_tablex'
+                                // );
+
+                                location.reload();
+
                                 // window.location.href = `choosing_subject.php?e_id=${enrollment_id}&st_id=${student_id}`;
                             })}
 

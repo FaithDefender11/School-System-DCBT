@@ -281,7 +281,7 @@
 
                         <?php if($student_enrollment_student_status == "Irregular"
                             || $student_status_st == "Irregular"):?>
-                            <a href="choosing_subject.php?e_id=<?php echo $student_non_enrolled_enrollment_id;?>&st_id=<?php echo $student_id?>">
+                            <a href="choosing_subject2.php?e_id=<?php echo $student_non_enrolled_enrollment_id;?>&st_id=<?php echo $student_id?>">
                                 <button type="button" class="default large">+ Add Subjects
                                 </button>
                             </a>

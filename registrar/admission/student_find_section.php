@@ -107,7 +107,7 @@
 
                 // }
 
-                Alert::success("Successfully section changed.", "process_enrollment.php?subject_review=show&st_id=$student_id&selected_course_id=$chosen_course_id");
+                Alert::success("Successfully change section and its subjects load.", "process_enrollment.php?subject_review=show&st_id=$student_id&selected_course_id=$chosen_course_id");
                 exit();
             }
         }
@@ -406,15 +406,11 @@
                         </div>
                     </header>
 
-                    
-
                     <?php 
 
                         # Regular, Irregular, New, Old
                         # List of available section based on the program.
 
-
-                    
                         if($student_enrollment_is_new == 1 && $student_enrollment_course_level != 0){
 
                             $regularOldSections = $section->GetIrregularOldSectionList(
@@ -438,6 +434,9 @@
                                                 </thead>
                                                 <tbody>
                                                     <?php
+
+                                                        $course_fulled_ids = $section->GetSectionWhoReachedTheMaximumCapacityOnEnrollment($current_school_year_id);
+
                                                         if(count($regularOldSections) > 0){
 
                                                             foreach ($regularOldSections as $key => $get_course) {
@@ -457,6 +456,24 @@
                                                                 $program_id = $section->GetSectionProgramId($course_id);
                                                                 $course_level = $section->GetSectionGradeLevel();
 
+                                                                $section = new Section($con, $course_id);
+                                                                $sectionCapacity = $section->GetSectionCapacity();
+
+
+                                                                $count = $section->GetEnrollmentCourseIdEnrolledCount($course_id, $current_school_year_id);
+
+                                                                // echo "count: $count";
+                                                                // echo "<br>";
+
+                                                                $disabled = "";
+
+                                                                if($sectionCapacity == $count){
+
+                                                                $disabled = "disabled";
+
+                                                                }
+
+
                                                                 echo "
                                                                     <tr class='text-center'>
                                                                         <td>$course_id</td>
@@ -465,7 +482,7 @@
                                                                         <td>$capacity</td>
                                                                         <td>$school_year_term</td>
                                                                         <td>
-                                                                            <input name='find_selected_course_id' class='radio' value='$course_id' 
+                                                                            <input $disabled name='find_selected_course_id' class='radio' value='$course_id' 
                                                                             type='radio'" . ($course_id == $student_enrollment_course_id ? " checked" : "") . ">
                                                                         </td>
                                                                     </tr>
@@ -631,27 +648,24 @@
                         }
 
                         if($student_enrollment_course_id == 0 && $student_new_enrollee === 1){
-
-                            
                             ?>
-                            <main>
-                                <div class='col-md-12'>
-                                    <h4 class='text-center text-muted'>
-                                        Enrollment form doesnt have a section. Please modify accordingly.
-                                    </h4>
-                                </div>
+                                <main>
+                                    <div class='col-md-12'>
+                                        <h4 class='text-center text-muted'>
+                                            Enrollment form doesnt have a section. Please modify accordingly.
+                                        </h4>
+                                    </div>
 
-                                <div style="margin-top: 20px;" class="action">
-                                    <button
-                                        type="button"
-                                        class="default large "
-                                        onclick="window.location.href = 'process_enrollment.php?details=show&st_id=<?php echo $student_id; ?>'">
-                                        Go back
-                                    </button>
-                                </div>
+                                    <div style="margin-top: 20px;" class="action">
+                                        <button
+                                            type="button"
+                                            class="default large "
+                                            onclick="window.location.href = 'process_enrollment.php?details=show&st_id=<?php echo $student_id; ?>'">
+                                            Go back
+                                        </button>
+                                    </div>
 
-                            </main>
-
+                                </main>
                             <?php
                         }
 

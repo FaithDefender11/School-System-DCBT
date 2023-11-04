@@ -72,12 +72,14 @@
           </div>
         </header>
         <main>
+          
           <div class="action">
-            <a href="#" onclick="newStudentURL()">New student</a>
+            <a href="#" onclick="newStudentURL()">New register</a>
           </div>
           <div class="action">
-            <a href="#" onclick="enrolledStudentURL()">Old student</a>
+            <a href="#" onclick="enrolledStudentURL()">Sign in</a>
           </div>
+
         </main>
         <header>
           <div class="title">

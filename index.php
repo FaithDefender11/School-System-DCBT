@@ -79,15 +79,14 @@
       rel="stylesheet"
     />
   </head>
-  
-   <body>
+  <body>
     <nav>
       <input type="checkbox" id="check" />
       <label for="check" class="check-btn">
         <i class="bi bi-list"></i>
       </label>
       <label class="logo">
-        <a href="index.php">
+        <a href="DCBT-landing-page.html">
           <img src="assets/images/home/DCBT-Logo.jpg" alt="DCBT" />
         </a>
       </label>
@@ -108,70 +107,28 @@
           <h2>DAEHAN COLLEGE OF BUSINESS AND TECHNOLOGY</h2>
         </div>
       </div>
-    </div>
+      <main>
 
-    <div class="slide-2">
-      <h3>Courses Offered</h3>
-
-      <div class="container">
-        <div class="row">
-          <div class="col">
-            <div class="course-header">
-              <img
-                src="assets/images/home/DCBT-SHS-Logo.jpg"
-              />
-              <h3>Senior High</h3>
-            </div>
-
-            <div class="shs-courses">
-
-              <?php 
-              
-                if(count($shsTrackArr) > 0){
-
-                  foreach ($shsTrackArr as $key => $value) {
-                    $track_shs = $value['track'];
-
-                    # code...
-                    echo "
-                      <h4>○ $track_shs Track</h4>
-                    ";
-
-                      $query = $con->prepare("SELECT * FROM program 
-                      
-                        WHERE track=:track");
-
-                      $query->bindValue(":track", $track_shs);
-                      $query->execute();
-
-                      if($query->rowCount() > 0){
-                        $result = $query->fetchAll(PDO::FETCH_ASSOC);
-                      }
-
-                      if(count($result) > 0){
-
-                          foreach ($result as $key => $value) {
-
-                            $track = $value['track'];
-                            $department_id = $value['department_id'];
-                            $program_name = $value['program_name'];
-                            $acronym = $value['acronym'];
-
-                            $department = new Department($con, $department_id);
-                            $name = $department->GetDepartmentName();
-                            
-                              # code...
-                              echo "
-                                <p>$acronym ($program_name) </p>
-                              ";
-
-                          }
-                      }
-
-                  }
-                }
-              ?>
-              
+      
+        <div class="slide-1" id="admissions">
+          <div class="carousel">
+            <img src="assets/images/home/DCBT-Cover.jpg" alt="Cover" />
+          </div>
+          <div class="carousel">
+            <h2>Be a DAEHAN student TODAY!</h2>
+            <p>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Aperiam
+              maiores beatae at vel ut minima praesentium. Totam accusamus
+              laboriosam consequatur enim, animi veniam quibusdam adipisci autem
+              sit obcaecati ducimus ratione?
+            </p>
+            <div class="action">
+              <button
+                class="enroll"
+                onclick="enroll()"
+              >
+                Enroll now!
+              </button>
             </div>
           </div>
         </div>
@@ -181,46 +138,15 @@
             <div class="title">
               <h2>Courses Offered</h2>
             </div>
+          </header>
+        </div>
 
-            <div class="college-courses">
-                <h4>BACHELOR'S DEGREE PROGRAMS</h4>
-                
-               <?php 
-                  $query = $con->prepare("SELECT * FROM program as t1
 
-                    INNER JOIN department as t2 ON t2.department_id=t1.department_id
-                    WHERE t2.department_name=:department_name
-
-                  ");
-
-                  $query->bindValue(":department_name", "Tertiary");
-                  $query->execute();
-
-                  if($query->rowCount() > 0){
-                    $result = $query->fetchAll(PDO::FETCH_ASSOC);
-                  }
-
-                  if(count($result) > 0){
-
-                      foreach ($result as $key => $value) {
-
-                        $track = $value['track'];
-                        $department_id = $value['department_id'];
-                        $program_name = $value['program_name'];
-                        $acronym = $value['acronym'];
-
-                        $department = new Department($con, $department_id);
-                        $name = $department->GetDepartmentName();
-                        
-                          # code...
-                          echo "
-                            <p>$acronym ($program_name)</p>
-                          ";
-
-                      }
-                  }
-
-                ?>
+        <div class="slide-2">
+          <header>
+            <div class="title">
+              <img src="assets/images/home/DCBT-SHS-Logo.jpg" alt="" />
+              <h3 style="font-weight: 400; font-style: italic">Senior High</h3>
             </div>
             <div class="title">
               <img src="assets/images/home/DCBT-Logo.jpg" alt="" />
@@ -230,15 +156,11 @@
           <main>
             <div class="item">
               <h3>ACADEMIC TRACK</h3>
-
-    
-
               <div>
                 <p>Accountancy, Business and Management (ABM)</p>
                 <p>Humanities and Social Science (HUMMS)</p>
                 <p>General Academic Strand (GAS)</p>
               </div>
-
               <h3>TECH-VOCATIONAL TRACK</h3>
               <div>
                 <p>Information and Communication Technology (ICT)</p>
@@ -454,5 +376,4 @@
       }
     </script>
   </body>
-
 </html>

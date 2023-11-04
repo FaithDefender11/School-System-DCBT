@@ -2048,6 +2048,72 @@
             // return [];
         }
 
+
+        
+        public function GetSectionWhoReachedTheMaximumCapacityOnEnrollment(
+            $school_year_id){
+
+
+            $reachedSectionCapacityArr= [];
+            
+            $query = $this->con->prepare("SELECT t1.* FROM enrollment as t1 
+
+
+                WHERE t1.enrollment_status=:enrollment_status
+                AND t1.school_year_id = :school_year_id
+
+                GROUP BY t1.course_id
+            ");
+
+            $query->bindValue(":enrollment_status", "tentative");
+            $query->bindValue(":school_year_id", $school_year_id);
+            $query->execute();
+
+            if($query->rowCount() > 0){
+
+                while($row = $query->fetch(PDO::FETCH_ASSOC)){
+
+                    $course_id = $row['course_id'];
+                    $enrollment_id = $row['enrollment_id'];
+                    $school_year_id = $row['school_year_id'];
+
+
+                    $section = new Section($this->con, $course_id);
+                    $sectionCapacity = $section->GetSectionCapacity();
+
+
+                    $count = $section->GetEnrollmentCourseIdEnrolledCount($course_id, $school_year_id);
+
+                    if($sectionCapacity == $count){
+
+                        array_push($reachedSectionCapacityArr, $course_id);
+
+                    }
+                }
+            }
+
+            return $reachedSectionCapacityArr;
+
+        }
+
+        public function GetEnrollmentCourseIdEnrolledCount($course_id, $school_year_id){
+
+            $sql = $this->con->prepare("SELECT * FROM enrollment
+
+                WHERE enrollment_status =:enrollment_status
+                AND course_id = :course_id
+                AND school_year_id = :school_year_id
+            ");
+
+            $sql->bindValue(":enrollment_status", "enrolled");
+            $sql->bindValue(":course_id", $course_id);
+            $sql->bindValue(":school_year_id", $school_year_id);
+
+            $sql->execute();
+        
+            return $sql->rowCount();
+
+        }
     }
 
 

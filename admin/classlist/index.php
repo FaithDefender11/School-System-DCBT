@@ -111,14 +111,16 @@
     </div>
 
     <div class="tabs">
-      <button
-        class="tab"
-        id="shsEvaluation"
-        style="background-color: var(--mainContentBG)"
-        onclick="window.location.href = 'index.php';"
-      >
-        Students per Instructor 
-      </button>
+        <button
+            class="tab"
+            id="shsEvaluation"
+            style="background-color: var(--mainContentBG)"
+            onclick="window.location.href = 'index.php';"
+        >
+            Students per Instructor 
+        </button>
+
+
         
       <button
         class="tab"
@@ -147,6 +149,7 @@
       </button>
        
     </div>
+
     <br>
 
     <div class="col-lg-12">
@@ -243,278 +246,277 @@
             </div>
         </form>
 
-        <div class="floating">
-        <main>
-            <header>
-                <div class="title">
-                    <div class="row col-md-12">
+        <div class="content">
+            <main>
+                <header>
+                    <div class="title">
+                        <div class="row col-md-12">
 
-                        <div class="col-md-6">
-                            <h4 class="mb-3" id="clickSchedule">Students list filter by Instructor </h4>
+                            <div class="col-md-6">
+                                <h4 class="mb-3" id="clickSchedule">Students list filter by Instructor </h4>
+                            </div>
+
+                            
+                            <div class="text-right col-md-6">
+
+                                <?php 
+                                    if($selected_teacher_id != "" 
+                                        && $selected_school_year_id != "" 
+                                        && $selected_subject_schedule_id != ""){
+                                            
+                                        ?>
+                                            <form action='print_classlist_by_teacher.php' method='POST'>
+
+                                                <input type="hidden" name="selected_school_year_id" id="selected_school_year_id" value="<?php echo $selected_school_year_id;?>">
+                                                <input type="hidden" name="selected_subject_schedule_id" id="selected_subject_schedule_id" value="<?php echo $selected_subject_schedule_id;?>">
+                                                <input type="hidden" name="selected_teacher_id" id="selected_teacher_id" value="<?php echo $selected_teacher_id;?>">
+                                            
+                                                <button title="Export as pdf" style="cursor: pointer;"
+                                                    type='submit' 
+                                                    
+                                                    href='#' name="print_classlist_by_teacher"
+                                                    class='btn-sm btn btn-primary'>
+                                                    <i class='bi bi-file-earmark-x'></i>&nbsp Print
+                                                </button>
+                                                <button style="cursor: pointer;"
+                                                    type='submit' 
+                                                    title="Export as excel"
+                                                    href='#' name="print_excel"
+                                                    class='btn-sm btn btn-success'>
+                                                    <i class='bi bi-file-earmark-x'></i>&nbsp Excel
+                                                </button>
+
+                                            </form>
+                                        <?php
+                                    }
+                                ?>
+                            </div>
                         </div>
+
+                        <?php 
+
+                            if($selected_subject_schedule_id !== NULL){
+
+                                $schedule = new Schedule($con, $selected_subject_schedule_id);
+                                
+                                $time_from = $schedule->GetTimeFrom();
+                                $time_to = $schedule->GetTimeTo();
+                                $schedule_time = $schedule->GetScheduleTime();
+
+
+                                $schedule_day = $schedule->GetScheduleDay();
+
+                                $subject_program_id = $schedule->GetSubjectProgramId();
+                                $schedule_course_id = $schedule->GetScheduleCourseId();
+                                $schedule_subject_code = $schedule->GetSubjectCode();
+
+                                $schedule_room_id = $schedule->GetRoomId();
+                                $room = "";
+
+                                // var_dump($schedule_room_id);
+
+                                if($schedule_room_id == NULL){
+                                    $room = "TBA";
+                                }else if($schedule_room_id != NULL){
+                                    $room = new Room($con, $schedule_room_id);
+                                    $room = $room->GetRoomNumber();
+                                }
+
+                                $section = new Section($con, $schedule_course_id);
+
+                                $programName = $section->GetSectionName();
+
+                                $subjectProgram = new SubjectProgram($con, $subject_program_id);
+
+
+                                $rawCode = $subjectProgram->GetSubjectProgramRawCode();
+
+                                $teacher = new Teacher($con, $selected_teacher_id);
+
+                                $fullname = ucwords(trim($teacher->GetTeacherFirstName())) . " " . ucwords(trim($teacher->GetTeacherLastName()));
+                            
+                                ?>
+
+                                    <div class="container">
+                                        <table style="max-width:100%"   class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th><label>Instructor :</label></th><th><label><?= $fullname; ?></label></th> 
+                                                    <th></th>
+                                                    <th>Day(s)/Time:</th><th>
+
+                                                        <?php 
+                                                        
+                                                            $query  = $con->prepare("SELECT * 
+
+                                                                FROM subject_schedule as t1
+                                                                
+                                                                WHERE t1.subject_code=:subject_code
+                                                                AND t1.teacher_id=:teacher_id
+                                                                AND t1.school_year_id=:school_year_id
+                                                            ");
+
+                                                            $query->bindValue(":subject_code", $schedule_subject_code);
+                                                            $query->bindValue(":teacher_id", $selected_teacher_id);
+                                                            $query->bindValue(":school_year_id", $selected_school_year_id);
+                                                            $query->execute();
+
+                                                            if($query->rowCount() > 0){
+
+                                                                $getAll = $query->fetchAll(PDO::FETCH_ASSOC);
+
+                                                                // var_dump($getAll);
+
+                                                                foreach ($getAll as $key => $value) {
+
+                                                                    $schedule_time = $value['schedule_time'];
+                                                                    $schedule_day = $value['schedule_day'];
+                                                                    $schedule_school_year_id = $value['school_year_id'];
+
+
+                                                                    $schedule_day = $schedule->convertToDays($schedule_day);
+
+                                                                    # code...
+                                                                    echo "$schedule_time / $schedule_day<br>";
+                                                                }
+
+                                                            }
+                                                        ?>
+
+                                                    </th>
+
+                                                </tr>
+                                            </thead>
+
+                                            <thead> 
+                                                <tr>
+                                                    <th>
+                                                        <label>Subject :</label>
+                                                    </th>
+                                                    <th>
+                                                        <label><?= $rawCode;?></label></th> 
+                                                    <th></th>
+                                                    <!-- <th>Rm: <?=$room;?> </th> -->
+
+                                                    <th>
+                                                        <label>Program-Section: <?= $programName;?></label>
+                                                    </th>
+                                                    <th>
+                                                        <label>Room: <?= $room;?></label>
+                                                    </th>
+
+                                                    <!-- <th><label>Room :</label></th><th><label><?= $programName;?></label></th> -->
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+
+
+                                <?php
+
+                            }
+                        ?>
+
 
                         
-                        <div class="text-right col-md-6">
-
-                            <?php 
-                                if($selected_teacher_id != "" 
-                                    && $selected_school_year_id != "" 
-                                    && $selected_subject_schedule_id != ""){
-                                        
-                                    ?>
-                                        <form action='print_classlist_by_teacher.php' 
-                                            method='POST'>
-
-                                            <input type="hidden" name="selected_school_year_id" id="selected_school_year_id" value="<?php echo $selected_school_year_id;?>">
-                                            <input type="hidden" name="selected_subject_schedule_id" id="selected_subject_schedule_id" value="<?php echo $selected_subject_schedule_id;?>">
-                                            <input type="hidden" name="selected_teacher_id" id="selected_teacher_id" value="<?php echo $selected_teacher_id;?>">
-                                        
-                                            <button title="Export as pdf" style="cursor: pointer;"
-                                                type='submit' 
-                                                
-                                                href='#' name="print_classlist_by_teacher"
-                                                class='btn-sm btn btn-primary'>
-                                                <i class='bi bi-file-earmark-x'></i>&nbsp Print
-                                            </button>
-                                            <button style="cursor: pointer;"
-                                                type='submit' 
-                                                title="Export as excel"
-                                                href='#' name="print_excel"
-                                                class='btn-sm btn btn-success'>
-                                                <i class='bi bi-file-earmark-x'></i>&nbsp Excel
-                                            </button>
-
-                                        </form>
-                                    <?php
-                                }
-                            ?>
-                        </div>
                     </div>
+                </header>
 
-                    <?php 
+            
+                <table id="student_per_instructor_table_list" class="a" style="margin: 0">
+                    <thead>
+                        <tr class="text-center"> 
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Gender</th>
+                            <th>Contact No</th>
+                            <th>Civil Status</th>
+                            <th>Program</th>
+                            <th>Level</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
 
-                        if($selected_subject_schedule_id !== NULL){
-
-                            $schedule = new Schedule($con, $selected_subject_schedule_id);
+                    <tbody>
+                        <?php 
+                        
+                            $query = $con->prepare("SELECT 
                             
-                            $time_from = $schedule->GetTimeFrom();
-                            $time_to = $schedule->GetTimeTo();
-                            $schedule_time = $schedule->GetScheduleTime();
+                                t3.firstname,
+                                t3.lastname,
+                                t3.student_unique_id,
+                                t3.admission_status,
+                                t3.sex,
+                                t3.contact_number,
+                                t3.course_level,
+                                
+                                t3.civil_status,
+
+                                t4.program_section,
+
+                                t5.acronym
+                            
+                                FROM subject_schedule as t1
+
+                                INNER JOIN student_subject as t2 ON t2.subject_code = t1.subject_code
+
+                                INNER JOIN student as t3  ON t3.student_id = t2.student_id
+                                
+                                LEFT JOIN course as t4  ON t4.course_id = t3.course_id
+                                LEFT JOIN program as t5  ON t5.program_id = t4.program_id
+                                
+                                WHERE t1.subject_schedule_id = :subject_schedule_id
+                                AND t2.is_final = :is_final
+                                
+                            ");
+
+                            $query->bindValue(":subject_schedule_id", $selected_subject_schedule_id);
+                            $query->bindValue(":is_final", 1);
+
+                            $query->execute();
+
+                            while($row = $query->fetch(PDO::FETCH_ASSOC)){
+
+                                $firstname = trim($row['firstname']);
+                                $lastname = trim($row['lastname']);
+
+                                $student_unique_id = trim($row['student_unique_id']);
+                                $contact_number = trim($row['contact_number']);
+                                $sex = trim($row['sex']);
+                                $program_section = trim($row['program_section']);
+                                $course_level = trim($row['course_level']);
+                                
+                                $civil_status = trim($row['civil_status']);
+                                $admission_status = trim($row['admission_status']);
+                                
+                                $acronym = trim($row['acronym']);
 
 
-                            $schedule_day = $schedule->GetScheduleDay();
+                                $fullname = ucwords($firstname) . " " . ucwords($lastname);
 
-                            $subject_program_id = $schedule->GetSubjectProgramId();
-                            $schedule_course_id = $schedule->GetScheduleCourseId();
-                            $schedule_subject_code = $schedule->GetSubjectCode();
-
-                            $schedule_room_id = $schedule->GetRoomId();
-                            $room = "";
-
-                            // var_dump($schedule_room_id);
-
-                            if($schedule_room_id == NULL){
-                                $room = "TBA";
-                            }else if($schedule_room_id != NULL){
-                                $room = new Room($con, $schedule_room_id);
-                                $room = $room->GetRoomNumber();
+                                // $removeDepartmentBtn = "removeDepartmentBtn($department_id)";
+                                echo "
+                                    <tr>
+                                        <td>$student_unique_id</td>
+                                        <td>$fullname</td>
+                                        <td>$sex</td>
+                                        <td>$contact_number</td>
+                                        <td>$civil_status</td>
+                                        <td>$acronym</td>
+                                        <td>$course_level</td>
+                                        <td>$admission_status</td>
+                                        
+                                    </tr>
+                                ";
                             }
 
-                            $section = new Section($con, $schedule_course_id);
+                        ?>
+                    </tbody>
+                    <!-- Your table body content here -->
+                </table>
 
-                            $programName = $section->GetSectionName();
-
-                            $subjectProgram = new SubjectProgram($con, $subject_program_id);
-
-
-                            $rawCode = $subjectProgram->GetSubjectProgramRawCode();
-
-                            $teacher = new Teacher($con, $selected_teacher_id);
-
-                            $fullname = ucwords(trim($teacher->GetTeacherFirstName())) . " " . ucwords(trim($teacher->GetTeacherLastName()));
-                        
-                            ?>
-
-                                <div class="container">
-                                    <table style="max-width:100%"   class="table">
-                                        <thead>
-                                            <tr>
-                                                <th><label>Instructor :</label></th><th><label><?= $fullname; ?></label></th> 
-                                                <th></th>
-                                                <th>Day(s)/Time:</th><th>
-
-                                                    <?php 
-                                                    
-                                                        $query  = $con->prepare("SELECT * 
-
-                                                            FROM subject_schedule as t1
-                                                            
-                                                            WHERE t1.subject_code=:subject_code
-                                                            AND t1.teacher_id=:teacher_id
-                                                            AND t1.school_year_id=:school_year_id
-                                                        ");
-
-                                                        $query->bindValue(":subject_code", $schedule_subject_code);
-                                                        $query->bindValue(":teacher_id", $selected_teacher_id);
-                                                        $query->bindValue(":school_year_id", $selected_school_year_id);
-                                                        $query->execute();
-
-                                                        if($query->rowCount() > 0){
-
-                                                            $getAll = $query->fetchAll(PDO::FETCH_ASSOC);
-
-                                                            // var_dump($getAll);
-
-                                                            foreach ($getAll as $key => $value) {
-
-                                                                $schedule_time = $value['schedule_time'];
-                                                                $schedule_day = $value['schedule_day'];
-                                                                $schedule_school_year_id = $value['school_year_id'];
-
-
-                                                                $schedule_day = $schedule->convertToDays($schedule_day);
-
-                                                                # code...
-                                                                echo "$schedule_time / $schedule_day<br>";
-                                                            }
-
-                                                        }
-                                                    ?>
-
-                                                </th>
-
-                                            </tr>
-                                        </thead>
-
-                                        <thead> 
-                                            <tr>
-                                                <th>
-                                                    <label>Subject :</label>
-                                                </th>
-                                                <th>
-                                                    <label><?= $rawCode;?></label></th> 
-                                                <th></th>
-                                                <!-- <th>Rm: <?=$room;?> </th> -->
-
-                                                <th>
-                                                    <label>Program-Section: <?= $programName;?></label>
-                                                </th>
-                                                <th>
-                                                    <label>Room: <?= $room;?></label>
-                                                </th>
-
-                                                <!-- <th><label>Room :</label></th><th><label><?= $programName;?></label></th> -->
-                                            </tr>
-                                        </thead>
-                                    </table>
-                                </div>
-
-
-                            <?php
-
-                        }
-                    ?>
-
-
-                    
-                </div>
-            </header>
-
-        
-            <table id="student_per_instructor_table_list" class="a" style="margin: 0">
-                <thead>
-                    <tr class="text-center"> 
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Gender</th>
-                        <th>Contact No</th>
-                        <th>Civil Status</th>
-                        <th>Program</th>
-                        <th>Level</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    <?php 
-                    
-                        $query = $con->prepare("SELECT 
-                        
-                            t3.firstname,
-                            t3.lastname,
-                            t3.student_unique_id,
-                            t3.admission_status,
-                            t3.sex,
-                            t3.contact_number,
-                            t3.course_level,
-                            
-                            t3.civil_status,
-
-                            t4.program_section,
-
-                            t5.acronym
-                          
-                            FROM subject_schedule as t1
-
-                            INNER JOIN student_subject as t2 ON t2.subject_code = t1.subject_code
-
-                            INNER JOIN student as t3  ON t3.student_id = t2.student_id
-                            
-                            LEFT JOIN course as t4  ON t4.course_id = t3.course_id
-                            LEFT JOIN program as t5  ON t5.program_id = t4.program_id
-                            
-                            WHERE t1.subject_schedule_id = :subject_schedule_id
-                            AND t2.is_final = :is_final
-                            
-                        ");
-
-                        $query->bindValue(":subject_schedule_id", $selected_subject_schedule_id);
-                        $query->bindValue(":is_final", 1);
-
-                        $query->execute();
-
-                        while($row = $query->fetch(PDO::FETCH_ASSOC)){
-
-                            $firstname = trim($row['firstname']);
-                            $lastname = trim($row['lastname']);
-
-                            $student_unique_id = trim($row['student_unique_id']);
-                            $contact_number = trim($row['contact_number']);
-                            $sex = trim($row['sex']);
-                            $program_section = trim($row['program_section']);
-                            $course_level = trim($row['course_level']);
-                            
-                            $civil_status = trim($row['civil_status']);
-                            $admission_status = trim($row['admission_status']);
-                            
-                            $acronym = trim($row['acronym']);
-
-
-                            $fullname = ucwords($firstname) . " " . ucwords($lastname);
-
-                            // $removeDepartmentBtn = "removeDepartmentBtn($department_id)";
-                            echo "
-                                <tr>
-                                    <td>$student_unique_id</td>
-                                    <td>$fullname</td>
-                                    <td>$sex</td>
-                                    <td>$contact_number</td>
-                                    <td>$civil_status</td>
-                                    <td>$acronym</td>
-                                    <td>$course_level</td>
-                                    <td>$admission_status</td>
-                                    
-                                </tr>
-                            ";
-                        }
-
-                    ?>
-                </tbody>
-                <!-- Your table body content here -->
-            </table>
-
-        </main>
-    </div>
+            </main>
+        </div>
 
     </div>
 
