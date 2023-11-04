@@ -132,7 +132,7 @@
             <header>
 
                 <div class="title">
-                    <h3 style="font-weight: bold;">My processed enrollment form</h3>
+                    <h3 style="font-weight: bold;">My processed conflict section enrollment form</h3>
                 </div>
             </header>
 
