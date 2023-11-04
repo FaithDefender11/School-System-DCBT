@@ -1231,6 +1231,19 @@ class Helper {
         return "
             <div class='$active_class'>
                 <a href='$link'>
+                    <span class='badge'>5</span>
+                    <i style='color: white;' class='$icon'>
+                        <span class='span_text'>$text</span>
+                    </i>
+                </a>
+            </div>
+        ";
+    }
+
+    public static function createNavByIconARC($text, $icon, $link, $active_class) {
+        return "
+            <div class='$active_class'>
+                <a href='$link'>
                     <span class='notification_count'>5</span>
                     <i style='color: white;' class='$icon'></i>
                     <span class='span_text'>$text</span>
@@ -1396,9 +1409,7 @@ class Helper {
         $type,
         //  $doesGraduate = null,
         $enrolle_enrollment_status = null,
-        $admission_status = null,
-        $student_status = null
-        ){
+        $admission_status = null){
 
         $output = "";
 
@@ -1412,10 +1423,9 @@ class Helper {
             $output = "Tertiary";
         }
 
-        
         return "
             <div class='title'>
-                <small><em>$output &nbsp</em></small>
+                <small><em>$output &nbsp &nbsp </em></small>
                 <small><em>$enrolle_enrollment_status &nbsp </em></small>
                 <small><em>$admission_status &nbsp </em></small>
              
@@ -1861,8 +1871,7 @@ class Helper {
         $teachingSubjects,
         $announcementPath = "",
         $studentAssignmentPath = "",
-        $showAllPath = "",
-        $logout_url = null
+        $showAllPath = ""
 
         ){
         
@@ -2155,33 +2164,6 @@ class Helper {
                     <a href="#" title="View profile"><?= "$lastname, $firstname"?></a>
                 </div>
 
-                <div class="log-out">
-
-                    <button class="log-out-btn">
-                        <i class="bi bi-chevron-down"></i>
-                    </button>
-
-                    <div class="log-out-item">
-
-                        
-
-                        <button class="item">
-                           
-                            <i class="bi bi-box-arrow-in-left">
-                                <span>Profile</span>
-                            </i>
-                        </button>
-
-                        <a style="color: inherit;" href="<?= $logout_url;?>" class="item">
-                            
-                            <i class="bi bi-box-arrow-in-left">
-                                <span>Log-out</span>
-                            </i>
-                        </a>
-
-                    </div>
-                </div>
-
             </div>
         <?php
     }
@@ -2194,8 +2176,7 @@ class Helper {
         $enrollment_id,
         $notificationPath = "",
         $coursesPath = "",
-        $showAllPath = "",
-        $logout_url = null){
+        $showAllPath = ""){
         
         if($showAllPath == "first"){
 
@@ -2270,8 +2251,7 @@ class Helper {
 
         ?>
 
-            <div style="min-height: 70px;" class="icons">
-
+            <div class="icons">
                 <button class="sidebar" id="sidebar-btn">
                     <i class="bi bi-list"></i>
                 </button>
@@ -2289,9 +2269,7 @@ class Helper {
                     </button>
                     
                     <div class="notif-menu">
-            
                         <?php 
-
                             $notification_url = "";
 
                             foreach ($mergedArray as $key => $notification) {
@@ -2446,7 +2424,7 @@ class Helper {
 
                                 if($studentViewed){
                                     $status = "
-                                        <i style='color: green' class='fas fa-check'></i>
+                                    <i class='bi bi-check-lg' style='color: var(--clean)'></i>
                                     ";
                                 }
                                 ?>
@@ -2457,11 +2435,9 @@ class Helper {
                                         <div class="col">
                                             <header>
                                                 <div class="title">
-                                                    <h5><?= $sender_name;?></h6>
+                                                    <h5><?= $sender_name;?> <?= $status; ?></h5>
                                                     <span><?="$type: ";?><?= $title;?></span>
                                                     <small><?= $date_creation;?></small>
-                                                    <span><?= $status;?></span>
-
                                                 </div>
                                             </header>
                                         </div>
@@ -2471,10 +2447,9 @@ class Helper {
                             }
                         
                         ?>
-
-                        <span>
-                            <button onclick="window.location.href = '<?php echo $showAllPath . "index.php"; ?>'" class="btn btn-sm btn-primary">Show All</button>
-                        </span>
+                        <div class="action">
+                            <button class="default" onclick="window.location.href = '<?php echo $showAllPath . 'index.php'; ?>'">See all</button>
+                        </div>
                     </div>
  
                 </div>
@@ -2485,34 +2460,8 @@ class Helper {
                 </button>
             
                 <div class="username">
-                    <a href="#" title="View profile"><?= "$lastname, $firstname"?></a>
+                    <button title="Profile"><?= "$lastname, $firstname"?></button>
                 </div>
-
-                <div class="log-out">
-
-                    <button class="log-out-btn">
-                        <i class="bi bi-chevron-down"></i>
-                    </button>
-
-                    <div class="log-out-item">
-
-                        <button class="item">
-                        
-                            <i class="bi bi-box-arrow-in-left">
-                                <span>Profile</span>
-                            </i>
-                        </button>
-
-                        <a style="color: inherit;" href="<?= $logout_url;?>" class="item">
-                            
-                            <i class="bi bi-box-arrow-in-left">
-                                <span>Log-out</span>
-                            </i>
-                        </a>
-
-                    </div>
-                </div>
-
             </div>
         <?php
     }

@@ -1,5 +1,4 @@
-<?php 
-
+<?php
     include_once('../../includes/student_lms_header.php');
     include_once('../../includes/classes/Student.php');
     include_once('../../includes/classes/SubjectPeriodCodeTopic.php');
@@ -8,7 +7,6 @@
     include_once('../../includes/classes/SubjectCodeAssignment.php');
     include_once('../../includes/classes/Announcement.php');
     include_once('../../includes/classes/Notification.php');
-
 
 
     if(isset($_GET['id'])){
@@ -41,34 +39,46 @@
         $markAsSViewed = $announcement->StudentAnnouncementAsViewed($announcement_id, $studentLoggedInId);
 
         $back_url = "index.php?c=$subject_code";
-        ?>
+?>
 
-        <div class="content">
             <nav>
-                <a href="<?php echo $back_url;?>">
-                    <i class="bi bi-arrow-return-left fa-1x"></i>
-                    <h3>Back</h3>
+                <a href="<?php echo $back_url; ?>">
+                    <i class="bi bi-arrow-return-left"></i>
+                    Back
                 </a>
             </nav>
-            <div class="row col-md-10">
-                <div class="offset-md-2">
-                    <div class="card">
-                        <div class="card-header">
-                            <h4 class="text-center"><?php  echo $title;?></h4>
-                            <span><?php echo $creation; ?></span>
-                        </div>
-                        <div class="card-body">
-                            <p>
-                                <?php  echo $content;?>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-                
-        </div>
-          
-        <?php
-    }
 
-?>
+            <main>
+                <div class="floating">
+                    <header>
+                        <div class="title">
+                            <h3>Announcement</h3>
+                        </div>
+                    </header>
+                    <main>
+                        <table class="a">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Sent</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><?php echo $title; ?></td>
+                                    <td><?php echo $creation; ?></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2"><?php echo $content; ?></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </main>
+                </div>
+            </main>
+        </div>
+    <?php
+    }
+    ?>
+    </body>
+</html>
