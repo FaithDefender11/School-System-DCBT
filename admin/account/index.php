@@ -95,21 +95,23 @@
         </div>
 
         <div class="floating" id="shs-sy">
+
             <header>
                 <div class="title">
                     <h3 style="font-weight: bold;">Account Details</h3>
                 </div>
-
-               
             </header>
+
             <main>
                 <table id="department_table" class="a" style="margin: 0">
                     <thead>
                         <tr class="text-center"> 
                             <th rowspan="2" >Student Id</th>  
+                            <th rowspan="2" >Username</th>  
                             <th rowspan="2" >Name</th>
                             <th rowspan="2"">Grade Level</th>  
                             <th rowspan="2"">Section</th>  
+                            <th rowspan="2"">Status</th>  
                             <th rowspan="2"></th>  
                         </tr>	
                     </thead> 	
@@ -133,17 +135,35 @@
                                 while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
 
                                     $name = $row['firstname'] . " " . $row['lastname'];
-                                    $program_section = $row['program_section'];
+                                    $program_section = $row['program_section'] == 0 ? "NE" : $row['program_section'];
                                     $student_id = $row['student_id'];
+
                                     $student_username = $row['username'];
-                                    $course_level = $row['course_level'];
+                                    $email = $row['email'];
+
+                                    $course_level = $row['course_level'] == 0 ? "NE" : $row['course_level'];
+
+                                    $status = "";
+
+                                    $username_output = "";
+
+                                    if($student_username == ""){
+                                        $status = "Not enrolled";
+                                        $username_output = $email;
+                                    }else{
+                                        $status = "enrolled";
+                                        $username_output = $student_username;
+
+                                    }
 
                                     echo "<tr class='text-center'>";
                                         echo "
                                             <td>$student_id</td>
+                                            <td>$username_output</td>
                                             <td>$name</td>
                                             <td>$course_level</td>
                                             <td>$program_section</td>
+                                            <td>$status</td>
                                             <td>
                                                 <form method='POST'>
                                                     <input name='student_username' type='hidden' value='$student_username'>
