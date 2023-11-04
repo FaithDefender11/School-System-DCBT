@@ -47,7 +47,7 @@
                         );
                     ?>
                     <input class="read_only form-control" type="text"
-                        name="lastname" id="lastName"  placeholder="Last name" 
+                        name="lastname" id="lastName"  placeholder="" 
                         value="<?php  
                             echo Helper::DisplayText('lastname', $lastname);
                         ?>">
@@ -60,7 +60,7 @@
                 ?>
                 <input class="read_only form-control"
                     type="text" name="firstname" 
-                    placeholder="First name"
+                    placeholder=""
                     id="firstName" 
                     value="<?php
                         echo Helper::DisplayText('firstname', $firstname);
@@ -78,7 +78,7 @@
                         Constants::$middleNameIsTooLong);
                 ?>
                 <input class="read_only form-control" type="text" name="middle_name" id="middleName" 
-                    placeholder="Middle name"
+                    placeholder=""
                     value="<?php
                         echo Helper::DisplayText('middle_name', $middle_name);
                     ?>">
@@ -213,7 +213,7 @@
                 <label for="address">Address</label>
                 <div>
                     <input style="text-align: start;" type="text" 
-                    id="address" name="address" 
+                    id="address" name="address" placeholder="House No, Street Name Barangay City/Municipality"
                     class="form-control" 
                     value="<?php
                         echo Helper::DisplayText('address', $address);
@@ -233,7 +233,7 @@
                 <label for="phone">Contact no.</label>
                 <div>
                     <input type="tel" id="contact_number"
-                        name="contact_number" class="form-control"
+                        name="contact_number" class="form-control" placeholder="09XXXXXX123"
                         value="<?php
                             echo Helper::DisplayText('contact_number', $contact_number);
                         ?>">
@@ -249,7 +249,7 @@
                 ?>
                 <div>
                     <input type="email" id="email" name="email" 
-                    class="read_only form-control" 
+                    class="read_only form-control" placeholder="sample15@gmail.com"
                     value="<?php 
                         echo Helper::DisplayText('email', $email);
                     ?>">

@@ -32,7 +32,7 @@
 
         <header>
             <div class="title">
-                <h3>Student Type</h3>
+                <h3>Student type</h3>
             </div>
         </header>
 
