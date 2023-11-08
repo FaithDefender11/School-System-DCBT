@@ -9,6 +9,7 @@
     include_once('../../includes/classes/Alert.php');
     include_once('../../includes/classes/Department.php');
     include_once('../../includes/classes/StudentRequirement.php');
+    include_once('../../includes/classes/Program.php');
 
     $init = false;
 

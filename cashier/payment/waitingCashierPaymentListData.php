@@ -148,7 +148,6 @@ if ($row != null) {
         t2.is_new_enrollee AS enrollment_is_new_enrollee,
         t2.is_transferee AS enrollment_is_transferee,
         t2.student_status AS enrollment_student_status,
-        t2.waiting_list,
         t2.enrollment_id,
 
         t3.program_section
@@ -195,10 +194,10 @@ if ($row != null) {
         $fullname = ucfirst($row['firstname']) . " " . ucfirst($row['lastname']);
 
         $enrollment_date = $row['enrollment_date'];
-        $waiting_list = $row['waiting_list'];
+        // $waiting_list = $row['waiting_list'];
 
 
-        $waiting_result = $waiting_list === "yes" ? "Waiting" : "";
+        // $waiting_result = $waiting_list === "yes" ? "Waiting" : "";
 
         $standing = $row['course_level'];
         $course_id = $row['course_id'];

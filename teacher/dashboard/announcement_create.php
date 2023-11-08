@@ -188,10 +188,11 @@
                                         $subjectProgram = new SubjectProgram($con, $row['subject_program_id']);
                                         
                                         $programCode = $subjectProgram->GetSubjectProgramRawCode();
+                                        $subject_title = $subjectProgram->GetTitle();
 
                                         $sectionSubjectCode = $section->CreateSectionSubjectCode($sectionName, $programCode);
                                     
-                                        echo '<input type="checkbox" name="selectedSubjects[]" value="' . $sectionSubjectCode . '"> ' . $sectionSubjectCode . '<br>';
+                                        echo '<input type="checkbox" name="selectedSubjects[]" value="' . $sectionSubjectCode . '"> '.$subject_title. ' ('. $sectionSubjectCode .')<br>';
                                     
                                     }
 

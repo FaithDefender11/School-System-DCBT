@@ -39,10 +39,13 @@
                     </div>
 
                     <div class="modal-footer">
-
+            
                         <input type="hidden" id="subject_assignment_submission_id" name="subject_assignment_submission_id" value="<?php echo $subject_assignment_submission_id; ?>">
                         <input type="hidden" id="max_score" name="max_score" value="<?php echo $max_score; ?>">
                         <input type="hidden" id="subject_code_topic_id" name="subject_code_topic_id" value="<?php echo $subject_code_topic_id; ?>">
+                        <input type="hidden" id="current_school_year_id" name="current_school_year_id" value="<?php echo $current_school_year_id; ?>">
+                        <input type="hidden" id="subject_code_assignment_id" name="subject_code_assignment_id" value="<?php echo $subject_code_assignment_id; ?>">
+                        <input type="hidden" id="subject_code" name="subject_code" value="<?php echo $subject_code; ?>">
 
                         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-primary">Save</button>
@@ -65,6 +68,11 @@
         var subject_assignment_submission_id = parseInt($("#subject_assignment_submission_id").val());
         var max_score = parseInt($("#max_score").val());
         var subject_code_topic_id = parseInt($("#subject_code_topic_id").val());
+        var current_school_year_id = parseInt($("#current_school_year_id").val());
+        var subject_code_assignment_id = parseInt($("#subject_code_assignment_id").val());
+        var subject_code = $("#subject_code").val();
+        
+        
         // console.log(grade_input);
  
         $.ajax({
@@ -73,7 +81,10 @@
             data: {
                 grade_input,
                 subject_assignment_submission_id,
-                max_score
+                max_score,
+                current_school_year_id,
+                subject_code_assignment_id,
+                subject_code
             },
             // dataType: 'json',
             // processData: false,

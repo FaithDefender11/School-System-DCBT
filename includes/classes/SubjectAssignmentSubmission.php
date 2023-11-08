@@ -1096,6 +1096,34 @@ class SubjectAssignmentSubmission{
 
     }
 
+
+    public function GetAllSubmittedAssignmentIds(
+        $school_year_id, $student_id) {
+
+        
+        $submission = $this->con->prepare("SELECT t1.subject_code_assignment_id
+            
+            FROM subject_assignment_submission AS t1
+
+            WHERE t1.school_year_id=:school_year_id
+            AND t1.student_id=:student_id
+
+            GROUP BY t1.subject_code_assignment_id
+        ");
+
+        $submission->bindValue(":school_year_id", $school_year_id);
+        $submission->bindValue(":student_id", $student_id);
+        $submission->execute();
+
+        if($submission->rowCount() > 0){
+            return $submission->fetchAll(PDO::FETCH_COLUMN);
+        }
+
+        return [];
+    }
+
+
+
 }
 
 ?>

@@ -18,6 +18,19 @@
   $selected_new_enrollee = "";
   $selected_old_enrollee = "";
 
+  // if(isset($_SESSION['enrollment_currently_registrar_id'])){
+
+  //   $enrollment_currently_registrar_id = $_SESSION['enrollment_currently_registrar_id'];
+  //   echo $_SESSION['enrollment_currently_registrar_id'];
+
+  //   if($enrollment_currently_registrar_id == $registrarUserId){
+
+  //     # MAKE INTO NULL.
+
+
+  //   }
+  // }
+
   if (
       $_SERVER["REQUEST_METHOD"] === "POST"
       && isset($_POST["enrollee_type"])

@@ -169,7 +169,7 @@ class Student{
     }
 
     public function GetStudentBirthdays() {
-        return isset($this->sqlData['birthday']) ? $this->sqlData["birthday"] : ""; 
+        return isset($this->sqlData['birthday']) ? $this->sqlData["birthday"] : NULL; 
     }
 
     public function GetStudentBirthPlace() {
@@ -185,7 +185,7 @@ class Student{
     }
 
     public function GetStudentLRN() {
-        return isset($this->sqlData['lrn']) ? $this->sqlData["lrn"] : ""; 
+        return isset($this->sqlData['lrn']) ? $this->sqlData["lrn"] : NULL; 
     }
 
     public function GetStudentSex() {
@@ -305,6 +305,40 @@ class Student{
         return $query->execute();
     }
 
+    public function UpdateStudentToBeIrregular($student_id){
+
+        // Update the student's password in the database
+
+        $query = $this->con->prepare("UPDATE student 
+            SET student_statusv2=:change_student_status_v2
+
+            WHERE student_id=:student_id
+            ");
+
+        $query->bindValue(":student_id", $student_id);
+        $query->bindValue(":change_student_status_v2", "Irregular");
+        $query->execute();
+
+        return $query->rowCount() > 0;
+    }
+
+    public function UpdateStudentToBeRegular($student_id){
+
+        // Update the student's password in the database
+
+        $query = $this->con->prepare("UPDATE student 
+            SET student_statusv2=:change_student_status_v2
+
+            WHERE student_id=:student_id
+            ");
+
+        $query->bindValue(":student_id", $student_id);
+        $query->bindValue(":change_student_status_v2", "Regular");
+        $query->execute();
+
+        return $query->rowCount() > 0;
+    }
+
     public function UpdateStudentAcademicType($student_id, $academic_type){
 
         $query = $this->con->prepare("UPDATE student 
@@ -326,7 +360,7 @@ class Student{
     public function UpdateStudentDetails($student_id, $firstname, $lastname,
         $middle_name, $suffix, $civil_status, $nationality, $sex,
         $birthday, $birthplace, $religion, $address, $contact_number,
-        $email) {
+        $email, $lrn = null) {
 
         $query = $this->con->prepare("UPDATE student 
             SET firstname=:firstname,
@@ -341,7 +375,8 @@ class Student{
                 religion=:religion,
                 address=:address,
                 contact_number=:contact_number,
-                email=:email
+                email=:email,
+                lrn=:lrn
 
             WHERE student_id=:student_id
             -- AND active=
@@ -360,6 +395,7 @@ class Student{
         $query->bindParam(":address", $address);
         $query->bindParam(":contact_number", $contact_number);
         $query->bindParam(":email", $email);
+        $query->bindParam(":lrn", $lrn);
         $query->bindParam(":student_id", $student_id);
 
         $query->execute();

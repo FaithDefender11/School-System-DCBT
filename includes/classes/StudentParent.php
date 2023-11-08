@@ -32,7 +32,7 @@
     }
 
     public function GetParentID() {
-        return isset($this->sqlData['parent_id']) ? ucfirst($this->sqlData["parent_id"]) : ""; 
+        return isset($this->sqlData['parent_id']) ? ucfirst($this->sqlData["parent_id"]) : NULL; 
     }
     public function GetFirstName() {
         return isset($this->sqlData['firstname']) ? ucfirst($this->sqlData["firstname"]) : ""; 
@@ -216,6 +216,56 @@
     }
 
 
+    public function UpdateNewEnrolleeStudentParent(
+        $pending_enrollees_id, $parent_id, $firstname, $lastname,
+        $middle_name, $suffix, $contact_number,
+        // $email, 
+        $occupation, $relationship
+    )
+         {
+ 
+
+        $query = $this->con->prepare("UPDATE parent 
+            SET 
+                firstname=:firstname,
+                lastname=:lastname,
+                middle_name=:middle_name,
+                suffix=:suffix,
+
+                contact_number=:contact_number,
+                -- email=:email,
+                occupation=:occupation,
+                relationship=:relationship
+
+                
+            WHERE pending_enrollees_id=:pending_enrollees_id
+            AND parent_id=:parent_id
+
+            -- AND active=
+        ");
+
+        $query->bindParam(":firstname", $firstname);
+        $query->bindParam(":lastname", $lastname);
+        $query->bindParam(":middle_name", $middle_name);
+        $query->bindParam(":suffix", $suffix);
+
+        $query->bindParam(":contact_number", $contact_number);
+        // $query->bindParam(":email", $email);
+        $query->bindParam(":occupation", $occupation);
+        $query->bindParam(":relationship", $relationship);
+ 
+        $query->bindParam(":parent_id", $parent_id);
+        $query->bindParam(":pending_enrollees_id", $pending_enrollees_id);
+
+        $query->execute();
+
+        if($query->rowCount() > 0){
+            return true;
+        }
+
+        return false;
+
+    }
 
 }
 ?>

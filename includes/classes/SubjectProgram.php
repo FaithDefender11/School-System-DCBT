@@ -481,18 +481,18 @@ class SubjectProgram{
 
             
 
+            // echo '<td>'.$average.'</td>';
+            // echo '<td>' . $subject_type . '</td>';
 
             echo '<tr class="text-center">';
             echo '<td>' . $subject_title . '</td>';
             echo '<td>' . $subject_code . '</td>';
-            echo '<td>' . $subject_type . '</td>';
             echo '<td>' . $unit . '</td>';
             echo '<td>' . $program_section . '</td>';
             echo '<td>'.$first.'</td>';
             echo '<td>'.$second.'</td>';
             echo '<td>'.$third.'</td>';
             echo '<td>'.$fourth.'</td>';
-            echo '<td>'.$average.'</td>';
             echo '<td>' . $remarks_url . '</td>';
             echo '</tr>';
         }

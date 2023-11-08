@@ -50,6 +50,7 @@
         $course_id = $subjectPeriodCodeTopic->GetCourseId();
         $subject_code = $subjectPeriodCodeTopic->GetSubjectCode();
         $school_year_id = $subjectPeriodCodeTopic->GetSchoolYearId();
+        $topic = $subjectPeriodCodeTopic->GetTopic();
 
         $assignmentListOnTeachingCode = $subjectCodeAssignment->GetSubjectAssignmentBasedOnTeachingSubject(
             $subject_code,
@@ -95,8 +96,7 @@
                 </nav>
 
                 <main>
-                    <h4 style="font-weight: bold;" class="text-muted text-start">Student Grade Book</h4>
-
+                    <h4 style="font-weight: bold;" class="text-primary text-start">Student Grade Book <span class="text-muted">( <?= $topic; ?> )</span></h4>
                     <div class="floating" id="shs-sy">
 
                         <header>

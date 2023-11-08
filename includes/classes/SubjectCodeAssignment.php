@@ -735,6 +735,135 @@ class SubjectCodeAssignment{
         return [];
     }
 
+
+    public function GetAllIncomingDueAssignmentsIds(
+        $enrolledSubjectList, $school_year_id, $student_id)  {
+
+        // var_dump($enrolledSubjectList);
+
+        $now_date =  date("Y-m-d H:i:s");
+
+        $arrayVal = [];
+
+        $subjectAssignmentSubmission = new SubjectAssignmentSubmission($this->con);
+
+        $studentAllSubmissions = $subjectAssignmentSubmission->GetAllSubmittedAssignmentIds(
+            $school_year_id, $student_id);
+
+
+        if(count($enrolledSubjectList) > 0){
+
+            $inPlaceholders = implode(', ', array_map(function($value, $index) {
+                return ":subject_code$index";
+            }, $enrolledSubjectList, array_keys($enrolledSubjectList)));
+
+            $studentAllSubmissionsPlaceholder = implode(', ', array_map(function($value, $index) {
+                return ":subject_code_assignment_id$index";
+            }, $studentAllSubmissions, array_keys($studentAllSubmissions)));
+
+
+            # If student hasnt any submission. ( will get all due_date less than 1 day assignments )
+
+            $filterWithSubmissions = "";
+
+            # If student has a submission,
+            #  ( will get all due_date less than 1 day assignments EXCEPT with submissions  )
+            if(count($studentAllSubmissions) > 0){
+                $filterWithSubmissions = "
+                    AND t1.subject_code_assignment_id NOT IN ($studentAllSubmissionsPlaceholder)
+                ";
+            }
+
+            # Get all assignments not due and does not have submissions.
+            $query = $this->con->prepare("SELECT t1.*
+
+                FROM subject_code_assignment as t1
+
+                INNER JOIN subject_period_code_topic as t2 ON t2.subject_period_code_topic_id = t1.subject_period_code_topic_id
+
+                -- LEFT JOIN subject_assignment_submission as t3 ON t3.subject_code_assignment_id != t1.subject_code_assignment_id
+                -- AND t3.student_id =:student_id
+
+                AND t2.subject_code IN ($inPlaceholders)
+                $filterWithSubmissions
+
+                AND t2.school_year_id =:school_year_id
+
+                WHERE t1.is_given = 1
+                AND t1.due_date > :now_date
+
+            ");
+
+
+            // // Bind values to named placeholders in the IN clause
+            foreach ($enrolledSubjectList as $index => $subjectCode) {
+                $placeholderName = ":subject_code$index";
+                $query->bindValue($placeholderName, $subjectCode);
+            }
+
+            if(count($studentAllSubmissions) > 0){
+                
+                foreach ($studentAllSubmissions as $index => $subjectCodeAssignment_ids) {
+                    $placeholderNamev2 = ":subject_code_assignment_id$index";
+                    $query->bindValue($placeholderNamev2, $subjectCodeAssignment_ids);
+                }
+            }
+
+            // // Bind the school_year_id
+            $query->bindValue(':school_year_id', $school_year_id, PDO::PARAM_INT);
+            $query->bindValue(':now_date', $now_date);
+            // $query->bindValue(':student_id', $student_id);
+
+            $query->execute();
+
+            if($query->rowCount() > 0){
+
+                $result = $query->fetchAll(PDO::FETCH_ASSOC);
+                // var_dump($result);
+
+                foreach ($result as $key => $row) {
+                    # code...
+
+                    // $due_date = $row['due_date'];
+                    $due_date = new DateTime($row['due_date']);
+
+                    $subject_code_assignment_id = $row['subject_code_assignment_id'];
+
+                    $today = new DateTime();
+
+                    $interval = $today->diff($due_date);
+
+                    // var_dump($interval->d);
+                    // var_dump($subject_code_assignment_id);
+
+                    // The due_date is less than 1 day from today`s day
+                    if ($interval->d < 1) {
+
+                        
+                        // $isDueSoon = true;
+                        // echo "subject_code_assignment_id: $subject_code_assignment_id";
+                        // echo "<br>";
+
+                        array_push($arrayVal, $subject_code_assignment_id);
+
+                    } else {
+                        // The due_date is not less than 1 day from today
+                        $isDueSoon = false;
+                    }
+
+                }
+
+                // return $result;
+            }
+
+        }
+     
+        return $arrayVal;
+    }
+
+
+
+
     public function GetSubjectHandoutBasedOnTeachingSubject(
         $subject_code, $current_school_year_id, $teacher_id)  {
 

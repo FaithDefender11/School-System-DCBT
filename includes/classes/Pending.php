@@ -351,9 +351,9 @@
         $age,
         $sex,
         $address,
-        $lrn,
+        $lrn = null,
         $religion,
-        $pending_enrollees_id
+        $pending_enrollees_id,
     ) {
 
         $query = $this->con->prepare("UPDATE pending_enrollees SET 

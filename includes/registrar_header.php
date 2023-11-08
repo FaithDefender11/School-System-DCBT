@@ -4,6 +4,7 @@
     require_once('../../includes/navigation/RegistrarNavigationMenuProvider.php');
     require_once('../../includes/classes/User.php');
     require_once('../../includes/classes/Helper.php');
+    require_once('../../includes/classes/Enrollment.php');
     require_once('../../includes/classes/Constants.php');
     require_once('../../includes/classes/Alert.php');
 
@@ -45,6 +46,9 @@
     $document_title = Helper::DocumentTitlePage($page);
 
     // $registrarLoggedInObj->MarkStudentAsApplicable();
+
+
+    
     
 ?>
 
@@ -111,7 +115,94 @@
 
         <div class="mainSectionContainer">
             <div class="mainContentContainer">
-                 
+                <?php 
+                
+                    if(isset($_SESSION['enrollment_currently_registrar_id'])
+                        && isset($_SESSION['enrollment_currently_enrollment_id'])
+                        && isset($_SESSION['enrollment_currently_student_id'])
+                        ){
+
+                        $enrollment_currently_registrar_id = $_SESSION['enrollment_currently_registrar_id'];
+                        $enrollment_currently_enrollment_id = $_SESSION['enrollment_currently_enrollment_id'];
+                        $enrollment_currently_student_id = $_SESSION['enrollment_currently_student_id'];
+                       
+                        # Note if session is not existing, it throws an undefined error.
+                        // $ad = $_SESSION['a'];
+                        // var_dump($ad);
+
+                        // var_dump($_SESSION['enrollment_currently_registrar_id']);
+
+                        if($enrollment_currently_registrar_id == $registrarUserId){
+
+                            # MAKE INTO NULL.
+                            // echo "yours";
+
+
+                            // $base_url = 'http://' . $_SERVER['HTTP_HOST'] . '/registrar/';
+                            $base_url = 'http://' . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . '/';
+
+
+
+                            $dirname = dirname($_SERVER['PHP_SELF']);
+                            $after_registrar = substr($dirname, strpos($dirname, 'registrar/') + strlen('registrar/'));
+
+                            // var_dump($base_url);
+
+                            $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
+                            $host = $_SERVER['HTTP_HOST'];
+                            $current_url = $protocol . '://' . $host . $_SERVER['REQUEST_URI'];
+
+                            // Remove the query parameters
+                            $parts = parse_url($current_url);
+                            $current_url_without_query = $parts['scheme'] . '://' . $parts['host'] . $parts['path'];
+                            
+                            $file_name = basename($current_url_without_query);
+
+                            echo $file_name;
+
+                            // echo $current_url_without_query;
+
+                            if($after_registrar === "student" 
+                                || $after_registrar === "dashboard" 
+                                || $after_registrar === "section" 
+                                || $after_registrar === "enrollment" 
+                                || $after_registrar === "grades" 
+                                || $after_registrar === "requirements" 
+                                || $after_registrar === "room" 
+                                || $file_name === "enrolled_subjects.php" 
+                                || $file_name === "waiting_approval.php" 
+                                || $file_name === "evaluation.php" 
+                                || $file_name === "enrolled_subjects.php" 
+                                || $file_name === "subject_insertion_summary.php" 
+                                
+                                ){
+                                    echo " You`re outside of the enrollment process of registrar. Enrollment ID: $enrollment_currently_enrollment_id, Student Id: $enrollment_currently_student_id ";
+
+                                    $enrollment = new Enrollment($con);
+
+
+                                    # Update the enrollment form ID enrollment_currently_registrar_id INTO NULL.
+                                    $updatingToNull = $enrollment->UpdateRegistrarOutsideTheEnrollment(
+                                        $enrollment_currently_student_id,
+                                        $enrollment_currently_enrollment_id,
+                                        $registrarUserId);
+                                    if($updatingToNull){
+
+                                        unset($_SESSION['enrollment_currently_registrar_id']);
+                                        unset($_SESSION['enrollment_currently_enrollment_id']);
+                                        unset($_SESSION['enrollment_currently_student_id']);
+                                    
+                                    }
+                                }else{
+                                    echo " You`re inside";
+                                }
+
+
+                            }else{
+                                // echo "not yours";
+                            }
+                    }
+                ?>             
 
 <script>
     $(document).ready(function() {

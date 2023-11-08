@@ -18,52 +18,46 @@
     $originalValueIsFalse = false;
 
 
-    $course_fulled_ids = $section->GetSectionWhoReachedTheMaximumCapacityOnEnrollment($current_school_year_id);
+    // $course_fulled_ids = $section->GetSectionWhoReachedTheMaximumCapacityOnEnrollment(
+    //     $current_school_year_id);
     
-    // $course_fulled_ids = [1281, 1289];
-    // print_r($course_fulled_ids);
+    // // $course_fulled_ids = [1281, 1289];
+    // // print_r($course_fulled_ids);
 
-    // Create an array of placeholders for the course_ids
+    // // Create an array of placeholders for the course_ids
+    // $placeholders = array_map(function ($id) {
+    //     return ":course_id_$id";
+    // }, $course_fulled_ids);
 
-    $placeholders = array_map(function ($id) {
-        return ":course_id_$id";
-    }, $course_fulled_ids);
+    // // print_r($placeholders);
 
-    // print_r($placeholders);
+    // $query = $con->prepare("SELECT course_id FROM course
 
-    $query = $con->prepare("SELECT course_id FROM course
+    //     WHERE program_id = :program_id
+    //     AND course_id NOT IN (" . implode(',', $placeholders) . ")
 
-        WHERE program_id = :program_id
-        AND course_id NOT IN (" . implode(',', $placeholders) . ")
+    //     AND active = 'yes'
+    //     AND is_full = 'no'
+    //     AND school_year_term = :school_year_term
+    // ");
 
-        AND program_section != :program_section
-        AND course_level = :course_level
-        AND active = 'yes'
-        AND is_full = 'no'
-        AND school_year_term = :school_year_term
-    ");
+    // $query->bindValue(":program_id", 25);
+    // $query->bindValue(":school_year_term", $current_school_year_term);
 
-    $query->bindValue(":program_id", 25);
-    $query->bindValue(":program_section", "ABE1-A");
-    $query->bindValue(":course_level", 1);
-    $query->bindValue(":school_year_term", $current_school_year_term);
+    // // Bind each course_id from the array
+    // foreach ($course_fulled_ids as $course_id) {
+    //     $paramName = ":course_id_$course_id";
+    //     $query->bindValue($paramName, $course_id);
+    // }
 
-    // Bind each course_id from the array
+    // $query->execute();
 
-    foreach ($course_fulled_ids as $course_id) {
-        $paramName = ":course_id_$course_id";
-        $query->bindValue($paramName, $course_id);
-    }
+    // if ($query->rowCount() > 0) {
 
-    $query->execute();
+    //     $res = $query->fetchAll(PDO::FETCH_ASSOC);
+    //     // print_r($res);
 
-    if ($query->rowCount() > 0) {
-        $res = $query->fetchAll(PDO::FETCH_ASSOC);
-        print_r($res);
-    }
-
-
-
+    // }
 
 
 
@@ -113,8 +107,6 @@
     # ABE1-A has already 3 enrolled student
 
     # Show that student which you have been processed.
-
-
 
 
  

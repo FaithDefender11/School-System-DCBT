@@ -1,10 +1,15 @@
-<?php
+<?php 
+
     include_once('../../includes/student_lms_header.php');
+    
+    echo Helper::RemoveSidebar();
+
     include_once('../../includes/classes/SchoolYear.php');
     include_once('../../includes/classes/SubjectProgram.php');
     include_once('../../includes/classes/SubjectCodeAssignment.php');
     include_once('../../includes/classes/SubjectPeriodCodeTopic.php');
     include_once('../../includes/classes/StudentSubject.php');
+
 
 
     if(
@@ -50,117 +55,83 @@
         $period_shortcut = $current_school_year_period === "First" ? "S1" : ($current_school_year_period === "Second" ? "S2" : "");
 
         $back_url = "student_dashboard.php";
-?>
 
-                <div class="content-header">
-                    <header>
-                        <div class="title">
-                            <h1><?php echo "$subject_title - SY $current_school_year_term $period_shortcut"; ?></h1>
-                        </div>
-                    </header>
-                    <div class="cards">
-                        <?php if(count($assignmentTodoIds) > 0): ?>
-                        <?php
-                            foreach ($assignmentTodoIds as $key => $subjectCodeAssignmentId) {
-                                $subject_code_assignment = new SubjectCodeAssignment($con, $subjectCodeAssignmentId);
-                                                
-                                $assignment_name = $subject_code_assignment->GetAssignmentName();
-                                $assignment_due = $subject_code_assignment->GetDueDate();
-                                $assignment_due = date("M d, g:i a", strtotime($assignment_due));
-                                $max_score = $subject_code_assignment->GetMaxScore();
-
-                                $assignment_url = "../courses/task_submission.php?sc_id=$subjectCodeAssignmentId&ss_id=$student_subject_id";
-                                echo "
-                                    <div class='card'>
-                                        <sup>Type</sup>
-                                        <sub>Dropbox</sub>
-                                    </div>
-                                    <div class='card'>
-                                        <sup>Max Score</sup>
-                                        <sub>$max_score</sub>
-                                    </div>
-                                    <div class='card'>
-                                        <sup>Category</sup>
-                                        <sub>Assignment</sub>
-                                    </div>
-                                    <div class='card'>
-                                        <sup>Start</sup>
-                                        <sub>-</sub>
-                                    </div>
-                                    <div class='card'>
-                                        <sup>Due</sup>
-                                        <sub>$assignment_due</sub>
-                                    </div>";
-                            }
-                        ?>
-                        <?php else: ?>
-                    </div>
-                    <div class="tabs">
-                        <button 
-                            class="tab"
-                            style="background-color: var(--mainContentBG); color: black"
-                            onclick="window.location.href = '#'"
-                            disabled
-                        >
-                            Instructions
-                        </button>
-                        <button 
-                            class="tab"
-                            style="background-color: var(--theme); color: white"
-                            onclick="window.location.href = '#'"
-                            disabled
-                        >
-                            Submissions
-                        </button>
-                    </div>
-
-                    <nav>
-                        <a href="<?php echo "$back_url"; ?>">
-                            <i class="bi bi-arrow-return-left"></i>
-                            Back
-                        </a>
-                    </nav>
-
-                    <main>
-                        <div class="bars">
-                            <div class="floating">
-                                <header>
-                                    <div class="title">
-                                        <h3>Score: <em>No submissions</em></h3>
-                                    </div>
-                                </header>
-                                <main>
-                                    <div class="progress" style="height: 20px">
-                                        <div class="progress-bar" style="width: 0%">0%</div>
-                                    </div>
-                                </main>
-                            </div>
-                            <div class="floating">
-                                <header>
-                                    <div class="title">
-                                        <h3>Submission</h3>
-                                        <small>Submitted: <em>Past due</em></small>
-                                        <small>Attempts: <em>0</em></small>
-                                        <small>Max Attempts: <em>-</em></small>
-                                    </div>
-                                </header>
-                            </div>
-                            <div class="floating">
-                                <header>
-                                    <div class="title">
-                                        <h3>Instructions</h3>
-                                        <p>Some Descriptions</p>
-                                        <p><?php echo "$assignment_url"; ?></p>
-                                    </div>
-                                </header>
-                            </div>
-                        </div>
-                        <?php endif; ?>
-                    </main>
-                </div>
-            </div>
-        <?php
-        }
         ?>
-    </body>
-</html>
+
+            <div class="content">
+
+                <nav>
+                    <a href="<?php echo $back_url;?>">
+                        <i class="bi bi-arrow-return-left fa-1x"></i>
+                        <h3>Back</h3>
+                    </a>
+                </nav>
+
+                <main>
+                    <div class="floating" id="shs-sy">
+                        <header class="mb-3">
+                            <div class="title">
+
+                                <h4 style="font-weight: bold;" class="text-primary"><?php echo "$subject_title - SY $current_school_year_term $period_shortcut"; ?></h4>
+
+                            </div>
+                        </header>
+
+                        <main>
+
+                            <?php if(count($assignmentTodoIds) > 0): ?>
+
+                                <table id="assignment_due_table" class="a" style="margin: 0">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-start">Assignment</th>  
+                                            <th>Max Score</th>
+                                            <th>Due</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php 
+                                        
+                                            foreach ($assignmentTodoIds as $key => $subjectCodeAssignmentId) {
+
+                                                # code...   
+
+                                                $subject_code_assignment = new SubjectCodeAssignment($con, $subjectCodeAssignmentId);
+                                                
+                                                $assignment_name = $subject_code_assignment->GetAssignmentName();
+                                                $assignment_due = $subject_code_assignment->GetDueDate();
+                                                $assignment_due = date("M d, g:i a", strtotime($assignment_due));
+                                                $max_score = $subject_code_assignment->GetMaxScore();
+
+                                                $assignment_url = "../courses/task_submission.php?sc_id=$subjectCodeAssignmentId&ss_id=$student_subject_id";
+                                                echo "
+                                                    <tr class='text-center'>
+                                                        <td >
+                                                            <a style='color: inherit' href='$assignment_url'>
+                                                                $assignment_name
+                                                            </a>
+                                                        </td>
+                                                        <td>$max_score</td>
+                                                        <td>$assignment_due</td>
+
+                                                    </tr>
+                                                ";
+                                            }
+                                        ?>
+                                    </tbody>
+                                </table>
+                            
+                                <?php else:?>
+                                    <h5 style="margin-bottom: 7px;">No assignments</h5>
+
+                            <?php endif; ?>
+                        </main>
+                    </div>
+                </main>
+            </div>
+        
+        <?php
+
+
+    }
+?>

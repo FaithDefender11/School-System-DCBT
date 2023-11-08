@@ -1184,6 +1184,33 @@
 
     }
 
+    public function GetEnrollmentCurrentRegistrarId($student_id, $enrollment_id) {
+
+        $currently_registrar_id = NULL;
+
+        // Check if the enrollment form ID already exists in the database
+
+        $sql = $this->con->prepare("SELECT currently_registrar_id FROM enrollment 
+
+            WHERE enrollment_id = :enrollment_id
+            AND student_id = :student_id
+            -- AND school_year_id = :school_year_id
+            -- AND enrollment_status != 'withdraw'
+            ORDER BY enrollment_id DESC
+            LIMIT 1
+        ");
+ 
+        $sql->bindValue(":enrollment_id", $enrollment_id);
+        $sql->bindValue(":student_id", $student_id);
+        $sql->execute();
+        if($sql->rowCount() > 0){
+            $currently_registrar_id = $sql->fetchColumn();
+        }
+
+        return $currently_registrar_id;
+
+    }
+
     public function GetEnrollmentFormCourseIdByForm($student_id, $enrollment_id,
         $school_year_id) {
 
@@ -1506,6 +1533,62 @@
             
         return false;
     }
+
+    public function UpdateRegistrarIntoTheEnrollment($student_id,
+        $enrollment_id, $registrar_id){
+
+            
+
+        $sql = $this->con->prepare("UPDATE enrollment
+            SET currently_registrar_id=:set_currently_registrar_id
+            WHERE enrollment_id=:enrollment_id
+            AND student_id=:student_id
+            AND (currently_registrar_id IS NULL)
+
+        ");
+
+
+        $sql->bindValue(":set_currently_registrar_id", $registrar_id);
+        $sql->bindValue(":student_id", $student_id);
+        $sql->bindValue(":enrollment_id", $enrollment_id);
+        $sql->execute();
+
+        if($sql->rowCount() > 0){
+            return true;
+        }
+            
+        return false;
+    }
+
+    public function UpdateRegistrarOutsideTheEnrollment(
+        $student_id,
+        $enrollment_id,
+        $registrar_id){
+
+            
+
+        $sql = $this->con->prepare("UPDATE enrollment
+            SET currently_registrar_id=:set_currently_registrar_id
+            WHERE enrollment_id=:enrollment_id
+            AND student_id=:student_id
+            AND (currently_registrar_id=:currently_registrar_id)
+
+        ");
+
+
+        $sql->bindValue(":set_currently_registrar_id", NULL);
+        $sql->bindValue(":currently_registrar_id", $registrar_id);
+        $sql->bindValue(":student_id", $student_id);
+        $sql->bindValue(":enrollment_id", $enrollment_id);
+        $sql->execute();
+
+        if($sql->rowCount() > 0){
+            return true;
+        }
+            
+        return false;
+    }
+
 
     public function GetEnrollmentPaymentStatus($student_id,
         $enrollment_id) {

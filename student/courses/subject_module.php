@@ -1,6 +1,5 @@
  <?php 
 
-
     include_once('../../includes/student_lms_header.php');
     include_once('../../includes/classes/Section.php');
     include_once('../../includes/classes/Enrollment.php');
@@ -209,6 +208,21 @@
         }
         // var_dump($enrolledSubjectList);
 
+        $logout_url = 'http://localhost/school-system-dcbt/lms_logout.php';
+
+        if ($_SERVER['SERVER_NAME'] === 'localhost') {
+
+            $base_url = 'http://localhost/school-system-dcbt/student/';
+        } else {
+            $base_url = 'http://' . $_SERVER['HTTP_HOST'] . '/student/';
+        }
+
+        if ($_SERVER['SERVER_NAME'] !== 'localhost') {
+
+            $new_url = str_replace("/student/", "", $base_url);
+            $logout_url = "$new_url/lms_logout.php";
+        }
+
         ?>
 
             <div style="min-width: 100%;" class="content">
@@ -217,11 +231,14 @@
                 
                     echo Helper::lmsStudentNotificationHeader(
                         $con, $studentLoggedInId,
-                        $current_school_year_id, $enrolledSubjectList,
+                        $current_school_year_id,
+                        $enrolledSubjectList,
                         $enrollment_id,
                         "second",
                         "first",
-                        "second");
+                        "second",
+                        $logout_url
+                    );
                 
                 ?>
 

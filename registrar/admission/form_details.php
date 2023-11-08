@@ -1,7 +1,66 @@
 
 <?php
 
-    $parent = new StudentParent($con, $student_id);
+    // $parent = new StudentParent($con, $student_id);
+
+    // $parent_firstname = $parent->GetFirstName();
+    // $parent_lastname = $parent->GetLastName();
+    // $parent_middle_name = $parent->GetMiddleName();
+    // $parent_suffix = $parent->GetSuffix();
+    // $parent_contact_number = $parent->GetContactNumber();
+    // $parent_email = $parent->GetEmail();
+    // $parent_occupation = $parent->GetOccupation();
+    // $parent_relationship = $parent->GetGuardianRelationship();
+    // 
+
+    $pendingEnroleee = new Pending($con);
+
+
+
+
+    
+
+    $pending = new Student($con, $student_id);
+
+    $student_lrn = $pending->GetStudentLRN();
+
+
+    $student_email = $pending->GetEmail();
+    $student_firstname = $pending->GetFirstName();
+    $student_lastname = $pending->GetLastName();
+    $student_middle_name = $pending->GetMiddleName();
+    $student_suffix = $pending->GetSuffix();
+
+    $student_civil_status = $pending->GetCivilStatus();
+    $student_nationality = $pending->GetNationality();
+    $student_religion = $pending->GetReligion();
+    $student_email = $pending->GetEmail();
+    $student_status_st = $pending->GetStudentStatus();
+    $student_current_course_id = $pending->GetStudentCurrentCourseId();
+    $student_contact_number = $pending->GetContactNumber();
+    $student_birthday = $pending->GetStudentBirthdays();
+    $student_birthplace = $pending->GetStudentBirthPlace();
+    $student_gender = $pending->GetStudentGender();
+    $student_address = $pending->GetStudentAddress();
+
+
+    $get_student_new_pending_id = $pendingEnroleee->GetPendingAccountByStudentTable(
+        $student_email, $student_firstname, $student_lastname);
+
+    $parent = new PendingParent($con, $get_student_new_pending_id);
+
+    $get_student_new_pending_id = $pendingEnroleee->GetPendingAccountByStudentTable(
+        $student_email, $student_firstname, $student_lastname);
+
+    $parent = new PendingParent($con, $get_student_new_pending_id);
+
+    $pending_enrollee = new Pending($con, $get_student_new_pending_id);
+
+    $student_parent = new StudentParent($con, $student_id);
+
+    $parent_id = $parent->GetParentID();
+
+    // var_dump($parent_id);
 
     $parent_firstname = $parent->GetFirstName();
     $parent_lastname = $parent->GetLastName();
@@ -11,73 +70,58 @@
     $parent_email = $parent->GetEmail();
     $parent_occupation = $parent->GetOccupation();
     $parent_relationship = $parent->GetGuardianRelationship();
-    // 
-
-    // Father
-    $father_firstname = $parent->GetFatherFirstName();
-    $father_lastname = $parent->GetFatherLastName();
-    $father_middle = $parent->GetFatherMiddleName();
-    $father_suffix = $parent->GetFatherSuffix();
-    $father_contact_number = $parent->GetFatherContactNumber();
-    $father_email = $parent->GetFatherEmail();
-    $father_occupation = $parent->GetFatherOccupation();
 
 
-    // Mother
-    $mother_firstname = $parent->GetMotherFirstName();
-    $mother_lastname = $parent->GetMotherLastName();
-    $mother_middle = $parent->GetMotherMiddleName();
-    $mother_suffix = $parent->GetMotherSuffix();
-    $mother_contact_number = $parent->GetMotherContactNumber();
-    $mother_email = $parent->GetMotherEmail();
-    $mother_occupation = $parent->GetMotherOccupation();
+    $school_name = $parent->GetSchoolName();
+    $school_address = $parent->GetSchoolAddress();
+    $year_started = $parent->GetSchoolYearStarted();
+    $year_ended = $parent->GetSchoolYearEnded();
+
+    $school_name = $parent->GetSchoolName();
+    $school_address = $parent->GetSchoolAddress();
+    $year_started = $parent->GetSchoolYearStarted();
+    $year_ended = $parent->GetSchoolYearEnded();
 
 
 ?>
 <!-- STEP 1 -->
 
 <div class="content">
-    <nav>
-        <a href="evaluation
-        .php"
-        ><i class="bi bi-arrow-return-left fa-1x"></i>
-        <h3>Back</h3>
-        </a>
-    </nav>
-
 
     <div class="content-header">
         
-         <?php echo Helper::RevealStudentTypePending($type,
+        <?php echo Helper::RevealStudentTypePending($type,
                 $student_enrollment_student_status); ?>
 
-            <header>
+        <header>
 
-                <div class="title">
-                    <h1>Enrollment form</h1>
-                </div>
-                <div class="action">
-                    <div class="dropdown">
+            <div class="title">
+                <h1>Enrollment form</h1>
+            </div>
+            <div class="action">
+                <div class="dropdown">
 
-                        <button class="icon">
-                            <i class="bi bi-three-dots-vertical"></i>
-                        </button>
+                    <button class="icon">
+                        <i class="bi bi-three-dots-vertical"></i>
+                    </button>
 
-                        <div class="dropdown-menu">
+                    <div class="dropdown-menu">
 
-                        
-                        </div>
+                        <a href="form_details_edit.php?id=<?php echo $student_id; ?>" class='text-primary dropdown-item'>
+                            <i class='bi bi-pencil'></i>Edit form
+                        </a>
                     </div>
-
                 </div>
 
-            </header>
+            </div>
 
-            <?php echo Helper::ProcessStudentCards($student_id, $student_enrollment_form_id,
-                $student_unique_id, $enrollment_creation, $student_new_enrollee,
-                $enrollment_is_new_enrollee, $enrollment_is_transferee, $student_status_st); ?>
+        </header>
 
-        </div>
+        <?php echo Helper::ProcessStudentCards($student_id, $student_enrollment_form_id,
+            $student_unique_id, $enrollment_creation, $student_new_enrollee,
+            $enrollment_is_new_enrollee, $enrollment_is_transferee, $student_status_st); ?>
+
+    </div>
     
     <main>
         <div class="progress">
@@ -90,23 +134,29 @@
 
         <div class="floating">
             <header>
-                <div class="title">
-                <h3>Student form details</h3>
-                <small
-                    >Assure every student information in this section. This will be
-                    the student data.</small
-                >
-                </div>
-            </header>
-            
-            <header>
-                <div class="title">
-                <h4>Student Information</h4>
+                <div class="mb-2 title">
+                <h4 style="font-weight: bold;">Student Information</h4>
                 </div>
             </header>
 
             <main>
+
                 <form action="">
+
+                    <?php if($type_status == 0):?>
+
+                        <div class="row">
+                            <span style="margin-left: 470px;">
+
+                                <label for="student_lrn">LRN</label>
+                                <input class="form-control" placeholder="" style="width: 250px;" id="student_lrn" type="text" name="student_lrn" value="<?php echo $student_lrn;?>">
+                        
+                            </span>
+                        </div>
+
+                    <?php endif;?>
+
+
                     <div class="row">
                         <span>
                             <label for="name">Name</label>
@@ -198,73 +248,66 @@
                             </div>
                         </span>
                     </div>
+
+                    <br>
+                    <div id="previous_school">
+                        <header>
+                            <div class="title">
+                                <h4 style="font-weight: bold;">Previous School Information</h4>
+                            </div>
+                        </header>
+
+                        <div class="row">
+                            <span>
+                                <label for="school_name">School Name</label>
+                                <div>
+                                    <input required type="text" id="school_name" name="school_name" class="read_only form-control" 
+                                    value="<?php echo $school_name; ?>">
+                                </div>
+                            </span>
+                        </div>
+                        <div class="row">
+                            <span>
+                                <label for="school_address">Address</label>
+                                <div>
+                                    <input required type="text" id="school_address" name="school_address"
+                                    class="read_only form-control" value="<?php echo $school_address; ?>">
+                                </div>
+                            </span>
+                        </div>
+                        <div class="row">
+                            <span>
+                                <label for="year_started">Admission Year</label>
+                                <div>
+                                    <input required type="text" id="year_started" name="year_started"
+                                    class="read_only form-control" value="<?php echo $year_started;?>">
+                                </div>
+                            </span>
+
+                            <span>
+                                <label for="year_ended">Graduation Year</label>
+                                <div>
+                                    <input  required type="text" id="year_ended" name="year_ended" 
+                                    class="read_only form-control" value="<?php echo $year_ended;?>">
+                                </div>
+                            </span>
+                        </div>
+
+                    </div>
+
+
+
                 </form>
+
+
             </main>
 
-            <div id="school_attended">
-                <header>
-                    <div class="title">
-                    <h4>Last School Attended</h4>
-                    </div>
-                </header>
-
-                <main>
-                    <form action="">
-                        <div class="row">
-                            <span>
-                                <label for="schoolType">School type</label>
-                                <div>
-                                    <select name="schoolType" id="schoolType" class="form-control">
-                                        <option value="">SHS</option>
-                                        <option value="">College</option>
-                                    </select>
-                                </div>
-                            </span>
-                            <span>
-                                <label for="schoolName">School name</label>
-                                <div>
-                                    <input type="text" name="schoolName" id="schoolName" value="" class="form-control" />
-                                </div>
-                            </span>
-                        </div>
-                        <div class="row">
-                            <span>
-                                <label for="graduationDate">Graduation date</label>
-                                <div>
-                                    <input type="date" name="graduationDate" id="graduationDate" value="" class="form-control" />
-                                </div>
-                            </span>
-                            <span>
-                                <label for="schoolYear">School year</label>
-                                <div>
-                                    <input type="text" name="schoolYear" id="schoolYear" placeholder="2022-2023" value="" class="form-control" />
-                                </div>
-                            </span>
-                            <span>
-                                <label for="term">Term</label>
-                                <div>
-                                    <select name="term" id="term" class="form-control">
-                                        <option value="">First term</option>
-                                        <option value="">Second term</option>
-                                    </select>
-                                </div>
-                            </span>
-                        </div>
-                        <div class="row">
-                            <span>
-                                <label for="schoolAddress">School address</label>
-                                <div>
-                                    <input type="text" name="schoolAddress" id="schoolAddress" value="" class="form-control" />
-                                </div>
-                            </span>
-                        </div>
-                    </form>
-                </main>
-
-            </div>
+ 
 
 
-            <div id="father_info">
+
+
+            <div style="display: none;" id="father_info">
                 <header>
                     <div class="title">
                         <h4>Father's Information</h4>
@@ -319,7 +362,7 @@
                 </main>
             </div>
 
-            <div id="mother_info">
+            <div style="display: none;" id="mother_info">
                 <header>
                     <div class="title">
                     <h4>Mother's Information</h4>
@@ -375,12 +418,11 @@
 
             </div>
 
-
             <div id="guardian_info">
 
                 <header>
-                    <div class="title">
-                    <h4>Guardian's Information</h4>
+                    <div class="mb-2 title">
+                        <h4 style="font-weight: bold">Guardian's Information</h4>
                     </div>
                 </header>
 
@@ -413,12 +455,6 @@
                             <label for="phoneNo">Phone no.</label>
                             <div>
                             <input type="text" name="guardian_contact" id="guardian_contact" value="<?php echo $parent_contact_number;?>" class="form-control" />
-                            </div>
-                        </span>
-                        <span>
-                            <label for="email">Email</label>
-                            <div>
-                            <input type="email" name="guardian_email" id="guardian_email" value="<?php echo $parent_email;?>" class="form-control" />
                             </div>
                         </span>
                         </div>

@@ -15,7 +15,23 @@
     $email = $pending->GetPendingEmail();
     $contact_number = $pending->GetPendingContactNumber();
     $admission_status = $pending->GetPendingAdmissionStatus();
+
+    $program_id = $pending->GetPendingProgramId();
+
+
+    $program = new Program($con, $program_id);
+
+    $department_id = $program->GetProgramDepartmentId();
+
+    $department = new Department($con, $department_id);
+
+    $department_name = $department->GetDepartmentName();
  
+    // var_dump($department_name);
+
+    $type_status = $department_name === "Tertiary" ? 1 : 0;
+
+    
     $parent = new PendingParent($con, $enrollee_id);
     $studentRequirement = new StudentRequirement($con, $enrollee_id);
 
@@ -115,7 +131,7 @@
 
         $email = "";
 
-        $lrn = isset($_POST['lrn']) ? Helper::sanitizeFormString($_POST['lrn']) : '';
+        $lrn = isset($_POST['lrn']) ? Helper::sanitizeFormString($_POST['lrn']) : NULL;
 
         
         // echo "firstname: $firstname<br>";
@@ -223,16 +239,22 @@
             <main>
                 <form method="POST">
                     <header>
-                        <div class="title">
-                            <h4 style="font-weight: bold;">Student Information</h4>
-                            <div class="row">
-                                <span style="margin-left: 660px;">
-                                    <label for="lrn">LRN</label>
-                                    <input class="form-control" placeholder="236-736-050-357" style="width: 250px;" id="lrn" type="text" name="lrn" 
-                                    value="<?php echo ($lrn != "") ? $lrn : ''; ?>"id="lrn">
-                                </span>
+
+                        <?php if($type_status == 0):?>
+
+                            <div class="title">
+                                <h4 style="font-weight: bold;">Student Information</h4>
+                                <div class="row">
+                                    <span style="margin-left: 660px;">
+                                        <label for="lrn">LRN</label>
+                                        <input class="form-control" placeholder="236-736-050-357" style="width: 250px;" id="lrn" type="text" name="lrn" 
+                                        value="<?php echo ($lrn != "") ? $lrn : ''; ?>"id="lrn">
+                                    </span>
+                                </div>
                             </div>
-                        </div>
+
+                        <?php endif;?>
+
                     </header>
                     <div class="row">
                         <span>

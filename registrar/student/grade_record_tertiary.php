@@ -166,14 +166,14 @@
                         <tr> 
                             <th>Subject</th>  
                             <th>Code</th>
-                            <th>Type</th>
+                            <!-- <th>Type</th> -->
                             <th rowspan="2">Unit</th>
                             <th>Section</th>  
                             <th>Prelim</th>  
                             <th>Midterm</th>  
                             <th>Pre-Final</th>  
                             <th>Final</th>  
-                            <th>Average</th>  
+                            <!-- <th>Average</th>   -->
                             <th >Remarks</th>  
                         </tr>
                     </thead> 	
@@ -226,14 +226,14 @@
                         <tr> 
                             <th>Subject</th>  
                             <th>Code</th>
-                            <th>Type</th>
+                            <!-- <th>Type</th> -->
                             <th rowspan="2">Unit</th>
                             <th>Section</th>  
                             <th>Prelim</th>  
                             <th>Midterm</th>  
                             <th>Pre-Final</th>  
                             <th>Final</th>  
-                            <th>Average</th>  
+                            <!-- <th>Average</th>   -->
                             <th >Remarks</th>  
                         </tr>
                     </thead> 	
@@ -288,14 +288,14 @@
                         <tr> 
                             <th>Subject</th>  
                             <th>Code</th>
-                            <th>Type</th>
+                            <!-- <th>Type</th> -->
                             <th rowspan="2">Unit</th>
                             <th>Section</th>  
                             <th>Prelim</th>  
                             <th>Midterm</th>  
                             <th>Pre-Final</th>  
                             <th>Final</th>  
-                            <th>Average</th>  
+                            <!-- <th>Average</th>   -->
                             <th >Remarks</th>  
                         </tr>
                     </thead> 	
@@ -347,14 +347,14 @@
                         <tr> 
                             <th>Subject</th>  
                             <th>Code</th>
-                            <th>Type</th>
+                            <!-- <th>Type</th> -->
                             <th rowspan="2">Unit</th>
                             <th>Section</th>  
                             <th>Prelim</th>  
                             <th>Midterm</th>  
                             <th>Pre-Final</th>  
                             <th>Final</th>  
-                            <th>Average</th>  
+                            <!-- <th>Average</th>   -->
                             <th >Remarks</th>  
                         </tr>
                     </thead> 	
@@ -406,14 +406,14 @@
                         <tr> 
                             <th>Subject</th>  
                             <th>Code</th>
-                            <th>Type</th>
+                            <!-- <th>Type</th> -->
                             <th rowspan="2">Unit</th>
                             <th>Section</th>  
                             <th>Prelim</th>  
                             <th>Midterm</th>  
                             <th>Pre-Final</th>  
                             <th>Final</th>  
-                            <th>Average</th>  
+                            <!-- <th>Average</th>   -->
                             <th >Remarks</th>  
                         </tr>
                     </thead> 	
@@ -465,14 +465,14 @@
                         <tr> 
                             <th>Subject</th>  
                             <th>Code</th>
-                            <th>Type</th>
+                            <!-- <th>Type</th> -->
                             <th rowspan="2">Unit</th>
                             <th>Section</th>  
                             <th>Prelim</th>  
                             <th>Midterm</th>  
                             <th>Pre-Final</th>  
                             <th>Final</th>  
-                            <th>Average</th>  
+                            <!-- <th>Average</th>   -->
                             <th >Remarks</th>  
                         </tr>
                     </thead> 	
@@ -524,14 +524,14 @@
                         <tr> 
                             <th>Subject</th>  
                             <th>Code</th>
-                            <th>Type</th>
+                            <!-- <th>Type</th> -->
                             <th rowspan="2">Unit</th>
                             <th>Section</th>  
                             <th>Prelim</th>  
                             <th>Midterm</th>  
                             <th>Pre-Final</th>  
                             <th>Final</th>  
-                            <th>Average</th>  
+                            <!-- <th>Average</th>   -->
                             <th >Remarks</th>  
                         </tr>
                     </thead> 	
@@ -583,14 +583,14 @@
                         <tr> 
                             <th>Subject</th>  
                             <th>Code</th>
-                            <th>Type</th>
+                            <!-- <th>Type</th> -->
                             <th rowspan="2">Unit</th>
                             <th>Section</th>  
                             <th>Prelim</th>  
                             <th>Midterm</th>  
                             <th>Pre-Final</th>  
                             <th>Final</th>  
-                            <th>Average</th>  
+                            <!-- <th>Average</th>   -->
                             <th >Remarks</th>  
                         </tr>
                     </thead> 	

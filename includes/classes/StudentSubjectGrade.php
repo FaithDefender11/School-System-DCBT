@@ -63,8 +63,13 @@
         return $mark_passed_query->execute();
     }
 
-    public function AddGradeToSubjectCode($student_id,
+    public function AddGradeToSubjectCode(
+        $student_id,
         $student_subject_id,
+
+        $teacher_id,
+        $school_year_id,
+
         $first_quarter_input,
         $second_quarter_input,
         $third_quarter_input,
@@ -74,14 +79,19 @@
 
 
         $addGrade = $this->con->prepare("INSERT INTO student_subject_grade
-            (student_id, student_subject_id, remarks, first, 
+            (student_id, teacher_id, school_year_id, student_subject_id, remarks, first, 
                 second,third,fourth)
-            VALUES (:student_id, :student_subject_id, :remarks, :first,
+            VALUES (:student_id, :teacher_id, :school_year_id, :student_subject_id, :remarks, :first,
                 :second,:third,:fourth)");
         
 
         $addGrade->bindParam("student_id", $student_id);
+
         $addGrade->bindParam("student_subject_id", $student_subject_id);
+
+        $addGrade->bindParam("teacher_id", $teacher_id);
+        $addGrade->bindParam("school_year_id", $school_year_id);
+
         $addGrade->bindParam("first", $first_quarter_input);
         $addGrade->bindParam("second", $second_quarter_input);
         $addGrade->bindParam("third", $third_quarter_input);
@@ -98,6 +108,8 @@
     public function UpdateGradeForSubjectCode(
         $student_subject_grade_id,
         $student_id,
+        $teacher_id,
+
         $first_quarter_input,
         $second_quarter_input,
         $third_quarter_input,
@@ -115,12 +127,15 @@
 
             WHERE student_subject_grade_id = :student_subject_grade_id
             AND student_id = :student_id
+            AND teacher_id = :teacher_id
 
-            ");
+        ");
 
         // Bind parameters
         $updateGrade->bindParam(":student_subject_grade_id", $student_subject_grade_id);
         $updateGrade->bindParam(":student_id", $student_id);
+        $updateGrade->bindParam(":teacher_id", $teacher_id);
+
         $updateGrade->bindParam(":first", $first_quarter_input);
         $updateGrade->bindParam(":second", $second_quarter_input);
         $updateGrade->bindParam(":third", $third_quarter_input);
@@ -134,6 +149,34 @@
             return true;
         }
         return false;
+    }
+
+    public function GetStudentFailedSubjectsCount(
+        $school_year_id, $student_subject_id,
+        $student_id, $current_school_year_id){
+     
+
+        $sql = $this->con->prepare("SELECT 
+                                    
+            t1.* 
+            
+            FROM student_subject_grade as t1
+
+    
+            -- WHERE t1.student_subject_id=:student_subject_id
+            WHERE t1.student_id=:student_id
+            AND t1.school_year_id=:current_school_year_id
+            AND remarks = 'Failed'
+        ");
+
+        // $sql->bindParam(":student_subject_id", $student_subject_id);
+        $sql->bindParam(":student_id", $student_id);
+        $sql->bindParam(":current_school_year_id", $current_school_year_id);
+
+        $sql->execute();
+
+        return $sql->rowCount();
+
     }
 
 }

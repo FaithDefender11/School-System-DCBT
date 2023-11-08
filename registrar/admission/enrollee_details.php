@@ -214,104 +214,110 @@
                 </main>
 
                 <hr>
-                <header>
-                    <div class="title">
-                        <h3>Father's Information</h3>
+
+                <div style="display: none;">
+
+                    <header>
+                        <div class="title">
+                            <h3>Father's Information</h3>
+                        </div>
+                    </header>
+
+                    <div class="row">
+                        <span>
+                            <label for="name">Name</label>
+                            <div>
+                                <input value="<?php echo $father_lastname?>" type="text" name="father_lastname" class="form-control">
+                                <small>Last name</small>
+                            </div>
+                            <div>
+                                <input value="<?php echo $father_firstname?>" type="text" name="father_firstname" class="form-control">
+                                <small>First name</small>
+                            </div>
+                            <div>
+                                <input value="<?php echo $father_middle?>" type="text" name="father_middle" class="form-control">
+                                <small>Middle name</small>
+                            </div>
+                            <div>
+                                <input value="<?php echo $father_suffix?>" type="text" name="father_suffix" class="form-control">
+                                <small>Father suffix</small>
+                            </div>
+                        </span>
                     </div>
-                </header>
 
-                <div class="row">
-                    <span>
-                        <label for="name">Name</label>
-                        <div>
-                            <input value="<?php echo $father_lastname?>" type="text" name="father_lastname" class="form-control">
-                            <small>Last name</small>
-                        </div>
-                        <div>
-                            <input value="<?php echo $father_firstname?>" type="text" name="father_firstname" class="form-control">
-                            <small>First name</small>
-                        </div>
-                        <div>
-                            <input value="<?php echo $father_middle?>" type="text" name="father_middle" class="form-control">
-                            <small>Middle name</small>
-                        </div>
-                        <div>
-                            <input value="<?php echo $father_suffix?>" type="text" name="father_suffix" class="form-control">
-                            <small>Father suffix</small>
-                        </div>
-                    </span>
-                </div>
-
-                <div class="row">
-                    <span>
-                        <label for="phone">Phone no.</label>
-                        <div>
-                            <input value="<?php echo $father_contact_number?>" type="tel" id="father_contact_number" name="father_contact_number" class="form-control">
-                        </div>
-                    </span>
-                    <span>
-                        <label for="email">Email</label>
-                        <div>
-                            <input value="<?php echo $father_email?>" type="text" id="father_email" name="father_email" class="form-control">
-                        </div>
-                    </span>
-                    <span>
-                        <label for="occupation">Occupation</label>
-                        <div>
-                            <input value="<?php echo $father_occupation?>" type="text" id="father_occupation" name="father_occupation" class="form-control">
-                        </div>
-                    </span>
-                </div>
-
-
-                <hr>
-                <header>
-                    <div class="title">
-                        <h3>Mother's Information</h3>
+                    <div class="row">
+                        <span>
+                            <label for="phone">Phone no.</label>
+                            <div>
+                                <input value="<?php echo $father_contact_number?>" type="tel" id="father_contact_number" name="father_contact_number" class="form-control">
+                            </div>
+                        </span>
+                        <span>
+                            <label for="email">Email</label>
+                            <div>
+                                <input value="<?php echo $father_email?>" type="text" id="father_email" name="father_email" class="form-control">
+                            </div>
+                        </span>
+                        <span>
+                            <label for="occupation">Occupation</label>
+                            <div>
+                                <input value="<?php echo $father_occupation?>" type="text" id="father_occupation" name="father_occupation" class="form-control">
+                            </div>
+                        </span>
                     </div>
-                </header>
 
-                <div class="row">
-                    <span>
-                        <label for="name">Name</label>
-                        <div>
-                            <input value="<?php echo $mother_lastname;?>" type="text" name="mother_lastname" class="form-control">
-                            <small>Last name</small>
+
+                    <hr>
+                    <header>
+                        <div class="title">
+                            <h3>Mother's Information</h3>
                         </div>
-                        <div>
-                            <input value="<?php echo $mother_firstname;?>" type="text" name="mother_firstname" class="form-control">
-                            <small>First name</small>
-                        </div>
-                        <div>
-                            <input value="<?php echo $mother_middle;?>" type="text" name="mother_middle" class="form-control">
-                            <small>Middle name</small>
-                        </div>
-                        <div>
-                            <input value="<?php echo $mother_suffix;?>" type="text" name="mother_suffix" class="form-control">
-                            <small>Mother suffix</small>
-                        </div>
-                    </span>
+                    </header>
+
+                    <div class="row">
+                        <span>
+                            <label for="name">Name</label>
+                            <div>
+                                <input value="<?php echo $mother_lastname;?>" type="text" name="mother_lastname" class="form-control">
+                                <small>Last name</small>
+                            </div>
+                            <div>
+                                <input value="<?php echo $mother_firstname;?>" type="text" name="mother_firstname" class="form-control">
+                                <small>First name</small>
+                            </div>
+                            <div>
+                                <input value="<?php echo $mother_middle;?>" type="text" name="mother_middle" class="form-control">
+                                <small>Middle name</small>
+                            </div>
+                            <div>
+                                <input value="<?php echo $mother_suffix;?>" type="text" name="mother_suffix" class="form-control">
+                                <small>Mother suffix</small>
+                            </div>
+                        </span>
+                    </div>
+                    <div class="row">
+                        <span>
+                            <label for="phone">Phone no.</label>
+                            <div>
+                                <input value="<?php echo $mother_contact_number;?>" type="tel" id="mother_contact_number" name="mother_contact_number" class="form-control">
+                            </div>
+                        </span>
+                        <span>
+                            <label for="email">Email</label>
+                            <div>
+                                <input value="<?php echo $mother_email;?>" type="text" id="mother_email" name="mother_email" class="form-control">
+                            </div>
+                        </span>
+                        <span>
+                            <label for="occupation">Occupation</label>
+                            <div>
+                                <input value="<?php echo $mother_occupation;?>" type="text" id="mother_occupation" name="mother_occupation" class="form-control">
+                            </div>
+                        </span>
+                    </div>
+
                 </div>
-                <div class="row">
-                    <span>
-                        <label for="phone">Phone no.</label>
-                        <div>
-                            <input value="<?php echo $mother_contact_number;?>" type="tel" id="mother_contact_number" name="mother_contact_number" class="form-control">
-                        </div>
-                    </span>
-                    <span>
-                        <label for="email">Email</label>
-                        <div>
-                            <input value="<?php echo $mother_email;?>" type="text" id="mother_email" name="mother_email" class="form-control">
-                        </div>
-                    </span>
-                    <span>
-                        <label for="occupation">Occupation</label>
-                        <div>
-                            <input value="<?php echo $mother_occupation;?>" type="text" id="mother_occupation" name="mother_occupation" class="form-control">
-                        </div>
-                    </span>
-                </div>
+
 
                 <hr>
                 <header>

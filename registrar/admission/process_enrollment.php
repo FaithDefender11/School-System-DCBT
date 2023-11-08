@@ -222,6 +222,7 @@
                                 </header>
                                 <main>
                                     <table class="a">
+
                                         <thead>
                                             <tr class="text-center"> 
                                                 <th rowspan="2">ID</th>
@@ -232,6 +233,7 @@
                                                 <th rowspan="2">Action</th>
                                             </tr>
                                         </thead>
+                                        
                                         <tbody>
                       
 
@@ -760,6 +762,47 @@
         $student_enrollment_id = $enrollment->GetEnrollmentIdNonDependent($student_id,
             $current_school_year_id);
         
+        
+        $enrollment_currently_registrar_id = $enrollment->GetEnrollmentCurrentRegistrarId($student_id,
+            $student_enrollment_id);
+
+        $user = new User($con, $registrarUserId);
+
+        // $enrollment_currently_registrar_id = NULL;
+
+
+        // var_dump($enrollment_currently_registrar_id);
+
+        if($enrollment_currently_registrar_id == NULL && $registrarUserId != NULL){
+            # Updates the current registrar.
+
+            $enrollment_currently_registrar_id = $enrollment->UpdateRegistrarIntoTheEnrollment(
+                $student_id,
+                $student_enrollment_id,
+                $registrarUserId);
+
+            $_SESSION['enrollment_currently_registrar_id'] = $registrarUserId;
+            $_SESSION['enrollment_currently_enrollment_id'] = $student_enrollment_id;
+            $_SESSION['enrollment_currently_student_id'] = $student_id;
+
+        }
+
+        // var_dump($registrarUserId);
+        // echo "<br>";
+
+        // var_dump($enrollment_currently_registrar_id);
+        // echo "<br>";
+        // return;
+
+        if($enrollment_currently_registrar_id !== NULL 
+            && $registrarUserId != $enrollment_currently_registrar_id){
+            // echo "You`re inside the form";
+            Alert::error("Only one registrar can processed the form.", "evaluation.php");
+            exit();
+        }
+
+
+
 
         $student_non_enrolled_enrollment_id = $enrollment->GetEnrollmentIdNonEnrolled($student_id,
             $current_school_year_id);
@@ -770,7 +813,9 @@
        $student_enrollment_course_id = $enrollment->GetEnrollmentFormCourseId($student_id,
             $student_enrollment_id, $current_school_year_id);
 
-        // echo $student_enrollment_course_id;
+
+
+        
 
         $student_enrollment_student_status = $enrollment->GetEnrollmentFormStudentStatus($student_id,
             $student_enrollment_id, $current_school_year_id);

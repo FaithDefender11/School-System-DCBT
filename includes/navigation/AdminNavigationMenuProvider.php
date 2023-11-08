@@ -55,58 +55,58 @@
 
         // $class = "navigationItem ";
   
-        $sideBarNavigationItem = Helper::createNavByIconARC("Dashboard", 
+        $sideBarNavigationItem = Helper::createNavByIcon("Dashboard", 
             "bi bi-clipboard-data icon ", $dashboard_url, Constants::$navigationClass . Helper::GetActiveClass($page, "dashboard"));
         
-        $sideBarNavigationItem .= Helper::createNavByIconARC("School Year", 
+        $sideBarNavigationItem .= Helper::createNavByIcon("School Year", 
             "bi bi-calendar icon ", $school_year_url, Constants::$navigationClass . Helper::GetActiveClass($page, "school_year"));
 
-        $sideBarNavigationItem .= Helper::createNavByIconARC("Department", 
+        $sideBarNavigationItem .= Helper::createNavByIcon("Department", 
             "bi bi-people", $department_url, Constants::$navigationClass . Helper::GetActiveClass($page, "department"));
 
-        $sideBarNavigationItem .= Helper::createNavByIconARC("Requirement", 
+        $sideBarNavigationItem .= Helper::createNavByIcon("Requirement", 
             "bi bi-file icon", $requirement_url, Constants::$navigationClass . Helper::GetActiveClass($page, "requirement"));
 
-        $sideBarNavigationItem .= Helper::createNavByIconARC("Room", 
+        $sideBarNavigationItem .= Helper::createNavByIcon("Room", 
             "bi bi-house", $room_url, Constants::$navigationClass . Helper::GetActiveClass($page, "room"));
 
 
-        $sideBarNavigationItem .= Helper::createNavByIconARC("Teacher", 
+        $sideBarNavigationItem .= Helper::createNavByIcon("Teacher", 
             "bi bi-person icon ", $teacher_url, Constants::$navigationClass . Helper::GetActiveClass($page, "teacher"));
 
-        $sideBarNavigationItem .= Helper::createNavByIconARC("Grades", 
+        $sideBarNavigationItem .= Helper::createNavByIcon("Grades", 
             "bi bi-collection", $grade_module_url, Constants::$navigationClass . Helper::GetActiveClass($page, "grade"));
 
-        $sideBarNavigationItem .= Helper::createNavByIconARC("Classlist", 
+        $sideBarNavigationItem .= Helper::createNavByIcon("Classlist", 
             "bi bi-collection", $class_module_url, Constants::$navigationClass . Helper::GetActiveClass($page, "classlist"));
 
 
-        // $sideBarNavigationItem .= Helper::createNavByIconARC("Courses", 
+        // $sideBarNavigationItem .= Helper::createNavByIcon("Courses", 
         //     "bi bi-book icon ", $course_url, Constants::$navigationClass . Helper::GetActiveClass($page, "course"));
 
-        $sideBarNavigationItem .= Helper::createNavByIconARC("Programs", 
+        $sideBarNavigationItem .= Helper::createNavByIcon("Programs", 
             "bi bi-book icon", $program_url, Constants::$navigationClass . Helper::GetActiveClass($page, "program"));
 
-        $sideBarNavigationItem .= Helper::createNavByIconARC("Subject", 
+        $sideBarNavigationItem .= Helper::createNavByIcon("Subject", 
             "bi bi-file icon ", $subject_url, Constants::$navigationClass . Helper::GetActiveClass($page, "subject"));
 
-        $sideBarNavigationItem .= Helper::createNavByIconARC("Section", 
+        $sideBarNavigationItem .= Helper::createNavByIcon("Section", 
             "bi bi-person-plus-fill icon", $section_url, Constants::$navigationClass . Helper::GetActiveClass($page, "section"));
 
-        $sideBarNavigationItem .= Helper::createNavByIconARC("Schedule", 
+        $sideBarNavigationItem .= Helper::createNavByIcon("Schedule", 
             "bi bi-clock icon", $schedule_url, Constants::$navigationClass . Helper::GetActiveClass($page, "schedule"));
 
-        $sideBarNavigationItem .= Helper::createNavByIconARC("Account", 
+        $sideBarNavigationItem .= Helper::createNavByIcon("Account", 
             "bi bi-person-circle", $account_url, Constants::$navigationClass . Helper::GetActiveClass($page, "account"));
 
-        $sideBarNavigationItem .= Helper::createNavByIconARC("User Log", 
+        $sideBarNavigationItem .= Helper::createNavByIcon("User Log", 
             "bi bi-person", $user_log_url, Constants::$navigationClass . Helper::GetActiveClass($page, "log"));
 
-        $sideBarNavigationItem .= Helper::createNavByIconARC("Admin Users", 
+        $sideBarNavigationItem .= Helper::createNavByIcon("Admin Users", 
             "bi bi-lock", $admin_users_url, Constants::$navigationClass . Helper::GetActiveClass($page, "admin_users"));
 
         if(User::isAdminLoggedIn()) {
-            $sideBarNavigationItem .= Helper::createNavByIconARC("Log Out", 
+            $sideBarNavigationItem .= Helper::createNavByIcon("Log Out", 
                 "bi bi-box-arrow-right icon", $logout_url, Constants::$navigationClass);
         }
 

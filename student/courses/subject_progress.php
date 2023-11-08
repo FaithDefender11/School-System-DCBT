@@ -234,11 +234,16 @@
 
                                         <?php 
                                             
-                                            $pecentage_equivalent_total = ($totalScore / $totalOver) * 100;
-                                            $equivalent_total = round($pecentage_equivalent_total, 0, PHP_ROUND_HALF_UP);
-                                            $equivalent_total = $equivalent_total . "%";
+                                            if($totalOver > 0){
+                                                 $pecentage_equivalent_total = ($totalScore / $totalOver) * 100;
+                                                $equivalent_total = round($pecentage_equivalent_total, 0, PHP_ROUND_HALF_UP);
+                                                $equivalent_total = $equivalent_total . "%";
 
-                                            echo "$totalScore / $totalOver = $equivalent_total";
+                                                echo "$totalScore / $totalOver = $equivalent_total";
+                                            }else{
+                                                echo "??";
+                                            }
+                                           
                                             
                                         ?></td>
                                     </tr>

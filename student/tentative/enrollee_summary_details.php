@@ -232,46 +232,54 @@
                                 </div>
                                 </span>
                             </div>
-                            <header>
-                                <div class="title">
-                                    <h4 style="font-weight: bold;">Previous School Information</h4>
-                                </div>
-                            </header>
-                            <div class="row">
-                                <span>
-                                    <label for="school_name">School Name</label>
-                                    <div>
-                                        <input required type="text" id="school_name" name="school_name" class="read_only form-control" 
-                                        value="<?php echo $school_name; ?>">
+                            
+                            <br>
+                            <div id="previous_school">
+                                <header>
+                                    <div class="title">
+                                        <h4 style="font-weight: bold;">Previous School Information</h4>
                                     </div>
-                                </span>
-                            </div>
-                            <div class="row">
-                                <span>
-                                    <label for="school_address">Address</label>
-                                    <div>
-                                        <input required type="text" id="school_address" name="school_address"
-                                        class="read_only form-control" value="<?php echo $school_address; ?>">
-                                    </div>
-                                </span>
-                            </div>
-                            <div class="row">
-                                <span>
-                                    <label for="year_started">Admission Year</label>
-                                    <div>
-                                        <input required type="text" id="year_started" name="year_started"
-                                        class="read_only form-control" value="<?php echo $year_started;?>">
-                                    </div>
-                                </span>
+                                </header>
 
-                                <span>
-                                    <label for="year_ended">Graduation Year</label>
-                                    <div>
-                                        <input  required type="text" id="year_ended" name="year_ended" 
-                                        class="read_only form-control" value="<?php echo $year_ended;?>">
-                                    </div>
-                                </span>
+                                <div class="row">
+                                    <span>
+                                        <label for="school_name">School Name</label>
+                                        <div>
+                                            <input required type="text" id="school_name" name="school_name" class="read_only form-control" 
+                                            value="<?php echo $school_name; ?>">
+                                        </div>
+                                    </span>
+                                </div>
+                                <div class="row">
+                                    <span>
+                                        <label for="school_address">Address</label>
+                                        <div>
+                                            <input required type="text" id="school_address" name="school_address"
+                                            class="read_only form-control" value="<?php echo $school_address; ?>">
+                                        </div>
+                                    </span>
+                                </div>
+                                <div class="row">
+                                    <span>
+                                        <label for="year_started">Admission Year</label>
+                                        <div>
+                                            <input required type="text" id="year_started" name="year_started"
+                                            class="read_only form-control" value="<?php echo $year_started;?>">
+                                        </div>
+                                    </span>
+
+                                    <span>
+                                        <label for="year_ended">Graduation Year</label>
+                                        <div>
+                                            <input  required type="text" id="year_ended" name="year_ended" 
+                                            class="read_only form-control" value="<?php echo $year_ended;?>">
+                                        </div>
+                                    </span>
+                                </div>
+
                             </div>
+
+
                             <!-- <header>
                                 <div class="title">
                                     <h4 style="font-weight: bold;">Enrollee Parent Information</h4>
@@ -385,6 +393,7 @@
                                     </span>
                                 </div>
                             </div>
+                            <br>
                             <div class="guardian_info">
                                 <header class="m-2">
                                     <div class="title">

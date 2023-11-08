@@ -931,8 +931,8 @@
                                        <?php 
                                             echo Helper::getError(Constants::$guardianOccupationRequired);
                                             echo Helper::getError(Constants::$invalidGuardianOccupationCharacters);
-                                            echo Helper::getError(Constants::$guardianOccupationIsTooShort);
-                                            echo Helper::getError(Constants::$guardianOccupationIsTooLong);
+                                            // echo Helper::getError(Constants::$guardianOccupationIsTooShort);
+                                            // echo Helper::getError(Constants::$guardianOccupationIsTooLong);
                                         ?>
                                     <div>
                                         <input type="text" id="parent_occupation" name="parent_occupation" class="form-control"

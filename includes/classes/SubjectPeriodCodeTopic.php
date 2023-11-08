@@ -70,8 +70,8 @@ class SubjectPeriodCodeTopic{
 
 
         # Cbeck if subject code is not assigned to other teacher
-        if($this->CheckDefaultTopicAlreadyBeenAssigned($subject_code,
-            $school_year_id, $subject_period_name) == false){
+        // if($this->CheckDefaultTopicAlreadyBeenAssigned($subject_code,
+        //     $school_year_id, $subject_period_name) == false){
 
             $add = $this->con->prepare("INSERT INTO subject_period_code_topic
                 (course_id,teacher_id, school_year_id,
@@ -97,8 +97,7 @@ class SubjectPeriodCodeTopic{
             if($add->rowCount() > 0){
                 return true;
             }
-        }
- 
+        // }
 
         return false;
 
@@ -552,7 +551,6 @@ class SubjectPeriodCodeTopic{
         $query->bindValue(":subject_code", $subject_code);
         if($subject_period_name != NULL){
             $query->bindValue(":subject_period_name", $subject_period_name);
-
         }
         $query->execute();
  

@@ -241,7 +241,7 @@
                 <form method="POST">
 
                     <br>
-                    <main>
+                    <main style="display: none;">
                         <header>
                             <div class="title">
                             <h3>Admission Type</h3>
@@ -379,10 +379,6 @@
                             </main>
 
                         </div>
-
-
-
-
 
                     </main>
 

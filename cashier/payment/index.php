@@ -133,16 +133,16 @@
             
             },
             'columns': [
-              { data: 'student_id', orderable: true },  
+              { data: 'student_id', orderable: false },  
               { data: 'name', orderable: false },  
               // { data: 'email', orderable: true },
               { data: 'type', orderable: false },
               { data: 'acronym', orderable: false },  
               // { data: 'waiting_result', orderable: false },  
-              { data: 'registrar_confirmation_date', orderable: true },
+              { data: 'registrar_confirmation_date', orderable: false },
               { data: 'button_url', orderable: false }
             ],
-            'ordering': true
+            'ordering': false
         });
     });
 </script>

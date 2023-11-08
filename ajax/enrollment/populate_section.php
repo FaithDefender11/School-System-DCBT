@@ -80,16 +80,40 @@
             'student_current_course_id' => $student_prev_course_id
         );
 
-        $query = $con->prepare("SELECT * FROM course
+        $course_fulled_ids = $section->GetSectionWhoReachedTheMaximumCapacityOnEnrollment(
+            $current_school_year_id);
+        
+        // $course_fulled_ids = [1281, 1289];
+        // print_r($course_fulled_ids);
+
+        // Create an array of placeholders for the course_ids
+        $placeholders = array_map(function ($id) {
+            return ":course_id_$id";
+        }, $course_fulled_ids);
+
+
+        $query = $con->prepare("SELECT * 
+        
+            FROM course
+
             WHERE program_id=:program_id
+            AND course_id NOT IN (" . implode(',', $placeholders) . ")
+
             AND active= 'yes'
             AND school_year_term=:school_year_term
-            AND is_full=:is_full
+
         ");
+
+        // AND is_full=:is_full
 
         $query->bindParam(":program_id", $student_program_id);
         $query->bindParam(":school_year_term", $current_school_year_term);
-        $query->bindValue(":is_full", "no");
+        // $query->bindValue(":is_full", "no");
+
+        foreach ($course_fulled_ids as $course_id) {
+            $paramName = ":course_id_$course_id";
+            $query->bindValue($paramName, $course_id);
+        }
         $query->execute();
 
         if($query->rowCount() > 0){

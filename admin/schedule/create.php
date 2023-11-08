@@ -41,6 +41,13 @@
         }
     }
 
+    $subjectPeriodCodeTopicTemplate = new SubjectPeriodCodeTopicTemplate($con);
+
+    $getAllDefaultTopicTemplate = $subjectPeriodCodeTopicTemplate
+        ->GetTopicTemplateDefaultTopics("ELS131");
+
+    // var_dump($getAllDefaultTopicTemplate);
+
 
     if(isset($_GET['course_id'])
         && isset($_GET['sp_id'])){

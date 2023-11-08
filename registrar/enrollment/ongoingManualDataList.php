@@ -119,11 +119,15 @@ $totalRecordwithFilter = $records['allcount'];
 ## Fetch records
 if ($row != null) {
      
+    # Filter out all old student that has enrollment ID
     $empQuery = "SELECT 
 
         t1.*,
         t2.program_section
         FROM student as t1
+
+        
+        -- INNER JOIN enrollment as t3 ON t3.course_id = t1.course_id
         LEFT JOIN course as t2 ON t2.course_id = t1.course_id
 
         WHERE 1 $searchQuery

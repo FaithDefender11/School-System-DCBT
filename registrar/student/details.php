@@ -55,37 +55,53 @@
     
         # Update
         $editStudentExec = $student->UpdateStudentDetails(
-        $student_id, $firstname, $lastname,
-        $middle_name, $suffix, $civil_status, $nationality, $sex,
-        $birthday, $birthplace, $religion, $address, $contact_number,
-        $email
+            $student_id, $firstname, $lastname,
+            $middle_name, $suffix, $civil_status, $nationality, $sex,
+            $birthday, $birthplace, $religion, $address, $contact_number,
+            $email
         );
+
 
         $editParentExec = $parent->UpdateStudentParent(
         $student_id, $parent_id, $guardian_firstname, $guardian_lastname,
         $guardian_middle_name, $guardian_suffix, $guardian_contact,
             $guardian_email, $guardian_occupation, $guardian_relationship,
 
-            $father_firstname,
-            $father_lastname,
-            $father_middle,
-            $father_suffix,
-            $father_contact_number,
-            $father_email,
-            $father_occupation,
-            $mother_firstname,
-            $mother_lastname,
-            $mother_middle,
-            $mother_suffix,
-            $mother_contact_number,
-            $mother_email,
-            $mother_occupation
+
+            // $father_firstname,
+            // $father_lastname,
+            // $father_middle,
+            // $father_suffix,
+            // $father_contact_number,
+            // $father_email,
+            // $father_occupation,
+            // $mother_firstname,
+            // $mother_lastname,
+            // $mother_middle,
+            // $mother_suffix,
+            // $mother_contact_number,
+            // $mother_email,
+            // $mother_occupation
+
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
         );
 
         if($editStudentExec || $editParentExec){
-        Alert::success("Successfully save Changes", "");
-        exit();
-
+            Alert::success("Successfully save Changes", "");
+            exit();
         }
     }
 
@@ -205,18 +221,14 @@
         <div class="floating">
             <header>
                 <div class="title">
-                <h3>Student form details</h3>
-                <small
-                    >Assure every student information in this section. This will be
-                    the student data.</small
-                >
+                    <h3>Student form details</h3>
                 </div>
             </header>
                 
              
             <header class="mt-4">
                 <div class="title">
-                <h4>Student Information</h4>
+                <h4 style="font-weight: bold;">Student Information</h4>
                 </div>
             </header>
 
@@ -227,8 +239,8 @@
                         <span>
                             <label for="name">Name</label>
                             <div>
-                            <input type="text" name="lastname" id="lastname" value="<?php echo $lastname;?>" class="form-control" />
-                            <small>Last name</small>
+                                <input type="text" name="lastname" id="lastname" value="<?php echo $lastname;?>" class="form-control" />
+                                <small>Last name</small>
                             </div>
                             <div>
                             <input type="text" name="firstname" id="firstname" value="<?php echo $firstname;?>" class="form-control" />
@@ -324,108 +336,8 @@
 
                 <hr>
                 <header>
-                    <div class="title">
-                        <h4>Father's Information</h4>
-                    </div>
-                </header>
-
-                <div class="row">
-                    <span>
-                        <label for="name">Name</label>
-                        <div>
-                            <input value="<?php echo $father_lastname?>" type="text" name="father_lastname" class="form-control">
-                            <small>Last name</small>
-                        </div>
-                        <div>
-                            <input value="<?php echo $father_firstname?>" type="text" name="father_firstname" class="form-control">
-                            <small>First name</small>
-                        </div>
-                        <div>
-                            <input value="<?php echo $father_middle?>" type="text" name="father_middle" class="form-control">
-                            <small>Middle name</small>
-                        </div>
-                        <div>
-                            <input value="<?php echo $father_suffix?>" type="text" name="father_suffix" class="form-control">
-                            <small>Father suffix</small>
-                        </div>
-                    </span>
-                </div>
-
-                <div class="row">
-                    <span>
-                        <label for="phone">Phone no.</label>
-                        <div>
-                            <input value="<?php echo $father_contact_number?>" type="tel" id="father_contact_number" name="father_contact_number" class="form-control">
-                        </div>
-                    </span>
-                    <span>
-                        <label for="email">Email</label>
-                        <div>
-                            <input value="<?php echo $father_email?>" type="text" id="father_email" name="father_email" class="form-control">
-                        </div>
-                    </span>
-                    <span>
-                        <label for="occupation">Occupation</label>
-                        <div>
-                            <input value="<?php echo $father_occupation?>" type="text" id="father_occupation" name="father_occupation" class="form-control">
-                        </div>
-                    </span>
-                </div>
-
-
-                <hr>
-                <header>
-                    <div class="title">
-                        <h4>Mother's Information</h4>
-                    </div>
-                </header>
-
-                <div class="row">
-                    <span>
-                        <label for="name">Name</label>
-                        <div>
-                            <input value="<?php echo $mother_lastname;?>" type="text" name="mother_lastname" class="form-control">
-                            <small>Last name</small>
-                        </div>
-                        <div>
-                            <input value="<?php echo $mother_firstname;?>" type="text" name="mother_firstname" class="form-control">
-                            <small>First name</small>
-                        </div>
-                        <div>
-                            <input value="<?php echo $mother_middle;?>" type="text" name="mother_middle" class="form-control">
-                            <small>Middle name</small>
-                        </div>
-                        <div>
-                            <input value="<?php echo $mother_suffix;?>" type="text" name="mother_suffix" class="form-control">
-                            <small>Mother suffix</small>
-                        </div>
-                    </span>
-                </div>
-                <div class="row">
-                    <span>
-                        <label for="phone">Phone no.</label>
-                        <div>
-                            <input value="<?php echo $mother_contact_number;?>" type="tel" id="mother_contact_number" name="mother_contact_number" class="form-control">
-                        </div>
-                    </span>
-                    <span>
-                        <label for="email">Email</label>
-                        <div>
-                            <input value="<?php echo $mother_email;?>" type="text" id="mother_email" name="mother_email" class="form-control">
-                        </div>
-                    </span>
-                    <span>
-                        <label for="occupation">Occupation</label>
-                        <div>
-                            <input value="<?php echo $mother_occupation;?>" type="text" id="mother_occupation" name="mother_occupation" class="form-control">
-                        </div>
-                    </span>
-                </div>
-
-                <hr>
-                <header>
-                  <div class="title">
-                    <h4>Guardian's Information</h4>
+                  <div class="mb-1 title">
+                    <h4 style="font-weight: bold;">Guardian's Information</h4>
                   </div>
                 </header>
 

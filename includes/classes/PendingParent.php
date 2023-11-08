@@ -1364,15 +1364,15 @@
                 return;
             }
 
-            if (strlen($trimmed) > 25) {
-                array_push(Helper::$errorArray, Constants::$guardianOccupationIsTooLong);
-                return;
-            }
+            // if (strlen($trimmed) > 25) {
+            //     array_push(Helper::$errorArray, Constants::$guardianOccupationIsTooLong);
+            //     return;
+            // }
 
-            if ((strlen($trimmed) > 0 && strlen($trimmed) <= 3)) {
-                array_push(Helper::$errorArray, Constants::$guardianOccupationIsTooShort);
-                return;
-            }
+            // if ((strlen($trimmed) > 0 && strlen($trimmed) <= 3)) {
+            //     array_push(Helper::$errorArray, Constants::$guardianOccupationIsTooShort);
+            //     return;
+            // }
 
             $output = Helper::sanitizeFormString($trimmed);
             return $output;

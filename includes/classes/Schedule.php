@@ -176,7 +176,6 @@
         $teacher_id = $teacher_id == 0 ? NULL : $teacher_id;
         $room_id = $room_id == 0 ? NULL : $room_id;
 
-
         // $subjectProgram = new SubjectProgram($con, $course_id);
 
         $subjectProgram = new SubjectProgram($this->con, $subject_program_id);
@@ -511,7 +510,7 @@
 
                     }
 
-
+                    
                     #
                     if($schedule_course_id_conflict == NULL){
 

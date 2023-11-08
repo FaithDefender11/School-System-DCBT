@@ -112,6 +112,10 @@
                                                 $teacher_id = $value['teacher_id'];
                                                 $content = $value['content'];
                                                 $subject_code = $value['subject_code'];
+
+                                                // $subejctProgram = new SubjectProgram($con);
+                                                // $subject_code = $subejctProgram->GetSubjectProgramTitleByRawCode($subject_code);
+
                                                 $announcement_creation_db = $value['announcement_creation'];
 
                                                 $text = "";

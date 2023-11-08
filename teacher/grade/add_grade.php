@@ -34,7 +34,6 @@
 
         // echo "qwe";
 
-        $student_grade = new StudentSubjectGrade($con);
         $student_subject = new StudentSubject($con, $student_subject_id);
 
         $enrolled_student_subject_code = $student_subject->GetStudentSubjectCode();
@@ -46,10 +45,27 @@
 
             ){
 
-            $first_quarter_input = $_POST['first_quarter_input'];
-            $second_quarter_input = $_POST['second_quarter_input'];
-            $third_quarter_input = $_POST['third_quarter_input'];
-            $fourth_quarter_input = $_POST['fourth_quarter_input'];
+            $first_quarter_input = intval($_POST['first_quarter_input']);
+            $second_quarter_input = intval($_POST['second_quarter_input']);
+            $third_quarter_input = intval($_POST['third_quarter_input']);
+            $fourth_quarter_input = intval($_POST['fourth_quarter_input']);
+
+
+            $generatedRemarks = NULL;
+
+            $totalGrade = $first_quarter_input + $second_quarter_input + $third_quarter_input + $fourth_quarter_input;
+
+            if($totalGrade >= 75){
+                $generatedRemarks = "Passed";
+            }else{
+                $generatedRemarks = "Failed";
+            }
+
+            // var_dump($totalGrade);
+            // echo "<br>";
+            // var_dump($generatedRemarks);
+
+            // return;
 
             $remark = isset($_POST['remark']) ? $_POST['remark'] : NULL;
 
@@ -62,6 +78,10 @@
             $wasSuccess = $student_grade->AddGradeToSubjectCode(
                 $student_id,
                 $student_subject_id,
+
+                $teacherLoggedInId,
+                $current_school_year_id,
+
                 $first_quarter_input,
                 $second_quarter_input,
                 $third_quarter_input,
@@ -142,7 +162,7 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group">
+                                <div style="display: none;" class="form-group">
                                     <div class="col-md-12 row">
                                         <label class="col-md-4 control-label" for="fourth_quarter_input">Remark:</label>
 

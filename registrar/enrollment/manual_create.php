@@ -881,6 +881,7 @@
                                 </div>
 
                             </span>
+                            
                         </div>
 
                         <!-- GRADE LEVEL  -->
@@ -902,10 +903,13 @@
                                 Proceed
                             </button>
                         </div>
+
                     </main>
                 </form>
+
             </div>
         </main>
+
     </div>
 
     <?php

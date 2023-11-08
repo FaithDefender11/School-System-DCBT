@@ -1,4 +1,5 @@
-<?php
+ <?php 
+
     include_once('../../includes/student_lms_header.php');
     include_once('../../includes/classes/Section.php');
     include_once('../../includes/classes/Enrollment.php');
@@ -10,6 +11,10 @@
     include_once('../../includes/classes/SubjectProgram.php');
     include_once('../../includes/classes/Announcement.php');
     include_once('../../includes/classes/Notification.php');
+    include_once('../../includes/classes/Teacher.php');
+
+    echo Helper::RemoveSidebar();
+  
     
     $school_year = new SchoolYear($con);
     $school_year_obj = $school_year->GetActiveSchoolYearAndSemester();
@@ -48,89 +53,172 @@
         $subject_codeGet = $value['student_subject_code'];
         array_push($enrolledSubjectList, $subject_codeGet);
     }
+
 ?>
-      <?php
+  <head>
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ELMS - Daehan College of Business and Technology</title>
+
+    <!--Link JavaScript-->
+    <script src="../../assets/js/elms-sidebar.js" defer></script>
+    <script src="../../assets/js/elms-dropdown.js" defer></script>
+    <script src="../../assets/js/table-dropdown.js" defer></script>
+    <!--Link styleshets-->
+    <link rel="stylesheet" href="../../assets/css/fonts.css" />
+    <link rel="stylesheet" href="../../assets/css/content.css" />
+    <link rel="stylesheet" href="../../assets/css/buttons.css" />
+    <link rel="stylesheet" href="../../assets/css/table.css" />
+    <!--Custom CSS-->
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+    />
+    <!--Link Fonts-->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Lato"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Arimo"
+    />
+
+    <style>
+      body {
+        background-color: white;
+        margin: 0;
+      }
+    </style>
+
+  </head>
+
+  <body>
+    <div class="content">
+
+
+      <?php 
         echo Helper::lmsStudentNotificationHeader(
           $con, $studentLoggedInId,
           $school_year_id, $enrolledSubjectList,
           $enrollment_id,
           "second",
           "first",
-          "second"
-         );
-       ?>
+          "second
+        ");
+      ?>
+ 
+
       <div class="content-header">
+
         <header>
           <div class="title">
             <h1>Dashboard</h1>
           </div>
         </header>
+
       </div>
+
       <div class="tabs">
-        <button 
+        <button
           class="tab"
           style="background-color: var(--theme); color: white"
+
           onclick="window.location.href='student_dashboard.php'"
         >
-          Enrolled
+          Enrolled (<?= count($allEnrolledSubjectCode)?>)
         </button>
-        <button 
+        <button
           class="tab"
-          onclick="window.location.href='completed_subjects.php'"
+            onclick="window.location.href='completed_subjects.php'"
         >
-          Completed
+          Completed (<?= count($getPreviousEnrolledSubjects)?>)
         </button>
       </div>
+
       <main>
-        <?php if(count($getPreviousEnrolledSubjects) > 0): ?>
-          <?php
-            foreach ($getPreviousEnrolledSubjects as $key => $row_inner) {
 
-              $subject_title = $row_inner['subject_title'];
-              $student_subject_id = $row_inner['student_subject_id'];
+          <?php if(count($getPreviousEnrolledSubjects) > 0): ?>
+              <?php 
+              
+                  foreach ($getPreviousEnrolledSubjects as $key => $row_inner) {
 
-              $teacher_firstname = $row_inner['firstname'];
-              $teacher_lastname = $row_inner['lastname'];
+                      $subject_title = $row_inner['subject_title'];
+                      $student_subject_id = $row_inner['student_subject_id'];
 
-              $instructor_name = "TBA";
+                      $teacher_firstname = $row_inner['firstname'];
+                      $teacher_lastname = $row_inner['lastname'];
 
-              if($teacher_firstname != null){
-                  $instructor_name = $teacher_firstname . " " . $teacher_lastname;
-              }
+                      $school_year_id = $row_inner['school_year_id'];
 
-              $courses_url = "../courses/subject_module.php?id=$student_subject_id";
-          ?>
-          <div class="floating noOutline">
-            <a href="<?php echo $course_url ?>">
-              <header>
-                <div class="title">
-                  <h3><?= $subject_title; ?> <em>SY2324-1T</em></h3>
-                  <small><?= $instructor_name; ?></small>
-                  <small style="color: orange">Archived</small>
-                </div>
-              </header>
-            </a>
-            <main>
-              <div class="progress" style="height: 20px">
-                <div class="progress-bar" style="width: 100%">100%</div>
-              </div>
-              <div class="action">
-                <button 
-                  class="task"
-                  data-toggle="tooltip"
-                  data-placement="bottom"
-                  title="No Assignments Due"
-                >
-                  <i class="bi bi-file-earmark">0</i>
-                </button>
-              </div>
-            </main>
-          </div>
-        <?php
-            }
-        ?>
-        <?php endif; ?>
+                      $sy = new SchoolYear($con, $school_year_id);
+
+                      $term = $sy->GetTerm();
+                      $period = $sy->GetPeriod();
+
+                      $fomatTerm = $enrollment->changeYearFormat($term);
+                      $period_short = $period === "First" ? "S1" : ($period === "Second" ? "S2" : "");
+                      
+                      $instructor_name = "TBA";
+
+                      if($teacher_firstname != null){
+                          $instructor_name = $teacher_firstname . " " . $teacher_lastname;
+                      }
+
+                      $courses_url = "../courses/subject_module.php?id=$student_subject_id";
+
+                      ?>
+
+                          <div style="width: 100%" class="floating noOutline">
+                              
+                              <a href="<?php echo $courses_url; ?>">
+                                  <header>
+                                      <div class="title">
+                                          <h3><?= $subject_title; ?> <em><?= "SY$fomatTerm-$period_short";?></em> &nbsp; &nbsp; <em class="text-primary"><span>Grade </span>70%</em></h3>
+                                          <small><?= $instructor_name?></small>
+                                          <br>
+                                          <small style="color: orange;">Archived</small>
+                                      
+                                      </div>
+                                  </header>
+                              </a>
+
+                              <main>
+
+                                  <div class="progress" style="height: 20px">
+                                      <div class="progress-bar" style="width: 25%">25%</div>
+                                  </div>
+
+                                  <div class="action">
+                                      <button
+                                      class="task"
+                                      data-toggle="tooltip"
+                                      data-placement="bottom"
+                                      title="No Assignments Due"
+                                      >
+                                      <i class="bi bi-file-earmark">0</i>
+                                      </button>
+                                  </div>
+
+                              </main>
+                              
+                          </div>
+
+                      <?php
+
+                  }
+
+              ?>
+          <?php endif;?>
+
       </main>
     </div>
   </body>
-</html>
+ 

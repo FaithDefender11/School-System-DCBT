@@ -140,9 +140,20 @@
                             <div class="action">
 
                                 <?php if ($get_grade !== NULL): ?>
-                                    <a style='color: inherit' href='edit_given_grade.php?id=<?php echo $subject_assignment_submission_id ?>&c=<?php echo $subject_code ?>'>
-                                        <?php echo $get_grade ?>
-                                    </a>
+
+                                    <?php 
+                                        
+                                        if($school_year_id == $current_school_year_id){
+                                            ?>
+                                                <a style='color: inherit' href='edit_given_grade.php?id=<?php echo $subject_assignment_submission_id ?>&c=<?php echo $subject_code ?>'>
+                                                    <i style="color: blueviolet;" class="fas fa-edit"></i> <?php echo $get_grade ?>
+                                                </a>
+                                            <?php
+                                        }
+
+                                        
+                                    ?>
+                                    
                                     <h5><span style="font-size: 17px;">Remark: </span> <?php echo "$get_grade / $max_score"?></h5>
                                 <?php else: ?>
                                     <?php if ($subject_assignment_submission_id != 0): ?>
@@ -198,13 +209,14 @@
 
                                             -- ORDER BY t1.subject_assignment_submission_id DESC
 
-                                            LIMIT 1 
+                                            LIMIT 1
+
                                         ");
 
                                         $query->bindParam(":subject_assignment_submission_id", $subject_assignment_submission_id);
                                         $query->bindParam(":subject_code_assignment_id", $subject_code_assignment_id);
                                         $query->bindParam(":student_id", $student_id);
-                                        $query->bindParam(":school_year_id", $current_school_year_id);
+                                        $query->bindParam(":school_year_id", $school_year_id);
                                         $query->execute();
 
                                         if($query->rowCount() > 0){
