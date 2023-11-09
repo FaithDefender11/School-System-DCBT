@@ -1,4 +1,5 @@
-<?php
+<?php 
+
     include_once('../../includes/student_lms_header.php');
     include_once('../../includes/classes/Section.php');
     include_once('../../includes/classes/Enrollment.php');
@@ -12,8 +13,58 @@
     include_once('../../includes/classes/Notification.php');
     include_once('../../includes/classes/Teacher.php');
     include_once('../../includes/classes/Student.php');
-?>
-<?php
+
+    echo Helper::RemoveSidebar();
+    
+    echo "hey nice";
+
+    ?>
+        <head>
+ 
+            <!--Link JavaScript-->
+            <script src="../../assets/js/elms-sidebar.js" defer></script>
+            <script src="../../assets/js/elms-dropdown.js" defer></script>
+            <script src="../../assets/js/table-dropdown.js" defer></script>
+            <script src="../../assets/js/calendar.js" defer></script>
+            
+            <!--Link styleshets-->
+            <link rel="stylesheet" href="../../assets/css/fonts.css" />
+            <link rel="stylesheet" href="../../assets/css/content.css" />
+            <link rel="stylesheet" href="../../assets/css/buttons.css" />
+            <link rel="stylesheet" href="../../assets/css/table.css" />
+            <link rel="stylesheet" href="../../assets/css/calendar.css" />
+
+            <!--Custom CSS-->
+            <link
+            rel="stylesheet"
+            href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+            integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+            crossorigin="anonymous"
+            />
+            <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+            />
+            <!--Link Fonts-->
+            <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css?family=Lato"
+            />
+            <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css?family=Arimo"
+            />
+
+            <style>
+            body {
+                background-color: white;
+                margin: 0;
+            }
+            </style>
+
+        </head>
+    <?php
+
     $section = new Section($con, null);
     $enrollment = new Enrollment($con);
 
@@ -34,6 +85,8 @@
 
     $allEnrolledSubjectCode = $studentSubject->GetAllEnrolledSubjectCodeELMS
         ($student_id, $school_year_id, $enrollment_id);
+
+    
         // public function GetAllAnnouncement($school_year_id) {
 
     $announcementList = $announcement->GetAllTeacherAnnouncement(
@@ -66,6 +119,12 @@
         $subject_codeGet = $value['student_subject_code'];
         array_push($enrolledSubjectList, $subject_codeGet);
     }
+
+    $getPreviousEnrolledSubjects = $studentSubject
+      ->GetAllPassedPreviousEnrolledSubjects($studentLoggedInId, $school_year_id);
+
+    // var_dump($getPreviousEnrolledSubjects);
+
 
     # List of all Enrolled Subject subject_period_code_topic_id(s)
     $getEnrolledSubjects = $subjectPeriodCodeTopic->GetAllSubjectTopicEnrolledBased(
@@ -131,7 +190,6 @@
 
         $base_url = 'http://localhost/school-system-dcbt/student/';
     } else {
-
         $base_url = 'http://' . $_SERVER['HTTP_HOST'] . '/student/';
     }
 
@@ -142,207 +200,246 @@
     }
 
     // var_dump($logout_url);
+
+
+
 ?>
-            <?php
-                echo Helper::lmsStudentNotificationHeader(
-                    $con, $studentLoggedInId,
-                    $school_year_id, $enrolledSubjectList,
-                    $enrollment_id,
-                    "second",
-                    "second",
-                    "second",
-                    $logout_url
-                );
-            ?>
-            <div class="content-header">
-                <header>
-                    <div class="title">
-                        <h1>Dashboard</h1>
-                    </div>
-                </header>
-            </div>
-            <div class="tabs">
-                <button 
-                    class="tab" 
-                    onclick="window.location.href='student_dashboard.php'"
-                >
-                    Enrolled
-                </button>
-                <button 
-                    class="tab" 
+
+<body>
+    <div class="content">
+
+        <?php
+            echo Helper::lmsStudentNotificationHeader(
+                $con, $studentLoggedInId,
+                $school_year_id, $enrolledSubjectList,
+                $enrollment_id,
+                "second",
+                "second",
+                "second",
+                $logout_url
+            );
+        
+        ?>
+
+        <div class="content-header">
+
+            <header>
+                <div class="title">
+                <h1>Dashboard</h1>
+                </div>
+            </header>
+        </div>
+
+        <div class="tabs">
+            <button
+                class="tab"
+                onclick="window.location.href='student_dashboard.php'">
+                Enrolled (<?php echo count($allEnrolledSubjectCode); ?>)
+            </button>
+
+            <button
+                class="tab"
                     style="background-color: var(--theme); color: white"
-                    onclick="window.location.href='completed_subjects.php'"
-                >
-                    Completed
-                </button>
-            </div>
+                    onclick="window.location.href='completed_subjects.php'">
 
-            <main>
-                <div class="bars right">
-                    <div class="floating">
-                        <main>
-                            <div class="calendar-container">
-                                <div class="calendar-header">
-                                    <button id="prev-month">&lt;</button>
-                                    <h2 id="current-month-year"></h2>
-                                    <button id="next-month">&gt;</button>
-                                </div>
-                                <table class="calendar">
-                                    <thead>
-                                        <tr>
-                                        <th>Sun</th>
-                                        <th>Mon</th>
-                                        <th>Tue</th>
-                                        <th>Wed</th>
-                                        <th>Thu</th>
-                                        <th>Fri</th>
-                                        <th>Sat</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="calendar-body"></tbody>
-                                </table>
+                    Completed (<?= count($getPreviousEnrolledSubjects)?>)
+
+
+            </button>
+        </div>
+
+        <main>
+
+
+            <div class="bars right">
+                <div class="floating">
+                    <main>
+                        <div class="calendar">
+                            <div class="header">
+                                <button class="prev-btn" onclick="previousMonth()">
+                                    &lt;
+                                </button>
+                                <h1 id="current-month"></h1>
+                                <button class="next-btn" onclick="nextMonth()">&gt;</button>
                             </div>
-                        </main>
-                    </div>
-
-                    <div class="floating">
-                        <header>
-                            <div class="title">
-                                <h3>To-do <em>(3)</em></h3>
-                            </div>
-                        </header>
-                        <ul>
-                            <?php if(count($subjectCodeAssignmentsArray) > 0):?>
-                                <?php
-                                    $assignmentCounts = [];
-
-                                    foreach ($subjectCodeAssignmentsArray as $key => $subjectCodeAssignmentIds) {
-                                        $subjectCodeAssignmentExec = new SubjectCodeAssignment($con, $subjectCodeAssignmentIds);
-                                        $assignment_name = $subjectCodeAssignmentExec->GetAssignmentName();
-                                        $assignment_topic_id = $subjectCodeAssignmentExec->GetSubjectPeriodCodeTopicId();
-    
-                                        $subjectPeriodCodeTopicId = $subjectCodeAssignmentExec->GetSubjectPeriodCodeTopicId();
-                                        $subjectPeriodCodeTopic = new SubjectPeriodCodeTopic($con, $subjectPeriodCodeTopicId);
-                                        
-                                        $rawCode = $subjectPeriodCodeTopic->GetProgramCode();
-                                        $subject_program_id = $subjectPeriodCodeTopic->GetSubjectProgramId();
-                                        $topic_subject_code = $subjectPeriodCodeTopic->GetSubjectCode();
-    
-                                        $subject_program = new SubjectProgram($con, $subject_program_id);
-                                        $subjectTitle = $subject_program->GetTitle();
-    
-                                        if (!isset($assignmentCounts[$subjectTitle])) {
-                                            $assignmentCounts[$subjectTitle] = [
-                                                'count' => 1,
-                                                'topic_subject_code' => $topic_subject_code,
-                                            ];
-                                        } else {
-                                            $assignmentCounts[$subjectTitle]['count']++;
-                                        }
-                                    }
-
-                                    foreach ($assignmentCounts as $assignmentTitle => $data) {
-                                        $count = $data['count'];
-                                        $topic_subject_code = $data['topic_subject_code'];
-                                     
-                                        echo "
-                                            <li>
-                                                <a href='assignment_due.php?c=$topic_subject_code'>$assignmentTitle <span>($count)</span></a>
-                                            </li>
-                                        ";
-                                    }
-                                ?>
-                            <?php endif; ?>
-                        </ul>
-                    </div>
-
-                    <div class="floating">
-                        <header>
-                            <div class="title">
-                                <h3>Announcements <em>(0)</em></h3>
-                            </div>
-                        </header>
-                        <ul>
-                            <li></li>
-                        </ul>
-                    </div>
+                            <div class="days"></div>
+                        </div>
+                    </main>
                 </div>
 
-                <?php if(count($allEnrolledSubjectCode) > 0): ?>
-                    <?php
-                        foreach ($allEnrolledSubjectCode as $key => $row_inner) {
+                <div class="floating">
+                    <header>
+                        <div class="title">
+                            <h3>To-do <em>(<?= count($subjectCodeAssignmentsArray);?>)</em></h3>
+                        </div>
+                    </header>
+                    <ul>
 
-                            $subject_title = $row_inner['subject_title'];
-                            $student_subject_id = $row_inner['student_subject_id'];
-    
-                            $schedule = new Schedule($con);
-    
-                            $student_subject_code = $row_inner['student_subject_code'];
-                            $sp_subjectCode = $row_inner['sp_subjectCode'];
-                            $subject_schedule_id = $row_inner['subject_schedule_id'];
-    
-                            $subject_schedule_course_id = $row_inner['subject_schedule_course_id'];
-                            $subject_subject_program_id = $row_inner['subject_subject_program_id'];
-    
-                            $subject_type = $row_inner['subject_type'];
-                            $unit = $row_inner['unit'];
-                            $program_section = $row_inner['program_section'];
-                            $remarks = $row_inner['remarks'];
-                            $ss_retake = $row_inner['ss_retake'];
-                            $ss_overlap = $row_inner['ss_overlap'];
-    
-                            $schedule_time = $row_inner['schedule_time'] != "" ? $row_inner['schedule_time'] : "-";
-                            
-                            $student_subject_code = $row_inner['student_subject_code'];
-    
-                            $teacher_firstname = $row_inner['firstname'];
-                            $teacher_lastname = $row_inner['lastname'];
-    
-                            // $instructor_name = "-";
-                            $instructor_name = "TBA";
-    
-                            if($teacher_firstname != null){
-                                $instructor_name = $teacher_firstname . " " . $teacher_lastname;
-                            }
-    
-                            $section_code = $section->CreateSectionSubjectCode($program_section, $sp_subjectCode);
-    
-                            // $section_code = trim(strtolower($section_code));
-    
-                            // $courses_url = "../courses/index.php?c=$section_code";
-                            $courses_url = "../courses/subject_module.php?id=$student_subject_id";
-                    ?>
+                        <?php if(count($subjectCodeAssignmentsArray) > 0):?>
+                            <div class="">
+                                <?php 
 
-                    <div class="floating noOutline">
-                        <a href="<?php echo $course_url; ?>">
-                            <header>
-                                <div class="title">
-                                    <h3><?= $subject_title; ?> <em>SY2324-1T</em></h3>
-                                    <small><?= $instructor_name; ?></small>
-                                </div>
-                            </header>
-                        </a>
-                        <main>
-                            <div class="progress" style="height: 20px">
-                                <div class="progress-bar" style="width: 25%">25%</div>
+                                $assignmentCounts = [];
+
+                                foreach ($subjectCodeAssignmentsArray as $key => $subjectCodeAssignmentIds) {
+                                    
+                                    $subjectCodeAssignmentExec = new SubjectCodeAssignment($con, $subjectCodeAssignmentIds);
+                                    $assignment_name = $subjectCodeAssignmentExec->GetAssignmentName();
+                                    $assignment_topic_id = $subjectCodeAssignmentExec->GetSubjectPeriodCodeTopicId();
+
+                                    $subjectPeriodCodeTopicId = $subjectCodeAssignmentExec->GetSubjectPeriodCodeTopicId();
+                                    $subjectPeriodCodeTopic = new SubjectPeriodCodeTopic($con, $subjectPeriodCodeTopicId);
+                                    
+                                    $rawCode = $subjectPeriodCodeTopic->GetProgramCode();
+                                    $subject_program_id = $subjectPeriodCodeTopic->GetSubjectProgramId();
+                                    $topic_subject_code = $subjectPeriodCodeTopic->GetSubjectCode();
+
+                                    $subject_program = new SubjectProgram($con, $subject_program_id);
+                                    $subjectTitle = $subject_program->GetTitle();
+
+                                    if (!isset($assignmentCounts[$subjectTitle])) {
+                                        $assignmentCounts[$subjectTitle] = [
+                                            'count' => 1,
+                                            'topic_subject_code' => $topic_subject_code,
+                                        ];
+                                    } else {
+                                        $assignmentCounts[$subjectTitle]['count']++;
+                                    }
+                                }
+
+                                //    echo "<a style='color:inherit' href='assignment_due.php?c=$topic_subject_code' class='m-0 text-right'>○ <span style='font-size: 15px'> $assignmentTitle - ($count)</span></a>";
+                                //    echo "<br>";
+
+                                foreach ($assignmentCounts as $assignmentTitle => $data) {
+                                    $count = $data['count'];
+                                    $topic_subject_code = $data['topic_subject_code'];
+                                 
+                                    echo "
+                                        <li>
+                                            <a href='assignment_due.php?c=$topic_subject_code'>$assignmentTitle <span>($count)</span></a>
+                                        </li>
+                                    ";
+                                }
+
+                                ?>
                             </div>
-                            <div class="action">
-                                <button 
-                                    class="task"
-                                    data-toogle="tooltip"
-                                    data-placement="bottom"
-                                    title="No Assignments Due"
-                                >
-                                    <i class="bi bi-file-earmark">0</i>
-                                </button>
-                            </div>
-                        </main>
-                    </div>
-                <?php
+                        <?php endif;?>
+                    </ul>
+                </div>
+
+                <div class="floating">
+                    
+                    <header>
+                        <div class="title">
+                            <h3>Announcement <em>(<?= count($announcementList);?>)</em></h3>
+                        </div>
+                    </header>
+
+                    <button onclick="window.location.href = 'announcement_index.php?sy_id=<?= $school_year_id;?>'" class="btn btn-sm btn-primary">View all</button>
+                </div>
+
+            </div>
+
+
+            <?php if(count($allEnrolledSubjectCode) > 0): ?>
+                <?php 
+                
+                    foreach ($allEnrolledSubjectCode as $key => $row_inner) {
+
+                        $subject_title = $row_inner['subject_title'];
+                        $student_subject_id = $row_inner['student_subject_id'];
+
+                        $schedule = new Schedule($con);
+
+                        $student_subject_code = $row_inner['student_subject_code'];
+                        $sp_subjectCode = $row_inner['sp_subjectCode'];
+                        $subject_schedule_id = $row_inner['subject_schedule_id'];
+
+                        $subject_schedule_course_id = $row_inner['subject_schedule_course_id'];
+                        $subject_subject_program_id = $row_inner['subject_subject_program_id'];
+
+                        $subject_type = $row_inner['subject_type'];
+                        $unit = $row_inner['unit'];
+                        $program_section = $row_inner['program_section'];
+                        $remarks = $row_inner['remarks'];
+                        $ss_retake = $row_inner['ss_retake'];
+                        $ss_overlap = $row_inner['ss_overlap'];
+
+                        $schedule_time = $row_inner['schedule_time'] != "" ? $row_inner['schedule_time'] : "-";
+                        
+                        $student_subject_code = $row_inner['student_subject_code'];
+
+                        $teacher_firstname = $row_inner['firstname'];
+                        $teacher_lastname = $row_inner['lastname'];
+
+                        $school_year_id = $row_inner['school_year_id'];
+
+                        $sy = new SchoolYear($con, $school_year_id);
+
+                        $term = $sy->GetTerm();
+                        $period = $sy->GetPeriod();
+
+                        $fomatTerm = $enrollment->changeYearFormat($term);
+                        $period_short = $period === "First" ? "S1" : ($period === "Second" ? "S2" : "");
+                        
+
+
+
+                        // $instructor_name = "-";
+                        $instructor_name = "TBA";
+
+                        if($teacher_firstname != null){
+                            $instructor_name = $teacher_firstname . " " . $teacher_lastname;
                         }
+
+                        $section_code = $section->CreateSectionSubjectCode($program_section, $sp_subjectCode);
+
+                        // $section_code = trim(strtolower($section_code));
+
+                        // $courses_url = "../courses/index.php?c=$section_code";
+                        $courses_url = "../courses/subject_module.php?id=$student_subject_id";
+
+                        ?>
+
+                            <div style="width: 100%" class="floating noOutline">
+                                
+                                <a href="<?php echo $courses_url; ?>">
+                                    <header>
+                                        <div class="title">
+                                            <h3><?= $subject_title; ?> <em><?= "SY$fomatTerm-$period_short";?></em></h3>
+                                            <small><?= $instructor_name?></small>
+                                        </div>
+                                    </header>
+                                </a>
+
+                                <main>
+
+                                    <div class="progress" style="height: 20px">
+                                        <div class="progress-bar" style="width: 25%">25%</div>
+                                    </div>
+
+                                    <div class="action">
+                                        <button
+                                        class="task"
+                                        data-toggle="tooltip"
+                                        data-placement="bottom"
+                                        title="No Assignments Due"
+                                        >
+                                        <i class="bi bi-file-earmark">0</i>
+                                        </button>
+                                    </div>
+
+                                </main>
+                                
+                            </div>
+
+                        <?php
+
+                    }
+
                 ?>
-                <?php endif; ?>
-            </main>
-        </div>
-    </body>
-</html>
+            <?php endif;?>
+
+        </main>
+    </div>
+</body>
