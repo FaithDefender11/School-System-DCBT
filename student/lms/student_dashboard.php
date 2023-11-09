@@ -241,7 +241,7 @@
                     style="background-color: var(--theme); color: white"
                     onclick="window.location.href='completed_subjects.php'">
 
-                    Completed qweqwe (<?= count($getPreviousEnrolledSubjects)?>)
+                    Completed (<?= count($getPreviousEnrolledSubjects)?>)
 
 
             </button>
