@@ -126,6 +126,7 @@ class Notification{
     public function GetStudentGradedAssignmentNotification(
         $enrolledSubjectList, $school_year_id, $student_id) {
 
+            // echo $student_id;
         if(count($enrolledSubjectList) > 0){
 
             $inPlaceholders = implode(', ', array_map(function($value, $index) {
@@ -136,9 +137,12 @@ class Notification{
             $query = $this->con->prepare("SELECT t1.* 
                 FROM notification as t1
 
-                INNER JOIN notification_view as t2 ON t2.notification_id = t2.notification_id
-                AND category = 'assignment'
-                AND student_id = :student_id
+                -- INNER JOIN notification_view as t2 ON t2.notification_id = t2.notification_id
+                -- AND t2.category = 'assignment'
+                -- AND t2.student_id = :student_id
+
+                INNER JOIN subject_assignment_submission as t3 ON t3.subject_assignment_submission_id = t1.subject_assignment_submission_id
+                AND t3.student_id = :student_id
 
                 WHERE t1.subject_code IN ($inPlaceholders)
                 AND t1.school_year_id = :school_year_id
@@ -591,7 +595,36 @@ class Notification{
     }
 
 
-   
+    public function GetStudentNotificationsViewedCount(
+        $school_year_id, $student_id, $notification_id) {
+
+        $totalViewedCount = 0;
+
+        
+        $get = $this->con->prepare("SELECT t2.notification_view_id
+        
+            FROM notification as t1
+
+            INNER JOIN notification_view as t2 ON t2.notification_id = t1.notification_id
+            AND t1.notification_id =:notification_id
+
+            WHERE t2.student_id=:student_id
+            AND t1.school_year_id =:school_year_id
+            AND t2.date_viewed IS NOT NULL
+            AND t2.viewed_role = 'student'
+        ");
+
+        $get->bindValue(":notification_id", $notification_id);
+        $get->bindValue(":student_id", $student_id);
+        $get->bindValue(":school_year_id", $school_year_id);
+        $get->execute();
+
+        if($get->rowCount() > 0){
+            $totalViewedCount++;
+        }
+
+        return $totalViewedCount;
+    }
 
     public function CheckStudentViewedNotification(
         $notification_id, $student_id) {
@@ -652,6 +685,7 @@ class Notification{
 
                     WHERE t1.notification_id=:notification_id
                     AND t1.teacher_id=:teacher_id
+                    AND t1.viewed_role = 'teacher'
                     
                     ");
                 $get->bindValue(":notification_id", $notification_id);
@@ -696,6 +730,44 @@ class Notification{
                 $get->execute();
 
                 if($get->rowCount() == 0){
+                    $count++;
+                }
+            }
+
+
+        }
+
+        return $count;
+
+    }
+
+
+    public function GetTeacherViewedNotificationFromAdminCount(
+        $adminAnnouncement, $teacher_id) {
+
+        $count = 0;
+        
+        if(count($adminAnnouncement) > 0){
+
+            foreach ($adminAnnouncement as $key => $value) {
+                # code...
+
+                $announcement_id = $value['announcement_id'];
+
+                $get = $this->con->prepare("SELECT t1.* 
+                
+                    FROM announcement_user as t1
+
+                    WHERE t1.announcement_id=:announcement_id
+                    AND t1.teacher_id=:teacher_id
+                    AND t1.date_viewed IS NOT NULL
+                    
+                    ");
+                $get->bindValue(":announcement_id", $announcement_id);
+                $get->bindValue(":teacher_id", $teacher_id);
+                $get->execute();
+
+                if($get->rowCount() > 0){
                     $count++;
                 }
             }
@@ -919,13 +991,14 @@ class Notification{
             $student_id) == false){
 
             $add = $this->con->prepare("INSERT INTO notification_view
-                (student_id, notification_id, date_viewed, viewed_role)
-                VALUES(:student_id, :notification_id, :date_viewed, :viewed_role)");
+                (student_id, notification_id, date_viewed, viewed_role, category)
+                VALUES(:student_id, :notification_id, :date_viewed, :viewed_role, :category)");
             
             $add->bindValue(":student_id", $student_id);
             $add->bindValue(":notification_id", $notification_id);
             $add->bindValue(":date_viewed", $now);
             $add->bindValue(":viewed_role", "student");
+            $add->bindValue(":category", "assignment");
             $add->execute();
 
             if($add->rowCount() > 0){

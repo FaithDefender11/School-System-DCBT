@@ -15,7 +15,6 @@
 
     echo Helper::RemoveSidebar();
 
-
     $student_id = $_SESSION['studentLoggedInId'];
 
     $school_year = new SchoolYear($con);
@@ -27,12 +26,8 @@
 
     $enrollment = new Enrollment($con);
 
-
     $enrollment_id = $enrollment->GetEnrollmentIdNonDependent($student_id,
         $school_year_id);
-
-    // echo $enrollment_id;
-
 
     $studentSubject = new StudentSubject($con);
 
@@ -67,20 +62,23 @@
     $studentsDueDateNotif = $notif->GetStudentDueDateNotifications(
         $enrolledSubjectList, $school_year_id, $studentLoggedInId);
 
-    // var_dump($studentsDueDateNotif);
+    // var_dump($gradedAssignments);
     // echo "<br>";
     
     // var_dump($studentEnrolledSubjectAssignmentNotif);
+    // echo "<br>";
 
     $allAdminNotification = $notif->GetAdminAnnouncement($school_year_id);
 
-    // print_r($allAdminNotification);
+    // print_r($gradedAssignments);
 
     // print_r($studentEnrolledSubjectAssignmentNotif);
     // echo "<br>";
 
     $mergedArray = array_merge($studentEnrolledSubjectAssignmentNotif,
         $allAdminNotification, $gradedAssignments, $studentsDueDateNotif);
+
+    // var_dump($mergedArray);
 
     // function sortByDateCreation($a, $b) {
     //     return strtotime($a['date_creation']) - strtotime($b['date_creation']);
@@ -124,11 +122,15 @@
         $enrolledSubjectList, $school_year_id, $studentLoggedInId
     );
 
+    $assignmentCount = count($getAllIncomingDueAssignmentsIds);
+
     // echo "<br>";
     // echo "getAllIncomingDueAssignmentsIds: ";
     // var_dump($getAllIncomingDueAssignmentsIds);
     // echo "<br>";
     // echo "<br>";
+
+
 
 
     # For Creation of Logic in notification table.
@@ -146,9 +148,6 @@
     //     $enrolledSubjectList, $school_year_id, $studentLoggedInId, $getAllIncomingDueAssignmentsIds
     // );
 
-    $dueDateNotifPresentButStudentDoesnt = $notif->CheckStudentEnrolledCodeHasIncludedInDueDateNotificationv2(
-        $enrolledSubjectList, $school_year_id, $studentLoggedInId, $getAllIncomingDueAssignmentsIds
-    );
 
 
     
@@ -157,16 +156,17 @@
 
 <div class="content">
 
-    <nav style="min-width: 100%; margin-bottom: 7px;
+    <!-- <nav style="min-width: 100%; margin-bottom: 7px;
         display: flex;flex-direction: row;">
         <a href="<?php echo $back_url;?>">
             <i class="bi bi-arrow-return-left fa-1x"></i>
             <h3>Back</h3>
         </a>
 
-    </nav>
+    </nav> -->
 
     <main>
+
         <div class="floating" id="shs-sy">
 
             <header>
@@ -323,7 +323,7 @@
 
                                     }
 
-                                    $assignment_notification_url = "../courses/task_submission.php?sc_id=$subject_code_assignment_id&ss_id=$get_student_subject_id&&n_id=$notification_id&notification=true";
+                                    $assignment_notification_url = "../courses/task_submission.php?sc_id=$subject_code_assignment_id&ss_id=$get_student_subject_id&n_id=$notification_id&notification=true";
 
                                     $button_url = "
                                         <button onclick='window.location.href=\"$assignment_notification_url\"' class='btn btn-primary btn-sm'>
@@ -347,6 +347,7 @@
                                 // var_dump($hey);
 
 
+                                # Graded assignments Notification
 
                                 if($subject_code_assignment_id != NULL && 
                                     $subject_code != NULL &&
@@ -377,6 +378,7 @@
                                     $type = "Graded";
                                     $title = "Assignment: <span style='font-weight: bold;'>$assigment_name</span> on <span style='font-weight: bold;'>$subject_title</span>";
 
+
                                     $get_student_subject_id = NULL;
 
                                     if($subject_code != NULL){
@@ -388,7 +390,7 @@
 
                                     }
 
-                                    $assignment_notification_url = "../courses/task_submission.php?sc_id=$subject_code_assignment_id&ss_id=$get_student_subject_id&&n_id=$notification_id&notification=true";
+                                    $assignment_notification_url = "../courses/task_submission.php?sc_id=$subject_code_assignment_id&ss_id=$get_student_subject_id&n_id=$notification_id&notification=true";
 
                                     $button_url = "
                                         <button onclick='window.location.href=\"$assignment_notification_url\"' class='btn btn-primary btn-sm'>
@@ -398,6 +400,8 @@
 
                                 }
 
+                                # Due date assignment Notification.
+                                
                                 if($subject_code_assignment_id != NULL && 
                                     $subject_code != NULL &&
                                     $subject_assignment_submission_id == NULL &&
@@ -437,7 +441,7 @@
 
                                     }
 
-                                    $assignment_notification_url = "../courses/task_submission.php?sc_id=$subject_code_assignment_id&ss_id=$get_student_subject_id&&n_id=$notification_id&notification_due=true";
+                                    $assignment_notification_url = "../courses/task_submission.php?sc_id=$subject_code_assignment_id&ss_id=$get_student_subject_id&n_id=$notification_id&notification_due=true";
 
                                     $button_url = "
                                         <button onclick='window.location.href=\"$assignment_notification_url\"' class='btn btn-primary btn-sm'>
@@ -530,4 +534,51 @@
         </div>
     </main>
 </div>
+
+
+
+<script>
+    $(document).ready(function () {
+
+        // Function to check for updates
+
+        // function checkForUpdates(lastCount, studentLoggedInId, enrollment_id) {
+
+        //     $.ajax({
+
+        //         url: 'check_updates.php', // PHP file to check updates
+        //         type: 'GET',
+
+        //         data: { 
+        //             last_count: lastCount,
+        //             studentLoggedInId,
+        //             enrollment_id
+        //         }, // Send the client's last count
+
+        //         success: function (data) {
+
+        //             data = data.trim();
+
+        //             console.log(data)
+                    
+        //             if (data == 'update_available') {
+        //                 // Reload the page if an update is available
+        //                 location.reload(true);
+        //             }
+
+        //         },
+        //         complete: function () {
+        //             // Schedule the next check after a certain interval (e.g., every 5 seconds)
+        //             setTimeout(function() {
+        //                 checkForUpdates(<?php echo $assignmentCount; ?>, <?php echo $studentLoggedInId; ?>, <?php echo $enrollment_id; ?>); // Corrected PHP echo
+        //             }, 5000);
+        //         }
+        //     });
+        // }
+
+        // Initial check when the page loads
+        // checkForUpdates(<?php echo $assignmentCount; ?>, <?php echo $studentLoggedInId; ?>, <?php echo $enrollment_id; ?>);
+    });
+</script>
+
 

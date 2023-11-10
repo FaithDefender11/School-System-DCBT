@@ -1943,6 +1943,24 @@ class Helper {
 
         $notificationCount = count($studentSubmittedAndAdminAnnouncement);
 
+        
+
+
+        $totalAdminNotifCount = count($adminAnnouncement);
+
+        $totalViewedAdminNotificationCount = $notification->GetTeacherViewedNotificationFromAdminCount(
+            $adminAnnouncement, $teacherLoggedInId);
+
+        $totalTeacherViewedCount = $notification->GetTeacherViewedNotificationCount(
+            $studentListSubmittedNotification, $teacherLoggedInId);
+
+        $totalAdminAndTeacherNotifCount = $totalViewedAdminNotificationCount + $totalTeacherViewedCount;
+
+        $totalNotifCount = count($studentSubmittedAndAdminAnnouncement);
+
+
+        $totalUnviewed = ($notificationCount - $totalAdminAndTeacherNotifCount);
+
         // var_dump($notificationCount);
 
         ?>
@@ -1961,7 +1979,8 @@ class Helper {
                         title="Notification">
 
                         <i class="bi bi-bell-fill"></i>
-                        <span class="<?= $notificationCount > 0 ? "badge-1" : "" ?>"><?= $notificationCount > 0 ? $notificationCount : "" ?></span>
+                        <!-- <span class="<?= $notificationCount > 0 ? "badge-1" : "" ?>"><?= $notificationCount > 0 ? $notificationCount : "" ?></span> -->
+                        <span class="<?= $totalUnviewed > 0 ? "badge-1" : "" ?>"><?= $totalUnviewed > 0 ? $totalUnviewed : "" ?></span>
 
                     </button>
                     
@@ -2243,17 +2262,24 @@ class Helper {
         $firstname = ucwords($student->GetFirstName());
         $lastname = ucwords($student->GetLastName());
 
-        $studentEnrolledSubjectAssignmentNotif = $notif->GetStudentAssignmentNotification(
+        $studentEnrolledSubjectAssignmentNotif = $notif->GetStudentAssignmentNotificationv2(
             $enrolledSubjectList, $school_year_id);
 
 
+        $gradedAssignments = $notif->GetStudentGradedAssignmentNotification(
+            $enrolledSubjectList, $school_year_id, $studentLoggedInId);
+
+  
         $allAdminNotification = $notif->GetAdminAnnouncement($school_year_id);
 
         // var_dump($school_year_id);
         // print_r($allAdminNotification);
 
+        $studentsDueDateNotif = $notif->GetStudentDueDateNotifications(
+            $enrolledSubjectList, $school_year_id, $studentLoggedInId);
+
         $mergedArray = array_merge($studentEnrolledSubjectAssignmentNotif,
-            $allAdminNotification);
+            $allAdminNotification, $gradedAssignments, $studentsDueDateNotif);
 
         // var_dump($mergedArray);
 
@@ -2273,7 +2299,27 @@ class Helper {
             return ($dateA > $dateB) ? -1 : 1; // Change from 1 to -1 for descending order
         });
 
+        $totalViewed = 0;
+    
+        foreach ($mergedArray as $key => $value) {
+            # code...
+
+            $notification_id = $value['notification_id'];
+            // echo "notification_id: $notification_id";
+
+            $count = $notif->GetStudentNotificationsViewedCount(
+                $school_year_id, $studentLoggedInId, $notification_id);
+
+            if($count != 0){
+                $totalViewed += $count;
+
+            }
+        }
         
+        $unViewedCount = ($notificationCount - $totalViewed);
+
+
+        // var_dump($notificationCount);
 
         ?>
 
@@ -2291,7 +2337,8 @@ class Helper {
                         title="Notification">
 
                         <i class="bi bi-bell-fill"></i>
-                        <span class="<?= $notificationCount > 0 ? "badge-1" : "" ?>"><?= $notificationCount > 0 ? $notificationCount : "" ?></span>
+                        <!-- <span class="<?= $notificationCount > 0 ? "badge-1" : "" ?>"><?= $notificationCount > 0 ? $notificationCount : "" ?></span> -->
+                        <span class="<?= $unViewedCount > 0 ? "badge-1" : "" ?>"><?= $unViewedCount > 0 ? $unViewedCount : "" ?></span>
                         
                     </button>
                     
@@ -2418,9 +2465,9 @@ class Helper {
 
                                     }
 
-                                    $notification_url = $coursesPath. "task_submission.php?sc_id=$subject_code_assignment_id&ss_id=$get_student_subject_id&&n_id=$notification_id&notification=true";
-                                    // $notification_url = "task_submission.php?sc_id=$subject_code_assignment_id&ss_id=$get_student_subject_id&&n_id=$notification_id&notification=true";
-                                    // $assignment_notification_url = "../courses/task_submission.php?sc_id=$subject_code_assignment_id&ss_id=$get_student_subject_id&&n_id=$notification_id&notification=true";
+                                    $notification_url = $coursesPath. "task_submission.php?sc_id=$subject_code_assignment_id&ss_id=$get_student_subject_id&n_id=$notification_id&notification=true";
+                                    // $notification_url = "task_submission.php?sc_id=$subject_code_assignment_id&ss_id=$get_student_subject_id&n_id=$notification_id&notification=true";
+                                    // $assignment_notification_url = "../courses/task_submission.php?sc_id=$subject_code_assignment_id&ss_id=$get_student_subject_id&n_id=$notification_id&notification=true";
 
                                     $button_url = "
                                         <button onclick='window.location.href=\"$notification_url\"' class='btn btn-primary btn-sm'>
@@ -2467,7 +2514,7 @@ class Helper {
 
                                     }
 
-                                    $notification_url = $coursesPath. "task_submission.php?sc_id=$subject_code_assignment_id&ss_id=$get_student_subject_id&&n_id=$notification_id&notification=true";
+                                    $notification_url = $coursesPath. "task_submission.php?sc_id=$subject_code_assignment_id&ss_id=$get_student_subject_id&n_id=$notification_id&notification=true";
 
                                     $button_url = "
                                         <button onclick='window.location.href=\"$notification_url\"' class='btn btn-primary btn-sm'>
@@ -2509,6 +2556,101 @@ class Helper {
 
                                 }
 
+                                $subjectAssignmentSubmission = new SubjectAssignmentSubmission($con, $subject_assignment_submission_id);
+                                $subject_assignment_submission_student_id = $subjectAssignmentSubmission->GetStudentId();
+
+                                if($subject_code_assignment_id != NULL && 
+                                    $subject_code != NULL &&
+                                    $subject_assignment_submission_id != NULL &&
+                                    $subject_assignment_submission_student_id == $studentLoggedInId &&
+                                    $announcement_id == NULL &&
+                                    $sender_role != "auto"
+
+                                    ){
+
+                                    $assigment = new SubjectCodeAssignment($con, $subject_code_assignment_id);
+                                    $assigment_name = $assigment->GetAssignmentName();
+
+                                    $subjectPeriodCodeTopicId = $assigment->GetSubjectPeriodCodeTopicId();
+
+                                    $subjectPeriodCodeTopic = new SubjectPeriodCodeTopic($con,
+                                        $subjectPeriodCodeTopicId);
+
+                                    
+                                    $teacher_id = $subjectPeriodCodeTopic->GetTeacherId();
+
+                                    // var_dump($teacher_id);
+                                    $teacher = new Teacher($con, $teacher_id);
+
+                                    $sender_name = ucwords($teacher->GetTeacherFirstName()) . " " . ucwords($teacher->GetTeacherLastName());
+                                    $sender_name = trim($sender_name);
+
+                                    $type = "Graded";
+                                    $title = "Assignment: <span style='font-weight: bold;'>$assigment_name</span> on <span style='font-weight: bold;'>$subject_title</span>";
+
+                                    $get_student_subject_id = NULL;
+
+                                    if($subject_code != NULL){
+
+                                        $studentSubject = new StudentSubject($con);
+
+                                        $get_student_subject_id = $studentSubject->GetStudentSubjectIdBySectionSubjectCode(
+                                            $subject_code, $studentLoggedInId, $enrollment_id);
+
+                                    }
+
+                                    $notification_url = $coursesPath. "task_submission.php?sc_id=$subject_code_assignment_id&ss_id=$get_student_subject_id&n_id=$notification_id&notification=true";
+                                    // $assignment_notification_url = "../courses/task_submission.php?sc_id=$subject_code_assignment_id&ss_id=$get_student_subject_id&n_id=$notification_id&notification=true";
+
+                                    // $notification_url = "../courses/task_submission.php?sc_id=$subject_code_assignment_id&ss_id=$get_student_subject_id&n_id=$notification_id&notification_due=true";
+
+                                }
+
+                                if($subject_code_assignment_id != NULL && 
+                                    $subject_code != NULL &&
+                                    $subject_assignment_submission_id == NULL &&
+                                    $announcement_id == NULL &&
+                                    $sender_role == "auto"
+                                    ){
+
+                                    $assigment = new SubjectCodeAssignment($con, $subject_code_assignment_id);
+                                    $assigment_name = $assigment->GetAssignmentName();
+
+                                    // $subjectPeriodCodeTopicId = $assigment->GetSubjectPeriodCodeTopicId();
+
+                                    // $subjectPeriodCodeTopic = new SubjectPeriodCodeTopic($con,
+                                    //     $subjectPeriodCodeTopicId);
+
+                                    // $teacher_id = $subjectPeriodCodeTopic->GetTeacherId();
+
+                                    // var_dump($teacher_id);
+                                    // $teacher = new Teacher($con, $teacher_id);
+
+                                    // $sender_name = ucwords($teacher->GetTeacherFirstName()) . " " . ucwords($teacher->GetTeacherLastName());
+                                    // $sender_name = trim($sender_name);
+
+                                    $sender_name = trim("System");
+
+                                    $type = "Due soon";
+                                    $title = "Assignment $type: <span style='font-weight: bold;'>$assigment_name</span> on <span style='font-weight: bold;'>$subject_title</span>";
+
+                                    $get_student_subject_id = NULL;
+
+                                    if($subject_code != NULL){
+
+                                        $studentSubject = new StudentSubject($con);
+
+                                        $get_student_subject_id = $studentSubject->GetStudentSubjectIdBySectionSubjectCode(
+                                            $subject_code, $studentLoggedInId, $enrollment_id);
+
+                                    }
+                                    
+                                    $notification_url = $coursesPath. "task_submission.php?sc_id=$subject_code_assignment_id&ss_id=$get_student_subject_id&n_id=$notification_id&notification_due=true";
+
+                                }
+
+
+
                                 $status = "
                                         <i style='color: orange' class='fas fa-times'></i>
                                     ";
@@ -2517,11 +2659,21 @@ class Helper {
                                 $notif_exec = new Notification($con, $notification_id);
                                 $studentViewed = $notif_exec->CheckStudentViewedNotification($notification_id, $studentLoggedInId);
 
+                                $studentViewedDue = $notif_exec->CheckStudentViewedDueDateNotification(
+                                    $notification_id, $studentLoggedInId);
+
                                 if($studentViewed){
                                     $status = "
                                         <i style='color: green' class='fas fa-check'></i>
                                     ";
                                 }
+
+                                if($studentViewedDue){
+                                    $status = "
+                                        <i style='color: green' class='fas fa-check'></i>
+                                    ";
+                                }
+
                                 ?>
 
 

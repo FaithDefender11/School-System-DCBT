@@ -766,26 +766,42 @@
         $enrollment_currently_registrar_id = $enrollment->GetEnrollmentCurrentRegistrarId($student_id,
             $student_enrollment_id);
 
-        $user = new User($con, $registrarUserId);
+        $user = new User($con, $enrollment_currently_registrar_id);
 
-        // $enrollment_currently_registrar_id = NULL;
+        $registrarName = "";
 
-
-        // var_dump($enrollment_currently_registrar_id);
-
-        if($enrollment_currently_registrar_id == NULL && $registrarUserId != NULL){
-            # Updates the current registrar.
-
-            $enrollment_currently_registrar_id = $enrollment->UpdateRegistrarIntoTheEnrollment(
-                $student_id,
-                $student_enrollment_id,
-                $registrarUserId);
-
-            $_SESSION['enrollment_currently_registrar_id'] = $registrarUserId;
-            $_SESSION['enrollment_currently_enrollment_id'] = $student_enrollment_id;
-            $_SESSION['enrollment_currently_student_id'] = $student_id;
+        if($enrollment_currently_registrar_id != NULL){
+            $registrarName = ucwords($user->getFirstName()) . " " . ucwords($user->getLastName());
 
         }
+
+        // var_dump($registrarName);
+
+        # AS registrar enters to the form. Update immediately his id into the enrollment form.
+        // $enrollment_currently_registrar_id = $enrollment->UpdateRegistrarIntoTheEnrollment(
+        $update_enrollment_currently_registrar_id = $enrollment->UpdateRegistrarIntoTheEnrollment(
+                $student_id,
+                $student_enrollment_id,
+                $registrarUserId,
+                $current_school_year_id);
+
+        // $enrollment_currently_registrar_id = NULL;
+        // var_dump($enrollment_currently_registrar_id);
+
+        // if($enrollment_currently_registrar_id == NULL && $registrarUserId != NULL){
+        //     # Updates the current registrar.
+
+        //     $enrollment_currently_registrar_id = $enrollment->UpdateRegistrarIntoTheEnrollment(
+        //         $student_id,
+        //         $student_enrollment_id,
+        //         $registrarUserId,
+        //         $current_school_year_id);
+
+        //     $_SESSION['enrollment_currently_registrar_id'] = $registrarUserId;
+        //     $_SESSION['enrollment_currently_enrollment_id'] = $student_enrollment_id;
+        //     $_SESSION['enrollment_currently_student_id'] = $student_id;
+
+        // }
 
         // var_dump($registrarUserId);
         // echo "<br>";
@@ -797,7 +813,7 @@
         if($enrollment_currently_registrar_id !== NULL 
             && $registrarUserId != $enrollment_currently_registrar_id){
             // echo "You`re inside the form";
-            Alert::error("Only one registrar can processed the form.", "evaluation.php");
+            Alert::error("Only one registrar can process with the form, $registrarName is inside.", "evaluation.php");
             exit();
         }
 

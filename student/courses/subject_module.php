@@ -15,6 +15,7 @@
     include_once('../../includes/classes/Notification.php');
     include_once('../../includes/classes/Teacher.php');
     include_once('../../includes/classes/SubjectCodeHandoutStudent.php');
+    include_once('../../includes/classes/SubjectModuleAudit.php');
 
 
     echo Helper::RemoveSidebar();
@@ -53,6 +54,8 @@
         $student_subject_id = $_GET['id'];
 
         // echo $student_subject_id;
+        
+        $enrollment = new Enrollment($con);
 
         $school_year = new SchoolYear($con);
         $school_year_obj = $school_year->GetActiveSchoolYearAndSemester();
@@ -65,6 +68,14 @@
 
         $subject_code = $studentSubject->GetStudentSubjectCode();
         $school_year_id = $studentSubject->GetSchoolYearId();
+
+        $sy = new SchoolYear($con, $school_year_id);
+
+        $term = $sy->GetTerm();
+        $period = $sy->GetPeriod();
+
+        $fomatTerm = $enrollment->changeYearFormat($term);
+        $period_short = $period === "First" ? "S1" : ($period === "Second" ? "S2" : "");
  
         $subjectProgramId = $studentSubject->GetStudentSubjectProgramId();
 
@@ -182,10 +193,35 @@
             }
 
         }
+ 
 
-        // var_dump($equivalent);
+        $allSubjectPeriodCodeTopicIds = $subjectPeriodCodeTopic->GetSubjectPeriodCodeTopicIdsBySubjectCode(
+            $subject_code, $school_year_id);
 
-        $enrollment = new Enrollment($con);
+            // var_dump($subject_code);
+
+        $assignmentList = $subjectCodeAssignment->GetSubjectTopicAssignmentListBasedOnTopicIdss(
+            $allSubjectPeriodCodeTopicIds);
+
+        $handoutList = $subjectCodeAssignment->GetSubjectTopicHandoutListBasedOnTopicIds(
+            $allSubjectPeriodCodeTopicIds);
+
+        // $handoutList = [];
+        // $assignmentList = [];
+
+        
+        $mergedList = array_merge($handoutList, $assignmentList);
+ 
+        $values = $subjectPeriodCodeTopic->GetTopicOverallModuleProgress(
+            $mergedList, $studentLoggedInId,
+            $school_year_id, $student_subject_id);
+
+        // var_dump($values);
+        
+        $totalOverProgress = $values[0];
+        $totalProgressOkayStatus = $values[1];
+
+
 
         // $enrollment_id = $enrollment->GetEnrollmentIdNonDependent($studentLoggedInId,
         //     $current_school_year_id);
@@ -193,11 +229,31 @@
         $enrollment_id = $studentSubject->GetEnrollmentId();
 
         // echo $school_year_id;
+        // echo "<br>";
+
+        
+        // echo $current_school_year_id;
+        // echo "<br>";
+
+
+
+        $current_enrollment_id = $enrollment->GetEnrollmentIdNonDependent($studentLoggedInId,
+            $current_school_year_id);
 
         $allEnrolledSubjectCode = $studentSubject->GetAllEnrolledSubjectCodeELMS
-            ($studentLoggedInId, $school_year_id, $enrollment_id);
+            ($studentLoggedInId,
+            $current_school_year_id,
+            $current_enrollment_id
 
-        // var_dump($allEnrolledSubjectCode);
+            // 41,
+            // 1432
+        
+        );
+
+
+        // var_dump($school_year_id);
+        // echo "<br>";
+        // var_dump($current_enrollment_id);
         
         $enrolledSubjectList = [];
 
@@ -206,7 +262,20 @@
             $subject_codeGet = $value['student_subject_code'];
             array_push($enrolledSubjectList, $subject_codeGet);
         }
+
+
+        $subjectModuleAudit = new SubjectModuleAudit($con);
+
+        $overview_audit_name = "Viewed Module overview";
+
+        // var_dump($overview_audit_name);
+
+        $doesAuditSuccess = $subjectModuleAudit->InsertAuditOfSubjectModule(
+            $student_subject_id, $current_school_year_id,
+            $overview_audit_name);
+
         // var_dump($enrolledSubjectList);
+
 
         $logout_url = 'http://localhost/school-system-dcbt/lms_logout.php';
 
@@ -245,7 +314,7 @@
                 <div class="content-header">
                     <header>
                     <div class="title">
-                        <h1><span style="font-size: 27px;"><?= $subject_title?></span>  <em style="font-size: 27px;">SY2324-1T</em></h1>
+                        <h1><span style="font-size: 27px;"><?= $subject_title?></span>  <em style="font-size: 27px;"><?= "SY$fomatTerm-$period_short";?></em></h1>
                     </div>
                     </header>
                 </div>
@@ -260,12 +329,55 @@
 
                     <div class="bars">
 
+                        
+
                         <div class="floating">
-                            <a style="color: white;" href="subject_progress.php?id=<?php echo $student_subject_id; ?>">
+
+                            <a style="text-decoration: none;color: white;" href="activity_progress.php?id=<?php echo $student_subject_id; ?>">
+
+                            <header>
+                                <div class="title">
+                                    <h4>Progress</h4>
+                                </div>
+                            </header>
+                            <main>
+                                <div  class="progress" style="position: relative; height: 20px">
+                                  
+                                        <?php 
+                                            $equivalent_totalProgressAct = 0;
+                                            if($totalOverProgress > 0){
+
+                                                // $pecentage_equivalent_total = ($totalScore / $totalOverProgress) * 100;
+                                                $pecentage_equivalent_total = ($totalProgressOkayStatus / $totalOverProgress) * 100;
+
+                                                // $totalProgressOkayStatus++;
+
+                                                $equivalent_totalProgressAct = round($pecentage_equivalent_total, 0, PHP_ROUND_HALF_UP);
+                                                $equivalent_totalProgressAct = $equivalent_totalProgressAct . "%";
+
+                                                echo "$totalProgressOkayStatus / $totalOverProgress = $equivalent_totalProgressAct";
+                                            } 
+                                        ?>
+
+                                        <div class="progress-bar" style="position: absolute; top:0; height: 30px;  width: <?= $equivalent_totalProgressAct;?>"><?php 
+                                        
+                                            // echo "$totalScore / $totalOver = $equivalent_totalProgressAct";
+                                            echo "$equivalent_totalProgressAct";
+                                            
+                                        ?></div>
+                                    
+                                </div>
+                            </main>
+                            </a>
+
+                        </div>
+
+                        <div class="floating">
+                            <a style="text-decoration: none;color: white;" href="grade_progress.php?id=<?php echo $student_subject_id; ?>">
                                 <header>
                                         
                                     <div class="title">
-                                        <h4>Progress</h4>
+                                        <h4>Scores</h4>
                                     </div>
                                 </header>
                                 <main>
@@ -297,27 +409,34 @@
 
                         <div class="floating">
                             <header>
-                            <div class="title">
-                                <h4>Grade</h4>
-                            </div>
-                            </header>
-                            <main>
-                            <div class="progress" style="position: relative; height: 20px">
-                                <div class="progress-bar" style="position: absolute; top:0; height: 30px;  width: 50%">0.5</div>
-                            </div>
-                            </main>
-                        </div>
-
-                        <div class="floating">
-                            <header>
-                            <div class="title">
-                                <h4>Scores</h4>
-                            </div>
-                            </header>
-                            <main>
-                                <div class="progress" style="position: relative; height: 20px">
-                                    <div class="progress-bar" style="position: absolute; top:0; height: 30px; width: 50%">50%</div>
+                                <div class="title">
+                                    <h5>Activity</h5>
                                 </div>
+                            </header>
+                            <main>
+                                <div>
+
+                                <?php 
+                                    $subjectModule = new SubjectModuleAudit($con);
+
+                                    $subjectModuleHistory = $subjectModule->GetLatestHistoryOfAction(
+                                        $student_subject_id);
+
+                                    foreach ($subjectModuleHistory as $key => $value) {
+
+                                        $description = $value['description'];
+                                        # code...
+                                        echo "
+                                            <p style='font-size: 16px;'>○ $description</p>
+                                        ";
+                                    }
+                                    
+                                ?>
+                                </div>
+
+                                    <!-- <p>Viewed Handout 1</p>
+                                    <p>Submitted Task 1</p>
+                                    <p>Viewed modules overview</p> -->
                             </main>
                         </div>
 
@@ -601,15 +720,17 @@
                                                                     $score_output = "$submission_grade  / $max_score";
                                                                 } 
 
+                                                                        // <td>$submitted_status</td>
 
                                                                 echo "
                                                                     <tr class='text-center'>
-                                                                        <td>$section_output</td>
 
+                                                                        <td>$section_output</td>
                                                                         <td>$submitted_status</td>
                                                                         <td>$score_output</td>
                                                                         <td>$due_date_output</td>
                                                                         <td>$submitted_graded_status</td>
+                                                                    
                                                                     </tr>
                                                                 ";
                                                             }

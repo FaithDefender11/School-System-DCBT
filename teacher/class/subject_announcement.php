@@ -8,6 +8,7 @@
     include_once('../../includes/classes/SubjectCodeAssignment.php');
     include_once('../../includes/classes/Announcement.php');
 
+    echo Helper::RemoveSidebar();
 
 
     if(isset($_GET['id'])){
@@ -31,12 +32,13 @@
         ?>
 
             <div class="content">
-                <nav>
+                <br>
+                <!-- <nav>
                     <a href="<?php echo $back_url;?>">
                         <i class="bi bi-arrow-return-left fa-1x"></i>
                         <h3>Back</h3>
                     </a>
-                </nav>
+                </nav> -->
                 <div class="col-md-12">
                     <div class="offset-md-0">
 

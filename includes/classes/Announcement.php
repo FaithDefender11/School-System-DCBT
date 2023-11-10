@@ -447,8 +447,40 @@
         }
 
 
+        public function GetAllTeacherAnnouncementUnderEnrolledSubjects($school_year_id, $enrolledSubjectList) {
+            if (count($enrolledSubjectList) > 0) {
+                $inPlaceholders = implode(', ', array_map(function($value, $index) {
+                    return ":subject_code$index";
+                }, $enrolledSubjectList, array_keys($enrolledSubjectList)));
+
+                $query = $this->con->prepare("SELECT t1.* 
+                    FROM announcement as t1
+                    WHERE subject_code IN ($inPlaceholders)
+                    AND school_year_id = :school_year_id
+                ");
+
+                foreach ($enrolledSubjectList as $index => $subjectCode) {
+                    $placeholderName = ":subject_code$index";
+                    $query->bindValue($placeholderName, $subjectCode);
+                }
+                
+                $query->bindValue(":school_year_id", $school_year_id);
+                $query->execute();
+
+                if ($query->rowCount() > 0) {
+                    return $query->fetchAll(PDO::FETCH_ASSOC);
+                }
+            }
+
+            return [];
+        }
+
+
+
     }
 
+
+ 
 
 
 ?>

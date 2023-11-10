@@ -12,6 +12,9 @@
     include_once('../../includes/classes/SubjectProgram.php');
     include_once('../../includes/classes/Schedule.php');
 
+    echo Helper::RemoveSidebar();
+
+
     ?>
 
         <head>

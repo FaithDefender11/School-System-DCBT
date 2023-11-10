@@ -60,13 +60,13 @@
         ?>
             <div class="content">
 
-                <nav>
+                <!-- <nav>
                     <a href="<?php echo $back_url;?>">
                         <i class="bi bi-arrow-return-left fa-1x"></i>
                         <h3>Back</h3>
 
                     </a>
-                </nav>
+                </nav> -->
 
                 <main>
                 
@@ -124,6 +124,8 @@
 
                                                 $removeAnnouncement = "removeAnnouncement($announcement_id, $teacher_id, $school_year_id)";
                                                 
+                                                // announcement_views
+
                                                 echo "
                                                     <tr>
                                                         <td>$title</td>
@@ -135,6 +137,12 @@
                                                             <a href='announcement_edit.php?id=$announcement_id'>
                                                                 <button class='btn-sm btn btn-primary'>
                                                                     <i class='fas fa-marker'></i>
+                                                                </button>
+                                                            </a>
+
+                                                            <a href='../class/subject_announcement.php?id=$announcement_id'>
+                                                                <button class='btn-sm btn btn-info'>
+                                                                    <i class='fas fa-eye'></i>
                                                                 </button>
                                                             </a>
 

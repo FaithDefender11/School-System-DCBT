@@ -9,6 +9,8 @@
     include_once('../../includes/classes/Announcement.php');
 
 
+    echo Helper::RemoveSidebar();
+
 
     if(isset($_GET['id'])){
 
@@ -34,12 +36,12 @@
 
         ?>
         <div class="content">
-            <nav>
+            <!-- <nav>
                 <a href="<?php echo $back_url;?>">
                     <i class="bi bi-arrow-return-left fa-1x"></i>
                     <h3>Back</h3>
                 </a>
-            </nav>
+            </nav> -->
             <main>
                 <div class="floating" id="shs-sy">
                     <header>

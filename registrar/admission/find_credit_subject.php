@@ -9,6 +9,8 @@
     include_once('../../includes/classes/Pending.php');
     include_once('../../includes/classes/StudentSubject.php');
     include_once('../../includes/classes/SubjectProgram.php');
+    
+    echo Helper::RemoveSidebar();
 
 
     ?>

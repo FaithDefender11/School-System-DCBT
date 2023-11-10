@@ -15,6 +15,7 @@
     include_once('../../includes/classes/Teacher.php');
     include_once('../../includes/classes/Student.php');
     include_once('../../includes/classes/SubjectProgram.php');
+    include_once('../../includes/classes/SubjectModuleAudit.php');
 
     echo Helper::RemoveSidebar();
 
@@ -41,6 +42,7 @@
                 display: none;
             }
         </style>
+
     <?php
 
     if(
@@ -60,7 +62,8 @@
 
             $notification = new Notification($con);
 
-            $markAsNotified = $notification->StudentNotificationMarkAsViewed($notification_id, $studentLoggedInId);
+            $markAsNotified = $notification->StudentNotificationMarkAsViewed(
+                $notification_id, $studentLoggedInId);
             // echo "marked";
         }
 
@@ -118,6 +121,7 @@
         // echo "<br>";
 
         $assignment_description = $subjectCodeAssignment->GetDescription();
+        $assignment_name = $subjectCodeAssignment->GetAssignmentName();
 
         $subject_code_assignment_template_id = $subjectCodeAssignment->GetSubject_code_assignment_template_id();
 
@@ -126,6 +130,8 @@
         
         $getAllTemplateUploadFiles = $subjectCodeAssignmentTemplate->GetTemplateUploadAssignmentFiles(
             $subject_code_assignment_template_id);
+
+
 
         // print_r($assignment_upload_files);
 
@@ -143,7 +149,20 @@
         $current_school_year_period = $school_year_obj['period'];
         $current_school_year_term = $school_year_obj['term'];
 
-        $assignment_name = $subjectCodeAssignment->GetAssignmentName();
+
+        # Adding Audit Trail.
+
+        $subjectModuleAudit = new SubjectModuleAudit($con);
+
+        $assignment_audit_name = "Viewed $assignment_name under $topic_name";
+
+        // var_dump($assignment_audit_name);
+
+        $doesAuditSuccess = $subjectModuleAudit->InsertAuditOfSubjectModule(
+            $student_subject_id, $current_school_year_id,
+            $assignment_audit_name);
+
+
 
         // $back_url = "index.php?c=$subject_code";
         $back_url = "subject_module.php?id=$student_subject_id";
@@ -183,7 +202,14 @@
             $school_year_id,
             $studentLoggedInId);
 
-        // var_dump($submission_data);
+        $submissionCount = $subjectAssignmentSubmission->GetSubmissionCount(
+            $subject_code_assignment_id,
+            $school_year_id,
+            $studentLoggedInId);
+
+        // echo "submission count: ";
+        // var_dump($submissionCount);
+        // echo "<br>";
 
         // $submission_remarks = NULL;
         // $subject_assignment_submission_id = NULL;
@@ -281,69 +307,80 @@
                 && empty($assignment_images['name'][0] == false)
                 && is_array($assignment_images['tmp_name'])) {
 
+                if($assignment_max_attempt > $submissionCount){
 
-                $doesCreated = $subjectAssignmentSubmission->CreateSubmissionAssignment(
-                    $subject_code_assignment_id,
-                    $studentLoggedInId, $current_school_year_id,
-                    $subject_code,
-                    $subject_assignment_submission_id);
-
-
-                $subject_assignment_submission_id = $con->lastInsertId();
-
-                # Adding notification.
-
-                $notification = new Notification($con);
-
-                if($subject_assignment_submission_id !== NULL){
-
-                    $wasAddedNotif = $notification->StudentSubmitTaskNotification(
-                        $subject_code, $current_school_year_id,
+                    $doesCreated = $subjectAssignmentSubmission->CreateSubmissionAssignment(
+                        $subject_code_assignment_id,
+                        $studentLoggedInId, $current_school_year_id,
+                        $subject_code,
                         $subject_assignment_submission_id);
 
-                    
-                }
 
-                $uploadDirectory = '../../assets/images/student_assignment_images/';
+                    $subject_assignment_submission_id = $con->lastInsertId();
 
-                if($subject_assignment_submission_id != 0){
+                    # Adding notification.
 
-                    for ($i = 0; $i < count($assignment_images['tmp_name']); $i++) {
-                        //
-                        $originalFilename = $assignment_images['name'][$i];
+                    $notification = new Notification($con);
 
-                        // Generate a unique filename
-                        $uniqueFilename = uniqid() . '_' . time() . '_img_' . $originalFilename;
-                        $targetPath = $uploadDirectory . $uniqueFilename;
+                    if($subject_assignment_submission_id !== NULL){
 
-                        if (move_uploaded_file($assignment_images['tmp_name'][$i], $targetPath)) {
-                            $imagePath = $targetPath;
+                        $wasAddedNotif = $notification->StudentSubmitTaskNotification(
+                            $subject_code, $current_school_year_id,
+                            $subject_assignment_submission_id);
 
-                            // Remove Directory Path in the Database.
-                            $imagePath = str_replace('../../', '', $imagePath);
+                        
+                    }
 
-                            $fileUpload = $subjectAssignmentSubmission->SubmitImagesAssignment(
-                                $subject_assignment_submission_id, $imagePath
-                            );
+                    $uploadDirectory = '../../assets/images/student_assignment_images/';
 
-                            if($fileUpload){
-                                $hasInserted = true;
-                            }
+                    if($subject_assignment_submission_id != 0){
 
-                        } 
-                        // else {
-                        //     // Handle the case where file upload failed.
-                        //     echo "Error uploading file: " . $originalFilename . "<br>";
-                        // }
+                        for ($i = 0; $i < count($assignment_images['tmp_name']); $i++) {
+                            //
+                            $originalFilename = $assignment_images['name'][$i];
+
+                            // Generate a unique filename
+                            $uniqueFilename = uniqid() . '_' . time() . '_img_' . $originalFilename;
+                            $targetPath = $uploadDirectory . $uniqueFilename;
+
+                            if (move_uploaded_file($assignment_images['tmp_name'][$i], $targetPath)) {
+                                $imagePath = $targetPath;
+
+                                // Remove Directory Path in the Database.
+                                $imagePath = str_replace('../../', '', $imagePath);
+
+                                $fileUpload = $subjectAssignmentSubmission->SubmitImagesAssignment(
+                                    $subject_assignment_submission_id, $imagePath
+                                );
+
+                                if($fileUpload){
+                                    $hasInserted = true;
+                                }
+
+                            } 
+                            // else {
+                            //     // Handle the case where file upload failed.
+                            //     echo "Error uploading file: " . $originalFilename . "<br>";
+                            // }
+                        }
+
                     }
 
                 }
-
 
             } 
 
                 
             if($hasInserted && $subject_code_assignment_id != 0){
+
+                $taskname = strtolower($taskname);
+
+                // $submitted_assignment_audit_name = "Viewed $assignment_name under $topic_name";
+                $submitted_assignment_audit_name = "Submitted an $taskname on $assignment_name under $topic_name";
+                $doesAuditSuccess = $subjectModuleAudit->InsertAuditOfSubjectModule(
+                    $student_subject_id, $current_school_year_id,
+                    $submitted_assignment_audit_name);
+
                 Alert::successAutoRedirect("Submission has been delivered successfully.",
                     "submission_view.php?sc_id=$subject_code_assignment_id&s_id=$subject_assignment_submission_id&ss_id=$student_subject_id");
                 exit();
@@ -355,36 +392,58 @@
         $doesAvailabeToAnswer = $assignment_max_attempt > $assignmentAttempts;
         $doesNotAvailableToAnswer = $assignment_max_attempt == $assignmentAttempts;
         
+        $doesSchoolYearMatch = $school_year_id == $current_school_year_id;
+
+        // var_dump($doesSchoolYearMatch);
+
         $buttontext = "";
         $button_type = "";
         $button_name = "";
 
+        $file_input_does_display = NULL;
+
         if ($doesAvailabeToAnswer && $doesSubmittedAndGraded == false
-            && $assignmentEnded == false) {
+            && $assignmentEnded == false
+            && $doesSchoolYearMatch
+            ) {
             $buttontext = "Prepare answer";
             $button_type = "submit";
             $button_name = "insert_assignment_btn_$subject_code_assignment_id" . '_user_' . $studentLoggedInId;
+            $file_input_does_display = true;
+        
         } 
         
         else if ($doesAvailabeToAnswer && $doesSubmittedAndGraded == false
-            && $assignmentEnded == true) {
+            && $assignmentEnded == true
+            && $doesSchoolYearMatch
+            
+            ) {
 
             $buttontext = "Assignment Due";
             $button_name = "";
             $button_type = "button";
+            $file_input_does_display = false;
+
         } 
         else if ($doesNotAvailableToAnswer == false
             && $doesAvailabeToAnswer 
-            && $doesSubmittedAndGraded == true) {
+            && $doesSubmittedAndGraded == true
+            && $doesSchoolYearMatch
+            
+            ) {
             $buttontext = "Graded";
             $button_name = "";
             $button_type = "button";
+            $file_input_does_display = false;
         } 
-        else if ($doesNotAvailableToAnswer) {
+        else if ($doesNotAvailableToAnswer
+            && $doesSchoolYearMatch
+            ) {
             $buttontext = "No more submission";
             $button_name = "";
             $button_type = "button";
-        } 
+            $file_input_does_display = false;
+        }
 
         // $statusSubmission == NULL && $assignmentEnded
   
@@ -393,11 +452,23 @@
         $studentSubject = new StudentSubject($con, $student_subject_id);
 
         $enrollment_id = $studentSubject->GetEnrollmentId();
+        
+        $enrollment = new Enrollment($con);
+
+        $current_enrollment_id = $enrollment->GetEnrollmentIdNonDependent($studentLoggedInId,
+            $current_school_year_id);
 
         $allEnrolledSubjectCode = $studentSubject->GetAllEnrolledSubjectCodeELMS
-            ($studentLoggedInId, $current_school_year_id, $enrollment_id);
+            ($studentLoggedInId,
+            $current_school_year_id,
+            $current_enrollment_id
+        );
 
-        // var_dump($allEnrolledSubjectCode);
+        // echo $subject_code_assignment_id;
+
+        // var_dump($school_year_id);
+        // echo "<br>";
+        // var_dump($current_enrollment_id);
         
         $enrolledSubjectList = [];
 
@@ -431,7 +502,6 @@
             <div class="content">
 
                <?php
-                
                     echo Helper::lmsStudentNotificationHeader(
                         $con, $studentLoggedInId,
                         $current_school_year_id,
@@ -645,15 +715,24 @@
                                                     }
                                                 } 
 
-                                                if(($doesSubmittedAndGraded == false && $assignmentEnded == false) 
-                                                    || $assignmentEnded == false){
+                                                if(($doesSubmittedAndGraded == false 
+                                                    && $assignmentEnded == false 
+                                                    && $doesSchoolYearMatch
+                                                    && $file_input_does_display == true
+
+                                                ) 
+                                                    || (
+                                                $assignmentEnded == false
+                                                && $doesSchoolYearMatch
+                                                && $file_input_does_display == true
+                                                )){
                                                 
                                                     # Assignment Button hide includes when:
 
                                                     # Deadline TRUE
                                                     # Graded TRUE
 
-                                                    var_dump($assignmentEnded);
+                                                    // var_dump($assignmentEnded);
 
                                                     ?>
                                                         <div class='form-group mb-2'>
@@ -745,9 +824,12 @@
                                 </div>
 
                                 <div class="modal-footer">
-                                    <button type='<?php echo $button_type; ?>' class='btn btn-primary' name="<?php echo $button_name;?>">
-                                        <?php echo $buttontext; ?>
-                                    </button>
+                                    <?php if($doesSchoolYearMatch):?>
+                                        <button type='<?php echo $button_type; ?>' class='btn btn-primary' name="<?php echo $button_name;?>">
+                                            <?php echo $buttontext; ?>
+                                        </button>
+                                    <?php endif;?>
+
                                 </div>
 
                             </form>

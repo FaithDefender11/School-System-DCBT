@@ -13,6 +13,8 @@
     include_once('../../includes/classes/Notification.php');
     include_once('../../includes/classes/Teacher.php');
     include_once('../../includes/classes/Student.php');
+    include_once('../../includes/classes/SubjectAssignmentSubmission.php');
+    include_once('../../includes/classes/SubjectCodeHandoutStudent.php');
 
     echo Helper::RemoveSidebar();
     // echo "hey nice";
@@ -209,9 +211,12 @@
 
         <?php
             echo Helper::lmsStudentNotificationHeader(
-                $con, $studentLoggedInId,
-                $school_year_id, $enrolledSubjectList,
+                $con,
+                $studentLoggedInId,
+                $school_year_id,
+                $enrolledSubjectList,
                 $enrollment_id,
+                
                 "second",
                 "second",
                 "second",
@@ -343,7 +348,11 @@
             <?php if(count($allEnrolledSubjectCode) > 0): ?>
                 <?php 
                 
+                $totalOverProgress = 0;
+                $totalProgressOkayStatus = 0;
                     foreach ($allEnrolledSubjectCode as $key => $row_inner) {
+
+                        $program_code = $row_inner['program_code'];
 
                         $subject_title = $row_inner['subject_title'];
                         $student_subject_id = $row_inner['student_subject_id'];
@@ -367,6 +376,11 @@
                         $schedule_time = $row_inner['schedule_time'] != "" ? $row_inner['schedule_time'] : "-";
                         
                         $student_subject_code = $row_inner['student_subject_code'];
+
+
+                        $moduleCount = $subjectPeriodCodeTopic->GetSubjectModulePerCountSubject($program_code);
+
+                        // var_dump($count);
 
                         $teacher_firstname = $row_inner['firstname'];
                         $teacher_lastname = $row_inner['lastname'];
@@ -396,7 +410,44 @@
                         // $section_code = trim(strtolower($section_code));
 
                         // $courses_url = "../courses/index.php?c=$section_code";
-                        $courses_url = "../courses/subject_module.php?id=$student_subject_id";
+
+                        $courses_url = "";
+
+                        if($instructor_name != "TBA"){
+                            $courses_url = "../courses/subject_module.php?id=$student_subject_id";
+
+                        }
+                        $view_assignments_url = "";
+
+                        if($instructor_name != "TBA"){
+
+                            $view_assignments_url = "../courses/grade_progress.php?id=$student_subject_id";
+                        }
+
+
+                        $allSubjectPeriodCodeTopicIds = $subjectPeriodCodeTopic->GetSubjectPeriodCodeTopicIdsBySubjectCode(
+                            $student_subject_code, $school_year_id);
+
+
+                        $assignmentList = $subjectCodeAssignment->GetSubjectTopicAssignmentListBasedOnTopicIdss(
+                            $allSubjectPeriodCodeTopicIds);
+
+                        $handoutList = $subjectCodeAssignment->GetSubjectTopicHandoutListBasedOnTopicIds(
+                            $allSubjectPeriodCodeTopicIds);
+
+                        $mergedList = array_merge($handoutList, $assignmentList);
+
+
+                        $values = $subjectPeriodCodeTopic->GetTopicOverallModuleProgress(
+                            $mergedList, $studentLoggedInId,
+                            $school_year_id, $student_subject_id);
+
+                    
+                        // var_dump($values);
+                        // echo "<br>";
+
+                        $totalOverProgress = $values[0] ?? 0;
+                        $totalProgressOkayStatus = $values[1] ?? 0;
 
                         ?>
 
@@ -418,14 +469,48 @@
                                     </div>
 
                                     <div class="action">
-                                        <button
-                                        class="task"
-                                        data-toggle="tooltip"
-                                        data-placement="bottom"
-                                        title="No Assignments Due"
-                                        >
-                                        <i class="bi bi-file-earmark">0</i>
+                                        
+                                        <a href="<?= $view_assignments_url;?>"
+                                            class="task"
+                                            data-toggle="tooltip"
+                                            data-placement="bottom"
+                                            title="View assignments"
+                                            >
+                                            <i class="bi bi-file-earmark"></i>
+                                        </a>
+
+                                        <button style="pointer-events: none;"
+                                            class="task"
+                                            data-toggle="tooltip"
+                                            data-placement="bottom"
+                                            title="Section modules"
+                                            >
+                                        <i class=""> <?= $moduleCount;?> modules</i>
                                         </button>
+                                         &nbsp; <?php 
+                                                
+                                                $equivalent_totalProgressAct = 0;
+
+                                                if($totalOverProgress > 0){
+
+                                                    // $pecentage_equivalent_total = ($totalScore / $totalOverProgress) * 100;
+                                                    $pecentage_equivalent_total = ($totalProgressOkayStatus / $totalOverProgress) * 100;
+
+                                                    // $totalProgressOkayStatus++;
+
+                                                    $equivalent_totalProgressAct = round($pecentage_equivalent_total, 0, PHP_ROUND_HALF_UP);
+                                                    $equivalent_totalProgressAct = $equivalent_totalProgressAct . "%";
+
+                                                    // echo "$totalProgressOkayStatus / $totalOverProgress = $equivalent_totalProgressAct";
+                                                        // <a style='text-decoration: none; color:inherit;' href='../courses/activity_progress.php?id=$student_subject_id'>Module progress: $equivalent_totalProgressAct</a>
+                                                    echo "
+                                                        <a style='text-decoration: none; color:inherit;' href='../courses/subject_module.php?id=$student_subject_id'>Module progress: $equivalent_totalProgressAct</a>
+                                                    ";
+                                                }else{
+                                                    echo "";
+                                                }
+                                            ?>
+                                        
                                     </div>
 
                                 </main>

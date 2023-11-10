@@ -60,6 +60,9 @@
         $studentListSubmittedNotification,
         $adminAnnouncement);
     
+    // var_dump($adminAnnouncement);
+    // echo "<br>";
+    
 
     $viewedCount = $notification->GetTeacherViewedNotificationCount(
         $studentListSubmittedNotification, $teacherLoggedInId);
@@ -67,11 +70,20 @@
     $unViewedCount = $notification->GetTeacherUnViewedNotificationCount(
         $studentListSubmittedNotification, $teacherLoggedInId);
 
-    echo "viewedCount: $viewedCount";
-    echo "<br>";
+        
 
-    echo "unViewedCount: $unViewedCount";
-    echo "<br>";
+    $unViewedAdminNotifCount = $notification->GetTeacherViewedNotificationFromAdminCount(
+        $adminAnnouncement, $teacherLoggedInId);
+
+    // echo "<br>";
+    // var_dump($unViewedAdminNotifCount);
+
+
+    // echo "viewedCount: $viewedCount";
+    // echo "<br>";
+
+    // echo "unViewedCount: $unViewedCount";
+    // echo "<br>";
 
     usort($studentSubmittedAndAdminAnnouncement, function($a, $b) {
         $dateA = strtotime($a['date_creation']);
@@ -274,7 +286,7 @@
 
                                 echo "
                                     <tr>
-                                        <td> $sender_name</td>
+                                        <td>($notification_id) $sender_name</td>
                                         <td>$type</td>
                                         <td>$title</td>
                                         <td>$date_creation</td>

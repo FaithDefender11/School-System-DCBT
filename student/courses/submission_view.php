@@ -10,6 +10,10 @@
     include_once('../../includes/classes/SubjectAssignmentSubmission.php');
     include_once('../../includes/classes/SubjectCodeAssignmentTemplate.php');
     include_once('../../includes/classes/TaskType.php');
+    include_once('../../includes/classes/StudentSubject.php');
+    include_once('../../includes/classes/Notification.php');
+    include_once('../../includes/classes/Teacher.php');
+    include_once('../../includes/classes/SubjectProgram.php');
 
     echo Helper::RemoveSidebar();
 
@@ -21,7 +25,22 @@
 
             <!-- SUMMER NOTE SCRIPT -->
             <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+        
+        
+            <script src="../../assets/js/elms-sidebar.js" defer></script>
+            <script src="../../assets/js/elms-dropdown.js" defer></script>
+            <script src="../../assets/js/table-dropdown.js" defer></script>
+
+            
+        
         </head>
+
+        <style>
+            .panel-heading.note-toolbar{
+                display: none;
+            }
+        </style>
+
     <?php
 
     if(isset($_GET['sc_id'])
@@ -142,8 +161,6 @@
         $get_subject_assignment_submission_date = $get_subject_assignment_submission !== NULL 
             ? $get_subject_assignment_submission['date_creation'] : NULL;
 
-
-
         
         $assignmentAttempts = $subjectAssignmentSubmission->GetNumberOfAssignmentAttempt(
             $subject_code_assignment_id, $school_year_id,
@@ -160,86 +177,66 @@
 
         }
 
+
+        $studentSubject = new StudentSubject($con, $student_subject_id);
+
+        $enrollment_id = $studentSubject->GetEnrollmentId();
+
+
+        $enrollment = new Enrollment($con);
+
+        $current_enrollment_id = $enrollment->GetEnrollmentIdNonDependent($studentLoggedInId,
+            $current_school_year_id);
+            
+        $allEnrolledSubjectCode = $studentSubject->GetAllEnrolledSubjectCodeELMS
+            ($studentLoggedInId,
+            $current_school_year_id,
+            $current_enrollment_id
+        );
+
+        // var_dump($allEnrolledSubjectCode);
+        
+        $enrolledSubjectList = [];
+
+        foreach ($allEnrolledSubjectCode as $key => $value) {
+            # code...
+            $subject_codeGet = $value['student_subject_code'];
+            array_push($enrolledSubjectList, $subject_codeGet);
+        }
+
+        $logout_url = 'http://localhost/school-system-dcbt/lms_logout.php';
+
+        if ($_SERVER['SERVER_NAME'] === 'localhost') {
+
+            $base_url = 'http://localhost/school-system-dcbt/student/';
+        } else {
+            $base_url = 'http://' . $_SERVER['HTTP_HOST'] . '/student/';
+        }
+
+        if ($_SERVER['SERVER_NAME'] !== 'localhost') {
+
+            $new_url = str_replace("/student/", "", $base_url);
+            $logout_url = "$new_url/lms_logout.php";
+        }
+
+
         ?>
 
             <div class="content">
                
-                <div class="icons">
-                    <button class="sidebar">
-                    <i class="bi bi-list"></i>
-                    </button>
-                    <div class="notif">
-                    <button
-                        class="icon"
-                        data-toggle="tooltip"
-                        data-placement="bottom"
-                        title="Notification"
-                    >
-                        <i class="bi bi-bell-fill"></i>
-                        <span class="badge-1">3</span>
-                    </button>
-                    <div class="notif-menu">
-                        <a href="#" class="notif-item">
-                        <div class="col">
-                            <header>
-                            <div class="title">
-                                <h5>Teacher</h5>
-                                <span
-                                >You have completed the course Workplace Etiquette</span
-                                >
-                                <small>Oct 12, 7:27pm</small>
-                            </div>
-                            </header>
-                        </div>
-                        </a>
-                        <a href="#" class="notif-item">
-                        <div class="col">
-                            <header>
-                            <div class="title">
-                                <h5>Teacher</h5>
-                                <span
-                                >You are now enrolled in course Workplace Etiquette</span
-                                >
-                                <small>Oct 12, 7:27pm</small>
-                            </div>
-                            </header>
-                        </div>
-                        </a>
-                        <a href="#" class="notif-item">
-                        <div class="col">
-                            <header>
-                            <div class="title">
-                                <h5>Teacher</h5>
-                                <span
-                                >Due soon: assignment '05 Activity 1 - ARG' in class
-                                'Technopreneurship'</span
-                                >
-                                <small>Oct 12, 5:33pm</small>
-                            </div>
-                            </header>
-                        </div>
-                        </a>
-                        <a href="#" class="notif-item">
-                        <div class="col">
-                            <header>
-                            <div class="title">
-                                <h5>Teacher</h5>
-                                <span
-                                >Given: assignment '05 Task Performance 1' in course
-                                'Software Quality Assurance'</span
-                                >
-                                <small>Oct 12, 7:27pm</small>
-                            </div>
-                            </header>
-                        </div>
-                        </a>
-                    </div>
-                    </div>
-                    <div class="username">
-                    <a href="#" title="Profile">Cultura, Dhan Exeq...</a>
-                    </div>
-                </div>
-
+                <?php
+                    echo Helper::lmsStudentNotificationHeader(
+                        $con, $studentLoggedInId,
+                        $current_school_year_id,
+                        $enrolledSubjectList,
+                        $enrollment_id,
+                        "second",
+                        "first",
+                        "second",
+                        $logout_url
+                    );
+                
+                ?>
                 
                 <div class="content-header">
                     <header>

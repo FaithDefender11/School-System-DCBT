@@ -107,7 +107,7 @@
                                 <!-- <h4 class="text-center text-muted"><?php echo $subject_code;?> Modules</h4> -->
                                 <h4 class="text-start text-primary mb-2">Modules</h4>
                                 
-                                <button onclick="window.location.href = 'subject_progress.php?id=<?php echo $student_subject_id; ?>'" class="text-start mb-2 btn btn-sm btn-info">
+                                <button onclick="window.location.href = 'grade_progress.php?id=<?php echo $student_subject_id; ?>'" class="text-start mb-2 btn btn-sm btn-info">
                                     Progress Tab
                                 </button>
                                 

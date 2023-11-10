@@ -328,7 +328,32 @@ class SubjectAssignmentSubmission{
     }
 
 
-   function calculatePercentage($completedTasks, $totalTasks) {
+    public function GetSubmissionCount(
+        $subject_code_assignment_id,
+        $school_year_id,
+        $student_id) {
+
+        $query = $this->con->prepare("SELECT * 
+
+            FROM subject_assignment_submission
+            WHERE subject_code_assignment_id=:subject_code_assignment_id
+            AND school_year_id=:school_year_id
+            AND student_id=:student_id
+
+            ORDER BY subject_assignment_submission_id DESC
+                
+        ");
+
+        $query->bindValue(":subject_code_assignment_id", $subject_code_assignment_id);
+        $query->bindValue(":school_year_id", $school_year_id);
+        $query->bindValue(":student_id", $student_id);
+        $query->execute();
+
+        return $query->rowCount();
+
+    }
+
+    public function calculatePercentage($completedTasks, $totalTasks) {
         if ($totalTasks == 0) {
             return 0; // Avoid division by zero
         }
@@ -450,17 +475,17 @@ class SubjectAssignmentSubmission{
 
         $date_creation = date("Y-m-d H:i:s");
 
-        $update = $this->con->prepare("INSERT INTO subject_assignment_submission
+        $insert = $this->con->prepare("INSERT INTO subject_assignment_submission
             (subject_code_assignment_id, student_id, school_year_id)
             VALUES(:subject_code_assignment_id, :student_id, :school_year_id)
             ");
 
-        $update->bindValue(":subject_code_assignment_id", $subject_code_assignment_id);
-        $update->bindValue(":student_id", $student_id);
-        $update->bindValue(":school_year_id", $school_year_id);
-        $update->execute();
+        $insert->bindValue(":subject_code_assignment_id", $subject_code_assignment_id);
+        $insert->bindValue(":student_id", $student_id);
+        $insert->bindValue(":school_year_id", $school_year_id);
+        $insert->execute();
 
-        if($update->rowCount() > 0){
+        if($insert->rowCount() > 0){
             
             return true;
         }

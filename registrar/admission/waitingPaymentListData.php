@@ -306,7 +306,7 @@ $stmt = $con->prepare("SELECT COUNT(*) AS allcount
             $process_url = "";
             
             // $waiting_payment_url = "subject_insertion_summary.php?id=$enrollement_student_id&enrolled_subject=show";
-            $waiting_payment_url = "subject_insertion_summary.php?id=$enrollment_id&enrolled_subject=show";
+            $waiting_payment_url = "subject_insertion_summary.php?id=$enrollment_id&enrolled_subject=show&page=waiting_payment";
 
             $student_status_pending = "";
 
@@ -335,7 +335,7 @@ $stmt = $con->prepare("SELECT COUNT(*) AS allcount
 
                 $button_url = "
                     <button class='default success'
-                        onclick=\"window.location.href = '" . $waiting_payment_url . "subject_insertion_summary.php?id=560&enrolled_subject=show'\">
+                        onclick=\"window.location.href = '" . $waiting_payment_url . "'\">
                         Evaluate
                     </button>
                 ";
@@ -350,7 +350,7 @@ $stmt = $con->prepare("SELECT COUNT(*) AS allcount
 
                 $button_url = "
                     <button class='default success'
-                        onclick=\"window.location.href = '" . $waiting_payment_url . "subject_insertion_summary.php?id=560&enrolled_subject=show'\">
+                        onclick=\"window.location.href = '" . $waiting_payment_url . "'\">
                         Evaluate
                     </button>
                 ";
@@ -366,7 +366,7 @@ $stmt = $con->prepare("SELECT COUNT(*) AS allcount
 
                 $button_url = "
                     <button class='default'
-                    onclick=\"window.location.href = '" . $waiting_payment_url . "subject_insertion_summary.php?id=560&enrolled_subject=show'\">
+                    onclick=\"window.location.href = '" . $waiting_payment_url . "'\">
                         Evaluate
                     </button>
                 ";
@@ -383,7 +383,7 @@ $stmt = $con->prepare("SELECT COUNT(*) AS allcount
 
                 $button_url = "
                     <button class='default'
-                    onclick=\"window.location.href = '" . $waiting_payment_url . "subject_insertion_summary.php?id=560&enrolled_subject=show'\">
+                    onclick=\"window.location.href = '" . $waiting_payment_url . "'\">
                         Evaluate
                     </button>
                 ";

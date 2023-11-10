@@ -53,7 +53,8 @@
         $back_url = "subject_module.php?id=$student_subject_id";
 
 
-        // var_dump($subject_code);
+
+
         
         ?>
 
@@ -72,7 +73,7 @@
                     <div class="floating" id="shs-sy">
                         <header>
                             <div class="title">
-                                <h3><?= $subject_title;?> Progress</h3>
+                                <h3><?= $subject_title;?> Scores</h3>
                             </div>
 
                         </header>

@@ -155,6 +155,12 @@
         $school_name = "";
         $school_address = "";
 
+
+        // $check = $enrollment->GetAllEnrollmentFormWithRegistrarIdAndReset(
+        //     $registrarUserId, $current_school_year_id, 1433);
+
+        // var_dump($check);
+
         if($_SERVER['REQUEST_METHOD'] === 'POST' &&
             isset($_POST['enrollment_btn_' . $enrollment_form_id])
             && isset($_POST['admission_type'])
@@ -734,11 +740,17 @@
                                 $enrollment_student_status, $is_tertiary, 
                                 $is_transferee, $is_new_enrollee);
 
+
+
                             $student_enrollment_id = 0;
 
                             if($newEnrollmentSuccess){
 
                                 $student_enrollment_id = $con->lastInsertId();
+
+                                # Update Enrollment Form which will be locked by registrar.
+                                $registrarIsInside = $enrollment->UpdateRegistrarIntoTheEnrollment($student_id,
+                                    $student_enrollment_id, $registrarUserId, $current_school_year_id);
 
                                 // $url = "../admission/process_enrollment.php?find_section=show&st_id=$student_id&c_id=$course_id";
 

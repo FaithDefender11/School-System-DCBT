@@ -1,11 +1,11 @@
 <div class="content">
 
-    <nav>
+    <!-- <nav>
         <a href="<?php echo $back_url; ?>"
         ><i class="bi bi-arrow-return-left fa-1x"></i>
         <span>Back</span>
         </a>
-    </nav>
+    </nav> -->
     
     <div class="content-header">
 

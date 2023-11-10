@@ -349,7 +349,43 @@
 
 
             // }
+            $page_redirect = "";
+            if(isset($_GET['page'])){
 
+                $page_redirect = $_GET['page'];
+
+            }
+
+            $enrollment_currently_registrar_id = $enrollment->GetEnrollmentCurrentRegistrarId($student_id,
+                $student_enrollment_id);
+
+            $user = new User($con, $enrollment_currently_registrar_id);
+
+            $registrarName = "";
+
+            if($enrollment_currently_registrar_id != NULL){
+                $registrarName = ucwords($user->getFirstName()) . " " . ucwords($user->getLastName());
+
+            }
+
+
+            if($enrollment_currently_registrar_id !== NULL 
+                && $registrarUserId != $enrollment_currently_registrar_id){
+
+                // echo "You`re inside the form";
+                Alert::error("Only one registrar can process with the form, $registrarName is inside.", "$page_redirect.php");
+                exit();
+                
+            }
+
+            $enrollment_currently_registrar_id = $enrollment->UpdateRegistrarIntoTheEnrollment(
+                $student_id,
+                $student_enrollment_id,
+                $registrarUserId,
+                $current_school_year_id);
+
+
+            
            
             ?>
                 <div class="content">
@@ -359,7 +395,7 @@
 
                         <header>
                             <div class="title">
-                                <em>Processed by: <?= $registrarName;?></em>
+                                <!-- <em>Processed by: <?= $registrarName;?></em> -->
                                 <h1>Enrollment form</h1>
                             </div>
 

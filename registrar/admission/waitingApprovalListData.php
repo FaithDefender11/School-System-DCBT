@@ -1,4 +1,5 @@
 <?php
+
 include('../../includes/config.php');
 include('../../includes/classes/SchoolYear.php');
 include('../../includes/classes/Section.php');
@@ -297,7 +298,7 @@ if ($row != null) {
 
 
         $process_url = "";
-        $waiting_payment_url = "subject_insertion_summary.php?id=$enrollment_id&enrolled_subject=show";
+        $waiting_payment_url = "subject_insertion_summary.php?id=$enrollment_id&enrolled_subject=show&page=waiting_approval";
         // $waiting_payment_url = "subject_insertion_summary.php?id=$enrollement_student_id&enrolled_subject=show";
 
         $student_status_pending = "";

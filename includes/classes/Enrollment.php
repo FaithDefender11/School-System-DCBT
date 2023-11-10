@@ -1064,6 +1064,8 @@
     }
 
     public function GetEnrollmentIdNonEnrolled($student_id, $school_year_id) {
+
+        $value = 0;
         // Check if the enrollment form ID already exists in the database
         $sql = $this->con->prepare("SELECT enrollment_id FROM enrollment 
             WHERE student_id = :student_id
@@ -1078,8 +1080,13 @@
         $sql->bindParam(":school_year_id", $school_year_id);
         $sql->bindValue(":enrollment_status", "tentative");
         $sql->execute();
-        
-        return $sql->fetchColumn();
+
+        if($sql->rowCount() > 0){
+            $value = $sql->fetchColumn();
+        }
+
+        return $value;
+
     }
 
 
@@ -1534,11 +1541,90 @@
         return false;
     }
 
+
+    public function GetAllEnrollmentFormWithRegistrarIdAndReset(
+        $registrar_id, $school_year_id, $enrollment_id) {
+
+
+        // $sql = $this->con->prepare("SELECT * FROM enrollment 
+
+        //     WHERE currently_registrar_id = :currently_registrar_id
+        //     AND school_year_id = :school_year_id
+        // ");
+
+        $update = $this->con->prepare("UPDATE enrollment
+
+            SET currently_registrar_id=:set_currently_registrar_id
+
+            WHERE currently_registrar_id = :currently_registrar_id
+            AND school_year_id = :school_year_id
+            AND enrollment_id != :enrollment_id
+        ");
+ 
+        $update->bindValue(":set_currently_registrar_id", NULL);
+        $update->bindValue(":currently_registrar_id", $registrar_id);
+        $update->bindValue(":school_year_id", $school_year_id);
+        $update->bindValue(":enrollment_id", $enrollment_id);
+        $update->execute();
+
+        if($update->rowCount() > 0){
+
+            return true;
+            // $result =  $sql->fetchAll(PDO::FETCH_ASSOC);
+
+            // foreach ($result as $key => $value) {
+            //     # code...
+            // }
+        }
+
+
+        return false;
+    }
+
+    public function GetAllEnrollmentFormWithRegistrarIdAndResetGlobal(
+        $registrar_id, $school_year_id) {
+
+
+        // $sql = $this->con->prepare("SELECT * FROM enrollment 
+
+        //     WHERE currently_registrar_id = :currently_registrar_id
+        //     AND school_year_id = :school_year_id
+        // ");
+
+        $update = $this->con->prepare("UPDATE enrollment
+
+            SET currently_registrar_id=:set_currently_registrar_id
+
+            WHERE currently_registrar_id = :currently_registrar_id
+            AND school_year_id = :school_year_id
+        ");
+ 
+        $update->bindValue(":set_currently_registrar_id", NULL);
+        $update->bindValue(":currently_registrar_id", $registrar_id);
+        $update->bindValue(":school_year_id", $school_year_id);
+        $update->execute();
+
+        if($update->rowCount() > 0){
+
+            return true;
+        }
+
+
+        return false;
+    }
+
+    
+
     public function UpdateRegistrarIntoTheEnrollment($student_id,
-        $enrollment_id, $registrar_id){
+        $enrollment_id, $registrar_id, $school_year_id){
+
+        # Remove any existing Id of registrar to all enrollment form.
+        # To prevent any duplication as the registrar will go through to other form.
 
             
-
+        $resetCurrentRegistrarIdBaseOnLoggedInRegistrar = $this->GetAllEnrollmentFormWithRegistrarIdAndReset(
+            $registrar_id, $school_year_id, $enrollment_id);
+            
         $sql = $this->con->prepare("UPDATE enrollment
             SET currently_registrar_id=:set_currently_registrar_id
             WHERE enrollment_id=:enrollment_id

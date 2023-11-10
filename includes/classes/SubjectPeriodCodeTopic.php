@@ -367,6 +367,28 @@ class SubjectPeriodCodeTopic{
         return NULL;
     }
 
+    public function GetSubjectPeriodCodeTopicIdsBySubjectCode(
+        $subject_code, $school_year_id) {
+
+
+        $sql = $this->con->prepare("SELECT subject_period_code_topic_id
+            FROM subject_period_code_topic
+            
+            WHERE subject_code=:subject_code
+            AND school_year_id=:school_year_id
+            ");
+                
+        $sql->bindValue(":subject_code", $subject_code);
+        $sql->bindValue(":school_year_id", $school_year_id);
+        $sql->execute();
+
+        if($sql->rowCount() > 0){
+            return $sql->fetchAll(PDO::FETCH_COLUMN);
+        }
+
+        return [];
+    }
+
 
     public function GetTeachingCodeTeacherId(
         $subject_code, $school_year_id) {
@@ -775,5 +797,104 @@ class SubjectPeriodCodeTopic{
     }
 
 
+    public function GetSubjectModulePerCountSubject(
+        $program_code){
+
+        $check = $this->con->prepare("SELECT * FROM subject_period_code_topic_template
+            
+            WHERE program_code=:program_code
+
+        ");
+
+        $check->bindValue(":program_code", $program_code);
+        $check->execute();
+
+       return $check->rowCount();
+        
+
+    }
+
+
+    public function GetTopicOverallModuleProgress(
+        $mergedList, $studentLoggedInId, $school_year_id, $student_subject_id){
+
+        $totalOverProgress = 0;
+        $totalProgressOkayStatus = 0;
+
+        if(count($mergedList) > 0){
+
+            foreach ($mergedList as $key => $row_ass) {
+                # code...
+
+                $assignment_name = isset($row_ass['assignment_name']) ? $row_ass['assignment_name'] : "";
+                $subject_code_assignment_id = isset($row_ass['subject_code_assignment_id']) ? $row_ass['subject_code_assignment_id'] : "";
+                
+                
+                $subject_code_handout_id = isset($row_ass['subject_code_handout_id']) ? $row_ass['subject_code_handout_id'] : "";
+
+                if($subject_code_assignment_id != ""){
+                    $totalOverProgress++;
+                }
+                if($subject_code_handout_id != ""){
+                    $totalOverProgress++;
+
+                }
+                
+        
+                $section_output = "";
+
+                $handout_name = isset($row_ass['handout_name']) ? $row_ass['handout_name'] : "";
+                $subject_code_handout_id = isset($row_ass['subject_code_handout_id']) ? $row_ass['subject_code_handout_id'] : NULL;
+
+                // var_dump($handout_name);
+
+                $subjectAssignmentSubmission = new SubjectAssignmentSubmission($this->con);
+                $subjectCodeHandoutStudent = new SubjectCodeHandoutStudent($this->con);
+                
+                $statusSubmission = $subjectAssignmentSubmission->CheckStatusSubmission(
+                    $subject_code_assignment_id,
+                    $studentLoggedInId, $school_year_id);
+
+                $singleHandoutViewed = $subjectCodeHandoutStudent->CheckSingleHandoutViewed(
+                    $subject_code_handout_id,
+                    $studentLoggedInId, $school_year_id);
+
+                $task_view_url = "task_submission.php?sc_id=$subject_code_assignment_id&ss_id=$student_subject_id";
+                
+                if($assignment_name !== ""){
+
+                    $section_output = "
+                        <a style='color: blue;' href='$task_view_url'>
+                            $assignment_name
+                        </a>
+                    ";
+
+                }
+                else{
+                    $section_output = "
+                        <a style='color: inherit;' href='topic_module_view.php?id=$subject_code_handout_id&ss_id=$student_subject_id'>
+                            <i class='fas fa-file'></i>&nbsp $handout_name
+                        </a>
+                    ";
+                }
+    
+    
+                if($singleHandoutViewed == true){
+
+                
+                    $totalProgressOkayStatus++;
+                }
+                if($statusSubmission !== NULL){
+
+                    $totalProgressOkayStatus++;
+                }
+    
+            }
+
+            return array($totalOverProgress, $totalProgressOkayStatus);
+        }
+        
+        return array();
+    }
 
 }

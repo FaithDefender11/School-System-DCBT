@@ -1995,6 +1995,7 @@
 
             t4.subject_code AS student_subject_code,
             t4.is_final,
+            t4.program_code,
             t4.school_year_id,
             t4.enrollment_id,
             t4.is_transferee,
@@ -2065,6 +2066,7 @@
         
             t1.student_subject_id,
             t1.school_year_id,
+            t1.subject_code AS student_subject_code,
             t4.subject_code,
             t4.subject_type,
             t4.subject_title,

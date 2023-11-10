@@ -309,6 +309,8 @@ class SubjectCodeAssignment{
         return [];
     }
 
+
+
     public function GetSubjectTopicHandoutList(
         $subject_period_code_topic_id) {
             
@@ -332,6 +334,93 @@ class SubjectCodeAssignment{
         if($handout->rowCount() > 0){
             return $handout->fetchAll(PDO::FETCH_ASSOC);
         }
+        return [];
+    }
+
+    public function GetSubjectTopicAssignmentListBasedOnTopicIdss(
+        $allSubjectPeriodCodeTopicIds) {
+
+        if(count($allSubjectPeriodCodeTopicIds) > 0){
+
+            $inPlaceholders = implode(', ', array_map(function($value, $index) {
+                return ":subject_period_code_topic_id$index";
+            }, $allSubjectPeriodCodeTopicIds, array_keys($allSubjectPeriodCodeTopicIds)));
+
+            $query = $this->con->prepare("SELECT 
+                                                                    
+                t1.subject_code_assignment_id
+                ,t1.assignment_name
+                ,t1.due_date
+                ,t1.max_score
+
+                FROM subject_code_assignment as t1
+
+                WHERE subject_period_code_topic_id IN ($inPlaceholders)
+                AND is_given = :is_given
+                
+                ORDER BY 
+                    t1.subject_code_assignment_template_id IS NULL ASC, 
+                    t1.subject_code_assignment_template_id ASC, 
+                    t1.date_creation ASC
+            ");
+
+            foreach ($allSubjectPeriodCodeTopicIds as $index => $subject_period_code_topic_ids) {
+                $placeholderName = ":subject_period_code_topic_id$index";
+                $query->bindValue($placeholderName, $subject_period_code_topic_ids);
+            }
+
+            // $assignment->bindValue(":subject_period_code_topic_id", $subject_period_code_topic_id);
+            
+            $query->bindValue(":is_given", 1);
+
+            $query->execute();
+            if($query->rowCount() > 0){
+                
+                return $query->fetchAll(PDO::FETCH_ASSOC);
+            }
+
+        }
+
+        return [];
+    }
+    # H1
+    public function GetSubjectTopicHandoutListBasedOnTopicIds(
+        $allSubjectPeriodCodeTopicIds) {
+
+        if(count($allSubjectPeriodCodeTopicIds) > 0){
+
+            $inPlaceholders = implode(', ', array_map(function($value, $index) {
+                return ":subject_period_code_topic_id$index";
+            }, $allSubjectPeriodCodeTopicIds, array_keys($allSubjectPeriodCodeTopicIds)));
+                
+            $handout = $this->con->prepare("SELECT 
+
+                t1.*
+                FROM subject_code_handout as t1
+
+                WHERE subject_period_code_topic_id IN ($inPlaceholders)
+                AND is_given = :is_given
+                ORDER BY 
+                    t1.subject_code_handout_template_id IS NULL ASC, 
+                    t1.subject_code_handout_template_id ASC, 
+                    t1.date_creation ASC
+
+            ");
+
+            foreach ($allSubjectPeriodCodeTopicIds as $index => $subject_period_code_topic_ids) {
+                $placeholderName = ":subject_period_code_topic_id$index";
+                $handout->bindValue($placeholderName, $subject_period_code_topic_ids);
+            }
+
+            $handout->bindValue(":is_given", 1);
+            $handout->execute();
+
+            if($handout->rowCount() > 0){
+                return $handout->fetchAll(PDO::FETCH_ASSOC);
+            }
+
+        }
+
         return [];
     }
 

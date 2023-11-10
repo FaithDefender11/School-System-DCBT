@@ -7,6 +7,13 @@
     require_once('../../includes/classes/Helper.php');
     require_once('../../includes/classes/Constants.php');
     require_once('../../includes/classes/Alert.php');
+
+    require_once('../../includes/classes/StudentSubject.php');
+    require_once('../../includes/classes/Enrollment.php');
+    require_once('../../includes/classes/SchoolYear.php');
+    require_once('../../includes/classes/SubjectCodeAssignment.php');
+    require_once('../../includes/classes/SubjectAssignmentSubmission.php');
+    
     require_once('../../includes/navigation/StudentElmsNavigationProvider.php');
 
     $studentLoggedIn = isset($_SESSION["studentLoggedIn"]) 
@@ -88,10 +95,85 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
         
     </head>
+
 <body>
+
     <div class="pageContainer">
+
+        <?php 
+        
+            $enrollment = new Enrollment($con);
+
+            $school_year = new SchoolYear($con);
+            $school_year_obj = $school_year->GetActiveSchoolYearAndSemester();
+
+            $school_year_id = $school_year_obj['school_year_id'];
+
+            $enrollment_id = $enrollment->GetEnrollmentIdNonDependent($studentLoggedInId,
+                $school_year_id);
+
+            $studentSubject = new StudentSubject($con);
+
+            $allEnrolledSubjectCode = $studentSubject->GetAllEnrolledSubjectCodeELMS
+                ($studentLoggedInId, $school_year_id, $enrollment_id);
+
+            $enrolledSubjectList = [];
+
+            foreach ($allEnrolledSubjectCode as $key => $value) {
+                # code...
+                $subject_code = $value['student_subject_code'];
+                array_push($enrolledSubjectList, $subject_code);
+            }
+        
+            // print_r($enrolledSubjectList);
+            // echo "<br>";
+
+            $subjectCodeAssignment = new SubjectCodeAssignment($con);
+
+
+            $getAllIncomingDueAssignmentsIds = $subjectCodeAssignment->GetAllIncomingDueAssignmentsIds(
+                $enrolledSubjectList, $school_year_id, $studentLoggedInId
+            );
+
+            // echo "<br>";
+            // echo "getAllIncomingDueAssignmentsIds: ";
+            // var_dump($getAllIncomingDueAssignmentsIds);
+            // echo "<br>";
+            // echo "<br>";
+
+            // $base_url = 'http://' . $_SERVER['HTTP_HOST'] . '/registrar/';
+            $base_url = 'http://' . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . '/';
+
+            $dirname = dirname($_SERVER['PHP_SELF']);
+            $after_registrar = substr($dirname, strpos($dirname, 'registrar/') + strlen('registrar/'));
+
+            // var_dump($base_url);
+
+            $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
+            $host = $_SERVER['HTTP_HOST'];
+            $current_url = $protocol . '://' . $host . $_SERVER['REQUEST_URI'];
+
+            // Remove the query parameters
+            $parts = parse_url($current_url);
+            $current_url_without_query = $parts['scheme'] . '://' . $parts['host'] . $parts['path'];
+            
+            $file_name = basename($current_url_without_query);
+
+
+            $assignmentCount = count($getAllIncomingDueAssignmentsIds);
+            // var_dump($assignmentCount);
+
+            if($file_name === "task_submission.php" 
+                // || $file_name === "subject_insertion_summary.php" 
+                
+            ){
+                // echo "Im at the task_submission page";
+            }
+        
+        ?>
        
         <div class="sidebar-nav" style="color: white;">
+
             <div class="sidebar-profile">
                 <h3><?php echo $studentLoggedInObj->getFirstName(); ?> <?php echo $studentLoggedInObj->getLastName(); ?> </h3>
                 <p class="user_email"><?php echo $studentLoggedInObj->getUsername(); ?></p>
@@ -114,6 +196,8 @@
         <div class="mainSectionContainer">
             <div class="mainContentContainer">
 
+                
+
 
 <script>
     $(document).ready(function() {
@@ -121,5 +205,46 @@
             $('.navigationItem').removeClass('active'); // Remove "active" class from all navigation items
             $(this).addClass('active'); // Add "active" class to the clicked navigation item
         });
+
+
+        function checkForUpdates(lastCount, studentLoggedInId, enrollment_id) {
+
+            $.ajax({
+
+                url: '../../includes/due_date_updates.php', // PHP file to check updates
+                type: 'GET',
+
+                data: { 
+                    last_count: lastCount,
+                    studentLoggedInId,
+                    enrollment_id
+                }, // Send the client's last count
+
+                success: function (data) {
+
+                    data = data.trim();
+
+                    console.log(data)
+                    
+                    // if (data == 'update_available') {
+                    if (data == 'update_available' && window.location.href.indexOf('task_submission.php') === -1) {
+                        // Reload the page if an update is available
+                        location.reload(true);
+                    }
+
+                },
+                complete: function () {
+                    // Schedule the next check after a certain interval (e.g., every 5 seconds)
+                    setTimeout(function() {
+                        checkForUpdates(<?php echo $assignmentCount; ?>, <?php echo $studentLoggedInId; ?>, <?php echo $enrollment_id; ?>); // Corrected PHP echo
+                    }, 10000);
+                    // }, 3000);
+                }
+            });
+        }
+
+        // Initial check when the page loads
+        checkForUpdates(<?php echo $assignmentCount; ?>, <?php echo $studentLoggedInId; ?>, <?php echo $enrollment_id; ?>);
+
     });
 </script>

@@ -5,6 +5,7 @@
     include_once('../../includes/classes/SubjectCodeHandout.php');
     include_once('../../includes/classes/SubjectCodeHandoutStudent.php');
     include_once('../../includes/classes/SubjectPeriodCodeTopic.php');
+    include_once('../../includes/classes/SubjectModuleAudit.php');
 
     echo Helper::RemoveSidebar();
 
@@ -28,12 +29,30 @@
 
         $subjectPeriodCodeTopic = new SubjectPeriodCodeTopic($con, $subject_period_code_topic_id);
 
+        $handoutTopic = $subjectPeriodCodeTopic->GetTopic();
+
+        $subjectPeriodCodeTopic = new SubjectPeriodCodeTopic($con, $subject_period_code_topic_id);
+
         $school_year = new SchoolYear($con);
         $school_year_obj = $school_year->GetActiveSchoolYearAndSemester();
 
         $current_school_year_id = $school_year_obj['school_year_id'];
         $current_school_year_period = $school_year_obj['period'];
         $current_school_year_term = $school_year_obj['term'];
+
+
+        # Adding Audit Trail.
+
+        $subjectModuleAudit = new SubjectModuleAudit($con);
+
+        $handout_audit_name = "Viewed $handout_name under $handoutTopic";
+
+        $doesAuditSuccess = $subjectModuleAudit->InsertAuditOfSubjectModule(
+            $student_subject_id, $current_school_year_id,
+            $handout_audit_name);
+
+
+        
 
         // $teacher_id = $_SESSION['teacherLoggedInId'];
 
@@ -56,40 +75,7 @@
         ?>
 
             <div class="content">
-                <!-- <div class="sidebar-nav">
-                    <div class="navigationContainer">
-                    <div class="navigationItem">
-                        <a href="#">
-                        <span class="badge">5</span>
-                        <i class="bi bi-clipboard-data">
-                            <span>Dashboard</span>
-                        </i>
-                        </a>
-                    </div>
-                    <div class="navigationItem">
-                        <a href="#">
-                        <span class="badge">5</span>
-                        <i class="bi bi-bell-fill">
-                            <span>Notification</span>
-                        </i>
-                        </a>
-                    </div>
-                    <div class="navigationItem">
-                        <a href="#">
-                        <i class="bi bi-person-circle">
-                            <span>User</span>
-                        </i>
-                        </a>
-                    </div>
-                    <div class="navigationItem">
-                        <a href="#">
-                        <i class="bi bi-box-arrow-in-left">
-                            <span>Log-out</span>
-                        </i>
-                        </a>
-                    </div>
-                    </div>
-                </div> -->
+               
 
             <div class="icons">
                 <button class="sidebar">
@@ -116,7 +102,7 @@
             <div class="content-header">
                 <header>
                 <div class="title">
-                    <h1>UCSP Topic 1 <em>Handout</em></h1>
+                    <h1><?= $handoutTopic;?> <em>Handout</em></h1>
                 </div>
                 </header>
             </div>

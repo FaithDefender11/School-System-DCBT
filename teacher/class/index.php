@@ -691,11 +691,10 @@
                                                                     if($assignment_name === "" && $subject_code_handout_id !== NULL){
                                                                         
                                                                         $removeHandout = "removeHandout($subject_code_handout_id, $current_school_year_id, $teacher_id)";
+                                                                        // <a style='color: inherit;' href='module_edit.php?id=$subject_code_handout_id'>
 
                                                                         $section_output = "
-                                                                            <a style='color: inherit;' href='module_edit.php?id=$subject_code_handout_id'>
                                                                                 <i class='fas fa-file'></i>&nbsp $handout_name
-                                                                            </a>
                                                                         ";
                                                                         $remove_btn = "
                                                                             <button onclick='$removeHandout' class='btn btn-sm btn-danger'>
@@ -708,10 +707,9 @@
 
                                                                         $removeAssignment = "removeAssignment($subject_code_assignment_id, $current_school_year_id, $teacher_id)";
 
+                                                                            // <a style='color: inherit;' href='$edit_given_assignment_url'>
                                                                         $section_output = "
-                                                                            <a style='color: inherit;' href='$edit_given_assignment_url'>
-                                                                                $assignment_name
-                                                                            </a>
+                                                                            $assignment_name
                                                                         ";
                                                                         
                                                                         $remove_btn = "
@@ -734,10 +732,9 @@
                                                                     echo "
                                                                         <tr class='text-center'>
                                                                             <td>
-                                                                                <a style='color: inherit;' href='$edit_given_assignment_url'>
                                                                                     $section_output
-                                                                                </a>
                                                                             </td>
+                                                                            
                                                                             <td>
                                                                                 $student_submitted_total
                                                                             </td>
