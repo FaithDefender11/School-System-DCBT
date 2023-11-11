@@ -1,5 +1,4 @@
 <?php
-
     require_once('../../includes/config.php');
     require_once('../../includes/navigation/StudentNavigationMenuProvider.php');
     require_once('../../includes/navigation/PendingNavigationMenuProvider.php');
@@ -25,69 +24,64 @@
 
     $page = Helper::GetUrlPath();
     $document_title = Helper::DocumentTitlePage($page);
-
 ?>
 
 <!DOCTYPE html>
-
-<html>
+<html lang="en">
     <head>
-        
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, inital-scale=1" />
         <title><?php echo "Enrollee " . $document_title; ?></title>
-
-        <!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-
-        <!-- Bootstrap Icons CSS -->
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-
         <!-- Font Awesome CSS -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
-        <!-- jQuery -->
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-        <!-- Popper.js and Bootstrap JS -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-
-        <!-- Custom CSS -->
-        <link rel="stylesheet" type="text/css" href="../../assets/css/main_style.css">
-        <link rel="stylesheet" type="text/css" href="../../assets/css/content.css">
-        <link rel="stylesheet" type="text/css" href="../../assets/css/forms.css">
-        <link rel="stylesheet" type="text/css" href="../../assets/css/buttons.css">
-        <link rel="stylesheet" type="text/css" href="../../assets/css/fonts.css">
-        <link rel="stylesheet" type="text/css" href="../../assets/css/table.css">
-        <link rel="stylesheet" type="text/css" href="../../assets/css/scheduler.css">
-        <link rel="stylesheet" type="text/css" href="../../assets/css/student-form-responsive.css">
-        <link rel="stylesheet" href="../../assets/css/others/toggle-switch.css">
-
-        <!-- Google Fonts -->
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Arimo">
-
         <!-- SweetAlert -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.24/sweetalert2.all.js"></script>
-
         <!-- Modify the Logo of DCBT Here and Please apply some styling -->
         <link rel="icon" href="../../assets/images/icons/DCBT-Logo.jpg" type="image/png">
-
-         <!-- Bootstrap 4 JavaScript -->
+        <!-- Bootstrap 4 JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-        
+        <!-- jQuery -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <!--Link JavaScript-->
+        <script src="../../assets/js/elms-sidebar.js" defer></script>
+        <!--Link stylesheets-->
+        <link rel="stylesheet" href="../../assets/css/fonts.css" />
+        <link rel="stylesheet" href="../../assets/css/sidebar.css" />
+        <link rel="stylesheet" href="../../assets/css/buttons.css" />
+        <link rel="stylesheet" href="../../assets/css/content.css" />
+        <link rel="stylesheet" href="../../assets/css/forms.css" />
+        <link rel="stylesheet" href="../../assets/css/student-form-responsive.css" />
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+        />
+        <link
+            rel="stylesheet"
+            href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+            integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+            crossorigin="anonymous"
+        />
+        <!--Link fonts-->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=IM+Fell+Double+Pica&display=swap"
+            rel="stylesheet"
+        />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400&display=swap"
+            rel="stylesheet"
+        />
+        <style>
+        body {
+            background-color: #efefef;
+            margin: 0;
+        }
+        </style>
     </head>
-<body>
-    <div class="pageContainer">
-       
-        <div class="sidebar-nav" style="color: white;">
-            <div class="sidebar-profile">
-                <h3><?php echo $enrolleeLoggedInObj->GetPendingFirstName(); ?> <?php echo $enrolleeLoggedInObj->GetPendingLastName(); ?> </h3>
-                <em class="user_email">
-                     <?php echo $enrolleeLoggedInObj->GetPendingEmail(); ?>
-                </em>
-                <p style="font-weight: bold;" class="role_name">Student</p>
-            </div>
-
+    <body>
+        <div class="sidebar-nav">
             <?php
-
                 // var_dump($enrolleeLoggedIn);
 
                 $pendingNav = new PendingStudentNavigationMenu($con, $enrolleeLoggedIn);
@@ -97,20 +91,15 @@
                     && $_SESSION['status'] == "pending"){
                     echo $pendingNav->create($page);
                 }
-
             ?>
-          
         </div>
+        <div class="content" id="elms-content">
 
-        <div class="mainSectionContainer">
-            <div class="mainContentContainer">
-
-
-<script>
-    $(document).ready(function() {
-        $('.navigationItem').click(function() {
-            $('.navigationItem').removeClass('active'); // Remove "active" class from all navigation items
-            $(this).addClass('active'); // Add "active" class to the clicked navigation item
-        });
-    });
-</script>
+        <script>
+            $(document).ready(function() {
+                $('.navigationItem').click(function() {
+                    $('.navigationItem').removeClass('active'); // Remove "active" class from all navigation items
+                    $(this).addClass('active'); // Add "active" class to the clicked navigation item
+                });
+            });
+        </script>

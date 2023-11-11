@@ -1,22 +1,15 @@
-<?php 
-
+<?php
     // include_once('../../includes/student_header.php');
     include_once('../../includes/pending_enrollee_header.php');
-    
+    include_once('../../includes/classes/Helper.php');
     include_once('../../includes/classes/Pending.php');
     include_once('../../includes/classes/PendingParent.php');
     include_once('../../includes/classes/Section.php');
     include_once('../../includes/classes/SchoolYear.php');
 
-    ?>
-        <head>
-            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-        </head>
-    <?php
+        // echo Helper::RemoveSidebar();
 
-    // echo Helper::RemoveSidebar();
-
-    if(isset($_SESSION['username'])
+        if(isset($_SESSION['username'])
         && isset($_SESSION['enrollee_id'])
         && isset($_SESSION['status']) 
         // && isset($_SESSION['email']) 
@@ -72,63 +65,62 @@
 
                 $isFinishedForm = $pending->CheckStudentFinishedForm($pending_enrollees_id);
                 // include_once('./enrollee_summary_details.php');
-                ?>
-                    <div class="row col-md-12">
-                        <div class="row">
+?>
 
+                <?php
+                    echo Helper::pendingStudentHeader($con, $enrolleeLoggedInObj);
+                ?>
+                <main>
+                    <div class="floating noBorder">
+                        <header>
                             <?php
                                 if($isFinishedForm == false){
 
                                     echo "
-                                        <div class='col-md-6'>
-                                            <a href='process.php?new_student=true&step=1'>
-                                                <button class='btn btn-outline-primary'>New Student Process</button>
-                                            </a>
+                                        <div class='action'>
+                                            <button 
+                                                class='default'
+                                                onclick='window.location.href='process.php?new_student=true&step=1''
+                                            >
+                                                New Student Process
+                                            </button>
                                         </div>
                                     ";
 
                                 }
                             ?>
-
                             <?php
-
                                 // $url = "./enrollee_summary_details_test.php?id=$pending_enrollees_id&details=show";
 
                                 $url = "./process.php?new_student=true&step=preferred_course";
-
                                 if($isFinishedForm == true){
                                     echo "
-                                        <div class='col-md-6'>
+                                        <div class='action'>
                                             <a href='$url'>
-                                                <button class='btn btn-outline-info'>View Form</button>
+                                                <button 
+                                                    class='information'
+                                                >
+                                                    View Form
+                                                </button>  
                                             </a>
                                         </div>
                                         ";
                                     }
                             ?>
-
-                        </div>
-
-                        <div class="card">
-                            <div class="card-header">
-                                <div class="text-center container">
-                                        <h3>Successfully filled-up the form</h3>
-                                        <p>Please walk-in for registrar accomodation.</p>
-                                </div>
-                            
+                        </header>
+                        <header>
+                            <div class="title">
+                                <h3>Successfully filled-up the form</h3>
+                                <p>Please walk-in for registrar accomodation.</p>
                             </div>
-                            <div class="card-body"></div>
-                        </div>
+                        </header>
                     </div>
-                <?php
+                </main>
+            <?php
             }
-
         }
-        // else{
-        //     echo "enrolled";
-        // }
-
-     
     }
-
-?>
+        ?>
+        </div>
+    </body>
+</html>

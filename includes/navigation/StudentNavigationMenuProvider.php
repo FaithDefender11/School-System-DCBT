@@ -49,7 +49,7 @@
                 $registration_enrollment_url,Constants::$navigationClass . Helper::GetActiveClass($page, "registration"));
             
             $sideBarNavigationItem .= Helper::createNavByIcon("Apply Semester", 
-                "bi bi-clipboard-data icon",
+                "bi bi-clipboard2-check",
                 $ongoing_enrollment_url, Constants::$navigationClass . Helper::GetActiveClass($page, "ongoing_enrollment"));
             
             $sideBarNavigationItem .= Helper::createNavByIcon("Requirements", 

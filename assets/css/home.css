@@ -187,6 +187,7 @@ nav>ul>li>a:hover {
 .slide-3 {
   display: flex;
   padding: 100px 60px;
+  height: 100vh;
   flex-direction: column;
   align-items: flex-start;
   gap: 20px;
@@ -295,6 +296,13 @@ nav>ul>li>a:hover {
   align-items: center;
   text-align: center;
   width: 100%;
+}
+
+.slide-2>main>.item>.custom-fb-post {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-width: 350px !important;
 }
 
 .slide-2>main>.item>h3 {
@@ -589,14 +597,14 @@ nav>ul>li>a:hover {
 
 .content>.login-element>.floating {
   display: flex;
-  width: 432px;
-  height: auto;
   padding: 20px 30px;
+  margin: 0 650px;
   flex-direction: column;
   align-items: flex-start;
   box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.25);
   background-color: #fff;
   border-radius: 10px;
+  flex-grow: 1;
 }
 
 .content>.login-element>.floating>.close-btn {
@@ -741,6 +749,12 @@ nav>ul.active {
 }
 
 /* RESPONSIVE CONTENT */
+@media (max-width: 1366px) {
+  .content>.login-element>.floating {
+    margin: 0 450px;
+  }
+}
+
 @media (max-width: 1080px) {
   .content-header {
     flex-direction: row;
@@ -765,6 +779,16 @@ nav>ul.active {
     width: 450px;
     height: 250px;
   }
+
+  .content>.login-element>.floating {
+    margin: 0 320px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .content>.login-element>.floating {
+    margin: 0 250px;
+  }
 }
 
 @media (max-width: 952px) {
@@ -784,6 +808,12 @@ nav>ul.active {
   }
 }
 
+@media (max-width: 768px) {
+  .content>.login-element>.floating {
+    margin: 0 180px;
+  }
+}
+
 @media (max-width: 700px) {
   .slide-1>.carousel>h2 {
     font-size: 20px;
@@ -796,6 +826,10 @@ nav>ul.active {
   .slide-1>.carousel>img {
     width: 280px;
     height: 180px;
+  }
+
+  .content>.login-element>.floating {
+    margin: 0 50px;
   }
 }
 
@@ -857,10 +891,6 @@ nav>ul.active {
   .slide-3>main>.action>a {
     font-size: 16px;
   }
-
-  .content>.login-element {
-    width: 100%;
-  }
 }
 
 @media (max-width: 400px) {
@@ -885,9 +915,5 @@ nav>ul.active {
 
   .content>main>.footer {
     padding: 12px 15px;
-  }
-
-  .slide-2>main>.item>.fb-post.custom-fb-post {
-    min-width: 320px !important;
   }
 }

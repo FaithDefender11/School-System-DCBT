@@ -1,6 +1,4 @@
-
-<?php  
-
+<?php
         // var_dump($does_enrollee_finished_input);
 
         ?>
@@ -73,7 +71,7 @@
         $father_email = $parent->GetFatherEmail();
         $father_occupation = $parent->GetFatherOccupation();
 
-        // Father
+        // Mother
         $mother_firstname = $parent->GetMotherFirstName();
         $mother_lastname = $parent->GetMotherLastName();
         $mother_middle = $parent->GetMotherMiddleName();
@@ -91,21 +89,20 @@
         // }else{
         //     echo "not";
         // }
+?>
 
-        ?>
-
-        <div class="content">
             <nav>
                 <a href="<?php echo $logout_url;?>">
                     <i class="fas fa-sign-out-alt"></i>
                     <h3>Logout</h3>
                 </a>
-            </nav>   
+            </nav>
+
             <main>
                 <div class="floating noBorder">
                     <header>
                         <div class="title">
-                            <h2 style="color: var(--titleTheme)">New enrollment form</h2>
+                            <h3>New enrollment form</h3>
                             <small>SY <?php echo $current_term; ?> &nbsp; <?php echo $current_semester; ?> Semester </small>
                         </div>
                     </header>
@@ -124,16 +121,24 @@
                         <form method="POST">
                            <header>
                                 <div class="title">
-                                    <h4 style="font-weight: bold;">Enrollee Information</h4>
-                                    <div class="row">
-                                        <span style="margin-left: 660px;">
-                                            <label for="lrn">LRN</label>
-                                            <input class="read_only form-control" style="width: 250px;" id="lrn" type="text" name="lrn" 
-                                            value="<?php echo ($lrn != "") ? $lrn : ''; ?>"id="lrn">
-                                        </span>
-                                    </div>
+                                    <h3>Enrollee Information</h3>
                                 </div>
                             </header> 
+                            <div class="row">
+                                <span>
+                                    <label for="lrn">LRN</label>
+                                    <div>
+                                        <input 
+                                            type="text"
+                                            class="read_only form-control"
+                                            style="width: 200px;"
+                                            name="lrn" 
+                                            id="lrn"
+                                            value="<?php echo ($lrn != "") ? $lrn : ''; ?>"
+                                        >
+                                    </div>
+                                </span>
+                            </div>
                             <div class="row">
                                 <span>
                                 <label for="name">Name</label>
@@ -171,7 +176,7 @@
                                 <span>
                                     <label for="citizenship">Citizenship</label>
                                     <div>
-                                        <input class="read_only form-control" style="width: 220px;" type="text" name="nationality" 
+                                        <input class="read_only form-control" type="text" name="nationality" 
                                             required value="<?php echo ($nationality != "") ? $nationality : ''; ?>"id="nationality">
                                     </div>
                                 </span>
@@ -232,61 +237,53 @@
                                 </div>
                                 </span>
                             </div>
-                            
-                            <br>
-                            <div id="previous_school">
-                                <header>
-                                    <div class="title">
-                                        <h4 style="font-weight: bold;">Previous School Information</h4>
-                                    </div>
-                                </header>
-
-                                <div class="row">
-                                    <span>
-                                        <label for="school_name">School Name</label>
-                                        <div>
-                                            <input required type="text" id="school_name" name="school_name" class="read_only form-control" 
-                                            value="<?php echo $school_name; ?>">
-                                        </div>
-                                    </span>
-                                </div>
-                                <div class="row">
-                                    <span>
-                                        <label for="school_address">Address</label>
-                                        <div>
-                                            <input required type="text" id="school_address" name="school_address"
-                                            class="read_only form-control" value="<?php echo $school_address; ?>">
-                                        </div>
-                                    </span>
-                                </div>
-                                <div class="row">
-                                    <span>
-                                        <label for="year_started">Admission Year</label>
-                                        <div>
-                                            <input required type="text" id="year_started" name="year_started"
-                                            class="read_only form-control" value="<?php echo $year_started;?>">
-                                        </div>
-                                    </span>
-
-                                    <span>
-                                        <label for="year_ended">Graduation Year</label>
-                                        <div>
-                                            <input  required type="text" id="year_ended" name="year_ended" 
-                                            class="read_only form-control" value="<?php echo $year_ended;?>">
-                                        </div>
-                                    </span>
-                                </div>
-
-                            </div>
-
-
-                            <!-- <header>
+                            <header>
                                 <div class="title">
-                                    <h4 style="font-weight: bold;">Enrollee Parent Information</h4>
+                                    <h3>Previous School Information</h3>
                                 </div>
-                            </header> -->
+                            </header>
+                            <div class="row">
+                                <span>
+                                    <label for="school_name">School Name</label>
+                                    <div>
+                                        <input required type="text" id="school_name" name="school_name" class="read_only form-control" 
+                                        value="<?php echo $school_name; ?>">
+                                    </div>
+                                </span>
+                            </div>
+                            <div class="row">
+                                <span>
+                                    <label for="school_address">Address</label>
+                                    <div>
+                                        <input required type="text" id="school_address" name="school_address"
+                                        class="read_only form-control" value="<?php echo $school_address; ?>">
+                                    </div>
+                                </span>
+                            </div>
+                            <div class="row">
+                                <span>
+                                    <label for="year_started">Admission Year</label>
+                                    <div>
+                                        <input required type="text" id="year_started" name="year_started"
+                                        class="read_only form-control" value="<?php echo $year_started;?>">
+                                    </div>
+                                </span>
+
+                                <span>
+                                    <label for="year_ended">Graduation Year</label>
+                                    <div>
+                                        <input  required type="text" id="year_ended" name="year_ended" 
+                                        class="read_only form-control" value="<?php echo $year_ended;?>">
+                                    </div>
+                                </span>
+                            </div>
+                            <header style="display: none">
+                                <div class="title">
+                                    <h3>Enrollee Parent Information</h3>
+                                </div>
+                            </header>
                             <!-- FATHER DD -->
-                            <div style="display: none;" id="father_info">
+                            <div id="father_info" style="display: none">
                                 <header>
                                     <div class="title">
                                     <h3>Father's Information</h3>
@@ -338,7 +335,7 @@
                                 </div>
                             </div>
                             <!-- MOTHER DD -->
-                            <div style="display: none;" id="mother_info">
+                            <div id="mother_info" style="display: none">
                                 <header>
                                     <div class="title">
                                     <h3>Mother's Information</h3>
@@ -393,11 +390,10 @@
                                     </span>
                                 </div>
                             </div>
-                            <br>
                             <div class="guardian_info">
-                                <header class="m-2">
+                                <header>
                                     <div class="title">
-                                    <h4 style="font-weight: bold;">Guardian Information</h4>
+                                        <h3>Guardian's Information</h3>
                                     </div>
                                 </header>
 
@@ -453,8 +449,8 @@
                                 </div>
                             </div>
                             <div class="action">
-                            <button style="margin-right: 9px;"
-                            type="button"
+                            <button
+                                type="button"
                                 class="default large"
                                 onclick="window.location.href = 'process.php?new_student=true&step=enrollee_parent_information'"
                                 >
@@ -463,88 +459,85 @@
 
                             <?php if($does_enrollee_finished_input !=  true): ?>
                                 <button
-                                    class="default success large"
+                                    class="clean large"
                                     onclick="MarkAsValidated(<?php echo $pending_enrollees_id; ?>, <?php echo $school_year_id; ?>, '<?php echo $current_term; ?>', '<?php echo $current_semester; ?>')"
                                     type="button">
                                     Validate
                                 </button>
                             <?php endif;?>
-                            
                         </div>
                         </form>
                     </main>
                 </div>
             </main>
         </div>
+        <script>
+            function MarkAsValidated(pending_enrollees_id,
+                current_school_year_id, current_term, current_period){
 
-        <?php
-?>
+                // pending_enrollees_id = parseInt(pending_enrollees_id);
 
-<script>
-    function MarkAsValidated(pending_enrollees_id,
-        current_school_year_id, current_term, current_period){
+                Swal.fire({
+                    icon: 'info',
+                    title: 'I hereby declare that all provided information are credible.',
+                    text: 'Please note that this cant be undone.',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ok',
 
-        // pending_enrollees_id = parseInt(pending_enrollees_id);
+                }).then((result) => {
 
-        Swal.fire({
-            icon: 'info',
-            title: 'I hereby declare that all provided information are credible.',
-            text: 'Please note that this cant be undone.',
-            showCancelButton: true,
-            confirmButtonText: 'Ok',
+                    if(result.isConfirmed){
+                        $.ajax({
+                        url: '../../ajax/tentative/markAsValidated.php',
+                        type: 'POST',
+                        data: {
+                            pending_enrollees_id,
+                            current_school_year_id,
+                            current_term,
+                            current_period,
+                        },
+                    // dataType: 'json',
+                        success: function (response) {
 
-          }).then((result) => {
+                            response = response.trim();
+                            console.log(response)
 
-            if(result.isConfirmed){
-                $.ajax({
-                url: '../../ajax/tentative/markAsValidated.php',
-                type: 'POST',
-                data: {
-                    pending_enrollees_id,
-                    current_school_year_id,
-                    current_term,
-                    current_period,
-                },
-            // dataType: 'json',
-                success: function (response) {
+                            if(response == "success"){
 
-                    response = response.trim();
-                    console.log(response)
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Pre enrollment inputs has been completed.',
+                                    timer: 1200,
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Wait',
+                                }).then(() => {
 
-                    if(response == "success"){
+                                    var url = 'process.php?new_student=true&step=4';
+                                    window.location.href = url;
 
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Pre enrollment inputs has been completed.',
-                            timer: 1200,
-                            showCancelButton: false,
-                            confirmButtonText: 'Wait',
-                        }).then(() => {
+                                });
 
-                            var url = 'process.php?new_student=true&step=4';
-                            window.location.href = url;
+                            }else{
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Something went wrong.',
+                                    timer: 1200,
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Wait',
+                                }).then(() => {
+
+                                    var url = 'process.php?new_student=true&step=enrollee_summary_details';
+                                    window.location.href = url;
+
+                                });
+                            }
+
+                        },
 
                         });
-
-                    }else{
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Something went wrong.',
-                            timer: 1200,
-                            showCancelButton: false,
-                            confirmButtonText: 'Wait',
-                        }).then(() => {
-
-                            var url = 'process.php?new_student=true&step=enrollee_summary_details';
-                            window.location.href = url;
-
-                        });
-                    }
-
-                },
-
+                    }   
                 });
-            }   
-        });
-    }
-</script>
+            }
+        </script>
+    </body>
+</html>

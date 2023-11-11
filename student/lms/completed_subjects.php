@@ -1,5 +1,4 @@
- <?php 
-
+<?php
     include_once('../../includes/student_lms_header.php');
     include_once('../../includes/classes/Section.php');
     include_once('../../includes/classes/Enrollment.php');
@@ -13,9 +12,7 @@
     include_once('../../includes/classes/Notification.php');
     include_once('../../includes/classes/Teacher.php');
     include_once('../../includes/classes/SubjectAssignmentSubmission.php');
-
-    echo Helper::RemoveSidebar();
-  
+    
     $school_year = new SchoolYear($con);
     $school_year_obj = $school_year->GetActiveSchoolYearAndSemester();
 
@@ -69,315 +66,232 @@
       $logout_url = "$new_url/lms_logout.php";
 
     }
-
 ?>
-  <head>
-
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ELMS - Daehan College of Business and Technology</title>
-
-    <!--Link JavaScript-->
-    <script src="../../assets/js/elms-sidebar.js" defer></script>
-    <script src="../../assets/js/elms-dropdown.js" defer></script>
-    <script src="../../assets/js/table-dropdown.js" defer></script>
-    <!--Link styleshets-->
-    <link rel="stylesheet" href="../../assets/css/fonts.css" />
-    <link rel="stylesheet" href="../../assets/css/content.css" />
-    <link rel="stylesheet" href="../../assets/css/buttons.css" />
-    <link rel="stylesheet" href="../../assets/css/table.css" />
-    <!--Custom CSS-->
-    <link
-      rel="stylesheet"
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-      crossorigin="anonymous"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
-    />
-    <!--Link Fonts-->
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css?family=Lato"
-    />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css?family=Arimo"
-    />
-
-    <style>
-      body {
-        background-color: white;
-        margin: 0;
-      }
-    </style>
-
-  </head>
-
-  <body>
-
-
-    <div class="content">
-
-
-      <?php 
+      <?php
         echo Helper::lmsStudentNotificationHeader(
           $con, $studentLoggedInId,
-          $school_year_id,
-          $enrolledSubjectList,
+          $school_year_id, $enrolledSubjectList,
           $enrollment_id,
-
           "second",
           "second",
-          "second",
-          $logout_url
-        );
-      ?>
- 
-
+          "second"
+         );
+       ?>
       <div class="content-header">
-
         <header>
           <div class="title">
             <h1>Dashboard</h1>
           </div>
         </header>
-
       </div>
-
       <div class="tabs">
-        <button
+        <button 
           class="tab"
           style="background-color: var(--theme); color: white"
-
           onclick="window.location.href='student_dashboard.php'"
         >
           Enrolled (<?= count($allEnrolledSubjectCode)?>)
         </button>
-        <button
+        <button 
           class="tab"
-            onclick="window.location.href='completed_subjects.php'"
+          onclick="window.location.href='completed_subjects.php'"
         >
           Completed (<?= count($getPreviousEnrolledSubjects)?>)
         </button>
       </div>
-
       <main>
+        <?php if(count($getPreviousEnrolledSubjects) > 0): ?>
+          <?php
+            $now = date("Y-m-d H:i:s");
+            $totalOver = 0;
+            $totalScore = 0;
+            foreach ($getPreviousEnrolledSubjects as $key => $row_inner) {
 
-          <?php if(count($getPreviousEnrolledSubjects) > 0): ?>
-              <?php 
+              $subject_title = $row_inner['subject_title'];
+              $student_subject_id = $row_inner['student_subject_id'];
+              $student_subject_code = $row_inner['student_subject_code'];
+
+              $teacher_firstname = $row_inner['firstname'];
+              $teacher_lastname = $row_inner['lastname'];
+
+              $school_year_id = $row_inner['school_year_id'];
+
+              $sy = new SchoolYear($con, $school_year_id);
+
+              $term = $sy->GetTerm();
+              $period = $sy->GetPeriod();
+
+              $fomatTerm = $enrollment->changeYearFormat($term);
+              $period_short = $period === "First" ? "S1" : ($period === "Second" ? "S2" : "");
+
+              $instructor_name = "TBA";
+
+              if($teacher_firstname != null){
+                  $instructor_name = $teacher_firstname . " " . $teacher_lastname;
+              }
+
+              $courses_url = "";
+
+              if($instructor_name != "TBA"){
+                $courses_url = "../courses/subject_module.php?id=$student_subject_id";
+              }
+
+              $subjectCodeAssignment = new SubjectCodeAssignment($con, $student_subject_id);
+
+              $allGivenAssignments = $subjectCodeAssignment->GetSubjectCodeAssignments(
+                $student_subject_code, $school_year_id);
+
+                $equivalent = NULL;
+
+              if(count($allGivenAssignments) > 0){
+
               
-                  $now = date("Y-m-d H:i:s");
-                  $totalOver = 0;
-                  $totalScore = 0;
-                  foreach ($getPreviousEnrolledSubjects as $key => $row_inner) {
+                foreach ($allGivenAssignments as $key => $row) {
+                  
+                  $subject_code_assignment_id = $row['subject_code_assignment_id'];
+                  $assignment_name = $row['assignment_name'];
 
-                      $subject_title = $row_inner['subject_title'];
-                      $student_subject_id = $row_inner['student_subject_id'];
-                      $student_subject_code = $row_inner['student_subject_code'];
+                  $max_score = $row['max_score'];
 
-                      $teacher_firstname = $row_inner['firstname'];
-                      $teacher_lastname = $row_inner['lastname'];
+                  
+                  $date_creation = $row['date_creation'];
+                  $start_date = date("M d, h:i a", strtotime($date_creation));
+                  
+                  $due_date_db = $row['due_date'];
+                  
+                  $due_date = date("M d, h:i a", strtotime($due_date_db));
 
-                      $school_year_id = $row_inner['school_year_id'];
-                      $school_year_idx = $row_inner['school_year_id'];
 
-                      $sy = new SchoolYear($con, $school_year_id);
+                  $submitted_status = "";
 
-                      $term = $sy->GetTerm();
-                      $period = $sy->GetPeriod();
 
-                      $fomatTerm = $enrollment->changeYearFormat($term);
-                      $period_short = $period === "First" ? "S1" : ($period === "Second" ? "S2" : "");
-                      
-                      $instructor_name = "TBA";
+                  $submitted_grade_status = "";
 
-                      if($teacher_firstname != null){
-                          $instructor_name = $teacher_firstname . " " . $teacher_lastname;
+
+                  $score = 0;
+
+                  $total = "";
+
+                  $subjectAssignmentSubmission = new SubjectAssignmentSubmission($con);
+
+                  $statusSubmission = $subjectAssignmentSubmission
+                      ->CheckStatusSubmission(
+                      $subject_code_assignment_id,
+                      $studentLoggedInId, $school_year_id);
+                  
+                  $equivalent = "";
+
+                  if($statusSubmission !== NULL){
+
+                      $submitted_grade =  $statusSubmission['subject_grade'];
+                      // $graded_over_score =  $statusSubmission['max_score'];
+                      $date_graded =  $statusSubmission['date_graded'];
+
+
+                      $score = $submitted_grade;
+
+                      if($submitted_grade != NULL){
+                          
+                          $submitted_grade_status = "
+                              <i style='color: green;' class='fas fa-check'></i>
+                          ";
+
+                          $totalScore += $submitted_grade;
+                          $totalOver += $max_score;
+                          
+
+                          $pecentage_equivalent = ($submitted_grade / $max_score) * 100;
+                          $equivalent = round($pecentage_equivalent, 0, PHP_ROUND_HALF_UP);
+                          $equivalent = $equivalent . "%";
+                          
                       }
 
-                      $courses_url = "";
-
-                      if($instructor_name != "TBA"){
-                        $courses_url = "../courses/subject_module.php?id=$student_subject_id";
+                      if($submitted_grade == NULL && $date_graded == NULL){
+                          $submitted_grade_status = "
+                              <i style='color: orange;' class='fas fa-times'></i>
+                          ";
+                          $score = "??";
                       }
 
-                      $subjectCodeAssignment = new SubjectCodeAssignment($con, $student_subject_id);
+                      $submitted_status = "
+                          <i style='color: green;' class='fas fa-check'></i>
+                      ";
 
-                      $allGivenAssignments = $subjectCodeAssignment->GetSubjectCodeAssignments(
-                        $student_subject_code, $school_year_id);
+                  }else if($statusSubmission == NULL){
 
-                        $equivalent = NULL;
+                      $submitted_status = "
+                          <i style='color: red;' class='fas fa-times'></i>
+                      ";
+                      $submitted_grade_status = "
+                              <i style='color: red;' class='fas fa-times'></i>
+                      ";
 
-                      if(count($allGivenAssignments) > 0){
+                      $nowTimestamp = strtotime($now);
 
-                      
-                        foreach ($allGivenAssignments as $key => $row) {
-                          
-                          $subject_code_assignment_id = $row['subject_code_assignment_id'];
-                          $assignment_name = $row['assignment_name'];
+                      if(strtotime($due_date_db) <=  $nowTimestamp){
+                          $submitted_status = "
+                              <i style='color: orange;' class='fas fa-flag'></i>
+                          ";
 
-                          $max_score = $row['max_score'];
-
-                          
-                          $date_creation = $row['date_creation'];
-                          $start_date = date("M d, h:i a", strtotime($date_creation));
-                          
-                          $due_date_db = $row['due_date'];
-                          
-                          $due_date = date("M d, h:i a", strtotime($due_date_db));
-
-
-                          $submitted_status = "";
-
-
-                          $submitted_grade_status = "";
-
-
-                          $score = 0;
-
-                          $total = "";
-
-                          $subjectAssignmentSubmission = new SubjectAssignmentSubmission($con);
-
-                          $statusSubmission = $subjectAssignmentSubmission
-                              ->CheckStatusSubmission(
-                              $subject_code_assignment_id,
-                              $studentLoggedInId, $school_year_id);
-                          
+                          $submitted_grade_status = "
+                              <i style='color: orange;' class='fas fa-flag'></i>
+                          ";
                           $equivalent = "";
 
-                          if($statusSubmission !== NULL){
+                          $totalOver += $max_score;
+                          // $totalScore += $max_score;
 
-                              $submitted_grade =  $statusSubmission['subject_grade'];
-                              // $graded_over_score =  $statusSubmission['max_score'];
-                              $date_graded =  $statusSubmission['date_graded'];
+                      }else if(strtotime($due_date_db) >  $nowTimestamp){
 
+                          // $submitted_status = "
+                          //     <i style='color: red;' class='fas fa-times'></i>
+                          // ";
+                          // $submitted_grade_status = "
+                          //         <i style='color: red;' class='fas fa-times'></i>
+                          // ";
 
-                              $score = $submitted_grade;
+                          $submitted_status = "-";
+                          $score = "?";
+                          $submitted_grade_status = "";
+                          $equivalent = "";
 
-                              if($submitted_grade != NULL){
-                                  
-                                  $submitted_grade_status = "
-                                      <i style='color: green;' class='fas fa-check'></i>
-                                  ";
-
-                                  $totalScore += $submitted_grade;
-                                  $totalOver += $max_score;
-                                  
-
-                                  $pecentage_equivalent = ($submitted_grade / $max_score) * 100;
-                                  $equivalent = round($pecentage_equivalent, 0, PHP_ROUND_HALF_UP);
-                                  $equivalent = $equivalent . "%";
-                                  
-                              }
-
-                              if($submitted_grade == NULL && $date_graded == NULL){
-                                  $submitted_grade_status = "
-                                      <i style='color: orange;' class='fas fa-times'></i>
-                                  ";
-                                  $score = "??";
-                              }
-
-                              $submitted_status = "
-                                  <i style='color: green;' class='fas fa-check'></i>
-                              ";
-
-                          }else if($statusSubmission == NULL){
-
-                              $submitted_status = "
-                                  <i style='color: red;' class='fas fa-times'></i>
-                              ";
-                              $submitted_grade_status = "
-                                      <i style='color: red;' class='fas fa-times'></i>
-                              ";
-
-                              $nowTimestamp = strtotime($now);
-
-                              if(strtotime($due_date_db) <=  $nowTimestamp){
-                                  $submitted_status = "
-                                      <i style='color: orange;' class='fas fa-flag'></i>
-                                  ";
-
-                                  $submitted_grade_status = "
-                                      <i style='color: orange;' class='fas fa-flag'></i>
-                                  ";
-                                  $equivalent = "";
-
-                                  $totalOver += $max_score;
-                                  // $totalScore += $max_score;
-
-                              }else if(strtotime($due_date_db) >  $nowTimestamp){
-
-                                  // $submitted_status = "
-                                  //     <i style='color: red;' class='fas fa-times'></i>
-                                  // ";
-                                  // $submitted_grade_status = "
-                                  //         <i style='color: red;' class='fas fa-times'></i>
-                                  // ";
-
-                                  $submitted_status = "-";
-                                  $score = "?";
-                                  $submitted_grade_status = "";
-                                  $equivalent = "";
-
-                              }
-                          }
-
-                        }
                       }
-
-                      // echo "allGivenAssignments: "; var_dump(count($allGivenAssignments));
-                      // echo "<br>";
-                      
-                      ?>
-                        <div style="width: 100%" class="floating noOutline">
-                            
-                            <a href="<?php echo $courses_url; ?>">
-                                <header>
-                                    <div class="title">
-                                        <h3><?= $subject_title; ?> <em><?= "SY$fomatTerm-$period_short";?></em> &nbsp; &nbsp; <em class="text-primary"><span> </span><?= $equivalent != NULL ? "<a href='../courses/grade_progress.php?id=$student_subject_id'>Grade $equivalent</a>" : "";?></em></h3>
-                                        <small><?= $instructor_name?></small>
-                                        <br>
-                                        <small style="color: orange;">Archived</small>
-                                    
-                                    </div>
-                                </header>
-                            </a>
-
-                            <main>
-
-                                <div class="progress" style="height: 20px">
-                                    <div class="progress-bar" style="width: 25%">25%</div>
-                                </div>
-
-                                <div class="action">
-                                    <button
-                                    class="task"
-                                    data-toggle="tooltip"
-                                    data-placement="bottom"
-                                    title="No Assignments Due"
-                                    >
-                                    <i class="bi bi-file-earmark">0</i>
-                                    </button>
-                                </div>
-
-                            </main>
-                            
-                        </div>
-
-                      <?php
-
                   }
 
-              ?>
-          <?php endif;?>
-
+                }
+              }
+          ?>
+          <div class="floating noOutline">
+            <a href="<?php echo $course_url ?>">
+              <header>
+                <div class="title">
+                  <h3><?= $subject_title; ?> <em><?= "SY$fomatTerm-$period_short";?></em> &nbsp; &nbsp; <span>Grade </span>70%</h3>
+                  <small><?= $instructor_name; ?></small>
+                  <small style="color: orange">Archived</small>
+                </div>
+              </header>
+            </a>
+            <main>
+              <div class="progress" style="height: 20px">
+                <div class="progress-bar" style="width: 100%">100%</div>
+              </div>
+              <div class="action">
+                <button 
+                  class="task"
+                  data-toggle="tooltip"
+                  data-placement="bottom"
+                  title="No Assignments Due"
+                >
+                  <i class="bi bi-file-earmark">0</i>
+                </button>
+              </div>
+            </main>
+          </div>
+        <?php
+            }
+        ?>
+        <?php endif; ?>
       </main>
     </div>
-
-
   </body>
- 
+</html>

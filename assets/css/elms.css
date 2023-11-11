@@ -41,6 +41,32 @@ form .row>span>div>a {
     align-items: center;
 }
 
+.floating.profile {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+}
+
+.floating>.img-container {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+    position: relative;
+}
+
+.floating>.img-container>img {
+    width: 100%;
+    position: absolute;
+    top: 0;
+}
+
+.floating>.user-description {
+    margin-left: 10px;
+}
+
+/*RESPONSIVE*/
 @media only screen and (max-width: 800px) {
     form>.row>span>label {
         display: block;
@@ -52,6 +78,12 @@ form .row>span>div>a {
 
     form .row>span {
         flex-wrap: wrap;
+        flex-direction: column;
+    }
+}
+
+@media only screen and (max-width: 605px) {
+    .floating.profile {
         flex-direction: column;
     }
 }

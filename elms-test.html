@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ELMS - Daehan College of Business and Technology</title>
+    <!--Link JavaScript-->
+    <script src="assets/js/elms-sidebar.js" defer></script>
+    <script src="assets/js/elms-dropdown.js" defer></script>
+    <script src="assets/js/table-dropdown.js" defer></script>
+    <script src="assets/js/calendar.js" defer></script>
+    <!--Link styleshets-->
+    <link rel="stylesheet" href="assets/css/sidebar.css" />
+    <link rel="stylesheet" href="assets/css/fonts.css" />
+    <link rel="stylesheet" href="assets/css/content.css" />
+    <link rel="stylesheet" href="assets/css/buttons.css" />
+    <link rel="stylesheet" href="assets/css/table.css" />
+    <link rel="stylesheet" href="assets/css/elms.css" />
+    <link rel="stylesheet" href="assets/css/calendar.css" />
+    <!--Custom CSS-->
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+    />
+    <!--Link Fonts-->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Lato"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Arimo"
+    />
+    <style>
+      body {
+        background-color: white;
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="sidebar-nav">
+      <div class="navigationContainer">
+        <div class="navigationItem">
+          <a href="#">
+            <span class="badge">5</span>
+            <i class="bi bi-clipboard-data">
+              <span>Dashboard</span>
+            </i>
+          </a>
+        </div>
+        <div class="navigationItem">
+          <a href="#">
+            <span class="badge">5</span>
+            <i class="bi bi-bell-fill">
+              <span>Notification</span>
+            </i>
+          </a>
+        </div>
+        <div class="navigationItem">
+          <a href="#">
+            <i class="bi bi-person-circle">
+              <span>User</span>
+            </i>
+          </a>
+        </div>
+        <div class="navigationItem">
+          <a href="#">
+            <i class="bi bi-box-arrow-in-left">
+              <span>Log-out</span>
+            </i>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="content" id="elms-content">
+      <div class="icons">
+        <button class="sidebar">
+          <i class="bi bi-list"></i>
+        </button>
+        <div class="notif">
+          <button
+            class="icon"
+            data-toggle="tooltip"
+            data-placement="bottom"
+            title="Notification"
+          >
+            <i class="bi bi-bell-fill"></i>
+            <span class="badge-1">3</span>
+          </button>
+          <div class="notif-menu">
+            <a href="#" class="notif-item">
+              <div class="col">
+                <header>
+                  <div class="title">
+                    <h5>
+                      Teacher <i class="bi bi-x-lg" style="color: red"></i>
+                    </h5>
+                    <span
+                      >You have completed the course Workplace Etiquette</span
+                    >
+                    <small>Oct 12, 7:27pm</small>
+                  </div>
+                </header>
+              </div>
+            </a>
+            <a href="#" class="notif-item">
+              <div class="col">
+                <header>
+                  <div class="title">
+                    <h5>
+                      Teacher
+                      <i class="bi bi-check-lg" style="color: var(--clean)"></i>
+                    </h5>
+                    <span
+                      >You are now enrolled in course Workplace Etiquette</span
+                    >
+                    <small>Oct 12, 7:27pm</small>
+                  </div>
+                </header>
+              </div>
+            </a>
+            <a href="#" class="notif-item">
+              <div class="col">
+                <header>
+                  <div class="title">
+                    <h5>
+                      Teacher
+                      <i class="bi bi-check-lg" style="color: var(--clean)"></i>
+                    </h5>
+                    <span
+                      >Due soon: assignment '05 Activity 1 - ARG' in class
+                      'Technopreneurship'</span
+                    >
+                    <small>Oct 12, 5:33pm</small>
+                  </div>
+                </header>
+              </div>
+            </a>
+            <a href="#" class="notif-item">
+              <div class="col">
+                <header>
+                  <div class="title">
+                    <h5>
+                      Teacher
+                      <i class="bi bi-check-lg" style="color: var(--clean)"></i>
+                    </h5>
+                    <span
+                      >Given: assignment '05 Task Performance 1' in course
+                      'Software Quality Assurance'</span
+                    >
+                    <small>Oct 12, 7:27pm</small>
+                  </div>
+                </header>
+              </div>
+            </a>
+            <div class="action">
+              <button class="default">See all</button>
+              <button class="clean">Mark all read</button>
+            </div>
+          </div>
+        </div>
+        <button
+          class="calendar-btn"
+          title="Calendar"
+          onclick="window.location.href = '#'"
+        >
+          <i class="bi bi-calendar-event"></i>
+        </button>
+        <div class="username">
+          <button title="Profile">Cultura, Dhan Exequiel M.</button>
+        </div>
+        <div class="log-out">
+          <button class="log-out-btn">
+            <i class="bi bi-chevron-down"></i>
+          </button>
+          <div class="log-out-item">
+            <button class="item">
+              <i class="bi bi-box-arrow-in-left">
+                <span>Log-out</span>
+              </i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="content-header">
+        <header>
+          <div class="title">
+            <h1>Dashboard</h1>
+          </div>
+        </header>
+        <div class="cards">
+          <div class="card">
+            <sup>Type</sup>
+            <sub>Dropbox</sub>
+          </div>
+          <div class="card">
+            <sup>Max Score</sup>
+            <sub>100</sub>
+          </div>
+          <div class="card">
+            <sup>Category</sup>
+            <sub>Assignment</sub>
+          </div>
+          <div class="card">
+            <sup>Start</sup>
+            <sub>Oct 13, 05:17am</sub>
+          </div>
+          <div class="card">
+            <sup>Due</sup>
+            <sub>Oct 15</sub>
+          </div>
+        </div>
+      </div>
+      <div class="tabs">
+        <button class="tab">Enrolled</button>
+        <button class="tab">Completed</button>
+      </div>
+      <nav>
+        <a href="Dashboard_enrolled.html"
+          ><i class="bi bi-arrow-return-left"></i>Back</a
+        >
+      </nav>
+      <main>
+        <div class="bars right">
+          <div class="floating">
+            <main>
+              <div class="calendar-container">
+                <div class="calendar-header">
+                  <button id="prev-month">&lt;</button>
+                  <h2 id="current-month-year"></h2>
+                  <button id="next-btn">&gt;</button>
+                </div>
+                <table class="calendar">
+                  <thead>
+                    <tr>
+                      <th>Sun</th>
+                      <th>Mon</th>
+                      <th>Tue</th>
+                      <th>Wed</th>
+                      <th>Thu</th>
+                      <th>Fri</th>
+                      <th>Sat</th>
+                    </tr>
+                  </thead>
+                  <tbody id="calendar-body"></tbody>
+                </table>
+              </div>
+            </main>
+          </div>
+          <div class="floating">
+            <header>
+              <div class="title">
+                <h3>To-do <em>(3)</em></h3>
+              </div>
+            </header>
+            <ul>
+              <li>
+                <a href="#">Software Quality Assurance <span>(3)</span></a>
+              </li>
+            </ul>
+          </div>
+          <div class="floating">
+            <header>
+              <div class="title">
+                <h3>Announcements <em>(0)</em></h3>
+              </div>
+            </header>
+            <ul>
+              <li></li>
+            </ul>
+          </div>
+        </div>
+        <div class="floating noOutline">
+          <a href="subject_TOC_template.html">
+            <header>
+              <div class="title">
+                <h3>Sample <em>SY2324-1T</em></h3>
+                <small>Teacher</small>
+                <em>BSCS701</em>
+              </div>
+            </header>
+          </a>
+          <main>
+            <div class="progress" style="height: 20px">
+              <div class="progress-bar" style="width: 50%">50%</div>
+            </div>
+            <div class="action">
+              <button
+                class="task"
+                data-toggle="tooltip"
+                data-placement="bottom"
+                title="No Assignments Due"
+              >
+                <i class="bi bi-file-earmark">0</i>
+              </button>
+            </div>
+          </main>
+        </div>
+        <div class="floating noOutline">
+          <a href="subject_TOC_template.html">
+            <header>
+              <div class="title">
+                <h3>Sample <em>SY2324-1T</em></h3>
+                <small>Teacher</small>
+                <em>BSCS701</em>
+              </div>
+            </header>
+          </a>
+          <main>
+            <div class="progress" style="height: 20px">
+              <div class="progress-bar" style="width: 50%">50%</div>
+            </div>
+            <div class="action">
+              <button
+                class="task"
+                data-toggle="tooltip"
+                data-placement="bottom"
+                title="No Assignments Due"
+              >
+                <i class="bi bi-file-earmark">
+                  <small>5 modules</small>
+                </i>
+              </button>
+            </div>
+          </main>
+        </div>
+        <div class="bars">
+          <div class="floating">
+            <header>
+              <div class="title">
+                <h4>Progress</h4>
+              </div>
+            </header>
+            <main>
+              <div class="progress" style="height: 20px">
+                <div class="progress-bar" style="width: 50%">50%</div>
+              </div>
+            </main>
+          </div>
+          <div class="floating">
+            <header>
+              <div class="title">
+                <h4>Grade</h4>
+              </div>
+            </header>
+            <main>
+              <div class="progress" style="height: 20px">
+                <div class="progress-bar" style="width: 50%">0.5</div>
+              </div>
+            </main>
+          </div>
+          <div class="floating">
+            <header>
+              <div class="title">
+                <h4>Scores</h4>
+              </div>
+            </header>
+            <main>
+              <div class="progress" style="height: 20px">
+                <div class="progress-bar" style="width: 50%">50%</div>
+              </div>
+            </main>
+          </div>
+        </div>
+        <div class="floating">
+          <header>
+            <div class="title">
+              <h3>Subject <em>Prelim</em></h3>
+              <small>Some description</small>
+            </div>
+            <div class="action">
+              <div class="dropdown">
+                <button class="table-drop">
+                  <i class="bi bi-chevron-up"></i>
+                  <i class="bi bi-chevron-down"></i>
+                </button>
+              </div>
+            </div>
+          </header>
+          <main>
+            <table class="b">
+              <thead>
+                <tr>
+                  <th>Section</th>
+                  <th>Submitted</th>
+                  <th>Score</th>
+                  <th>Due</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><a href="#">Handout</a></td>
+                  <td class="b-1">-</td>
+                  <td class="b-1">-</td>
+                  <td class="b-1">-</td>
+                  <td class="b-1">></td>
+                </tr>
+                <tr>
+                  <td><a href="#">Handout</a></td>
+                  <td class="b-1">-</td>
+                  <td class="b-1">-</td>
+                  <td class="b-1">-</td>
+                  <td class="b-1">></td>
+                </tr>
+              </tbody>
+            </table>
+          </main>
+        </div>
+        <div class="floating">
+          <main>
+            <table class="d">
+              <thead>
+                <tr>
+                  <th>Sun</th>
+                  <th>Mon</th>
+                  <th>Tue</th>
+                  <th>Wed</th>
+                  <th>Thu</th>
+                  <th>Fri</th>
+                  <th>Sat</th>
+                </tr>
+              </thead>
+              <tbody class="days_headers">
+                <tr></tr>
+                <tr></tr>
+                <tr></tr>
+              </tbody>
+            </table>
+          </main>
+        </div>
+        <div class="floating">
+          <main>
+            <table class="d">
+              <thead>
+                <tr>
+                  <th>Sun</th>
+                  <th>Mon</th>
+                  <th>Tue</th>
+                  <th>Wed</th>
+                  <th>Thu</th>
+                  <th>Fri</th>
+                  <th>Sat</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr id="day-row"></tr>
+              </tbody>
+            </table>
+          </main>
+        </div>
+        <div class="floating">
+          <header>
+            <div class="title">
+              <h3>Notifications</h3>
+            </div>
+            <div class="action">
+              <button class="clean">
+                <span>Mark as read</span>
+              </button>
+            </div>
+          </header>
+          <main>
+            <table class="a">
+              <thead>
+                <tr>
+                  <th>From</th>
+                  <th class="type">Type</th>
+                  <th>Subject</th>
+                  <th class="sent">Sent</th>
+                  <th class="read">Read?</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Albert Einstein</td>
+                  <td class="type">Assignment</td>
+                  <td>
+                    <a href="#">
+                      <i class="bi bi-x-lg" style="color: red"></i>
+                      Due soon: assignment '03 Laboratory Exercise 1 - ARG' in
+                      class 'Information Assurance and Security (Data Privacy) -
+                      SY2324-1T'
+                    </a>
+                  </td>
+                  <td class="sent">12:23 am</td>
+                  <td class="read"><i class="bi bi-x"></i></td>
+                </tr>
+                <tr>
+                  <td>Albert Einstein</td>
+                  <td class="type">Assignment</td>
+                  <td>
+                    <a href="#">
+                      <i class="bi bi-check-lg" style="color: var(--clean)"></i>
+                      Due soon: assignment '03 Laboratory Exercise 1 - ARG' in
+                      class 'Information Assurance and Security (Data Privacy) -
+                      SY2324-1T'
+                    </a>
+                  </td>
+                  <td class="sent">12:23 am</td>
+                  <td class="read"><i class="bi bi-x"></i></td>
+                </tr>
+              </tbody>
+            </table>
+          </main>
+        </div>
+        <div class="floating row">
+          <main class="row" style="width: 320px">
+            <table class="a">
+              <thead>
+                <tr>
+                  <th colspan="2">Assignments</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th></th>
+                  <th>Due</th>
+                </tr>
+                <tr>
+                  <th>Students</th>
+                  <th>Overall</th>
+                </tr>
+                <tr>
+                  <td>Doe, Jane</td>
+                  <td>86</td>
+                </tr>
+                <tr>
+                  <td>Cultura, Dhan Exequiel M.</td>
+                  <td>90</td>
+                </tr>
+              </tbody>
+            </table>
+          </main>
+          <main class="row">
+            <table class="a">
+              <thead>
+                <tr>
+                  <th>Extra Assignment</th>
+                  <th>USCP Topic Assignment 1</th>
+                  <th>USCP Topic Assignment 2</th>
+                  <th>USCP Topic Assignment 3</th>
+                  <th>USCP Topic Assignment 4</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th>Oct 15</th>
+                  <th>Oct 15</th>
+                  <th>Oct 13</th>
+                  <th>Oct 13</th>
+                  <th>Oct 13</th>
+                </tr>
+                <tr>
+                  <th>100</th>
+                  <th>100</th>
+                  <th>100</th>
+                  <th>100</th>
+                  <th>100</th>
+                </tr>
+                <tr>
+                  <td><input type="text" name="" id="" /></td>
+                  <td><input type="text" name="" id="" /></td>
+                  <td><input type="text" name="" id="" /></td>
+                  <td><input type="text" name="" id="" /></td>
+                  <td><input type="text" name="" id="" /></td>
+                </tr>
+                <tr>
+                  <td><input type="text" name="" id="" /></td>
+                  <td><input type="text" name="" id="" /></td>
+                  <td><input type="text" name="" id="" /></td>
+                  <td><input type="text" name="" id="" /></td>
+                  <td><input type="text" name="" id="" /></td>
+                </tr>
+              </tbody>
+            </table>
+          </main>
+        </div>
+
+        <div class="floating">
+          <header>
+            <div class="title">
+              <span>(2 / 4)</span>
+              <h3>Topic Name</h3>
+              <small>Description</small>
+            </div>
+          </header>
+        </div>
+
+        <div class="floating">
+          <header>
+            <div class="title">
+              <h3>Modules</h3>
+            </div>
+            <div class="action">
+              <button class="information">Progress Tab</button>
+            </div>
+          </header>
+        </div>
+
+        <div class="bars">
+          <div class="floating">
+            <header>
+              <div class="title">
+                <h3>Assignments</h3>
+                <small>TODO</small>
+                <small><a href="#">TODO</a></small>
+              </div>
+            </header>
+          </div>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

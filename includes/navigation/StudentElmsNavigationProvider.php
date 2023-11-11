@@ -36,12 +36,19 @@
             $dashboard_lms_url = $base_url .  "lms/student_dashboard.php";
             $notification_lms_url = $base_url .  "notification/index.php";
 
+            $user_lms_url = $base_url . "profile/my_profile.php";
+
             $sideBarNavigationItem = "";
 
             if(User::IsStudentEnrolledAuthenticatedLMS()) {
 
+                $sideBarNavigationItem .= Helper::createNavByIcon("User", 
+                    "bi bi-person-circle",
+                    $user_lms_url,
+                    Constants::$navigationClass . Helper::GetActiveClass($page, "user"));
+
                 $sideBarNavigationItem .= Helper::createNavByIcon("Courses", 
-                    "bi bi-clipboard-data icon",
+                    "bi bi-collection",
                     $courses_lms_url,
                     Constants::$navigationClass . Helper::GetActiveClass($page, "courses"));
 
@@ -51,7 +58,7 @@
                     Constants::$navigationClass . Helper::GetActiveClass($page, "lms"));
                 
                 $sideBarNavigationItem .= Helper::createNavByIcon("Notification", 
-                    "bi bi-clipboard-data icon",
+                    "bi bi-bell-fill icon",
                     $notification_lms_url,
                     Constants::$navigationClass . Helper::GetActiveClass($page, "notification"));
 

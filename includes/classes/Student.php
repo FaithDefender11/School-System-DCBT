@@ -91,6 +91,9 @@ class Student{
     public function GetEmail() {
         return isset($this->sqlData['email']) ? $this->sqlData["email"] : ""; 
     }
+    public function GetStudentProfile() {
+        return isset($this->sqlData['profilePic']) ? $this->sqlData["profilePic"] : "";
+    }
     public function GetFirstName() {
         return isset($this->sqlData['firstname']) ? ucwords($this->sqlData["firstname"]) : ""; 
     }

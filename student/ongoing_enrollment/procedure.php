@@ -1,5 +1,4 @@
-<?php 
-
+<?php
     include_once('../../includes/student_header.php');
     include_once('../../includes/classes/Pending.php');
     include_once('../../includes/classes/Section.php');
@@ -54,6 +53,7 @@
     //     && $endEnrollment < $now)){
 
         # Start of Enrollment is not yet set now.
+        Helper::enrollmentStudentHeader($con, $studentLoggedInId);
         echo "
             <div class='container'>
                 <div class='alert alert-warning mt-4'>
@@ -94,7 +94,6 @@
             $student_contact = $student->GetContactNumber();
             $student_address = $student->GetStudentAddress();
             $admission_status = $student->GetAdmissionStatus();
-            $student_student_status = $student->GetStudentStatus();
             $student_civil_status = $student->GetCivilStatus();
             $student_nationality = $student->GetNationality();
             $student_birthday = $student->GetStudentBirthdays();
@@ -112,10 +111,8 @@
             $student_level = $student_admission_status == "Old" 
                 && $current_semester == "First" 
                 && $student_student_status == "Regular" 
-
                 ? $student_level + 1 : $student_level;
-
-
+            
             $current_student_level = $student->GetStudentLevel($student_id);
 
             // var_dump($current_student_level);
@@ -123,7 +120,7 @@
             $apply_to_level = $student_admission_status == "Old" 
                 && $current_semester == "First" 
                 ? $current_student_level + 1 : $current_student_level;
-            
+
             // echo $student_level;
             $student_lrn = $student->GetStudentLRN();
             $student_status = $student->GetStudentStatus();
@@ -159,12 +156,6 @@
 
             // echo "qweqwe";
 
-
-            // $checkHasForm = $enrollment->CheckAlreadyHasEnrollmentForm(
-            //     $student_id, $school_year_id);
-
-            // var_dump($checkHasForm);
-
             if(isset($_GET['information']) && $_GET['information'] == "show"){
                 include_once("./os_information.php");
             }
@@ -178,11 +169,6 @@
             }
 
             if(isset($_GET['subject_summary']) && $_GET['subject_summary'] == "show"){
-
-
-               
-
-                    // var_dump($check);
 
                 if(isset($_POST['apply_next_semester_os_' . $student_id])){
 
@@ -210,8 +196,6 @@
 
                     }
                     else if($current_semester == "Second"){
-
-                    
                         $enrollment_request_success = $enrollment->ApplyEnrollmentOS($student_id, $student_course_id,
                             $school_year_id, $enrollment_form_id, $student_status, $type);
                         
@@ -226,180 +210,153 @@
                     
 
                 }
-
-                ?>
-
-                    <div class="content">
-
-                        <main>
-                            <div class="floating noBorder">
-
-                                <header>
-                                    <div class="title row">
-                                        <h2 style="color: var(--titleTheme)">Existing Student Form</h2>
-                    <p class="text-right mt-0">Generated Form ID: <?php echo $enrollment_form_id;?> &nbsp; Status: &nbsp;  <em style="font-size: 15px;"><?= $student_student_status;?></em></p>
-                                    
-                                    </div>
-                                </header>
-
-                                <div class="progress">
-                                    <span class="dot active"><p>Update Information</p></span>
-                                    <span class="line active"></span>
-                                    <span class="dot active"> <p>Enrollment Details</p></span>
-                                    <span class="line active"></span>
-                                    <span class="dot active"> <p>Validate Details</p></span>
-                                    <span class="line active"></span>
-                                    <span class="dot active"> <p>Finished</p></span>
-                                </div>
-                                <hr>
-
-                                <form method="POST">
-                                    <main>
-                                        <div class="floating">
-
-                                            <!-- REGULAR -> Populate Subjects -->
-                                            <!-- IRREGULAR -> Should be evaluated by registrar. -->
-                                            <?php 
-
-                                                if($student_status == "Regular"){
-                                                    
-                                                    ?>
-                                                        <header>
-                                                            <div class="title">
-                                                                <h3>Subjects for upcoming <?php echo "$programName-$student_level"; ?> <?php echo "&nbsp A.Y $current_term - $current_semester Semester";?></h3>
-                                                            </div>
-                                                        </header>
-
-                                                        <form method="post">
-
-                                                            <main>
-                                                                <table class="a">
-                                                                    <thead>
-                                                                        <tr class="text-center"> 
-                                                                            <th rowspan="2">Code</th>
-                                                                            <th rowspan="2">Subject Title</th>
-                                                                            <th rowspan="2">Unit</th>
-                                                                            <th rowspan="2">Type</th>
-                                                                        </tr>
-                                                                    </thead>
-                                                                    <tbody>
-                                                                        <?php
-
-                                                                            $active = "yes";
-
-                                                                            # Only Available now.
-                                                                            $sql = $con->prepare("SELECT 
-                                                                            
-                                                                                DISTINCT t2.subject_title, t2.subject_type, t2.unit, t2.subject_code
-
-                                                                                FROM course AS t1
-                                                                                INNER JOIN subject_program AS t2 ON t2.program_id = t1.program_id
-                                                                                WHERE t2.program_id = :program_id
-                                                                                AND t2.course_level = :course_level
-                                                                                AND t2.semester = :semester
-                                                                            ");
-
-                                                                            $sql->bindParam(":program_id", $student_program_id);
-                                                                            $sql->bindParam(":course_level", $student_level);
-                                                                            $sql->bindParam(":semester", $current_semester);
-                                                                            $sql->execute();
-                                                                        
-                                                                            if($sql->rowCount() > 0){
-
-                                                                                while($get_course = $sql->fetch(PDO::FETCH_ASSOC)){
-
-                                                                                    $subject_title = $get_course['subject_title'];
-                                                                                    $subject_type = $get_course['subject_type'];
-                                                                                    $unit = $get_course['unit'];
-                                                                                    $subject_code = $get_course['subject_code'];
-                                                                                    
-                                                                                    echo "
-                                                                                        <tr class='text-center'>
-                                                                                            <td>$subject_code</td>
-                                                                                            <td>$subject_title</td>
-                                                                                            <td>$unit</td>
-                                                                                            <td>$subject_type</td>
-                                                                                        </tr>
-                                                                                    ";
-                                                                                    }
-                                                                            }else{
-                                                                                echo "
-                                                                                    <div class='col-md-12'>
-                                                                                        <h4 class='text-center text-muted'>No currently available section for $student_program_acronym-$student_level</h4>
-                                                                                    </div>
-                                                                                ";
-                                                                            }
-                                                                        ?>
-                                                                    </tbody>
-                                                                </table>
-                                                            </main>
-
-                                                            <div style="margin-top: 20px;" class="action">
-                                                                <button
-                                                                    type="button"
-                                                                    class="default large"
-                                                                    onclick="window.location.href = 'procedure.php?validate_details=show'">
-                                                                    Return
-                                                                </button>
-
-                                                                <?php if($checkHasEnrollment == false):?>
-                                                                    <button
-                                                                        class="default large success"
-                                                                        name="apply_next_semester_os_<?php echo $student_id;?>"
-                                                                        type="submit">
-                                                                        Apply for Next Semester
-                                                                    </button>
-                                                                <?php endif ?>
-                                                                
-                                                            </div>
-                                                        </form>
-
-                                                    <?php
-                                                }
-                                                
-                                                else if($student_status == "Irregular"){
-                                                    ?>
-                                                        <p>Note. Enrollee personel should evaluate you to know your required subjects for this <?php echo $current_semester;?> Semester</p>
-
-                                                        <form method="post">
-
-
-                                                            <div style="margin-top: 20px;" class="action">
-                                                                <button
-                                                                type="button"
-                                                                    class="default large"
-                                                                    onclick="window.location.href = 'procedure.php?validate_details=show'">
-                                                                    Return
-                                                                </button>
-                                                                <?php if($checkHasEnrollment == false):?>
-                                                                    <button
-                                                                        class="default large success"
-                                                                        name="apply_next_semester_os_<?php echo $student_id;?>"
-                                                                        type="submit">
-                                                                        Apply for Next Semester
-                                                                    </button>
-                                                                <?php endif ?>
-                                                            </div>
-                                                        </form>
-                                                    <?php
-                                                }
-                                            
-                                            ?>
-                                            
-
-
-                                        </div>
-                                    </main>
-
-                                </form>
-
-
-                            </div>
-                        </main>
-
-                    </div>
-                <?php
-            }
-    }
-
 ?>
+            <?php
+                echo Helper::enrollmentStudentHeader($con, $studentLoggedInId);
+            ?>
+
+            <main>
+                <div class="floating noBorder">
+                    <header>
+                        <div class="title">
+                            <h3>Existing Student Form</h3>
+                            <small>Generated Form ID: <?php echo $enrollment_form_id;?></small>
+                        </div>
+                    </header>
+                    <div class="progress">
+                        <span class="dot active"><p>Update Information</p></span>
+                        <span class="line active"></span>
+                        <span class="dot active"> <p>Enrollment Details</p></span>
+                        <span class="line active"></span>
+                        <span class="dot active"> <p>Validate Details</p></span>
+                        <span class="line active"></span>
+                        <span class="dot active"> <p>Finished</p></span>
+                    </div>
+                    <main>
+                        <form method="POST">
+                            <?php
+                                if ($student_status == "Regular") {
+                                    ?>
+                                    <header>
+                                        <div class="title">
+                                            <h3>Subjects for upcoming <?php echo "$programName-$student_level"; ?> <?php echo "&nbsp A.Y $current_term - $current_semester Semester";?></h3>
+                                        </div>
+                                    </header>
+                                    <form method="POST">
+                                        <main>
+                                            <table class="a">
+                                                <thead>
+                                                <tr>
+                                                    <th>Code</th>
+                                                    <th>Subject</th>
+                                                    <th>Unit</th>
+                                                    <th>Type</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <?php
+                                                        $active = "yes";
+
+                                                        # Only Available now.
+                                                        $sql = $con->prepare("SELECT 
+                                                        
+                                                            DISTINCT t2.subject_title, t2.subject_type, t2.unit, t2.subject_code
+
+                                                            FROM course AS t1
+                                                            INNER JOIN subject_program AS t2 ON t2.program_id = t1.program_id
+                                                            WHERE t2.program_id = :program_id
+                                                            AND t2.course_level = :course_level
+                                                            AND t2.semester = :semester
+                                                        ");
+
+                                                        $sql->bindParam(":program_id", $student_program_id);
+                                                        $sql->bindParam(":course_level", $student_level);
+                                                        $sql->bindParam(":semester", $current_semester);
+                                                        $sql->execute();
+                                                    
+                                                        if($sql->rowCount() > 0){
+
+                                                            while($get_course = $sql->fetch(PDO::FETCH_ASSOC)){
+
+                                                                $subject_title = $get_course['subject_title'];
+                                                                $subject_type = $get_course['subject_type'];
+                                                                $unit = $get_course['unit'];
+                                                                $subject_code = $get_course['subject_code'];
+                                                                
+                                                                echo "
+                                                                    <tr>
+                                                                        <td>$subject_code</td>
+                                                                        <td>$subject_title</td>
+                                                                        <td>$unit</td>
+                                                                        <td>$subject_type</td>
+                                                                    </tr>
+                                                                ";
+                                                                }
+                                                        }else{
+                                                            echo "
+                                                                <div class='col-md-12'>
+                                                                    <h4 class='text-center text-muted'>No currently available section for $student_program_acronym-$student_level</h4>
+                                                                </div>
+                                                            ";
+                                                        }
+                                                    ?>
+                                                </tbody>
+                                            </table>
+                                        </main>
+                                        <div class="action">
+                                            <button class="default large" 
+                                                onclick="window.location.href = 'procedure.php?validate_details=show'"
+                                            >
+                                                Return
+                                            </button>
+                                            <?php if($checkHasEnrollment == false): ?>
+                                                <button
+                                                    class="default large success"
+                                                    name="apply_next_semester_os_<?php echo $student_id;?>"
+                                                    type="submit"
+                                                >
+                                                    Apply for Next Semester
+                                                </button>
+                                            <?php endif; ?>
+                                        </div>
+                                    </form>
+                                <?php
+                                }
+
+                                else if($student_status == "Irregular") {
+                                    ?>
+                                    <p>Note. Enrollee personel should evaluate you to know your required subjects for this <?php echo $current_semester;?> Semester</p>
+                                    <form method="POST">
+                                        <div class="action">
+                                            <button
+                                                type="button"
+                                                class="default large"
+                                                onclick="window.location.href = 'procedure.php?validate_details=show'"
+                                            >
+                                                Return
+                                            </button>
+                                            <?php if($checkHasEnrollment == false): ?>
+                                                <button
+                                                    class="default large success"
+                                                    name="apply_next_semester_os_<?php echo $student_id;?>"
+                                                    type="submit"
+                                                >
+                                                    Apply for Next Semester
+                                                </button>
+                                            <?php endif; ?>
+                                        </div>
+                                    </form>
+                                    <?php
+                                }
+                            ?>
+                        </form>
+                    </main>
+                </div>
+            </main>
+            <?php
+            }
+        }
+        ?>
+        </div>
+    </body>
+</html>

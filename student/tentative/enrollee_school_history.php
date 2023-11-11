@@ -1,7 +1,4 @@
-
-<?php 
-
-
+<?php
     $pending = new Pending($con, $pending_enrollees_id);
 
     $doesEnrolleeHasSchoolHistoryMade = $pending->CheckEnrolleeHasSchoolHistory($pending_enrollees_id);
@@ -147,132 +144,128 @@
             exit(); 
         }
     }
-
 ?>
 
-
-<div class="content">
-    <nav>
-        <a href="<?php echo $logout_url;?>">
-            <i class="fas fa-sign-out-alt"></i>
-            <h3>Logout</h3>
-        </a>
-    </nav>
-    <main>
-        <div class="floating noBorder">
-            <header>
-                <div class="title">
-                    <h2 style="color: var(--titleTheme)">New enrollment form</h2>
-                    <small>SY <?php echo $current_term; ?> &nbsp; <?php echo $current_semester; ?> Semester </small>
-                </div>
-            </header>
-
-            <div class="progress">
-                <span class="dot active"><p>Preferred Course/Strand</p></span>
-                <span class="line active"></span>
-                <span class="dot active"> <p>Personal Information</p></span>
-                <span class="line inactive"></span>
-                <span class="dot inactive"> <p>Validate Details</p></span>
-                <span class="line inactive"></span>
-                <span class="dot inactive"> <p>Finished</p></span>
-            </div>
+            <nav>
+                <a href="<?php echo $logout_url;?>">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <h3>Logout</h3>
+                </a>
+            </nav>
 
             <main>
-                <form method="POST">
-                    
+                <div class="floating noBorder">
                     <header>
                         <div class="title">
-                            <h4 style="font-weight: bold;">Previous School Information</h4>
+                            <h2 style="color: var(--titleTheme)">New enrollment form</h2>
+                            <small>SY <?php echo $current_term; ?> &nbsp; <?php echo $current_semester; ?> Semester </small>
                         </div>
                     </header>
 
-                    <div class="row">
-                        <span>
-                            <?php
-                                Helper::EchoErrorField(
-                                Constants::$schoolRequired,
-                                Constants::$invalidSchoolCharacters,
-                                Constants::$schoolIsTooShort,
-                                Constants::$schoolIsTooLong
-                                );
-                            ?>
-                            <label for="school_name">School Name <span class="red">*</span></label>
-                            <div>
-                                <input placeholder="Sta Lucia High School" required type="text" id="school_name" name="school_name" class="form-control" 
-                                value="<?php
-                                        echo Helper::DisplayText('school_name', $school_name);
-                                    ?>">
-                            </div>
-                        </span>
-                    </div>
-                    <div class="row">
-                        <span>
-                            <?php
-                                Helper::EchoErrorField(
-                                Constants::$addressRequired,
-                                Constants::$invalidAddressCharacters,
-                                Constants::$addressIsTooShort,
-                                Constants::$addressIsTooLong
-                                );
-                            ?>
-                            <label for="address">Address <span class="red">*</span></label>
-                            <div>
-                                <input required type="text" id="address" name="address"
-                                class="form-control" placeholder="House No Street Name Barangay City/Municipality" value="<?php
-                                    echo Helper::DisplayText('address', $address);
-                                ?>">
-                            </div>
-                        </span>
-                    </div>
-                    <div class="row">
-                        <span>
-                            <label for="year_started">Admission Year <span class="red">*</span></label>
-                            <div>
-                                <!-- <input required type="date" id="year_started" name="year_started"
-                                    class="form-control" value="<?php
-                                    echo Helper::DisplayText('year_started', $year_started);
-                                ?>"> -->
-                                <input autocomplete="off" maxlength="4" required type="text" id="year_started" name="year_started"
-                                    class="form-control" placeholder="e.g. 2020" value="<?php
-                                    echo Helper::DisplayText('year_started', $year_started);
-                                ?>">
-                            </div>
-                        </span>
-
-                        <span>
-                            <label for="year_ended">Graduation Year <span class="red">*</span></label>
-                            <div>
-                                <!-- <input required type="date" id="year_ended" name="year_ended" 
-                                class="form-control" value="<?php
-                                    echo Helper::DisplayText('year_started', $year_ended);
-                                ?>"> -->
-                                <input autocomplete="off" maxlength="4" required type="text" id="year_ended" name="year_ended"
-                                    class="form-control" placeholder="e.g. 2022" value="<?php
-                                    echo Helper::DisplayText('year_ended', $year_ended);
-                                ?>">
-                            </div>
-                        </span>
-                    </div>
-                    <div class="action">
-                        <button style="margin-right: 9px;"
-                        type="button"
-                            class="default large"
-                            onclick="window.location.href = 'process.php?new_student=true&step=enrollee_requirements';"
-                            >
-                        Return
-                        </button>
-                        <button
-                            class="default success large"
-                            name="student_school_history_btn_<?php echo $pending_enrollees_id ?>" 
-                            type="submit"
-                        >
-                        Proceed
-                        </button>
+                    <div class="progress">
+                        <span class="dot active"><p>Preferred Course/Strand</p></span>
+                        <span class="line active"></span>
+                        <span class="dot active"> <p>Personal Information</p></span>
+                        <span class="line inactive"></span>
+                        <span class="dot inactive"> <p>Validate Details</p></span>
+                        <span class="line inactive"></span>
+                        <span class="dot inactive"> <p>Finished</p></span>
                     </div>
 
-                </form>
-                
+                    <main>
+                        <form method="POST">
+                            <header>
+                                <div class="title">
+                                    <h4 style="font-weight: bold;">Previous School Information</h4>
+                                </div>
+                            </header>
+                            <div class="row">
+                                <span>
+                                    <?php
+                                        Helper::EchoErrorField(
+                                        Constants::$schoolRequired,
+                                        Constants::$invalidSchoolCharacters,
+                                        Constants::$schoolIsTooShort,
+                                        Constants::$schoolIsTooLong
+                                        );
+                                    ?>
+                                    <label for="school_name">School Name <span class="red">*</span></label>
+                                    <div>
+                                        <input placeholder="Sta Lucia High School" required type="text" id="school_name" name="school_name" class="form-control" 
+                                        value="<?php
+                                                echo Helper::DisplayText('school_name', $school_name);
+                                            ?>">
+                                    </div>
+                                </span>
+                            </div>
+                            <div class="row">
+                                <span>
+                                    <?php
+                                        Helper::EchoErrorField(
+                                        Constants::$addressRequired,
+                                        Constants::$invalidAddressCharacters,
+                                        Constants::$addressIsTooShort,
+                                        Constants::$addressIsTooLong
+                                        );
+                                    ?>
+                                    <label for="address">Address <span class="red">*</span></label>
+                                    <div>
+                                        <input required type="text" id="address" name="address"
+                                        class="form-control" placeholder="House No Street Name Barangay City/Municipality" value="<?php
+                                            echo Helper::DisplayText('address', $address);
+                                        ?>">
+                                    </div>
+                                </span>
+                            </div>
+                            <div class="row">
+                                <span>
+                                    <label for="year_started">Admission Year <span class="red">*</span></label>
+                                    <div>
+                                        <!-- <input required type="date" id="year_started" name="year_started"
+                                            class="form-control" value="<?php
+                                            echo Helper::DisplayText('year_started', $year_started);
+                                        ?>"> -->
+                                        <input autocomplete="off" maxlength="4" required type="text" id="year_started" name="year_started"
+                                            class="form-control" placeholder="e.g. 2020" value="<?php
+                                            echo Helper::DisplayText('year_started', $year_started);
+                                        ?>">
+                                    </div>
+                                </span>
+
+                                <span>
+                                    <label for="year_ended">Graduation Year <span class="red">*</span></label>
+                                    <div>
+                                        <!-- <input required type="date" id="year_ended" name="year_ended" 
+                                        class="form-control" value="<?php
+                                            echo Helper::DisplayText('year_started', $year_ended);
+                                        ?>"> -->
+                                        <input autocomplete="off" maxlength="4" required type="text" id="year_ended" name="year_ended"
+                                            class="form-control" placeholder="e.g. 2022" value="<?php
+                                            echo Helper::DisplayText('year_ended', $year_ended);
+                                        ?>">
+                                    </div>
+                                </span>
+                            </div>
+                            <div class="action">
+                                <button
+                                    type="button"
+                                    class="default large"
+                                    onclick="window.location.href = 'process.php?new_student=true&step=enrollee_requirements';"
+                                >
+                                    Return
+                                </button>
+                                <button
+                                    class="clean large"
+                                    name="student_school_history_btn_<?php echo $pending_enrollees_id ?>" 
+                                    type="submit"
+                                >
+                                    Proceed
+                                </button>
+                            </div>
+                        </form>
+                    </main>
+                </div>
             </main>
         </div>
-    </main>
-</div>
+    </body>
+</html>

@@ -1,6 +1,4 @@
-
-<?php 
-
+<?php
     $pending = new Pending($con, $pending_enrollees_id);
     $parent = new PendingParent($con, $pending_enrollees_id);
 
@@ -54,7 +52,7 @@
     $father_email = $parent->GetFatherEmail();
     $father_occupation = $parent->GetFatherOccupation();
 
-    // Father
+    // Mother
     $mother_firstname = $parent->GetMotherFirstName();
     $mother_lastname = $parent->GetMotherLastName();
     $mother_middle = $parent->GetMotherMiddleName();
@@ -565,431 +563,422 @@
         // echo "Parent's Occupation: $parent_occupation <br>";
         // echo "Parent's Relationship: $parent_relationship <br>";
     }
-
 ?>
 
-    <div class="content">
-        <nav>
-            <a href="<?php echo $logout_url;?>">
-                <i class="fas fa-sign-out-alt"></i>
-                <h3>Logout</h3>
-            </a>
-        </nav>
-        <main>
-            <div class="floating noBorder">
+            <nav>
+                <a href="<?php echo $logout_url;?>">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <h3>Logout</h3>
+                </a>
+            </nav>
 
-                <header>
-                    <div class="title">
-                    <h2 style="color: var(--titleTheme)">Enrollee Enrollment Form</h2>
-                        <small>SY <?php echo $current_term; ?> &nbsp; <?php echo $current_semester; ?> Semester </small>
+            <main>
+                <div class="floating noBorder">
 
+                    <header>
+                        <div class="title">
+                        <h2 style="color: var(--titleTheme)">Enrollee Enrollment Form</h2>
+                            <small>SY <?php echo $current_term; ?> &nbsp; <?php echo $current_semester; ?> Semester </small>
+
+                        </div>
+                    </header>
+
+                    <div class="progress">
+                        <span class="dot active"><p>Preferred Course/Strand</p></span>
+                        <span class="line active"></span>
+                        <span class="dot active"> <p>Student Information</p></span>
+                        <span class="line inactive"></span>
+                        <span class="dot inactive"> <p>Validate Details</p></span>
+                        <span class="line inactive"></span>
+                        <span class="dot inactive"> <p>Finished</p></span>
                     </div>
-                </header>
 
-                <div class="progress">
-                    <span class="dot active"><p>Preferred Course/Strand</p></span>
-                    <span class="line active"></span>
-                    <span class="dot active"> <p>Student Information</p></span>
-                    <span class="line inactive"></span>
-                    <span class="dot inactive"> <p>Validate Details</p></span>
-                    <span class="line inactive"></span>
-                    <span class="dot inactive"> <p>Finished</p></span>
-                </div>
-
-                <main>
-                    <form method="POST">
-                        <!-- <header >
-                            <div class="title">
-                                <h4 style="font-weight: bold;">Enrollee Parent Information</h4>
-                            </div>
-                        </header> -->
-                        <!-- FATHER DD -->
-                        <div style="display: none;" id="father_info">
-                            <header>
+                    <main>
+                        <form method="POST">
+                            <header style="display: none">
                                 <div class="title">
-                                    <h3>Father's Information</h3>
+                                    <h4 style="font-weight: bold;">Enrollee Parent Information</h4>
                                 </div>
                             </header>
+                            <!-- FATHER DD -->
+                            <div id="father_info" style="display: none">
+                                <header>
+                                    <div class="title">
+                                        <h3>Father's Information</h3>
+                                    </div>
+                                </header>
 
-                            <div class="row">
-                                <span>
+                                <div class="row">
+                                    <span>
+                                        <label for="name">Name</label>
+                                        <div>
+                                            <?php 
+                                                Helper::EchoErrorField(
+                                                    Constants::$fatherLastNameRequired,
+                                                    Constants::$invalidFatherLastNameCharacters,
+                                                    Constants::$fatherLastNameIsTooShort,
+                                                    Constants::$fatherLastNameIsTooLong
+                                                );
+                                            ?>
+                                            <input type="text" name="father_lastname" class="form-control" 
+                                                value="<?php 
+                                                        echo Helper::DisplayText('father_lastname', $father_lastname);  
+                                                    ?>">
+                                            <small>Last name <span class="red">*</span></small>
+                                        </div>
+                                        <div>
+                                            <?php 
+                                                Helper::EchoErrorField(
+                                                    Constants::$fatherFirstNameRequired,
+                                                    Constants::$invalidFatherFirstNameCharacters,
+                                                    Constants::$fatherFirstNameIsTooShort,
+                                                    Constants::$fatherFirstNameIsTooLong
+                                                );
+                                            ?>
+                                            <input type="text" name="father_firstname" class="form-control"
+                                                value="<?php 
+                                                    echo Helper::DisplayText('father_firstname', $father_firstname);  
+                                                ?>">
+                                            <small>First name <span class="red">*</span></small>
+                                        </div>
+                                        <div>
+                                            <?php 
+                                                Helper::EchoErrorField(
+                                                    Constants::$fatherMiddleNameRequired,
+                                                    Constants::$invalidFatherMiddleNameCharacters,
+                                                    Constants::$fatherMiddleNameIsTooShort,
+                                                    Constants::$fatherMiddleNameIsTooLong
+                                                );
+                                            ?>
+                                            <input type="text" name="father_middle" class="form-control" 
+                                                value="<?php 
+                                                    echo Helper::DisplayText('father_middle', $father_middle);  
+                                                ?>">
+                                            <small>Middle name</small>
+                                        </div>
+                                        <div>
+                                            <?php
+                                                echo Helper::getError(Constants::$invalidFatherSuffixNameCharacters);
+                                            ?>
+                                            <input type="text" placeholder="e.g. Jr, Sr, II" name="father_suffix" maxlength="3" class="form-control"
+                                                value="<?php 
+                                                    echo Helper::DisplayText('father_suffix', $father_suffix);;
+                                                ?>">
+                                            <small>Suffix name</small>
+                                        </div>
+                                    </span>
+                                </div>
+
+                                <div class="row">
+                                    <span>
+                                        <?php
+                                            echo Helper::getError(Constants::$fatherContactNumberRequired);
+                                            echo Helper::getError(Constants::$invalidFatherContactNumberCharacters);
+                                            echo Helper::getError(Constants::$invalidFatherContactNumber2Characters);
+                                        ?>
+                                        <label for="phone">Phone no  <span class="red">*</span></label>
+                                        <div>
+                                            <input type="tel" id="father_contact_number" name="father_contact_number" class="form-control" 
+                                                value="<?php 
+                                                    echo Helper::DisplayText('father_contact_number', $father_contact_number);;
+                                                ?>">
+                                        </div>
+                                    </span>
+                                    <span>
+                                        <!-- <?php
+                                            echo Helper::getError(Constants::$fatherEmailRequired);
+                                            echo Helper::getError(Constants::$invalidFatherEmailCharacters);
+                                        ?>
+                                        <label for="email">Email</label>
+                                        <div>
+                                            <input type="text" id="father_email" name="father_email" class="form-control"
+                                                value="<?php 
+                                                    echo Helper::DisplayText('father_email', $father_email);;
+                                                ?>">
+                                        </div> -->
+                                    </span>
+                                    <span>
+                                        <?php 
+                                            echo Helper::getError(Constants::$fatherOccupationRequired);
+                                            echo Helper::getError(Constants::$invalidFatherOccupationCharacters);
+                                            echo Helper::getError(Constants::$fatherOccupationIsTooShort);
+                                            echo Helper::getError(Constants::$fatherOccupationIsTooLong);
+                                        ?>
+                                        <label for="occupation">Occupation</label>
+                                        <div>
+                                            <input type="text" id="father_occupation" name="father_occupation"
+                                                class="form-control" 
+                                                value="<?php 
+                                                    echo Helper::DisplayText('father_occupation', $father_occupation);;
+                                                ?>">
+                                        </div>
+                                    </span>
+                                </div>
+                            </div>
+                            <!-- MOTHER DD -->
+                            <div id="mother_info" style="display: none">
+                                <header>
+                                    <div class="title">
+                                    <h3>Mother's Information</h3>
+                                    </div>
+                                </header>
+
+                                <div class="row">
+                                    <span>
+                                        
+                                        <label for="name">Name</label>
+                                        <div>
+                                            <?php 
+                                                echo Helper::getError(Constants::$motherLastNameRequired);
+                                                echo Helper::getError(Constants::$invalidMotherLastNameCharacters);
+                                                echo Helper::getError(Constants::$motherLastNameIsTooShort);
+                                                echo Helper::getError(Constants::$motherLastNameIsTooLong);
+                                            ?>
+
+                                            <input type="text" name="mother_lastname" class="form-control"\
+                                                value="<?php 
+                                                    echo Helper::DisplayText('mother_lastname', $mother_lastname); 
+                                                ?>">
+
+                                            <small>Last name <span class="red">*</span></small>
+                                        </div>
+
+                                        <div>
+                                            <?php 
+                                                echo Helper::getError(Constants::$motherFirstNameRequired);
+                                                echo Helper::getError(Constants::$invalidMotherFirstNameCharacters);
+                                                echo Helper::getError(Constants::$motherFirstNameIsTooShort);
+                                                echo Helper::getError(Constants::$motherFirstNameIsTooLong);
+                                            ?>
+                                            <input type="text" name="mother_firstname" class="form-control"
+                                                value="<?php 
+                                                    echo Helper::DisplayText('mother_firstname', $mother_firstname); 
+                                                ?>">
+                                            <small>First name <span class="red">*</span></small>
+                                        </div>
+
+                                        <div>
+                                            <?php 
+                                                echo Helper::getError(Constants::$motherMiddleNameRequired);
+                                                echo Helper::getError(Constants::$invalidMotherMiddleNameCharacters);
+                                                echo Helper::getError(Constants::$motherMiddleNameIsTooShort);
+                                                echo Helper::getError(Constants::$motherMiddleNameIsTooLong);
+                                            ?>
+                                            <input type="text" name="mother_middle" class="form-control" 
+                                                value="<?php 
+                                                    echo Helper::DisplayText('mother_middle', $mother_middle); 
+                                                ?>">
+                                            
+                                            <small>Middle name</small>
+                                        </div>
+                                        <!-- <div>
+                                            <input type="text" name="mother_suffix" class="form-control" maxlength="3" value="<?php echo $mother_suffix; ?>">
+                                            
+                                            <small>Suffix name</small>
+                                        </div> -->
+                                    </span>
+                                </div>
+                                <div class="row">
+                                    <span>
+                                        <?php 
+                                            echo Helper::getError(Constants::$motherContactNumberRequired);
+                                            echo Helper::getError(Constants::$invalidMotherContactNumberCharacters);
+                                            echo Helper::getError(Constants::$invalidMotherContactNumber2Characters);
+                                        ?>
+                                        <label for="phone">Phone no  <span class="red">*</span></label>
+                                        <div>
+                                            <input type="tel" id="mother_contact_number" name="mother_contact_number" class="form-control" 
+                                                value="<?php
+                                                    echo Helper::DisplayText('mother_contact_number', $mother_contact_number); 
+                                                ?>">
+                                        </div>
+                                    </span>
+                                    <span>
+
+                                        <!-- <?php 
+                                            echo Helper::getError(Constants::$motherEmailRequired);
+                                            echo Helper::getError(Constants::$invalidMotherEmailCharacters);
+                                        ?>
+                                        <label for="email">Email</label>
+                                        <div>
+                                            <input type="text" id="mother_email" name="mother_email" class="form-control" 
+                                                value="<?php 
+                                                    echo Helper::DisplayText('mother_email', $mother_email); 
+                                                ?>">
+                                        </div> -->
+                                    </span>
+
+                                    <span>
+                                        <?php 
+                                            echo Helper::getError(Constants::$motherOccupationRequired);
+                                            echo Helper::getError(Constants::$invalidMotherOccupationCharacters);
+                                            echo Helper::getError(Constants::$motherOccupationIsTooShort);
+                                            echo Helper::getError(Constants::$motherOccupationIsTooLong);
+                                        ?>
+                                        <label for="occupation">Occupation</label>
+                                        <div>
+                                            <input type="text" id="mother_occupation" name="mother_occupation" class="form-control"
+                                                value="<?php 
+                                                    echo Helper::DisplayText('mother_occupation', $mother_occupation); 
+                                                ?>">
+                                        </div>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="guardian_info">
+                                <header>
+                                    <div class="title">
+                                        <h3>Guardian's Information</h3>
+                                    </div>
+                                </header>
+
+                                <div class="row">
+                                    <span>
                                     <label for="name">Name</label>
                                     <div>
                                         <?php 
-                                            Helper::EchoErrorField(
-                                                Constants::$fatherLastNameRequired,
-                                                Constants::$invalidFatherLastNameCharacters,
-                                                Constants::$fatherLastNameIsTooShort,
-                                                Constants::$fatherLastNameIsTooLong
-                                            );
+                                            echo Helper::getError(Constants::$guardianLastNameRequired);
+                                            echo Helper::getError(Constants::$invalidGuardianLastNameCharacters);
+                                            echo Helper::getError(Constants::$guardianLastNameIsTooShort);
+                                            echo Helper::getError(Constants::$guardianLastNameIsTooLong);
                                         ?>
-                                        <input type="text" name="father_lastname" class="form-control" 
+                                        <input type="text" name="parent_lastname" class="form-control"
                                             value="<?php 
-                                                    echo Helper::DisplayText('father_lastname', $father_lastname);  
-                                                ?>">
+                                                echo Helper::DisplayText('parent_lastname', $parent_lastname); 
+                                            ?>">
                                         <small>Last name <span class="red">*</span></small>
                                     </div>
                                     <div>
                                         <?php 
-                                            Helper::EchoErrorField(
-                                                Constants::$fatherFirstNameRequired,
-                                                Constants::$invalidFatherFirstNameCharacters,
-                                                Constants::$fatherFirstNameIsTooShort,
-                                                Constants::$fatherFirstNameIsTooLong
-                                            );
+                                            echo Helper::getError(Constants::$guardianFirstNameRequired);
+                                            echo Helper::getError(Constants::$invalidGuardianFirstNameCharacters);
+                                            echo Helper::getError(Constants::$guardianFirstNameIsTooShort);
+                                            echo Helper::getError(Constants::$guardianFirstNameIsTooLong);
                                         ?>
-                                        <input type="text" name="father_firstname" class="form-control"
+                                        <input type="text" name="parent_firstname" class="form-control" 
                                             value="<?php 
-                                                echo Helper::DisplayText('father_firstname', $father_firstname);  
+                                                echo Helper::DisplayText('parent_firstname', $parent_firstname); 
                                             ?>">
+
                                         <small>First name <span class="red">*</span></small>
                                     </div>
                                     <div>
                                         <?php 
-                                            Helper::EchoErrorField(
-                                                Constants::$fatherMiddleNameRequired,
-                                                Constants::$invalidFatherMiddleNameCharacters,
-                                                Constants::$fatherMiddleNameIsTooShort,
-                                                Constants::$fatherMiddleNameIsTooLong
-                                            );
+                                            echo Helper::getError(Constants::$guardianMiddleNameRequired);
+                                            echo Helper::getError(Constants::$invalidGuardianMiddleNameCharacters);
+                                            echo Helper::getError(Constants::$guardianMiddleNameIsTooShort);
+                                            echo Helper::getError(Constants::$guardianMiddleNameIsTooLong);
                                         ?>
-                                        <input type="text" name="father_middle" class="form-control" 
+                                        <input type="text" name="parent_middle_name" class="form-control" 
                                             value="<?php 
-                                                echo Helper::DisplayText('father_middle', $father_middle);  
+                                                echo Helper::DisplayText('parent_middle_name', $parent_middle_name); 
                                             ?>">
                                         <small>Middle name</small>
                                     </div>
                                     <div>
                                         <?php
-                                            echo Helper::getError(Constants::$invalidFatherSuffixNameCharacters);
+                                            echo Helper::getError(Constants::$invalidGuardianSuffixNameCharacters);
                                         ?>
-                                        <input type="text" placeholder="e.g. Jr, Sr, II" name="father_suffix" maxlength="3" class="form-control"
+                                        <input type="text" name="parent_suffix" class="form-control"
+                                            maxlength="3"  placeholder="e.g. Jr, Sr, II" 
                                             value="<?php 
-                                                echo Helper::DisplayText('father_suffix', $father_suffix);;
+                                                echo Helper::DisplayText('parent_suffix', $parent_suffix); 
                                             ?>">
                                         <small>Suffix name</small>
                                     </div>
-                                </span>
-                            </div>
-
-                            <div class="row">
-                                <span>
-                                    <?php
-                                        echo Helper::getError(Constants::$fatherContactNumberRequired);
-                                        echo Helper::getError(Constants::$invalidFatherContactNumberCharacters);
-                                        echo Helper::getError(Constants::$invalidFatherContactNumber2Characters);
-                                    ?>
-                                    <label for="phone">Phone no  <span class="red">*</span></label>
-                                    <div>
-                                        <input type="tel" id="father_contact_number" name="father_contact_number" class="form-control" 
-                                            value="<?php 
-                                                echo Helper::DisplayText('father_contact_number', $father_contact_number);;
-                                            ?>">
-                                    </div>
-                                </span>
-                                <span>
-                                    <!-- <?php
-                                        echo Helper::getError(Constants::$fatherEmailRequired);
-                                        echo Helper::getError(Constants::$invalidFatherEmailCharacters);
-                                    ?>
-                                    <label for="email">Email</label>
-                                    <div>
-                                        <input type="text" id="father_email" name="father_email" class="form-control"
-                                            value="<?php 
-                                                echo Helper::DisplayText('father_email', $father_email);;
-                                            ?>">
-                                    </div> -->
-                                </span>
-                                <span>
-                                    <?php 
-                                        echo Helper::getError(Constants::$fatherOccupationRequired);
-                                        echo Helper::getError(Constants::$invalidFatherOccupationCharacters);
-                                        echo Helper::getError(Constants::$fatherOccupationIsTooShort);
-                                        echo Helper::getError(Constants::$fatherOccupationIsTooLong);
-                                    ?>
-                                    <label for="occupation">Occupation</label>
-                                    <div>
-                                        <input type="text" id="father_occupation" name="father_occupation"
-                                            class="form-control" 
-                                            value="<?php 
-                                                echo Helper::DisplayText('father_occupation', $father_occupation);;
-                                            ?>">
-                                    </div>
-                                </span>
-                            </div>
-                        </div>
-                        <!-- MOTHER DD -->
-                        <div style="display: none;" id="mother_info">
-                            <header>
-                                <div class="title">
-                                <h3>Mother's Information</h3>
+                                    </span>
                                 </div>
-                            </header>
-
-                            <div class="row">
-                                <span>
-                                    
-                                    <label for="name">Name</label>
-                                    <div>
-                                        <?php 
-                                            echo Helper::getError(Constants::$motherLastNameRequired);
-                                            echo Helper::getError(Constants::$invalidMotherLastNameCharacters);
-                                            echo Helper::getError(Constants::$motherLastNameIsTooShort);
-                                            echo Helper::getError(Constants::$motherLastNameIsTooLong);
+                                <div class="row">
+                                    <span>
+                                        <label for="phone">Phone no <span class="red">*</span></label>
+                                        <?php
+                                            echo Helper::getError(Constants::$guardianContactNumberRequired);
+                                            echo Helper::getError(Constants::$invalidGuardianContactNumberCharacters);
+                                            echo Helper::getError(Constants::$invalidGuardianContactNumber2Characters);
                                         ?>
-
-                                        <input type="text" name="mother_lastname" class="form-control"\
-                                            value="<?php 
-                                                echo Helper::DisplayText('mother_lastname', $mother_lastname); 
-                                            ?>">
-
-                                        <small>Last name <span class="red">*</span></small>
-                                    </div>
-
-                                    <div>
-                                        <?php 
-                                            echo Helper::getError(Constants::$motherFirstNameRequired);
-                                            echo Helper::getError(Constants::$invalidMotherFirstNameCharacters);
-                                            echo Helper::getError(Constants::$motherFirstNameIsTooShort);
-                                            echo Helper::getError(Constants::$motherFirstNameIsTooLong);
-                                        ?>
-                                        <input type="text" name="mother_firstname" class="form-control"
-                                            value="<?php 
-                                                echo Helper::DisplayText('mother_firstname', $mother_firstname); 
-                                            ?>">
-                                        <small>First name <span class="red">*</span></small>
-                                    </div>
-
-                                    <div>
-                                        <?php 
-                                            echo Helper::getError(Constants::$motherMiddleNameRequired);
-                                            echo Helper::getError(Constants::$invalidMotherMiddleNameCharacters);
-                                            echo Helper::getError(Constants::$motherMiddleNameIsTooShort);
-                                            echo Helper::getError(Constants::$motherMiddleNameIsTooLong);
-                                        ?>
-                                        <input type="text" name="mother_middle" class="form-control" 
-                                            value="<?php 
-                                                echo Helper::DisplayText('mother_middle', $mother_middle); 
-                                            ?>">
                                         
-                                        <small>Middle name</small>
-                                    </div>
-                                    <!-- <div>
-                                        <input type="text" name="mother_suffix" class="form-control" maxlength="3" value="<?php echo $mother_suffix; ?>">
-                                        
-                                        <small>Suffix name</small>
-                                    </div> -->
-                                </span>
-                            </div>
-                            <div class="row">
-                                <span>
-                                    <?php 
-                                        echo Helper::getError(Constants::$motherContactNumberRequired);
-                                        echo Helper::getError(Constants::$invalidMotherContactNumberCharacters);
-                                        echo Helper::getError(Constants::$invalidMotherContactNumber2Characters);
-                                    ?>
-                                    <label for="phone">Phone no  <span class="red">*</span></label>
-                                    <div>
-                                        <input type="tel" id="mother_contact_number" name="mother_contact_number" class="form-control" 
-                                            value="<?php
-                                                echo Helper::DisplayText('mother_contact_number', $mother_contact_number); 
-                                            ?>">
-                                    </div>
-                                </span>
-                                <span>
+                                        <div>
+                                            <input type="tel" id="parent_contact_number" name="parent_contact_number" class="form-control"
+                                                value="<?php 
+                                                    echo Helper::DisplayText('parent_contact_number', $parent_contact_number); 
+                                                ?>">
+                                        </div>
 
-                                    <!-- <?php 
-                                        echo Helper::getError(Constants::$motherEmailRequired);
-                                        echo Helper::getError(Constants::$invalidMotherEmailCharacters);
-                                    ?>
-                                    <label for="email">Email</label>
-                                    <div>
-                                        <input type="text" id="mother_email" name="mother_email" class="form-control" 
-                                            value="<?php 
-                                                echo Helper::DisplayText('mother_email', $mother_email); 
-                                            ?>">
-                                    </div> -->
-                                </span>
-
-                                <span>
-                                    <?php 
-                                        echo Helper::getError(Constants::$motherOccupationRequired);
-                                        echo Helper::getError(Constants::$invalidMotherOccupationCharacters);
-                                        echo Helper::getError(Constants::$motherOccupationIsTooShort);
-                                        echo Helper::getError(Constants::$motherOccupationIsTooLong);
-                                    ?>
-                                    <label for="occupation">Occupation</label>
-                                    <div>
-                                        <input type="text" id="mother_occupation" name="mother_occupation" class="form-control"
-                                            value="<?php 
-                                                echo Helper::DisplayText('mother_occupation', $mother_occupation); 
-                                            ?>">
-                                    </div>
-                                </span>
-                            </div>
-                        </div>
-                        <div class="guardian_info">
-                            <header class="mb-2">
-                                <div class="title">
-                                    <h4 style="font-weight: bold;">Guardian Information</h4>
-                                </div>
-                            </header>
-
-                            <div class="row">
-                                <span>
-                                <label for="name">Name</label>
-                                <div>
-                                    <?php 
-                                        echo Helper::getError(Constants::$guardianLastNameRequired);
-                                        echo Helper::getError(Constants::$invalidGuardianLastNameCharacters);
-                                        echo Helper::getError(Constants::$guardianLastNameIsTooShort);
-                                        echo Helper::getError(Constants::$guardianLastNameIsTooLong);
-                                    ?>
-                                    <input type="text" name="parent_lastname" class="form-control"
-                                        value="<?php 
-                                            echo Helper::DisplayText('parent_lastname', $parent_lastname); 
-                                        ?>">
-                                    <small>Last name <span class="red">*</span></small>
-                                </div>
-                                <div>
-                                    <?php 
-                                        echo Helper::getError(Constants::$guardianFirstNameRequired);
-                                        echo Helper::getError(Constants::$invalidGuardianFirstNameCharacters);
-                                        echo Helper::getError(Constants::$guardianFirstNameIsTooShort);
-                                        echo Helper::getError(Constants::$guardianFirstNameIsTooLong);
-                                    ?>
-                                    <input type="text" name="parent_firstname" class="form-control" 
-                                        value="<?php 
-                                            echo Helper::DisplayText('parent_firstname', $parent_firstname); 
-                                        ?>">
-
-                                    <small>First name <span class="red">*</span></small>
-                                </div>
-                                <div>
-                                    <?php 
-                                        echo Helper::getError(Constants::$guardianMiddleNameRequired);
-                                        echo Helper::getError(Constants::$invalidGuardianMiddleNameCharacters);
-                                        echo Helper::getError(Constants::$guardianMiddleNameIsTooShort);
-                                        echo Helper::getError(Constants::$guardianMiddleNameIsTooLong);
-                                    ?>
-                                    <input type="text" name="parent_middle_name" class="form-control" 
-                                        value="<?php 
-                                            echo Helper::DisplayText('parent_middle_name', $parent_middle_name); 
-                                        ?>">
-                                    <small>Middle name</small>
-                                </div>
-                                <div>
-                                    <?php
-                                        echo Helper::getError(Constants::$invalidGuardianSuffixNameCharacters);
-                                    ?>
-                                    <input type="text" name="parent_suffix" class="form-control"
-                                        maxlength="3"  placeholder="e.g. Jr, Sr, II" 
-                                        value="<?php 
-                                            echo Helper::DisplayText('parent_suffix', $parent_suffix); 
-                                        ?>">
-                                    <small>Suffix name</small>
-                                </div>
-                                </span>
-                            </div>
-                            <div class="row">
-                                <span>
-                                    <label for="phone">Phone no <span class="red">*</span></label>
-                                    <?php
-                                        echo Helper::getError(Constants::$guardianContactNumberRequired);
-                                        echo Helper::getError(Constants::$invalidGuardianContactNumberCharacters);
-                                        echo Helper::getError(Constants::$invalidGuardianContactNumber2Characters);
-                                    ?>
-                                    
-                                    <div>
-                                        <input type="tel" id="parent_contact_number" name="parent_contact_number" class="form-control"
-                                            value="<?php 
-                                                echo Helper::DisplayText('parent_contact_number', $parent_contact_number); 
-                                            ?>">
-                                    </div>
-
-                                    <!-- <label for="email">Email</label>
-                                    <?php
-                                        echo Helper::getError(Constants::$guardianEmailRequired);
-                                        echo Helper::getError(Constants::$invalidGuardianEmailCharacters);
-                                    ?>
-                                    <div>
-                                        <input type="text" id="parent_email" name="parent_email" class="form-control"
-                                            value="<?php 
-                                                echo Helper::DisplayText('parent_email', $parent_email); 
-                                            ?>">
-
-                                    </div> -->
-
-                                    <!-- <input type="text" name="father_firstname" class="form-control">
-                                    <input type="text" name="father_lastname" class="form-control">
-
-                                    <input type="text" name="mother_firstname" class="form-control">
-                                    <input type="text" name="mother_lastname" class="form-control"> -->
-
-                                    <label for="occupation">Occupation</label>
-
-                                       <?php 
-                                            echo Helper::getError(Constants::$guardianOccupationRequired);
-                                            echo Helper::getError(Constants::$invalidGuardianOccupationCharacters);
-                                            // echo Helper::getError(Constants::$guardianOccupationIsTooShort);
-                                            // echo Helper::getError(Constants::$guardianOccupationIsTooLong);
+                                        <!-- <label for="email">Email</label>
+                                        <?php
+                                            echo Helper::getError(Constants::$guardianEmailRequired);
+                                            echo Helper::getError(Constants::$invalidGuardianEmailCharacters);
                                         ?>
-                                    <div>
-                                        <input type="text" id="parent_occupation" name="parent_occupation" class="form-control"
-                                            value="<?php 
-                                                echo Helper::DisplayText('parent_occupation', $parent_occupation); 
+                                        <div>
+                                            <input type="text" id="parent_email" name="parent_email" class="form-control"
+                                                value="<?php 
+                                                    echo Helper::DisplayText('parent_email', $parent_email); 
+                                                ?>">
 
-                                            ?>">
-                                    </div>
-                                    <label for="relationship">Relationship <span class="red">*</span></label>
-                                    <div>
+                                        </div> -->
+
+                                        <!-- <input type="text" name="father_firstname" class="form-control">
+                                        <input type="text" name="father_lastname" class="form-control">
+
+                                        <input type="text" name="mother_firstname" class="form-control">
+                                        <input type="text" name="mother_lastname" class="form-control"> -->
+
+                                        <label for="occupation">Occupation</label>
+
                                         <?php 
-                                            echo Helper::EchoErrorField(
-                                                Constants::$guardianRelationshipRequired,
-                                                Constants::$invalidGuardianRelationshipCharacters,
-                                                Constants::$guardianRelationshipIsTooShort,
-                                                Constants::$guardianRelationshipIsTooLong
-                                            );
-                                        ?>
-                                        <input class="form-control"
-                                        type="text"
-                                        name="parent_relationship"
-                                        id="parent_relationship"
-                                        placeholder="e.g. Auntie, Uncle"
-                                        value="<?php echo $parent_relationship;?>"
-                                        />
-                                    </div>
-                                </span>
+                                                echo Helper::getError(Constants::$guardianOccupationRequired);
+                                                echo Helper::getError(Constants::$invalidGuardianOccupationCharacters);
+                                                echo Helper::getError(Constants::$guardianOccupationIsTooShort);
+                                                echo Helper::getError(Constants::$guardianOccupationIsTooLong);
+                                            ?>
+                                        <div>
+                                            <input type="text" id="parent_occupation" name="parent_occupation" class="form-control"
+                                                value="<?php 
+                                                    echo Helper::DisplayText('parent_occupation', $parent_occupation); 
+
+                                                ?>">
+                                        </div>
+                                        <label for="relationship">Relationship <span class="red">*</span></label>
+                                        <div>
+                                            <?php 
+                                                echo Helper::EchoErrorField(
+                                                    Constants::$guardianRelationshipRequired,
+                                                    Constants::$invalidGuardianRelationshipCharacters,
+                                                    Constants::$guardianRelationshipIsTooShort,
+                                                    Constants::$guardianRelationshipIsTooLong
+                                                );
+                                            ?>
+                                            <input class="form-control"
+                                            type="text"
+                                            name="parent_relationship"
+                                            id="parent_relationship"
+                                            placeholder="e.g. Auntie, Uncle"
+                                            value="<?php echo $parent_relationship;?>"
+                                            />
+                                        </div>
+                                    </span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="action">
-                            <button style="margin-right: 9px;"
-                                type="button"
-                                class="default large"
-                                onclick="window.location.href = 'process.php?new_student=true&step=enrollee_school_history';"
+                            <div class="action">
+                                <button
+                                    type="button"
+                                    class="default large"
+                                    onclick="window.location.href = 'process.php?new_student=true&step=enrollee_school_history';"
 
-                                >Return
-                            </button>
-                            <button
-                                class="default success large"
-                                name="parent_details_btn_<?php echo $pending_enrollees_id ?>" 
-                                type="submit"
-                                >
-                                Proceed
-                            </button>
-                        </div>
-                    </form>
-                </main>
-            </div>
-        </main>
-    </div>
-    
-<?php
-
-?>
-
-
-
-
-
-
+                                    >Return
+                                </button>
+                                <button
+                                    class="clean large"
+                                    name="parent_details_btn_<?php echo $pending_enrollees_id ?>" 
+                                    type="submit"
+                                    >
+                                    Proceed
+                                </button>
+                            </div>
+                        </form>
+                    </main>
+                </div>
+            </main>
+        </div>
+    </body>
+</html>
