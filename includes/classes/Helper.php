@@ -1231,9 +1231,10 @@ class Helper {
         return "
             <div class='$active_class'>
                 <a href='$link'>
-                    <span class='notification_count'>5</span>
-                    <i style='color: white;' class='$icon'></i>
-                    <span class='span_text'>$text</span>
+                    <span class='badge'>5</span>
+                    <i style='color: white;' class='$icon'>
+                        <span class='span_text'>$text</span>
+                    </i>
                 </a>
             </div>
         ";
