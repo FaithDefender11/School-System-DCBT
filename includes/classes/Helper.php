@@ -1425,7 +1425,6 @@ class Helper {
             $output = "Tertiary";
         }
 
-        
         return "
             <div class='title'>
                 <small><em>$output &nbsp</em></small>
@@ -1955,9 +1954,6 @@ class Helper {
 
         $notificationCount = count($studentSubmittedAndAdminAnnouncement);
 
-        
-
-
         $totalAdminNotifCount = count($adminAnnouncement);
 
         $totalViewedAdminNotificationCount = $notification->GetTeacherViewedNotificationFromAdminCount(
@@ -1975,8 +1971,9 @@ class Helper {
 
         // var_dump($notificationCount);
 
+
         ?>
-            <div style="min-height: 70px;" class="icons">
+            <div class="icons">
 
                 <button class="sidebar" id="sidebar-btn">
                     <i class="bi bi-list"></i>
@@ -1991,12 +1988,12 @@ class Helper {
                         title="Notification">
 
                         <i class="bi bi-bell-fill"></i>
-                        <!-- <span class="<?= $notificationCount > 0 ? "badge-1" : "" ?>"><?= $notificationCount > 0 ? $notificationCount : "" ?></span> -->
                         <span class="<?= $totalUnviewed > 0 ? "badge-1" : "" ?>"><?= $totalUnviewed > 0 ? $totalUnviewed : "" ?></span>
 
                     </button>
                     
-                    <div  class="notif-menu">
+                    <div class="notif-menu">
+
                         <?php 
 
                             $announcement_url = "";
@@ -2159,33 +2156,17 @@ class Helper {
                                             </header>
                                         </div>
                                     </a>
+
                                 <?php
                             }
+                        
                         ?>
 
-                        <?php if($notificationCount > 0):?>
-
-                            <div class="action">
-                                <button 
-                                    class="default"
-                                    onclick="window.location.href='<?php echo $showAllPath . 'index.php'; ?>'"
-                                >
-                                    Show all
-                                </button>
-                                <button class="clean">Mark all read</button>
-                            </div>
-                            <?php else:?>
-                                <div class="action">
-                                    <button 
-                                        class="default"
-                                        onclick="window.location.href='<?php echo $showAllPath . 'index.php'; ?>'"
-                                    >
-                                        Show all
-                                    </button>
-                                    <button class="clean">Mark all read</button>
-                                </div>
-                        <?php endif;?>
-
+                      
+                        <div class="action">
+                            <button onclick="window.location.href = '<?php echo $showAllPath . "index.php"; ?>'"  class="default">See all</button>
+                            <button class="clean">Mark all read</button>
+                        </div>
                     </div>  
 
 
@@ -2199,7 +2180,7 @@ class Helper {
                 </button>
                 
                 <div class="username">
-                    <a href="#" title="View profile"><?= "$lastname, $firstname"?></a>
+                    <button title="Profile" onclick="window.location.href='#'"><?= "$lastname, $firstname"?></button>
                 </div>
 
             </div>
@@ -2257,14 +2238,13 @@ class Helper {
         $firstname = ucwords($student->GetFirstName());
         $lastname = ucwords($student->GetLastName());
 
-        $studentEnrolledSubjectAssignmentNotif = $notif->GetStudentAssignmentNotificationv2(
+        $studentEnrolledSubjectAssignmentNotif = $notif->GetStudentAssignmentNotification(
             $enrolledSubjectList, $school_year_id);
-
 
         $gradedAssignments = $notif->GetStudentGradedAssignmentNotification(
             $enrolledSubjectList, $school_year_id, $studentLoggedInId);
 
-  
+
         $allAdminNotification = $notif->GetAdminAnnouncement($school_year_id);
 
         // var_dump($school_year_id);
@@ -2274,9 +2254,7 @@ class Helper {
             $enrolledSubjectList, $school_year_id, $studentLoggedInId);
 
         $mergedArray = array_merge($studentEnrolledSubjectAssignmentNotif,
-            $allAdminNotification, $gradedAssignments, $studentsDueDateNotif);
-
-        // var_dump($mergedArray);
+            $allAdminNotification);
 
         $notificationCount = count($mergedArray);
 
@@ -2317,16 +2295,13 @@ class Helper {
 
             }
         }
-        
+
         $unViewedCount = ($notificationCount - $totalViewed);
-
-
-        // var_dump($notificationCount);
+        
 
         ?>
 
             <div class="icons">
-
                 <button class="sidebar" id="sidebar-btn">
                     <i class="bi bi-list"></i>
                 </button>
@@ -2339,15 +2314,12 @@ class Helper {
                         title="Notification">
 
                         <i class="bi bi-bell-fill"></i>
-                        <!-- <span class="<?= $notificationCount > 0 ? "badge-1" : "" ?>"><?= $notificationCount > 0 ? $notificationCount : "" ?></span> -->
                         <span class="<?= $unViewedCount > 0 ? "badge-1" : "" ?>"><?= $unViewedCount > 0 ? $unViewedCount : "" ?></span>
                         
                     </button>
                     
                     <div class="notif-menu">
-            
                         <?php 
-
                             $notification_url = "";
 
                             foreach ($mergedArray as $key => $notification) {
@@ -2365,9 +2337,9 @@ class Helper {
                                 $sender_role = $notification['sender_role'];
 
                                 $subject_code = $notification['subject_code'];
- 
+                                // $users_id = $notification['users_id'];
 
-                               $subject_code_assignment_id = $notification['subject_code_assignment_id'];
+                                $subject_code_assignment_id = $notification['subject_code_assignment_id'];
 
                                 $subjectCodeAssignment = new SubjectCodeAssignment($con, $subject_code_assignment_id);
 
@@ -2380,9 +2352,6 @@ class Helper {
                                 $subjectProgram = new SubjectProgram($con, $subjectProgramId);
 
                                 $subject_title = $subjectProgram->GetTitle();
-
-
-
 
                                 $subject_code_assignment_id = $notification['subject_code_assignment_id'];
                                 $announcement_id = $notification['announcement_id'];
@@ -2467,9 +2436,10 @@ class Helper {
 
                                     }
 
-                                    $notification_url = $coursesPath. "task_submission.php?sc_id=$subject_code_assignment_id&ss_id=$get_student_subject_id&n_id=$notification_id&notification=true";
-                                    // $notification_url = "task_submission.php?sc_id=$subject_code_assignment_id&ss_id=$get_student_subject_id&n_id=$notification_id&notification=true";
-                                    // $assignment_notification_url = "../courses/task_submission.php?sc_id=$subject_code_assignment_id&ss_id=$get_student_subject_id&n_id=$notification_id&notification=true";
+                                    $notification_url = $coursesPath. "task_submission.php?sc_id=$subject_code_assignment_id&ss_id=$get_student_subject_id&&n_id=$notification_id&notification=true";
+                                    
+                                    // $notification_url = "task_submission.php?sc_id=$subject_code_assignment_id&ss_id=$get_student_subject_id&&n_id=$notification_id&notification=true";
+                                    // $assignment_notification_url = "../courses/task_submission.php?sc_id=$subject_code_assignment_id&ss_id=$get_student_subject_id&&n_id=$notification_id&notification=true";
 
                                     $button_url = "
                                         <button onclick='window.location.href=\"$notification_url\"' class='btn btn-primary btn-sm'>
@@ -2516,7 +2486,7 @@ class Helper {
 
                                     }
 
-                                    $notification_url = $coursesPath. "task_submission.php?sc_id=$subject_code_assignment_id&ss_id=$get_student_subject_id&n_id=$notification_id&notification=true";
+                                    $notification_url = $coursesPath. "task_submission.php?sc_id=$subject_code_assignment_id&ss_id=$get_student_subject_id&&n_id=$notification_id&notification=true";
 
                                     $button_url = "
                                         <button onclick='window.location.href=\"$notification_url\"' class='btn btn-primary btn-sm'>
@@ -2525,6 +2495,8 @@ class Helper {
                                     ";
 
                                 }
+
+
 
                                 if($announcement_id != NULL 
                                     && $subject_code != NULL
@@ -2651,8 +2623,6 @@ class Helper {
 
                                 }
 
-
-
                                 $status = "
                                         <i style='color: orange' class='fas fa-times'></i>
                                     ";
@@ -2675,23 +2645,19 @@ class Helper {
                                         <i style='color: green' class='fas fa-check'></i>
                                     ";
                                 }
-
                                 ?>
 
 
                                 
                                     <a href="<?= $notification_url; ?>" class="notif-item">
                                         <div class="col">
-
                                             <header>
                                                 <div class="title">
-                                                    <h5><?= $sender_name;?></h6>
+                                                    <h5><?= $sender_name;?> <?= $status; ?></h5>
                                                     <span><?="$type: ";?><?= $title;?></span>
                                                     <small><?= $date_creation;?></small>
-                                                    <span><?= $status;?></span>
                                                 </div>
                                             </header>
-
                                         </div>
                                     </a>
 
@@ -2699,9 +2665,7 @@ class Helper {
                             }
                         
                         ?>
-
-                        <?php if($notificationCount > 0):?>
-
+                        <?php if($notificationCount > 0): ?>
                             <div class="action">
                                 <button 
                                     class="default"
@@ -2711,21 +2675,18 @@ class Helper {
                                 </button>
                                 <button class="clean">Mark all read</button>
                             </div>
-
-                            <?php else:?>
-                                <div class="action">
-                                    <button 
-                                        class="default"
-                                        onclick="window.location.href='<?php echo $showAllPath . 'index.php'; ?>'"
-                                    >
-                                        Show all
-                                    </button>
-                                    <button class="clean">Mark all read</button>
-                                </div>
-                        <?php endif;?>
-
+                        <?php else: ?>
+                            <div class="action">
+                                <button 
+                                    class="default"
+                                    onclick="window.location.href='<?php echo $showAllPath . 'index.php'; ?>'"
+                                >
+                                    Show all
+                                </button>
+                                <button class="clean">Mark all read</button>
+                            </div>
+                        <?php endif; ?>
                     </div>
- 
                 </div>
 
                 <button  class="calendar-btn" title="Calendar"
@@ -2736,7 +2697,6 @@ class Helper {
                 <div class="username">
                     <button onclick="window.location.href='<?= $profile_url; ?>'" title="Profile"><?= "$lastname, $firstname"?></button>
                 </div>
-
             </div>
         <?php
     }

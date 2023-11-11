@@ -1,5 +1,4 @@
-<?php 
-
+<?php
     include_once('../../includes/teacher_header.php');
     include_once('../../includes/classes/Student.php');
     include_once('../../includes/classes/SubjectPeriodCodeTopic.php');
@@ -8,10 +7,6 @@
     include_once('../../includes/classes/SubjectCodeAssignment.php');
     include_once('../../includes/classes/Announcement.php');
     include_once('../../includes/classes/Notification.php');
-
-    echo Helper::RemoveSidebar();
-
-
 
     if(
         isset($_GET['c'])
@@ -68,58 +63,61 @@
             }
 
         }
+?>
 
-        ?>
+            <?php
+                echo Helper::lmsTeacherNotificationHeader(
+                    $con, $teacherLoggedInId,
+                    $current_school_year_id,
+                    $teachingSubjects,
+                    "second",
+                    "second",
+                    "second"
+                );
+            ?>
 
-        <div class='content'>
-
-            <nav style="min-width: 100%; margin-bottom: 7px;
-                display: flex;flex-direction: row;">
-                <a href="<?php echo $back_url;?>">
-                    <i class="bi bi-arrow-return-left fa-1x"></i>
-                    <h3>Back</h3>
+            <nav>
+                <a href="<?= $back_url; ?>">
+                    <i class="bi bi-arrow-return-left"></i>
+                    Back
                 </a>
             </nav>
 
-            <div class='col-md-10 offset-md-1'>
-                <div class='card'>
-
-                    <div class='card-header'>
-                        <h4 class='text-center mb-3'>Add announcement on: <?php echo $subject_code;?></h4>
-                    </div>
-
-                    <div class="card-body">
-                        <form method='POST' enctype="multipart/form-data">
-
-                            <div class='form-group mb-2'>
-                                <label for="title" class='mb-2'>* Subject</label>
-
-                                <input required class='form-control' type='text' 
-                                    placeholder='Add Assignment' id="title" name='title'>
+            <main>
+                <div class="floating">
+                    <header>
+                        <div class="title">
+                            <h3>Add announcement on: <?php echo $subject_code;?></h3>
+                        </div>
+                    </header>
+                    <main>
+                        <form method="POST" enctype="multipart/form-data">
+                            <div class="row">
+                                <span>
+                                    <label for="title">Title</label>
+                                    <div>
+                                        <input type="text" name="title" id="title" class="form-control" required>
+                                    </div>
+                                </span>
                             </div>
-
-
-                            <div class='form-group mb-2'>
-                                <label for="content" class='mb-2'>* Content</label>
-        
-                                <textarea class="form-control" name="content" id="content"></textarea>
+                            <div class="row">
+                                <span>
+                                    <label for="content">Content</label>
+                                    <div>
+                                        <textarea name="content" id="content" class="form-control"></textarea>
+                                    </div>
+                                </span>
                             </div>
-                        
-                            
-                            <div class="modal-footer">
-                                <button type='submit' class='btn btn-success' name='add_announcement_code_<?php echo $subject_code; ?>'>Add announcement</button>
+                            <div class="action">
+                                <button type="submit" class="btn btn-success" name="add_announcement_code_<?php echo $subject_code; ?>">Add announcement</button>
                             </div>
-
                         </form>
-                    </div>
-
+                    </main>
                 </div>
-            </div>
-            
+            </main>
         </div>
-
-        <?php
+    <?php
     }
-
-?>
-
+    ?>
+    </body>
+</html>

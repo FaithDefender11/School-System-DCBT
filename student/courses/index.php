@@ -77,6 +77,17 @@
         $back_url = "../lms/student_dashboard.php";
 ?>
 
+            <?php
+                echo Helper::lmsStudentNotificationHeader(
+                    $con, $studentLoggedInId,
+                    $school_year_id, $enrolledSubjectList,
+                    $enrollment_id,
+                    "second",
+                    "second",
+                    "second"
+                );
+            ?>
+
                 <div class="content-header">
                     <header>
                         <div class="title">

@@ -1,5 +1,5 @@
 <?php
-
+    include_once('../../includes/classes/Student.php');
     class StudentElmsNavigationProvider {
 
         private $con, $userLoggedInObj;
@@ -36,7 +36,11 @@
             $dashboard_lms_url = $base_url .  "lms/student_dashboard.php";
             $notification_lms_url = $base_url .  "notification/index.php";
 
-            $user_lms_url = $base_url . "profile/my_profile.php";
+            $studentLoggedInId = isset($_SESSION["studentLoggedInId"]) 
+                ? $_SESSION["studentLoggedInId"] : "";
+            $studentLoggedInObj = new Student($this->con, $studentLoggedInId);
+            $student_id = $studentLoggedInObj->GetStudentId();
+            $user_lms_url = $base_url . "profile/my_profile.php?id=" . $student_id;
 
             $sideBarNavigationItem = "";
 
@@ -45,7 +49,7 @@
                 $sideBarNavigationItem .= Helper::createNavByIcon("User", 
                     "bi bi-person-circle",
                     $user_lms_url,
-                    Constants::$navigationClass . Helper::GetActiveClass($page, "user"));
+                    Constants::$navigationClass . Helper::GetActiveClass($page, "profile"));
 
                 $sideBarNavigationItem .= Helper::createNavByIcon("Courses", 
                     "bi bi-collection",

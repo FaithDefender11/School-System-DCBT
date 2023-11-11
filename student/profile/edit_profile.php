@@ -24,7 +24,7 @@
             if ($image && $image['tmp_name']) {
                 $uploadDirectory = '../../assets/images/users/';
                 $originalFilename = $image['name'];
-                $uniqueFilename = uniqid() . '_' . time() . '_' . $originalFilename;
+                $uniqueFilename = $originalFilename;
                 $targetPath = $uploadDirectory . $uniqueFilename;
 
                 // Delete the existing file
@@ -61,7 +61,7 @@
             
         }
 
-    $back_url = "my_profile.php?=id$student_id";
+    $back_url = "my_profile.php?id=$student_id";
 ?>
 
             <main>

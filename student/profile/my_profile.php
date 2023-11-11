@@ -27,65 +27,9 @@
         } else {
             echo "Student not found.";
         }
-    }
 
-    $section = new Section($con, null);
-    $enrollment = new Enrollment($con);
-
-    $school_year = new SchoolYear($con);
-    $school_year_obj = $school_year->GetActiveSchoolYearAndSemester();
-
-    $school_year_id = $school_year_obj['school_year_id'];
-    $current_semester = $school_year_obj['period'];
-    $current_term = $school_year_obj['term'];
-
-    $student_id = $_SESSION['studentLoggedInId'];
-
-    $enrollment_id = $enrollment->GetEnrollmentIdNonDependent($student_id,
-    $school_year_id);
-
-    $studentSubject = new StudentSubject($con);
-    $announcement = new Announcement($con);
-
-    $allEnrolledSubjectCode = $studentSubject->GetAllEnrolledSubjectCodeELMS
-        ($student_id, $school_year_id, $enrollment_id);
-        // public function GetAllAnnouncement($school_year_id) {
-
-    $announcementList = $announcement->GetAllTeacherAnnouncement(
-        $school_year_id);
-
-    // print_r($allEnrolledSubjectCode);
-
-    $subjectPeriodCodeTopic = new SubjectPeriodCodeTopic($con);
-    // $subjectAssignmentSubmission = new SubjectAssignmentSubmission($con);
-
-    $subjectTopicAssignmentsArray = [];
-    $subjectCodeAssignmentsArray = [];
-
-
-    // print_r($getEnrolledSubjects);
-    // echo "<br>";
-
-    $subjectCodeAssignment = new SubjectCodeAssignment($con);
-
-
-    $submissionCodeAssignmentArr = [];
-
-    $allEnrolledSubjectCode = $studentSubject->GetAllEnrolledSubjectCodeELMS
-        ($studentLoggedInId, $school_year_id, $enrollment_id);
-
-    $enrolledSubjectList = [];
-
-    foreach ($allEnrolledSubjectCode as $key => $value) {
-        # code...
-        $subject_codeGet = $value['student_subject_code'];
-        array_push($enrolledSubjectList, $subject_codeGet);
-    }
-
-    # List of all Enrolled Subject subject_period_code_topic_id(s)
-    $getEnrolledSubjects = $subjectPeriodCodeTopic->GetAllSubjectTopicEnrolledBased(
-        $school_year_id, $student_id, $enrollment_id
-    );
+        $student_id = $_SESSION['studentLoggedInId'];
+        
 ?>
 
             <?php
@@ -159,4 +103,7 @@
             </main>
         </div>
     </body>
+    <?php
+    }
+    ?>
 </html>
