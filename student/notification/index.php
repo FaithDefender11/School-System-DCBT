@@ -153,7 +153,7 @@
                                 </a>
                             </div>
                         </header>
-                        <main>
+                        <main style='overflow-x: auto'>
                             <table class="a" id="notification_table">
                                 <thead>
                                     <tr>
