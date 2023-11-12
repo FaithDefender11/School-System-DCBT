@@ -214,7 +214,7 @@
             <main>
                 <div class="bars right">
                     <div class="floating">
-                        <main>
+                        <main style='overflow-x: auto'>
                             <div class="calendar-container">
                                 <div class="calendar-header">
                                     <button id="prev-month">&lt;</button>
