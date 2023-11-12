@@ -1,4 +1,5 @@
 <?php
+include_once('../../includes/classes/Student.php');
 class Helper {
 
     public static $errorArray = array();
@@ -2277,7 +2278,12 @@ class Helper {
         } else {
             $base_url = 'http://' . $_SERVER['HTTP_HOST'] . '/student/';
         }
-        $profile_url = $base_url . "profile/my_profile.php";
+
+        $studentLoggedInId = isset($_SESSION["studentLoggedInId"]) 
+                ? $_SESSION["studentLoggedInId"] : "";
+        $studentLoggedInObj = new Student($con, $studentLoggedInId);
+        $student_id = $studentLoggedInObj->GetStudentId();
+        $profile_url = $base_url . "profile/my_profile.php?id=" . $student_id;
 
         $totalViewed = 0;
     
