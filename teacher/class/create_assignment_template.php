@@ -321,20 +321,17 @@
                                     </div>
                                 </span>
                             </div>
+                            <header>
+                                <div class="title">
+                                    <h4>* Allow Late Submission</h4>
+                                </div>
+                            </header>
                             <div class="row">
                                 <span>
-                                    <label for="allow_late_submission">* Allow Late Submission</label>
-                                    <div>
-                                        <input type="radio" id="late_submission_yes" required name="allow_late_submission" value="yes">
-                                    </div>
-                                </span>
-                                <span>
+                                    <input type="radio" id="late_submission_yes" required name="late_submission_yes" value="yes">
                                     <label for="late_submission_yes">Yes</label>
-                                    <div>
-                                        <input type="radio" checked id="late_submission_no" required name="allow_late_submission" value="no">
-                                    </div>
-                                </span>
-                                <span>
+                                    
+                                    <input type="radio" checked id="late_submission_no" required name="late_submission_no" value="no">
                                     <label for="late_submission_no">No</label>
                                 </span>
                             </div>

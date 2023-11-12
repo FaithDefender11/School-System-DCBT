@@ -1,5 +1,5 @@
 var tableDrops = document.querySelectorAll(".table-drop");
-var tables = document.querySelectorAll(".b");
+var tables = document.querySelectorAll(".d");
 var iconUp = document.querySelectorAll(".bi-chevron-up");
 var iconDown = document.querySelectorAll(".bi-chevron-down");
 

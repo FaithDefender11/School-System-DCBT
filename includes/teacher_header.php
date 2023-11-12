@@ -51,6 +51,11 @@
         <script src="../../assets/js/table-dropdown.js" defer></script>
         <script src="../../assets/js/calendar.js" defer></script>
         <script src="../../assets/js/dropdownMenu.js" defer></script>
+        <!-- Include Moment.js CDN -->
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script>
+        <!-- Include Bootstrap DateTimePicker CDN -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
         <!-- Popper.js and Bootstrap JS -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
         <!-- SweetAlert -->
@@ -61,6 +66,23 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
         <!-- SUMMER NOTE SCRIPT -->
         <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+        <!-- *Note: You must have internet connection on your laptop or pc other wise below code is not working -->
+        <!-- CSS for full calender -->
+        <link
+        href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.css"
+        rel="stylesheet"
+        />
+        <!-- JS for jQuery -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <!-- JS for full calender -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.js"></script>
+        <!-- bootstrap css and js -->
+        <link
+        rel="stylesheet"
+        href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        />
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
         <!--Link styleshets-->
         <link rel="stylesheet" href="../../assets/css/sidebar.css" />
         <link rel="stylesheet" href="../../assets/css/fonts.css" />
@@ -95,6 +117,11 @@
         body {
             background-color: white;
             margin: 0;
+        }
+        .fc-content {
+            width: auto !important;
+            white-space: normal !important;
+            overflow: visible !important;
         }
         </style>
     </head>

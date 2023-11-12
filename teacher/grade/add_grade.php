@@ -1,5 +1,4 @@
 <?php
-
     include_once('../../includes/teacher_header.php');
     include_once('../../includes/classes/Section.php');
     include_once('../../includes/classes/SchoolYear.php');
@@ -14,7 +13,6 @@
     $current_school_year_term = $school_year_obj['term'];
     $current_school_year_period = $school_year_obj['period'];
     $current_school_year_id = $school_year_obj['school_year_id'];
-
 
     if(
         isset($_GET['st_id'])
@@ -34,6 +32,7 @@
 
         // echo "qwe";
 
+        $student_grade = new StudentSubjectGrade($con);
         $student_subject = new StudentSubject($con, $student_subject_id);
 
         $enrolled_student_subject_code = $student_subject->GetStudentSubjectCode();
@@ -45,27 +44,10 @@
 
             ){
 
-            $first_quarter_input = intval($_POST['first_quarter_input']);
-            $second_quarter_input = intval($_POST['second_quarter_input']);
-            $third_quarter_input = intval($_POST['third_quarter_input']);
-            $fourth_quarter_input = intval($_POST['fourth_quarter_input']);
-
-
-            $generatedRemarks = NULL;
-
-            $totalGrade = $first_quarter_input + $second_quarter_input + $third_quarter_input + $fourth_quarter_input;
-
-            if($totalGrade >= 75){
-                $generatedRemarks = "Passed";
-            }else{
-                $generatedRemarks = "Failed";
-            }
-
-            // var_dump($totalGrade);
-            // echo "<br>";
-            // var_dump($generatedRemarks);
-
-            // return;
+            $first_quarter_input = $_POST['first_quarter_input'];
+            $second_quarter_input = $_POST['second_quarter_input'];
+            $third_quarter_input = $_POST['third_quarter_input'];
+            $fourth_quarter_input = $_POST['fourth_quarter_input'];
 
             $remark = isset($_POST['remark']) ? $_POST['remark'] : NULL;
 
@@ -78,10 +60,6 @@
             $wasSuccess = $student_grade->AddGradeToSubjectCode(
                 $student_id,
                 $student_subject_id,
-
-                $teacherLoggedInId,
-                $current_school_year_id,
-
                 $first_quarter_input,
                 $second_quarter_input,
                 $third_quarter_input,
@@ -94,27 +72,28 @@
                 exit();
             }
         }
-    
-        ?>
-            <div class="content">
-                <nav>
-                    <a href="<?php echo $back_url;?>">
-                        <i class="bi bi-arrow-return-left"></i>
-                        <h3>Back</h3>
-                    </a>
-                </nav>
-                
-                <div style="min-width: 750px; margin-top: -5px" class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 class='modal-title text-center'>Adding Grades to: <span id="modalStudentName"><?php echo $student_name;?></span></h4>
-                            
+?>
+
+            <nav>
+                <a href="<?= $back_url; ?>">
+                    <i class="bi bi-arrow-return-left"></i>
+                    Back
+                </a>
+            </nav>
+
+            <main>
+                <div class="floating">
+                    <header>
+                        <div class="title">
+                            <h3>Adding Grades to: <span id="modalStudentName"><?php echo $student_name;?></span></h3>
+                        </div>
+                        <div class="action">
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-
-                        <form method="POST">
+                    </header>
+                    <main>
+                        <form method="post">
                             <div class="modal-body">
-
                                 <div id="errorMessage" class="alert alert-warning d-none"></div>
 
                                 <div class="form-group">
@@ -127,7 +106,6 @@
                                     </div>
                                 </div>
 
-
                                 <div class="form-group">
                                     <div class="col-md-12 row">
                                         <label class="col-md-4 control-label" for="second_quarter_input">Second Grading:</label>
@@ -138,9 +116,6 @@
                                     </div>
                                 </div>
 
-
-
-                                
                                 <div class="form-group">
                                     <div class="col-md-12 row">
                                         <label class="col-md-4 control-label" for="third_quarter_input">Third Grading:</label>
@@ -150,7 +125,6 @@
                                         </div>
                                     </div>
                                 </div>
-
 
                                 <div class="form-group">
                                     <div class="col-md-12 row">
@@ -162,7 +136,7 @@
                                     </div>
                                 </div>
 
-                                <div style="display: none;" class="form-group">
+                                <div class="form-group">
                                     <div class="col-md-12 row">
                                         <label class="col-md-4 control-label" for="fourth_quarter_input">Remark:</label>
 
@@ -176,21 +150,17 @@
                                         </div>
                                     </div>
                                 </div>
-
-
                             </div>
-
-                            <div class="modal-footer">
-
-                                <button type="submit" name="addingGrade<?php echo $student_subject_id?>" class="default clean large">Save Changes</button>
+                            <div class="action">
+                                <button type="submit" class="clean large" name="addingGrade<?php echo $student_subject_id?>">Save Changes</button>
                             </div>
                         </form>
-                    </div>
+                    </main>
                 </div>
-
-            </div>
-        <?php
+            </main>
+        </div>
+    <?php
     }
-
-
-?>
+    ?>
+    </body>
+</html>

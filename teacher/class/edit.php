@@ -1,5 +1,4 @@
-<?php 
-
+<?php
     include_once('../../includes/teacher_header.php');
     include_once('../../includes/classes/Section.php');
     include_once('../../includes/classes/SubjectPeriodCodeTopic.php');
@@ -8,30 +7,6 @@
     include_once('../../includes/classes/SubjectCodeAssignment.php');
     include_once('../../includes/classes/SubjectCodeAssignmentTemplate.php');
     include_once('../../includes/classes/SubjectPeriodCodeTopicTemplate.php');
-
-    ?>
-        <head>
-            <!-- <script src=
-                "https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js">
-            </script> -->
-        
-            <!-- Include Moment.js CDN -->
-            <script type="text/javascript" src=
-                "https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js">
-            </script>
-        
-            <!-- Include Bootstrap DateTimePicker CDN -->
-            <link
-                href=
-                "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css"
-                rel="stylesheet">
-        
-            <script src=
-                "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js">
-                </script>
-                
-        </head>
-    <?php
 
     if(isset($_GET['id'])
         && $_GET['id'] != ""
@@ -213,112 +188,117 @@
                 }
 
         }
+?>
 
+            <?php
+                echo Helper::lmsTeacherNotificationHeader(
+                    $con, $teacherLoggedInId,
+                    $current_school_year_id,
+                    $teachingSubjects,
+                    "second",
+                    "second",
+                    "second"
+                );
+            ?>
 
+            <nav>
+                <a href="<?= $back_url; ?>">
+                    <i class="bi bi-arrow-return-left"></i>
+                    Back
+                </a>
+            </nav>
 
-        ?>
-            <div class='content'>
-
-                <nav>
-                    <a href="<?php echo $back_url;?>">
-                        <i class="bi bi-arrow-return-left fa-1x"></i>
-                        <h3>Back</h3>
-                    </a>
-                </nav>
-
-                <div class='col-md-10 offset-md-1'>
-                    <div class='card'>
-                        
-                        <div class='card-header'>
-                            <h4 class='text-center mb-3'><?php echo $subjectPeriodCodeTopic->GetTopic(); ?> <span class="text-muted text-right" style="font-size: 17px;"><?php echo $subject_code_assignment_template_id === NULL ? "Non-template" : "Template" ?></span></h4>
+            <main>
+                <div class="floating">
+                    <header>
+                        <div class="title">
+                            <h3><?php echo $subjectPeriodCodeTopic->GetTopic(); ?> <em><?php echo $subject_code_assignment_template_id === NULL ? "Non-template" : "Template" ?></em></h3>
                         </div>
-
-                        <div class="card-body">
-                            <form method='POST' enctype="multipart/form-data">
-
-                                <div class='form-group mb-2'>
-                                    <label for="assignment_name" class='mb-2'>* Assignment Name</label>
-
-                                    <input readonly value="<?php echo $getAssignmentName; ?>" required class='form-control' type='text' 
-                                        placeholder='Add Assignment' id="assignment_name" name='assignment_name'>
-                                </div>
-
-                            
-
-                                <div class='form-group mb-2'>
+                    </header>
+                    <main>
+                        <form method="post" enctype="multipart/form-data">
+                            <div class="row">
+                                <span>
+                                    <label for="assignment_name">* Assignment Name</label>
+                                    <div>
+                                        <input readonly value="<?php echo $getAssignmentName; ?>" required class='form-control' type='text' 
+                                            placeholder='Add Assignment' id="assignment_name" name='assignment_name'>
+                                    </div>
+                                </span>
+                            </div>
+                            <div class="row">
+                                <span>
                                     <label for="description" class='mb-2'>Description</label>
-
-                                    <textarea class="form-control summernote" type='text' 
-                                        placeholder='Add Description Here.' id="description" name='description'><?php echo $getDescription; ?></textarea>
+                                    <div>
+                                        <textarea class="form-control summernote" type='text' 
+                                            placeholder='Add Description Here.' id="description" name='description'><?php echo $getDescription; ?></textarea>
+                                    </div>
+                                </span>
+                            </div>
+                            <div class="row">
+                                <span>
+                                    <label for="max_score">* Max Score</label>
+                                    <div>
+                                        <input readonly value="<?php echo $max_score; ?>" maxlength="3" value="100" required class='form-control' type='text' 
+                                            placeholder='Max is 100 points' id="max_score" name='max_score'>
+                                    </div>
+                                </span>
+                            </div>
+                            <div class="row">
+                                <span>
+                                    <label for="due_date">* Set Due Date</label>
+                                    <div>
+                                        <input value="<?php echo $due_date; ?>" required class='form-control' type="datetime-local"
+                                            id="due_date" name="due_date">
+                                    </div>
+                                </span>
+                            </div>
+                            <header>
+                                <div class="title">
+                                    <h4>* Allow Late Submission</h4>
                                 </div>
-
-                                 
-                                <div class='form-group mb-2'>
-                                    <label for="max_score" class='mb-2'>* Max Score</label>
-
-                                    <input readonly value="<?php echo $max_score; ?>" maxlength="3" value="100" required class='form-control' type='text' 
-                                        placeholder='Max is 100 points' id="max_score" name='max_score'>
-                                </div>
-
-                                 
-
-
-                                <div class='mb-2 style="position: relative"' >
-                                    <label for="due_date" class='mb-2'>* Set Due Date</label>
-                                    <input value="<?php echo $due_date; ?>" required class='form-control' type="datetime-local"
-                                       id="due_date" name="due_date">
-
-                                </div>
-
-
-                                <div class='form-group mb-2'>
-                                    <label>* Allow Late Submission:</label><br>
+                            </header>
+                            <div class="row">
+                                <span>
                                     <input <?php echo $getAllowLateSubmission === "yes" ? "checked" : ""; ?> type="radio" id="late_submission_yes" required name="allow_late_submission" value="yes">
-                                    <label for="late_submission_yes">Yes</label> &nbsp;
+                                    <label for="late_submission_yes">Yes</label>
+
                                     <input <?php echo $getAllowLateSubmission === "no" ? "checked" : ""; ?> type="radio" id="late_submission_no" required name="allow_late_submission" value="no">
-                                    <label for="late_submission_no">No</label><br>
-
-                                </div>
-
-                                <div class='form-group mb-2'>
-                                    <label for="max_attempt" class='mb-2'>* Submission Count</label>
-                                    <input value="<?php echo $max_attempt; ?>" required class='form-control' type="text"
-                                       id="max_attempt" name="max_attempt">
-                                </div>
-
-                                <div class='form-group mb-2'>
-
+                                    <label for="late_submission_no">No</label>
+                                </span>
+                            </div>
+                            <div class="row">
+                                <span>
                                     <?php if ($assignment_type === "upload" && $subject_code_assignment_template_id === NULL) : ?>
-                                        <label for="assignment_images" class='mb-2'>Files</label>
-                                        <input value="<?php echo $getAssignmentImage; ?>" class='form-control' type='file' 
-                                            placeholder='' id="assignment_images" multiple name='assignment_images[]'>
+                                        <label for="assignment_images">Files</label>
+                                        <div>
+                                            <input value="<?php echo $getAssignmentImage; ?>" class='form-control' type='file' 
+                                                placeholder='' id="assignment_images" multiple name='assignment_images[]'>
+                                        </div>
                                     <?php endif; ?>
-
-                                    <!-- <input class='form-control' type='file' id="assignment_images" 
-                                        multiple name='assignment_images[]'> -->
-                                    
-                                    <?php if ($subject_code_assignment_template_id === NULL &&
-                                        count($getAllUploadFiles) > 0 ): ?>
-                                        <div class='form-group mb-2'>
-                                            <label for="assignment_images" class='mb-2'>Files</label>
-                                            <br>
+                                </span>
+                            </div>
+                            <?php if ($subject_code_assignment_template_id === NULL && count($getAllUploadFiles) > 0 ): ?>
+                                <div class="row">
+                                    <span>
+                                        <label for="assignment_images">Files</label>
+                                        <div>
                                             <?php foreach ($getAllUploadFiles as $key => $photo): ?>
-
-                                                <?php 
+                                                <?php
                                                     $uploadFile = $photo['image'];
 
                                                     // echo $uploadFile;
                                                     // echo "<br>";
-
+        
                                                     $extension = pathinfo($uploadFile, PATHINFO_EXTENSION);
-
+        
                                                     // $parts = explode('_', $uploadFile);
                                                     // $original_file_name = end($parts);
-
+        
                                                     $pos = strpos($uploadFile, "img_");
-
+        
                                                     $original_file_name = "";
-
+        
                                                     // Check if "img_" was found
                                                     if ($pos !== false) {
                                                         $original_file_name = substr($uploadFile, $pos + strlen("img_"));
@@ -326,184 +306,169 @@
 
                                                     if (in_array(strtolower($extension), ['jpg', 'jpeg', 'png'])) {
                                                         ?>
-                                                            <span onclick="uploadImageRemoval(<?php echo $photo['subject_code_assignment_list_id'] ?>, <?php echo $photo['subject_code_assignment_id'] ?>)" style="cursor: pointer;">
-                                                                <i style="color: orange;" class="fas fa-times"></i>
-                                                            </span>
+                                                        <span onclick="uploadImageRemoval(<?php echo $photo['subject_code_assignment_list_id'] ?>, <?php echo $photo['subject_code_assignment_id'] ?>)" style="cursor: pointer;">
+                                                            <i style="color: orange;" class="fas fa-times"></i>
+                                                        </span>
 
-                                                            <!-- <a title="View File" href='<?php echo "../../".  $photo['image'] ?>' target='__blank' rel='noopener noreferrer'>
-                                                                <img style="margin-left:8px; width: 120px; heigt: 120px" 
-                                                                    src='<?php echo "../../".$photo['image']; ?>' alt='Given Photo' class='preview-image'>
-                                                            </a> -->
+                                                        <!-- <a title="View File" href='<?php echo "../../".  $photo['image'] ?>' target='__blank' rel='noopener noreferrer'>
+                                                            <img style="margin-left:8px; width: 120px; heigt: 120px" 
+                                                                src='<?php echo "../../".$photo['image']; ?>' alt='Given Photo' class='preview-image'>
+                                                        </a> -->
 
-                                                            <a  title="View File" href='<?php echo "../../".  $photo['image'] ?>' target='__blank' rel='noopener noreferrer'>
-                                                                <?php echo $original_file_name; ?>
-                                                            </a>
-                                                            <br>
-                                                        <?php
+                                                        <a  title="View File" href='<?php echo "../../".  $photo['image'] ?>' target='__blank' rel='noopener noreferrer'>
+                                                    <?php echo $original_file_name; ?>
+                                                                </a>
+                                                    <?php
                                                     } elseif (in_array(strtolower($extension), ['pdf', 'docx', 'doc', 'txt'])) {
                                                         ?>
-
-                                                            <span onclick="uploadImageRemoval(<?php echo $photo['subject_code_assignment_list_id'] ?>, <?php echo $photo['subject_code_assignment_id'] ?>)" style="cursor: pointer;">
-                                                                <i style="color: orange;" class="fas fa-times"></i>
-                                                            </span>
-                                                           
-                                                            <a title="View File" href='<?php echo "../../".  $photo['image'] ?>' target='__blank' rel='noopener noreferrer'>
-                                                                <?php echo $original_file_name; ?>
-                                                            </a>
-                                                            <br>
-                                                        <?php
+                                                        <span onclick="uploadImageRemoval(<?php echo $photo['subject_code_assignment_list_id'] ?>, <?php echo $photo['subject_code_assignment_id'] ?>)" style="cursor: pointer;">
+                                                            <i style="color: orange;" class="fas fa-times"></i>
+                                                        </span>
+                                                            
+                                                        <a title="View File" href='<?php echo "../../".  $photo['image'] ?>' target='__blank' rel='noopener noreferrer'>
+                                                            <?php echo $original_file_name; ?>
+                                                        </a>
+                                                    <?php
                                                     }
                                                 ?>
-
                                             <?php endforeach; ?>
                                         </div>
-                                    <?php endif; ?>
+                                    </span>
+                                </div>
+                            <?php endif; ?>
 
-                                 
-                                    <!-- For Admin Assignment Template Content -->
-                                    <?php if ($subject_code_assignment_template_id !== NULL 
-                                        && count($getAllTemplateUploadFiles) > 0): ?>
+                            <!-- For Admin Assignment Template Content -->
+                            <?php if ($subject_code_assignment_template_id !== NULL 
+                                && count($getAllTemplateUploadFiles) > 0): ?>
+                                <div class="row">
+                                    <label for="assignment_images">Files</label>
+                                    <div>
+                                        <?php foreach ($getAllTemplateUploadFiles as $key => $photo): ?>
+                                            <?php 
+                                                $uploadFile = $photo['image'];
+                                                $extension = pathinfo($uploadFile, PATHINFO_EXTENSION);
 
-                                        <div class='form-group mb-2'>
-                                            <label for="assignment_images" class='mb-2'>Files</label>
-                                            <br>
-                                            <?php foreach ($getAllTemplateUploadFiles as $key => $photo): ?>
-                                                <?php 
-                                                    $uploadFile = $photo['image'];
-                                                    $extension = pathinfo($uploadFile, PATHINFO_EXTENSION);
-
-                                                    // $parts = explode('_', $uploadFile);
-                                                    // $original_file_name = end($parts);
+                                                // $parts = explode('_', $uploadFile);
+                                                // $original_file_name = end($parts);
                                                     
-                                                    $pos = strpos($uploadFile, "img_");
-                                                    $original_file_name = "";
+                                                $pos = strpos($uploadFile, "img_");
+                                                $original_file_name = "";
 
-                                                    // Check if "img_" was found
-                                                    if ($pos !== false) {
-                                                        $original_file_name = substr($uploadFile, $pos + strlen("img_"));
-                                                    }
+                                                // Check if "img_" was found
+                                                if ($pos !== false) {
+                                                    $original_file_name = substr($uploadFile, $pos + strlen("img_"));
+                                                }
 
-                                                    if (in_array(strtolower($extension), ['jpg', 'jpeg', 'png'])) {
-                                                        ?>
-                                                            <a title="View File" href='<?php echo "../../".  $photo['image'] ?>' target='__blank' rel='noopener noreferrer'>
-                                                                <img style="margin-left:8px; width: 120px;" 
-                                                                    src='<?php echo "../../".$photo['image']; ?>' alt='Given Photo' class='preview-image'>
-                                                            </a>
-                                                            <br>
-                                                        <?php
-                                                    } elseif (in_array(strtolower($extension), ['pdf', 'docx', 'doc', 'txt'])) {
-                                                        ?>
-                                                            <a title="View File" href='<?php echo "../../".  $photo['image'] ?>' target='__blank' rel='noopener noreferrer'>
-                                                                <?php echo $original_file_name; ?>
-                                                            </a>
-                                                            <br>
-                                                        <?php
-                                                    }
-                                                ?>
-                                            <?php endforeach; ?>
-                                        </div>
-                                    <?php endif; ?>
-                                    
-                                    
+                                                if (in_array(strtolower($extension), ['jpg', 'jpeg', 'png'])) {
+                                                    ?>
+                                                    <a title="View File" href='<?php echo "../../".  $photo['image'] ?>' target='__blank' rel='noopener noreferrer'>
+                                                        <img style="margin-left:8px; width: 120px;" 
+                                                            src='<?php echo "../../".$photo['image']; ?>' alt='Given Photo' class='preview-image'>
+                                                    </a>
+                                                <?php
+                                                } elseif (in_array(strtolower($extension), ['pdf', 'docx', 'doc', 'txt'])){
+                                                    ?>
+                                                    <a title="View File" href='<?php echo "../../".  $photo['image'] ?>' target='__blank' rel='noopener noreferrer'>
+                                                        <?php echo $original_file_name; ?>
+                                                    </a>
+                                                <?php
+                                                }
+                                            ?>
+                                        <?php endforeach; ?>
+                                    </div>
                                 </div>
-                                <br>
-                                
-                                <div class="modal-footer">
-                                    <button type='submit' class='btn btn-success' name='edit_assignment_topic_<?php echo $subject_period_code_topic_id; ?>'>Save Section</button>
-                                </div>
-
-                            </form>
-                        </div>
-
-                    </div>
+                            <?php endif; ?>
+                            <div class="action">
+                                <button type="submit" class="clean large" name="edit_assignment_topic_<?php echo $subject_period_code_topic_id; ?>"> Save Section</button>
+                            </div>
+                        </form>
+                    </main>
                 </div>
-                
+            </main>
+        </div>
+    <?php
+        }
+    ?>
+    <script>
+        // $('#datetime').datetimepicker({
+        //     format: 'hh:mm A'
+        // });
 
-            </div>
-        <?php
+        function uploadImageRemoval(subject_code_assignment_list_id,
+            subject_code_assignment_id){
 
-    }
-?>
+            var subject_code_assignment_list_id = parseInt(subject_code_assignment_list_id);
+            var subject_code_assignment_id = parseInt(subject_code_assignment_id);
 
-<script>
+            Swal.fire({
+                    icon: 'question',
+                    title: `Are you sure you want remove the selected photo?`,
+                    text: 'Important! This action cannot be undone.',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes',
+                    cancelButtonText: 'Cancel'
 
-    // $('#datetime').datetimepicker({
-    //     format: 'hh:mm A'
-    // });
+                }).then((result) => {
+                    if (result.isConfirmed) {
 
-    function uploadImageRemoval(subject_code_assignment_list_id,
-        subject_code_assignment_id){
+                        $.ajax({
+                            url: "../../ajax/teacher/removeUploadedFile.php",
+                            type: 'POST',
+                            data: {
+                                subject_code_assignment_list_id,
+                                subject_code_assignment_id
+                            },
+                            success: function(response) {
 
-        var subject_code_assignment_list_id = parseInt(subject_code_assignment_list_id);
-        var subject_code_assignment_id = parseInt(subject_code_assignment_id);
+                                response = response.trim();
 
-        Swal.fire({
-                icon: 'question',
-                title: `Are you sure you want remove the selected photo?`,
-                text: 'Important! This action cannot be undone.',
-                showCancelButton: true,
-                confirmButtonText: 'Yes',
-                cancelButtonText: 'Cancel'
+                                console.log(response);
 
-            }).then((result) => {
-                if (result.isConfirmed) {
+                                if(response == "success_delete"){
+                                    Swal.fire({
+                                    icon: 'success',
+                                    title: `Successfully Deleted`,
+                                    showConfirmButton: false,
+                                    timer: 1000, // Adjust the duration of the toast message in milliseconds (e.g., 3000 = 3 seconds)
+                                    toast: true,
+                                    position: 'top-end',
+                                    showClass: {
+                                    popup: 'swal2-noanimation',
+                                    backdrop: 'swal2-noanimation'
+                                    },
+                                    hideClass: {
+                                    popup: '',
+                                    backdrop: ''
+                                    }
+                                }).then((result) => {
 
-                    $.ajax({
-                        url: "../../ajax/teacher/removeUploadedFile.php",
-                        type: 'POST',
-                        data: {
-                            subject_code_assignment_list_id,
-                            subject_code_assignment_id
-                        },
-                        success: function(response) {
+                                    // $('#shs_program_table').load(
+                                    //     location.href + ' #shs_program_table'
+                                    // );
 
-                            response = response.trim();
+                                    location.reload();
+                                });}
 
-                            console.log(response);
+                            },
+                            error: function(xhr, status, error) {
+                                // handle any errors here
+                                console.error('Error:', error);
+                                console.log('Status:', status);
+                                console.log('Response Text:', xhr.responseText);
+                                console.log('Response Code:', xhr.status);
+                            }
+                        });
+                    } else {
+                        // User clicked "No," perform alternative action or do nothing
+                    }
+            });
+        }
 
-                            if(response == "success_delete"){
-                                Swal.fire({
-                                icon: 'success',
-                                title: `Successfully Deleted`,
-                                showConfirmButton: false,
-                                timer: 1000, // Adjust the duration of the toast message in milliseconds (e.g., 3000 = 3 seconds)
-                                toast: true,
-                                position: 'top-end',
-                                showClass: {
-                                popup: 'swal2-noanimation',
-                                backdrop: 'swal2-noanimation'
-                                },
-                                hideClass: {
-                                popup: '',
-                                backdrop: ''
-                                }
-                            }).then((result) => {
-
-                                // $('#shs_program_table').load(
-                                //     location.href + ' #shs_program_table'
-                                // );
-
-                                location.reload();
-                            });}
-
-                        },
-                        error: function(xhr, status, error) {
-                            // handle any errors here
-                            console.error('Error:', error);
-                            console.log('Status:', status);
-                            console.log('Response Text:', xhr.responseText);
-                            console.log('Response Code:', xhr.status);
-                        }
-                    });
-                } else {
-                    // User clicked "No," perform alternative action or do nothing
-                }
+        $(document).ready(function () {
+            $('.summernote').summernote({
+                height:250
+            });
         });
-    }
-
-    $(document).ready(function () {
-        $('.summernote').summernote({
-            height:250
-        });
-    });
-</script>
+        </script>
+    </body>
+</html>

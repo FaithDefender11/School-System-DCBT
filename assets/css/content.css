@@ -739,11 +739,11 @@
   border: none;
 }
 
-.floating>main>.b {
+.floating>main>.d {
   display: none;
 }
 
-.floating>main>.b.show {
+.floating>main>.d.show {
   display: table;
 }
 

@@ -1,5 +1,4 @@
-<?php 
-
+<?php
     include_once('../../includes/teacher_header.php');
     include_once('../../includes/classes/Enrollment.php');
     include_once('../../includes/classes/SchoolYear.php');
@@ -10,10 +9,6 @@
     include_once('../../includes/classes/SubjectAssignmentSubmission.php');
     include_once('../../includes/classes/SubjectCodeAssignmentTemplate.php');
     include_once('../../includes/classes/SubjectCodeHandout.php');
- 
-
-    echo Helper::RemoveSidebar();
-
 
     if(
         isset($_GET['id'])
@@ -56,54 +51,44 @@
         $school_year_id = $subjectPeriodCodeTopic->GetSchoolYearId();
 
         $back_url = "../class/index.php?c=$subject_code&sy_id=$school_year_id";
+?>
 
-        
+            <nav>
+                <a href="<?= $back_url; ?>">
+                    <i class="bi bi-arrow-return-left"></i>
+                    Back
+                </a>
+            </nav>
 
-        ?>
-
-            <div class="content">
-
-                <nav style="min-width: 100%; margin-bottom: 7px;
-                    display: flex;flex-direction: row;">
-                    <a href="<?php echo $back_url;?>">
-                        <i class="bi bi-arrow-return-left fa-1x"></i>
-                        <h3>Back</h3>
-                    </a>
-                </nav>
-
-                <main>
-                    <div class="floating" id="shs-sy">
-                        <header>
-                            <div class="title">
-                                <h3><?= $topic; ?>Handouts</h3>
-                            </div>
-
-                            <div class="action">
-                                <a href="handout_create.php?id=<?= $subject_period_code_topic_id;?>">
-                                    <button type="button" class="default large success">+ Handout</button>
-                                </a>
-                            </div>
-
-                        </header>
-                        
-                        <main>
-
-                            <?php if(count($topicHandoutsMerge) > 0):?>
-
-                                <table id="handouts_table" class="a" style="margin: 0">
-                                    <thead>
-                                        <tr>
-                                            <th>Name</th>
-                                            <!-- <th>File</th> -->
-                                            <th>From Template</th>
-                                            <th>Given</th>
-                                            <th>Action</th>
-                                        </tr>
+            <main>
+                <div class="floating">
+                    <header>
+                        <div class="title">
+                            <h3><?= $topic; ?> Handouts</h3>
+                        </div>
+                        <div class="action">
+                            <button 
+                                class="clean"
+                                onclick="window.location.href='handout_create.php?id=<?= $subject_period_code_topic_id;?>'"
+                            >
+                                + Handout
+                            </button>
+                        </div>
+                    </header>
+                    <main style='overflow-x: auto'>
+                        <?php if(count($topicHandoutsMerge) > 0):?>
+                            <table class="a" id="handouts_table">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <!-- <th>File</th> -->
+                                        <th>From Template</th>
+                                        <th>Given</th>
+                                        <th>Action</th>
+                                    </tr>
                                     </thead>
                                     <tbody>
                                         <?php
-                                        
-
                                             // $query = $con->prepare("SELECT * FROM subject_code_handout
 
                                             //     WHERE subject_period_code_topic_id =:subject_period_code_topic_id
@@ -363,8 +348,6 @@
                                                 //         ";
                                                 //     }
 
-
-
                                                 //     echo "
                                                 //         <tr>
                                                 //             <td>$handout_name</td>
@@ -386,381 +369,374 @@
 
                                                 // }
                                             // }
-
                                         ?>
                                     </tbody>
-                                </table>
+                            </table>
+                        <?php endif; ?>
+                    </main>
+                </div>
+            </main>
+        </div>
+    <?php
+        }
+    ?>
+    <script>
 
-                            <?php endif;?>
-                        </main>
-                        
-                    </div>
-                </main>
-            </div>
+        //  HANDOUT TEMPLATE
 
-        <?php
+        function giveHandoutTemplate(subject_code_handout_template_id,
+            handout_name, subject_period_code_topic_id){
 
-    }
+            var subject_code_handout_template_id = parseInt(subject_code_handout_template_id);
 
-?>
+            Swal.fire({
+                    icon: 'question',
+                    title: `Do you want to give Module ${handout_name}?`,
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes',
+                    cancelButtonText: 'Cancel'
 
+                }).then((result) => {
+                    if (result.isConfirmed) {
 
+                        $.ajax({
+                        url: "../../ajax/class/giveHandoutTemplate.php",
+                            type: 'POST',
+                            data: {
+                                subject_code_handout_template_id,subject_period_code_topic_id
+                            },
+                            success: function(response) {
 
-<script>
+                                response = response.trim();
 
-    //  HANDOUT TEMPLATE
+                                console.log(response);
 
-    function giveHandoutTemplate(subject_code_handout_template_id,
-        handout_name, subject_period_code_topic_id){
+                                if(response == "success"){
+                                    Swal.fire({
+                                    icon: 'success',
+                                    title: `Successfully Attached`,
+                                    showConfirmButton: false,
+                                    timer: 1200, // Adjust the duration of the toast message in milliseconds (e.g., 3000 = 3 seconds)
+                                    toast: true,
+                                    position: 'top-end',
+                                    showClass: {
+                                    popup: 'swal2-noanimation',
+                                    backdrop: 'swal2-noanimation'
+                                    },
+                                    hideClass: {
+                                    popup: '',
+                                    backdrop: ''
+                                    }
+                                }).then((result) => {
 
-        var subject_code_handout_template_id = parseInt(subject_code_handout_template_id);
+                                    $('#handouts_table').load(
+                                        location.href + ' #handouts_table'
+                                    );
 
-        Swal.fire({
-                icon: 'question',
-                title: `Do you want to give Module ${handout_name}?`,
-                showCancelButton: true,
-                confirmButtonText: 'Yes',
-                cancelButtonText: 'Cancel'
+                                    // location.reload();
+                                });}
 
-            }).then((result) => {
-                if (result.isConfirmed) {
+                            },
+                            error: function(xhr, status, error) {
+                                // handle any errors here
+                                console.error('Error:', error);
+                                console.log('Status:', status);
+                                console.log('Response Text:', xhr.responseText);
+                                console.log('Response Code:', xhr.status);
+                            }
+                        });
+                    } else {
+                        // User clicked "No," perform alternative action or do nothing
+                    }
+            });
+        }
 
-                    $.ajax({
-                    url: "../../ajax/class/giveHandoutTemplate.php",
-                        type: 'POST',
-                        data: {
-                            subject_code_handout_template_id,subject_period_code_topic_id
-                        },
-                        success: function(response) {
+        function ungiveHandoutTemplate(subject_code_handout_id,
+            subject_period_code_topic_id, teacher_id){
 
-                            response = response.trim();
+            var subject_code_handout_id = parseInt(subject_code_handout_id);
+            var subject_period_code_topic_id = parseInt(subject_period_code_topic_id);
+            var teacher_id = parseInt(teacher_id);
 
-                            console.log(response);
+            Swal.fire({
+                    icon: 'question',
+                    title: `Do you want to un-give the selected module?`,
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes',
+                    cancelButtonText: 'Cancel'
 
-                            if(response == "success"){
-                                Swal.fire({
-                                icon: 'success',
-                                title: `Successfully Attached`,
-                                showConfirmButton: false,
-                                timer: 1200, // Adjust the duration of the toast message in milliseconds (e.g., 3000 = 3 seconds)
-                                toast: true,
-                                position: 'top-end',
-                                showClass: {
-                                popup: 'swal2-noanimation',
-                                backdrop: 'swal2-noanimation'
-                                },
-                                hideClass: {
-                                popup: '',
-                                backdrop: ''
-                                }
-                            }).then((result) => {
+                }).then((result) => {
+                    if (result.isConfirmed) {
 
-                                $('#handouts_table').load(
-                                    location.href + ' #handouts_table'
-                                );
+                        $.ajax({
+                        url: "../../ajax/class/ungiveHandoutTemplate.php",
+                            type: 'POST',
+                            data: {
+                                subject_code_handout_id,
+                                subject_period_code_topic_id,
+                                teacher_id
+                            },
+                            success: function(response) {
 
-                                // location.reload();
-                            });}
+                                response = response.trim();
 
-                        },
-                        error: function(xhr, status, error) {
-                            // handle any errors here
-                            console.error('Error:', error);
-                            console.log('Status:', status);
-                            console.log('Response Text:', xhr.responseText);
-                            console.log('Response Code:', xhr.status);
-                        }
-                    });
-                } else {
-                    // User clicked "No," perform alternative action or do nothing
-                }
-        });
-    }
+                                console.log(response);
 
-    function ungiveHandoutTemplate(subject_code_handout_id,
-        subject_period_code_topic_id, teacher_id){
+                                if(response == "success"){
+                                    Swal.fire({
+                                    icon: 'success',
+                                    title: `Successfully Un-gived Handout`,
+                                    showConfirmButton: false,
+                                    timer: 1200, // Adjust the duration of the toast message in milliseconds (e.g., 3000 = 3 seconds)
+                                    toast: true,
+                                    position: 'top-end',
+                                    showClass: {
+                                    popup: 'swal2-noanimation',
+                                    backdrop: 'swal2-noanimation'
+                                    },
+                                    hideClass: {
+                                    popup: '',
+                                    backdrop: ''
+                                    }
+                                }).then((result) => {
 
-        var subject_code_handout_id = parseInt(subject_code_handout_id);
-        var subject_period_code_topic_id = parseInt(subject_period_code_topic_id);
-        var teacher_id = parseInt(teacher_id);
+                                    $('#handouts_table').load(
+                                        location.href + ' #handouts_table'
+                                    );
 
-        Swal.fire({
-                icon: 'question',
-                title: `Do you want to un-give the selected module?`,
-                showCancelButton: true,
-                confirmButtonText: 'Yes',
-                cancelButtonText: 'Cancel'
+                                    // location.reload();
+                                });}
 
-            }).then((result) => {
-                if (result.isConfirmed) {
+                            },
+                            error: function(xhr, status, error) {
+                                // handle any errors here
+                                console.error('Error:', error);
+                                console.log('Status:', status);
+                                console.log('Response Text:', xhr.responseText);
+                                console.log('Response Code:', xhr.status);
+                            }
+                        });
+                    } else {
+                        // User clicked "No," perform alternative action or do nothing
+                    }
+            });
+        }
 
-                    $.ajax({
-                    url: "../../ajax/class/ungiveHandoutTemplate.php",
-                        type: 'POST',
-                        data: {
-                            subject_code_handout_id,
-                            subject_period_code_topic_id,
-                            teacher_id
-                        },
-                        success: function(response) {
+        //  HOME MADE HANDOUT
+        function removeMadeHandout(subject_code_handout_id,
+            subject_period_code_topic_id, teacher_id){
 
-                            response = response.trim();
+            var subject_code_handout_id = parseInt(subject_code_handout_id);
+            var subject_period_code_topic_id = parseInt(subject_period_code_topic_id);
+            var teacher_id = parseInt(teacher_id);
 
-                            console.log(response);
+            Swal.fire({
+                    icon: 'question',
+                    title: `Do you want to remove the selected module?`,
+                    text: `Important! This action cannot be undone`,
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes',
+                    cancelButtonText: 'Cancel'
 
-                            if(response == "success"){
-                                Swal.fire({
-                                icon: 'success',
-                                title: `Successfully Un-gived Handout`,
-                                showConfirmButton: false,
-                                timer: 1200, // Adjust the duration of the toast message in milliseconds (e.g., 3000 = 3 seconds)
-                                toast: true,
-                                position: 'top-end',
-                                showClass: {
-                                popup: 'swal2-noanimation',
-                                backdrop: 'swal2-noanimation'
-                                },
-                                hideClass: {
-                                popup: '',
-                                backdrop: ''
-                                }
-                            }).then((result) => {
+                }).then((result) => {
+                    if (result.isConfirmed) {
 
-                                $('#handouts_table').load(
-                                    location.href + ' #handouts_table'
-                                );
+                        $.ajax({
+                        url: "../../ajax/class/removeMadeHandout.php",
+                            type: 'POST',
+                            data: {
+                                subject_code_handout_id,
+                                subject_period_code_topic_id,
+                                teacher_id
+                            },
+                            success: function(response) {
 
-                                // location.reload();
-                            });}
+                                response = response.trim();
 
-                        },
-                        error: function(xhr, status, error) {
-                            // handle any errors here
-                            console.error('Error:', error);
-                            console.log('Status:', status);
-                            console.log('Response Text:', xhr.responseText);
-                            console.log('Response Code:', xhr.status);
-                        }
-                    });
-                } else {
-                    // User clicked "No," perform alternative action or do nothing
-                }
-        });
-    }
+                                console.log(response);
 
-    //  HOME MADE HANDOUT
-    function removeMadeHandout(subject_code_handout_id,
-        subject_period_code_topic_id, teacher_id){
+                                if(response == "success"){
+                                    Swal.fire({
+                                    icon: 'success',
+                                    title: `Handout has been removed`,
+                                    showConfirmButton: false,
+                                    timer: 1200, // Adjust the duration of the toast message in milliseconds (e.g., 3000 = 3 seconds)
+                                    toast: true,
+                                    position: 'top-end',
+                                    showClass: {
+                                    popup: 'swal2-noanimation',
+                                    backdrop: 'swal2-noanimation'
+                                    },
+                                    hideClass: {
+                                    popup: '',
+                                    backdrop: ''
+                                    }
+                                }).then((result) => {
 
-        var subject_code_handout_id = parseInt(subject_code_handout_id);
-        var subject_period_code_topic_id = parseInt(subject_period_code_topic_id);
-        var teacher_id = parseInt(teacher_id);
+                                    $('#handouts_table').load(
+                                        location.href + ' #handouts_table'
+                                    );
 
-        Swal.fire({
-                icon: 'question',
-                title: `Do you want to remove the selected module?`,
-                text: `Important! This action cannot be undone`,
-                showCancelButton: true,
-                confirmButtonText: 'Yes',
-                cancelButtonText: 'Cancel'
+                                    // location.reload();
+                                });}
 
-            }).then((result) => {
-                if (result.isConfirmed) {
+                            },
+                            error: function(xhr, status, error) {
+                                // handle any errors here
+                                console.error('Error:', error);
+                                console.log('Status:', status);
+                                console.log('Response Text:', xhr.responseText);
+                                console.log('Response Code:', xhr.status);
+                            }
+                        });
+                    } else {
+                        // User clicked "No," perform alternative action or do nothing
+                    }
+            });
+        }
 
-                    $.ajax({
-                    url: "../../ajax/class/removeMadeHandout.php",
-                        type: 'POST',
-                        data: {
-                            subject_code_handout_id,
-                            subject_period_code_topic_id,
-                            teacher_id
-                        },
-                        success: function(response) {
+        function giveMadeHandout(subject_code_handout_id,
+            subject_period_code_topic_id, teacher_id){
 
-                            response = response.trim();
+            var subject_code_handout_id = parseInt(subject_code_handout_id);
+            var subject_period_code_topic_id = parseInt(subject_period_code_topic_id);
+            var teacher_id = parseInt(teacher_id);
 
-                            console.log(response);
+            Swal.fire({
+                    icon: 'question',
+                    title: `Do you want to give the selected handout module?`,
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes',
+                    cancelButtonText: 'Cancel'
 
-                            if(response == "success"){
-                                Swal.fire({
-                                icon: 'success',
-                                title: `Handout has been removed`,
-                                showConfirmButton: false,
-                                timer: 1200, // Adjust the duration of the toast message in milliseconds (e.g., 3000 = 3 seconds)
-                                toast: true,
-                                position: 'top-end',
-                                showClass: {
-                                popup: 'swal2-noanimation',
-                                backdrop: 'swal2-noanimation'
-                                },
-                                hideClass: {
-                                popup: '',
-                                backdrop: ''
-                                }
-                            }).then((result) => {
+                }).then((result) => {
+                    if (result.isConfirmed) {
 
-                                $('#handouts_table').load(
-                                    location.href + ' #handouts_table'
-                                );
+                        $.ajax({
+                        url: "../../ajax/class/giveHandoutMade.php",
+                            type: 'POST',
+                            data: {
+                                subject_code_handout_id,
+                                subject_period_code_topic_id,
+                                teacher_id
+                            },
+                            success: function(response) {
 
-                                // location.reload();
-                            });}
+                                response = response.trim();
 
-                        },
-                        error: function(xhr, status, error) {
-                            // handle any errors here
-                            console.error('Error:', error);
-                            console.log('Status:', status);
-                            console.log('Response Text:', xhr.responseText);
-                            console.log('Response Code:', xhr.status);
-                        }
-                    });
-                } else {
-                    // User clicked "No," perform alternative action or do nothing
-                }
-        });
-    }
-    
-    function giveMadeHandout(subject_code_handout_id,
-        subject_period_code_topic_id, teacher_id){
+                                console.log(response);
 
-        var subject_code_handout_id = parseInt(subject_code_handout_id);
-        var subject_period_code_topic_id = parseInt(subject_period_code_topic_id);
-        var teacher_id = parseInt(teacher_id);
+                                if(response == "success"){
+                                    Swal.fire({
+                                    icon: 'success',
+                                    title: `Handout has been successfully given`,
+                                    showConfirmButton: false,
+                                    timer: 1200, // Adjust the duration of the toast message in milliseconds (e.g., 3000 = 3 seconds)
+                                    toast: true,
+                                    position: 'top-end',
+                                    showClass: {
+                                    popup: 'swal2-noanimation',
+                                    backdrop: 'swal2-noanimation'
+                                    },
+                                    hideClass: {
+                                    popup: '',
+                                    backdrop: ''
+                                    }
+                                }).then((result) => {
 
-        Swal.fire({
-                icon: 'question',
-                title: `Do you want to give the selected handout module?`,
-                showCancelButton: true,
-                confirmButtonText: 'Yes',
-                cancelButtonText: 'Cancel'
+                                    $('#handouts_table').load(
+                                        location.href + ' #handouts_table'
+                                    );
 
-            }).then((result) => {
-                if (result.isConfirmed) {
+                                    // location.reload();
+                                });}
 
-                    $.ajax({
-                    url: "../../ajax/class/giveHandoutMade.php",
-                        type: 'POST',
-                        data: {
-                            subject_code_handout_id,
-                            subject_period_code_topic_id,
-                            teacher_id
-                        },
-                        success: function(response) {
+                            },
+                            error: function(xhr, status, error) {
+                                // handle any errors here
+                                console.error('Error:', error);
+                                console.log('Status:', status);
+                                console.log('Response Text:', xhr.responseText);
+                                console.log('Response Code:', xhr.status);
+                            }
+                        });
+                    } else {
+                        // User clicked "No," perform alternative action or do nothing
+                    }
+            });
+        }
 
-                            response = response.trim();
+        function unGiveMadeHandout(subject_code_handout_id,
+            subject_period_code_topic_id, teacher_id){
 
-                            console.log(response);
+            var subject_code_handout_id = parseInt(subject_code_handout_id);
+            var subject_period_code_topic_id = parseInt(subject_period_code_topic_id);
+            var teacher_id = parseInt(teacher_id);
 
-                            if(response == "success"){
-                                Swal.fire({
-                                icon: 'success',
-                                title: `Handout has been successfully given`,
-                                showConfirmButton: false,
-                                timer: 1200, // Adjust the duration of the toast message in milliseconds (e.g., 3000 = 3 seconds)
-                                toast: true,
-                                position: 'top-end',
-                                showClass: {
-                                popup: 'swal2-noanimation',
-                                backdrop: 'swal2-noanimation'
-                                },
-                                hideClass: {
-                                popup: '',
-                                backdrop: ''
-                                }
-                            }).then((result) => {
+            Swal.fire({
+                    icon: 'question',
+                    title: `Do you want to un-give the selected module?`,
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes',
+                    cancelButtonText: 'Cancel'
 
-                                $('#handouts_table').load(
-                                    location.href + ' #handouts_table'
-                                );
+                }).then((result) => {
+                    if (result.isConfirmed) {
 
-                                // location.reload();
-                            });}
+                        $.ajax({
+                        url: "../../ajax/class/unGiveMadeHandout.php",
+                            type: 'POST',
+                            data: {
+                                subject_code_handout_id,
+                                subject_period_code_topic_id,
+                                teacher_id
+                            },
+                            success: function(response) {
 
-                        },
-                        error: function(xhr, status, error) {
-                            // handle any errors here
-                            console.error('Error:', error);
-                            console.log('Status:', status);
-                            console.log('Response Text:', xhr.responseText);
-                            console.log('Response Code:', xhr.status);
-                        }
-                    });
-                } else {
-                    // User clicked "No," perform alternative action or do nothing
-                }
-        });
-    }
+                                response = response.trim();
 
-    function unGiveMadeHandout(subject_code_handout_id,
-        subject_period_code_topic_id, teacher_id){
+                                console.log(response);
 
-        var subject_code_handout_id = parseInt(subject_code_handout_id);
-        var subject_period_code_topic_id = parseInt(subject_period_code_topic_id);
-        var teacher_id = parseInt(teacher_id);
+                                if(response == "success"){
+                                    Swal.fire({
+                                    icon: 'success',
+                                    title: `Successfully Un-give`,
+                                    showConfirmButton: false,
+                                    timer: 1200, // Adjust the duration of the toast message in milliseconds (e.g., 3000 = 3 seconds)
+                                    toast: true,
+                                    position: 'top-end',
+                                    showClass: {
+                                    popup: 'swal2-noanimation',
+                                    backdrop: 'swal2-noanimation'
+                                    },
+                                    hideClass: {
+                                    popup: '',
+                                    backdrop: ''
+                                    }
+                                }).then((result) => {
 
-        Swal.fire({
-                icon: 'question',
-                title: `Do you want to un-give the selected module?`,
-                showCancelButton: true,
-                confirmButtonText: 'Yes',
-                cancelButtonText: 'Cancel'
+                                    $('#handouts_table').load(
+                                        location.href + ' #handouts_table'
+                                    );
 
-            }).then((result) => {
-                if (result.isConfirmed) {
+                                    // location.reload();
+                                });}
 
-                    $.ajax({
-                    url: "../../ajax/class/unGiveMadeHandout.php",
-                        type: 'POST',
-                        data: {
-                            subject_code_handout_id,
-                            subject_period_code_topic_id,
-                            teacher_id
-                        },
-                        success: function(response) {
+                            },
+                            error: function(xhr, status, error) {
+                                // handle any errors here
+                                console.error('Error:', error);
+                                console.log('Status:', status);
+                                console.log('Response Text:', xhr.responseText);
+                                console.log('Response Code:', xhr.status);
+                            }
+                        });
+                    } else {
+                        // User clicked "No," perform alternative action or do nothing
+                    }
+            });
+        }
 
-                            response = response.trim();
-
-                            console.log(response);
-
-                            if(response == "success"){
-                                Swal.fire({
-                                icon: 'success',
-                                title: `Successfully Un-give`,
-                                showConfirmButton: false,
-                                timer: 1200, // Adjust the duration of the toast message in milliseconds (e.g., 3000 = 3 seconds)
-                                toast: true,
-                                position: 'top-end',
-                                showClass: {
-                                popup: 'swal2-noanimation',
-                                backdrop: 'swal2-noanimation'
-                                },
-                                hideClass: {
-                                popup: '',
-                                backdrop: ''
-                                }
-                            }).then((result) => {
-
-                                $('#handouts_table').load(
-                                    location.href + ' #handouts_table'
-                                );
-
-                                // location.reload();
-                            });}
-
-                        },
-                        error: function(xhr, status, error) {
-                            // handle any errors here
-                            console.error('Error:', error);
-                            console.log('Status:', status);
-                            console.log('Response Text:', xhr.responseText);
-                            console.log('Response Code:', xhr.status);
-                        }
-                    });
-                } else {
-                    // User clicked "No," perform alternative action or do nothing
-                }
-        });
-    }
-
-</script>
+    </script>
+    </body>
+</html>

@@ -72,7 +72,7 @@ table {
     }
 
     .calendar-container>.calendar-header {
-        flex-direction: column;
+        flex-direction: row;
         text-align: center;
     }
 
@@ -89,6 +89,10 @@ table {
 @media only screen and (max-width: 425px) {
     .calendar-container {
         width: 220px;
+    }
+
+    .calendar-container>.calendar-header {
+        flex-direction: column;
     }
 }
 

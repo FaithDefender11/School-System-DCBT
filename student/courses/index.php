@@ -262,7 +262,7 @@
                             </div>
                         </header>
                         <main>
-                            <table class="b">
+                            <table class="d">
                                 <thead>
                                     <tr>
                                         <th>Section</th>

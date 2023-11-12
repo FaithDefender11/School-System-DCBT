@@ -62,7 +62,10 @@ table.b td,
 table.b td a,
 table.c th,
 table.c td,
-table.c td a {
+table.c td a,
+table.d th,
+table.d td,
+table.d td a {
   padding: 10px 20px;
 }
 
@@ -217,6 +220,23 @@ table.c>tbody>tr>td>.task-beige {
   }
 
   table.c>thead {
+    display: none;
+  }
+
+  table.a>thead>tr>.type,
+  table.a>thead>tr>.sent,
+  table.a>thead>tr>.read,
+  table.a>tbody>tr>.type,
+  table.a>tbody>tr>.sent,
+  table.a>tbody>tr>.read {
+    display: none;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+
+  table.d>thead>tr>.d-1,
+  table.d>tbody>tr>.d-1 {
     display: none;
   }
 }
