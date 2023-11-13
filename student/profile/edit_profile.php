@@ -97,7 +97,7 @@
                                     <div>
                                         <input type="file" name="profilePic" id="profilePic">
                                         <?php if ($profilePic): ?>
-                                            <img src="<?= "../../".$profilePic; ?>" alt="Profile Picture">
+                                            <img src="<?= "../../".$profilePic; ?>" alt="Profile Picture" style="width: 200px; height: 200px">
                                         <?php else: ?>
                                             <img src="../../assets/images/users/Blank.png" alt="Profile Picture" style="width: 200px; height: 200px">
                                         <?php endif; ?>
