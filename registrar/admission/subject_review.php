@@ -295,6 +295,7 @@
                                 <tr class="text-center"> 
                                     <th style="min-width: 186px;">Course Description</th>
                                     <th >Section</th>
+                                    <th >Code</th>
                                     <th >Type</th>
                                     <th style="min-width: 186px;" >Time</th>
                                     <th >Room</th>
@@ -426,6 +427,7 @@
                                                 <tr class='text-center'>
                                                     <td>$subject_title</td>
                                                     <td>$enrolled_section_Name</td>
+                                                    <td>$section_subject_code</td>
                                                     <td>$subject_type</td>
                                                     <td>$scheduleOutput</td>
                                                     <td>$roomOutput</td>
@@ -513,10 +515,11 @@
                     data: {
                         student_subject_id
                     },
+
                     success: function(response) {
                         response = response.trim();
 
-                        // console.log(response);
+                        console.log(response);
 
                         if(response == "success_delete"){
                             Swal.fire({
@@ -630,7 +633,9 @@
                         $.ajax({
                         url: '../../ajax/admission/student_enrollment_confirm.php',
                         type: 'POST',
-                        data: {student_enrollment_form_id,
+                        data: {
+                            student_enrollment_id,
+                            student_enrollment_form_id,
                             student_course_id, current_school_year_id,
                             student_id, enrollment_payment, registrarUserId
                         },

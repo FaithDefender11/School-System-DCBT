@@ -100,6 +100,8 @@
                                 // $programName = $program->GetProgramName();
                                 // $acronym = $program->GetProgramAcronym();
 
+                                $url = "view_student.php?id=$student_id";
+
                                 echo "
                                     <tr>
                                         <td>$student_unique_id</td>
@@ -110,9 +112,12 @@
                                         <td>$student_statusv2</td>
                                         <td>$admission_status</td>
                                         <td>
-                                            <button onclick='window.location.href = \"view_student.php?id=$student_id\"' class='btn btn-primary btn-sm'>
-                                                <i class='fas fa-eye'></i>
-                                            </button>
+                                            <a style='text-decoration: none; color:inherit; ' href='$url'>
+                                                <button onclick='window.location.href = \"view_student.php?id=$student_id\"' class='btn btn-primary btn-sm'>
+                                                    <i class='fas fa-eye'></i>
+                                                </button>
+                                            </a>
+
                                         </td>
                                     </tr>
                                 ";

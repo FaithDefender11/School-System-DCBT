@@ -6,6 +6,7 @@
     include_once('../../includes/classes/Pending.php');
     include_once('../../includes/classes/StudentSubject.php');
     include_once('../../includes/classes/PendingParent.php');
+    include_once('../../includes/classes/EnrollmentAudit.php');
 
     if(isset($_GET['id'])){
 
@@ -16,6 +17,7 @@
 
         $student_parent = new StudentParent($con, $pending_enrollees_id);
 
+                $enrollmentAudit= new EnrollmentAudit($con);
 
 
         $parent_id = $parent->GetParentID();
@@ -34,6 +36,11 @@
         $address = $pending->GetPendingAddress();
         $email = $pending->GetPendingEmail();
         $contact_number = $pending->GetPendingContactNumber();
+
+
+        $student_lrn = $pending->GetPendingLRN();
+
+        $type_status = $pending->GetPendingType();
 
         // Guardian
         $parent_firstname = $parent->GetFirstName();
@@ -67,7 +74,256 @@
         $mother_occupation = $parent->GetMotherOccupation();
 
 
-        if(isset($_POST['update_pending_btn'])){
+        $school_name = $parent->GetSchoolName();
+        $school_address = $parent->GetSchoolAddress();
+        $year_started = $parent->GetSchoolYearStarted();
+        $year_ended = $parent->GetSchoolYearEnded();
+
+
+        // var_dump($pending_enrollees_id);
+
+        if(
+            $_SERVER['REQUEST_METHOD'] === "POST" &&
+            
+            isset($_POST['update_pending_btn'])){
+
+
+            // $stud = $con->prepare("SELECT 
+            //     lastname, firstname, middle_name, suffix, civil_status, nationality,
+            //     sex, birthday, birthplace, religion, address, contact_number, email
+
+            //     FROM pending_enrollees WHERE pending_enrollees_id = :pending_enrollees_id"
+            // );
+            
+            // $stud->bindParam(':pending_enrollees_id', $pending_enrollees_id);
+            // $stud->execute();
+            // $oldStudent = $stud->fetch(PDO::FETCH_ASSOC);
+
+            // echo "old: ". $oldStudent['lastname'];
+
+            // $changes = [];
+
+            // if ($oldStudent['lastname'] !== $_POST['lastname']) {
+            //     $changes['lastname'] = $oldStudent['lastname'];
+            // }
+            // if ($oldStudent['firstname'] !== $_POST['firstname']) {
+            //     $changes['firstname'] = $oldStudent['firstname'];
+            // }
+
+            // if ($oldStudent['middle_name'] !== $_POST['middle_name']) {
+            //     $changes['middle_name'] = $oldStudent['middle_name'];
+            // }
+            // if ($oldStudent['suffix'] !== $_POST['suffix']) {
+            //     $changes['suffix'] = $oldStudent['suffix'];
+            // }
+
+            // if ($oldStudent['civil_status'] !== $_POST['civil_status']) {
+            //     $changes['civil_status'] = $oldStudent['civil_status'];
+            // }
+            // if ($oldStudent['nationality'] !== $_POST['nationality']) {
+            //     $changes['nationality'] = $oldStudent['nationality'];
+            // }
+            // if ($oldStudent['sex'] !== $_POST['sex']) {
+            //     $changes['sex'] = $oldStudent['sex'];
+            // }
+            // if ($oldStudent['birthday'] !== $_POST['birthday']) {
+            //     $changes['birthday'] = $oldStudent['birthday'];
+            // }
+            // if ($oldStudent['birthplace'] !== $_POST['birthplace']) {
+            //     $changes['birthplace'] = $oldStudent['birthplace'];
+            // }
+            // if ($oldStudent['religion'] !== $_POST['religion']) {
+            //     $changes['religion'] = $oldStudent['religion'];
+            // }
+            // if ($oldStudent['address'] !== $_POST['address']) {
+            //     $changes['address'] = $oldStudent['address'];
+            // }
+            // if ($oldStudent['contact_number'] !== $_POST['contact_number']) {
+            //     $changes['contact_number'] = $oldStudent['contact_number'];
+            // }
+            // if ($oldStudent['email'] !== $_POST['email']) {
+            //     $changes['email'] = $oldStudent['email'];
+            // }
+
+            // $studentDetailsQuery = $con->prepare("SELECT 
+
+            //     lastname, firstname, middle_name, suffix, occupation, relationship, contact_number,
+            //     school_name, school_address, year_started, year_ended
+
+            //     FROM parent WHERE pending_enrollees_id = :pending_enrollees_id"
+            // );
+            // $studentDetailsQuery->bindParam(':pending_enrollees_id', $pending_enrollees_id);
+            // $studentDetailsQuery->execute();
+
+            // $studentOther = $studentDetailsQuery->fetch(PDO::FETCH_ASSOC);
+
+            // if ($studentOther['school_name'] !== $_POST['school_name']) {
+            //     $changes['school_name'] = $studentOther['school_name'];
+            // }
+            // if ($studentOther['school_address'] !== $_POST['school_address']) {
+            //     $changes['school_address'] = $studentOther['school_address'];
+            // }
+            // if ($studentOther['year_started'] !== $_POST['year_started']) {
+            //     $changes['year_started'] = $studentOther['year_started'];
+            // }
+            // if ($studentOther['year_ended'] !== $_POST['year_ended']) {
+            //     $changes['year_ended'] = $studentOther['year_ended'];
+            // }
+
+
+            // # Guardian
+
+            // if ($studentOther['lastname'] !== $_POST['guardian_lastname']) {
+            //     $changes['guardian_lastname'] = $studentOther['lastname'];
+            // }
+            // if ($studentOther['firstname'] !== $_POST['guardian_firstname']) {
+            //     $changes['guardian_firstname'] = $studentOther['firstname'];
+            // }
+
+            // if ($studentOther['middle_name'] !== $_POST['guardian_middle_name']) {
+            //     $changes['guardian_middle_name'] = $studentOther['middle_name'];
+            // }
+            // if ($studentOther['suffix'] !== $_POST['guardian_suffix']) {
+            //     $changes['guardian_suffix'] = $studentOther['suffix'];
+            // }
+
+            // if ($studentOther['contact_number'] !== $_POST['guardian_contact']) {
+            //     $changes['guardian_contact'] = $studentOther['contact_number'];
+            // }
+            // if ($studentOther['occupation'] !== $_POST['guardian_occupation']) {
+            //     $changes['guardian_occupation'] = $studentOther['occupation'];
+            // }
+            // if ($studentOther['relationship'] !== $_POST['guardian_relationship']) {
+            //     $changes['guardian_relationship'] = $studentOther['relationship'];
+            // }
+
+            // var_dump($changes);
+            // return;
+
+            // foreach ($changes as $field => $oldValue) {
+
+            //     echo "<br>";
+            //     // echo "oldValue: $oldValue";
+            //     echo "field: $field";
+            //     echo "<br>";
+
+            //     $formatValue = "";
+
+            //     if($field == "lastname"){
+            //         $formatValue = "Last name";
+            //     }
+            //     if($field == "firstname"){
+            //         $formatValue = "First name";
+            //     }
+
+            //     if($field == "middle_name"){
+            //         $formatValue = "Middle name";
+            //     }
+
+            //     if($field == "suffix"){
+            //         $formatValue = "Suffix";
+            //     }
+
+            //     if($field == "civil_status"){
+            //         $formatValue = "Civil Status";
+            //     }
+                
+            //     if($field == "nationality"){
+            //         $formatValue = "Citizenship";
+            //     }
+
+            //     if($field == "sex"){
+            //         $formatValue = "Gender";
+            //     }
+
+
+            //      if($field == "birthday"){
+            //         $formatValue = "Birth day";
+            //     }
+                
+            //     if($field == "birthplace"){
+            //         $formatValue = "Birth place";
+            //     }
+
+            //     if($field == "religion"){
+            //         $formatValue = "Religion";
+            //     }
+
+            //     if($field == "address"){
+            //         $formatValue = "Address";
+            //     }
+            //     if($field == "contact_number"){
+            //         $formatValue = "Phone";
+            //     }
+
+            //     if($field == "email"){
+            //         $formatValue = "Email";
+            //     }
+
+            //     if($field == "school_name"){
+            //         $formatValue = "School Name";
+            //     }
+                
+            //     if($field == "school_address"){
+            //         $formatValue = "School Address";
+            //     }
+
+
+            //     if($field == "guardian_lastname"){
+            //         $formatValue = "Guardian lastname";
+            //     }
+                
+            //     if($field == "guardian_firstname"){
+            //         $formatValue = "Guardian firstname";
+            //     }
+
+            //     if($field == "guardian_middle_name"){
+            //         $formatValue = "Guardian Middlename";
+            //     }
+                
+            //     if($field == "guardian_suffix"){
+            //         $formatValue = "Guardian suffix";
+            //     }
+
+            //     if($field == "guardian_contact"){
+            //         $formatValue = "Guardian contact";
+            //     }
+                
+            //     if($field == "guardian_occupation"){
+            //         $formatValue = "Guardian occupation";
+            //     }
+
+            //     if($field == "guardian_relationship"){
+            //         $formatValue = "Guardian relationship";
+            //     }
+
+            //     $newValue = $_POST[$field];
+
+            //     // echo "newValue: $newValue";
+            //     // echo "<br>";
+            //     $description = "'Name' has been edited the $formatValue input, From '$oldValue' changed into '$newValue'";
+                
+            //     echo $description;
+            //     echo "<br>";
+
+            //     // $stmt = $con->prepare("INSERT INTO enrollment_audit 
+
+            //     //     (enrollment_id, description, school_year_id, registrar_id) 
+            //     //     VALUES (:enrollment_id, :description, :school_year_id, :registrar_id)
+            //     // ");
+            //     // $stmt->bindParam(':enrollment_id', $student_enrollment_id);
+            //     // $stmt->bindParam(':description', $description);
+            //     // $stmt->bindParam(':school_year_id', $current_school_year_id);
+            //     // $stmt->bindParam(':registrar_id', $registrarUserId);
+            //     // $stmt->execute();
+
+            //     // $doesAuditInserted = $enrollmentAudit->EnrollmentAuditInsert(
+            //     //     $student_enrollment_id,
+            //     //     $description, $current_school_year_id, $registrarUserId
+            //     // );
+            // }
+
+            // return;
 
             $firstname = $_POST['firstname'];
             $lastname = $_POST['lastname'];
@@ -84,38 +340,57 @@
             $email = $_POST['email'];
 
 
-            $guardian_firstname = $_POST['guardian_firstname'];
-            $guardian_lastname = $_POST['guardian_lastname'];
-            $guardian_middle_name = $_POST['guardian_middle_name'];
-            $guardian_suffix = $_POST['guardian_suffix'];
-            $guardian_contact = $_POST['guardian_contact'];
-            $guardian_email = $_POST['guardian_email'];
-            $guardian_occupation = $_POST['guardian_occupation'];
-            $guardian_relationship = $_POST['guardian_relationship'];
+            $guardian_firstname = $_POST['guardian_firstname'] ?? "";
+            $guardian_lastname = $_POST['guardian_lastname'] ?? "";
+            $guardian_middle_name = $_POST['guardian_middle_name'] ?? "";
+            $guardian_suffix = $_POST['guardian_suffix'] ?? "";
+            $guardian_contact = $_POST['guardian_contact'] ?? "";
+            // $guardian_email = $_POST['guardian_email'] ?? "";
+            $guardian_occupation = $_POST['guardian_occupation'] ?? "";
+            $guardian_relationship = $_POST['guardian_relationship'] ?? "";
 
           
 
             // Father
-            $father_firstname = $_POST['father_firstname'];
-            $father_lastname = $_POST['father_lastname'];
-            $father_middle = $_POST['father_middle'];
-            $father_suffix = $_POST['father_suffix'];
-            $father_contact_number = $_POST['father_contact_number'];
-            $father_email = $_POST['father_email'];
-            $father_occupation = $_POST['father_occupation'];
+            $father_firstname = $_POST['father_firstname'] ?? "";
+            $father_lastname = $_POST['father_lastname'] ?? "";
+            $father_middle = $_POST['father_middle'] ?? "";
+            $father_suffix = $_POST['father_suffix'] ?? "";
+            $father_contact_number = $_POST['father_contact_number'] ?? "";
+            $father_email = $_POST['father_email'] ?? "";
+            $father_occupation = $_POST['father_occupation'] ?? "";
 
           
 
             // Mother
-            $mother_firstname = $_POST['mother_firstname'];
-            $mother_lastname = $_POST['mother_lastname'];
-            $mother_middle = $_POST['mother_middle'];
-            $mother_suffix = $_POST['mother_suffix'];
-            $mother_contact_number = $_POST['mother_contact_number'];
-            $mother_email = $_POST['mother_email'];
-            $mother_occupation = $_POST['mother_occupation'];
+            $mother_firstname = $_POST['mother_firstname'] ?? "";
+            $mother_lastname = $_POST['mother_lastname'] ?? "";
+            $mother_middle = $_POST['mother_middle'] ?? "";
+            $mother_suffix = $_POST['mother_suffix'] ?? "";
+            $mother_contact_number = $_POST['mother_contact_number'] ?? "";
+            $mother_email = $_POST['mother_email'] ?? "";
+            $mother_occupation = $_POST['mother_occupation'] ?? "";
 
-            
+
+            echo "Father Information:<br>";
+            echo "First Name: " . $father_firstname . "<br>";
+            echo "Last Name: " . $father_lastname . "<br>";
+            echo "Middle Name: " . $father_middle . "<br>";
+            echo "Suffix: " . $father_suffix . "<br>";
+            echo "Contact Number: " . $father_contact_number . "<br>";
+            echo "Email: " . $father_email . "<br>";
+            echo "Occupation: " . $father_occupation . "<br>";
+
+            echo "<br>Mother Information:<br>";
+            echo "First Name: " . $mother_firstname . "<br>";
+            echo "Last Name: " . $mother_lastname . "<br>";
+            echo "Middle Name: " . $mother_middle . "<br>";
+            echo "Suffix: " . $mother_suffix . "<br>";
+            echo "Contact Number: " . $mother_contact_number . "<br>";
+            echo "Email: " . $mother_email . "<br>";
+            echo "Occupation: " . $mother_occupation . "<br>";
+
+            // return;
 
             $editPendingtExec = $pending->UpdatePendingEnrolleeDetails(
                 $pending_enrollees_id,
@@ -136,8 +411,9 @@
             $editParentExec = $parent->UpdatePendingParent(
                 $pending_enrollees_id, $parent_id, $guardian_firstname, $guardian_lastname,
                 $guardian_middle_name, $guardian_suffix, $guardian_contact,
-                $guardian_email, $guardian_occupation, $guardian_relationship,
+                "", $guardian_occupation, $guardian_relationship,
 
+                # Remove
                 $father_firstname,
                 $father_lastname,
                 $father_middle,
@@ -160,7 +436,6 @@
             
         }
 
-        
 
         ?>
             <div class="content">
@@ -172,21 +447,28 @@
                 </nav>
                 
                 <main>
+
                     <div class="floating">
-                        <header>
-                            <div class="title">
-                                <h3 class="text-primary text-center">Enrollee Form Details</h3>
-                            </div>
-                        </header>
-                            
-                        
+
                         <header class="mt-4">
                             <div class="title">
-                            <h3>Pending Enrollee Information</h3>
+                                <h4 style="font-weight: bold;">Enrollee Information</h4>
                             </div>
+                            
                         </header>
 
                         <form method="POST">
+
+                            <?php if($type_status == "SHS"):?>
+
+                                <div class="row">
+                                    <span style="margin-left: 470px;">
+
+                                        <label for="student_lrn">LRN</label>
+                                        <input class="form-control" placeholder="" style="width: 250px;" id="student_lrn" type="text" name="student_lrn" value="<?php echo $student_lrn;?>">
+                                    </span>
+                                </div>
+                            <?php endif;?>
 
                             <main>
                                 <div class="row">
@@ -206,7 +488,7 @@
                                     </div>
                                     <div>
                                     <input type="text" name="suffix" id="suffix" value="<?php echo $suffix;?>" class="form-control" />
-                                    <small>Suffix name</small>
+                                    <small>Suffix</small>
                                     </div>
                                 </span>
                                 </div>
@@ -288,111 +570,57 @@
                                 </div>
                             </main>
 
-                            <hr>
-                            <header>
-                                <div class="title">
-                                    <h3>Father's Information</h3>
+                            <br>
+                            <div id="previous_school">
+                                <header>
+                                    <div class="title">
+                                        <h4 style="font-weight: bold;">Previous School Information</h4>
+                                    </div>
+                                </header>
+
+                                <div class="row">
+                                    <span>
+                                        <label for="school_name">School Name</label>
+                                        <div>
+                                            <input required type="text" id="school_name" name="school_name" class="read_only form-control" 
+                                            value="<?php echo $school_name; ?>">
+                                        </div>
+                                    </span>
                                 </div>
-                            </header>
-
-                            <div class="row">
-                                <span>
-                                    <label for="name">Name</label>
-                                    <div>
-                                        <input value="<?php echo $father_lastname?>" type="text" name="father_lastname" class="form-control">
-                                        <small>Last name</small>
-                                    </div>
-                                    <div>
-                                        <input value="<?php echo $father_firstname?>" type="text" name="father_firstname" class="form-control">
-                                        <small>First name</small>
-                                    </div>
-                                    <div>
-                                        <input value="<?php echo $father_middle?>" type="text" name="father_middle" class="form-control">
-                                        <small>Middle name</small>
-                                    </div>
-                                    <div>
-                                        <input value="<?php echo $father_suffix?>" type="text" name="father_suffix" class="form-control">
-                                        <small>Father suffix</small>
-                                    </div>
-                                </span>
-                            </div>
-
-                            <div class="row">
-                                <span>
-                                    <label for="phone">Phone no.</label>
-                                    <div>
-                                        <input value="<?php echo $father_contact_number?>" type="tel" id="father_contact_number" name="father_contact_number" class="form-control">
-                                    </div>
-                                </span>
-                                <span>
-                                    <label for="email">Email</label>
-                                    <div>
-                                        <input value="<?php echo $father_email?>" type="text" id="father_email" name="father_email" class="form-control">
-                                    </div>
-                                </span>
-                                <span>
-                                    <label for="occupation">Occupation</label>
-                                    <div>
-                                        <input value="<?php echo $father_occupation?>" type="text" id="father_occupation" name="father_occupation" class="form-control">
-                                    </div>
-                                </span>
-                            </div>
-
-
-                            <hr>
-                            <header>
-                                <div class="title">
-                                    <h3>Mother's Information</h3>
+                                <div class="row">
+                                    <span>
+                                        <label for="school_address">Address</label>
+                                        <div>
+                                            <input required type="text" id="school_address" name="school_address"
+                                            class="read_only form-control" value="<?php echo $school_address; ?>">
+                                        </div>
+                                    </span>
                                 </div>
-                            </header>
+                                <div class="row">
+                                    <span>
+                                        <label for="year_started">Admission Year</label>
+                                        <div>
+                                            <input required type="text" id="year_started" name="year_started"
+                                            class="read_only form-control" value="<?php echo $year_started;?>">
+                                        </div>
+                                    </span>
 
-                            <div class="row">
-                                <span>
-                                    <label for="name">Name</label>
-                                    <div>
-                                        <input value="<?php echo $mother_lastname;?>" type="text" name="mother_lastname" class="form-control">
-                                        <small>Last name</small>
-                                    </div>
-                                    <div>
-                                        <input value="<?php echo $mother_firstname;?>" type="text" name="mother_firstname" class="form-control">
-                                        <small>First name</small>
-                                    </div>
-                                    <div>
-                                        <input value="<?php echo $mother_middle;?>" type="text" name="mother_middle" class="form-control">
-                                        <small>Middle name</small>
-                                    </div>
-                                    <div>
-                                        <input value="<?php echo $mother_suffix;?>" type="text" name="mother_suffix" class="form-control">
-                                        <small>Mother suffix</small>
-                                    </div>
-                                </span>
-                            </div>
-                            <div class="row">
-                                <span>
-                                    <label for="phone">Phone no.</label>
-                                    <div>
-                                        <input value="<?php echo $mother_contact_number;?>" type="tel" id="mother_contact_number" name="mother_contact_number" class="form-control">
-                                    </div>
-                                </span>
-                                <span>
-                                    <label for="email">Email</label>
-                                    <div>
-                                        <input value="<?php echo $mother_email;?>" type="text" id="mother_email" name="mother_email" class="form-control">
-                                    </div>
-                                </span>
-                                <span>
-                                    <label for="occupation">Occupation</label>
-                                    <div>
-                                        <input value="<?php echo $mother_occupation;?>" type="text" id="mother_occupation" name="mother_occupation" class="form-control">
-                                    </div>
-                                </span>
+                                    <span>
+                                        <label for="year_ended">Graduation Year</label>
+                                        <div>
+                                            <input  required type="text" id="year_ended" name="year_ended" 
+                                            class="read_only form-control" value="<?php echo $year_ended;?>">
+                                        </div>
+                                    </span>
+                                </div>
+
                             </div>
 
                             <hr>
                             <header>
-                            <div class="title">
-                                <h4>Guardian's Information</h4>
-                            </div>
+                                <div class="title mb-2 mt-2">
+                                    <h4 style="font-weight: bold;">Guardian Information</h4>
+                                </div>
                             </header>
 
                             <main>
@@ -413,46 +641,44 @@
                                     </div>
                                     <div>
                                     <input type="text" name="guardian_suffix" id="guardian_suffix" value="<?php echo $parent_suffix;?>" class="form-control" />
-                                    <small>Suffix name</small>
+                                    <small>Suffix</small>
                                     </div>
                                 </span>
                                 </div>
 
                                 <div class="row">
-                                <span>
-                                    <label for="phoneNo">Phone no.</label>
-                                    <div>
-                                    <input type="text" name="guardian_contact" id="guardian_contact" value="<?php echo $parent_contact_number;?>" class="form-control" />
-                                    </div>
-                                </span>
-                                <span>
-                                    <label for="email">Email</label>
-                                    <div>
-                                    <input type="email" name="guardian_email" id="guardian_email" value="<?php echo $parent_email;?>" class="form-control" />
-                                    </div>
-                                </span>
+                                    <span>
+                                        <label for="phoneNo">Phone no.</label>
+                                        <div>
+                                        <input type="text" name="guardian_contact" id="guardian_contact" value="<?php echo $parent_contact_number;?>" class="form-control" />
+                                        </div>
+                                    </span>
+                                    
                                 </div>
 
                                 <div class="row">
-                                <span>
-                                    <label for="relationship">Relationship</label>
-                                    <div>
-                                    <input type="text" name="guardian_relationship" id="guardian_relationship" value="<?php echo $parent_relationship;?>" class="form-control" />
-                                    </div>
-                                </span>
-                                <span>
-                                    <label for="occupation">Occupation</label>
-                                    <div>
-                                    <input type="text" name="guardian_occupation" id="guardian_occupation" value="<?php echo $parent_occupation;?>" class="form-control" />
-                                    </div>
-                                </span>
+
+                                    <span>
+                                        <label for="relationship">Relationship</label>
+                                        <div>
+                                        <input type="text" name="guardian_relationship" id="guardian_relationship" value="<?php echo $parent_relationship;?>" class="form-control" />
+                                        </div>
+                                    </span>
+
+                                    <span>
+                                        <label for="occupation">Occupation</label>
+                                        <div>
+                                        <input type="text" name="guardian_occupation" id="guardian_occupation" value="<?php echo $parent_occupation;?>" class="form-control" />
+                                        </div>
+                                    </span>
+
                                 </div>
                             </main>
 
                             <div class="action modal-footer">
                                 <button name="update_pending_btn"
                                     type="submit" class="default large success">
-                                    Save Changes
+                                    Update & Save
                                 </button>
                             </div>
                         </form>

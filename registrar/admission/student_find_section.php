@@ -23,10 +23,7 @@
     if(isset($_POST['student_choose_section']) && isset($_POST['find_selected_course_id'])){
 
         $chosen_course_id = intval($_POST['find_selected_course_id']);
-
-
-
-
+ 
         if($student_enrollment_course_id != 0 && 
             $student_enrollment_course_id == $chosen_course_id){
 
@@ -106,6 +103,29 @@
                 // if($student_enrollment_student_status === "Irregular"){
 
                 // }
+
+                $selectec_section = new Section($con, $chosen_course_id);
+                $sectionName = $selectec_section->GetSectionName();
+
+                $enrollmentAudit= new EnrollmentAudit($con);
+
+                ##
+                $registrarName = "";
+
+                if($registrarUserId != ""){
+                    $user = new User($con, $registrarUserId);
+                    $registrarName = ucwords($user->getFirstName()) . " " . ucwords($user->getLastName());
+                }
+
+                $now = date("Y-m-d H:i:s");
+                $date_creation = date("M d, Y h:i a", strtotime($now));
+
+                $description = "Registrar '$registrarName' has been placed student section into '$sectionName' on $date_creation";
+
+                $doesAuditInserted = $enrollmentAudit->EnrollmentAuditInsert(
+                    $student_enrollment_id,
+                    $description, $current_school_year_id, $registrarUserId
+                );
 
                 Alert::success("Successfully change section and its subjects load.", "process_enrollment.php?subject_review=show&st_id=$student_id&selected_course_id=$chosen_course_id");
                 exit();
@@ -402,11 +422,16 @@
                                     
                     <header>
                         <div class="title">
-                            <h4 style="font-weight: 350;">Available sections</h4>
+                            <h4 style="font-weight: 350;">Available sections <a style="font-size: 18px; color: inherit" href="../section/create_section.php?id=<?= $student_program_id;?>&st_id=<?= $student_id?>&c_id=<?= $student_enrollment_course_id?>&info=find_section">+</a></h4>
                         </div>
                     </header>
 
                     <?php 
+
+                        // var_dump($student_enrollment_is_new);
+
+                        # Check if student_program_id in the current_school_year_term already full
+                        
 
                         # Regular, Irregular, New, Old
                         # List of available section based on the program.
@@ -415,6 +440,8 @@
 
                             $regularOldSections = $section->GetIrregularOldSectionList(
                                 $student_program_id, $current_school_year_term);
+
+                            
 
                             if(count($regularOldSections) > 0){
                                 ?>

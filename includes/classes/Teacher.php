@@ -115,6 +115,10 @@
         public function GetTeacherContactNumber() {
             return isset($this->sqlData['contact_number']) ? ucfirst($this->sqlData["contact_number"]) : ""; 
         }
+        public function GetTeacherusername() {
+            return isset($this->sqlData['username']) ? $this->sqlData["username"] : ""; 
+        }
+
 
         public function GetTeacherBirthplace() {
             return isset($this->sqlData['birthplace']) ? ucfirst($this->sqlData["birthplace"]) : ""; 
@@ -666,6 +670,61 @@
             return false;
         }
 
+        public function TeacherResetPassword($teacher_id){
+
+            $array = [];
+
+
+            $new_password =  $this->generateRandomPassword();
+
+            // Hash the new password
+            $hashed_password = password_hash($new_password, PASSWORD_BCRYPT);
+
+            // Update the student's password in the database
+            $query = $this->con->prepare("UPDATE teacher 
+
+                SET password=:password,
+                    suffix=:suffix
+                WHERE teacher_id=:teacher_id
+
+            ");
+
+            $query->bindValue(":password", $hashed_password);
+            $query->bindValue(":suffix", $new_password);
+
+            $query->bindValue(":teacher_id", $teacher_id);
+
+            if($query->execute()){
+                // echo "<br>";
+                // echo "Temporary Password: $new_password";
+                // echo "<br>";
+
+                // Sent via email
+                // return $new_password;
+                array_push($array, $new_password);
+                array_push($array, true);
+            }
+
+            return $array;
+        }
+
+        public function TeacherSetAsInactive($teacher_id){
+            $query = $this->con->prepare("UPDATE teacher
+
+                SET teacher_status=:teacher_status
+                WHERE teacher_id=:teacher_id
+                ");
+
+            $query->bindValue(":teacher_status", "inactive");
+            $query->bindParam(":teacher_id", $teacher_id);
+            $query->execute();
+
+            if($query->rowCount() > 0){
+                return true;
+            }
+            return false;
+        }
+
         public function LmsLoginCheck($username, $password){
 
             $in_active = "Inactive";
@@ -890,5 +949,53 @@
             }
             return [];
         }
+
+
+        // Function to generate the next school_teacher_id
+        public function generateNextSchoolTeacherId()
+        {
+            // Fetch the highest school_teacher_id from the database
+            $query = "SELECT 
+            
+                MAX(school_teacher_id) AS max_id 
+                FROM teacher
+
+            ";
+
+            $result = $this->con->query($query);
+            $row = $result->fetch(PDO::FETCH_ASSOC);
+
+            // Extract the maximum id and increment it
+            $maxId = $row['max_id'];
+            $nextId = $maxId + 1;
+
+            // Format the id as '000001', '000002', etc.
+            $formattedId = sprintf('%06d', $nextId);
+
+            return $formattedId;
+        }
+
+        function generateRandomPassword() {
+            $uppercaseLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            $lowercaseLetters = 'abcdefghijklmnopqrstuvwxyz';
+            $numbers = '0123456789';
+
+            // Generate the first letter (uppercase)
+            $firstLetter = $uppercaseLetters[rand(0, strlen($uppercaseLetters) - 1)];
+
+            // Generate the next two letters (lowercase)
+            $nextTwoLetters = substr(str_shuffle($lowercaseLetters), 0, 2);
+
+            // Generate 5 random numbers
+            $randomNumbers = substr(str_shuffle($numbers), 0, 5);
+
+            // Concatenate the letters and numbers
+            $password = $firstLetter . $nextTwoLetters . $randomNumbers;
+
+            return $password;
+        }
+
+        // generateNextSchoolTeacherId($pdo);
+
     }
 ?>

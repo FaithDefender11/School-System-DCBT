@@ -11,7 +11,6 @@
  
     echo Helper::RemoveSidebar();
 
-
     $school_year = new SchoolYear($con);
     $school_year_obj = $school_year->GetActiveSchoolYearAndSemester();
 
@@ -46,6 +45,15 @@
     // var_dump($getAllAnnouncementOnMyEnrolledSubjects);
 
 
+    $getAllAnnouncementFromAdmin = $announcement->GetAllAnnouncementFromAdmin(
+        $current_school_year_id);
+
+    $mergeAnnouncement = array_merge($getAllAnnouncementFromAdmin,
+        $getAllAnnouncementOnMyEnrolledSubjects);
+
+    // var_dump($mergeAnnouncement);
+
+
     $stmt = $con->prepare("SELECT COUNT(*) as announcement_count FROM announcement");
     $stmt->execute();
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -69,7 +77,7 @@
 
                     <main>
 
-                    <?php if(count($getAllAnnouncementOnMyEnrolledSubjects) > 0):?>
+                    <?php if(count($mergeAnnouncement) > 0):?>
 
                             <table style="width: 100%" id="teacher_global_announcement_table" class="a" >
                                 
@@ -86,7 +94,7 @@
 
                                     <?php 
 
-                                        foreach ($getAllAnnouncementOnMyEnrolledSubjects as $key => $value) {
+                                        foreach ($mergeAnnouncement as $key => $value) {
 
                                             $announcement_id = $value['announcement_id'];
 
@@ -94,26 +102,56 @@
                                             $teacher_id = $value['teacher_id'];
                                             $content = $value['content'];
                                             $subject_code = $value['subject_code'];
+                                            $role = $value['role'];
+                                            $for_student = $value['for_student'];
+                                            $users_id = $value['users_id'];
+
+                                            var_dump($subject_code);
 
 
+                                            // subject_code
 
-                                            $teacher = new Teacher($con, $teacher_id);
-                                            $teacherFullname = ucwords($teacher->GetTeacherFirstName()) . " " . ucwords($teacher->GetTeacherLastName());
+                                            $toWhomName = "";
+                                            $byWhomName = "";
+
 
 
                                             $announcement_creation_db = $value['date_creation'];
 
                                             $text = "";
-
                                             $announcement_creation = date("M d, Y h:i a", strtotime($announcement_creation_db));
 
-                                            $removeAnnouncement = "removeAnnouncement($announcement_id, $teacher_id, $current_school_year_id)";
                                             
+                                            if($role == "teacher" 
+                                                && $teacher_id != NULL
+                                                && $for_student == NULL){
+
+                                                $teacher = new Teacher($con, $teacher_id);
+                                                $toWhomName = $value['subject_code'];
+
+                                                $byWhomName = ucwords($teacher->GetTeacherFirstName()) . " " . ucwords($teacher->GetTeacherLastName());
+
+                                            }
+                                            if($role == "admin"
+                                                && $teacher_id == NULL
+                                                && $for_student != NULL
+                                                && $users_id != NULL){
+
+                                                // echo "qwe";
+                                                $toWhomName = "All Students";
+
+                                                $user = new User($con, $users_id);
+                                                $byWhomName = ucwords($user->getFirstName()) . " " . ucwords($user->getLastName());
+
+                                            }
+
+
+
                                             echo "
                                                 <tr>
                                                     <td>$title</td>
-                                                    <td>$teacherFullname</td>
-                                                    <td>$subject_code</td>
+                                                    <td>$byWhomName</td>
+                                                    <td>$toWhomName</td>
                                                     <td>$announcement_creation</td>
 
                                                     <td>

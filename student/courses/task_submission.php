@@ -160,7 +160,7 @@
 
         $doesAuditSuccess = $subjectModuleAudit->InsertAuditOfSubjectModule(
             $student_subject_id, $current_school_year_id,
-            $assignment_audit_name);
+            $assignment_audit_name, $studentLoggedInId, $subject_code);
 
 
 
@@ -379,7 +379,7 @@
                 $submitted_assignment_audit_name = "Submitted an $taskname on $assignment_name under $topic_name";
                 $doesAuditSuccess = $subjectModuleAudit->InsertAuditOfSubjectModule(
                     $student_subject_id, $current_school_year_id,
-                    $submitted_assignment_audit_name);
+                    $submitted_assignment_audit_name, $studentLoggedInId, $subject_code);
 
                 Alert::successAutoRedirect("Submission has been delivered successfully.",
                     "submission_view.php?sc_id=$subject_code_assignment_id&s_id=$subject_assignment_submission_id&ss_id=$student_subject_id");

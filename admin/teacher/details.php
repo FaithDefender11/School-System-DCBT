@@ -101,7 +101,7 @@
                       <span>
                           <label for="birthdate">Birthdate</label>
                           <div>
-                          <input type="date" name="birthday" id="birthday" value="<?php echo $birthday;?>" class="form-control" />
+                          <input type="date" name="birthdate" id="birthdate" value="<?php echo $birthday;?>" class="form-control" />
                           </div>
                       </span>
                       <span>

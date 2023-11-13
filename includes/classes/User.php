@@ -111,15 +111,26 @@ class User {
     
 
     public function CreateUserAccount($firstName, $lastName, $email,
-        $role, $password, $imagePath) {
+        $role, $password, $imagePath, $last = "", $username, $unique_id) {
 
+        $firstName = trim(strtolower($firstName));
+        $lastName = trim(strtolower($lastName));
+        $firstName = trim(ucwords($firstName));
+        $lastName = trim(ucfirst($lastName));
+
+        // var_dump($firstName);
+        // var_dump($lastName);
+        // return;
 
         $hashed_password = password_hash($password, PASSWORD_BCRYPT);
 
 
         $create = $this->con->prepare("INSERT INTO users
-            (firstName, lastName, email, role, password, photo)
-            VALUES(:firstName, :lastName, :email, :role, :password, :photo)");
+            (firstName, lastName, email, role, password,
+            photo, last_activity, username, unique_id)
+
+            VALUES(:firstName, :lastName, :email, :role, :password,
+            :photo, :last_activity, :username, :unique_id)");
 
         $create->bindParam(":firstName", $firstName);
         $create->bindParam(":lastName", $lastName);
@@ -127,6 +138,10 @@ class User {
         $create->bindParam(":role", $role);
         $create->bindParam(":password", $hashed_password);
         $create->bindParam(":photo", $imagePath);
+        $create->bindParam(":last_activity", $last);
+        $create->bindParam(":username", $username);
+        $create->bindParam(":unique_id", $unique_id);
+        
         $create->execute();
 
         if($create->rowCount() > 0){
@@ -340,8 +355,52 @@ class User {
     //     return isset($this->sqlData["profilePic"]) ? $this->sqlData["profilePic"] : "";
     // }
 
-    // public function getSignUpDate() {
-    //     return $this->sqlData["signUpDate"];
-    // }
+    public function getSignUpDate() {
+        return $this->sqlData["signUpDate"];
+    }
+
+    public function generateNextUniqueUserId()
+    {
+        $query = "SELECT 
+        
+            MAX(unique_id) AS max_id 
+            FROM users
+
+        ";
+
+        $result = $this->con->query($query);
+        $row = $result->fetch(PDO::FETCH_ASSOC);
+
+        // Extract the maximum id and increment it
+        $maxId = $row['max_id'];
+        $nextId = $maxId + 1;
+
+        // Format the id as '000001', '000002', etc.
+        $formattedId = sprintf('%06d', $nextId);
+
+        return $formattedId;
+    }
+
+    function generateRandomPassword() {
+
+        $uppercaseLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $lowercaseLetters = 'abcdefghijklmnopqrstuvwxyz';
+        $numbers = '0123456789';
+
+        // Generate the first letter (uppercase)
+        $firstLetter = $uppercaseLetters[rand(0, strlen($uppercaseLetters) - 1)];
+
+        // Generate the next two letters (lowercase)
+        $nextTwoLetters = substr(str_shuffle($lowercaseLetters), 0, 2);
+
+        // Generate 5 random numbers
+        $randomNumbers = substr(str_shuffle($numbers), 0, 5);
+
+        // Concatenate the letters and numbers
+        $password = $firstLetter . $nextTwoLetters . $randomNumbers;
+
+        return $password;
+    }
+
 }
 ?>

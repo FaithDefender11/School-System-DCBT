@@ -1,3 +1,4 @@
+
 <?php 
 
     include_once('../../includes/cashier_header.php');
@@ -12,9 +13,12 @@
     include_once('../../includes/classes/Schedule.php');
     include_once('../../includes/classes/EnrollmentPayment.php');
     include_once('../../includes/classes/User.php');
+    include_once('../../includes/classes/EnrollmentAudit.php');
 
     $department = new Department($con, null);
+
     $school_year = new SchoolYear($con, null);
+
     $school_year_obj = $school_year->GetActiveSchoolYearAndSemester();
 
     $current_school_year_term = $school_year_obj['term'];
@@ -36,6 +40,44 @@
 
 
         $enrollment_form_id_url = $_GET['id'];
+
+        $enrollment_form_id = $enrollment->GetEnrollmentFormByFormIdOnly($enrollment_form_id_url);
+
+        // var_dump($enrollment_form_id);
+
+        $enrollmentAudit = new EnrollmentAudit($con);
+
+        if(isset($_GET['clicked'])
+            && $_GET['clicked'] == "true"){
+        
+
+            $cashierName = "";
+
+            // var_dump($cashierUserId);
+            if($cashierUserId != ""){
+
+                $user = new User($con, $cashierUserId);
+                $cashierName = ucwords($user->getFirstName()) . " " . ucwords($user->getLastName());
+            
+            }
+            
+            $now = date("Y-m-d H:i:s");
+            $date_creation = date("M d, Y h:i a", strtotime($now));
+
+            // echo $period_short;
+            //  $current_school_year_period;
+            // $period_short = $current_school_year_period === "First" ? "S1" : ($current_school_year_period === "Second" ? "S2" : "");
+
+            $description = "Cashier '$cashierName' has entered the enrollment form '#$enrollment_form_id' on $date_creation";
+            // echo "$description";
+
+            $doesAuditInserted = $enrollmentAudit->EnrollmentAuditInsert(
+                $enrollment_form_id_url,
+                $description, $current_school_year_id, $cashierUserId
+            );
+            
+            // echo "nice";
+        }
 
         // echo $cashierUserId;
 
@@ -424,7 +466,7 @@
             // echo "enrollment_form_is_tertiary: $enrollment_form_is_tertiary";
             // echo "<br>";
 
-            if(isset($_POST['subject_load_btn']) 
+            if(isset($_POST['subject_load_btn_' . $enrollment_form_id_url]) 
                 && isset($_POST['unique_enrollment_form_id'])
                 && isset($_POST['enrollment_payment'])
                 ){
@@ -521,73 +563,135 @@
 
                     }
                         
-                        // echo "payment_status: $payment_status";
-                        // echo "<br>";
+                    // echo "payment_status: $payment_status";
+                    // echo "<br>";
 
-                        // echo "payment_method: $payment_method";
-                        // echo "<br>";
+                    // echo "payment_method: $payment_method";
+                    // echo "<br>";
 
-                        // echo "inserted_payment: $inserted_payment";
-                        // echo "<br>";
+                    // echo "inserted_payment: $inserted_payment";
+                    // echo "<br>";
 
-                        // echo "total_balance: $total_balance";
-                        // echo "<br>";
+                    // echo "total_balance: $total_balance";
+                    // echo "<br>";
 
                         // return;
                         
-                        $markAsPaid = $enrollment->EnrollmentFormMarkAsPaid(
-                            $current_school_year_id,
-                            $student_id,
-                            $student_enrollment_form_id,
-                            "5000",
-                            $payment_status,
-                            $payment_method
+                    $markAsPaid = $enrollment->EnrollmentFormMarkAsPaid(
+                        $current_school_year_id,
+                        $student_id,
+                        $student_enrollment_form_id,
+                        "5000",
+                        $payment_status,
+                        $payment_method
+                    );
+
+                    // var_dump($markAsPaid);
+                    // return;
+                    
+                    if(($markAsPaid) == true && $payment_method === "Cash"){
+
+                        # QWEE
+                        $wasSuccessPayment = $enrollmentPayment->AddEnrollmentPayment(
+                            $enrollment_id, $inserted_payment,
+                            $enrollment_form_student_id,
+                            $payment_method, $cashierUserId
                         );
 
-                        // var_dump($markAsPaid);
-                        // return;
-                        
-                        if(($markAsPaid) == true && $payment_method === "Cash"){
+                        if($wasSuccessPayment === "cash_complete_enrollment_payment_success"){
+                            // Alert::success("Enrollment Form ID: $student_enrollment_form_id. has been approved and payment is fully settled.", "index.php");
 
-                            # QWEE
-                            $wasSuccessPayment = $enrollmentPayment->AddEnrollmentPayment(
-                                $enrollment_id, $inserted_payment,
-                                $enrollment_form_student_id,
-                                $payment_method, $cashierUserId
+                            # BTB
+
+                            $cashierName = "";
+                            // var_dump($cashierUserId);
+                            if($cashierUserId != ""){
+
+                                $user = new User($con, $cashierUserId);
+                                $cashierName = ucwords($user->getFirstName()) . " " . ucwords($user->getLastName());
+                            }
+                            
+                            $now = date("Y-m-d H:i:s");
+                            $date_creation = date("M d, Y h:i a", strtotime($now));
+ 
+                            $description = "Cashier '$cashierName' has input an amount of $inserted_payment and payment is full settled on $date_creation";
+                            
+                            $enrollmentAudit = new EnrollmentAudit($con);
+
+                            $doesAuditInserted = $enrollmentAudit->EnrollmentAuditInsert(
+                                $enrollment_form_id_url,
+                                $description, $current_school_year_id, $cashierUserId
+                            );
+                            
+
+                            Alert::success("Enrollment Form ID: $student_enrollment_form_id. has been approved and payment is fully settled.", "payment_summary.php?id=$enrollment_id&enrolled_subject=show");
+                            exit();
+                        }
+
+                    }
+
+                    if(($markAsPaid) == true && $payment_method === "Partial"){
+
+                        # QWEE
+                        $wasSuccessPayment = $enrollmentPayment->AddEnrollmentPayment(
+                            $enrollment_id, $inserted_payment,
+                            $enrollment_form_student_id,
+                            $payment_method, $cashierUserId);
+
+                        if($wasSuccessPayment === "payment_incomplete_enrollment_payment_success"){
+
+                            $cashierName = "";
+                            // var_dump($cashierUserId);
+                            if($cashierUserId != ""){
+
+                                $user = new User($con, $cashierUserId);
+                                $cashierName = ucwords($user->getFirstName()) . " " . ucwords($user->getLastName());
+                            }
+                            
+                            $now = date("Y-m-d H:i:s");
+                            $date_creation = date("M d, Y h:i a", strtotime($now));
+ 
+                            $description = "Cashier '$cashierName' has input an amount of $inserted_payment and payment is in partial on $date_creation";
+
+                            $doesAuditInserted = $enrollmentAudit->EnrollmentAuditInsert(
+                                $enrollment_form_id_url,
+                                $description, $current_school_year_id, $cashierUserId
                             );
 
-                            if($wasSuccessPayment === "cash_complete_enrollment_payment_success"){
-                                // Alert::success("Enrollment Form ID: $student_enrollment_form_id. has been approved and payment is fully settled.", "index.php");
+                            // var_dump($doesAuditInserted);
+                            // return;
 
-                                Alert::success("Enrollment Form ID: $student_enrollment_form_id. has been approved and payment is fully settled.", "payment_summary.php?id=$enrollment_id&enrolled_subject=show");
-                                exit();
-                                
-                            }
+                            Alert::success("Enrollment Form ID: $student_enrollment_form_id. has been approved with remaining balance.", "payment_summary.php?id=$enrollment_id&enrolled_subject=show");
+                            exit();
+
                         }
 
-                        if(($markAsPaid) == true && $payment_method === "Partial"){
+                        if($wasSuccessPayment === "payment_completed_enrollment_payment_success"){
+                            
+                            $cashierName = "";
+                            // var_dump($cashierUserId);
+                            if($cashierUserId != ""){
 
-                            # QWEE
-                            $wasSuccessPayment = $enrollmentPayment->AddEnrollmentPayment(
-                                $enrollment_id, $inserted_payment,
-                                $enrollment_form_student_id,
-                                $payment_method, $cashierUserId);
-
-                            if($wasSuccessPayment === "payment_incomplete_enrollment_payment_success"){
-                                // Alert::success("Enrollment Form ID: $student_enrollment_form_id. has been approved with remaining balance.", "index.php");
-                                
-                                Alert::success("Enrollment Form ID: $student_enrollment_form_id. has been approved with remaining balance.", "payment_summary.php?id=$enrollment_id&enrolled_subject=show");
-                                
-                                exit();
+                                $user = new User($con, $cashierUserId);
+                                $cashierName = ucwords($user->getFirstName()) . " " . ucwords($user->getLastName());
                             }
+                            
+                            $now = date("Y-m-d H:i:s");
+                            $date_creation = date("M d, Y h:i a", strtotime($now));
+ 
+                            $description = "Cashier '$cashierName' has input an amount of $inserted_payment and payment is fully settled on $date_creation";
 
-                            if($wasSuccessPayment === "payment_completed_enrollment_payment_success"){
-                                // Alert::success("Enrollment Form ID: $student_enrollment_form_id. has been approved and payment is fully settled.", "index.php");
-                                
-                                Alert::success("Enrollment Form ID: $student_enrollment_form_id. has been approved and payment is fully settled.", "payment_summary.php?id=$enrollment_id&enrolled_subject=show");
-                                exit();
-                            }
+                            $doesAuditInserted = $enrollmentAudit->EnrollmentAuditInsert(
+                                $enrollment_form_id_url,
+                                $description, $current_school_year_id, $cashierUserId
+                            );
+
+                            Alert::success("Enrollment Form ID: $student_enrollment_form_id. has been approved and payment is fully settled.", "payment_summary.php?id=$enrollment_id&enrolled_subject=show");
+                            exit();
+
                         }
+
+                    }
 
 
                 }
@@ -1185,7 +1289,7 @@
                                                     maxlength="9" name="enrollment_payment" id="enrollment_payment">
                                             
                                                 
-                                                <button type="submit" name="subject_load_btn" 
+                                                <button type="submit" name="subject_load_btn_<?php echo $enrollment_form_id_url ?>" 
                                                         class="default large clean"
                                                         onclick="return confirm('Are you sure to insert the inserted amount ?')">
                                                     

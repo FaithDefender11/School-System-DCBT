@@ -47,9 +47,6 @@
 
         $handout_audit_name = "Viewed $handout_name under $handoutTopic";
 
-        $doesAuditSuccess = $subjectModuleAudit->InsertAuditOfSubjectModule(
-            $student_subject_id, $current_school_year_id,
-            $handout_audit_name);
 
 
         
@@ -59,6 +56,12 @@
         $topic_name = $subjectPeriodCodeTopic->GetTopic();
         $topic_subject_code = $subjectPeriodCodeTopic->GetSubjectCode();
         $topic_course_id = $subjectPeriodCodeTopic->GetCourseId();
+
+        // var_dump($topic_subject_code);
+
+        $doesAuditSuccess = $subjectModuleAudit->InsertAuditOfSubjectModule(
+            $student_subject_id, $current_school_year_id,
+            $handout_audit_name, $studentLoggedInId, $topic_subject_code);
 
         // $back_url = "";
 

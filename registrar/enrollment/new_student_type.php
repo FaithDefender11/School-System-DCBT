@@ -76,7 +76,18 @@
                 </div>
 
                 <div class="form-element courseStrand">
-                    <label>Choose Section</label>
+                    <label>Choose Section 
+
+                        <!-- <a style="text-decoration: none; color: inherit" href="../section/createe_section.php?id=<?= $program_id;?>>
+                            <i class="fas fa-plus-circle"></i>
+                        </a> -->
+                        
+                        <a id="populateSectionCreate"></a>
+
+
+
+                    </label>
+                    
                     <div>
                         <select  style="width: 350px;" 
                             class='form-control' name="course_id" id="course_id">

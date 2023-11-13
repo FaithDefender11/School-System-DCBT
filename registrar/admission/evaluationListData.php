@@ -393,15 +393,16 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             subject_insertion_summary.php?id=$enrollment_id&enrolled_subject=show
         ";
     }
+
     // Trying to decide
+
     $enrollment_url = "";
-    if($enrollment_form_id != "-"){
-        $enrollment_form_id = "
-            <a style='all:unset' href='$enrollment_url'>
-                $enrollment_form_id
-            </a>
-        ";
-    }
+    
+    // if($enrollment_form_id != "-"){
+    //     $enrollment_form_id = "
+    //        $enrollment_form_id
+    //     ";
+    // }
 
 
 
@@ -455,7 +456,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
     $process_url = "process_enrollment.php?enrollee_details=true&id=$pending_enrollees_id";
 
-    $student_table_enrollment_url = "process_enrollment.php?details=show&st_id=$student_id";
+    $student_table_enrollment_url = "process_enrollment.php?details=show&st_id=$student_id&clicked=true";
 
     $advicing_pending_enrollment_url = "advising_pending_process_enrollment.php?details=show&id=$pending_enrollees_id";
     

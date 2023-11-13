@@ -2114,6 +2114,26 @@
             return $sql->rowCount();
 
         }
+
+        // public function CheckStudentProgramIdSectionIsOutOfSelection($program_id, $studen $school_year_term){
+
+        //     $sql = $this->con->prepare("SELECT * FROM course
+
+        //         WHERE program_id =:program_id
+        //         AND course_id = :course_id
+        //         AND school_year_id = :school_year_id
+        //     ");
+
+        //     $sql->bindValue(":enrollment_status", "enrolled");
+        //     $sql->bindValue(":course_id", $course_id);
+        //     $sql->bindValue(":school_year_id", $school_year_id);
+
+        //     $sql->execute();
+        
+        //     return $sql->rowCount();
+
+        // }
+
     }
 
 

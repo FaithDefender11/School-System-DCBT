@@ -112,15 +112,19 @@
                                 
                                     <table class='table table-hover tb-left'>
                                         <thead>
+                                            
                                             <tr class='text-center'>
                                                 <th colspan='4'>Tasks</th>
                                             </tr>
+
                                             <tr style='text-align:right;'>
                                                 <th colspan='4'>Category</th>
                                             </tr>
+
                                             <tr style='text-align:right;'>
                                                 <th colspan='4'>Due</th>
                                             </tr>
+
                                             <tr>
                                                 <th>Students</th>
                                                 <th></th>
@@ -199,11 +203,20 @@
 
                                                             echo "
                                                                 <tr>
+
                                                                     <td style='font-size: 15px'>
-                                                                        $lastname
+                                                                    
+                                                                       <a style='text-decoration: none; color: inherit;'
+                                                                            href='student_module_audit.php?id=$student_id&code=$subject_code&sy_id=$school_year_id'>
+                                                                            $lastname
+                                                                       </a> 
+
                                                                     </td>
+
                                                                     <td>$firstname</td>
+
                                                                     <td></td>
+
                                                                     <td>$student_points / $qualifiedMaxScore = $rounded_equivalent% </td>
                                                                 </tr>
                                                             ";

@@ -1,7 +1,18 @@
 
 <?php  
 
-        // var_dump($does_enrollee_finished_input);
+    $program = new Program($con, $program_id);
+
+    $department_id = $program->GetProgramDepartmentId();
+
+    $department = new Department($con, $department_id);
+
+    $department_name = $department->GetDepartmentName();
+ 
+    // var_dump($department_name);
+
+    $type_status = $department_name === "Tertiary" ? 1 : 0;
+    // var_dump($type_status);
 
         ?>
             <style>
@@ -122,18 +133,23 @@
 
                     <main>
                         <form method="POST">
+
                            <header>
-                                <div class="title">
-                                    <h4 style="font-weight: bold;">Enrollee Information</h4>
-                                    <div class="row">
-                                        <span style="margin-left: 660px;">
-                                            <label for="lrn">LRN</label>
-                                            <input class="read_only form-control" style="width: 250px;" id="lrn" type="text" name="lrn" 
-                                            value="<?php echo ($lrn != "") ? $lrn : ''; ?>"id="lrn">
-                                        </span>
+                                <?php if($type_status == 0):?>
+
+                                    <div class="title">
+                                        <h4 style="font-weight: bold;">Student Information</h4>
+                                        <div class="row">
+                                            <span style="margin-left: 660px;">
+                                                <label for="lrn">LRN</label>
+                                                <input class="read_only form-control" placeholder="236-736-050-357" style="width: 250px;" id="lrn" type="text" name="lrn" 
+                                                value="<?php echo ($lrn != "") ? $lrn : ''; ?>"id="lrn">
+                                            </span>
+                                        </div>
                                     </div>
-                                </div>
+                                <?php endif;?>
                             </header> 
+                            
                             <div class="row">
                                 <span>
                                 <label for="name">Name</label>

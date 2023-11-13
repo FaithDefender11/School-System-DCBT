@@ -25,12 +25,12 @@
         ) {
 
         if ($_SERVER['SERVER_NAME'] === 'localhost') {
-            header("Location: /school-system-dcbt/enrollment_login.php");
+            header("Location: /school-system-dcbt/lms_login.php");
             session_destroy();
             exit();
         }
         # If Online,
-        header("Location: /enrollment_login.php");
+        header("Location: /lms_login.php");
         session_destroy();
         exit();
 

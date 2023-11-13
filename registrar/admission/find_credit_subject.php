@@ -19,7 +19,6 @@
         </header>
     <?php
   
-  
     $school_year = new SchoolYear($con);
 
 
@@ -216,7 +215,8 @@
 
                                                         $action = "";
 
-                                                        $credit_btn = "creditNonAssignSubject($subject_program_id, $current_school_year_id, $student_id, \"$subject_title\", \"$subject_code\")";
+                                                        
+                                                        $credit_btn = "creditNonAssignSubject($subject_program_id, $current_school_year_id, $student_id, \"$subject_title\", \"$subject_code\", $enrollment_id)";
 
                                                         // ASSIGN Subjects
                                                         // Subjects that are present in the current selected subject load list
@@ -527,7 +527,7 @@
 
     function creditNonAssignSubject(subject_program_id,
         current_school_year_id, student_id, subject_title,
-        subject_code){
+        subject_code, enrollment_id){
 
         Swal.fire({
                 icon: 'question',
@@ -546,7 +546,9 @@
                             subject_program_id,
                             current_school_year_id, student_id,
                             subject_code,
-                            type: "Credit"
+                            type: "Credit",
+                            enrollment_id
+
                         },
                         success: function(response) {
                             response = response.trim();

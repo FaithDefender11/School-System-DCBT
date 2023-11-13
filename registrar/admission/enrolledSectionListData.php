@@ -53,6 +53,7 @@ $stmt = $con->prepare("SELECT COUNT(*) AS allcount
 
     FROM enrollment AS t1
     INNER JOIN course AS t2 ON t2.course_id = t1.course_id
+    INNER JOIN student AS t3 ON t3.student_id = t1.student_id
 
     WHERE t1.enrollment_status = :enrollment_status
     AND t1.school_year_id = :school_year_id
@@ -73,6 +74,7 @@ $records = $stmt->fetch(PDO::FETCH_ASSOC);
 
 
 $totalRecords = $records['allcount'];
+// var_dump($totalRecords);
  
 
 ## Total number of records with filtering
@@ -85,6 +87,7 @@ $stmt = $con->prepare("SELECT COUNT(*) AS allcount
 
     FROM enrollment AS t1
     INNER JOIN course AS t2 ON t2.course_id = t1.course_id
+    INNER JOIN student AS t3 ON t3.student_id = t1.student_id
 
     WHERE 1 $searchQuery
 
@@ -93,12 +96,10 @@ $stmt = $con->prepare("SELECT COUNT(*) AS allcount
 
     GROUP BY t1.course_id
 
-
 ");
 
 $stmt->bindValue(":enrollment_status", "enrolled");
-$stmt->bindParam(":school_year_id", $current_school_year_id);
-    
+$stmt->bindValue(":school_year_id", $current_school_year_id);
  
 $stmt->execute();
 
@@ -122,8 +123,6 @@ if ($row != null) {
     // WHERE t1.enrollment_status=:enrollment_status
     // AND t1.school_year_id=:school_year_id
 
-    // GROUP BY t1.course_id
-
     $empQuery = "SELECT 
 
         t1.school_year_id,
@@ -131,6 +130,7 @@ if ($row != null) {
 
         FROM enrollment AS t1
         INNER JOIN course AS t2 ON t2.course_id = t1.course_id
+        INNER JOIN student AS t3 ON t3.student_id = t1.student_id
 
         WHERE 1 $searchQuery
 

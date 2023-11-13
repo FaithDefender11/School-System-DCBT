@@ -8,9 +8,12 @@
         $teacher_id = $_POST['teacher_id'];
 
         $teacher = new Teacher($con, $teacher_id);
+
         if(isset($_SESSION['role']) == "admin"){
 
-            $wasSuccess = $teacher->TeacherRemoval($teacher_id);
+
+            $wasSuccess = $teacher->TeacherSetAsInactive($teacher_id);
+
             if($wasSuccess){
                 echo "success";
                 return;

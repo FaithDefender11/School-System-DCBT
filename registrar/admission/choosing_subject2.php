@@ -14,41 +14,40 @@
 
     echo Helper::RemoveSidebar();
 
-
     ?>
 
-        <head>
-            <style>
-                .show_search{
-                    position: relative;
-                    /* margin-top: -38px;
-                    margin-left: 215px; */
-                }
-                div.dataTables_length {
-                    display: none;
-                }
+    <head>
+        <style>
+            .show_search{
+                position: relative;
+                /* margin-top: -38px;
+                margin-left: 215px; */
+            }
+            div.dataTables_length {
+                display: none;
+            }
 
-                #evaluation_table_filter{
-                margin-top: 15px;
-                width: 100%;
-                display: flex;
-                flex-direction: row;
-                justify-content: start;
-                margin-bottom: 7px;
-                }
+            #evaluation_table_filter{
+            margin-top: 15px;
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            justify-content: start;
+            margin-bottom: 7px;
+            }
 
-                #evaluation_table_filter input{
-                width: 250px;
-                }
+            #evaluation_table_filter input{
+            width: 250px;
+            }
 
-            </style>
+        </style>
 
-            <script src="choosing_subject_code.js"></script>
+        <script src="choosing_subject_code.js"></script>
 
-            <link href='https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css' rel='stylesheet' type='text/css'>
-            <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+        <link href='https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css' rel='stylesheet' type='text/css'>
+        <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 
-        </head>
+    </head>
 
     <?php
   

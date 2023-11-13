@@ -35,6 +35,7 @@
         // }
 
         $dashboard_url = $base_url .  "dashboard/index.php";
+        // $admission_url = $base_url .  "admission/evaluation.php";
         $admission_url = $base_url .  "admission/evaluation.php";
         $students_url = $base_url .  "student/index.php";
         $section_url = $base_url .  "section/shs_index.php";

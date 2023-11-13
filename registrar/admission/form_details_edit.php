@@ -12,6 +12,8 @@
     include_once('../../includes/classes/Program.php');
     include_once('../../includes/classes/PendingParent.php');
     include_once('../../includes/classes/Schedule.php');
+    include_once('../../includes/classes/EnrollmentAudit.php');
+    include_once('../../includes/classes/User.php');
 
 
     
@@ -81,6 +83,13 @@
         $year_started = $parent->GetSchoolYearStarted();
         $year_ended = $parent->GetSchoolYearEnded();
 
+        $enrollment = new Enrollment($con);
+        
+        $student_enrollment_id = $enrollment->GetEnrollmentIdNonDependent($student_id,
+            $current_school_year_id);
+
+        $user = new User($con, $registrarUserId);
+        $registrarName = ucwords($user->getFirstName()) . " " . ucwords($user->getLastName());
 
 
         if (
@@ -108,7 +117,255 @@
             isset($_POST['guardian_occupation'])
         ) {
 
+            // $suffixName = $_POST['suffixName'];
 
+            // var_dump($suffixName);
+            // return;
+            // Retrieve old values
+
+            $stud = $con->prepare("SELECT 
+                lastname, firstname, middle_name, suffix, civil_status, nationality,
+                sex, birthday, birthplace, religion, address, contact_number, email
+
+                FROM student WHERE student_id = :student_id"
+            );
+
+            $stud->bindParam(':student_id', $student_id);
+            $stud->execute();
+            $oldStudent = $stud->fetch(PDO::FETCH_ASSOC);
+
+
+
+            // Collect changes
+            $changes = [];
+            if ($oldStudent['lastname'] !== $_POST['lastName']) {
+                $changes['lastName'] = $oldStudent['lastname'];
+            }
+            if ($oldStudent['firstname'] !== $_POST['firstName']) {
+                $changes['firstName'] = $oldStudent['firstname'];
+            }
+
+            if ($oldStudent['middle_name'] !== $_POST['middleName']) {
+                $changes['middleName'] = $oldStudent['middle_name'];
+            }
+            if ($oldStudent['suffix'] !== $_POST['suffixName']) {
+                $changes['suffixName'] = $oldStudent['suffix'];
+            }
+
+            if ($oldStudent['civil_status'] !== $_POST['status']) {
+                $changes['status'] = $oldStudent['civil_status'];
+            }
+            if ($oldStudent['nationality'] !== $_POST['citizenship']) {
+                $changes['citizenship'] = $oldStudent['nationality'];
+            }
+            if ($oldStudent['sex'] !== $_POST['gender']) {
+                $changes['gender'] = $oldStudent['sex'];
+            }
+            if ($oldStudent['birthday'] !== $_POST['birthdate']) {
+                $changes['birthdate'] = $oldStudent['birthday'];
+            }
+            if ($oldStudent['birthplace'] !== $_POST['birthplace']) {
+                $changes['birthplace'] = $oldStudent['birthplace'];
+            }
+            if ($oldStudent['religion'] !== $_POST['religion']) {
+                $changes['religion'] = $oldStudent['religion'];
+            }
+            if ($oldStudent['address'] !== $_POST['address']) {
+                $changes['address'] = $oldStudent['address'];
+            }
+            if ($oldStudent['contact_number'] !== $_POST['phone']) {
+                $changes['phone'] = $oldStudent['contact_number'];
+            }
+            if ($oldStudent['email'] !== $_POST['email']) {
+                $changes['email'] = $oldStudent['email'];
+            }
+
+            # School
+
+            $studentDetailsQuery = $con->prepare("SELECT 
+
+                lastname, firstname, middle_name, suffix, occupation, relationship, contact_number,
+                school_name, school_address, year_started, year_ended
+
+                FROM parent WHERE pending_enrollees_id = :pending_enrollees_id"
+            );
+            $studentDetailsQuery->bindParam(':pending_enrollees_id', $get_student_new_pending_id);
+            $studentDetailsQuery->execute();
+
+            $studentOther = $studentDetailsQuery->fetch(PDO::FETCH_ASSOC);
+
+            # School History
+            if ($studentOther['school_name'] !== $_POST['school_name']) {
+                $changes['school_name'] = $studentOther['school_name'];
+            }
+            if ($studentOther['school_address'] !== $_POST['school_address']) {
+                $changes['school_address'] = $studentOther['school_address'];
+            }
+            if ($studentOther['year_started'] !== $_POST['year_started']) {
+                $changes['year_started'] = $studentOther['year_started'];
+            }
+            if ($studentOther['year_ended'] !== $_POST['year_ended']) {
+                $changes['year_ended'] = $studentOther['year_ended'];
+            }
+
+            # Guardian
+            if ($studentOther['lastname'] !== $_POST['guardian_lastname']) {
+                $changes['guardian_lastname'] = $studentOther['lastname'];
+            }
+            if ($studentOther['firstname'] !== $_POST['guardian_firstname']) {
+                $changes['guardian_firstname'] = $studentOther['firstname'];
+            }
+
+            if ($studentOther['middle_name'] !== $_POST['guardian_middle_name']) {
+                $changes['guardian_middle_name'] = $studentOther['middle_name'];
+            }
+            if ($studentOther['suffix'] !== $_POST['guardian_suffix']) {
+                $changes['guardian_suffix'] = $studentOther['suffix'];
+            }
+
+            if ($studentOther['contact_number'] !== $_POST['guardian_contact']) {
+                $changes['guardian_contact'] = $studentOther['contact_number'];
+            }
+            if ($studentOther['occupation'] !== $_POST['guardian_occupation']) {
+                $changes['guardian_occupation'] = $studentOther['occupation'];
+            }
+            if ($studentOther['relationship'] !== $_POST['guardian_relationship']) {
+                $changes['guardian_relationship'] = $studentOther['relationship'];
+            }
+             
+            
+
+            $enrollmentAudit= new EnrollmentAudit($con);
+
+            $firstNameFormat = "";
+
+            foreach ($changes as $field => $oldValue) {
+
+                echo "<br>";
+                // echo "oldValue: $oldValue";
+                echo "field: $field";
+                echo "<br>";
+
+                $formatValue = "";
+
+                if($field == "lastName"){
+                    $formatValue = "Last name";
+                }
+                if($field == "firstName"){
+                    $formatValue = "First name";
+                }
+
+                if($field == "middleName"){
+                    $formatValue = "Middle name";
+                }
+
+                if($field == "suffixName"){
+                    $formatValue = "Suffix";
+                }
+
+                if($field == "civil_status"){
+                    $formatValue = "Civil Status";
+                }
+                
+                if($field == "citizenship"){
+                    $formatValue = "Citizenship";
+                }
+
+                if($field == "sex"){
+                    $formatValue = "Gender";
+                }
+
+
+                 if($field == "birthday"){
+                    $formatValue = "Birth day";
+                }
+                
+                if($field == "birthplace"){
+                    $formatValue = "Birth place";
+                }
+
+                if($field == "religion"){
+                    $formatValue = "Religion";
+                }
+
+                if($field == "address"){
+                    $formatValue = "Suffix";
+                }
+                if($field == "contact_number"){
+                    $formatValue = "Phone";
+                }
+
+                if($field == "email"){
+                    $formatValue = "Email";
+                }
+
+                if($field == "school_name"){
+                    $formatValue = "School Name";
+                }
+                
+                if($field == "school_address"){
+                    $formatValue = "School Address";
+                }
+
+
+                if($field == "guardian_lastname"){
+                    $formatValue = "Guardian lastname";
+                }
+                
+                if($field == "guardian_firstname"){
+                    $formatValue = "Guardian firstname";
+                }
+
+                if($field == "guardian_middle_name"){
+                    $formatValue = "Guardian Middlename";
+                }
+                
+                if($field == "guardian_suffix"){
+                    $formatValue = "Guardian suffix";
+                }
+
+                if($field == "guardian_contact"){
+                    $formatValue = "Guardian contact";
+                }
+                
+                if($field == "guardian_occupation"){
+                    $formatValue = "Guardian occupation";
+                }
+
+                if($field == "guardian_relationship"){
+                    $formatValue = "Guardian relationship";
+                }
+
+                $newValue = $_POST[$field];
+
+
+                $description = "Registrar '$registrarName' has been edited the $formatValue input, From '$oldValue' changed into '$newValue'";
+                // echo $description;
+                // echo "<br>";
+
+                // $stmt = $con->prepare("INSERT INTO enrollment_audit 
+
+                //     (enrollment_id, description, school_year_id, registrar_id) 
+                //     VALUES (:enrollment_id, :description, :school_year_id, :registrar_id)
+                // ");
+                // $stmt->bindParam(':enrollment_id', $student_enrollment_id);
+                // $stmt->bindParam(':description', $description);
+                // $stmt->bindParam(':school_year_id', $current_school_year_id);
+                // $stmt->bindParam(':registrar_id', $registrarUserId);
+                // $stmt->execute();
+
+                $enrollmentAudit=   new EnrollmentAudit($con);
+
+                $doesAuditInserted = $enrollmentAudit->EnrollmentAuditInsert(
+                    $student_enrollment_id,
+                    $description, $current_school_year_id, $registrarUserId
+                );
+
+
+
+            }
+
+            // return;
 
             // $student_lrn = isset($_POST['lrn']) ? $_POST['lrn'] : NULL;
 
@@ -403,7 +660,7 @@
 
                                     <header>
                                         <div class="title mb-2 mt-2">
-                                        <h4 style="font-weight: bold;">Guardian Information</h4>
+                                            <h4 style="font-weight: bold;">Guardian Information</h4>
                                         </div>
                                     </header>
 
@@ -412,11 +669,11 @@
                                             <span>
                                                 <label for="name">Name</label>
                                                 <div>
-                                                <input type="text" name="guardian_firstname" id="guardian_firstname" value="<?php echo $parent_lastname;?>" class="form-control" />
+                                                <input type="text" name="guardian_lastname" id="guardian_lastname" value="<?php echo $parent_lastname;?>" class="form-control" />
                                                 <small>Last name</small>
                                                 </div>
                                                 <div>
-                                                <input type="text" name="guardian_lastname" id="guardian_lastname" value="<?php echo $parent_firstname;?>" class="form-control" />
+                                                <input type="text" name="guardian_firstname" id="guardian_firstname" value="<?php echo $parent_firstname;?>" class="form-control" />
                                                 <small>First name</small>
                                                 </div>
                                                 <div>
@@ -425,7 +682,7 @@
                                                 </div>
                                                 <div>
                                                 <input type="text" name="guardian_suffix" id="guardian_suffix" value="<?php echo $parent_suffix;?>" class="form-control" />
-                                                <small>Suffix name</small>
+                                                <small>Suffix</small>
                                                 </div>
                                             </span>
                                             </div>

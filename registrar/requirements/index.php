@@ -65,6 +65,11 @@
                             INNER JOIN student_requirement as t2 ON t2.pending_enrollees_id = t1.pending_enrollees_id
 
                             WHERE t1.is_enrolled = 0
+                            AND (
+                                t1.student_status IS NOT NULL OR 
+                                t1.student_status != ''
+
+                            )
                         ");
 
                         $query->execute();
@@ -91,6 +96,8 @@
                                 $programName = $program->GetProgramName();
                                 $acronym = $program->GetProgramAcronym();
 
+                                $url = "view_new_enrollee.php?id=$pending_enrollees_id";
+
                                 echo "
                                     <tr>
                                         <td>$pending_enrollees_id</td>
@@ -102,9 +109,12 @@
                                         <td>$enrollment_status</td>
                                         <td>$admission_status</td>
                                         <td>
-                                            <button onclick='window.location.href = \"view_new_enrollee.php?id=$pending_enrollees_id\"' class='btn btn-primary btn-sm'>
-                                                <i class='fas fa-eye'></i>
-                                            </button>
+                                            <a style='text-decoration: none; color:inherit; ' href='$url'>
+                                                <button onclick='window.location.href = \"view_new_enrollee.php?id=$pending_enrollees_id\"' class='btn btn-primary btn-sm'>
+                                                    <i class='fas fa-eye'></i>
+                                                </button>
+                                            </a>
+
                                         </td>
                                     </tr>
                                 ";

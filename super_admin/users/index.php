@@ -8,9 +8,10 @@
     $user = new User($con);
 
 
-    $check = $user->GenerateUniqueUsersId();
+    $check = $user->generateNextUniqueUserId();
 
-    // var_dump($check);
+
+    // var_dump($userRandomPassword);
 
     // echo $_SESSION['adminUserId'];
 ?>
@@ -70,14 +71,14 @@
                                     <td>$role</td>
                                     <td>
                                         <a href='edit.php?id=$user_id'>
-                                            <button class='btn btn-primary'>
+                                            <button class='btn-sm btn btn-primary'>
                                                 <i class='fas fa-pen'></i>
                                             </button>
                                         </a>
-                                        <button onclick='$removeUser' class='btn btn-danger'>
+                                        <button onclick='$removeUser' class='btn-sm btn btn-danger'>
                                                 <i class='fas fa-trash'></i>
                                         </button>
-                                        <button onclick='$resetPasswordBtn' class='btn btn-info'>
+                                        <button onclick='$resetPasswordBtn' class='btn-sm btn btn-info'>
                                                 <i class='fas fa-undo'></i>
                                         </button>
                                         

@@ -121,6 +121,11 @@
                     $school_year_obj = $school_year->GetActiveSchoolYearAndSemester();
 
                     $current_school_year_id = $school_year_obj['school_year_id'];
+                    $current_school_year_period = $school_year_obj['period'];
+                    $current_school_year_term = $school_year_obj['term'];
+
+                    $period_short = $current_school_year_period === "First" ? "S1" : ($current_school_year_period === "Second" ? "S2" : "");
+                    $today_ay = "A.Y $current_school_year_term $period_short";
 
                     // $base_url = 'http://' . $_SERVER['HTTP_HOST'] . '/registrar/';
                     $base_url = 'http://' . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . '/';
@@ -152,7 +157,7 @@
                         || $after_registrar === "dashboard" 
                         || $after_registrar === "section" 
                         || $after_registrar === "enrollment" 
-                        || $after_registrar === "grades" 
+                        || $after_registrar === "grade" 
                         || $after_registrar === "requirements" 
                         || $after_registrar === "room" 
                         || $file_name === "enrolled_subjects.php" 
@@ -163,17 +168,17 @@
                         // || $file_name === "subject_insertion_summary.php" 
                         
                         ){
-                            echo " You`re outside of the enrollment process of registrar ($file_name).";
-                            echo "<br>";
-                            echo "All Enrollment form that are link to your id will be RESET ";
-                            echo "<br>";
+                            // echo " You`re outside of the enrollment process of registrar ($file_name).";
+                            // echo "<br>";
+                            // echo "All Enrollment form that are link to your id will be RESET ";
+                            // echo "<br>";
 
                             $enrollment = new Enrollment($con);
 
 
-                            $resetCurrentRegistrarIdBaseOnLoggedInRegistrar = $enrollment
-                                ->GetAllEnrollmentFormWithRegistrarIdAndResetGlobal(
-                                $registrarUserId, $current_school_year_id);
+                            // $resetCurrentRegistrarIdBaseOnLoggedInRegistrar = $enrollment
+                            //     ->GetAllEnrollmentFormWithRegistrarIdAndResetGlobal(
+                            //     $registrarUserId, $current_school_year_id);
 
                             # Update the enrollment form ID enrollment_currently_registrar_id INTO NULL.
 
@@ -193,7 +198,7 @@
                         }
                         else{
                             
-                            echo " You`re within the enrollment process Page.";
+                            // echo " You`re within the enrollment process Page.";
                         }   
                 
                      

@@ -20,14 +20,11 @@
     echo Helper::RemoveSidebar();
 
     ?>
+        <head>
 
-    <head>
-
-        <script src="../../assets/js/enrollment/manual_create.js"></script>
-         
-    </head>
-
-
+            <script src="../../assets/js/enrollment/manual_create.js"></script>
+            
+        </head>
     <?php
 
         
@@ -210,8 +207,7 @@
             $contact_number = Helper::ValidateContactNumber($_POST['contact_number']);
             $email = Helper::ValidateEmail($_POST['email'], false, $con);
             // $lrn = Helper::ValidateLRN($_POST['lrn'], false, $con);
-            $lrn = isset($_POST['lrn']) ? $_POST['lrn'] : "";
-
+            $lrn = isset($_POST['lrn']) ? $_POST['lrn'] : NULL;
 
             $school_name = isset($_POST['school_name']) ? $_POST['school_name'] : "";
             $school_address = isset($_POST['school_address']) ? $_POST['school_address'] : "";
@@ -906,13 +902,12 @@
                         <hr>
                         <?php include_once('./new_student_form.php'); ?>
                          
-
  
                         <div class="action">
                             <button type="submit"
                                 name="enrollment_btn_<?php echo $enrollment_form_id; ?>"
-                                class="default large" >
-                                Proceed
+                                class="default large clean" >
+                                + Create form
                             </button>
                         </div>
 

@@ -5,7 +5,8 @@
     include_once('../../includes/classes/Email.php');
     include_once('../../includes/classes/Student.php');
 
-    require "../../vendor/autoload.php";
+    // require "../../vendor/autoload.php";
+    require_once __DIR__ . '../../../vendor/autoload.php';
 
     if(isset($_POST['reset_student_password'])  && isset($_POST['student_username'])){
 
@@ -13,49 +14,42 @@
 
             $student_username = $_POST['student_username'];
 
-            // $enroll = new StudentEnroll($con);
+            // var_dump($student_username);
+            // return;
+
+            // Assuming you have a Student class with a GetEmail and ResetPassword method
             $student = new Student($con, $student_username);
 
             $email = new Email();
 
             $student_email = $student->GetEmail();
-            $b = $student->GenerateBirthdayAsPassword();
 
-            // echo $b;
+            // var_dump($student_email);
+            // return;
+
             $temporaryPassword = $student->ResetPassword($student_username);
 
-            if(count($temporaryPassword) > 0 && $temporaryPassword[1] == true){
+            if (!empty($student_email) && filter_var($student_email, FILTER_VALIDATE_EMAIL) &&
+                count($temporaryPassword) > 0 && $temporaryPassword[1] == true) {
 
-                $isEmailSent = $email->SendTemporaryPassword($student_email,
-                    $temporaryPassword[0]);
+                $isEmailSent = $email->SendTemporaryPassword($student_email, $temporaryPassword[0]);
 
-                if($isEmailSent == true){
-                // if(true){
+                if ($isEmailSent) {
                     Alert::success("Email reset password has been sent to: $student_email", "");
-                }else{
+                } else {
                     echo "Sending reset password via email went wrong";
                 }
 
-            }else{
-                echo "Password did not reset";
+            } 
+            else {
+                echo "Invalid email address or password reset failed";
             }
 
-            //code...
         } catch (Exception $e) {
-
             // Handle PHPMailer exceptions
             echo 'Message could not be sent. PHPMailer Error: ' . $e->getMessage();
-            //  echo 'SMTP Error Code: ' . $mail->smtp->getError()['error'];
-            // Check for specific errors and provide alternative messages
-            if (strpos($e->getMessage(), 'Maximum execution time') !== false) {
-                echo 'Email sending timed out. Please try again later or contact support.';
-            }
+            // Handle other exceptions as needed
         }
-
-        
-
-        
-
     }
 
 
@@ -125,7 +119,9 @@
                                 FROM student as t1
 
                                 LEFT JOIN course as t2 ON t1.course_id = t2.course_id
-                                WHERE t1.active=:active");
+                                WHERE t1.active=:active
+                            
+                            ");
 
                             $query->bindValue(":active", $active);
                             $query->execute();
@@ -166,7 +162,7 @@
                                             <td>$status</td>
                                             <td>
                                                 <form method='POST'>
-                                                    <input name='student_username' type='hidden' value='$student_username'>
+                                                    <input name='student_username' type='hidden' value='$username_output'>
                                                     <button type='submit' name='reset_student_password' class='danger'>Reset Password</button>
                                                 </form>
                                             </td>

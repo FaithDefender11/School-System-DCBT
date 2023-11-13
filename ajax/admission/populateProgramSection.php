@@ -5,7 +5,6 @@
     require_once("../../includes/classes/Student.php");
     require_once("../../includes/classes/Section.php");
 
-
     // $school_year = new SchoolYear($con);
 
     // $school_year_obj = $school_year->GetActiveSchoolYearAndSemester();

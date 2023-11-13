@@ -1,13 +1,27 @@
 <?php
 
+
     include_once('../../includes/admin_header.php');
     include_once('../../includes/classes/Teacher.php');
-    // include_once('../../assets/images/');
+    include_once('../../includes/classes/User.php');
+    include_once('../../includes/classes/Email.php');
+    
+    require_once __DIR__ . '../../../vendor/autoload.php';
 
     $teacher = new Teacher($con);
 
+    $user = new User($con, $adminUserId);
+    $adminName = ucwords($user->getFirstName());
+
     // $form = $teacher->createTeacherForm();
     $department_selection = $teacher->CreateTeacherDepartmentSelection();
+
+
+    // Example of using the function to generate the next school_teacher_id
+    $newTeacherId = $teacher->generateNextSchoolTeacherId();
+    $teacherRandomPassword = $teacher->generateRandomPassword();
+
+    // echo $teacherRandomPassword;
 
     if(isset($_POST['create_teacher_btn'])){
 
@@ -17,7 +31,7 @@
         $suffix = $_POST['suffix'];
         $department_id = $_POST['department_id'];
         $gender = $_POST['gender'];
-        $email = $_POST['email'];
+        $teacher_email = $_POST['email'];
         $contact_number = $_POST['contact_number'];
         $address = $_POST['address'];
         $citizenship = $_POST['citizenship'];
@@ -25,12 +39,16 @@
         $birthday = $_POST['birthday'];
         $religion = $_POST['religion'];
 
-        $password = "123456";
 
         $status = "active";
 
-        $hash_password = password_hash($password, PASSWORD_BCRYPT);
+        $password = "2023-11-12";
 
+        // $default_password_date = date("mdY", strtotime($birthday));
+
+        $default_password = $teacherRandomPassword;
+
+        $hash_password = password_hash($default_password, PASSWORD_BCRYPT);
 
         $image = $_FILES['profilePic'] ?? null;
         $imagePath = '';
@@ -61,18 +79,19 @@
 
             // Remove Directory Path in the Database.
             $imagePath = str_replace('../../', '', $imagePath);
-
         }
 
+        $username = trim(strtolower($lastname)).".".$newTeacherId."F@dcbt.ph";
 
-        
-
-
-        $query = "INSERT INTO teacher (password, firstname, middle_name, lastname, suffix, department_id, profilePic, gender, email, contact_number,
-                address, citizenship, birthplace, birthday, religion, teacher_status) 
+        $query = "INSERT INTO teacher 
+            (password, firstname, middle_name, lastname, suffix, department_id, profilePic, gender, email, contact_number,
+            address, citizenship, birthplace, birthday, religion,
+            teacher_status, school_teacher_id, username) 
 
             VALUES (:password, :firstname, :middle_name, :lastname, :suffix, :department_id, :profilePic, :gender, :email, :contact_number,
-                :address, :citizenship, :birthplace, :birthday, :religion, :teacher_status)";
+            :address, :citizenship, :birthplace, :birthday, :religion, 
+            :teacher_status, :school_teacher_id, :username)
+        ";
 
         $statement = $con->prepare($query);
 
@@ -80,11 +99,11 @@
         $statement->bindParam(':firstname', $firstname);
         $statement->bindParam(':middle_name', $middle_name);
         $statement->bindParam(':lastname', $lastname);
-        $statement->bindParam(':suffix', $suffix);
+        $statement->bindParam(':suffix', $default_password);
         $statement->bindParam(':department_id', $department_id);
         $statement->bindParam(':profilePic', $imagePath);
         $statement->bindParam(':gender', $gender);
-        $statement->bindParam(':email', $email);
+        $statement->bindParam(':email', $teacher_email);
         $statement->bindParam(':contact_number', $contact_number);
         $statement->bindParam(':address', $address);
         $statement->bindParam(':citizenship', $citizenship);
@@ -92,10 +111,46 @@
         $statement->bindParam(':birthday', $birthday);
         $statement->bindParam(':religion', $religion);
         $statement->bindParam(':teacher_status', $status);
+        $statement->bindParam(':school_teacher_id', $newTeacherId);
+        $statement->bindParam(':username', $username);
 
         if ($statement->execute()) {
-            Alert::success("Successfully Created", "index.php");
-            exit();
+
+            # Send teacher credentials.
+
+            try {
+
+                $email = new Email();
+
+
+                if (!empty($teacher_email) && filter_var($teacher_email, FILTER_VALIDATE_EMAIL)) {
+
+                    $isEmailSent = $email->SendTeacherCredentialsAfterCreation(
+                            $teacher_email, $username, $default_password, $adminName);
+
+                    if ($isEmailSent) {
+                        Alert::success("Teacher credentials has been delivered to teacher provided email: $teacher_email", "index.php");
+                        exit();
+
+                    } else {
+                        echo "Sending credentials via email went wrong";
+                    }
+
+                } 
+                else {
+                    echo "Invalid teacher provided email address";
+                }
+
+            } catch (Exception $e) {
+                // Handle PHPMailer exceptions
+                echo 'Message could not be sent. PHPMailer Error: ' . $e->getMessage();
+                // Handle other exceptions as needed
+            }
+
+
+            // Alert::success("Successfully Created", "index.php");
+            // exit();
+
         }
         //  else {
         //     Alert::error("Error Occured", "index.php");
@@ -199,7 +254,7 @@
                         <span>
                             <label for="profilePic">Profile Pic</label>
                             <div>
-                                <input type="file" name="profilePic" placeholder="" required>
+                                <input type="file" name="profilePic" placeholder="">
                             </div>
                         </span>
                     </div>

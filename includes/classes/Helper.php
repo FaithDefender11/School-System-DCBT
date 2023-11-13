@@ -1749,6 +1749,10 @@ class Helper {
                 ";
             }
 
+            // <a onclick='$reject' href='#' class='dropdown-item' style='color: yellow'>
+            //                         <i class='bi bi-file-earmark-x'></i>
+            //                         Reject form
+            //                     </a>
 
             $headerHtml = "
                 <header>
@@ -1764,10 +1768,7 @@ class Helper {
                             </button>
 
                             <div class='dropdown-menu'>
-                                <a onclick='$reject' href='#' class='dropdown-item' style='color: yellow'>
-                                    <i class='bi bi-file-earmark-x'></i>
-                                    Reject form
-                                </a>
+                                
 
                                 $enrollee_enroll_status
                                 $enrollee_admission_status

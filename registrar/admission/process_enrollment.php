@@ -12,6 +12,8 @@
     include_once('../../includes/classes/Program.php');
     include_once('../../includes/classes/PendingParent.php');
     include_once('../../includes/classes/Schedule.php');
+    include_once('../../includes/classes/EnrollmentAudit.php');
+    include_once('../../includes/classes/User.php');
 
 
     ?>
@@ -710,13 +712,13 @@
 
         $generated_enrollment_form_id = $enrollment->GenerateEnrollmentFormId($current_school_year_id);
 
-        if (!isset($_SESSION['enrollment_form_id'])) {
-            $generated_enrollment_form_id = $enrollment->GenerateEnrollmentFormId($current_school_year_id);
-            $_SESSION['enrollment_form_id'] = $generated_enrollment_form_id;
+        // if (!isset($_SESSION['enrollment_form_id'])) {
+        //     $generated_enrollment_form_id = $enrollment->GenerateEnrollmentFormId($current_school_year_id);
+        //     $_SESSION['enrollment_form_id'] = $generated_enrollment_form_id;
             
-        } else {
-            $generated_enrollment_form_id = $_SESSION['enrollment_form_id'];
-        }
+        // } else {
+        //     $generated_enrollment_form_id = $_SESSION['enrollment_form_id'];
+        // }
 
 
         // echo $generated_enrollment_form_id;
@@ -949,6 +951,40 @@
 
         if(isset($_GET['details']) 
             && $_GET['details'] == "show"){
+            
+            if(isset($_GET['clicked'])
+                && $_GET['clicked'] == "true"){
+            
+                
+                $enrollmentAudit = new EnrollmentAudit($con);
+
+                $registrarName = "";
+
+                if($registrarUserId != ""){
+
+                    $user = new User($con, $registrarUserId);
+                    $registrarName = ucwords($user->getFirstName()) . " " . ucwords($user->getLastName());
+                
+                }
+                
+                $now = date("Y-m-d H:i:s");
+                $date_creation = date("M d, Y h:i a", strtotime($now));
+
+                // echo $period_short;
+                // BTB $current_school_year_period;
+                // $period_short = $current_school_year_period === "First" ? "S1" : ($current_school_year_period === "Second" ? "S2" : "");
+
+                $description = "Registrar '$registrarName' has entered the enrollment form '#$student_enrollment_form_id' on $date_creation";
+                // echo "$description";
+
+                $doesAuditInserted = $enrollmentAudit->EnrollmentAuditInsert(
+                    $student_enrollment_id,
+                    $description, $current_school_year_id, $registrarUserId
+                );
+                
+                // echo "nice";
+
+            }
 
             include("./form_details.php");
         }

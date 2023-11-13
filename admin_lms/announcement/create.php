@@ -6,11 +6,13 @@
     include_once('../../includes/classes/Section.php');
     include_once('../../includes/classes/SchoolYear.php');
     include_once('../../includes/classes/Announcement.php');
+    include_once('../../includes/classes/Enrollment.php');
 
     // echo Helper::RemoveSidebar();
 
 
     $teacher = new Teacher($con);
+    $enrollment = new Enrollment($con);
 
     $school_year = new SchoolYear($con);
     $school_year_obj = $school_year->GetActiveSchoolYearAndSemester();
@@ -24,6 +26,13 @@
     // var_dump($allActiveTeacher);
 
     $back_url = "index.php";
+
+
+    # Can select teachers (All or selected)
+    # or All Students.
+
+    $getAllStudents = $enrollment->GetEnrolledStudentIdsWithinSemester($current_school_year_id);
+
 
 
     
@@ -44,6 +53,18 @@
 
             $announcement = new Announcement($con);
 
+            if (isset($_POST['student_selected'])) {
+
+                $student_selected = "";
+                echo "hey";
+
+                if(count($getAllStudents) > 0){
+
+                    
+
+                }
+                
+            }
             if (isset($_POST['selectedTeachers']) && is_array($_POST['selectedTeachers'])) {
 
                 $teachers_id = "";

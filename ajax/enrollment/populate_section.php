@@ -114,6 +114,7 @@
             $paramName = ":course_id_$course_id";
             $query->bindValue($paramName, $course_id);
         }
+
         $query->execute();
 
         if($query->rowCount() > 0){
@@ -128,6 +129,7 @@
                     'program_section' => $program_section
                 );
             }
+            
         }
 
         $result = array();
@@ -157,17 +159,25 @@
 
         // return;
 
-        $query = $con->prepare("SELECT * FROM course
-            WHERE program_id=:program_id
-            AND active= 'yes'
-            AND school_year_term=:school_year_term
-            AND is_full=:is_full
+        # Reflect the current number status of each section, based on number of enrolled form.
+
+        
+        $query = $con->prepare("SELECT * FROM course as t1
+
+
+            WHERE t1.program_id=:program_id
+            AND t1.active= 'yes'
+            AND t1.school_year_term=:school_year_term
+            -- AND is_full=:is_full
+
         ");
 
         $query->bindParam(":program_id", $program_id);
         $query->bindParam(":school_year_term", $current_school_year_term);
-        $query->bindValue(":is_full", "no");
+        // $query->bindValue(":is_full", "no");
         $query->execute();
+
+        $section = new Section($con);
 
         if($query->rowCount() > 0){
 
@@ -175,10 +185,24 @@
 
                 $course_id = $row['course_id'];
                 $program_section = $row['program_section'];
+                $capacity = $row['capacity'];
+                $program_id = $row['program_id'];
+
+                // $enrollment_capacity = $row['capacity'];
+
+                $enrollment_capacity = $section->GetEnrollmentCourseIdEnrolledCount($course_id,
+                    $school_year_id);
+
+                // $enrollment_capacity = 2;
+
+                // var_dump($enrollment_capacity);
 
                 $data[] = array(
                     'course_id' => $course_id,
-                    'program_section' => $program_section
+                    'program_section' => $program_section,
+                    'capacity' => $capacity,
+                    'enrollment_capacity' => $enrollment_capacity,
+                    'program_id' => $program_id
                 );
             }
         }

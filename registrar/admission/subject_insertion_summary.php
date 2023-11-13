@@ -14,6 +14,8 @@
     include_once('../../includes/classes/Pending.php');
     include_once('../../includes/classes/Schedule.php');
     include_once('../../includes/classes/PendingParent.php');
+    include_once('../../includes/classes/EnrollmentAudit.php');
+    include_once('../../includes/classes/User.php');
  
     // require_once __DIR__ . '../../../includes/config.php';
     // require_once __DIR__ . '../../../vendor/autoload.php';
@@ -124,7 +126,11 @@
         # By Enrollment ID
         $enrollment_id = $enrollment->GetEnrollmentIdByForm($enrollment_form_id_url,
             $current_school_year_id);
+
+        $enrollment_form_id_real = $enrollment->GetEnrollmentFormByFormIdOnly($enrollment_form_id_url);   
             
+        // var_dump($enrollment_form_id_real);
+
         $student_enrollment_student_status = $enrollment->GetEnrollmentFormStudentStatus($student_id,
             $enrollment_id, $current_school_year_id);
 
@@ -288,7 +294,7 @@
         $enrollment_course_section_level = $enrollment_course_section->GetSectionGradeLevel();
         $student_current_program_section = $enrollment_course_section->GetSectionName();
 
-        // echo $enrollment_course_section_level;
+        // echo $enrollment_course_section_name;
 
         // $back_url = "process_enrollment.php?subject_review=show&st_id=$student_id&selected_course_id=$student_enrollment_course_id";
 
@@ -473,6 +479,11 @@
                                                     class="dropdown-item" style="cursor:pointer;color: blue">
                                                     <i class="bi bi-file-earmark-x"></i>
                                                     Change Section
+                                                </a>
+                                                <a  href="../section/create_section.php?id=<?= $student_program_id;?>&st_id=<?= $student_id?>&c_id=<?= $student_course_id?>&info=subject_insertion&e_id=<?= $enrollment_id?>"
+                                                    class="dropdown-item" style="cursor:pointer;color: green">
+                                                    <i class="bi bi-file-earmark-x"></i>
+                                                    Create Section
                                                 </a>
                                                 
                                             <?php
@@ -788,87 +799,6 @@
                                 </div>
 
                                 <?php
-
-                                    if(isset($_POST['xsubject_load_btn']) 
-                                        && isset($_POST['unique_enrollment_form_id'])){
-
-
-                                        // $created_student_unique_id = $student->GenerateUniqueStudentNumberV2();
-
-                                        // $created_student_username = $student->GenerateStudentUsername(
-                                        //     $student_lastname,
-                                        //     $created_student_unique_id);
-
-                                        // var_dump($created_student_username);
-
-                                        #TRIGGERED
-                                        // $processEnrolled = true;
-
-
-
-                                        // if($processEnrolled == true){
-
-                                            // Alert::success("Student enrollment form has been enrolled", "");
-                                            // exit();
-
-                                        // }
-
-                                        # 
-                                        Alert::successEnrollment("Student enrollment form has been enrolled", "");
-                                        $student_subject->SendingEmailAfterSuccessfulEnrollment($processEnrolled);
-
-                                        ?>
-                                            <script>
-
-                                                // let processEnrolledJs = `
-                                                //     <?php echo $processEnrolled;?>
-                                                // `;
-
-                                                // processEnrolledJs = processEnrolledJs.trim();
-
-                                                // // console.log(processEnrolledJs);
-
-                                                // if(processEnrolledJs == false){
-                                                
-                                                //     var buttonToClick = document.getElementById('toClickButton');
-                                                //     buttonToClick.click();
-
-                                                //     $processEnrolled = false;
-                                                // }
-
-                                            </script>
-                                        <?php
-
-                                        # Did not worked because of the result of blank page 
-                                        # in print_enrolled_subject.php
-
-                                        // if($processEnrolled == false){
-
-                                        //     Alert::success("Enrollment email sending is not working.", "");
-                                        //     // exit();
-                                        // }
-
-                                        // if(isset($_SESSION['enrollment_printed_success'])
-                                        //     && isset($_SESSION['enrollment_printed_success']) == true){
-                                            
-                                        //     Alert::success("Success", "");
-
-                                        //     # Reset the session 
-                                        //     unset($_SESSION['enrollment_printed_success']);
-
-                                        //     exit();
-                                        // }
-
-                                        
-
-                                        // if($processEnrolled == false){
-                                        //     Alert::error("Did not enrolled", "");
-                                        //     exit();
-                                        // }
-
-                                    }
-                                        
-
                                     if(isset($_POST['subject_load_btn']) 
                                         && isset($_POST['unique_enrollment_form_id'])){
                                        
@@ -943,7 +873,8 @@
                                                     
                                                     # FROM 000001 to 999999, and 1000000 and so on again,
                                                     
-                                                    $created_student_unique_id = $student->GenerateUniqueStudentNumberV2();
+                                                    $created_student_unique_id = $student->generateNexStudentUniqueId();
+                                                    // $created_student_unique_id = "123123";
 
                                                     $created_student_username = $student->GenerateStudentUsername(
                                                         $student_lastname,
@@ -1004,8 +935,8 @@
                                                                 $updateStudentIdOnRequirement = $requirement->UpdateStudentIdOnRequirement(
                                                                     $student_id, $student_pending_enrollee_id);
                                                             }
-
                                                         }
+
                                                     }
 
                                                     # RFR
@@ -1048,15 +979,16 @@
                                                     # HUMMS11-B (NOT FULL)
                                                     # HUMMS11-B (FULL)
 
-                                                    $checkNextInActiveSectionIfExistAndUpdateToActive = $section
-                                                        ->CheckNextInActiveSectionIfExistAndUpdateToActive($program_section,
-                                                        $current_school_year_term);
+                                                    # This will automatically active the inactive section (if there any existing section)
+                                                    // $checkNextInActiveSectionIfExistAndUpdateToActive = $section
+                                                    //     ->CheckNextInActiveSectionIfExistAndUpdateToActive($program_section,
+                                                    //     $current_school_year_term);
 
-                                                    $updateInActivePreviousSectionToActive = false;
+                                                    // $updateInActivePreviousSectionToActive = false;
 
-                                                    if($checkNextInActiveSectionIfExistAndUpdateToActive){
-                                                        $updateInActivePreviousSectionToActive = true;
-                                                    }
+                                                    // if($checkNextInActiveSectionIfExistAndUpdateToActive){
+                                                    //     $updateInActivePreviousSectionToActive = true;
+                                                    // }
 
 
                                                     // $section_exec = new Section($con, $student_enrollment_course_id);
@@ -1064,7 +996,7 @@
                                                     //     GetTotalNumberOfStudentInSection($student_enrollment_course_id,
                                                     //         $current_school_year_id);
 
-                                                    #BSIS
+                                                    
                                                     if ($latestStudentNumberInSection >= $capacity &&
                                                         count($hasAvailableRoomWithinSemester) > 0
                                                         && (($checkNextActiveSectionIfExist && !$checkNextActiveSectionIfExistNotFull) 
@@ -1112,6 +1044,24 @@
 
                                                         // Alert::success("Enrollment Form ID: $student_enrollment_form_id is now enrolled.", "../student/record_details.php?id=$student_id&enrolled_subject=show");
                                                     
+                                                        $enrollmentAudit = new EnrollmentAudit($con);
+
+                                                        $registrarName = "";
+                                                        if($registrarUserId != ""){
+                                                            $user = new User($con, $registrarUserId);
+                                                            $registrarName = ucwords($user->getFirstName()) . " " . ucwords($user->getLastName());
+                                                        }
+                                                        
+                                                        $now = date("Y-m-d H:i:s");
+                                                        $date_creation = date("M d, Y h:i a", strtotime($now));
+
+                                                        $description = "Registrar '$registrarName' has approved the enrollment form '$enrollment_form_id_real' and placed into section '$enrollment_course_section_name' on $date_creation";
+
+                                                        $doesAuditInserted = $enrollmentAudit->EnrollmentAuditInsert(
+                                                            $enrollment_form_id_url,
+                                                            $description, $current_school_year_id, $registrarUserId
+                                                        );
+
                                                         Alert::successEnrollment("Enrollment Form ID: $student_enrollment_form_id is now enrolled.", "../student/record_details.php?id=$student_id&enrolled_subject=show");
                                                         $student_subject->SendingEmailAfterSuccessfulEnrollment($processEnrolled);
 
@@ -1419,12 +1369,12 @@
                                                         class="default large info"
                                                         name="pending_choose_section"
                                                         type="button">
-                                                        Section is full, Click to create.
+                                                        Enrollment Given Section is full
                                                     </button>
                                                 </div>
                                             <?php
                                     }
-
+                                    
                                     # This happens when Registrar wanted to create new form
                                     # With the same Section but different subject load.
 
