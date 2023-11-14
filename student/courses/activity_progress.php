@@ -100,7 +100,7 @@
                             <h3><?= $subject_title; ?></h3>
                         </div>
                     </header>
-                    <main>
+                    <main style="overflow-x: auto">
                         <?php if(count($allGivenAssignments) > 0): ?>
                             <table class="a" id="progress_table">
                                 <thead>
@@ -292,9 +292,9 @@
                                     </tr>
                                 <?php endif; ?>
                             </table>
-                                <?php else: ?>
-                                    <h4 style="text-align: center"></h4>No Data</h4>
-                                <?php endif; ?>
+                        <?php else: ?>
+                            <h4 style="text-align: center"></h4>No Data</h4>
+                        <?php endif; ?>
                     </main>
                 </div>
             </main>

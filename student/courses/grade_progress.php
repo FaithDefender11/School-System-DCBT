@@ -55,7 +55,7 @@
                     $school_year_id, $enrolledSubjectList,
                     $enrollment_id,
                     "second",
-                    "second",
+                    "first",
                     "second"
                 );
             ?>
@@ -74,7 +74,7 @@
                             <h3><?= $subject_title;?> Scores</h3>
                         </div>
                     </header>
-                    <main>
+                    <main style="overflow-x: auto">
                         <?php if(count($allGivenAssignments) > 0):?>
                             <table class="a" id="progress_table">
                                 <thead>

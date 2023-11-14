@@ -63,13 +63,13 @@
         $sideBarNavigationItem .= Helper::createNavByIconARC("Enrollment", 
             "bi bi-clock-history icon", $enrollment_url, Constants::$navigationClass . Helper::GetActiveClass($page, "enrollment"));
         
-        $sideBarNavigationItem .= Helper::createNavByIcon("Grades", 
+        $sideBarNavigationItem .= Helper::createNavByIconARC("Grades", 
             "bi bi-collection", $grade_module_url, Constants::$navigationClass . Helper::GetActiveClass($page, "grade"));
 
         $sideBarNavigationItem .= Helper::createNavByIconARC("Requirement", 
             "bi bi-file", $requirement_url, Constants::$navigationClass . Helper::GetActiveClass($page, "requirements"));
 
-        $sideBarNavigationItem .= Helper::createNavByIcon("Room", 
+        $sideBarNavigationItem .= Helper::createNavByIconARC("Room", 
             "bi bi-house", $room_url, Constants::$navigationClass . Helper::GetActiveClass($page, "room"));
 
         // $sideBarNavigationItem .= Helper::createNavByIconARC("Waiting List", 

@@ -469,14 +469,14 @@
                             <?= $sectionModuleItemsCount > 1 ? "Sections" : ($sectionModuleItemsCount == 1 ? "Section" : ""); ?>
                             <div class="dropdown">
                                 <button class="table-drop">
-                                    i class="bi bi-chevron-up"></i>
+                                    <i class="bi bi-chevron-up"></i>
                                     <i class="bi bi-chevron-down"></i>
                                 </button>
                             </div>
                         </div>
                     </header>
                     <main>
-                        <table class="b">
+                        <table class="d">
                             <thead>
                                 <tr>
                                     <th>Section</th>
