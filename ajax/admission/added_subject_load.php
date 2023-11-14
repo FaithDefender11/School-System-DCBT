@@ -7,8 +7,10 @@
     require_once("../../includes/classes/Section.php");
     require_once("../../includes/classes/SchoolYear.php");
     require_once("../../includes/classes/Room.php");
-
+    require_once("../../includes/classes/Enrollment.php");
     require_once("../../includes/classes/Schedule.php");
+    require_once("../../includes/classes/EnrollmentAudit.php");
+    require_once("../../includes/classes/User.php");
     
     if (isset($_POST['subject_program_id'])
         && isset($_POST['current_school_year_id'])
@@ -17,10 +19,22 @@
         && isset($_POST['enrollment_id'])
         && isset($_POST['course_id'])
         && isset($_POST['subject_schedule_arr'])
+        && isset($_POST['doesFull'])
         
         ) {
 
+        $registrarUserId = isset($_SESSION["registrarUserId"]) 
+            ? $_SESSION["registrarUserId"] : "";
+
+            
+
+        $doesFull = intval($_POST['doesFull']);
+        // echo "br";
+        // var_dump($doesFull);
+        // return;
+
         $subject_program_id = $_POST['subject_program_id'];
+
         $current_school_year_id = $_POST['current_school_year_id'];
         $student_id = $_POST['student_id'];
         $student_enrollment_course_id = $_POST['student_enrollment_course_id'];
@@ -60,6 +74,7 @@
         $subject_program = new SubjectProgram($con, $subject_program_id);
 
         $subject_code = $subject_program->GetSubjectProgramRawCode();
+        $subject_title = $subject_program->GetTitle();
 
         $pre_requisite_code = $subject_program->GetPreRequisiteSubjectByCode(
             $subject_code, $subject_program_id
@@ -292,6 +307,25 @@
         //     $hasError = true;
         // }
 
+        if($doesFull == 1){
+
+            // echo "full";
+            // return;
+
+            $hasError = true;
+
+            array_push($hasErrorArr, "subject_is_full");
+            array_push($returnArr, "subject_is_full");
+
+            $data[] = array(
+                "output" => "subject_is_full"
+            );
+
+            echo json_encode($data);
+            return; 
+
+        }
+
         if($checkIfChosenSubjectAlreadyCredited == true){
 
             // echo "already_credited";
@@ -401,6 +435,27 @@
 
             // echo $hasError;
             // echo " without err";
+
+            $enrollmentAudit = new EnrollmentAudit($con);
+
+            $registrarName = "";
+            if($registrarUserId != ""){
+                $user = new User($con, $registrarUserId);
+                $registrarName = ucwords($user->getFirstName()) . " " . ucwords($user->getLastName());
+            }
+            
+            $now = date("Y-m-d H:i:s");
+            $date_creation = date("M d, Y h:i a", strtotime($now));
+
+            $school_year = new SchoolYear($con, null);
+            $school_year_obj = $school_year->GetActiveSchoolYearAndSemester();
+ 
+            $description = "Registrar '$registrarName' has been placed a subject load of '$subject_title ($student_subject_code)' on $date_creation";
+
+            $doesAuditInserted = $enrollmentAudit->EnrollmentAuditInsert(
+                $enrollment_id,
+                $description, $current_school_year_id, $registrarUserId
+            );
 
             $insertSubjectLoad = $student_subject->InsertStudentSubjectNonFinal($student_id, $student_subject_code,
                 $enrollment_id, $course_id, $subject_program_id,

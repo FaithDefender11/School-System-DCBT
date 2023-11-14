@@ -12,6 +12,9 @@
     include_once('../../includes/classes/SubjectProgram.php');
     include_once('../../includes/classes/Schedule.php');
 
+    echo Helper::RemoveSidebar();
+
+
     ?>
         <header>
             <script src="choosing_subject_code.js"></script>
@@ -223,6 +226,7 @@
                                         <!-- <th rowspan="2">ID</th> -->
                                         <th>Code</th>
                                         <th style="min-width: 190px;">Description</th>
+                                        <th>Status</th>
                                         <th>Requisite</th>
                                         <th>Unit</th>
                                         <th>Level</th>
@@ -275,6 +279,7 @@
                                                 $i++;
                                                 $subject_code = $row['subject_code'];
                                                 $program_section = $row['program_section'];
+                                                $section_capacity = $row['capacity'];
 
 
                                                 // echo "subject_code: $subject_code, program_section: $program_section";
@@ -286,6 +291,9 @@
 
                                                 $subject_program_id = $row['subject_program_id'];
                                                 $subject_title = $row['subject_title'];
+
+                                                // var_dump($subject_title);
+
                                                 $pre_req_subject_title = $row['pre_req_subject_title'];
                                                 $sp_program_id = $row['program_id'];
                                                 $unit = $row['unit'];
@@ -374,10 +382,20 @@
                                                 }else{
                                                     $scheduleOutput = "TBA";
                                                 }
+
+                                                $section_subject_code = $section->CreateSectionSubjectCode($program_section, $subject_code);
+
+                                                $student_subject_enrolled = $subject_program->GetSectionSubjectEnrolledStudents(
+                                                        $subject_program_id,
+                                                        $course_id, $section_subject_code, $current_school_year_id);
+
+                                                $student_subject_enrolled = $student_subject_enrolled == 0 ? "" : $student_subject_enrolled;
+ 
+                                                $doesFull = $student_subject_enrolled === $section_capacity ? 1 : 0;
  
                                                 $test = htmlspecialchars(json_encode($subject_schedule_arr), ENT_QUOTES, 'UTF-8');   
 
-                                                $addAvailable = "addAvailable($subject_program_id, $current_school_year_id, $student_id, $student_enrollment_course_id, $enrollment_id, $course_id, \"$subject_code\", $test)";
+                                                $addAvailable = "addAvailable($subject_program_id, $current_school_year_id, $student_id, $student_enrollment_course_id, $enrollment_id, $course_id, \"$subject_code\", $test, \"$subject_title\", $doesFull)";
 
                                                 $icon = "
                                                     <button onclick='$addAvailable' class='btn btn-primary btn-sm'>
@@ -442,11 +460,13 @@
                                                 }
 
                                                 // ($subject_program_id)
- 
+
+
                                                 echo "
                                                     <tr class='text-center'>
                                                         <td>$subject_code </td>
                                                         <td>$subject_title</td>
+                                                        <td>$student_subject_enrolled / $section_capacity</td>
                                                         <td>$pre_req_subject_title</td>
                                                         <td>$unit</td>
                                                         <td>$course_level</td>
@@ -517,13 +537,14 @@
     
     function addAvailable(subject_program_id, current_school_year_id,
         student_id, student_enrollment_course_id, enrollment_id, course_id,
-        subject_code, subject_schedule_arr){
+        subject_code, subject_schedule_arr, subject_title, doesFull){
 
-        // console.log(subject_schedule_arr)
+        // console.log(doesFull)
+        // return;
 
         Swal.fire({
                 icon: 'question',
-                title: `Adding Subject Code: ${subject_code}`,
+                title: `Do you want to add subject: ${subject_title}`,
                 text: '',
                 showCancelButton: true,
                 confirmButtonText: 'Yes',
@@ -539,15 +560,25 @@
                             subject_program_id, current_school_year_id,
                             student_id, student_enrollment_course_id,
                             enrollment_id, course_id,
-                            subject_schedule_arr: JSON.stringify(subject_schedule_arr)
+                            subject_schedule_arr: JSON.stringify(subject_schedule_arr),
+                            doesFull
                         },
 
                         dataType: 'json',
 
                         success: function(response) {
+
                             // response = response.trim();
 
                             console.log(response);
+
+                            if(response[0].output == "subject_is_full"){
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Not available!',
+                                    text: `Subject '${subject_title}' is currently full`,
+                                });
+                            }
 
                             if (response[0].output == 'conflicted_schedule') {
 

@@ -652,6 +652,7 @@ class SubjectProgram{
                     t1.*
                     ,t2.program_section
                     ,t2.course_id
+                    ,t2.capacity
 
                     ,t3.student_subject_id,
                     t3.is_final AS ss_is_final,
@@ -712,6 +713,7 @@ class SubjectProgram{
                     t1.*
                     ,t2.program_section
                     ,t2.course_id
+                    ,t2.capacity
 
                     ,t3.student_subject_id,
                     t3.is_final AS ss_is_final,
@@ -878,22 +880,26 @@ class SubjectProgram{
     }
 
     public function GetSectionSubjectEnrolledStudents($subject_program_id,
-        $course_id, $section_subject_code){
+        $course_id, $section_subject_code, $school_year_id){
      
 
         $count = 0;
   
-        $sql = $this->con->prepare("SELECT t1.student_id FROM student_subject AS t1
+        $sql = $this->con->prepare("SELECT t1.student_id 
+        
+            FROM student_subject AS t1
 
             INNER JOIN enrollment AS t2 ON t2.enrollment_id = t1.enrollment_id
             AND t1.is_final = 1
             AND t2.enrollment_status = :enrollment_status
             
             WHERE t1.subject_code=:subject_code
+            AND t1.school_year_id=:school_year_id
             -- AND t2.student_subject_id=:student_subject_id
         ");
 
         $sql->bindParam(":subject_code", $section_subject_code);
+        $sql->bindParam(":school_year_id", $school_year_id);
         $sql->bindValue(":enrollment_status", "enrolled");
         // $sql->bindParam(":student_subject_id", $student_subject_id);
 

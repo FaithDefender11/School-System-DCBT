@@ -258,39 +258,57 @@
                       }
                   }
 
-                }
-              }
-          ?>
-          <div class="floating noOutline">
-            <a href="<?php echo $course_url ?>">
-              <header>
-                <div class="title">
-                  <h3><?= $subject_title; ?> <em><?= "SY$fomatTerm-$period_short";?></em> &nbsp; &nbsp; <span>Grade </span>70%</h3>
-                  <small><?= $instructor_name; ?></small>
-                  <small style="color: orange">Archived</small>
-                </div>
-              </header>
-            </a>
-            <main>
-              <div class="progress" style="height: 20px">
-                <div class="progress-bar" style="width: 100%">100%</div>
-              </div>
-              <div class="action">
-                <button 
-                  class="task"
-                  data-toggle="tooltip"
-                  data-placement="bottom"
-                  title="No Assignments Due"
-                >
-                  <i class="bi bi-file-earmark">0</i>
-                </button>
-              </div>
-            </main>
-          </div>
-        <?php
-            }
-        ?>
-        <?php endif; ?>
+                        }
+                      }
+
+                      // echo "allGivenAssignments: "; var_dump(count($allGivenAssignments));
+                      // echo "<br>";
+                      
+                      ?>
+                        <div style="width: 100%" class="floating noOutline">
+                            
+                            <a href="<?php echo $courses_url; ?>">
+                                <header>
+                                    <div class="title">
+                                        <h3><?= $subject_title; ?> <em><?= "SY$fomatTerm-$period_short";?></em> &nbsp; &nbsp; <em class="text-primary"><span> </span><?= $equivalent != NULL ? "<a href='../courses/grade_progress.php?id=$student_subject_id'>Grade $equivalent</a>" : "";?></em></h3>
+                                        <small><?= $instructor_name?></small>
+                                        <br>
+                                        <small style="color: orange;">Archived</small>
+                                    
+                                    </div>
+                                </header>
+                            </a>
+
+                            <main>
+
+                                <div class="progress" style="height: 20px">
+                                    <div class="progress-bar" style="width: 25%">25%</div>
+                                </div>
+
+                                <div class="action">
+                                    <button
+                                    class="task"
+                                    data-toggle="tooltip"
+                                    data-placement="bottom"
+                                    title="No Assignments Due"
+                                    >
+                                    <i class="bi bi-file-earmark">0</i>
+                                    </button>
+                                </div>
+
+                            </main>
+                            
+                        </div>
+
+                      <?php
+
+                  }
+
+              ?>
+          <?php else: ?>
+            <h2 class="text-center">No completed subjects</h2>
+          <?php endif;?>
+
       </main>
     </div>
   </body>

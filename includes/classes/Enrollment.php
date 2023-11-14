@@ -1162,6 +1162,24 @@
         return 0;
     }
 
+    function GetEnrollmentFormByFormIdOnly($enrollment_id) {
+        // Check if the enrollment form ID already exists in the database
+
+        $sql = $this->con->prepare("SELECT enrollment_form_id FROM enrollment 
+            WHERE enrollment_id = :enrollment_id
+        ");
+
+        $sql->bindValue(":enrollment_id", $enrollment_id);
+        $sql->execute();
+
+        if($sql->rowCount() > 0){
+
+            return $sql->fetchColumn();
+        }
+
+        return NULL;
+    }
+
     public function GetEnrollmentFormCourseId($student_id, $enrollment_id,
         $school_year_id = null) {
 
@@ -2983,6 +3001,51 @@
         return [];
     }
 
+    public function GetEnrolledStudentWithinSemester($school_year_id) {
+
+        $enrollment_status = "enrolled";
+
+        $sql = $this->con->prepare("SELECT student_id FROM enrollment 
+            WHERE school_year_id = :school_year_id
+            AND enrollment_status = :enrollment_status
+            AND enrollment_approve IS NOT NULL
+            -- AND is_new_enrollee = 1
+            ");
+        
+        $sql->bindParam(":school_year_id", $school_year_id);
+        $sql->bindParam(":enrollment_status", $enrollment_status);
+
+        $sql->execute();
+
+        if($sql->rowCount() > 0){
+            return $sql->fetchAll(PDO::FETCH_COLUMN);
+        }
+        return [];
+    }
+
+    public function GetAllRegistrarIdIntheEnrollment($school_year_id, $registrar_id) {
+
+        $enrollment_status = "enrolled";
+
+        $sql = $this->con->prepare("SELECT currently_registrar_id FROM enrollment 
+            WHERE currently_registrar_id IS NOT NULL
+            AND school_year_id = :school_year_id
+            AND currently_registrar_id != :current_currently_registrar_id
+            ");
+        
+        $sql->bindParam(":school_year_id", $school_year_id);
+        $sql->bindParam(":current_currently_registrar_id", $registrar_id);
+
+        $sql->execute();
+
+        if($sql->rowCount() > 0){
+
+            return $sql->fetchAll(PDO::FETCH_ASSOC);
+
+        }
+        return [];
+    }
+
     public function GetNewEnrollmentTentativeIDs($school_year_id) {
         
         $sql = $this->con->prepare("SELECT t1.enrollment_id, t1.student_id 
@@ -3729,11 +3792,11 @@
 
 
 
-    public function GetEnrolledStudentsWithinSemester($school_year_id) : array{
+    public function GetEnrolledStudentIdsWithinSemester($school_year_id) : array{
 
         $sql = $this->con->prepare("SELECT 
         
-            t1.*
+            t2.student_id
 
             FROM enrollment as t1
 

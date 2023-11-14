@@ -130,8 +130,7 @@
 
         $email = "";
 
-        $lrn = isset($_POST['lrn']) ? Helper::sanitizeFormString($_POST['lrn']) : '';
-
+        $lrn = isset($_POST['lrn']) ? Helper::sanitizeFormString($_POST['lrn']) : NULL;
         
         // echo "firstname: $firstname<br>";
         // echo "middle_name: $middle_name<br>";

@@ -135,7 +135,22 @@
         <div class="floating">
             <header>
                 <div class="mb-2 title">
-                <h4 style="font-weight: bold;">Student Information</h4>
+                    <h4 style="font-weight: bold;">Student Information</h4>
+                </div>
+
+                <div>
+
+                    <a href="enrollment_audit.php?id=<?= $student_enrollment_id;?>" style="text-decoration: none; color: inherit">
+                        <button class="btn btn-sm btn-info">
+                            <i class="fas fa-clock"></i> History
+                        </button>
+                    </a>
+                    
+
+                    <button onclick="window.location.href='enrollee_file_submission.php?id=<?= $pending_enrollees_id;?>'" class="btn btn-sm btn-primary">
+                        <i class="fas fa-file"></i> Files
+                    </button>
+
                 </div>
             </header>
 
@@ -255,6 +270,7 @@
                             <div class="title">
                                 <h4 style="font-weight: bold;">Previous School Information</h4>
                             </div>
+                          
                         </header>
 
                         <div class="row">

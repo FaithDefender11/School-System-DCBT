@@ -46,6 +46,8 @@
             $lastname = $student->GetLastName();
             $middle = $student->GetMiddleName();
 
+            
+
             $enrollment = new Enrollment($con);
             
             $enrollment_course_id = $enrollment->GetEnrollmentFormCourseId(

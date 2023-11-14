@@ -109,7 +109,7 @@
   <?php
 
   if (isset($_SESSION['enrollment_form_id'])) {
-          unset($_SESSION['enrollment_form_id']);
+    unset($_SESSION['enrollment_form_id']);
   }
 
   $school_year = new SchoolYear($con, null);
@@ -148,7 +148,7 @@
 
   $student = new Student($con);
 
-  $check = $student->GenerateUniqueStudentNumberV2();
+  // $check = $student->generateNexStudentUniqueId();
   // var_dump($check);
 
   // echo $current_school_year_id;

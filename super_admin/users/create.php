@@ -3,12 +3,23 @@
 
     include_once('../../includes/super_admin_header.php');
     include_once('../../includes/classes/User.php');
+    include_once('../../includes/classes/Email.php');
 
-
+    require_once __DIR__ . '../../../vendor/autoload.php';
 
     $back_url = "index.php";
 
-    $user = new User($con);
+
+    $user = new User($con, $superAdminUserId);
+    // var_dump($superAdminUserId);
+    $adminName = ucwords($user->getFirstName());
+
+    $usersNextUniqueId = $user->generateNextUniqueUserId();
+
+    $userRandomPassword = $user->generateRandomPassword();
+
+    // var_dump($userRandomPassword);
+
 
     if($_SERVER['REQUEST_METHOD'] === "POST" &&
         isset($_POST['user_create_btn']) &&
@@ -23,10 +34,36 @@
 
         $firstname = $_POST['firstname'];
         $lastname = $_POST['lastname'];
-        $email = $_POST['email'];
+        $userEmail = $_POST['email'];
         $role = $_POST['role'];
 
-        $default_password = 123456;
+        // $default_password = 123456;
+
+        $username = "";
+
+        # H = Super Admin
+        # A = Admin
+        # R = Registrar
+        # C = Cashier
+
+        if($role == "Administrator"){
+            $username = trim(strtolower($lastname)).".".$usersNextUniqueId."A@dcbt.edu.ph";
+
+        }
+
+        if($role == "Cashier"){
+            $username = trim(strtolower($lastname)).".".$usersNextUniqueId."C@dcbt.edu.ph";
+            
+        }
+
+        if($role == "Registrar"){
+            $username = trim(strtolower($lastname)).".".$usersNextUniqueId."R@dcbt.edu.ph";
+        }
+         
+
+        // $default_password = password_hash($userRandomPassword, PASSWORD_BCRYPT);
+
+        $default_password = $userRandomPassword;
         
 
         $image = $_FILES['photo'] ?? null;
@@ -64,9 +101,38 @@
 
 
         $user_create = $user->CreateUserAccount($firstname, $lastname,
-            $email, $role, $default_password, $imagePath);
+            $userEmail, $role, $default_password,
+            $imagePath, $userRandomPassword, $username, $usersNextUniqueId);
             
         if($user_create){
+
+            try {
+
+                $email = new Email();
+
+                if (!empty($userEmail) && filter_var($userEmail, FILTER_VALIDATE_EMAIL)) {
+
+                    $isEmailSent = $email->SendUserCredentialsAfterCreation(
+                            $userEmail, $username, $default_password, $adminName);
+
+                    if ($isEmailSent) {
+
+                        Alert::success("User credentials has been delivered to provided email: $userEmail", "index.php");
+                        exit();
+
+                    } else {
+                        echo "Sending credentials via email went wrong";
+                    }
+                } 
+                else {
+                    echo "Invalid provided email address";
+                }
+
+            } catch (Exception $e) {
+                // Handle PHPMailer exceptions
+                echo 'Message could not be sent. PHPMailer Error: ' . $e->getMessage();
+                // Handle other exceptions as needed
+            }
 
             Alert::success("User created successfully", "index.php");
             exit();
@@ -119,7 +185,7 @@
                             </div>
 
                             <div class='form-group mb-2'>
-                                <label class='mb-2'>Photo *</label>
+                                <label class='mb-2'>Photo</label>
                                 <input class='form-control' type='file' placeholder='' name='photo'>
                             </div>
 

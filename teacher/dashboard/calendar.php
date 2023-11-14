@@ -34,6 +34,11 @@
                 </header>
               </div>
               <div class="floating">
+                <header>
+                  <div class="title">
+                    <h3>Given Assignments Calendar</h3>
+                  </div>
+                </header>
                 <main>
                   <div id="calendar"></div>
                 </main>

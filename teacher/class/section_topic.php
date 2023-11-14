@@ -9,15 +9,28 @@
     include_once('../../includes/classes/SubjectPeriodCodeTopicTemplate.php');
     include_once('../../includes/classes/SubjectCodeHandout.php');
     include_once('../../includes/classes/SubjectCodeAssignment.php');
+
+    include_once('../../includes/classes/Student.php');
     include_once('../../includes/classes/Announcement.php');
+    include_once('../../includes/classes/Notification.php');
+    include_once('../../includes/classes/SubjectProgram.php');
+    include_once('../../includes/classes/Teacher.php');
+    include_once('../../includes/classes/SubjectAssignmentSubmission.php');
+ 
 
     if(isset($_GET['id'])
+    && isset($_GET['ct_id'])
     && isset($_GET['ct_id'])
     ){
 
     $subject_period_code_topic_template_id = $_GET['id'];
     $subject_period_code_topic_id = $_GET['ct_id'];
 
+    $subject_period_code_topic_template_id = $_GET['id'];
+    $subject_period_code_topic_id = $_GET['ct_id'];
+
+    // $subjectPeriodCodeTopicTemplate = new SubjectPeriodCodeTopicTemplate(
+    //     $con, $subject_period_code_topic_template_id);
     // $subjectPeriodCodeTopicTemplate = new SubjectPeriodCodeTopicTemplate(
     //     $con, $subject_period_code_topic_template_id);
 
@@ -64,6 +77,35 @@
     // print_r($nonTemplateHandout);
 
     $back_url = "index.php?c=$topic_subject_code&sy_id=$school_year_id";
+
+    $teachingSubjectCode = $subjectCodeAssignment->GetTeacherTeachingSubjects(
+        $teacherLoggedInId,
+        $school_year_id);
+
+    $teachingSubjects = [];
+
+
+    foreach ($teachingSubjectCode as $key => $value) {
+
+        $teachingCode = $value['subject_code'];
+        array_push($teachingSubjects, $teachingCode);
+    }
+
+    $logout_url = 'http://localhost/school-system-dcbt/lms_logout.php';
+
+    if ($_SERVER['SERVER_NAME'] === 'localhost') {
+
+        $base_url = 'http://localhost/school-system-dcbt/teacher/';
+    } else {
+
+        $base_url = 'http://' . $_SERVER['HTTP_HOST'] . '/teacher/';
+    }
+
+    if ($_SERVER['SERVER_NAME'] !== 'localhost') {
+
+        $new_url = str_replace("/teacher/", "", $base_url);
+        $logout_url = "$new_url/lms_logout.php";
+    }
 ?>
 
             <nav>
@@ -103,7 +145,8 @@
                         <div class="title">
                             <h3>Module Overview</h3>
                         </div>
-                        <div class="action">
+
+                        <!-- <div class="action">
                             <div class="dropdown">
                                 <button class="icon">
                                     <i class="bi bi-three-dots-vertical"></i>
@@ -126,7 +169,8 @@
                                     </a>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
+                        
                     </header>
                     <main style="overflow-x: auto">
                         <?php
@@ -144,7 +188,7 @@
 
                             if(count($mergeHandoutWithAssignmentList) > 0){
                                 ?>
-                                <table class="a" id="handoutt_template_table" style="width: 100%">
+                                <table class="a" id="handoutt_template_table">
                                     <thead>
                                         <tr>
                                             <th>Section</th>
@@ -327,6 +371,11 @@
                                                             $assignment_name
                                                         </a>
                                                     ";
+                                                    $output_section = "
+                                                        <a style='color: inherit;' href=''>
+                                                            $assignment_name
+                                                        </a>
+                                                    ";
                                                 }
 
                                                 # HANDOUT TEMPLATE LOGIC HERE
@@ -349,6 +398,9 @@
                                                         $given_status = "
                                                             <i onclick='$ungiveHandoutTemplate' style='cursor:pointer; color: green;' class='fas fa-check'></i>
                                                         ";
+                                                        $given_status = "
+                                                            <i onclick='' style='cursor:pointer; color: green;' class='fas fa-check'></i>
+                                                        ";
                                                     }
 
                                                     if($handout_template_is_given == 0){
@@ -356,6 +408,9 @@
 
                                                         $given_status = "
                                                             <i onclick='$giveHandoutTemplate' style='cursor:pointer; color: orange;' class='fas fa-times'></i>
+                                                        ";
+                                                        $given_status = "
+                                                            <i onclick='' style='cursor:pointer; color: orange;' class='fas fa-times'></i>
                                                         ";
                                                     }
 
@@ -414,6 +469,9 @@
                                                         $given_status = "
                                                             <i onclick='$unGiveMadeHandout' style='cursor:pointer; color: green;' class='fas fa-check'></i>
                                                         ";
+                                                         $given_status = "
+                                                            <i onclick='' style='cursor:pointer; color: green;' class='fas fa-check'></i>
+                                                        ";
                                                     }
 
                                                     if($nonTemplateSubjectHandoutIsGiven == 0){
@@ -426,10 +484,19 @@
                                                             </button>
                                                         ";
 
+                                                        $output_btn = "
+                                                            <button onclick='' class='btn btn-danger btn-sm'>
+                                                                <i class='fas fa-trash'></i>
+                                                            </button>
+                                                        ";
+
                                                         $giveMadeHandout = "giveMadeHandout($nonTemplateSubjectCodeHandoutId, $subject_period_code_topic_id, $teacher_id)";
 
                                                         $given_status = "
                                                             <i  onclick='$giveMadeHandout' style='cursor:pointer; color: orange;' class='fas fa-times'></i>
+                                                        ";
+                                                        $given_status = "
+                                                            <i  onclick='' style='cursor:pointer; color: orange;' class='fas fa-times'></i>
                                                         ";
                                                     }
                                                     $template_status = "
@@ -459,6 +526,9 @@
                                                         $given_status = "
                                                             <i onclick='$unGiveMadeAssignment' style='cursor: pointer;color: yellow;' class='fas fa-check'></i>
                                                         ";
+                                                        $given_status = "
+                                                            <i onclick='' style='cursor: pointer;color: yellow;' class='fas fa-check'></i>
+                                                        ";
                                                     }
                                                     if($nonTemplateSubjectAssignmentIsGiven == 0){
 
@@ -471,12 +541,20 @@
                                                                 <i class='bi bi-trash'></i>
                                                             </button>
                                                         ";
+                                                        $output_btn = "
+                                                            <button onclick='' class='btn btn-danger btn-sm'>
+                                                                <i class='bi bi-trash'></i>
+                                                            </button>
+                                                        ";
 
                                                         $giveMadeAssignment = "giveMadeAssignment($nonTemplateSubjectCodeAssignmentId,
                                                             $subject_period_code_topic_id, $teacher_id)";
 
                                                         $given_status = "
                                                             <i onclick='$giveMadeAssignment' style='cursor:pointer; color: yellow;' class='fas fa-times'></i>
+                                                        ";
+                                                        $given_status = "
+                                                            <i onclick='' style='cursor:pointer; color: yellow;' class='fas fa-times'></i>
                                                         ";
                                                         
                                                     }

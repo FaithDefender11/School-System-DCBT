@@ -767,6 +767,28 @@ class Student{
 
     }
 
+    public function generateNexStudentUniqueId()
+        {
+            // Fetch the highest school_teacher_id from the database
+            $query = "SELECT 
+            
+                MAX(student_unique_id) AS max_id 
+                FROM student
+
+            ";
+
+            $result = $this->con->query($query);
+            $row = $result->fetch(PDO::FETCH_ASSOC);
+
+            // Extract the maximum id and increment it
+            $maxId = $row['max_id'];
+            $nextId = $maxId + 1;
+
+            // Format the id as '000001', '000002', etc.
+            $formattedId = sprintf('%06d', $nextId);
+
+            return $formattedId;
+    }
     public function GenerateUniqueStudentNumberV2() {
 
         // Loop until a unique student number is generated
@@ -810,8 +832,6 @@ class Student{
             if ($result->rowCount() == 0) {
                 return $nextStudentID; // Unique student number
             }
-            
-             // If the generated student number already exists, continue the loop to generate a new one
         }
     }
 
@@ -843,7 +863,7 @@ class Student{
                         
         $username_student_role = "S";
 
-        $username = strtolower($lastname) . '.' . $generateStudentUniqueId . $username_student_role . '@dcbt.ph';
+        $username = strtolower($lastname) . '.' . $generateStudentUniqueId . $username_student_role . '@dcbt.edu.ph';
         return $username;
     }
 

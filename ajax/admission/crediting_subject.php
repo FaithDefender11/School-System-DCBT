@@ -6,19 +6,23 @@
     require_once("../../includes/classes/Section.php");
     require_once("../../includes/classes/SubjectProgram.php");
     require_once("../../includes/classes/SchoolYear.php");
+    require_once("../../includes/classes/EnrollmentAudit.php");
+    require_once("../../includes/classes/User.php");
     
     if (isset($_POST['subject_program_id'])
     
         && isset($_POST['current_school_year_id'])
         && isset($_POST['student_id'])
         && isset($_POST['subject_code'])
-        
         && isset($_POST['type']) && $_POST['type'] == "Credit"
+        && isset($_POST['enrollment_id'])
         ) {
 
         $subject_program_id = $_POST['subject_program_id'];
+        $enrollment_id = $_POST['enrollment_id'];
 
-    
+        $registrarUserId = isset($_SESSION["registrarUserId"]) 
+            ? $_SESSION["registrarUserId"] : "";
 
         $current_school_year_id = $_POST['current_school_year_id'];
         $student_id = $_POST['student_id'];
@@ -29,7 +33,33 @@
         $wasSuccess = $student_subject->MarkStudentSubjectAsCredited($student_id,
             $current_school_year_id, $subject_program_id, $subject_code);
 
+        $subject_program = new SubjectProgram($con, $subject_program_id);
+
+        $subject_code = $subject_program->GetSubjectProgramRawCode();
+        $subject_title = $subject_program->GetTitle();
+
         if($wasSuccess){
+
+            $registrarName = "";
+
+            if($registrarUserId != ""){
+                $user = new User($con, $registrarUserId);
+                $registrarName = ucwords($user->getFirstName()) . " " . ucwords($user->getLastName());
+            }
+            
+            $now = date("Y-m-d H:i:s");
+            $date_creation = date("M d, Y h:i a", strtotime($now));
+
+
+            $description = "Registrar '$registrarName' has credited a subject load of '$subject_title ($subject_code)' on $date_creation";
+
+            $enrollmentAudit = new EnrollmentAudit($con);
+
+            $doesAuditInserted = $enrollmentAudit->EnrollmentAuditInsert(
+                $enrollment_id,
+                $description, $current_school_year_id, $registrarUserId
+            );
+
             echo "credited_success";
         }
  
@@ -50,7 +80,8 @@
         $enrollment_id = $_POST['enrollment_id'];
 
 
-
+        $registrarUserId = isset($_SESSION["registrarUserId"]) 
+            ? $_SESSION["registrarUserId"] : "";
 
         $current_school_year_id = $_POST['current_school_year_id'];
         $student_id = $_POST['student_id'];
@@ -119,6 +150,33 @@
         $query->execute();
 
         if($query->rowCount() > 0){
+
+
+            $registrarName = "";
+
+            $subject_program = new SubjectProgram($con, $subject_program_id);
+
+            $subject_code = $subject_program->GetSubjectProgramRawCode();
+            $subject_title = $subject_program->GetTitle();
+
+            if($registrarUserId != ""){
+                $user = new User($con, $registrarUserId);
+                $registrarName = ucwords($user->getFirstName()) . " " . ucwords($user->getLastName());
+            }
+            
+            $now = date("Y-m-d H:i:s");
+            $date_creation = date("M d, Y h:i a", strtotime($now));
+
+
+            $description = "Registrar '$registrarName' has uncredited a subject load of '$subject_title ($subject_code)' on $date_creation";
+
+            $enrollmentAudit = new EnrollmentAudit($con);
+
+            $doesAuditInserted = $enrollmentAudit->EnrollmentAuditInsert(
+                $enrollment_id,
+                $description, $current_school_year_id, $registrarUserId
+            );
+
 
             # Once student form is regular and the credited subject
             # is within the same current semester (1st Semester)

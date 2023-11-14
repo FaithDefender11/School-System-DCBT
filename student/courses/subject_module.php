@@ -185,8 +185,8 @@
 
         // var_dump($values);
         
-        $totalOverProgress = $values[0];
-        $totalProgressOkayStatus = $values[1];
+        $totalOverProgress = $values[0] ?? 0;
+        $totalProgressOkayStatus = $values[1] ?? 0;
 
 
 
@@ -239,7 +239,7 @@
 
         $doesAuditSuccess = $subjectModuleAudit->InsertAuditOfSubjectModule(
             $student_subject_id, $current_school_year_id,
-            $overview_audit_name);
+            $overview_audit_name, $studentLoggedInId, $subject_code);
 
         // var_dump($enrolledSubjectList);
 
@@ -308,11 +308,14 @@
                                             $equivalent_totalProgressAct = round($pecentage_equivalent_total, 0, PHP_ROUND_HALF_UP);
                                             $equivalent_totalProgressAct = $equivalent_totalProgressAct . "%";
 
-                                            echo "$totalProgressOkayStatus / $totalOverProgress = $equivalent_totalProgressAct";
-                                        } 
-                                    ?>
-                                    <div class="progress-bar" style="width: <?= $equivalent_totalProgressAct;?>">
-                                        <?php
+                                                // echo "$totalProgressOkayStatus / $totalOverProgress = $equivalent_totalProgressAct";
+                                                echo "$equivalent_totalProgressAct";
+                                            } 
+                                        ?>
+
+                                        <div class="progress-bar" style="height: 20px;  width: <?= $equivalent_totalProgressAct;?>"><?php 
+                                        
+                                            // echo "$totalScore / $totalOver = $equivalent_totalProgressAct";
                                             echo "$equivalent_totalProgressAct";
                                         ?>
                                     </div>

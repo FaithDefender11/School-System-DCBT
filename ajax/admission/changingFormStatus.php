@@ -7,6 +7,8 @@
     require_once("../../includes/classes/Section.php");
     require_once("../../includes/classes/SubjectProgram.php");
     require_once("../../includes/classes/StudentSubject.php");
+    require_once("../../includes/classes/User.php");
+    require_once("../../includes/classes/EnrollmentAudit.php");
 
     if (isset($_POST['student_enrollment_id'])
         && isset($_POST['student_id']) 
@@ -44,6 +46,10 @@
         ){
 
 
+        $registrarUserId = isset($_SESSION["registrarUserId"]) 
+        ? $_SESSION["registrarUserId"] : "";
+
+
         $student_enrollment_id = $_POST['student_enrollment_id'];   
         $student_id = $_POST['student_id']; 
         $current_school_year_id = $_POST['current_school_year_id']; 
@@ -77,22 +83,33 @@
 
         // echo "heyy";
 
+        $enrollmentAudit = new EnrollmentAudit($con);
+
+        $now = date("Y-m-d H:i:s");
+        $date_creation = date("M d, Y h:i a", strtotime($now));
+
+        $registrarName = "";
+
+        if($registrarUserId != ""){
+            $user = new User($con, $registrarUserId);
+            $registrarName = ucwords($user->getFirstName()) . " " . ucwords($user->getLastName());
+        }
+
         if($type === "Regular"){
 
             # Change into Regular
-
-            // echo "Into Regular";
-            // $asd = $studentSubject->PopulateBlockSectionSubjects(
-            //     $current_school_year_id, $current_school_year_period,
-            //     $student_enrollment_course_id,
-            //     $student_enrollment_id,
-            //     $student_id);
-            // return;
 
             $wasSuccess = $enrollment->FormUpdateStudentStatus($current_school_year_id,
             $student_id, $student_enrollment_id, $type);
 
             if($wasSuccess){
+
+                $description = "Registrar '$registrarName' has been changed the enrollment status into 'Regular' on $date_creation";
+
+                $doesAuditInserted = $enrollmentAudit->EnrollmentAuditInsert(
+                    $student_enrollment_id,
+                    $description, $current_school_year_id, $registrarUserId
+                );
 
                 # Remove all subjects in the student_subject list
                 # Remove also the credited subjects within semester course level
@@ -100,10 +117,12 @@
                 # Get all Offered Subject Program within semester course level
                 # And Insert All appropriate subjects for Regular Student Within *Semester Course Level
                 
-                $asd = $studentSubject->PopulateBlockSectionSubjects(
+                $doesPopulationSubjectCompleted = $studentSubject->PopulateBlockSectionSubjects(
                     $current_school_year_id, $current_school_year_period,
                     $student_enrollment_course_id,
-                    $student_enrollment_id, $student_id);
+                    $student_enrollment_id, $student_id,
+                    
+                    $registrarUserId);
 
                 echo "update_success";
                 return;
@@ -119,11 +138,17 @@
             // echo "Into Regular";
             // return;
 
+            $description = "Registrar '$registrarName' has been changed the enrollment status into 'Irregular' on $date_creation";
+
+            $doesAuditInserted = $enrollmentAudit->EnrollmentAuditInsert(
+                $student_enrollment_id,
+                $description, $current_school_year_id, $registrarUserId
+            );
+
             $wasSuccess = $enrollment->FormUpdateStudentStatus($current_school_year_id,
             $student_id, $student_enrollment_id, $type);
 
             if($wasSuccess){
-
                 
                 echo "update_success";
                 return;

@@ -1,5 +1,18 @@
-<?php
-        // var_dump($does_enrollee_finished_input);
+
+<?php  
+
+    $program = new Program($con, $program_id);
+
+    $department_id = $program->GetProgramDepartmentId();
+
+    $department = new Department($con, $department_id);
+
+    $department_name = $department->GetDepartmentName();
+ 
+    // var_dump($department_name);
+
+    $type_status = $department_name === "Tertiary" ? 1 : 0;
+    // var_dump($type_status);
 
         ?>
             <style>
@@ -119,10 +132,14 @@
 
                     <main>
                         <form method="POST">
+
                            <header>
-                                <div class="title">
-                                    <h3>Enrollee Information</h3>
-                                </div>
+                                <?php if($type_status == 0):?>
+
+                                    <div class="title">
+                                        <h3>Student Information</h3>
+                                    </div>
+                                <?php endif;?>
                             </header> 
                             <div class="row">
                                 <span>

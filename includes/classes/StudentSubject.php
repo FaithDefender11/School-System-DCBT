@@ -203,7 +203,8 @@
         $current_school_year_period,
         $student_enrollment_course_id,
         $student_enrollment_id,
-        $student_id){
+        $student_id,
+        $registrarUserId = ""){
 
 
         $section = new Section($this->con, $student_enrollment_course_id);
@@ -244,6 +245,17 @@
             // $asd = $sql->fetchAll(PDO::FETCH_ASSOC);
             // return $asd;
 
+            $enrollmentAudit = new EnrollmentAudit($this->con);
+
+            $registrarName = "";
+
+            if($registrarUserId != ""){
+
+                $user = new User($this->con, $registrarUserId);
+                $registrarName = ucwords($user->getFirstName()) . " " . ucwords($user->getLastName());
+            
+            }
+
             while($row = $sql->fetch(PDO::FETCH_ASSOC)){
              
                 $program_code = $row['subject_code'];
@@ -281,6 +293,23 @@
                 $add_student_subject->bindParam(':program_code', $program_code);
 
                 if($add_student_subject->execute()){
+
+                    $subject_program = new SubjectProgram($this->con, $subject_program_id);
+
+                    $subject_title = $subject_program->GetTitle();
+
+
+                    $now = date("Y-m-d H:i:s");
+                    $date_creation = date("M d, Y h:i a", strtotime($now));
+
+
+                    $description = "Registrar '$registrarName' has been placed a subject load of '$subject_title ($student_subject_code)' via block section population on $date_creation";
+
+                    $doesAuditInserted = $enrollmentAudit->EnrollmentAuditInsert(
+                        $student_enrollment_id,
+                        $description, $current_school_year_id, $registrarUserId
+                    );
+
                     $isFinish = true;
                 }
 
@@ -2235,6 +2264,30 @@
 
         return NULL;;
     }
+
+    public function GetStudentSubjectProgramIdBy(
+        $student_id, $subject_code, $school_year_id){
+
+        $sql = $this->con->prepare("SELECT student_subject_id FROM student_subject
+
+            WHERE subject_code = :subject_code
+            AND school_year_id = :school_year_id
+            AND student_id = :student_id
+        ");
+                
+        $sql->bindParam(":subject_code", $subject_code);
+        $sql->bindParam(":school_year_id", $school_year_id);
+        $sql->bindParam(":student_id", $student_id);
+        $sql->execute();
+
+        if($sql->rowCount() > 0){
+            return $sql->fetchColumn();
+        }
+
+        return NULL;;
+    }
+
+    
 
 }
 

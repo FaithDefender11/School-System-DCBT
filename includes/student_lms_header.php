@@ -48,76 +48,46 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        
         <title><?php echo "Student " . $document_title; ?></title>
-        <!--Link JavaScript-->
-        <script src="../../assets/js/elms-sidebar.js" defer></script>
-        <script src="../../assets/js/elms-dropdown.js" defer></script>
-        <script src="../../assets/js/table-dropdown.js" defer></script>
-        <script src="../../assets/js/student-calendar.js" defer></script>
-        <!--Link styleshets-->
-        <link rel="stylesheet" href="../../assets/css/sidebar.css" />
-        <link rel="stylesheet" href="../../assets/css/fonts.css" />
-        <link rel="stylesheet" href="../../assets/css/content.css" />
-        <link rel="stylesheet" href="../../assets/css/buttons.css" />
-        <link rel="stylesheet" href="../../assets/css/table.css" />
-        <link rel="stylesheet" href="../../assets/css/elms.css" />
-        <link rel="stylesheet" href="../../assets/css/calendar.css" />
-        <!--Custom CSS-->
-        <link
-        rel="stylesheet"
-        href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-        crossorigin="anonymous"
-        />
-        <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
-        />
-        <!--Link Fonts-->
-        <link
-        rel="stylesheet"
-        href="https://fonts.googleapis.com/css?family=Lato"
-        />
-        <link
-        rel="stylesheet"
-        href="https://fonts.googleapis.com/css?family=Arimo"
-        />
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+        <!-- Bootstrap Icons CSS -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+        <!-- Font Awesome CSS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+        <!-- jQuery -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+        <!-- Popper.js and Bootstrap JS -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+        <!-- Custom CSS -->
+        <link rel="stylesheet" type="text/css" href="../../assets/css/main_style.css">
+        <link rel="stylesheet" type="text/css" href="../../assets/css/content.css">
+        <link rel="stylesheet" type="text/css" href="../../assets/css/forms.css">
+        <link rel="stylesheet" type="text/css" href="../../assets/css/buttons.css">
+        <link rel="stylesheet" type="text/css" href="../../assets/css/fonts.css">
+        <link rel="stylesheet" type="text/css" href="../../assets/css/table.css">
+        <link rel="stylesheet" type="text/css" href="../../assets/css/scheduler.css">
+        <link rel="stylesheet" href="../../assets/css/others/toggle-switch.css">
+
+        <!-- Google Fonts -->
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Arimo">
+
+        <!-- SweetAlert -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.24/sweetalert2.all.js"></script>
+
         <!-- Modify the Logo of DCBT Here and Please apply some styling -->
         <link rel="icon" href="../../assets/images/icons/DCBT-Logo.jpg" type="image/png">
-        <!-- Bootstrap 4 JavaScript -->
-        <script 
-        src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" 
-        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" 
-        crossorigin="anonymous"
-        >
-        </script>
-        <!--Link for jQuery-->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-        <!-- JS for full calender -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.js"></script>
-        <!-- *Note: You must have internet connection on your laptop or pc other wise below code is not working -->
-        <!-- CSS for full calender -->
-        <link
-          href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.css"
-          rel="stylesheet"
-        />
-        <!-- SweetAlert2 -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.24/sweetalert2.all.js"></script>
-        <style>
-        body {
-            background-color: white;
-            margin: 0;
-        }
 
-        .fc-content {
-            width: auto !important;
-            white-space: normal !important;
-            overflow: visible !important;
-        }
-        </style>
+         <!-- Bootstrap 4 JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        
     </head>
     <body>
         <?php

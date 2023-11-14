@@ -1,8 +1,6 @@
 <?php
 require_once('includes/config.php');
 
-session_start();
-
 // $url_local = LOCAL_BASE_URL . "/pre_enrollment_login.php";
 // $url_online = 'http://' . $_SERVER['HTTP_HOST'] . "/pre_enrollment_login.php";
 
@@ -24,9 +22,16 @@ $home = LOCAL_BASE_URL . "/index.php";
 
 if (isset($_SESSION['role'])) {
 
+    // var_dump($_SESSION['role']);
+    // return; 
+
     if($_SERVER['SERVER_NAME'] === 'localhost'){
         if ($_SESSION['role'] === "admin" 
             || $_SESSION['role'] === "teacher" || $_SESSION['role'] === "student") {
+
+
+                // echo "url_users_local1: $url_users_local";
+                // return;
 
             header("Location: $url_users_local");
             session_destroy();
@@ -41,6 +46,9 @@ if (isset($_SESSION['role'])) {
     }else{
         if ($_SESSION['role'] === "admin" 
             || $_SESSION['role'] === "teacher" || $_SESSION['role'] === "student") {
+
+            echo "url_users_local2: $url_users_local";
+            return;
 
             header("Location: $url_users_online");
             session_destroy();

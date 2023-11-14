@@ -446,9 +446,41 @@
             return [];
         }
 
+        public function GetAllAnnouncementFromAdmin($school_year_id) {
 
-        public function GetAllTeacherAnnouncementUnderEnrolledSubjects($school_year_id, $enrolledSubjectList) {
+            $get = $this->con->prepare("SELECT t1.*
+            
+            -- , t2.firstName, t2.lastName, t2.role
+            
+                FROM announcement as t1
+
+                INNER JOIN users as t2 ON t2.user_id = t1.users_id
+
+                WHERE t1.for_student=:for_student
+                AND t1.school_year_id=:school_year_id
+                
+            ");
+
+            $get->bindValue(":for_student", 1);
+            $get->bindValue(":school_year_id", $school_year_id);
+            $get->execute();
+
+            if($get->rowCount() > 0){
+
+                return $get->fetchAll(PDO::FETCH_ASSOC);
+            }
+
+            return [];
+        }
+
+
+        public function GetAllTeacherAnnouncementUnderEnrolledSubjects(
+            $school_year_id, $enrolledSubjectList) {
+            
             if (count($enrolledSubjectList) > 0) {
+
+                // echo "hey";
+
                 $inPlaceholders = implode(', ', array_map(function($value, $index) {
                     return ":subject_code$index";
                 }, $enrolledSubjectList, array_keys($enrolledSubjectList)));

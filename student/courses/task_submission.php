@@ -88,7 +88,20 @@
         $current_school_year_period = $school_year_obj['period'];
         $current_school_year_term = $school_year_obj['term'];
 
-        $assignment_name = $subjectCodeAssignment->GetAssignmentName();
+
+        # Adding Audit Trail.
+
+        $subjectModuleAudit = new SubjectModuleAudit($con);
+
+        $assignment_audit_name = "Viewed $assignment_name under $topic_name";
+
+        // var_dump($assignment_audit_name);
+
+        $doesAuditSuccess = $subjectModuleAudit->InsertAuditOfSubjectModule(
+            $student_subject_id, $current_school_year_id,
+            $assignment_audit_name, $studentLoggedInId, $subject_code);
+
+
 
         // $back_url = "index.php?c=$subject_code";
         $back_url = "subject_module.php?id=$student_subject_id";
@@ -288,6 +301,15 @@
 
                 
             if($hasInserted && $subject_code_assignment_id != 0){
+
+                $taskname = strtolower($taskname);
+
+                // $submitted_assignment_audit_name = "Viewed $assignment_name under $topic_name";
+                $submitted_assignment_audit_name = "Submitted an $taskname on $assignment_name under $topic_name";
+                $doesAuditSuccess = $subjectModuleAudit->InsertAuditOfSubjectModule(
+                    $student_subject_id, $current_school_year_id,
+                    $submitted_assignment_audit_name, $studentLoggedInId, $subject_code);
+
                 Alert::successAutoRedirect("Submission has been delivered successfully.",
                     "submission_view.php?sc_id=$subject_code_assignment_id&s_id=$subject_assignment_submission_id&ss_id=$student_subject_id");
                 exit();
@@ -341,7 +363,7 @@
                     $school_year_id, $enrolledSubjectList,
                     $enrollment_id,
                     "second",
-                    "second",
+                    "first",
                     "second"
                 );
             ?>

@@ -22,7 +22,6 @@
         $middle_name = $teacher->GetTeacherMiddleName();
         $suffix = $teacher->GetTeacherSuffix();
 
-
         $civil_status = $teacher->GetCivilStatus();
         $sex = $teacher->GetTeacherGender();
         $nationality  = $teacher->GetTeacherCitizenship();
@@ -44,6 +43,7 @@
         <style>
             <?php include "../../assets/css/content.css" ?>
         </style>
+
         <body>
             <div class="content">
                 <nav>
@@ -59,13 +59,22 @@
                         </div>
                         <div class="action">
                             <div class="dropdown">
+
                                 <button class="icon">
                                     <i class="bi bi-three-dots-vertical"></i>
                                 </button>
+
                                 <div class="dropdown-menu">
-                                    <a onclick="<?php echo "removeTeacher($teacher_id) " ?>" class="dropdown-item" style="color: red;">
-                                        <i class="bi bi-file-earmark-x"></i>Delete form</a>
-                                </div>
+                                    <a onclick="<?php echo "removeTeacher($teacher_id) " ?>" class="dropdown-item" style="color: orange;">
+                                        <i class="bi bi-file-earmark-x"></i>Mark as Inactive</a>
+                                
+                                 <a onclick="<?php echo "resetTeacherPassword($teacher_id) " ?>" class="dropdown-item" style="color: blue;">
+                                        <i class="bi bi-file-earmark-x"></i>Reset password</a>
+                                    </div>
+
+                             
+ 
+
                             </div>
                         </div>
                     </header>
@@ -103,14 +112,79 @@
         });
     });
 
+
+    function resetTeacherPassword(teacher_id){
+
+        var teacher_id = parseInt(teacher_id);
+
+        Swal.fire({
+            icon: 'question',
+            title: `Are you sure you want to reset selected teacher current password`,
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'Cancel'
+
+        }).then((result) => {
+
+            if (result.isConfirmed) {
+                // REFX
+                $.ajax({
+                    url: '../../ajax/teacher/resetTeacher.php',
+                    type: 'POST',
+                    data: {
+                        teacher_id
+                    },
+                    success: function(response) {
+
+                        response = response.trim();
+
+                        console.log(response);
+
+                            Swal.fire({
+                                icon: 'success',
+                                title: `Successfully reset the password.`,
+                            });
+
+                            setTimeout(() => {
+                                Swal.close();
+                                // location.reload();
+                                window.location.href = "index.php";
+                            }, 2000);
+
+
+ 
+
+                        // if (response === "success_update") {
+
+                        //     Swal.fire({
+                        //         icon: 'success',
+                        //         title: `Selected form has been rejected.`,
+                        //     });
+                        // } 
+
+                        // else {
+                        //     console.log('Update failed');
+                        // }
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.log('AJAX Error:', textStatus, errorThrown);
+                    }
+
+                });
+
+            }
+            
+        });
+
+    }
+
     function removeTeacher(teacher_id){
 
         var teacher_id = parseInt(teacher_id);
 
         Swal.fire({
             icon: 'question',
-            title: `Do you want to remove selected teacher`,
-            text: `Important! This action is cannot be undone`,
+            title: `Do you want to set as Inactive the selected teacher`,
             showCancelButton: true,
             confirmButtonText: 'Yes',
             cancelButtonText: 'Cancel'
@@ -162,4 +236,5 @@
             }
         });
     }
+
 </script>

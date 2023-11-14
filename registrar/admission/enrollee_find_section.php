@@ -5,7 +5,7 @@
     // $check = $enrollment->changeYearFormat("2021-2022");
     // var_dump($check);
 
-
+ 
     if(isset($_POST['pending_choose_section_' . $pending_enrollees_id]) && isset($_POST['selected_course_id'])){
 
         // New (Standard start from the beginning of DCBT). 
@@ -35,6 +35,7 @@
 
             $username = NULL;
             $generateStudentUniqueId = NULL;
+            $generated_enrollment_id = NULL;
 
             $successInsert = $student->InsertStudentFromPendingTable(
                 $firstname, $lastname, $middle_name, $password,
@@ -87,6 +88,36 @@
 
                     $generated_enrollment_id = $con->lastInsertId();
 
+                    if($generated_enrollment_id != NULL){
+
+                        # INSERT AUDIT TRAIL.
+
+                        $selectec_section = new Section($con, $selected_course_id_value);
+                        $sectionName = $selectec_section->GetSectionName();
+
+                        $enrollmentAudit = new EnrollmentAudit($con);
+
+                        ##
+                        $registrarName = "";
+
+                        if($registrarUserId != ""){
+                            $user = new User($con, $registrarUserId);
+                            $registrarName = ucwords($user->getFirstName()) . " " . ucwords($user->getLastName());
+                        }
+
+                        $now = date("Y-m-d H:i:s");
+                        $date_creation = date("M d, Y h:i a", strtotime($now));
+
+                        $description = "Registrar '$registrarName' has been placed student section into '$sectionName' on $date_creation";
+
+                        $doesAuditInserted = $enrollmentAudit->EnrollmentAuditInsert(
+                            $generated_enrollment_id,
+                            $description, $current_school_year_id, $registrarUserId
+                        );
+                        
+                        // var_dump($doesAuditInserted);
+                        // return;
+                    }
 
                     # Populating Student_Subject base on Section Subjects as DEFAULT Behavior
 
@@ -188,6 +219,7 @@
                         
                 // if($successInsert == true){
 
+                $insert_enrollment_id = null;
                 $insert_enrollment = $con->prepare("INSERT INTO enrollment
                     (student_id, course_id, school_year_id, enrollment_status, is_new_enrollee,
                         registrar_evaluated, is_transferee, enrollment_form_id,
@@ -216,10 +248,62 @@
 
                 }
 
+                $insert_enrollment_id = $con->lastInsertId();
+
+                var_dump($insert_enrollment_id);
+
+                if($insert_enrollment_id != NULL){
+
+                    # INSERT AUDIT TRAIL.
+
+                    $selectec_section = new Section($con, $selected_course_id_value);
+                    $sectionName = $selectec_section->GetSectionName();
+
+                    $enrollmentAudit = new EnrollmentAudit($con);
+
+                    ##
+                    $registrarName = "";
+
+                    if($registrarUserId != ""){
+                        $user = new User($con, $registrarUserId);
+                        $registrarName = ucwords($user->getFirstName()) . " " . ucwords($user->getLastName());
+                    }
+
+                    $now = date("Y-m-d H:i:s");
+                    $date_creation = date("M d, Y h:i a", strtotime($now));
+
+                    $description = "Registrar '$registrarName' has been placed student section into '$sectionName' on $date_creation";
+
+                    $doesAuditInserted = $enrollmentAudit->EnrollmentAuditInsert(
+                        $insert_enrollment_id,
+                        $description, $current_school_year_id, $registrarUserId
+                    );
+
+                    var_dump($doesAuditInserted);
+                    return;
+                }
+
                 // Approved Request
                 $pendingSuccess = $pending->SetPendingApprove($pending_enrollees_id);
 
                 if($pendingSuccess == true){
+
+
+                    // $selectec_section = new Section($con, $selected_course_id_value);
+                    // $sectionName = $selectec_section->GetSectionName();
+
+                    // $enrollmentAudit= new EnrollmentAudit($con);
+
+                    // $user = new User($con, $registrarUserId);
+
+                    // $registrarName = ucwords($user->getFirstName()) . " " . ucwords($user->getLastName());
+
+                    // $description = "'$registrarName' has been inserted the Section into '$sectionName'";
+
+                    // $doesAuditInserted = $enrollmentAudit->EnrollmentAuditInsert(
+                    //     $insert_enrollment_id,
+                    //     $description, $current_school_year_id, $registrarUserId
+                    // );
 
                     $student_table_subject_review = "process_enrollment.php?subject_review=show&st_id=$generated_student_id&selected_course_id=$selected_course_id_value";
 
@@ -274,7 +358,9 @@
 
             <header>
                 <div class="title">
-                    <h3>Available sections</h3>
+                    <!-- <h3>Available sections</h3> -->
+                    <h4 style="font-weight: 350;">Available section <a style="font-size: 18px; color: inherit" href="../section/createe_section.php?id=<?= $program_id;?>&p_id=<?= $pending_enrollees_id;?>">+</a></h4>
+
                 </div>
             </header>
             
@@ -284,7 +370,6 @@
                     $program_id,
                     $current_school_year_term,
                     $pending_course_level);
-
 
 
                 if(count($availableSection) > 0){

@@ -62,68 +62,15 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.24/sweetalert2.all.js"></script>
         <!-- Modify the Logo of DCBT Here and Please apply some styling -->
         <link rel="icon" href="../../assets/images/icons/DCBT-Logo.jpg" type="image/png">
-        <!-- Bootstrap 4 JavaScript -->
+
+        <!-- SUMMER NOTE LINK -->
+        <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+
+         <!-- Bootstrap 4 JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
         <!-- SUMMER NOTE SCRIPT -->
         <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
-        <!-- *Note: You must have internet connection on your laptop or pc other wise below code is not working -->
-        <!-- CSS for full calender -->
-        <link
-        href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.css"
-        rel="stylesheet"
-        />
-        <!-- JS for jQuery -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-        <!-- JS for full calender -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.js"></script>
-        <!-- bootstrap css and js -->
-        <link
-        rel="stylesheet"
-        href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-        />
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-        <!--Link styleshets-->
-        <link rel="stylesheet" href="../../assets/css/sidebar.css" />
-        <link rel="stylesheet" href="../../assets/css/fonts.css" />
-        <link rel="stylesheet" href="../../assets/css/content.css" />
-        <link rel="stylesheet" href="../../assets/css/buttons.css" />
-        <link rel="stylesheet" href="../../assets/css/table.css" />
-        <link rel="stylesheet" href="../../assets/css/elms.css" />
-        <link rel="stylesheet" href="../../assets/css/calendar.css" />
-        <!--Custom CSS-->
-        <link
-        rel="stylesheet"
-        href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-        crossorigin="anonymous"
-        />
-        <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
-        />
-        <!--Link Fonts-->
-        <link
-        rel="stylesheet"
-        href="https://fonts.googleapis.com/css?family=Lato"
-        />
-        <link
-        rel="stylesheet"
-        href="https://fonts.googleapis.com/css?family=Arimo"
-        />
-        <!-- Font Awesome CSS -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
-        <style>
-        body {
-            background-color: white;
-            margin: 0;
-        }
-        .fc-content {
-            width: auto !important;
-            white-space: normal !important;
-            overflow: visible !important;
-        }
-        </style>
+    
     </head>
     <body>
         <div class="sidebar-nav">

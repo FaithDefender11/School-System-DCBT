@@ -147,7 +147,7 @@
                     style="background-color: var(--mainContentBG); color: black"
                     onclick="window.location.href = 'enrolled_students.php';"
                     >
-                    Enrolled (<?php echo $enrolledStudentsEnrollmentCount;?>)
+                    Enrolled (<?php echo count($studentEnrolledInSectionList);?>)
                     </button>
                 </div>
 

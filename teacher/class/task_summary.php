@@ -7,9 +7,33 @@
     include_once('../../includes/classes/SubjectCodeAssignmentTemplate.php');
     include_once('../../includes/classes/SubjectPeriodCodeTopic.php');
     include_once('../../includes/classes/SubjectPeriodCodeTopicTemplate.php');
-    include_once('../../includes/classes/SubjectAssignmentSubmission.php');
     include_once('../../includes/classes/SubjectCodeAssignment.php');
     include_once('../../includes/classes/Student.php');
+    include_once('../../includes/classes/Announcement.php');
+    include_once('../../includes/classes/Notification.php');
+    include_once('../../includes/classes/SubjectProgram.php');
+    include_once('../../includes/classes/Teacher.php');
+    include_once('../../includes/classes/SubjectAssignmentSubmission.php');
+ 
+
+    ?>
+        <head>
+                <!--Link JavaScript-->
+            <script src="../../assets/js/elms-sidebar.js" defer></script>
+            <script src="../../assets/js/elms-dropdown.js" defer></script>
+        </head>
+    <?php
+
+    ?>
+        <style>
+            th a {
+                text-decoration: underline;
+                color: inherit; /* To maintain the link color */
+                white-space: nowrap; /* Prevent text from wrapping */
+            }
+        </style>
+
+    <?php
 
     if(isset($_GET['ct_id'])){
  
@@ -36,6 +60,16 @@
         $course_id = $subjectPeriodCodeTopic->GetCourseId();
         $subject_code = $subjectPeriodCodeTopic->GetSubjectCode();
         $school_year_id = $subjectPeriodCodeTopic->GetSchoolYearId();
+        $subject_program_id = $subjectPeriodCodeTopic->GetSubjectProgramId();
+
+        $enrollment =  new Enrollment($con);
+
+        $subjectProgram =  new SubjectProgram($con, $subject_program_id);
+        $subject_title = $subjectProgram->GetTitle();
+
+        $fomatTerm = $enrollment->changeYearFormat($current_school_year_term);
+        $period_short = $current_school_year_period === "First" ? "S1" : ($current_school_year_period === "Second" ? "S2" : "");
+
 
         $assignmentListOnTeachingCode = $subjectCodeAssignment->GetSubjectAssignmentBasedOnTeachingSubject(
             $subject_code,
@@ -70,7 +104,48 @@
  
         $back_url = "section_topic.php?id=$subjectPeriodCodeTopicTemplateId&ct_id=$subject_period_code_topic_id";
 
+        $teachingSubjectCode = $subjectCodeAssignment->GetTeacherTeachingSubjects(
+            $teacherLoggedInId,
+            $school_year_id);
+
+        $teachingSubjects = [];
+
+
+        foreach ($teachingSubjectCode as $key => $value) {
+
+            $teachingCode = $value['subject_code'];
+            array_push($teachingSubjects, $teachingCode);
+        }
+
+        $logout_url = 'http://localhost/school-system-dcbt/lms_logout.php';
+
+        if ($_SERVER['SERVER_NAME'] === 'localhost') {
+
+            $base_url = 'http://localhost/school-system-dcbt/teacher/';
+        } else {
+
+            $base_url = 'http://' . $_SERVER['HTTP_HOST'] . '/teacher/';
+        }
+
+        if ($_SERVER['SERVER_NAME'] !== 'localhost') {
+
+            $new_url = str_replace("/teacher/", "", $base_url);
+            $logout_url = "$new_url/lms_logout.php";
+        }
+
 ?>
+
+            <?php 
+                echo Helper::lmsTeacherNotificationHeader(
+                    $con, $teacherLoggedInId,
+                    $current_school_year_id,
+                    $teachingSubjects,
+                    "second",
+                    "first",
+                    "second",
+                    "second");
+                
+            ?>
 
             <nav>
                 <a href="<?= $back_url; ?>">
@@ -173,9 +248,14 @@
                                                     }
                                                     echo "
                                                         <tr>
-                                                            <td style='font-size: 14px'>
-                                                                $lastname
-                                                            </td>
+                                                             <td style='font-size: 15px'>
+                                                                    
+                                                                       <a style='text-decoration: none; color: inherit;'
+                                                                            href='student_module_audit.php?id=$student_id&code=$subject_code&sy_id=$school_year_id'>
+                                                                            $lastname
+                                                                       </a> 
+
+                                                                    </td>
                                                             <td>$firstname</td>
                                                             <td></td>
                                                             <td>$student_points / $qualifiedMaxScore = $rounded_equivalent% </td>

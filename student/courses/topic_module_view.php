@@ -5,6 +5,10 @@
     include_once('../../includes/classes/SubjectCodeHandoutStudent.php');
     include_once('../../includes/classes/SubjectPeriodCodeTopic.php');
     include_once('../../includes/classes/SubjectModuleAudit.php');
+    include_once('../../includes/classes/Notification.php');
+    include_once('../../includes/classes/SubjectProgram.php');
+    include_once('../../includes/classes/Teacher.php');
+    include_once('../../includes/classes/Student.php');
 
     if(
         isset($_GET['id']) &&
@@ -42,18 +46,17 @@
 
         $handout_audit_name = "Viewed $handout_name under $handoutTopic";
 
-        $doesAuditSuccess = $subjectModuleAudit->InsertAuditOfSubjectModule(
-            $student_subject_id, $current_school_year_id,
-            $handout_audit_name);
-
-
-        
-
         // $teacher_id = $_SESSION['teacherLoggedInId'];
 
         $topic_name = $subjectPeriodCodeTopic->GetTopic();
         $topic_subject_code = $subjectPeriodCodeTopic->GetSubjectCode();
         $topic_course_id = $subjectPeriodCodeTopic->GetCourseId();
+
+        // var_dump($topic_subject_code);
+
+        $doesAuditSuccess = $subjectModuleAudit->InsertAuditOfSubjectModule(
+            $student_subject_id, $current_school_year_id,
+            $handout_audit_name, $studentLoggedInId, $topic_subject_code);
 
         // $back_url = "";
 
@@ -65,18 +68,41 @@
         # Check If student had goes in to this page.
         $pushToHandoutView = $subjectCodeHandoutStudent->MarkStudentViewedHandout($subject_code_handout_id,
             $studentLoggedInId, $current_school_year_id);
-?>
+        
+        $logout_url = 'http://localhost/school-system-dcbt/lms_logout.php';
 
-            <?php
-                echo Helper::lmsStudentNotificationHeader(
-                    $con, $studentLoggedInId,
-                    $school_year_id, $enrolledSubjectList,
-                    $enrollment_id,
-                    "second",
-                    "second",
-                    "second"
-                );
-            ?>
+        if ($_SERVER['SERVER_NAME'] === 'localhost') {
+
+            $base_url = 'http://localhost/school-system-dcbt/student/';
+        } else {
+            $base_url = 'http://' . $_SERVER['HTTP_HOST'] . '/student/';
+        }
+
+        if ($_SERVER['SERVER_NAME'] !== 'localhost') {
+
+            $new_url = str_replace("/student/", "", $base_url);
+            $logout_url = "$new_url/lms_logout.php";
+        }
+
+        ?>
+
+            <div class="content">
+               
+
+                <?php
+                
+                    echo Helper::lmsStudentNotificationHeader(
+                        $con, $studentLoggedInId,
+                        $current_school_year_id,
+                        $enrolledSubjectList,
+                        $enrollment_id,
+                        "second",
+                        "first",
+                        "second",
+                        "second"
+                    );
+                
+                ?>
 
             <div class="content-header">
                 <header>

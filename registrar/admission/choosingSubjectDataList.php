@@ -108,6 +108,7 @@ $columnNames = array(
     'code',
     'description',
     'section',
+    'status',
     'requisite',
     'unit',
     'level',
@@ -254,6 +255,7 @@ if ($row != null) {
         t1.*
         ,t2.program_section
         ,t2.course_id
+        ,t2.capacity
 
         ,t3.student_subject_id,
         t3.is_final AS ss_is_final,
@@ -330,6 +332,8 @@ if ($row != null) {
 
             $subject_code = $row['subject_code'];
             $program_section = $row['program_section'];
+            $section_capacity = $row['capacity'];
+            
             $i++;
 
             // echo "subject_code: $subject_code, program_section: $program_section";
@@ -416,17 +420,27 @@ if ($row != null) {
 
                     $allDays .= $schedule_day;
                     $allTime .= $schedule_time;
-
-                    $scheduleOutput .= "○ $schedule_day - $schedule_time ($subject_schedule_id) <br>";
+                    // ($subject_schedule_id)
+                    $scheduleOutput .= "○ $schedule_day - $schedule_time  <br>";
                     // echo "<br>";
                 }
             }else{
                 $scheduleOutput = "TBA";
             }
 
+            $section_subject_code = $section->CreateSectionSubjectCode($program_section, $subject_code);
+
+            $student_subject_enrolled = $subject_program->GetSectionSubjectEnrolledStudents(
+                    $subject_program_id,
+                    $course_id, $section_subject_code, $current_school_year_id);
+
+            $student_subject_enrolled = $student_subject_enrolled == 0 ? "" : $student_subject_enrolled;
+
+            $doesFull = $student_subject_enrolled === $section_capacity ? 1 : 0;
+
             $test = htmlspecialchars(json_encode($subject_schedule_arr), ENT_QUOTES, 'UTF-8');   
 
-            $addAvailable = "addAvailable($subject_program_id, $current_school_year_id, $student_id, $student_enrollment_course_id, $enrollment_id, $course_id, \"$subject_code\", $test)";
+            $addAvailable = "addAvailable($subject_program_id, $current_school_year_id, $student_id, $student_enrollment_course_id, $enrollment_id, $course_id, \"$subject_code\", $test, \"$subject_title\", $doesFull)";
 
             $icon = "
                 <button onclick='$addAvailable' class='btn btn-primary btn-sm'>
@@ -487,22 +501,14 @@ if ($row != null) {
                 // }
             }
 
+
+
             $button_url = "";
-
-            // <td>$subject_code </td>
-            // <td>$subject_title</td>
-            // <td>$pre_req_subject_title</td>
-            // <td>$unit</td>
-            // <td>$course_level</td>
-            // <td>$semester</td>
-            // <td>$sectionName</td>
-            // <td>$scheduleOutput</td>
-            // <td>$icon</td>
-
             $data[] = array(
                 "code" => "$subject_code",
                 "description" => "$subject_title",
                 "section" => "$sectionName",
+                "status" => "$student_subject_enrolled / $section_capacity",
                 "requisite" => "$pre_req_subject_title",
                 "unit" => "$unit",
                 "level" => "$course_level",

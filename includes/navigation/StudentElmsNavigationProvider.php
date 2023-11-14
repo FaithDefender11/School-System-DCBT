@@ -52,7 +52,7 @@
                     Constants::$navigationClass . Helper::GetActiveClass($page, "profile"));
 
                 $sideBarNavigationItem .= Helper::createNavByIcon("Courses", 
-                    "bi bi-collection",
+                    "bi bi-clipboard-data icon",
                     $courses_lms_url,
                     Constants::$navigationClass . Helper::GetActiveClass($page, "courses"));
 
@@ -61,6 +61,12 @@
                     $dashboard_lms_url,
                     Constants::$navigationClass . Helper::GetActiveClass($page, "lms"));
                 
+
+                $sideBarNavigationItem .= Helper::createNavByIcon("Courses", 
+                    "bi bi-clipboard-data icon",
+                    $courses_lms_url,
+                    Constants::$navigationClass . Helper::GetActiveClass($page, "courses"), true);
+
                 $sideBarNavigationItem .= Helper::createNavByIcon("Notification", 
                     "bi bi-bell-fill icon",
                     $notification_lms_url,

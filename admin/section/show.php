@@ -30,11 +30,13 @@
     if (isset($_GET['id'])
         && isset($_GET['per_semester'])
         && isset($_GET['term'])
+        && isset($_GET['type'])
         
         ) {
 
         $course_id = $_GET['id'];
         $term = $_GET['term'];
+        $department_type = $_GET['type'];
 
 
         $section = new Section($con, $course_id);
@@ -89,8 +91,10 @@
             $section_term = $_SESSION['section_term'];
         }
 
+        // var_dump($section_term);
+
         $db_school_year_id = $school_year->GetSchoolYearIdBySyID($selectedSemester,
-            $section_term);
+            $term);
 
         $totalStudent = $section->GetTotalNumberOfStudentInSection($course_id, 
             $db_school_year_id);
@@ -100,19 +104,31 @@
             // echo "<br>";
         $department_type_section = "";
 
-        // echo $section_term;
+        // echo $term;
 
         if(isset($_SESSION['department_type_section'])){
             $department_type_section = $_SESSION['department_type_section'];
         }
 
-        if($department_type_section === "Senior High School"){
-            $back_url = "shs_list.php?id=$section_program_id&term=$section_term";
 
-        }else if($department_type_section === "Tertiary"){
-            $back_url = "tertiary_list.php?id=$section_program_id&term=$section_term";
+        # OVVERIDE THIS.
+        $department_type_section = "";
+
+        // if($department_type_section === "Senior High School"){
+        //     $back_url = "shs_list.php?id=$section_program_id&term=$term";
+
+        // }else if($department_type_section === "Tertiary"){
+        //     $back_url = "tertiary_list.php?id=$section_program_id&term=$term";
+        // }
+
+        if($department_type === "shs"){
+            $back_url = "shs_list.php?id=$section_program_id&term=$term";
+
+        }else if($department_type === "tertiary"){
+            $back_url = "tertiary_list.php?id=$section_program_id&term=$term";
         }
 
+        
 
         $enrollment_form_id= "";
         $date_creation= "";
@@ -368,11 +384,12 @@
 
                                                     $sp_code = $sp->GetSubjectProgramRawCode();
 
-                                                    $add_schedule_url = "../schedule/create.php?course_id=$course_id&sp_id=$subject_program_id";
+                                                    
+                                                    $add_schedule_url = "../schedule/create.php?course_id=$course_id&sp_id=$subject_program_id&type=$department_type";
 
                                                     // $edit_schedule_url = "edit_schedule_code.php?s_id=$subject_schedule_id";
 
-                                                    $edit_schedule_url = "../schedule/edit.php?id=$subject_schedule_id&course_id=$course_id&sp_id=$subject_program_id&t_id=$teacher_id";
+                                                    $edit_schedule_url = "../schedule/edit.php?id=$subject_schedule_id&course_id=$course_id&sp_id=$subject_program_id&t_id=$teacher_id&type=$department_type";
 
                                                     $deleteSchedule = "";
                                                     $removeScheduleBtn = "";
@@ -428,7 +445,7 @@
 
 
                                                     $student_subject_enrolled = $subject_program->GetSectionSubjectEnrolledStudents($subject_program_id,
-                                                        $course_id, $section_subject_code);
+                                                        $course_id, $section_subject_code, $current_school_year_id);
 
                                                     $student_subject_enrolled = $student_subject_enrolled == 0 ? "" : $student_subject_enrolled;
                                                     
@@ -451,10 +468,10 @@
 
                                                     if($teacher_id != NULL){
 
-                                                        $add_schedule_with_teacher_url = "../schedule/create.php?course_id=$course_id&sp_id=$subject_program_id&t_id=$teacher_id";
+                                                        $add_schedule_with_teacher_url = "../schedule/create.php?course_id=$course_id&sp_id=$subject_program_id&t_id=$teacher_id&type=$department_type";
                                                     }else{
 
-                                                        $add_schedule_with_teacher_url = "../schedule/create.php?course_id=$course_id&sp_id=$subject_program_id";
+                                                        $add_schedule_with_teacher_url = "../schedule/create.php?course_id=$course_id&sp_id=$subject_program_id&type=$department_type";
                                                     }
 
                                                     

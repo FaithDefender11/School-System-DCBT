@@ -233,7 +233,7 @@ if ($row != null) {
         // $is_transferee = $row['is_transferee'];
 
         $process_url = "";
-        $waiting_payment_url = "payment_summary.php?id=$enrollment_id&enrolled_subject=show";
+        $waiting_payment_url = "payment_summary.php?id=$enrollment_id&enrolled_subject=show&clicked=true";
 
         $student_status_pending = "";
 

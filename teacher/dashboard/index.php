@@ -167,7 +167,8 @@
                     $teachingSubjects,
                     "second",
                     "second",
-                    "second"
+                    "second",
+                    "first"
                 );
             ?>
 

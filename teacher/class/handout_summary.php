@@ -11,6 +11,22 @@
     include_once('../../includes/classes/SubjectCodeHandoutStudent.php');
     include_once('../../includes/classes/SubjectCodeAssignment.php');
     include_once('../../includes/classes/SubjectCodeHandout.php');
+    include_once('../../includes/classes/Notification.php');
+    include_once('../../includes/classes/Student.php');
+    include_once('../../includes/classes/SubjectProgram.php');
+    include_once('../../includes/classes/Announcement.php');
+    include_once('../../includes/classes/Teacher.php');
+    include_once('../../includes/classes/SubjectAssignmentSubmission.php');
+    ?>
+        <style>
+            th a {
+                text-decoration: underline;
+                color: inherit; /* To maintain the link color */
+                white-space: nowrap; /* Prevent text from wrapping */
+            }
+        </style>
+
+    <?php
 
     if(isset($_GET['ct_id'])){
  
@@ -37,6 +53,18 @@
         $course_id = $subjectPeriodCodeTopic->GetCourseId();
         $subject_code = $subjectPeriodCodeTopic->GetSubjectCode();
         $school_year_id = $subjectPeriodCodeTopic->GetSchoolYearId();
+
+        $subject_program_id = $subjectPeriodCodeTopic->GetSubjectProgramId();
+
+        $enrollment =  new Enrollment($con);
+
+        $subjectProgram =  new SubjectProgram($con, $subject_program_id);
+        $subject_title = $subjectProgram->GetTitle();
+
+        $fomatTerm = $enrollment->changeYearFormat($current_school_year_term);
+        $period_short = $current_school_year_period === "First" ? "S1" : ($current_school_year_period === "Second" ? "S2" : "");
+
+
 
         // echo $subject_code;
 
@@ -68,6 +96,36 @@
             $subject_code,
             $school_year_id);
 
+            
+        $teachingSubjectCode = $subjectCodeAssignment->GetTeacherTeachingSubjects(
+            $teacherLoggedInId,
+            $school_year_id);
+
+        $teachingSubjects = [];
+
+
+        foreach ($teachingSubjectCode as $key => $value) {
+
+            $teachingCode = $value['subject_code'];
+            array_push($teachingSubjects, $teachingCode);
+        }
+
+        $logout_url = 'http://localhost/school-system-dcbt/lms_logout.php';
+
+        if ($_SERVER['SERVER_NAME'] === 'localhost') {
+
+            $base_url = 'http://localhost/school-system-dcbt/teacher/';
+        } else {
+
+            $base_url = 'http://' . $_SERVER['HTTP_HOST'] . '/teacher/';
+        }
+
+        if ($_SERVER['SERVER_NAME'] !== 'localhost') {
+
+            $new_url = str_replace("/teacher/", "", $base_url);
+            $logout_url = "$new_url/lms_logout.php";
+        }
+
         // var_dump($assignmentListOnTeachingCode);
         // echo count($assignmentListOnTeachingCode);
 
@@ -76,6 +134,20 @@
         $back_url = "section_topic.php?id=$subjectPeriodCodeTopicTemplateId&ct_id=$subject_period_code_topic_id";
 ?>
 
+            <div style="min-width: 100%;" class="content">
+
+                <?php 
+                    echo Helper::lmsTeacherNotificationHeader(
+                        $con, $teacherLoggedInId,
+                        $current_school_year_id,
+                        $teachingSubjects,
+                        "second",
+                        "first",
+                        "second",
+                        $logout_url, "second");
+                    
+                ?>
+
             <nav>
                 <a href="<?= $back_url; ?>">
                     <i class="bi bi-arrow-return-left"></i>
@@ -83,11 +155,19 @@
                 </a>
             </nav>
 
+            <div class="content-header">
+                <header>
+                    <div class="title">
+                        <h1><?= $subject_title; ?> <em><?= "SY$formatTerm-$period_short"; ?></em></h1>
+                    </div>
+                </header>
+            </div>
+
             <main>
                 <div class="floating">
                     <header>
                         <div class="title">
-                            <h3>Student Grade Book</h3>
+                            <h3>Student Handout Summary</h3>
                             <small>Section Overview</small>
                         </div>
                     </header>

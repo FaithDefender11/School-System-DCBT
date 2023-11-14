@@ -1373,12 +1373,16 @@
 
     public function SetPendingApprove($pending_enrollees_id) {
 
+        $now = date("Y-m-d H:i:s");
+
         $query = $this->con->prepare("UPDATE pending_enrollees
         
-            SET student_status = :student_status
+            SET student_status = :student_status,
+                date_approved=:date_approved
             WHERE pending_enrollees_id = :pending_enrollees_id");
 
         $query->bindValue(":pending_enrollees_id", $pending_enrollees_id);
+        $query->bindValue(":date_approved", $now);
         $query->bindValue(":student_status", "APPROVED");
 
         return $query->execute();

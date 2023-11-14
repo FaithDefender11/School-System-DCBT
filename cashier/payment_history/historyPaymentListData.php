@@ -247,7 +247,6 @@ if ($row != null) {
         t2.is_new_enrollee AS enrollment_is_new_enrollee,
         t2.is_transferee AS enrollment_is_transferee,
         t2.student_status AS enrollment_student_status,
-        t2.waiting_list,
         t2.enrollment_id,
         t2.enrollment_form_id,
         t2.payment_status,

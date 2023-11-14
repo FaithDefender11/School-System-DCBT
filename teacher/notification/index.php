@@ -116,7 +116,7 @@
                                 <h3>Notifications</h3>
                             </div>
                             <div class="action">
-                                <button class="clean large" onclick="window.location.href='create.php'">Mark all as read</button>
+                                <button class="clean large">Mark all as read</button>
                             </div>
                         </header>
                         <main style='overflow-x: auto'>
@@ -281,7 +281,7 @@
             
                                             echo "
                                                 <tr>
-                                                    <td>($notification_id) $sender_name</td>
+                                                    <td>$sender_name</td>
                                                     <td>$type</td>
                                                     <td>$title</td>
                                                     <td>$date_creation</td>

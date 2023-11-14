@@ -23,7 +23,6 @@
         ){
 
 
-
         $subject_code = $_GET['c'];
         // $course_id = $_GET['c_id'];
 
@@ -186,41 +185,6 @@
             $new_url = str_replace("/teacher/", "", $base_url);
             $logout_url = "$new_url/lms_logout.php";
         }
-
-
-        $getx = $con->prepare("SELECT 
-
-            t1.*
-        
-            FROM subject_period_code_topic as t1 
-
-            WHERE t1.subject_code=:subject_code
-            AND t1.school_year_id=:school_year_id
-            AND t1.teacher_id=:teacher_id
-
-
-            ORDER BY
-            CASE subject_period_name
-                WHEN 'Prelim' THEN 1
-                WHEN 'Midterm' THEN 2
-                WHEN 'Pre-final' THEN 3
-                WHEN 'Final' THEN 4
-                ELSE 5  
-            END
-
-        ");
-
-        $getx->bindValue(":subject_code", $subject_code);
-        $getx->bindValue(":school_year_id", $school_year_id);
-        $getx->bindValue(":teacher_id", $teacher_id);
-        $getx->execute();
-
-        if($getx->rowCount() > 0){
-
-            $ads = $getx->fetchAll(PDO::FETCH_ASSOC);
-            // var_dump($ads);
-
-        }
 ?>
 
             <?php
@@ -230,6 +194,7 @@
                     $teachingSubjects,
                     "second",
                     "first",
+                    "second",
                     "second"
                 );
             ?>

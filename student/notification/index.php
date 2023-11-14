@@ -135,39 +135,57 @@
     // );
 ?>
 
-                <nav>
-                    <a href="<?php echo $back_url; ?>">
-                        <i class="bi bi-arrow-return-left"></i>
-                        Back
-                    </a>
-                </nav>
-                <main>
-                    <div class="floating">
-                        <header>
-                            <div class="title">
-                                <h3>Notifications</h3>
-                            </div>
-                            <div class="action">
-                                <a href="create.php">
-                                    <button class="clean">Mark all as read</button>
-                                </a>
-                            </div>
-                        </header>
-                        <main style='overflow-x: auto'>
-                            <table class="a" id="notification_table">
-                                <thead>
-                                    <tr>
-                                    <th>From</th>
-                                    <th class="type">Type</th>
-                                    <th>Subject</th>
-                                    <th class="sent">Sent</th>
-                                    <th class="read">Read?</th>
-                                    <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php
-                                        foreach ($mergedArray as $key => $notification) {
+    
+?>
+
+
+<div class="content">
+
+    <!-- <nav style="min-width: 100%; margin-bottom: 7px;
+        display: flex;flex-direction: row;">
+        <a href="<?php echo $back_url;?>">
+            <i class="bi bi-arrow-return-left fa-1x"></i>
+            <h3>Back</h3>
+        </a>
+
+    </nav> -->
+
+    <main>
+
+        <div class="floating" id="shs-sy">
+
+            <header>
+                <div class="title">
+                    <h3>Notifications</h3>
+                </div>
+
+                <div class="action">
+                    <!-- <a href="create.php">
+                        <button type="button" class="clean large success"> Mark all as read</button>
+                    </a> -->
+                </div>
+
+            </header>
+            
+            <main>
+
+                <table id="notification_table" class="a" style="margin: 0">
+
+                    <thead>
+                        <tr>
+                            <th>From</th>
+                            <th>Type</th>
+                            <th>Subject</th>
+                            <th>Sent </th>
+                            <th>Status</th>
+                            <th>Read?</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <?php
+                        
+                            foreach ($mergedArray as $key => $notification) {
                                 
                                             // $department_id = $row['department_id'];
                                             

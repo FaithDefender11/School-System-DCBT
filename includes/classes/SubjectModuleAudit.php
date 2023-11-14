@@ -39,16 +39,19 @@ class SubjectModuleAudit{
     }
 
     public function InsertAuditOfSubjectModule(
-        $student_subject_id, $school_year_id, $description) {
+        $student_subject_id, $school_year_id, $description, $student_id, $subject_code) {
 
         $add = $this->con->prepare("INSERT INTO subject_module_audit
-            (student_subject_id, school_year_id, description)
-            VALUES(:student_subject_id, :school_year_id, :description)
+            (student_subject_id, school_year_id, description, student_id, subject_code)
+            VALUES(:student_subject_id, :school_year_id, :description, :student_id, :subject_code)
         ");
         
         $add->bindValue(":student_subject_id", $student_subject_id);
         $add->bindValue(":school_year_id", $school_year_id);
         $add->bindValue(":description", $description);
+        $add->bindValue(":student_id", $student_id);
+        $add->bindValue(":subject_code", $subject_code);
+        
         $add->execute();
 
         if($add->rowCount() > 0){

@@ -149,7 +149,7 @@
             <header>
 
                 <div class="title">
-                    <h3>Section details</h3>
+                    <h3 style="font-weight: bold;">Enrolled Sections</h3>
                 </div>
 
             </header>
@@ -170,27 +170,27 @@
 
                             <?php 
 
-                                foreach ($sectionEnrolledStudentList as $key => $value) {
+                                // foreach ($sectionEnrolledStudentList as $key => $value) {
 
-                                    $program_section = $value['program_section'];
-                                    $course_id = $value['course_id'];
-                                    $capacity = $value['capacity'];
-                                    $school_year_id = $value['school_year_id'];
+                                //     $program_section = $value['program_section'];
+                                //     $course_id = $value['course_id'];
+                                //     $capacity = $value['capacity'];
+                                //     $school_year_id = $value['school_year_id'];
 
-                                    $totalStudent = $section->GetTotalNumberOfStudentInSection($course_id, $current_school_year_id);
+                                //     $totalStudent = $section->GetTotalNumberOfStudentInSection($course_id, $current_school_year_id);
                                     
-                                    echo "
-                                        <tr>
-                                            <td>
-                                                <a href='enrolled_students.php?id=$course_id&sy_id=$school_year_id' style='color: inherit'>
-                                                    $program_section
-                                                </a>
-                                            </td>
-                                            <td>$totalStudent</td>
-                                            <td>$capacity</td>
-                                        </tr>
-                                    ";
-                                }
+                                //     echo "
+                                //         <tr>
+                                //             <td>
+                                //                 <a href='enrolled_students.php?id=$course_id&sy_id=$school_year_id' style='color: inherit'>
+                                //                     $program_section
+                                //                 </a>
+                                //             </td>
+                                //             <td>$totalStudent</td>
+                                //             <td>$capacity</td>
+                                //         </tr>
+                                //     ";
+                                // }
                             ?>
 
                         </tbody>
@@ -209,6 +209,7 @@
     $(document).ready(function() {
      
         var table = $('#enrolled_section_list').DataTable({
+                "info": false,
             'processing': true,
             'serverSide': true,
             'serverMethod': 'POST',
@@ -228,18 +229,18 @@
                     console.log('Response Code:', xhr.status);
                 }
             },
-            // 'pageLength': 2,
+            'pageLength': 10,
             'language': {
                 'infoFiltered': '',
                 'processing': '<i class="fas fa-spinner fa-spin"></i> Processing...',
                 'emptyTable': "No available data for enrolled students."
             },
             'columns': [
-            { data: 'program_section', orderable: true },  
+            { data: 'program_section', orderable: false },  
             { data: 'student_count', orderable: false },  
-            { data: 'capacity', orderable: true }
+            { data: 'capacity', orderable: false }
             ],
-            'ordering': true
+            'ordering': false
         });
     });
     

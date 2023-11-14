@@ -17,10 +17,13 @@
     if(
         isset($_GET['c_id'])
         && isset($_GET['c'])
+        && isset($_GET['sy_id'])
+        
         ){
 
         $course_id = $_GET['c_id'];
         $subject_code = $_GET['c'];
+        $sy_id = $_GET['sy_id'];
 
         $school_year = new SchoolYear($con);
         $school_year_obj = $school_year->GetActiveSchoolYearAndSemester();
@@ -139,7 +142,9 @@
                                         }
                                     ?>
                                 </tbody>
-                            </table> 
+                            </table>
+                        <?php else: ?>
+                            <h4 class="text-center">No announcement posted</h4> 
                         <?php endif; ?>
                     </main>
                 </div>

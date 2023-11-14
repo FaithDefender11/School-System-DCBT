@@ -171,7 +171,6 @@
                 break;
         }
 
-
         # TO DELETE.
         $teacher_id = $teacher_id == 0 ? NULL : $teacher_id;
         $room_id = $room_id == 0 ? NULL : $room_id;
@@ -180,6 +179,7 @@
 
         $subjectProgram = new SubjectProgram($this->con, $subject_program_id);
         $rawCode = $subjectProgram->GetSubjectProgramRawCode();
+        $selected_title = $subjectProgram->GetTitle();
 
         // $section = new Section($this->con, $course_id);
         // $programName = $section->GetSectionName();
@@ -192,7 +192,6 @@
         // return;
 
         # Room, teacher are all TBA conflict prompt under SUBJECT CODE.
-
         $schedule_course_id_conflict = NULL;
 
         if($course_id !== NULL && $teacher_id == NULL){
@@ -227,23 +226,32 @@
                 $room_inserted = new Room($this->con, $room_id);
 
                 $room_inserted_number = $room_inserted->GetRoomNumber();
+
                 if($room_inserted_number == NULL){
                     $room_inserted_number = "N/A";
                 }
 
                 $subject_code_conflict = $scheduleConflict->GetSubjectCode();
 
-
                 
                 $time_from_meridian_military = $this->convertTo12HourFormat($time_from_meridian_military);
                 $time_to_meridian_military = $this->convertTo12HourFormat($time_to_meridian_military);
 
-                // $time_from_meridian_military = $this->convertTo12HourFormat($raw_time_from);
-                // $time_to_meridian_military = $this->convertTo12HourFormat($raw_time_to);
+ 
+                $subject_code_conflict = $scheduleConflict->GetSubjectCode();
+                $subjectProgramConflictId = $scheduleConflict->GetSubjectProgramId();
 
-                Alert::conflictedMessageNonRedirect("Conflicted Schedule: $time_from - $time_to <br> ( $day ) <br> Code: $subject_code_conflict",
-                    "Desired Schedule: $time_from_meridian_military - $time_to_meridian_military <br> ( $schedule_day ) <br> Code: $section_subject_code", "");
+                $subjectProgramConflict = new SubjectProgram($this->con, $subjectProgramConflictId);
+
+                $title_conflict = $subjectProgramConflict->GetTitle();
                 
+                $time_from_meridian_military = $this->convertTo12HourFormat($time_from_meridian_military);
+                $time_to_meridian_military = $this->convertTo12HourFormat($time_to_meridian_military);
+ 
+                Alert::conflictedMessage("Teacher Conflicted Schedule: $time_from - $time_to <br> ( $day ) Room: $room_number <br> Subject: $title_conflict ($subject_code_conflict)",
+                    "Desired Schedule: $time_from_meridian_military - $time_to_meridian_military <br> ( $schedule_day ) Room: $room_inserted_number <br> Subject: $selected_title ($section_subject_code)", "");
+                
+ 
                 // exit();  
                     
                 // Alert::error("Selected schedule day along with time for teacher is conflicted", "");
@@ -253,41 +261,55 @@
             
         }
 
-        // if($room_id !== NULL){
+        if($room_id !== NULL){
 
-        //     $schedule_id_conflict = $this->CheckScheduleDayWithRoomConflict(
-        //         $time_from_meridian_military, $time_to_meridian_military,
-        //         $schedule_day, $current_school_year_id, $room_id);
+            # OOp
+            $room_schedule_id_conflict = $this->CheckScheduleDayWithRoomConflict(
+                $time_from_meridian_military, $time_to_meridian_military,
+                $schedule_day, $current_school_year_id, $room_id);
 
-        //     if($schedule_id_conflict !== NULL){
+                // var_dump($room_id);
+                // return;
+            
+            if($room_schedule_id_conflict !== NULL){
 
-        //         $scheduleConflict = new Schedule($this->con, $schedule_id_conflict);
+                $scheduleConflict = new Schedule($this->con, $room_schedule_id_conflict);
 
-        //         $time_from = $scheduleConflict->GetTimeFrom();
-        //         $time_from = $this->convertTo12HourFormat($time_from);
+                $time_from = $scheduleConflict->GetTimeFrom();
+                $time_from = $this->convertTo12HourFormat($time_from);
 
-        //         $time_to = $scheduleConflict->GetTimeTo();
-        //         $time_to = $this->convertTo12HourFormat($time_to);
+                $time_to = $scheduleConflict->GetTimeTo();
+                $time_to = $this->convertTo12HourFormat($time_to);
 
-        //         $day = $scheduleConflict->GetScheduleDay();
-        //         $room_conflicted_id = $scheduleConflict->GetRoomId();
+                $day = $scheduleConflict->GetScheduleDay();
+                $room_conflicted_id = $scheduleConflict->GetRoomId();
 
-        //         $room_conflict = new Room($this->con, $room_conflicted_id);
-        //         $room_number = $room_conflict->GetRoomNumber();
+                $room_conflict = new Room($this->con, $room_conflicted_id);
+                $room_number = $room_conflict->GetRoomNumber();
 
-        //         $room_inserted = new Room($this->con, $room_id);
-        //         $room_inserted_number = $room_inserted->GetRoomNumber();
+                $room_inserted = new Room($this->con, $room_id);
+                $room_inserted_number = $room_inserted->GetRoomNumber();
 
-        //         $time_from_meridian_military = $this->convertTo12HourFormat($time_from_meridian_military);
-        //         $time_to_meridian_military = $this->convertTo12HourFormat($time_to_meridian_military);
+                $time_from_meridian_military = $this->convertTo12HourFormat($time_from_meridian_military);
+                $time_to_meridian_military = $this->convertTo12HourFormat($time_to_meridian_military);
 
-        //         Alert::conflictedMessage("Conflicted Schedule: $time_from - $time_to <br> ($day) Room: $room_number",
-        //             "Desired Schedule: $time_from_meridian_military - $time_to_meridian_military <br> ($schedule_day) Room: $room_inserted_number", "");
 
-        //         exit();
-        //     }
+                $subject_code_conflict = $scheduleConflict->GetSubjectCode();
+                $subjectProgramConflictId = $scheduleConflict->GetSubjectProgramId();
 
-        // }
+                $subjectProgramConflict = new SubjectProgram($this->con, $subjectProgramConflictId);
+
+                $title_conflict = $subjectProgramConflict->GetTitle();
+                
+                Alert::conflictedMessage("Room Conflicted Schedule: $time_from - $time_to <br> ( $day ) Room: $room_number <br> Subject: $title_conflict ($subject_code_conflict)",
+                    "Desired Schedule: $time_from_meridian_military - $time_to_meridian_military <br> ($schedule_day) Room: $room_inserted_number <br> Subject: $selected_title ($section_subject_code)", "");
+
+                exit();
+            }
+
+        }
+
+        // return;
 
 
         if($teacher_id !== NULL){
@@ -338,19 +360,19 @@
                 }
 
                 $subject_code_conflict = $scheduleConflict->GetSubjectCode();
+                $subjectProgramConflictId = $scheduleConflict->GetSubjectProgramId();
 
+                $subjectProgramConflict = new SubjectProgram($this->con, $subjectProgramConflictId);
 
+                $title_conflict = $subjectProgramConflict->GetTitle();
                 
                 $time_from_meridian_military = $this->convertTo12HourFormat($time_from_meridian_military);
                 $time_to_meridian_military = $this->convertTo12HourFormat($time_to_meridian_military);
-
-                // $time_from_meridian_military = $this->convertTo12HourFormat($raw_time_from);
-                // $time_to_meridian_military = $this->convertTo12HourFormat($raw_time_to);
-
-                Alert::conflictedMessage("Teacher Conflicted Schedule: $time_from - $time_to <br> ( $day ) Room: $room_number <br> Code: $subject_code_conflict",
-                    "Desired Schedule: $time_from_meridian_military - $time_to_meridian_military <br> ( $schedule_day ) Room: $room_inserted_number <br> Code: $section_subject_code", "");
+ 
+                Alert::conflictedMessage("Teacher Conflicted Schedule: $time_from - $time_to <br> ( $day ) Room: $room_number <br> Subject: $title_conflict ($subject_code_conflict)",
+                    "Desired Schedule: $time_from_meridian_military - $time_to_meridian_military <br> ( $schedule_day ) Room: $room_inserted_number <br> Subject: $selected_title ($section_subject_code)", "");
                 
-                    exit();  
+                exit();  
                     
                 // Alert::error("Selected schedule day along with time for teacher is conflicted", "");
                 // exit();  
@@ -458,8 +480,8 @@
                     # doesnt have a teacher to valide, so subject code would be its validation.
 
                     $schedule_course_id_conflict = $this->CheckScheduleDayConflictWithinSection(
-                    $time_from_meridian_military, $time_to_meridian_military,
-                    $schedule_day, $current_school_year_id, $course_id, null, $section_subject_code);
+                        $time_from_meridian_military, $time_to_meridian_military,
+                        $schedule_day, $current_school_year_id, $course_id, null, $section_subject_code);
 
                 
                     if($schedule_course_id_conflict !== NULL){
@@ -501,8 +523,26 @@
                         // $time_from_meridian_military = $this->convertTo12HourFormat($raw_time_from);
                         // $time_to_meridian_military = $this->convertTo12HourFormat($raw_time_to);
 
-                        Alert::conflictedMessage("Teacher Conflicted Schedule: $time_from - $time_to <br> ( $day ) <br> Code: $subject_code_conflict",
-                            "Desired Schedule: $time_from_meridian_military - $time_to_meridian_military <br> ( $schedule_day ) <br> Code: $section_subject_code", "");
+
+                        $subject_code_conflict = $scheduleConflict->GetSubjectCode();
+                        $subjectProgramConflictId = $scheduleConflict->GetSubjectProgramId();
+
+                        $subjectProgramConflict = new SubjectProgram($this->con, $subjectProgramConflictId);
+
+                        $title_conflict = $subjectProgramConflict->GetTitle();
+                        
+                        // $time_from_meridian_military = $this->convertTo12HourFormat($time_from_meridian_military);
+                        // $time_to_meridian_military = $this->convertTo12HourFormat($time_to_meridian_military);
+
+                        // // $time_from_meridian_military = $this->convertTo12HourFormat($raw_time_from);
+                        // // $time_to_meridian_military = $this->convertTo12HourFormat($raw_time_to);
+
+                        // Alert::conflictedMessage("Teacher Conflicted Schedule: $time_from - $time_to <br> ( $day ) Room: $room_number <br> Subject: $title_conflict ($subject_code_conflict)",
+                        //     "Desired Schedule: $time_from_meridian_military - $time_to_meridian_military <br> ( $schedule_day ) Room: $room_inserted_number <br> Subject: $selected_title ($section_subject_code)", "");
+                
+
+                        Alert::conflictedMessage("Teacher Conflicted Schedule: $time_from - $time_to <br> ( $day ) <br> Room: $room_number <br> Subject: $title_conflict ($subject_code_conflict)",
+                            "Desired Schedule: $time_from_meridian_military - $time_to_meridian_military <br> ( $schedule_day ) <br> Room: $room_inserted_number <br> Subject: $selected_title ($section_subject_code)", "");
                         exit();  
                             
                         // Alert::error("Selected schedule day along with time for teacher is conflicted", "");
@@ -767,6 +807,7 @@
         $sp = new SubjectProgram($this->con, $existing_subject_program_id);
 
         $existing_program_code = $sp->GetSubjectProgramRawCode();
+        $selected_title = $sp->GetTitle();
 
         $subjectPeriodCodeTopic = new SubjectPeriodCodeTopic($this->con);
 
@@ -849,8 +890,8 @@
                 $time_to_meridian_military = $this->convertTo12HourFormat($raw_time_to);
 
                 Alert::conflictedMessage(
-                    "Section Conflicted Schedule: $time_from - $time_to <br> ( $day ) <br> Code: $subject_code_conflict",
-                    "Desired Schedule: $time_from_meridian_military - $time_to_meridian_military <br> ( $schedule_day ) <br> Code: $subject_code", "");
+                    "Section Conflicted Schedule: $time_from - $time_to <br> ( $day ) <br> Code1: $subject_code_conflict",
+                    "Desired Schedule: $time_from_meridian_military - $time_to_meridian_military <br> ( $schedule_day ) <br> Code1: $subject_code", "");
                 
                 exit();  
                     
@@ -864,57 +905,121 @@
 
         # ROOM Conflict Section. 
 
-        // if($room_id !== NULL){
+        if($room_id !== NULL){
 
-        //     $schedule_id_conflict = $this->CheckScheduleDayWithRoomConflict(
-        //         $time_from, $time_to,
-        //         $schedule_day, $school_year_id,
-        //         $room_id, $subject_schedule_id);
+
+            $room_schedule_id_conflict = $this->CheckScheduleDayWithRoomConflict(
+                $time_from, $time_to,
+                $schedule_day, $school_year_id,
+                $room_id, $subject_schedule_id);
+
+            // var_dump($room_schedule_id_conflict);
+            // return;
           
-        //     if($schedule_id_conflict !== NULL){
+            if($room_schedule_id_conflict !== NULL){
 
-        //         // var_dump($schedule_id_conflict);
-        //         // return;
-        //         $scheduleConflict = new Schedule($this->con, $schedule_id_conflict);
+                // var_dump($room_schedule_id_conflict);
+                // return;
+                $scheduleConflict = new Schedule($this->con, $room_schedule_id_conflict);
 
-        //         $time_from = $scheduleConflict->GetTimeFrom();
-        //         $time_from = $this->convertTo12HourFormat($time_from);
+                $time_from = $scheduleConflict->GetTimeFrom();
+                $time_from = $this->convertTo12HourFormat($time_from);
 
-        //         $time_to = $scheduleConflict->GetTimeTo();
-        //         $time_to = $this->convertTo12HourFormat($time_to);
+                $time_to = $scheduleConflict->GetTimeTo();
+                $time_to = $this->convertTo12HourFormat($time_to);
 
-        //         $day = $scheduleConflict->GetScheduleDay();
-        //         $room_conflicted_id = $scheduleConflict->GetRoomId();
+                $day = $scheduleConflict->GetScheduleDay();
+                $room_conflicted_id = $scheduleConflict->GetRoomId();
 
-        //         $room_conflict = new Room($this->con, $room_conflicted_id);
-        //         $room_number = $room_conflict->GetRoomNumber();
+                $room_conflict = new Room($this->con, $room_conflicted_id);
+                $room_number = $room_conflict->GetRoomNumber();
 
-        //         // var_dump($room_number);
-        //         // return;
+                // var_dump($room_number);
+                // return;
 
-        //         if($room_number == NULL){
-        //             $room_number = "N/A";
-        //         }
+                if($room_number == NULL){
+                    $room_number = "N/A";
+                }
 
-        //         $room_inserted = new Room($this->con, $room_id);
-        //         $room_inserted_number = $room_inserted->GetRoomNumber();
+                $room_inserted = new Room($this->con, $room_id);
+                $room_inserted_number = $room_inserted->GetRoomNumber();
 
 
-        //         // $time_from_meridian_military = $this->convertTo12HourFormat($time_from_meridian_military);
-        //         // $time_to_meridian_military = $this->convertTo12HourFormat($time_to_meridian_military);
+                // $time_from_meridian_military = $this->convertTo12HourFormat($time_from_meridian_military);
+                // $time_to_meridian_military = $this->convertTo12HourFormat($time_to_meridian_military);
+
+                $subject_code_conflict = $scheduleConflict->GetSubjectCode();
+                $subjectProgramConflictId = $scheduleConflict->GetSubjectProgramId();
+
+                $subjectProgramConflict = new SubjectProgram($this->con, $subjectProgramConflictId);
+
+                $title_conflict = $subjectProgramConflict->GetTitle();
+                
+
+                $time_from_meridian_military = $this->convertTo12HourFormat($raw_time_from);
+                $time_to_meridian_military = $this->convertTo12HourFormat($raw_time_to);
+
+                Alert::conflictedMessage("Room Conflicted Schedule: $time_from - $time_to <br> ( $day ) Room: $room_number <br> Subject: $title_conflict ($subject_code_conflict)",
+                    "Desired Schedule: $time_from_meridian_military - $time_to_meridian_military <br> ($schedule_day) Room: $room_inserted_number <br> Subject: $selected_title ($existing_subject_code)", "");
 
                 
-        //         $time_from_meridian_military = $this->convertTo12HourFormat($raw_time_from);
-        //         $time_to_meridian_military = $this->convertTo12HourFormat($raw_time_to);
 
-        //         Alert::conflictedMessage("Conflicted Schedule: $time_from - $time_to <br> ($day) Room: $room_number",
-        //             "Desired Schedule: $time_from_meridian_military - $time_to_meridian_military <br> ($schedule_day) Room: $room_inserted_number", "");
+                // Alert::conflictedMessage("Conflicted Schedule: $time_from - $time_to <br> ($day) Room: $room_number",
+                //     "Desired Schedule: $time_from_meridian_military - $time_to_meridian_military <br> ($schedule_day) Room: $room_inserted_number", "");
                 
-        //         // Alert::errorToast("Schedule day with time has conflicted with selected room.", "");
-        //         exit();
+                // Alert::errorToast("Schedule day with time has conflicted with selected room.", "");
+                exit();
 
-        //     }   
-        // }
+            }   
+
+            if($room_schedule_id_conflict == NULL){
+
+                $sql = $this->con->prepare("UPDATE subject_schedule
+                    SET schedule_day = :schedule_day,
+                        time_from = :time_from,
+                        time_to = :time_to,
+                        school_year_id = :school_year_id,
+                        course_id = :course_id,
+                        teacher_id = :teacher_id,
+                        subject_code = :subject_code,
+                        subject_program_id = :subject_program_id,
+                        day_count = :day_count,
+                        room_id = :room_id,
+                        schedule_time = :schedule_time
+
+                    WHERE subject_schedule_id = :subject_schedule_id
+                ");
+
+                // Concatenate time_from and time_to for schedule_time
+                if(true){
+
+                    $schedule_time = $raw_time_from . ' - ' . $raw_time_to;
+                    
+                    // $schedule_time = $time_from . ' - ' . $time_to;
+
+                    // Bind parameters
+                    $sql->bindParam(":subject_schedule_id", $subject_schedule_id);
+                    $sql->bindParam(":schedule_day", $schedule_day);
+                    $sql->bindParam(":schedule_time", $schedule_time);
+                    $sql->bindParam(":time_from", $time_from);
+                    $sql->bindParam(":time_to", $time_to);
+                    $sql->bindParam(":school_year_id", $school_year_id);
+                    $sql->bindParam(":course_id", $course_id);
+                    $sql->bindParam(":teacher_id", $teacher_id);
+                    $sql->bindParam(":subject_code", $subject_code);
+                    $sql->bindParam(":subject_program_id", $subject_program_id);
+                    $sql->bindParam(":day_count", $day_count);
+                    $sql->bindParam(":room_id", $room_id);
+
+                    $sql->execute();
+
+                    if ($sql->rowCount() > 0) {
+                        Alert::success("Schedule with the same teacher has been updated successfully.", $back_url);
+                        exit();
+                    } 
+                }
+            }
+        }
 
         
         if($teacher_id !== NULL){
@@ -978,10 +1083,22 @@
 
                 $time_from_meridian_military = $this->convertTo12HourFormat($raw_time_from);
                 $time_to_meridian_military = $this->convertTo12HourFormat($raw_time_to);
+                
+                $subjectProgramConflictId = $scheduleConflict->GetSubjectProgramId();
 
+                $subjectProgramConflict = new SubjectProgram($this->con, $subjectProgramConflictId);
+
+                $title_conflict = $subjectProgramConflict->GetTitle();
+                
+       
+                // Alert::conflictedMessage("Teacher Conflicted Schedule: $time_from - $time_to <br> ( $day ) Room: $room_number <br> Subject: $title_conflict ($subject_code_conflict)",
+                //     "Desired Schedule: $time_from_meridian_military - $time_to_meridian_military <br> ( $schedule_day ) Room: $room_inserted_number <br> Subject: $selected_title ($section_subject_code)", "");
+                
+
+                
                 Alert::conflictedMessage(
-                    "Teacher Conflicted Schedule: $time_from - $time_to <br> ( $day ) Room: $room_number <br> Code: $subject_code_conflict",
-                    "Desired Schedule: $time_from_meridian_military - $time_to_meridian_military <br> ( $schedule_day ) Room: $room_inserted_number <br> Code: $subject_code", "");
+                    "Teacher Conflicted Schedule: $time_from - $time_to <br> ( $day ) Room: $room_number <br> Subject: $title_conflict ($subject_code_conflict)",
+                    "Desired Schedule: $time_from_meridian_military - $time_to_meridian_military <br> ( $schedule_day ) Room: $room_inserted_number <br> Subject: $selected_title ($existing_subject_code)", "");
                 exit();  
                     
                 // Alert::error("Selected schedule day along with time for teacher is conflicted", "");
@@ -1119,6 +1236,8 @@
             $doesTeacherTheSame = $subject_schedule_teacher_id == $teacher_id;
             $doesTheSameSubjectCode = $existing_subject_code == $subject_code;
 
+            # * SHOULD ADAPT BY ROOM ID
+
             # Editing with the same teacher, but not modifying the subject_code.
 
             if($check_teacher_id_conflict == NULL 
@@ -1175,6 +1294,8 @@
                 }
             }
 
+            # * SHOULD ADAPT BY ROOM ID
+            
             # FROM TBA to chosen teacher_id
             # Can be one or more TBA subject codes to selected teacher.
             # and update subject topic to assign teacher
@@ -1874,7 +1995,6 @@
         $stmt = $this->con->prepare("SELECT * FROM subject_schedule 
         
             WHERE schedule_day = :schedule_day
-            -- $room_output_query
             AND room_id=:room_id
             AND school_year_id=:school_year_id
             $subject_schedule_output_query
@@ -1923,8 +2043,8 @@
 
                 if (
                     ($userTimeFrom >= $existingTimeTo) ||
-                    ($userTimeTo <= $existingTimeFrom) ||
-                    ($existingTimeTo == $userTimeFrom) // Add this condition
+                    ($userTimeTo <= $existingTimeFrom)
+                    //  || ($existingTimeTo == $userTimeFrom) // Add this condition
                 ) {
                     continue; // No conflict found, check the next schedule
                 } else {
@@ -1991,7 +2111,6 @@
                 $existingTimeTo = trim($existingTimeTo);
                 $subject_schedule_id = $row['subject_schedule_id']; // Get the Class ID
 
-               
 
 
                 if (
@@ -2079,6 +2198,16 @@
             Alert::errorNonRedirect("Time from should greater than Time to", "");
             return false;
             // exit();
+        }
+
+        return true;
+    }
+    public function CheckScheduleRoom($schedule_room_capacity, $selected_room_capacity
+    ) {
+
+        if($schedule_room_capacity > $selected_room_capacity){
+            Alert::errorNonRedirect("Selected room is less than to actual subject capacity", "");   
+            return false;
         }
 
         return true;

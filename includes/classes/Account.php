@@ -185,7 +185,9 @@ class Account {
                 # R = Registrar
                 # C = Cashier
 
-                $role = "Registrar";
+                // $role = "Registrar";
+
+                $role = "";
 
                 $queryUsers = $this->con->prepare("SELECT * 
                 
@@ -207,11 +209,16 @@ class Account {
                     $user_id = $row['user_id'];
                     $username = $row['username'];
 
-                    // echo $username;
+                    // var_dump($user_id);
+                    // return;
+
+                    // var_dump($username);
                     // echo "<br>";
 
                     // echo $password;
                     // echo "<br>";
+
+
 
                     if ($row && password_verify($password, $row['password'])) {
                         
@@ -219,14 +226,22 @@ class Account {
                         $user_id = $row['user_id'];
                         $username = $row['username'];
 
+                        // echo "eehey";
+                        // return;
+
                         array_push($array, "enrollment_users_staff");
                         array_push($array, true);
                         array_push($array, $role);
                         array_push($array, $user_id);
                         array_push($array, $username);
+
+                    }else{
+                        # Passwordis incorrect
+                        array_push($this->errorArray, Constants::$loginFailed);
                     }
                 }
                 else{
+                    # username is incorrect
                     array_push($this->errorArray, Constants::$loginFailed);
                 }
 

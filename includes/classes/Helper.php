@@ -1213,25 +1213,27 @@ class Helper {
 
         return $sanitized_email;
     }
-
-
-
-
-
-
-
+ 
     public static function GetActiveClass($currentPage, $activePage) {
         // echo $activePage;
         return $currentPage == $activePage ? "active" : null;
     }
 
-    public static function createNavByIcon($text, $icon, $link, $active_class){
+
+    public static function createNavByIcon($text, $icon, $link, $active_class, $readonly = false){
 
         // <span style='display:none;' class='notification_count'>1</span>
 
+        $textLink = "";
+
+        if($readonly == true){
+            $textLink = "style='pointer-events: none;'";
+        }
+        
+
         return "
             <div class='$active_class'>
-                <a href='$link'>
+                <a $textLink href='$link'>
                     <span class='badge'>5</span>
                     <i style='color: white;' class='$icon'>
                         <span class='span_text'>$text</span>
@@ -1240,6 +1242,7 @@ class Helper {
             </div>
         ";
     }
+
 
     public static function createNavByIconARC($text, $icon, $link, $active_class) {
         return "
@@ -1252,6 +1255,21 @@ class Helper {
             </div>
         ";
     }
+
+    // public static function createNavByIcon($text, $icon, $link, $active_class){
+
+    //     // <span style='display:none;' class='notification_count'>1</span>
+
+    //     return "
+    //         <div class='$active_class'>
+    //             <a href='$link'>
+    //                 <span class='notification_count'>5</span>
+    //                 <i style='color: white;' class='$icon'></i>
+    //                 <span class='span_text'>$text</span>
+    //             </a>
+    //         </div>
+    //     ";
+    // }
 
     public static function createNavItem($text, $icon, $link){
         return "
@@ -1762,6 +1780,10 @@ class Helper {
                 ";
             }
 
+            // <a onclick='$reject' href='#' class='dropdown-item' style='color: yellow'>
+            //                         <i class='bi bi-file-earmark-x'></i>
+            //                         Reject form
+            //                     </a>
 
             $headerHtml = "
                 <header>
@@ -1777,10 +1799,7 @@ class Helper {
                             </button>
 
                             <div class='dropdown-menu'>
-                                <a onclick='$reject' href='#' class='dropdown-item' style='color: yellow'>
-                                    <i class='bi bi-file-earmark-x'></i>
-                                    Reject form
-                                </a>
+                                
 
                                 $enrollee_enroll_status
                                 $enrollee_admission_status
@@ -1868,13 +1887,16 @@ class Helper {
         }
     }
 
+    # TEACHER NOTIFICATION
     public static function lmsTeacherNotificationHeader($con,
         $teacherLoggedInId,
         $school_year_id,
         $teachingSubjects,
         $announcementPath = "",
         $studentAssignmentPath = "",
-        $showAllPath = ""
+        $showAllPath = "",
+        $logout_url = null,
+        $showCalendar = ""
 
         ){
         
@@ -1888,6 +1910,16 @@ class Helper {
             # You`re 1 level outside of notification folder.
             $showAllPath = "../notification/";
 
+        }
+        
+
+        if($showCalendar == "first"){
+
+            $showCalendar = "";
+        }
+        else if($showCalendar == "second"){
+
+            $showCalendar = "../dashboard/";
         }
 
         if($announcementPath == "first"){
@@ -1912,8 +1944,6 @@ class Helper {
             $studentAssignmentPath = "../class/";
         }
 
-
-        
         
         $announcement = new Announcement($con);
         $notification = new Notification($con);
@@ -1980,7 +2010,7 @@ class Helper {
                     <i class="bi bi-list"></i>
                 </button>
 
-                <div class="notif">
+                <div style="width: 76%;" class="notif">
                     
                     <button
                         class="icon"
@@ -2173,9 +2203,14 @@ class Helper {
 
                 </div>
 
+                <?php 
+                
+                    $assignment_calendar_url = $showCalendar . "calendar.php";
+                
+                ?>
 
-                <button  class="calendar-btn" title="Calendar"
-                    onclick="window.location.href = '#'">
+                <button  class="calendar-btn" title="Assignment calendar"
+                    onclick="window.location.href = '<?= $assignment_calendar_url; ?>'">
                     <i class="bi bi-calendar-event"></i>
 
                 </button>
@@ -2188,7 +2223,7 @@ class Helper {
         <?php
     }
 
-
+    # STUDENT NOTIFICATION
     public static function lmsStudentNotificationHeader($con,
         $studentLoggedInId,
         $school_year_id,
@@ -2196,7 +2231,9 @@ class Helper {
         $enrollment_id,
         $notificationPath = "",
         $coursesPath = "",
-        $showAllPath = ""){
+        $showAllPath = "",
+        $logout_url = null,
+        $showCalendar = ""){
         
         if($showAllPath == "first"){
 
@@ -2207,6 +2244,17 @@ class Helper {
 
             # You`re 1 level outside of notification folder.
             $showAllPath = "../notification/";
+        }
+
+        if($showCalendar == "first"){
+
+            # You`re in the notification folder.
+            $showCalendar = "";
+        }
+        else if($showCalendar == "second"){
+
+            # You`re 1 level outside of notification folder.
+            $showCalendar = "../lms/";
         }
 
         if($notificationPath == "first"){
@@ -2312,7 +2360,7 @@ class Helper {
                     <i class="bi bi-list"></i>
                 </button>
 
-                <div class="notif">
+                <div style="width: 76%;" class="notif">
                     <button
                         class="icon"
                         data-toggle="tooltip"
@@ -2695,8 +2743,17 @@ class Helper {
                     </div>
                 </div>
 
-                <button  class="calendar-btn" title="Calendar"
-                    onclick="window.location.href = '#'">
+
+                <?php 
+                
+                    $task_calendar_url = $showCalendar . "student_calendar.php";
+
+                
+                ?>
+
+                <!-- $notificationPath . "admin_announcement.php?id=$announcement_id&n_id=$notification_id&notification=true -->
+                <button  class="calendar-btn" title="Task calendar"
+                    onclick="window.location.href = '<?= $task_calendar_url; ?>'">
                     <i class="bi bi-calendar-event"></i>
                 </button>
             

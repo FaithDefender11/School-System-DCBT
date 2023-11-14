@@ -161,7 +161,10 @@
                     <?php
                         }
                     ?>
-                <?php endif; ?>
+            <?php else:?>
+                <h4 class="text-center">No history of teaching subjects</h4>
+                
+            <?php endif; ?>
             </main>
         </div>
     </body>

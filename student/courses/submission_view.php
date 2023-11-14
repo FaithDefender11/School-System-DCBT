@@ -203,7 +203,7 @@
                     $school_year_id, $enrolledSubjectList,
                     $enrollment_id,
                     "second",
-                    "second",
+                    "first",
                     "second"
                 );
             ?>

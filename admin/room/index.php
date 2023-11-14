@@ -38,9 +38,8 @@
                 <table id="room_table" class="a" style="margin: 0">
                     <thead>
                         <tr>
-                            <th>Room ID</th>
-                            <th>Name</th>
-                            <th>Assign Section</th>
+                            <!-- <th>Room ID</th> -->
+                            <th>Room Number</th>
                             <th>Capacity</th>
                             <th>Action</th>
                         </tr>
@@ -62,6 +61,7 @@
                                     
                                     $room_id = $row['room_id'];
                                     $room_name = $row['room_name'];
+                                    $room_number = $row['room_number'];
                                     $room_capacity = $row['room_capacity'];
                                     $program_section = $row['program_section'] ?? "-";
 
@@ -73,12 +73,11 @@
                                     $room_assigned = $room->GetRoomSectionFilled($room_id, $current_school_year_period);
 
                                     $room_assigned = $room_assigned ?? "-";
+                                            // <td>$room_id</td>
                                     
                                     echo "
                                         <tr>
-                                            <td>$room_id</td>
-                                            <td>$room_name</td>
-                                            <td>$room_assigned</td>
+                                            <td>$room_number</td>
                                             <td>$room_capacity</td>
                                             <td>
                                                 <a href='edit.php?id=$room_id'>

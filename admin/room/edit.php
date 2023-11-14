@@ -13,19 +13,23 @@
         $check = $room->CheckIdExists($room_id);
 
         $room_name = $room->GetRoomName();
-        $room_capacity= $room->GetRoomCapacity();
+        $room_number = $room->GetRoomNumber();
+        $room_capacity = $room->GetRoomCapacity();
+
+        // var_dump($room_capacity);
 
         if(isset($_POST['edit_room_btn_' . $room_id])){
 
-            $room_name = $_POST['room_name'];
+            // $room_name = $_POST['room_name'];
+            $room_number = $_POST['room_number'];
 
             $statement = $con->prepare("UPDATE room 
-                SET room_name = :new_room_name,
+                SET room_number = :new_room_number,
                     room_capacity = :room_capacity
                 WHERE room_id = :room_id");
 
             // Assuming you have an 'id' column in the 'department' table to uniquely identify the department
-            $statement->bindParam(":new_room_name", $room_name);
+            $statement->bindParam(":new_room_number", $room_number);
             $statement->bindParam(":room_capacity", $room_capacity);
             $statement->bindParam(":room_id", $room_id);
 
@@ -48,17 +52,17 @@
                     </a>
                 </nav>
                 <main>
-                    <form method="POST" enctype="multipart/form-data">
+                    <form method="POST">
                         <div class="row">
-                            <label for="room_name">Room Name</label>
+                            <label for="room_number">* Room number</label>
                             <div>
-                                <input type="text" name="room_name" placeholder="" value="<?php echo $room_name; ?>">
+                                <input class="form-control" id="room_number" type="text" name="room_number" placeholder="" value="<?php echo $room_number; ?>">
                             </div>
                         </div>
                         <div class="row">
-                            <label for="room_capacity">Room Capacity</label>
+                            <label for="room_capacity">* Room Capacity</label>
                             <div>
-                                <input type="text" name="room_capacity" placeholder="" value="<?php echo $room_id; ?>">
+                                <input class="form-control" type="text" name="room_capacity" id="room_capacity" placeholder="" value="<?php echo $room_id; ?>">
                             </div>
                         </div>
                         <div class="action">

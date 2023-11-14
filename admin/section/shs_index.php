@@ -14,6 +14,7 @@
         </head>
     <?php
 
+
     $section = new Section($con);
 
     $school_year = new SchoolYear($con);
@@ -45,7 +46,7 @@
             <header>
 
                 <div class="title">
-                    <h3 style="font-weight: bold;">Strand <a href="to_remove.php">Section</a></h3>
+                    <h3 style="font-weight: bold;">Senior High School Programs</h3>
                 </div>
             </header>
 

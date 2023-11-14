@@ -137,7 +137,7 @@
 
     public function UpdatePendingParent($pending_enrollees_id, $parent_id, $firstname, $lastname,
         $middle_name, $suffix, $contact_number,
-        $email, $occupation, $relationship,
+        $email = "", $occupation, $relationship,
 
         $father_firstname,
         $father_lastname,
@@ -164,7 +164,7 @@
                 suffix=:suffix,
 
                 contact_number=:contact_number,
-                email=:email,
+                -- email=:email,
                 occupation=:occupation,
                 relationship=:relationship,
 
@@ -198,7 +198,7 @@
         $query->bindParam(":suffix", $suffix);
 
         $query->bindParam(":contact_number", $contact_number);
-        $query->bindParam(":email", $email);
+        // $query->bindParam(":email", $email);
         $query->bindParam(":occupation", $occupation);
         $query->bindParam(":relationship", $relationship);
 
