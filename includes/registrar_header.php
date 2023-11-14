@@ -176,9 +176,9 @@
 
                             $enrollment = new Enrollment($con);
 
-                            // $resetCurrentRegistrarIdBaseOnLoggedInRegistrar = $enrollment
-                            //     ->GetAllEnrollmentFormWithRegistrarIdAndResetGlobal(
-                            //     $registrarUserId, $current_school_year_id);
+                            $resetCurrentRegistrarIdBaseOnLoggedInRegistrar = $enrollment
+                                ->GetAllEnrollmentFormWithRegistrarIdAndResetGlobal(
+                                $registrarUserId, $current_school_year_id);
 
                             # Update the enrollment form ID enrollment_currently_registrar_id INTO NULL.
 
