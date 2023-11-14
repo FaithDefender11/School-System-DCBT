@@ -186,6 +186,22 @@
             <main>
                 <div class="bars right">
                     <div class="floating">
+                        <header>
+                            <div class="action">
+                                <button 
+                                    class="btn btn-sm btn-primary"
+                                    onclick="window.location.href = 'student_calendar.php'"
+                                >
+                                    View Assignment
+                                </button>
+                                <button 
+                                    class="btn btn-sm btn-primary"
+                                    onclick="window.location.href = 'announcement_calendar.php'"
+                                >
+                                View Announcement
+                                </button>
+                            </div>
+                        </header>
                         <main style='overflow-x: auto'>
                             <div class="calendar-container">
                                 <div class="calendar-header">
