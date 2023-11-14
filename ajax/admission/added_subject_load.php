@@ -19,13 +19,22 @@
         && isset($_POST['enrollment_id'])
         && isset($_POST['course_id'])
         && isset($_POST['subject_schedule_arr'])
+        && isset($_POST['doesFull'])
         
         ) {
 
         $registrarUserId = isset($_SESSION["registrarUserId"]) 
             ? $_SESSION["registrarUserId"] : "";
 
+            
+
+        $doesFull = intval($_POST['doesFull']);
+        // echo "br";
+        // var_dump($doesFull);
+        // return;
+
         $subject_program_id = $_POST['subject_program_id'];
+
         $current_school_year_id = $_POST['current_school_year_id'];
         $student_id = $_POST['student_id'];
         $student_enrollment_course_id = $_POST['student_enrollment_course_id'];
@@ -298,6 +307,25 @@
         //     $hasError = true;
         // }
 
+        if($doesFull == 1){
+
+            // echo "full";
+            // return;
+
+            $hasError = true;
+
+            array_push($hasErrorArr, "subject_is_full");
+            array_push($returnArr, "subject_is_full");
+
+            $data[] = array(
+                "output" => "subject_is_full"
+            );
+
+            echo json_encode($data);
+            return; 
+
+        }
+
         if($checkIfChosenSubjectAlreadyCredited == true){
 
             // echo "already_credited";
@@ -408,7 +436,6 @@
             // echo $hasError;
             // echo " without err";
 
-         
             $enrollmentAudit = new EnrollmentAudit($con);
 
             $registrarName = "";

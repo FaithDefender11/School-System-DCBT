@@ -33,7 +33,7 @@
                 $logout_url = "$new_url/lms_logout.php";
             }
 
-            $dashboard_lms_url = $base_url .  "dashboard/index2.php";
+            $dashboard_lms_url = $base_url .  "dashboard/index.php";
             $classes_lms_url = $base_url .  "class/index.php";
             $grade_url = $base_url .  "grade/index.php";
             $notification_url = $base_url .  "notification/index.php";
@@ -45,6 +45,12 @@
                     "bi bi-clipboard-data icon",
                     $dashboard_lms_url,
                     Constants::$navigationClass . Helper::GetActiveClass($page, "dashboard"));
+
+                
+                $sideBarNavigationItem .= Helper::createNavByIcon("Class", 
+                    "bi bi-clipboard-data icon",
+                    $classes_lms_url,
+                    Constants::$navigationClass . Helper::GetActiveClass($page, "class"), true);
  
                 $sideBarNavigationItem .= Helper::createNavByIcon("Grade", 
                     "bi bi-book icon",

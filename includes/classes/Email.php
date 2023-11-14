@@ -178,10 +178,12 @@ class Email {
   
 
     public function SendEnrolledSubjectListViaPdf(
-            $email_address, $pdfContent, $pdfName) {
+            $email_address, $pdfContent, $pdfName, $username = "", $generated_password = "") {
 
         $subject = "You have successfully enrolled";
-        $message = "Here is your Enrollment details";
+        $message = "Here is your Enrollment details <br> <br> Un: $username <br> <br> Pw: $generated_password <br> <br> Yours in Administrator <br> <br> Admin name";
+
+        // $email_message = "Admin has recently created your account. <br> <br> Un: $username <br> <br> Pw: $generated_password <br> <br> Yours in Administrator <br> <br> $adminName, <br> <br> Note: If you have received this email and its not you or in error, please notify the sender immediately and delete this email.";
 
         $this->mailer->addAddress($email_address);
         // $this->mailer->Subject = "Daehan College of Business Technology Enrollment Verification";

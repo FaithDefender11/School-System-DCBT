@@ -8,7 +8,7 @@
     include_once('../../includes/classes/SubjectCodeAssignment.php');
     include_once('../../includes/classes/Notification.php');
     
-    echo Helper::RemoveSidebar();
+    // echo Helper::RemoveSidebar();
 
     if(isset($_GET['id'])
         // && isset($_GET['c'])

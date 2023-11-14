@@ -18,38 +18,16 @@
     include_once('../../includes/classes/SubjectModuleAudit.php');
 
 
-    echo Helper::RemoveSidebar();
-    
+    // echo Helper::RemoveSidebar();
+
     ?>
-        <head>
-                <!--Link JavaScript-->
-            <script src="../../assets/js/elms-sidebar.js" defer></script>
-            <script src="../../assets/js/elms-dropdown.js" defer></script>
-            <script src="../../assets/js/table-dropdown.js" defer></script>
 
-            <link
-                rel="stylesheet"
-                href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-                integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-                crossorigin="anonymous"
-                />
-                <link
-                rel="stylesheet"
-                href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
-                />
-                <!--Link Fonts-->
-                <link
-                rel="stylesheet"
-                href="https://fonts.googleapis.com/css?family=Lato"
-                />
-                <link
-                rel="stylesheet"
-                href="https://fonts.googleapis.com/css?family=Arimo"
-                />
-        </head>
-    <?php
-
-    if(isset($_GET['id'])){
+    <html>
+        <body>
+            
+            <?php 
+            
+                if(isset($_GET['id'])){
 
         $student_subject_id = $_GET['id'];
 
@@ -306,7 +284,8 @@
                         "second",
                         "first",
                         "second",
-                        $logout_url
+                        $logout_url,
+                        "second"
                     );
                 
                 ?>
@@ -378,7 +357,7 @@
                                 <header>
                                         
                                     <div class="title">
-                                        <h4>Scores</h4>
+                                        <h4>Scorese</h4>
                                     </div>
                                 </header>
                                 <main>
@@ -762,6 +741,14 @@
             </div>
         <?php
     }
+            
+            
+            ?>
+        </body>
+    </html>
+    <?php
+
+
 
 ?>
  

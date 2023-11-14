@@ -40,16 +40,18 @@
 
             if(User::IsStudentEnrolledAuthenticatedLMS()) {
 
-                $sideBarNavigationItem .= Helper::createNavByIcon("Courses", 
-                    "bi bi-clipboard-data icon",
-                    $courses_lms_url,
-                    Constants::$navigationClass . Helper::GetActiveClass($page, "courses"));
-
+                
                 $sideBarNavigationItem .= Helper::createNavByIcon("Dashboard", 
                     "bi bi-clipboard-data icon",
                     $dashboard_lms_url,
                     Constants::$navigationClass . Helper::GetActiveClass($page, "lms"));
                 
+
+                $sideBarNavigationItem .= Helper::createNavByIcon("Courses", 
+                    "bi bi-clipboard-data icon",
+                    $courses_lms_url,
+                    Constants::$navigationClass . Helper::GetActiveClass($page, "courses"), true);
+
                 $sideBarNavigationItem .= Helper::createNavByIcon("Notification", 
                     "bi bi-clipboard-data icon",
                     $notification_lms_url,

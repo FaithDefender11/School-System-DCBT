@@ -344,13 +344,13 @@
         <main>
            
             <div style="display: none;" class="floating">
+
                 <header>
                     <div class="title">
                         <h4 id="clickSchedule">Schedule</h4>
                     </div>
-                
-                   
                 </header>
+
                 <main >
 
                     <table class="a" style="margin: 0">
@@ -428,7 +428,7 @@
                 <main>
                     <header>
                         <div class="title">
-                            <h4 id="clickSchedule">Schedule</h4>
+                            <h4 id="clickSchedule">Subject Schedules</h4>
 
                             <p>
                                 <?php 
@@ -462,11 +462,13 @@
 
                         </div>
 
-                         <div class="action">
-                        <button onclick="window.location.href= 'create.php' " class="default clean">
-                            <i class="fas fa-plus"></i>
-                        SCHEDULE</button>
-                    </div>
+                         <!-- <div class="action">
+                            <button onclick="window.location.href= 'create.php' " class="default clean">
+                                <i class="fas fa-plus"></i>
+                                SCHEDULE
+                            </button>
+                        </div> -->
+
                     </header>
                         
 

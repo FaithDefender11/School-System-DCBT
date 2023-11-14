@@ -15,16 +15,19 @@
     include_once('../../includes/classes/TaskType.php');
     include_once('../../includes/classes/Enrollment.php');
  
-    echo Helper::RemoveSidebar();
+    // echo Helper::RemoveSidebar();
     
 
     if(
         isset($_GET['c_id'])
         && isset($_GET['c'])
+        && isset($_GET['sy_id'])
+        
         ){
 
         $course_id = $_GET['c_id'];
         $subject_code = $_GET['c'];
+        $sy_id = $_GET['sy_id'];
 
         $school_year = new SchoolYear($con);
         $school_year_obj = $school_year->GetActiveSchoolYearAndSemester();
@@ -41,7 +44,10 @@
 
         $announcementList = $announcement->GetAnnouncementsWithinSubjectCode($subject_code, $teacher_id);
     
-        $back_url = "../class/index.php?c_id=1279&c=$subject_code";
+        // $back_url = "../class/index.php?c_id=1279&c=$subject_code";
+        // $current_school_year_id
+
+        $back_url = "../class/index.php?c=$subject_code&sy_id=$sy_id";
 
         ?>
             <div class="content">
@@ -68,90 +74,95 @@
                                     <button type="button" class="default success large">+ Add announcement</button>
                                 </a>
                             </div>
-                            
                         </header>
 
                         <main>
 
-                        <?php if(count($announcementList ) > 0):?>
+                            <?php if(count($announcementList ) > 0):?>
 
-                                <table style="width: 100%" id="admin_announcement_table" class="a" >
-                                    
-                                    <thead>
-                                        <tr>
-                                            <th>Subject</th>  
-                                            <th>To whom</th>
-                                            <th>Date announced</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
+                                    <table style="width: 100%" id="admin_announcement_table" class="a" >
+                                        
+                                        <thead>
+                                            <tr>
+                                                <th>Subject</th>  
+                                                <th>To whom</th>
+                                                <th>Date announced</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
 
-                                        <?php 
+                                            <?php 
 
-                                            foreach ($announcementList   as $key => $value) {
+                                                foreach ($announcementList   as $key => $value) {
 
-                                                $announcement_id = $value['announcement_id'];
+                                                    $announcement_id = $value['announcement_id'];
 
-                                                $title = $value['title'];
-                                                $users_id = $value['users_id'];
-                                                $content = $value['content'];
-                                                $date_creation_db = $value['date_creation'];
+                                                    $title = $value['title'];
+                                                    $users_id = $value['users_id'];
+                                                    $content = $value['content'];
+                                                    $date_creation_db = $value['date_creation'];
 
-                                                $for_student = $value['for_student'];
-                                                $teachers_id = $value['teachers_id'];
+                                                    $for_student = $value['for_student'];
+                                                    $teachers_id = $value['teachers_id'];
 
-                                                // var_dump($for_student);
-                                                // echo "<br>";
+                                                    // var_dump($for_student);
+                                                    // echo "<br>";
 
-                                                $text = "";
+                                                    $text = "";
 
-                                                if($for_student != NULL && $teachers_id != ""){
-                                                    $text = "Teachers and Students";
-                                                }
+                                                    if($for_student != NULL && $teachers_id != ""){
+                                                        $text = "Teachers and Students";
+                                                    }
 
-                                                if($for_student != NULL && $teachers_id == ""){
-                                                    $text = "Students";
-                                                }
-                                                if($for_student == NULL && $teachers_id != ""){
-                                                    $text = "Teachers";
-                                                }
+                                                    if($for_student != NULL && $teachers_id == ""){
+                                                        $text = "Students";
+                                                    }
+                                                    if($for_student == NULL && $teachers_id != ""){
+                                                        $text = "Teachers";
+                                                    }
 
-                                                $date_creation = date("M d, Y h:i a", strtotime($date_creation_db));
+                                                    $date_creation = date("M d, Y h:i a", strtotime($date_creation_db));
 
 
-                                                $removeAnnouncement = "removeAnnouncement($announcement_id, $users_id)";
-                                                
-                                                echo "
-                                                    <tr>
-                                                        <td>$title</td>
-                                                        <td>$text</td>
-                                                        <td>$date_creation</td>
+                                                    $removeAnnouncement = "removeAnnouncement($announcement_id, $users_id)";
+                                                    
+                                                    echo "
+                                                        <tr>
+                                                            <td>$title</td>
+                                                            <td>$text</td>
+                                                            <td>$date_creation</td>
 
-                                                        <td>
+                                                            <td>
 
-                                                            <a href='edit.php?id=$announcement_id'>
-                                                                <button class='btn-sm btn btn-primary'>
-                                                                    <i class='fas fa-marker'></i>
+                                                                <a href='edit.php?id=$announcement_id'>
+                                                                    <button class='btn-sm btn btn-primary'>
+                                                                        <i class='fas fa-marker'></i>
+                                                                    </button>
+                                                                </a>
+
+                                                                <button onclick='$removeAnnouncement' class='btn-sm btn btn-danger'>
+                                                                    <i class='fas fa-trash'></i>
                                                                 </button>
-                                                            </a>
 
-                                                            <button onclick='$removeAnnouncement' class='btn-sm btn btn-danger'>
-                                                                <i class='fas fa-trash'></i>
-                                                            </button>
+                                                            </td>
 
-                                                        </td>
+                                                        </tr>
+                                                    ";
+                                                }
+                                            ?>
 
-                                                    </tr>
-                                                ";
-                                            }
-                                        ?>
+                                        </tbody>
+                                    </table>
 
-                                    </tbody>
-                                </table>
+                                <?php else:?>
+                                <div class="col-md-12">
+                                    <br>
+                                    <br>
+                                    <br>
+                                    <h2 class="text-center text-primary">No announcement posted</h2>
+                                </div>
                             <?php endif;?>
-
-
                         </main>
                     </div>
                 </main>

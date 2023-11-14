@@ -56,10 +56,8 @@
 
     <?php
 
-
     $time_from = "";
     $time_to = "";
-
 
     if(isset($_GET['id'])){
 
@@ -74,6 +72,11 @@
         $url_t_id = null;
 
         $back_url = "index.php";
+        $type = null;
+
+        if(isset($_GET['type'])){
+            $type = $_GET['type'];
+        }
 
         if(isset($_GET['course_id'])
             && isset($_GET['sp_id'])
@@ -86,7 +89,7 @@
 
             // echo "hey";
             
-            $back_url = "../section/show.php?id=$url_course_id&per_semester=$current_school_year_period&term=$current_school_year_term";
+            $back_url = "../section/show.php?id=$url_course_id&per_semester=$current_school_year_period&term=$current_school_year_term&type=$type";
         }
 
 
@@ -211,15 +214,20 @@
 
             // $room_id = isset($_POST['room_id']) && $_POST['room_id'] == 0 ? NULL : intval($_POST['room_id']);
             
-            $selectedTeacherId = $_POST['selectedTeacherId'] == 0 ? NULL : intval($_POST['selectedTeacherId']);
+            // $selectedTeacherId = $_POST['selectedTeacherId'] == 0 ? NULL : intval($_POST['selectedTeacherId']);
+            $selectedTeacherId = !isset($_POST['selectedTeacherId']) ? NULL : intval($_POST['selectedTeacherId']);
+            $selectedTeacherId = $selectedTeacherId == 0 ? NULL : $selectedTeacherId;
             
-            $teacher_id = $_POST['teacher_id']  == 0 ? NULL : intval($_POST['teacher_id']);
+            // $teacher_id = $_POST['teacher_id']  == 0 ? NULL : intval($_POST['teacher_id']);
+            // $teacher_id = !isset($_POST['teacher_id']) ? NULL : intval($_POST['teacher_id']);
+            // $teacher_id = $teacher_id == 0 ? NULL : $teacher_id;
             
             // var_dump($room_id);
             // var_dump($room_id);
-            // var_dump($teacher_id);
+            // var_dump($selectedTeacherId);
 
             // echo "<br>";
+
             // return;
 
             $schedule_time = $time_from . " - " . $time_to;
@@ -333,10 +341,10 @@
                                                 echo "<option value='' disabled selected>Select Room</option>";
 
                                                 if($schedule_room_id === NULL){
-                                                    // echo "<option selected value='0'>TBA</option>";
+                                                    echo "<option selected value='0'>TBA</option>";
                                                 }
                                                 else{
-                                                    // echo "<option value='0'>TBA</option>";
+                                                    echo "<option value='0'>TBA</option>";
                                                 }
 
                                                 while($row = $query->fetch(PDO::FETCH_ASSOC)) {

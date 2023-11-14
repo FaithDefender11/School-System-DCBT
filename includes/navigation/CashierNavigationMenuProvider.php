@@ -41,29 +41,29 @@
         $payments_url = $base_url .  "payment/index.php";
         $payment_history_url = $base_url .  "payment_history/index.php";
 
-        $sideBarNavigationItem = Helper::createNavByIcon("Dashboard", 
+        $sideBarNavigationItem = Helper::createNavByIconARC("Dashboard", 
             "bi bi-clipboard-data icon", $dashboard_url, Constants::$navigationClass . Helper::GetActiveClass($page, "dashboard"));
 
 
-        $sideBarNavigationItem .= Helper::createNavByIcon("Payment", 
+        $sideBarNavigationItem .= Helper::createNavByIconARC("Payment", 
                 "bi bi-credit-card", $payments_url, Constants::$navigationClass . Helper::GetActiveClass($page, "payment"));
 
-        $sideBarNavigationItem .= Helper::createNavByIcon("Payment History", 
+        $sideBarNavigationItem .= Helper::createNavByIconARC("Payment History", 
             "bi bi-clock-history icon", $payment_history_url, Constants::$navigationClass . Helper::GetActiveClass($page, "payment_history"));
 
      
 
-        // $sideBarNavigationItem = $this->createNavByIcon("Dashboard", 
+        // $sideBarNavigationItem = $this->createNavByIconARC("Dashboard", 
         //     "bi bi-clipboard-data icon", $dashboard_url);
 
-        // $sideBarNavigationItem .= $this->createNavByIcon("Payment", 
+        // $sideBarNavigationItem .= $this->createNavByIconARC("Payment", 
         //     "bi bi-credit-card", $payments_url);
 
-        // $sideBarNavigationItem .= $this->createNavByIcon("History", 
+        // $sideBarNavigationItem .= $this->createNavByIconARC("History", 
         //     "bi bi-clock-history icon", $payment_history_url);
 
         if(User::isCashierLoggedIn()) {
-            $sideBarNavigationItem .= Helper::createNavByIcon("Log Out", 
+            $sideBarNavigationItem .= Helper::createNavByIconARC("Log Out", 
                 "bi bi-box-arrow-right icon", $logout_url, Constants::$navigationClass);
         }
 
@@ -86,7 +86,7 @@
         ";
     }
 
-    public function createNavByIcon($text, $icon, $link){
+    public function createNavByIconARC($text, $icon, $link){
         return "
             <div class='navigationItem'>
                 <a href='$link'>

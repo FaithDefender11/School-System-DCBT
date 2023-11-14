@@ -106,7 +106,10 @@
 
             // $url = "../../teacher/class/section_topic.php?id=$subject_period_code_topic_template_id&ct_id=$subject_period_code_topic_id";
            
-            $url = "../../teacher/class/grade_book_topic.php?ct_id=$subject_period_code_topic_id";
+            // $url = "../../teacher/class/grade_book_topic.php?ct_id=$subject_period_code_topic_id";
+
+
+            $url = "../../teacher/class/task_summary.php?ct_id=$subject_period_code_topic_id";
             
             $dataCalendar[] = array(
                 'subject_code_assignment_id' => $subject_code_assignment_id,

@@ -15,7 +15,7 @@
     include_once('../../includes/classes/Teacher.php');
     include_once('../../includes/classes/SubjectProgram.php');
 
-    echo Helper::RemoveSidebar();
+    // echo Helper::RemoveSidebar();
 
 
     ?>
@@ -233,7 +233,8 @@
                         "second",
                         "first",
                         "second",
-                        $logout_url
+                        $logout_url,
+                        "second"
                     );
                 
                 ?>

@@ -15,7 +15,7 @@
     include_once('../../includes/classes/TaskType.php');
     include_once('../../includes/classes/Enrollment.php');
  
-    echo Helper::RemoveSidebar();
+    // echo Helper::RemoveSidebar();
     
 
     if(

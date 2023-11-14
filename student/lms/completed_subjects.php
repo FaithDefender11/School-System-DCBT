@@ -14,7 +14,7 @@
     include_once('../../includes/classes/Teacher.php');
     include_once('../../includes/classes/SubjectAssignmentSubmission.php');
 
-    echo Helper::RemoveSidebar();
+    // echo Helper::RemoveSidebar();
   
     $school_year = new SchoolYear($con);
     $school_year_obj = $school_year->GetActiveSchoolYearAndSemester();
@@ -132,7 +132,8 @@
           "second",
           "second",
           "second",
-          $logout_url
+          $logout_url,
+          "first"
         );
       ?>
  
@@ -373,6 +374,14 @@
                   }
 
               ?>
+
+            <?php else:?>
+                <div class="col-md-12">
+                    <br>
+                    <br>
+                    <br>
+                    <h2 class="text-center text-primary">No completed subjects</h2>
+                </div>
           <?php endif;?>
 
       </main>

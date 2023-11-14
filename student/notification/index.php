@@ -13,7 +13,7 @@
     include_once('../../includes/classes/User.php');
     include_once('../../includes/classes/SubjectAssignmentSubmission.php');
 
-    echo Helper::RemoveSidebar();
+    // echo Helper::RemoveSidebar();
 
     $student_id = $_SESSION['studentLoggedInId'];
 
@@ -175,9 +175,9 @@
                 </div>
 
                 <div class="action">
-                    <a href="create.php">
+                    <!-- <a href="create.php">
                         <button type="button" class="clean large success"> Mark all as read</button>
-                    </a>
+                    </a> -->
                 </div>
 
             </header>

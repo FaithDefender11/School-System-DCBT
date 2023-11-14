@@ -12,7 +12,7 @@
     include_once('../../includes/classes/SubjectCodeAssignment.php');
     include_once('../../includes/classes/TaskType.php');
  
-    echo Helper::RemoveSidebar();
+    // echo Helper::RemoveSidebar();
 
 
     if(

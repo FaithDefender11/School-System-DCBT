@@ -216,7 +216,8 @@
                                     <tr class="text-center"> 
                                         <th>Code</th>
                                         <th style="min-width: 190px;">Description</th>
-                                        <th>Section</th>
+                                        <th style="min-width: 80px;">Section</th>
+                                        <th>Status</th>
                                         <th>Requisite</th>
                                         <th>Unit</th>
                                         <th>Level</th>
@@ -268,6 +269,7 @@
                                         { data: 'code', orderable: false },  
                                         { data: 'description', orderable: false },  
                                         { data: 'section', orderable: false },
+                                        { data: 'status', orderable: false },
                                         { data: 'requisite', orderable: false },  
                                         { data: 'unit', orderable: false },  
                                         { data: 'level', orderable: false },  
@@ -312,7 +314,7 @@
     
     function addAvailable(subject_program_id, current_school_year_id,
         student_id, student_enrollment_course_id, enrollment_id, course_id,
-        subject_code, subject_schedule_arr){
+        subject_code, subject_schedule_arr, subject_title, doesFull){
 
         // console.log(subject_schedule_arr)
 
@@ -334,7 +336,8 @@
                             subject_program_id, current_school_year_id,
                             student_id, student_enrollment_course_id,
                             enrollment_id, course_id,
-                            subject_schedule_arr: JSON.stringify(subject_schedule_arr)
+                            subject_schedule_arr: JSON.stringify(subject_schedule_arr),
+                            doesFull
                         },
 
                         dataType: 'json',
@@ -343,6 +346,14 @@
                             // response = response.trim();
 
                             console.log(response);
+
+                            if(response[0].output == "subject_is_full"){
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Not available!',
+                                    text: `Subject '${subject_title}' is currently full`,
+                                });
+                            }
 
                             if (response[0].output == 'conflicted_schedule') {
 

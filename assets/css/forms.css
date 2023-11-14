@@ -11,17 +11,17 @@ form .row {
   padding: 10px;
 }
 
-form .row > span {
+form .row>span {
   display: flex;
   flex: 3 1 auto;
   gap: 10px;
 }
 
-form .row > span.small {
+form .row>span.small {
   flex: 1 2 auto;
 }
 
-form .row > span.x-small {
+form .row>span.x-small {
   flex: 0 3 auto;
   width: 100px;
 }
@@ -30,20 +30,22 @@ form label {
   font-weight: bold;
 }
 
-form .row > span > div {
+form .row>span>div {
   display: flex;
   flex: 1 1 auto;
   flex-direction: column;
 }
 
-form .row > span > div > input {
+form .row>span>div>input {
   width: 99%;
 }
 
-.content form > .action {
+.content form>.action {
   display: flex;
   justify-content: end;
   align-items: center;
+  gap: 5px;
+  flex-wrap: wrap;
 }
 
 .content .progress {
@@ -54,13 +56,13 @@ form .row > span > div > input {
   height: 70px;
 }
 
-.content .progress > .line {
+.content .progress>.line {
   background-color: var(--inactiveProgress);
   height: 3px;
   flex: 1;
 }
 
-.content .progress > .dot {
+.content .progress>.dot {
   height: 25px;
   width: 25px;
   display: flex;
@@ -69,15 +71,15 @@ form .row > span > div > input {
   border-radius: 50%;
 }
 
-.content .progress > .inactive {
+.content .progress>.inactive {
   background-color: var(--inactiveProgress);
 }
 
-.content .progress > .active {
+.content .progress>.active {
   background-color: var(--activeProgress);
 }
 
-.content .progress > .dot p {
+.content .progress>.dot p {
   white-space: nowrap;
   display: flex;
   column-gap: 5px;
@@ -89,14 +91,15 @@ form .row > span > div > input {
 }
 
 @media only screen and (max-width: 800px) {
-  form > .row > span > label {
+  form>.row>span>label {
     display: block;
   }
+
   form .row {
     flex-wrap: wrap;
   }
 
-  form .row > span {
+  form .row>span {
     flex-wrap: wrap;
     flex-direction: column;
   }

@@ -87,14 +87,15 @@
                                    <tr class="text-center"> 
                                         <th rowspan="2">ID</th>
                                         <th rowspan="2">Name</th>
-                                        <th rowspan="2">Code</th>
-                                        <th rowspan="2">Units</th>
+                                        <th rowspan="2">Date Apply</th>
+                                        <th rowspan="2">Enrolled Date</th>
+                                        <!-- <th rowspan="2">Units</th>
                                         <th rowspan="2">Prelim</th>
                                         <th rowspan="2">Midterm</th>
                                         <th rowspan="2">Pre-Final</th>
                                         <th rowspan="2">Final</th>
                                         <th rowspan="2">Remarks</th>
-                                        <th rowspan="2">Action</th>
+                                        <th rowspan="2">Action</th> -->
                                     </tr>	
                                 </thead>
                                 <tbody>
@@ -102,10 +103,12 @@
                                     <?php
                                         $enrollment_status = "enrolled";
                                         $sql = $con->prepare("SELECT 
+
                                             t1.*,
                                             t2.active, t2.firstname, t2.lastname , t2.admission_status,
                                             t2.course_id as student_course_id
                                             ,t4.enrollment_approve
+                                            ,t4.enrollment_date
 
                                             ,t3.program_section
 
@@ -149,6 +152,12 @@
                                                 $student_subject_grade_id = $row['student_subject_grade_id'];
 
                                                 $student_subject_id = $row['student_subject_id'];
+
+                                                $enrollment_approve_db = $row['enrollment_approve'];
+                                                $enrollment_approve = date("M d, Y h:i a", strtotime($enrollment_approve_db));
+
+                                                $enrollment_date_db = $row['enrollment_date'];
+                                                $enrollment_date = date("M d, Y h:i a", strtotime($enrollment_date_db));
 
                                                 $unit = $row['unit'];
 
@@ -221,22 +230,26 @@
 
                                                         echo '<td>'.$student_id.'</td>';
                                                         echo '<td>'.$fullName.'</td>';
-                                                        echo '<td>'.$program_code.'</td>';
-                                                       
-                                                        echo '<td>'.$unit.'</td>';
-                                                        echo '<td>'.$first.'</td>';
-                                                        echo '<td>'.$second.'</td>';
-                                                        echo '<td>'.$third.'</td>';
-                                                        echo '<td>'.$fourth.'</td>';
-                                                        echo '<td>'.$remarks.'</td>';
-                                                        echo '<td>
-
-
-                                                            '.$grade_url.'
-                                                        </td>';
+                                                        echo '<td>'.$enrollment_approve.'</td>';
+                                                        echo '<td>'.$enrollment_date_db.'</td>';
 
                                                        
                                                 echo '</tr>';
+                                                // echo '<td>'.$student_id.'</td>';
+                                                //         echo '<td>'.$fullName.'</td>';
+                                                //         echo '<td>'.$program_code.'</td>';
+                                                       
+                                                //         echo '<td>'.$unit.'</td>';
+                                                //         echo '<td>'.$first.'</td>';
+                                                //         echo '<td>'.$second.'</td>';
+                                                //         echo '<td>'.$third.'</td>';
+                                                //         echo '<td>'.$fourth.'</td>';
+                                                //         echo '<td>'.$remarks.'</td>';
+                                                //         echo '<td>
+
+
+                                                //             '.$grade_url.'
+                                                //         </td>';
                                             }
                                         }else{
                                             // echo "none";

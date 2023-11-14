@@ -219,12 +219,12 @@
         ?>
             <div class='content'>
 
-                <nav>
-                    <a href="<?php echo $back_url;?>">
-                        <i class="bi bi-arrow-return-left fa-1x"></i>
-                        <h3>Back</h3>
-                    </a>
-                </nav>
+                 <nav>
+                <a href="<?= $back_url; ?>">
+                    <i class="bi bi-arrow-return-left"></i>
+                    Back
+                </a>
+            </nav>
 
                 <div class='col-md-10 offset-md-1'>
                     <div class='card'>
@@ -506,4 +506,5 @@
             height:250
         });
     });
+
 </script>

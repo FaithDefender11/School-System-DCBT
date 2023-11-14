@@ -153,7 +153,8 @@
 
                     // $registrarName = ucwords($user->getFirstName()) . " " . ucwords($user->getLastName());
 
-                    if($after_registrar === "student" 
+                    if(
+                        $after_registrar === "student" 
                         || $after_registrar === "dashboard" 
                         || $after_registrar === "section" 
                         || $after_registrar === "enrollment" 
@@ -174,7 +175,6 @@
                             // echo "<br>";
 
                             $enrollment = new Enrollment($con);
-
 
                             // $resetCurrentRegistrarIdBaseOnLoggedInRegistrar = $enrollment
                             //     ->GetAllEnrollmentFormWithRegistrarIdAndResetGlobal(

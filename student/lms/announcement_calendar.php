@@ -8,6 +8,7 @@
     include_once('../../includes/classes/SubjectAssignmentSubmission.php');
     include_once('../../includes/classes/Enrollment.php');
     include_once('../../includes/classes/StudentSubject.php');
+    require_once("../../includes/classes/Announcement.php");
 
 
     $school_year = new SchoolYear($con);
@@ -24,8 +25,32 @@
     $enrollment_id = $enrollment->GetEnrollmentIdNonDependent($student_id,
         $current_school_year_id);
 
-    # List of all Enrolled Subject subject_period_code_topic_id(s)
+    
+    $announcement = new Announcement($con);
 
+    $studentSubject = new StudentSubject($con);
+
+    $allEnrolledSubjectCode = $studentSubject->GetAllEnrolledSubjectCodeELMS
+        ($studentLoggedInId, $current_school_year_id, $enrollment_id);
+
+    $enrolledSubjectList = [];
+
+    foreach ($allEnrolledSubjectCode as $key => $value) {
+        # code...
+        $subject_code = $value['student_subject_code'];
+        array_push($enrolledSubjectList, $subject_code);
+    }
+
+    $getAllAnnouncementOnMyEnrolledSubjects = $announcement->GetAllTeacherAnnouncementUnderEnrolledSubjects(
+        $current_school_year_id, $enrolledSubjectList);
+
+    $getAllAnnouncementFromAdmin = $announcement->GetAllAnnouncementFromAdmin(
+        $current_school_year_id);
+
+    $mergeAnnouncement = array_merge($getAllAnnouncementFromAdmin,
+        $getAllAnnouncementOnMyEnrolledSubjects);
+
+    # List of all Enrolled Subject subject_period_code_topic_id(s)
 
 
 ?>
@@ -69,96 +94,13 @@
       <div class="row">
         <div class="col-lg-12">
           <h4 style="font-weight: bold;" class="mt-2 text-primary text-center">
-            Task Calendar
+            Announcement Calendar
           </h4>
+          <br>
           <div style="max-width: 70%;" id="calendar"></div>
         </div>
       </div>
     </div>
-
-    <!-- Start popup dialog box -->
-    <!-- <div
-      class="modal fade"
-      id="event_entry_modal"
-      tabindex="-1"
-      role="dialog"
-      aria-labelledby="modalLabel"
-      aria-hidden="true">
-      <div class="modal-dialog modal-md" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="modalLabel">Add New Event</h5>
-            <button
-              type="button"
-              class="close"
-              data-dismiss="modal"
-              aria-label="Close"
-            >
-              <span aria-hidden="true">×</span>
-            </button>
-          </div>
-
-          <div class="modal-body">
-            <div class="img-container">
-              <div class="row">
-                <div class="col-sm-12">
-                  <div class="form-group">
-                    <label for="event_name">Event name</label>
-                    <input
-                      type="text"
-                      name="event_name"
-                      id="event_name"
-                      class="form-control"
-                      placeholder="Enter your event name"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="col-sm-6">
-                  <div class="form-group">
-                    <label for="event_start_date">Event start</label>
-                    <input
-                      type="date"
-                      name="event_start_date"
-                      id="event_start_date"
-                      class="form-control onlydatepicker"
-                      placeholder="Event start date"
-                    />
-                  </div>
-                </div>
-                <div class="col-sm-6">
-                  <div class="form-group">
-                    <label for="event_end_date">Event end</label>
-                    <input
-                      type="date"
-                      name="event_end_date"
-                      id="event_end_date"
-                      class="form-control"
-                      placeholder="Event end date"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-primary"
-              onclick="save_event()"
-            >
-              Save Event
-            </button>
-          </div>
-        </div>
-      </div>
-
-    </div> -->
-
-    <!-- End popup dialog box -->
-
     <br />
 </body>
 
@@ -166,18 +108,21 @@
 
   $(document).ready(function () {
 
-    var studentId = `
+    let studentId = `
       <?php echo $student_id; ?>
     `;
 
-    var current_school_year_id = `
+    let current_school_year_id = `
       <?php echo $current_school_year_id; ?>
     `;
 
-    var enrollment_id = `
+    let enrollment_id = `
       <?php echo $enrollment_id; ?>
     `;
 
+    studentId = studentId.trim();
+    current_school_year_id = current_school_year_id.trim();
+    enrollment_id = enrollment_id.trim();
 
     display_events(studentId, current_school_year_id, enrollment_id);
 
@@ -188,11 +133,12 @@
     var events = []; // Initialize an empty array to store events
 
     $.ajax({
-      url: `../../ajax/class/student_calendar.php?st_id=${studentId}&sy_id=${current_school_year_id}&e_id=${enrollment_id}`,
+      url: `../../ajax/class/announcement_calendar.php?st_id=${studentId}&sy_id=${current_school_year_id}&e_id=${enrollment_id}`,
 
       dataType: 'json',
 
       success: function (response) {
+
         var result = response.data;
 
         console.log(response);
@@ -201,7 +147,7 @@
         $.each(result, function (i, item) {
 
             events.push({
-                subject_code_assignment_id: result[i].subject_code_assignment_id,
+                announcement_id: result[i].announcement_id,
                 title: result[i].title,
                 start: result[i].start,
                 end: result[i].end,
@@ -212,8 +158,7 @@
         });
 
         var calendar = $('#calendar').fullCalendar({
-          // eventLimit: false,
-          // defaultView: 'list', 
+         
           defaultView: 'month',
           timeZone: 'local',
           editable: true,

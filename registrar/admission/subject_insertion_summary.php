@@ -1063,6 +1063,7 @@
                                                         );
 
                                                         Alert::successEnrollment("Enrollment Form ID: $student_enrollment_form_id is now enrolled.", "../student/record_details.php?id=$student_id&enrolled_subject=show");
+                                                        #approvestate
                                                         $student_subject->SendingEmailAfterSuccessfulEnrollment($processEnrolled);
 
                                                     }

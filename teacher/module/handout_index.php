@@ -12,7 +12,7 @@
     include_once('../../includes/classes/SubjectCodeHandout.php');
  
 
-    echo Helper::RemoveSidebar();
+    // echo Helper::RemoveSidebar();
 
 
     if(

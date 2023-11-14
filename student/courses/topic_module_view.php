@@ -6,8 +6,12 @@
     include_once('../../includes/classes/SubjectCodeHandoutStudent.php');
     include_once('../../includes/classes/SubjectPeriodCodeTopic.php');
     include_once('../../includes/classes/SubjectModuleAudit.php');
+    include_once('../../includes/classes/Notification.php');
+    include_once('../../includes/classes/SubjectProgram.php');
+    include_once('../../includes/classes/Teacher.php');
+    include_once('../../includes/classes/Student.php');
 
-    echo Helper::RemoveSidebar();
+    // echo Helper::RemoveSidebar();
 
 
     if(
@@ -47,10 +51,6 @@
 
         $handout_audit_name = "Viewed $handout_name under $handoutTopic";
 
-
-
-        
-
         // $teacher_id = $_SESSION['teacherLoggedInId'];
 
         $topic_name = $subjectPeriodCodeTopic->GetTopic();
@@ -74,130 +74,69 @@
         $pushToHandoutView = $subjectCodeHandoutStudent->MarkStudentViewedHandout($subject_code_handout_id,
             $studentLoggedInId, $current_school_year_id);
         
+        $logout_url = 'http://localhost/school-system-dcbt/lms_logout.php';
+
+        if ($_SERVER['SERVER_NAME'] === 'localhost') {
+
+            $base_url = 'http://localhost/school-system-dcbt/student/';
+        } else {
+            $base_url = 'http://' . $_SERVER['HTTP_HOST'] . '/student/';
+        }
+
+        if ($_SERVER['SERVER_NAME'] !== 'localhost') {
+
+            $new_url = str_replace("/student/", "", $base_url);
+            $logout_url = "$new_url/lms_logout.php";
+        }
 
         ?>
 
             <div class="content">
                
 
-            <div class="icons">
-                <button class="sidebar">
-                    <i class="bi bi-list"></i>
-                </button>
-                <div class="notif">
+                <?php
+                
+                    echo Helper::lmsStudentNotificationHeader(
+                        $con, $studentLoggedInId,
+                        $current_school_year_id,
+                        $enrolledSubjectList,
+                        $enrollment_id,
+                        "second",
+                        "first",
+                        "second",
+                        $logout_url,
+                        "second"
+                    );
+                
+                ?>
 
-                    <button
-                        class="icon"
-                        data-toggle="tooltip"
-                        data-placement="bottom"
-                        title="Notification">
-                        <i class="bi bi-bell-fill"></i>
-                        <span class="badge-1">3</span>
-                    </button>
- 
+                <div class="content-header">
+                    <header>
+                        <div class="title">
+                            <h1><?= $handoutTopic;?> <em>Handout</em></h1>
+                        </div>
+                    </header>
                 </div>
-
-                <div class="username">
-                    <a href="#" title="Profile">Cultura, Dhan Exeq...</a>
-                </div>
-            </div>
-
-            <div class="content-header">
-                <header>
-                <div class="title">
-                    <h1><?= $handoutTopic;?> <em>Handout</em></h1>
-                </div>
-                </header>
-            </div>
-
-            <nav>
-                <a href="<?=$back_url;?>"
-                ><i class="bi bi-arrow-return-left"></i>Back</a
-                >
-            </nav>
-
-            <main>
-                <div class="floating noBorder">
-                <header>
-                    <div class="title">
-                    <h3><?= $handout_name;?></h3>
-                    </div>
-                </header>
-                <main>
-                    <form action="">
-                    <div class="row">
-                        <span>
-                            <label for="file">File</label>
-                            <div>
-                                <p>
-                                    <?php 
-
-                                        $extension = pathinfo($handout_file, PATHINFO_EXTENSION);
-
-                                        $pos = strpos($handout_file, "img_");
-
-                                        $original_file_name = "";
-
-                                        // Check if "img_" was found
-                                        if ($pos !== false) {
-                                            $original_file_name = substr($handout_file, $pos + strlen("img_"));
-                                        }
-
-                                        if (in_array(strtolower($extension), ['pdf', 'docx', 'doc'])) {
-                                            ?>
-                                                
-                                                <a title="View File" href='<?php echo "../../".  $handout_file ?>' target='__blank' rel='noopener noreferrer'>
-                                                    <?php echo $original_file_name; ?>
-                                                </a>
-                                                <br>
-                                            <?php
-                                        }
-                                    ?>
-                                </p>
-                            </div>
-                        </span>
-                    </div>
-                    </form>
-                </main>
-                </div>
-            </main>
-            </div>
-
-            <br>
-            <div class='content'>
 
                 <nav>
-                    <a href="<?php echo $back_url;?>">
-                        <i class="bi bi-arrow-return-left fa-1x"></i>
-                        <h3>Back</h3>
-                    </a>
+                    <a href="<?=$back_url;?>"
+                    ><i class="bi bi-arrow-return-left"></i>Back</a
+                    >
                 </nav>
 
-                <div class='col-md-10 offset-md-1'>
-                    <div class='card'>
-
-
-                        <div class='card-header'>
-                            <h4 class='text-center mb-3'><?php echo ucwords($topic_name); ?> <span style="font-size: 17px;" class="text-muted">Handout</span> </h4>
-                        </div> 
-
-                        <div class="card-body">
-                            <form method='POST' enctype="multipart/form-data">
-
-                                 <div class='form-group mb-2'>
-                                    <label for="handout_name" class='mb-2'>Handout Name</label>
-
-                                    <input disabled value="<?php echo $handout_name ?>" required class='form-control' type='text' 
-                                        placeholder='Add Handout' id="handout_name" name='handout_name'>
-                                </div>
-
-                                <div class='form-group mb-2'>
-                                    <label for="assignment_image" class='mb-2'>File</label>
-                                    
-                                    <?php if ($handout_template_id == NULL): ?>
-                                        <input value="<?php echo $handout_file; ?>" id="assignment_image" class='form-control' type='file' placeholder='' name='assignment_image'>
-                                    <?php endif; ?>
-
+                <main>
+                    <div class="floating noBorder">
+                    <header>
+                        <div class="title">
+                        <h3><?= $handout_name;?></h3>
+                        </div>
+                    </header>
+                    <main>
+                        <form action="">
+                        <div class="row">
+                            <span>
+                                <label for="file">File</label>
+                                <div>
                                     <p>
                                         <?php 
 
@@ -223,15 +162,15 @@
                                             }
                                         ?>
                                     </p>
-
                                 </div>
-                            </form>
+                            </span>
                         </div>
+                        </form>
+                    </main>
                     </div>
-                </div>
+                </main>
+
             </div>
-
-
         <?php
     }
 ?>

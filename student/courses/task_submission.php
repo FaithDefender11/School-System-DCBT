@@ -17,10 +17,9 @@
     include_once('../../includes/classes/SubjectProgram.php');
     include_once('../../includes/classes/SubjectModuleAudit.php');
 
-    echo Helper::RemoveSidebar();
+    // echo Helper::RemoveSidebar();
 
-
-    ?>
+        ?>
         <head>
             <!-- SUMMER NOTE LINK -->
             <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
@@ -29,9 +28,9 @@
             <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
         
         
-            <script src="../../assets/js/elms-sidebar.js" defer></script>
+            <!-- <script src="../../assets/js/elms-sidebar.js" defer></script>
             <script src="../../assets/js/elms-dropdown.js" defer></script>
-            <script src="../../assets/js/table-dropdown.js" defer></script>
+            <script src="../../assets/js/table-dropdown.js" defer></script> -->
 
             
         
@@ -44,6 +43,7 @@
         </style>
 
     <?php
+
 
     if(
         isset($_GET['sc_id']) &&
@@ -510,7 +510,8 @@
                         "second",
                         "first",
                         "second",
-                        $logout_url
+                        $logout_url,
+                        "second"
                     );
                 
                 ?>
@@ -858,5 +859,4 @@
    
    });
 </script>
-
 

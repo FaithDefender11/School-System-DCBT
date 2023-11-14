@@ -11,7 +11,7 @@
     include_once('../../includes/classes/Student.php');
     include_once('../../includes/classes/Announcement.php');
 
-    echo Helper::RemoveSidebar();
+    // echo Helper::RemoveSidebar();
 
 
     $subjectCodeAssignment = new SubjectCodeAssignment($con);
@@ -109,7 +109,7 @@
 
             <?php if(count($studentSubmittedAndAdminAnnouncement) > 0): ?>
 
-                <header>
+                <header style="pointer-events: none;">
                     <div class="title">
                         <h3>Notifications</h3>
                     </div>
@@ -141,8 +141,6 @@
                             foreach ($studentSubmittedAndAdminAnnouncement as $key => $notification) {
                                 
                                 // $department_id = $row['department_id'];
-
-
                                 
                                 $notification_id = isset($notification['notification_id']) ? $notification['notification_id'] : "";
 
@@ -286,7 +284,7 @@
 
                                 echo "
                                     <tr>
-                                        <td>($notification_id) $sender_name</td>
+                                        <td>$sender_name</td>
                                         <td>$type</td>
                                         <td>$title</td>
                                         <td>$date_creation</td>

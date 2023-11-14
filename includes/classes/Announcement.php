@@ -474,8 +474,13 @@
         }
 
 
-        public function GetAllTeacherAnnouncementUnderEnrolledSubjects($school_year_id, $enrolledSubjectList) {
+        public function GetAllTeacherAnnouncementUnderEnrolledSubjects(
+            $school_year_id, $enrolledSubjectList) {
+            
             if (count($enrolledSubjectList) > 0) {
+
+                // echo "hey";
+
                 $inPlaceholders = implode(', ', array_map(function($value, $index) {
                     return ":subject_code$index";
                 }, $enrolledSubjectList, array_keys($enrolledSubjectList)));

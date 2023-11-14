@@ -481,6 +481,21 @@
                     $capacity = $row['capacity'];
                     $room_number = $row['room_number'] ?? "-";
 
+
+                    $program = new Program($this->con, $program_id);
+
+                    $programDepartmentId = $program->GetProgramDepartmentId($program_id);
+                    
+
+                    $department = new Department($this->con, $programDepartmentId);
+
+                    $department_name = $department->GetDepartmentName();
+
+                    $department_name = $department_name == "Senior High School" ? "shs" : "tertiary";
+                    // var_dump($department_name);
+
+
+
                     $active_status = ($active != "no") 
                         ? "<i style='color: green;' class='fas fa-check'></i>" 
                         : "<i style='color: orange;' class='fas fa-times'></i>";
@@ -497,7 +512,7 @@
                     
                     $editUrl=  "edit.php?id=$course_id&p_id=$program_id";
 
-                    $show_url = "show.php?id=$course_id&per_semester=$school_year_period&term=$school_year_term";
+                    $show_url = "show.php?id=$course_id&per_semester=$school_year_period&term=$school_year_term&type=$department_name";
 
                     //  <td>".$room_number."</td>
 

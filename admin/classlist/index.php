@@ -7,6 +7,7 @@
     include_once('../../includes/classes/Teacher.php');
     include_once('../../includes/classes/Section.php');
     include_once('../../includes/classes/SubjectProgram.php');
+    include_once('../../includes/classes/Room.php');
 
   ?>
 

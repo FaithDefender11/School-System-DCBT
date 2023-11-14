@@ -9,7 +9,7 @@
     include_once('../../includes/classes/Enrollment.php');
     include_once('../../includes/classes/Teacher.php');
  
-    echo Helper::RemoveSidebar();
+    // echo Helper::RemoveSidebar();
 
     $school_year = new SchoolYear($con);
     $school_year_obj = $school_year->GetActiveSchoolYearAndSemester();
@@ -52,7 +52,6 @@
         $getAllAnnouncementOnMyEnrolledSubjects);
 
     // var_dump($mergeAnnouncement);
-
 
     $stmt = $con->prepare("SELECT COUNT(*) as announcement_count FROM announcement");
     $stmt->execute();
@@ -106,21 +105,15 @@
                                             $for_student = $value['for_student'];
                                             $users_id = $value['users_id'];
 
-                                            var_dump($subject_code);
-
-
-                                            // subject_code
+                                            // var_dump($subject_code);
 
                                             $toWhomName = "";
                                             $byWhomName = "";
-
-
 
                                             $announcement_creation_db = $value['date_creation'];
 
                                             $text = "";
                                             $announcement_creation = date("M d, Y h:i a", strtotime($announcement_creation_db));
-
                                             
                                             if($role == "teacher" 
                                                 && $teacher_id != NULL
@@ -142,10 +135,7 @@
 
                                                 $user = new User($con, $users_id);
                                                 $byWhomName = ucwords($user->getFirstName()) . " " . ucwords($user->getLastName());
-
                                             }
-
-
 
                                             echo "
                                                 <tr>
@@ -153,7 +143,6 @@
                                                     <td>$byWhomName</td>
                                                     <td>$toWhomName</td>
                                                     <td>$announcement_creation</td>
-
                                                     <td>
 
                                                         <a href='../dashboard/announcement.php?id=$announcement_id'>

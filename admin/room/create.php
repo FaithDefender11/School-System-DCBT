@@ -9,16 +9,23 @@
     $form = $teacher->createTeacherForm();
     $department_selection = $teacher->CreateTeacherDepartmentSelection();
 
-    if(isset($_POST['create_room_btn'])){
+    if(
+        isset($_POST['create_room_btn']) &&
+        isset($_POST['room_number']) &&
+        isset($_POST['room_capacity'])
+        ){
 
-        $room_name = $_POST['room_name'];
+        // $room_name = $_POST['room_name'];
+
+        $room_number = $_POST['room_number'];
+        
         $room_capacity = $_POST['room_capacity'];
 
 
-        $statement = $con->prepare("INSERT INTO room (room_name, room_capacity) 
-            VALUES (:room_name, :room_capacity)");
+        $statement = $con->prepare("INSERT INTO room (room_number, room_capacity) 
+            VALUES (:room_number, :room_capacity)");
 
-        $statement->bindParam(":room_name", $room_name);
+        $statement->bindParam(":room_number", $room_number);
         $statement->bindParam(":room_capacity", $room_capacity);
 
         if ($statement->execute()) {
@@ -43,17 +50,17 @@
                 <form method="POST" enctype="multipart/form-data">
                     <div class="row">
                         <span>
-                            <label for="room_name">Room Name</label>
+                            <label for="room_number">* Room number</label>
                             <div>
-                                <input type="text" name="room_name" placeholder="">
+                                <input class="form-control" type="text" name="room_number" placeholder="">
                             </div>
                         </span>
                     </div>
                     <div class="row">
                         <span>
-                            <label for="room_capacity">Room Capacity</label>
+                            <label for="room_capacity">* Room Capacity</label>
                             <div>
-                                <input type="text" name="room_capacity" placeholder="">
+                                <input class="form-control"  type="text" name="room_capacity" placeholder="">
                             </div>
                         </span>
                     </div>

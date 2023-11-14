@@ -64,9 +64,11 @@
         <div class="container">
           <div class="row">
             <div class="col-lg-12">
-              <h4 style="font-weight: bold;" class="mt-2 text-primary text-center">
-                My Calendar
+              <br>
+              <h4 style="font-weight: bold;" class="mt-3 text-primary text-start">
+                Given assignments Calendar
               </h4>
+              <br>
               <div id="calendar"></div>
             </div>
           </div>
@@ -74,6 +76,8 @@
       </div>
 
       <div class="col-md-3">
+              <br>
+
         <h4>Legend</h4>
       </div>
 

@@ -1,3 +1,4 @@
+
 <?php 
 
     include_once('../../includes/teacher_header.php');
@@ -12,7 +13,7 @@
     include_once('../../includes/classes/Notification.php');
     include_once('../../includes/classes/Student.php');
 
-    echo Helper::RemoveSidebar();
+    // echo Helper::RemoveSidebar();
     
     ?>
         <head>
@@ -220,7 +221,8 @@
                 "second",
                 "second",
                 "second",
-                $logout_url
+                $logout_url,
+                "first"
             );
         ?>
 
@@ -270,7 +272,7 @@
         <main>
                     
             <div class="bars right">
-                <div class="floating">
+                <!-- <div class="floating">
                     <main>
                         <div class="calendar">
                             <div class="header">
@@ -284,6 +286,17 @@
                         </div>
                         <button onclick="window.location.href = 'calendar.php' " class="btn btn-sm btn-info">View all</button>
                     </main>
+                </div> -->
+
+                <div class="floating">
+                    
+                    <header>
+                        <div class="title">
+                            <h3>Calendar</h3>
+                        </div>
+                    </header>
+                    <button onclick="window.location.href = 'calendar.php'" class="btn btn-sm btn-primary">View assignments</button>
+                    <!-- <button onclick="window.location.href = 'announcement_calendar.php'" class="btn btn-sm btn-primary">View Announcement</button> -->
                 </div>
 
                 <div class="floating">

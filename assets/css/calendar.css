@@ -1,58 +1,60 @@
-.calendar {
-    background-color: #fff;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 100%;
+.calendar-container {
+    max-width: 300px;
+    margin: 0 auto;
 }
 
-.header {
+.calendar-container>.calendar-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #b42372;
-    color: #fff;
-    padding: 10px;
+    margin-bottom: 10px;
 }
 
-.button {
-    cursor: pointer;
-    background-color: transparent;
+.calendar-container>.calendar-header>h2 {
+    font-size: 18px;
+}
+
+.calendar-container>.calendar-header>button {
+    background-color: #0074cc;
+    color: #fff;
     border: none;
-    color: inherit;
-    font-size: 1.2em;
+    padding: 5px 10px;
+    cursor: pointer;
 }
 
-.days {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 5px;
-    padding: 10px;
+.calendar-container>.calendar-header>button:hover {
+    background-color: #0056a7;
 }
 
-.day {
-    width: 14.28%;
+.calendar-container>.calendar {
+    width: 100%;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+.calendar-container>.calendar>thead>tr>th,
+.calendar-container>.calendar>tbody>tr>td {
+    border: 1px solid #ddd;
     text-align: center;
-    font-weight: bold;
+    padding: 8px;
 }
 
-.grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 5px;
-    padding: 10px;
-    background-color: #fff;
+.calendar-container>.calendar>thead>tr>th {
+    background-color: #f2f2f2;
 }
 
-.current-day {
-    background-color: #b42372;
-    color: #fff;
-    border-radius: 50%;
-    width: 25px;
-    height: 25px;
-    display: flex;
-    /* Use flexbox to center content vertically and horizontally */
-    justify-content: center;
-    align-items: center;
+.calendar-container>.calendar>tbody>tr>td {
+    cursor: pointer;
+}
+
+.calendar-container>.calendar>tbody>tr>td:hover {
+    background-color: #f2f2f2;
+}
+
+.today {
+    background-color: lightblue;
 }
 
 .current_day {
@@ -64,8 +66,40 @@
     font-size: 16px;
 }
 
-@media only screen and (max-width: 424px) {
-    .calendar {
-        max-width: 300px;
+@media only screen and (max-width: 768px) {
+    .calendar-container {
+        width: 400px;
+    }
+
+    .calendar-container>.calendar-header {
+        flex-direction: row;
+        text-align: center;
+    }
+
+    .calendar-container>.calendar-header>button {
+        margin: 5px;
+    }
+
+    .calendar-container>.calendar>thead>tr>th,
+    .calendar-container>.calendar>tbody>tr>td {
+        font-size: 14px;
+    }
+}
+
+@media only screen and (max-width: 425px) {
+    .calendar-container {
+        width: 220px;
+    }
+
+    .calendar-container>.calendar-header {
+        flex-direction: column;
+    }
+}
+
+@media only screen and (max-width: 320px) {
+
+    .calendar-container>.calendar>thead>tr>th,
+    .calendar-container>.calendar>tbody>tr>td {
+        font-size: 14px;
     }
 }

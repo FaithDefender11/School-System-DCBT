@@ -14,7 +14,7 @@
     include_once('../../includes/classes/StudentSubject.php');
     include_once('../../includes/classes/SubjectProgram.php');
  
-    echo Helper::RemoveSidebar();
+    // echo Helper::RemoveSidebar();
     
     ?>
         <style>
@@ -52,13 +52,13 @@
         $studentSubjectId = $studentSubject->GetStudentSubjectProgramIdBy(
             $student_id, $subject_code, $school_year_id);
 
-        var_dump($studentSubjectId);
+        // var_dump($studentSubjectId);
         
         $studentSubject = new StudentSubject($con, $studentSubjectId);
         
         $subjectProgramId = $studentSubject->GetStudentSubjectProgramId();
 
-        var_dump($subjectProgramId);
+        // var_dump($subjectProgramId);
 
         $subjectProgram = new SubjectProgram($con, $subjectProgramId);
 

@@ -16,55 +16,9 @@
     include_once('../../includes/classes/SubjectAssignmentSubmission.php');
     include_once('../../includes/classes/SubjectCodeHandoutStudent.php');
 
-    echo Helper::RemoveSidebar();
+    // echo Helper::RemoveSidebar();
     // echo "hey nice";
 
-    ?>
-        <head>
- 
-            <!--Link JavaScript-->
-            <script src="../../assets/js/elms-sidebar.js" defer></script>
-            <script src="../../assets/js/elms-dropdown.js" defer></script>
-            <script src="../../assets/js/table-dropdown.js" defer></script>
-            <script src="../../assets/js/calendar.js" defer></script>
-            
-            <!--Link styleshets-->
-            <link rel="stylesheet" href="../../assets/css/fonts.css" />
-            <link rel="stylesheet" href="../../assets/css/content.css" />
-            <link rel="stylesheet" href="../../assets/css/buttons.css" />
-            <link rel="stylesheet" href="../../assets/css/table.css" />
-            <link rel="stylesheet" href="../../assets/css/calendar.css" />
-
-            <!--Custom CSS-->
-            <link
-            rel="stylesheet"
-            href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-            integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-            crossorigin="anonymous"
-            />
-            <link
-            rel="stylesheet"
-            href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
-            />
-            <!--Link Fonts-->
-            <link
-            rel="stylesheet"
-            href="https://fonts.googleapis.com/css?family=Lato"
-            />
-            <link
-            rel="stylesheet"
-            href="https://fonts.googleapis.com/css?family=Arimo"
-            />
-
-            <style>
-            body {
-                background-color: white;
-                margin: 0;
-            }
-            </style>
-
-        </head>
-    <?php
 
     $section = new Section($con, null);
     $enrollment = new Enrollment($con);
@@ -220,10 +174,11 @@
                 "second",
                 "second",
                 "second",
-                $logout_url
+                $logout_url,
+                "first"
             );
-        
         ?>
+        
 
         <div class="content-header">
 
@@ -256,19 +211,17 @@
 
 
             <div class="bars right">
+               
+
                 <div class="floating">
-                    <main>
-                        <div class="calendar">
-                            <div class="header">
-                                <button class="prev-btn" onclick="previousMonth()">
-                                    &lt;
-                                </button>
-                                <h1 id="current-month"></h1>
-                                <button class="next-btn" onclick="nextMonth()">&gt;</button>
-                            </div>
-                            <div class="days"></div>
+                    
+                    <header>
+                        <div class="title">
+                            <h3>Calendar</h3>
                         </div>
-                    </main>
+                    </header>
+                    <button onclick="window.location.href = 'student_calendar.php'" class="btn btn-sm btn-primary">View Assignment</button>
+                    <button onclick="window.location.href = 'announcement_calendar.php'" class="btn btn-sm btn-primary">View Announcement</button>
                 </div>
 
                 <div class="floating">

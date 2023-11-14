@@ -5,6 +5,7 @@
     include_once('../../includes/classes/Enrollment.php');
     include_once('../../includes/classes/SchoolYear.php');
     include_once('../../includes/classes/Program.php');
+    include_once('../../includes/classes/Department.php');
 
     ?>
         <style>
@@ -82,11 +83,14 @@
             <div class="content">
                 
                 <nav>
+
                     <a href="shs_index.php">
                         <i class="bi bi-arrow-return-left fa-1x"></i>
                         <h3>Back</h3>
                     </a>
+
                 </nav>
+
                 <main>
 
                     <div>

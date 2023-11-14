@@ -12,7 +12,7 @@
     include_once('../../includes/classes/Notification.php');
     include_once('../../includes/classes/Student.php');
 
-    echo Helper::RemoveSidebar();
+    // echo Helper::RemoveSidebar();
     
     ?>
         <head>
@@ -21,7 +21,7 @@
             <script src="../../assets/js/elms-sidebar.js" defer></script>
             <script src="../../assets/js/elms-dropdown.js" defer></script>
             <script src="../../assets/js/table-dropdown.js" defer></script>
-            <script src="../../assets/js/calendar.js" defer></script>
+            <!-- <script src="../../assets/js/calendar.js" defer></script> -->
             <!--Link styleshets-->
             <link rel="stylesheet" href="../../assets/css/fonts.css" />
             <link rel="stylesheet" href="../../assets/css/content.css" />
@@ -232,6 +232,13 @@
 
                     }
                 ?>
+            <?php else:?>
+                <div class="col-md-12">
+                    <br>
+                    <br>
+                    <br>
+                    <h2 class="text-center text-primary">No history of teaching subjects</h2>
+                </div>
             <?php endif;?>
 
     </main>

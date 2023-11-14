@@ -17,7 +17,7 @@
     include_once('../../includes/classes/Notification.php');
     include_once('../../includes/classes/Student.php');
  
-    echo Helper::RemoveSidebar();
+    // echo Helper::RemoveSidebar();
     
     ?>
         <head>
@@ -53,7 +53,6 @@
         // && isset($_GET['c_id'])
         && isset($_GET['sy_id'])
         ){
-
 
 
         $subject_code = $_GET['c'];
@@ -218,41 +217,7 @@
             $new_url = str_replace("/teacher/", "", $base_url);
             $logout_url = "$new_url/lms_logout.php";
         }
-
-
-        $getx = $con->prepare("SELECT 
-
-            t1.*
-        
-            FROM subject_period_code_topic as t1 
-
-            WHERE t1.subject_code=:subject_code
-            AND t1.school_year_id=:school_year_id
-            AND t1.teacher_id=:teacher_id
-
-
-            ORDER BY
-            CASE subject_period_name
-                WHEN 'Prelim' THEN 1
-                WHEN 'Midterm' THEN 2
-                WHEN 'Pre-final' THEN 3
-                WHEN 'Final' THEN 4
-                ELSE 5  
-            END
-
-        ");
-
-        $getx->bindValue(":subject_code", $subject_code);
-        $getx->bindValue(":school_year_id", $school_year_id);
-        $getx->bindValue(":teacher_id", $teacher_id);
-        $getx->execute();
-
-        if($getx->rowCount() > 0){
-
-            $ads = $getx->fetchAll(PDO::FETCH_ASSOC);
-            // var_dump($ads);
-
-        }
+ 
 
         ?>
 
@@ -266,7 +231,9 @@
                         "second",
                         "first",
                         "second",
-                    $logout_url);
+                        $logout_url,
+                        "second"
+                    );
                     
                 ?>
 
@@ -286,7 +253,7 @@
                                 <div class="dropdown-menu">
 
                                     <a 
-                                        href="../announcement/index.php?c_id=<?= $course_id; ?>&c=<?=$subject_code;?>"
+                                        href="../announcement/index.php?c_id=<?= $course_id; ?>&c=<?=$subject_code;?>&sy_id=<?= $school_year_id;?>"
                                         class="dropdown-item" style="color: inherit">
                                         <i class="bi bi-megaphone-fill"></i>
                                         Announcement
@@ -561,6 +528,7 @@
                                                     <a href="section_topic.php?id=<?php echo $subject_period_code_topic_template_id;?>&ct_id=<?php echo $subject_period_code_topic_id; ?>">
                                                         <button class='btn btn-sm btn-success'><i class="fas fa-plus"></i> View</button>
                                                     </a>
+
                                                     <button onclick="window.location.href = '../module/handout_index.php?id=<?php echo $subject_period_code_topic_template_id;?>&sct_id=<?php echo $subject_period_code_topic_id ?>' " class="ml-1 task bg-primary" data-toggle="tooltip" data-placement="bottom" title="Handout">
                                                         <?= $totalHandoutCount; ?> <i class="bi bi-file-earmark">+</i>
                                                     </button>
@@ -593,10 +561,10 @@
                                                                     
                                                                     title="<?= $task_name; ?>"
                                                                     >
-                                                                    <button class="ml-1 task bg-dark">
-                                                                        <?= $module_count; ?> <i class="bi bi-file-earmark">+</i>
-
-                                                                    </button>
+                                                                    
+                                                                        <button class="ml- task bg-dark">
+                                                                            <?= $module_count; ?> <i class="bi bi-file-earmark">+</i>
+                                                                        </button>
                                                                     </a>
 
                                                                 <?php
@@ -606,12 +574,16 @@
                                                     
                                                     ?>
 
+<span class="ml-3 mr-3">
+
+                                                    <?= $sectionModuleItemsCount == 0 ? "" : $sectionModuleItemsCount; ?> 
+                                                    <?= $sectionModuleItemsCount > 1 ? "Sections" : ($sectionModuleItemsCount == 1 ? "Section" : ""); ?>
+</span>
+                                                
                                                 </div>
 
                                                 <div class="action">
 
-                                                    <?= $sectionModuleItemsCount; ?> 
-                                                    <?= $sectionModuleItemsCount > 1 ? "Sections" : ($sectionModuleItemsCount == 1 ? "Section" : ""); ?>
 
                                                     <div class="dropdown">
                                                         <button class="table-drop">
