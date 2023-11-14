@@ -9,13 +9,13 @@
     define('DB_HOST', 'localhost');
     define('DB_PORT', 3307); // Update with your specific port number
 
-    define('DB_USERNAME', 'root');
-    define('DB_PASSWORD', '');
-    define('DB_DATABASE', 'dcbt');
+    // define('DB_USERNAME', 'root');
+    // define('DB_PASSWORD', '');
+    // define('DB_DATABASE', 'dcbt');
 
-    // define('DB_USERNAME', 'u544299924_master');
-    // define('DB_PASSWORD', 'xTVeEU~k=O8:');
-    // define('DB_DATABASE', 'u544299924_main');
+    define('DB_USERNAME', 'u544299924_master');
+    define('DB_PASSWORD', 'xTVeEU~k=O8:');
+    define('DB_DATABASE', 'u544299924_main');
 
     try {
         
