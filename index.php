@@ -11,6 +11,8 @@
     $currentURL = "http://$_SERVER[HTTP_HOST]$_SERVER[SCRIPT_NAME]";
     $baseURL = dirname($currentURL);
 
+    $test = "test";
+    
         
     if(isset($_POST['samp_btn'])
       && isset($_POST['username'])

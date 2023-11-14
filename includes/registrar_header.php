@@ -14,7 +14,7 @@
     include_once('../../includes/classes/Student.php');
     // include_once('../../includes/classes/Task.php');
 
-
+    
     $registrarLoggedIn = isset($_SESSION["registrarLoggedIn"]) 
         ? $_SESSION["registrarLoggedIn"] : "";
 
