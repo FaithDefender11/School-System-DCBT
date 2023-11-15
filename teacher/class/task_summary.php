@@ -133,7 +133,8 @@
             $logout_url = "$new_url/lms_logout.php";
         }
 
-?>
+    ?>
+        <div style="min-width: 100%;" class="content">
 
             <?php 
                 echo Helper::lmsTeacherNotificationHeader(
@@ -143,9 +144,19 @@
                     "second",
                     "first",
                     "second",
-                    "second");
+                    $logout_url,"second");
                 
             ?>
+
+            <div class="content-header">
+                <header>
+
+                    <div class="title">
+                        <h1><span style="font-size: 27px;"><?= $subject_title?></span>  <em style="font-size: 27px;"><?= "SY$fomatTerm-$period_short";?></em></h1>
+                    </div>
+
+                </header>
+            </div>
 
             <nav>
                 <a href="<?= $back_url; ?>">
@@ -153,6 +164,7 @@
                     Back
                 </a>
             </nav>
+            
 
             <main>
                 <div class="floating">
@@ -407,7 +419,7 @@
                                                             # WHEN IT WAS CLICKED.
 
                                                             $status = "
-                                                                <div class='row'>
+                                                                <div style='justify-content: center;' class='row'>
                                                                     <input style='width: 60px' autocomplete='off' maxLength='3' type='text' name='grade_input_$student_id-_$subject_code_assignment_id' id='grade_input_$student_id-_$subject_code_assignment_id'>
                                                                     
                                                                     <button title='Add grade' style='margin-left: 4px' onclick='$gradeStudent'>

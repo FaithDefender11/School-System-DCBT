@@ -20,17 +20,11 @@
 
     if(isset($_GET['id'])
     && isset($_GET['ct_id'])
-    && isset($_GET['ct_id'])
     ){
 
     $subject_period_code_topic_template_id = $_GET['id'];
     $subject_period_code_topic_id = $_GET['ct_id'];
 
-    $subject_period_code_topic_template_id = $_GET['id'];
-    $subject_period_code_topic_id = $_GET['ct_id'];
-
-    // $subjectPeriodCodeTopicTemplate = new SubjectPeriodCodeTopicTemplate(
-    //     $con, $subject_period_code_topic_template_id);
     // $subjectPeriodCodeTopicTemplate = new SubjectPeriodCodeTopicTemplate(
     //     $con, $subject_period_code_topic_template_id);
 
@@ -78,36 +72,54 @@
 
     $back_url = "index.php?c=$topic_subject_code&sy_id=$school_year_id";
 
+
+
     $teachingSubjectCode = $subjectCodeAssignment->GetTeacherTeachingSubjects(
-        $teacherLoggedInId,
-        $school_year_id);
+            $teacherLoggedInId,
+            $school_year_id);
 
-    $teachingSubjects = [];
+        $teachingSubjects = [];
 
 
-    foreach ($teachingSubjectCode as $key => $value) {
+        foreach ($teachingSubjectCode as $key => $value) {
 
-        $teachingCode = $value['subject_code'];
-        array_push($teachingSubjects, $teachingCode);
-    }
+            $teachingCode = $value['subject_code'];
+            array_push($teachingSubjects, $teachingCode);
+        }
 
-    $logout_url = 'http://localhost/school-system-dcbt/lms_logout.php';
+        $logout_url = 'http://localhost/school-system-dcbt/lms_logout.php';
 
-    if ($_SERVER['SERVER_NAME'] === 'localhost') {
+        if ($_SERVER['SERVER_NAME'] === 'localhost') {
 
-        $base_url = 'http://localhost/school-system-dcbt/teacher/';
-    } else {
+            $base_url = 'http://localhost/school-system-dcbt/teacher/';
+        } else {
 
-        $base_url = 'http://' . $_SERVER['HTTP_HOST'] . '/teacher/';
-    }
+            $base_url = 'http://' . $_SERVER['HTTP_HOST'] . '/teacher/';
+        }
 
-    if ($_SERVER['SERVER_NAME'] !== 'localhost') {
+        if ($_SERVER['SERVER_NAME'] !== 'localhost') {
 
-        $new_url = str_replace("/teacher/", "", $base_url);
-        $logout_url = "$new_url/lms_logout.php";
-    }
+            $new_url = str_replace("/teacher/", "", $base_url);
+            $logout_url = "$new_url/lms_logout.php";
+        }
+
 ?>
 
+        <div style="min-width: 100%;" class="content">
+            <?php 
+                echo Helper::lmsTeacherNotificationHeader(
+                    $con, $teacherLoggedInId,
+                    $current_school_year_id,
+                    $teachingSubjects,
+                    "second",
+                    "first",
+                    "second",
+                    $logout_url,
+                    "second"
+                );
+                
+            ?>
+            
             <nav>
                 <a href="<?= $back_url; ?>">
                     <i class="bi bi-arrow-return-left"></i>
@@ -188,7 +200,7 @@
 
                             if(count($mergeHandoutWithAssignmentList) > 0){
                                 ?>
-                                <table class="a" id="handoutt_template_table">
+                                <table class="a" id="handoutt_template_table" style="width: 100%">
                                     <thead>
                                         <tr>
                                             <th>Section</th>

@@ -1,4 +1,5 @@
-<?php
+<?php 
+
     include_once('../../includes/teacher_header.php');
     include_once('../../includes/classes/Section.php');
     include_once('../../includes/classes/Enrollment.php');
@@ -9,6 +10,11 @@
     include_once('../../includes/classes/SubjectAssignmentSubmission.php');
     include_once('../../includes/classes/Student.php');
     include_once('../../includes/classes/Announcement.php');
+
+  
+    echo Helper::RemoveSidebar();
+
+
 
     if(isset($_GET['id'])){
 
@@ -43,31 +49,43 @@
 
         $back_url = "../dashboard/index.php";
 
-?>
+        ?>
 
-            <nav>
-                <a href="<?= $back_url; ?>">
-                    <i class="bi bi-arrow-return-left"></i>
-                    Back
-                </a>
-            </nav>
+            <div class="content">
+                <!-- <nav>
+                    <a href="<?php echo $back_url;?>">
+                        <i class="bi bi-arrow-return-left fa-1x"></i>
+                        <h3>Back</h3>
+                    </a>
+                </nav> -->
+                <br>
+                <div class="col-md-12">
+                    <div class="offset-md-0">
 
-            <main>
-                <div class="floating">
-                    <header>
-                        <div class="title">
-                            <h3><?php  echo $title;?></h3>
-                            <small><?php echo $creation; ?></small>
+                        <div style="max-width: 100%;" class="card">
+                            <div class="card-header">
+
+                                <!-- <button class="btn btn-sm btn-info">
+                                    <a style="color: inherit;" href="announcement_views.php?id=<?php echo $announcement_id ?>">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                </button> -->
+
+                                <h4 class="text-center"><?php  echo $title;?></h4>
+                                <span><?php echo $creation; ?></span>
+                            </div>
+                            <div class="card-body">
+                                <p>
+                                    <?php  echo $content;?>
+                                </p>
+                            </div>
                         </div>
-                    </header>
-                    <main>
-                        <p><?php  echo $content;?></p>
-                    </main>
+                    </div>
+
                 </div>
-            </main>
-        </div>
-    <?php
+                    
+            </div>
+
+        <?php
     }
-    ?>
-    </body>
-</html>
+?>

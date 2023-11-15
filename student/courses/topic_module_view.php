@@ -1,4 +1,5 @@
-<?php
+<?php 
+
     include_once('../../includes/student_lms_header.php');
     include_once('../../includes/classes/SchoolYear.php');
     include_once('../../includes/classes/SubjectCodeHandout.php');
@@ -10,7 +11,11 @@
     include_once('../../includes/classes/Teacher.php');
     include_once('../../includes/classes/Student.php');
 
+    // echo Helper::RemoveSidebar();
+
+
     if(
+        
         isset($_GET['id']) &&
         isset($_GET['ss_id'])
         ){
@@ -64,7 +69,7 @@
 
         // $back_url = "index.php?id=$student_subject_id";
         $back_url = "subject_module.php?id=$student_subject_id";
-    
+     
         # Check If student had goes in to this page.
         $pushToHandoutView = $subjectCodeHandoutStudent->MarkStudentViewedHandout($subject_code_handout_id,
             $studentLoggedInId, $current_school_year_id);
@@ -99,50 +104,53 @@
                         "second",
                         "first",
                         "second",
+                        $logout_url,
                         "second"
                     );
                 
                 ?>
 
-            <div class="content-header">
-                <header>
-                    <div class="title">
-                        <h1><?= $handoutTopic;?> <em>Handout</em></h1>
-                    </div>
-                </header>
-            </div>
-
-            <nav>
-                <a href="<?=$back_url;?>"
-                    ><i class="bi bi-arrow-return-left"></i>Back</a
-                >
-            </nav>
-
-            <main>
-                <div class="floating noBorder">
+                <div class="content-header">
                     <header>
                         <div class="title">
-                            <h3><?= $handout_name;?></h3>
+                            <h1><?= $handoutTopic;?> <em>Handout</em></h1>
+                        </div>
+                    </header>
+                </div>
+
+                <nav>
+                    <a href="<?=$back_url;?>"
+                    ><i class="bi bi-arrow-return-left"></i>Back</a
+                    >
+                </nav>
+
+                <main>
+                    <div class="floating noBorder">
+                    <header>
+                        <div class="title">
+                        <h3><?= $handout_name;?></h3>
                         </div>
                     </header>
                     <main>
                         <form action="">
-                            <div class="row">
-                                <span>
-                                    <label for="file">File</label>
-                                    <div>
-                                        <?php
+                        <div class="row">
+                            <span>
+                                <label for="file">File</label>
+                                <div>
+                                    <p>
+                                        <?php 
+
                                             $extension = pathinfo($handout_file, PATHINFO_EXTENSION);
 
                                             $pos = strpos($handout_file, "img_");
-    
+
                                             $original_file_name = "";
-    
+
                                             // Check if "img_" was found
                                             if ($pos !== false) {
                                                 $original_file_name = substr($handout_file, $pos + strlen("img_"));
                                             }
-    
+
                                             if (in_array(strtolower($extension), ['pdf', 'docx', 'doc'])) {
                                                 ?>
                                                     
@@ -153,16 +161,16 @@
                                                 <?php
                                             }
                                         ?>
-                                    </div>
-                                </span>
-                            </div>
+                                    </p>
+                                </div>
+                            </span>
+                        </div>
                         </form>
                     </main>
-                </div>
-            </main>
-        </div>
-    <?php
+                    </div>
+                </main>
+
+            </div>
+        <?php
     }
-    ?>
-    </body>
-</html>
+?>

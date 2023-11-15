@@ -1,4 +1,5 @@
-<?php
+<?php 
+
     include_once('../../includes/teacher_header.php');
     include_once('../../includes/classes/SubjectCodeAssignment.php');
     include_once('../../includes/classes/SubjectPeriodCodeTopic.php');
@@ -166,83 +167,100 @@
         $getTemplateUploadFiles = $subjectCodeAssignmentTemplate->GetTemplateUploadAssignmentFiles($subject_code_assignment_template_id);
 
         // print_r($getTemplateUploadFiles);
-?>
 
-            <nav>
-                <a href="<?= $back_url; ?>">
-                    <i class="bi bi-arrow-return-left"></i>
-                    Back
-                </a>
-            </nav>
+        ?>
+            <div class='content'>
 
-            <main>
-                <div class="floating">
-                    <header>
-                        <div class="title">
-                            <h3>Add Assignment to: <?php echo $subjectPeriodCodeTopic->GetTopic(); ?></h3>
+                <nav>
+                    <a href="<?php echo $back_url;?>">
+                        <i class="bi bi-arrow-return-left fa-1x"></i>
+                        <h3>Back</h3>
+                    </a>
+                </nav>
+
+
+                <div class='col-md-10 offset-md-1'>
+                        
+                    <div class='card'>
+ 
+                        <!-- <div class='card-header'>
+                            <h5  class='text-muted text-center mb-3'>Assignment Type: <?php echo ucwords($assignment_type) ?></h5>
+                        </div> -->
+
+                        <div class='card-header'>
+                            <h4 class='text-center mb-3'>Add Assignment to: <?php echo $subjectPeriodCodeTopic->GetTopic(); ?></h4>
                         </div>
-                    </header>
-                    <main>
-                        <form method="post" enctype="multipart/form-data">
-                            <div class='form-group mb-2'>
-                                <label for="assignment_name" class='mb-2'>* Assignment Name</label>
+
+                        <div class="card-body">
+                            <form method='POST' enctype="multipart/form-data">
+ 
+                                 <div class='form-group mb-2'>
+                                    <label for="assignment_name" class='mb-2'>* Assignment Name</label>
                                     
-                                <input readonly value="<?php echo $assignment_name; ?>" type="text" name="assignment_name"
-                                    id="assignment_name" 
-                                    class="form-control">   
-                            </div>
-
-                            <?php if (count($getTemplateUploadFiles) > 0 && $assignment_type == "upload"): ?>
-                                <div class='form-group mb-2'>
-                                    <label for="assignment_images" class='mb-2'>Files</label>
-                                    <br>
-                                    <?php foreach ($getTemplateUploadFiles as $key => $photo): ?>
-                                        <?php 
-                                            $uploadFile = $photo['image'];
-                                            $extension = pathinfo($uploadFile, PATHINFO_EXTENSION);
-
-                                            $parts = explode('_', $uploadFile);
-
-                                            $original_file_name = end($parts);
-
-                                            if (in_array(strtolower($extension), ['jpg', 'jpeg', 'png'])) {
-                                                ?>
-                                                    <a title="View File" href='<?php echo "../../".  $photo['image'] ?>' target='__blank' rel='noopener noreferrer'>
-                                                        <img style="margin-left:8px; width: 120px;" 
-                                                            src='<?php echo "../../".$photo['image']; ?>' alt='Given Photo' class='preview-image'>
-                                                    </a>
-                                                    <br>
-                                                <?php
-                                            } elseif (in_array(strtolower($extension), ['pdf', 'docx', 'doc'])) {
-                                                ?>
-                                                    <a title="View File" href='<?php echo "../../".  $photo['image'] ?>' target='__blank' rel='noopener noreferrer'>
-                                                        <?php echo $original_file_name; ?>
-                                                    </a>
-                                                    <br>
-                                                <?php
-                                            }
-                                        ?>
-                                    <?php endforeach; ?>
+                                    <input readonly value="<?php echo $assignment_name; ?>" type="text" name="assignment_name"
+                                        id="assignment_name" 
+                                        class="form-control">
+                                          
                                 </div>
-                            <?php endif; ?>
 
-                            <div class='form-group mb-2'>
-                                <label for="description" class='mb-2'>Instructions <span style="font-size: 12px"></span></label>
+                                
 
-                                <textarea class="form-control summernote" type='text' 
-                                    placeholder='Optional' id="description" name='description'><?php echo $description ?></textarea>
-                            </div>
-                                 
-                            <div class='form-group mb-2'>
-                                <label for="max_score" class='mb-2'>* Max Score</label>
 
-                                <input readonly value="<?php echo $max_score; ?>" maxlength="3"   required class='form-control' type='text' 
-                                    placeholder='Max is 100 points' id="max_score" name='max_score'>
-                            </div>
+                                <?php if (count($getTemplateUploadFiles) > 0 && $assignment_type == "upload"): ?>
+                                    <div class='form-group mb-2'>
+                                        <label for="assignment_images" class='mb-2'>Files</label>
+                                        <br>
+                                        <?php foreach ($getTemplateUploadFiles as $key => $photo): ?>
+                                            <?php 
+                                                $uploadFile = $photo['image'];
+                                                $extension = pathinfo($uploadFile, PATHINFO_EXTENSION);
 
-                            <?php if ($subject_period_code_topic_template_id !== NULL &&
-                                    count($getAllTemplateUploadFiles) > 0): ?>
+                                                $parts = explode('_', $uploadFile);
+
+                                                $original_file_name = end($parts);
+
+                                                if (in_array(strtolower($extension), ['jpg', 'jpeg', 'png'])) {
+                                                    ?>
+                                                        <a title="View File" href='<?php echo "../../".  $photo['image'] ?>' target='__blank' rel='noopener noreferrer'>
+                                                            <img style="margin-left:8px; width: 120px;" 
+                                                                src='<?php echo "../../".$photo['image']; ?>' alt='Given Photo' class='preview-image'>
+                                                        </a>
+                                                        <br>
+                                                    <?php
+                                                } elseif (in_array(strtolower($extension), ['pdf', 'docx', 'doc'])) {
+                                                    ?>
+                                                        <a title="View File" href='<?php echo "../../".  $photo['image'] ?>' target='__blank' rel='noopener noreferrer'>
+                                                            <?php echo $original_file_name; ?>
+                                                        </a>
+                                                        <br>
+                                                    <?php
+                                                }
+                                            ?>
+                                        <?php endforeach; ?>
+                                    </div>
+                                <?php endif; ?>
+
+                                
+
                                 <div class='form-group mb-2'>
+                                    <label for="description" class='mb-2'>Instructions <span style="font-size: 12px"></span></label>
+
+                                    <textarea class="form-control summernote" type='text' 
+                                        placeholder='Optional' id="description" name='description'><?php echo $description ?></textarea>
+                                </div>
+                                 
+                                <div class='form-group mb-2'>
+                                    <label for="max_score" class='mb-2'>* Max Score</label>
+
+                                    <input readonly value="<?php echo $max_score; ?>" maxlength="3"   required class='form-control' type='text' 
+                                        placeholder='Max is 100 points' id="max_score" name='max_score'>
+                                </div>
+
+
+                                <?php if ($subject_period_code_topic_template_id !== NULL &&
+                                    count($getAllTemplateUploadFiles) > 0): ?>
+
+                                    <div class='form-group mb-2'>
                                         <label for="assignment_images" class='mb-2'>Files</label>
                                         <br>
                                         <?php foreach ($getAllTemplateUploadFiles as $key => $photo): ?>
@@ -276,9 +294,9 @@
                                             ?>
                                         <?php endforeach; ?>
                                     </div>
-                            <?php endif; ?>
+                                <?php endif; ?>
 
-                            <div class='form-group mb-2'>
+                                <div class='form-group mb-2'>
                                     <label for="due_date" class='mb-2'>* Set Due Date</label>
                                     <input required class='form-control'
                                         type="datetime-local" id="due_date" name="due_date">
@@ -308,25 +326,29 @@
                                     <label for="max_attempt" class='mb-2'>* Submission Count</label>
                                     <input value="1" required class='form-control' type="text"
                                        id="max_attempt" name="max_attempt">
-                            </div>
+                                </div>
 
-                            <div class="action">
-                                <button type="submit" class="clean large" name='add_assignment_topic_template_<?php echo $subject_code_assignment_template_id; ?>'>Give</button>
-                            </div>
-                        </form>
-                    </main>
+                                
+                                <div class="modal-footer">
+                                    <button type='submit' class='btn btn-success' name='add_assignment_topic_template_<?php echo $subject_code_assignment_template_id; ?>'>Give</button>
+                                </div>
+
+                            </form>
+                        </div>
+
+                    </div>
                 </div>
-            </main>
-        </div>
-    <?php
-        }
-    ?>
-    <script>
-        $(document).ready(function () {
-            $('.summernote').summernote({
-                height:250
-            });
+                
+            </div>
+        <?php
+
+    }
+?>
+
+<script>
+    $(document).ready(function () {
+        $('.summernote').summernote({
+            height:250
         });
-    </script>
-    </body>
-</html>
+    });
+</script>

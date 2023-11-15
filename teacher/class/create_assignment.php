@@ -1,4 +1,5 @@
-<?php
+<?php 
+
     include_once('../../includes/teacher_header.php');
     include_once('../../includes/classes/Section.php');
     include_once('../../includes/classes/SubjectPeriodCodeTopic.php');
@@ -7,6 +8,7 @@
     include_once('../../includes/classes/SubjectCodeAssignment.php');
     include_once('../../includes/classes/SubjectPeriodCodeTopicTemplate.php');
     include_once('../../includes/classes/SubjectCodeAssignmentTemplate.php');
+    
 
     if(isset($_GET['id'])){
 
@@ -148,104 +150,115 @@
                 }
  
             }
+
+        ?>
+            <div class='content'>
+
+                <nav>
+                    <a href="<?php echo $back_url;?>">
+                        <i class="bi bi-arrow-return-left fa-1x"></i>
+                        <h3>Back</h3>
+                    </a>
+                </nav>
+
+                <div class='col-md-10 offset-md-1'>
+                    <div class='card'>
+
+                        <div class='card-header'>
+                            <h4 class='text-center mb-3'>Add Assignment to: <?php echo $subjectPeriodCodeTopic->GetTopic(); ?></h4>
+                        </div>
+
+                        <div class="card-body">
+                            <form method='POST' enctype="multipart/form-data">
+
+                                <div class='form-group mb-2'>
+                                    <label for="type" class='mb-2'>* Type</label>
+                                    <select required class='form-control' name="type" id="type">
+                                        <option value="" disabled selected>Choose Type</option>
+                                        <option value="text">Text</option>
+                                        <option value="upload">Upload</option>
+                                    </select>
+
+                                </div>
+
+                                <div class='form-group mb-2'>
+                                    <label for="assignment_name" class='mb-2'>* Assignment Name</label>
+
+                                    <input required class='form-control' type='text' 
+                                        placeholder='Add Assignment' id="assignment_name" name='assignment_name'>
+                                </div>
+
+                                <div class='form-group mb-2'>
+                                    <label for="assignment_images" class='mb-2'> Image</label>
+
+                                    <input class='form-control' type='file' id="assignment_images" 
+                                        multiple name='assignment_images[]'>
+
+                                </div>
+
+                                <div class='form-group mb-2'>
+                                    <label for="description" class='mb-2'>Instructions <span style="font-size: 12px">(Optional)</span></label>
+
+                                    <textarea class="form-control summernote" type='text' 
+                                        placeholder='Optional' id="description" name='description'></textarea>
+                                </div>
+                                 
+                                <div class='form-group mb-2'>
+                                    <label for="max_score" class='mb-2'>* Max Score</label>
+
+                                    <input maxlength="3" value="100" required class='form-control' type='text' 
+                                        placeholder='Max is 100 points' id="max_score" name='max_score'>
+                                </div>
+
+                                <div class='form-group mb-2'>
+                                    <label for="due_date" class='mb-2'>* Set Due Date</label>
+                                    <input required class='form-control' type="datetime-local"
+                                       id="due_date" name="due_date">
+
+                                </div>
+
+
+                                <div class='form-group mb-2'>
+
+                                    <label>* Allow Late Submission</label><br>
+                                    <input type="radio" id="late_submission_yes" required name="allow_late_submission" value="yes">
+                                    
+                                    <label for="late_submission_yes">Yes</label> &nbsp;
+                                    <input type="radio" checked id="late_submission_no" required name="allow_late_submission" value="no">
+                                    
+                                    <label for="late_submission_no">No</label><br>
+                                </div>
+
+                                
+
+                                <div class='form-group mb-2'>
+                                    <label for="max_attempt" class='mb-2'>* Submission Count</label>
+                                    <input value="1" required class='form-control' type="text"
+                                       id="max_attempt" name="max_attempt">
+                                </div>
+                                
+
+                                
+                                <div class="modal-footer">
+                                    <button type='submit' class='btn btn-success' name='add_assignment_topic_<?php echo $subject_period_code_topic_id; ?>'>Save Section</button>
+                                </div>
+
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+                
+            </div>
+        <?php
+
+    }
 ?>
 
-            <nav>
-                <a href="<?= $back_url; ?>">
-                    <i class="bi bi-arrow-return-left"></i>
-                    Back
-                </a>
-            </nav>
-
-            <main>
-                <div class="floating">
-                    <header>
-                        <div class="title">
-                            <h3>Add Assignment to: <?php echo $subjectPeriodCodeTopic->GetTopic(); ?></h3>
-                        </div>
-                    </header>
-                    <main>
-                        <form method="post" enctype="multipart/form-data">
-                            <div class='form-group mb-2'>
-                                <label for="type" class='mb-2'>* Type</label>
-                                <select required class='form-control' name="type" id="type">
-                                    <option value="" disabled selected>Choose Type</option>
-                                    <option value="text">Text</option>
-                                    <option value="upload">Upload</option>
-                                </select>
-                            </div>
-
-                            <div class='form-group mb-2'>
-                                <label for="assignment_name" class='mb-2'>* Assignment Name</label>
-                                <input required class='form-control' type='text' 
-                                    placeholder='Add Assignment' id="assignment_name" name='assignment_name'>
-                            </div>
-
-                            <div class='form-group mb-2'>
-                                <label for="assignment_images" class='mb-2'> Image</label>
-                                <input class='form-control' type='file' id="assignment_images" 
-                                    multiple name='assignment_images[]'>
-                            </div>
-
-                            <div class='form-group mb-2'>
-                                <label for="description" class='mb-2'>Instructions <span style="font-size: 12px">(Optional)</span></label>
-                                <textarea class="form-control summernote" type='text' 
-                                    placeholder='Optional' id="description" name='description'></textarea>
-                            </div>
-                                 
-                            <div class='form-group mb-2'>
-                                <label for="max_score" class='mb-2'>* Max Score</label>
-
-                                <input maxlength="3" value="100" required class='form-control' type='text' 
-                                    placeholder='Max is 100 points' id="max_score" name='max_score'>
-                            </div>
-
-                            <div class='form-group mb-2'>
-                                <label for="due_date" class='mb-2'>* Set Due Date</label>
-                                <input required class='form-control' type="datetime-local"
-                                    id="due_date" name="due_date">
-                            </div>
-
-
-                            <div class='form-group mb-2'>
-                                <label>* Allow Late Submission</label><br>
-                                <input type="radio" id="late_submission_yes" required name="allow_late_submission" value="yes">
-                                    
-                                <label for="late_submission_yes">Yes</label> &nbsp;
-                                <input type="radio" checked id="late_submission_no" required name="allow_late_submission" value="no">
-                                    
-                                <label for="late_submission_no">No</label><br>
-                            </div>
-
-                            <div class='form-group mb-2'>
-                                <label for="max_attempt" class='mb-2'>* Submission Count</label>
-                                <input value="1" required class='form-control' type="text"
-                                    id="max_attempt" name="max_attempt">
-                            </div>
-                            
-                            <div class="action">
-                                <button 
-                                    type="submit" 
-                                    class="clean large"
-                                    name="add_assignment_topic_<?php echo $subject_period_code_topic_id; ?>"
-                                >
-                                    Save Section
-                                </button>
-                            </div>
-                        </form>
-                    </main>
-                </div>
-            </main>
-        </div>
-    <?php
-    }
-    ?>
-    <script>
-        $(document).ready(function () {
-            $('.summernote').summernote({
-                height:250
-            });
+<script>
+    $(document).ready(function () {
+        $('.summernote').summernote({
+            height:250
         });
-    </script>
-    </body>
-</html>
+    });
+</script>

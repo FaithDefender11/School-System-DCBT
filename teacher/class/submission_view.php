@@ -1,9 +1,11 @@
-<?php
+<?php 
+
     include_once('../../includes/teacher_header.php');
     include_once('../../includes/classes/SubjectAssignmentSubmission.php');
     include_once('../../includes/classes/SubjectCodeAssignment.php');
     include_once('../../includes/classes/SchoolYear.php');
     include_once('../../includes/classes/SubjectCodeAssignment.php');
+    
 
     if(isset($_GET['id'])){
 
@@ -28,50 +30,53 @@
         $current_school_year_id = $school_year_obj['school_year_id'];
         $current_school_year_period = $school_year_obj['period'];
         $current_school_year_term = $school_year_obj['term'];
-?>
 
-            <?php
-                echo Helper::lmsTeacherNotificationHeader(
-                    $con, $teacherLoggedInId,
-                    $current_school_year_id,
-                    $teachingSubjects,
-                    "second",
-                    "first",
-                    "second"
-                );
-            ?>
 
+        
+        ?>
+
+        <div class="content">
             <main>
-                <div class="floating">
+                <div class="floating" id="shs-sy">
+
+                    
                     <header>
                         <div class="title">
-                            <h3>Instructions:</h3>
-                            <small><?php echo $subject_instructions;?></small>
+                            <h4>Instructions:</h4>
+                            <br>
+                            <h3><?php echo $subject_instructions;?></h3>
+
                         </div>
+
                         <div class="action">
-                            <?php
+                            <?php 
+                            
                                 if($get_grade != NULL){
 
                                     ?>
-                                        <small>Remark: <?php echo "$get_grade / $max_grade"?></small>
+                                        <h5><span style="font-size: 17px;">Remark: </span> <?php echo "$get_grade / $max_grade"?></h5>
                                     <?php
                                 }else{
                                         include_once('./addGradeBtnModal.php');
                                     ?>
-                                        <button 
-                                            data-bs-target="#addGradeBtn" 
+                                        <a data-bs-target="#addGradeBtn" 
                                             data-bs-toggle="modal"
-                                            class="btn btn-success" 
-                                        >
+                                            class="btn btn-success" style="cursor:pointer;">
                                             + Add Grade
-                                        </button>
+                                        </a>
                                     <?php
+
                                 }
                             ?>
+                            
+
+                        
                         </div>
                     </header>
-                    <main style="overflow-x: auto">
-                        <table class="a" id="department_table">
+                    <main>
+
+                        
+                        <table id="department_table" class="a" style="margin: 0">
                             <thead>
                                 <tr>
                                     <th>Answer Text</th>
@@ -81,14 +86,16 @@
                             </thead>
                             <tbody>
                                 <?php
+                                
+                                    
                                     $query = $con->prepare("SELECT  
 
-                                    t1.*, t2.*
-                                    
-                                    FROM subject_assignment_submission as t1
+                                        t1.*, t2.*
+                                        
+                                        FROM subject_assignment_submission as t1
 
-                                    INNER JOIN subject_assignment_submission_list as t2 ON t2.subject_assignment_submission_id = t1.subject_assignment_submission_id
-                                    WHERE t1.subject_assignment_submission_id =:subject_assignment_submission_id
+                                        INNER JOIN subject_assignment_submission_list as t2 ON t2.subject_assignment_submission_id = t1.subject_assignment_submission_id
+                                        WHERE t1.subject_assignment_submission_id =:subject_assignment_submission_id
                                     ");
 
                                     $query->bindParam(":subject_assignment_submission_id", $subject_assignment_submission_id);
@@ -96,40 +103,43 @@
 
                                     if($query->rowCount() > 0){
 
-                                        while($row = $query->fetch(PDO::FETCH_ASSOC)){
+                                    while($row = $query->fetch(PDO::FETCH_ASSOC)){
 
-                                            $output_text = $row['output_text'];
-                                            $output_file = $row['output_file'];
+                                        $output_text = $row['output_text'];
+                                        $output_file = $row['output_file'];
 
-                                            $subject_assignment_submission_id = $row['subject_assignment_submission_id'];
+                                        $subject_assignment_submission_id = $row['subject_assignment_submission_id'];
 
 
-                                            $removeDepartmentBtn = "";
-                                            echo "
-                                            <tr>
-                                                <td>$output_text</td>
-                                                <td>$output_file</td>
-                                                <td>
-                                                    <a href='submission_view.php?id=$subject_assignment_submission_id'>
-                                                        <button class='btn btn-primary'>
-                                                            <i class='fas fa-eye'></i>
-                                                        </button>
-                                                    </a>
-                                                    
-                                                </td>
-                                            </tr>
-                                            ";
-                                        }
+                                        $removeDepartmentBtn = "";
+                                        echo "
+                                        <tr>
+                                            <td>$output_text</td>
+                                            <td>$output_file</td>
+                                            <td>
+                                                <a href='submission_view.php?id=$subject_assignment_submission_id'>
+                                                    <button class='btn btn-primary'>
+                                                        <i class='fas fa-eye'></i>
+                                                    </button>
+                                                </a>
+                                                
+                                            </td>
+                                        </tr>
+                                        ";
                                     }
+                                    }
+
                                 ?>
                             </tbody>
                         </table>
+
                     </main>
                 </div>
             </main>
         </div>
-    <?php
+        <?php
     }
-    ?>
-    </body>
-</html>
+
+?>
+
+
