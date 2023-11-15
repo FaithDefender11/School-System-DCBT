@@ -62,7 +62,7 @@
     <title>Daehan College of Business & Technology</title>
     <!--Link JavaScript-->
     <script src="assets/js/image-slider.js" defer></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
     <!--Link stylesheets-->
     <link rel="stylesheet" href="assets/css/home.css" />
     <link rel="stylesheet" href="assets/css/fonts.css" />
@@ -285,14 +285,38 @@
           <main>
             <div class="wrapper">
               <i id="left" class="fa-solid fa-angle-left"></i>
-              <div class="carousel">
-                <img src="assets/images/home/slide-1.jpg" alt="" draggable="false" />
-                <img src="assets/images/home/slide-2.jpg" alt="" draggable="false" />
-                <img src="assets/images/home/slide-3.jpg" alt="" draggable="false" />
-                <img src="assets/images/home/slide-4.jpg" alt="" draggable="false" />
-                <img src="assets/images/home/slide-5.jpg" alt="" draggable="false" />
-                <img src="assets/images/home/slide-6.jpg" alt="" draggable="false" />
-              </div>
+              <ul class="carousel">
+                <div class="card">
+                  <div class="img">
+                    <img src="assets/images/home/slide-1.jpg" alt="" draggable="false" />
+                  </div>
+                </div>
+                <div class="card">
+                  <div class="img">
+                    <img src="assets/images/home/slide-2.jpg" alt="" draggable="false" />
+                  </div>
+                </div>
+                <div class="card">
+                  <div class="img">
+                    <img src="assets/images/home/slide-3.jpg" alt="" draggable="false" />
+                  </div>
+                </div>
+                <div class="card">
+                  <div class="img">
+                    <img src="assets/images/home/slide-4.jpg" alt="" draggable="false" />
+                  </div>
+                </div>
+                <div class="card">
+                  <div class="img">
+                    <img src="assets/images/home/slide-5.jpg" alt="" draggable="false" />
+                  </div>
+                </div>
+                <div class="card">
+                  <div class="img">
+                    <img src="assets/images/home/slide-6.jpg" alt="" draggable="false" />
+                  </div>
+                </div>
+              </ul>
               <i id="right" class="fa-solid fa-angle-right"></i>
             </div>
           </main>
