@@ -47,8 +47,8 @@ if (isset($_SESSION['role'])) {
         if ($_SESSION['role'] === "admin" 
             || $_SESSION['role'] === "teacher" || $_SESSION['role'] === "student") {
 
-            echo "url_users_local2: $url_users_local";
-            return;
+            // echo "url_users_local2: $url_users_local";
+            // return;
 
             header("Location: $url_users_online");
             session_destroy();
