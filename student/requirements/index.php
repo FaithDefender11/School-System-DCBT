@@ -340,7 +340,7 @@
             <main>
                 <div class="floating">
                     <main>
-                        <form method="POST" enctype="multipart/form-data">
+                        <form method="post" enctype="multipart/form-data">
                             <header>
                                 <div class="title">
                                     <h3><?= $studentFullname;?> | <span style="color: blue"><?= $student_type;?> <?php echo "$student_admission_status"; ?></span> Requirements list</h3>
@@ -348,57 +348,59 @@
                             </header>
                             <!-- BOTH SHS AND TERTIARY REQUIREMENTS -->
                             <?php foreach ($universalRequirements as $key => $value): ?>
-                                <header>
-                                    <div class="title">
-                                        <h3><?= $value['requirement_name']; ?> <span style="color: red">*</span></h3>
-                                    </div>
-                                </header>
-                                <div class="row">
-                                    <div>
-                                        <input type="file" multiple class="form-control" name="<?= $value['acronym']; ?>[]">
-                                    </div>
+                                <div class="card-body">
+                                    <h5 class="card-title"><?= $value['requirement_name']; ?> <span class="red">*</span></h5>
+                                    <hr>
+                                    <input multiple class="form-control" type="file" name="<?= $value['acronym']; ?>[]">
 
-                                    <?php 
-                                    
+                                    <?php
                                         $submitedRequirementList = $studentRequirement->GetStudentRequirementList(
                                             $student_requirement_id,
                                             $value['requirement_id']);
-
+        
                                         // var_dump($submitedRequirementList);
-
+        
                                         foreach ($submitedRequirementList as $key => $value) {
-
+        
                                             $uploadFile = $value['file'];
                                             $student_requirement_list_id = $value['student_requirement_list_id'];
                                             
                                             $extension = pathinfo($uploadFile, PATHINFO_EXTENSION);
-
+        
                                             $pos = strpos($uploadFile, "img_");
-
+        
                                             $original_file_name = "";
-
+        
                                             // Check if "img_" was found
                                             if ($pos !== false) {
                                                 $original_file_name = substr($uploadFile, $pos + strlen("img_"));
                                             }
-
+        
                                             if (in_array(strtolower($extension), ['jpg', 'jpeg', 'png'])) {
+        
                                                 ?>
+        
                                                 <span onclick="requirementRemoval(<?php echo $student_requirement_list_id; ?>, <?php echo $student_requirement_id; ?>)" style="cursor: pointer;">
+        
                                                     <i style="color: orange;" class="fas fa-times"></i>
                                                 </span>
+        
                                                 <a title="View File" href='<?php echo "../../".  $value['file'] ?>' target='__blank' rel='noopener noreferrer'>
                                                     <?php echo $original_file_name; ?>
                                                 </a>
                                                 <br>
                                                 <?php
                                             }
-
+        
                                             if (in_array(strtolower($extension), ['pdf', 'docx', 'doc'])) {
                                                 ?>
+        
+        
                                                 <span onclick="requirementRemoval(<?php echo $student_requirement_list_id; ?>, <?php echo $student_requirement_id; ?>)" style="cursor: pointer;">
+        
                                                     <i style="color: orange;" class="fas fa-times"></i>
                                                 </span>
+        
                                                 <a title="View File" href='<?php echo "../../".  $value['file'] ?>' target='__blank' rel='noopener noreferrer'>
                                                     <?php echo $original_file_name; ?>
                                                 </a>
@@ -414,140 +416,143 @@
                                 <?php foreach ($standardRequirements as $key => $value): ?>
                                     <?php if ($value['education_type'] == $student_type 
                                         || $value['education_type'] == "Universal"): ?>
-                                        <header>
-                                            <div class="title">
-                                                <h3><?= $value['requirement_name']; ?> <span style="color: red">*</span></h3>
-                                            </div>
-                                        </header>
-                                        <div class="row">
-                                            <div>
-                                                <input  multiple class="form-control" type="file" name="<?= $value['acronym']; ?>[]">
-                                                <?php 
-                                        
+                                        <div class="card-body">
+                                            <h5 class="card-title"><?= $value['requirement_name']; ?> <span class="red">*</span></h5>
+                                            <hr>
+                                            <input multiple class="form-control" type="file" name="<?= $value['acronym']; ?>[]">
+
+                                            <?php
                                                 $submitedRequirementList = $studentRequirement->GetStudentRequirementList(
                                                     $student_requirement_id,
                                                     $value['requirement_id']);
-
-
+        
+        
                                                 foreach ($submitedRequirementList as $key => $value) {
-
+        
                                                     $uploadFile = $value['file'];
                                                     $student_requirement_list_id = $value['student_requirement_list_id'];
                                                     
                                                     $extension = pathinfo($uploadFile, PATHINFO_EXTENSION);
-
+        
                                                     $pos = strpos($uploadFile, "img_");
-
+        
                                                     $original_file_name = "";
-
+        
                                                     // Check if "img_" was found
                                                     if ($pos !== false) {
                                                         $original_file_name = substr($uploadFile, $pos + strlen("img_"));
                                                     }
-
+        
                                                     if (in_array(strtolower($extension), ['jpg', 'jpeg', 'png'])) {
+        
                                                         ?>
-                                                        <span onclick="requirementRemoval(<?php echo $student_requirement_list_id; ?>, <?php echo $student_requirement_id; ?>)" style="cursor: pointer;">
-                                                            <i style="color: orange;" class="fas fa-times"></i>
-                                                        </span>
-                                                        <a title="View File" href='<?php echo "../../".  $value['file'] ?>' target='__blank' rel='noopener noreferrer'>
-                                                            <?php echo $original_file_name; ?>
-                                                        </a>
-                                                        <br>
+        
+                                                            <span onclick="requirementRemoval(<?php echo $student_requirement_list_id; ?>, <?php echo $student_requirement_id; ?>)" style="cursor: pointer;">
+        
+                                                                <i style="color: orange;" class="fas fa-times"></i>
+                                                            </span>
+        
+                                                            <a title="View File" href='<?php echo "../../".  $value['file'] ?>' target='__blank' rel='noopener noreferrer'>
+                                                                <?php echo $original_file_name; ?>
+                                                            </a>
+                                                            <br>
+        
                                                         <?php
                                                     }
-
+        
                                                     if (in_array(strtolower($extension), ['pdf', 'docx', 'doc'])) {
                                                         ?>
-                                                        <span onclick="requirementRemoval(<?php echo $student_requirement_list_id; ?>, <?php echo $student_requirement_id; ?>)" style="cursor: pointer;">
-                                                            <i style="color: orange;" class="fas fa-times"></i>
-                                                        </span>
-                                                        <a title="View File" href='<?php echo "../../".  $value['file'] ?>' target='__blank' rel='noopener noreferrer'>
-                                                            <?php echo $original_file_name; ?>
-                                                        </a>
-                                                        <br>
+                                                            <span onclick="requirementRemoval(<?php echo $student_requirement_list_id; ?>, <?php echo $student_requirement_id; ?>)" style="cursor: pointer;">
+        
+                                                                <i style="color: orange;" class="fas fa-times"></i>
+                                                            </span>
+        
+                                                            <a title="View File" href='<?php echo "../../".  $value['file'] ?>' target='__blank' rel='noopener noreferrer'>
+                                                                <?php echo $original_file_name; ?>
+                                                            </a>
+                                                            
+                                                            <br>
                                                         <?php
                                                     }
                                                 }
-                                                ?>
-                                            </div>
+                                            ?>
                                         </div>
                                     <?php endif; ?>
                                 <?php endforeach; ?>
                             <?php endif; ?>
 
                             <?php if ($student_admission_status === "Transferee"): ?>
-                                <header>
-                                    <div class="title">
-                                        <h3><?php echo $student_admission_status; ?> below:</h3>
-                                    </div>
-                                </header>
+                                <h5 class="text-center"><?php echo $student_admission_status; ?> Below: </h5>
                                 <?php foreach ($transfereeRequirements as $key => $value): ?>
+
                                     <!-- IF student ( SHS OR Tertiary ) is matched to the education_type ( SHS OR Tertiary )  -->
-                                    
                                     <?php if ($value['education_type'] == $student_type 
                                         || $value['education_type'] == "Universal"): ?>
+                                        
                                         <?php
                                             $acronym = strtolower(str_replace(' ', '_', $value['requirement_name'])); 
                                         ?>
-                                        <header>
-                                            <div class="title">
-                                                <h3><?= $value['requirement_name']; ?> <span style="color: red">*</span></h3>
-                                            </div>
-                                        </header>
-                                        <div class="row">
-                                            <div>
-                                                <input type="file" name="<?= $value['acronym']; ?>[]" multiple class="form-control">
-                                                <?php 
-                                        
+
+                                        <div class="card-body">
+                                            <h5 class="card-title"><?= $value['requirement_name']; ?> <span class="red">*</span></h5>
+                                            <hr>
+                                            <input  multiple class="form-control" type="file" name="<?= $value['acronym']; ?>[]">
+
+                                            <?php
                                                 $submitedRequirementList = $studentRequirement->GetStudentRequirementList(
                                                     $student_requirement_id,
                                                     $value['requirement_id']);
-
-
+        
+        
                                                 foreach ($submitedRequirementList as $key => $value) {
-
+        
                                                     $uploadFile = $value['file'];
                                                     $student_requirement_list_id = $value['student_requirement_list_id'];
                                                     
                                                     $extension = pathinfo($uploadFile, PATHINFO_EXTENSION);
-
+        
                                                     $pos = strpos($uploadFile, "img_");
-
+        
                                                     $original_file_name = "";
-
+        
                                                     // Check if "img_" was found
                                                     if ($pos !== false) {
                                                         $original_file_name = substr($uploadFile, $pos + strlen("img_"));
                                                     }
-
+        
                                                     if (in_array(strtolower($extension), ['jpg', 'jpeg', 'png'])) {
-
+        
                                                         ?>
-                                                        <span onclick="requirementRemoval(<?php echo $student_requirement_list_id; ?>, <?php echo $student_requirement_id; ?>)" style="cursor: pointer;">
-                                                            <i style="color: orange;" class="fas fa-times"></i>
-                                                        </span>
-                                                        <a title="View File" href='<?php echo "../../".  $value['file'] ?>' target='__blank' rel='noopener noreferrer'>
-                                                            <?php echo $original_file_name; ?>
-                                                        </a>
-                                                        <br>
-                                                    <?php
+        
+                                                            <span onclick="requirementRemoval(<?php echo $student_requirement_list_id; ?>, <?php echo $student_requirement_id; ?>)" style="cursor: pointer;">
+        
+                                                                <i style="color: orange;" class="fas fa-times"></i>
+                                                            </span>
+        
+                                                            <a title="View File" href='<?php echo "../../".  $value['file'] ?>' target='__blank' rel='noopener noreferrer'>
+                                                                <?php echo $original_file_name; ?>
+                                                            </a>
+                                                            <br>
+        
+                                                        <?php
                                                     }
-
+        
                                                     if (in_array(strtolower($extension), ['pdf', 'docx', 'doc'])) {
                                                         ?>
-                                                        <span onclick="requirementRemoval(<?php echo $student_requirement_list_id; ?>, <?php echo $student_requirement_id; ?>)" style="cursor: pointer;">
-                                                            <i style="color: orange;" class="fas fa-times"></i>
-                                                        </span>
-                                                        <a title="View File" href='<?php echo "../../".  $value['file'] ?>' target='__blank' rel='noopener noreferrer'>
-                                                            <?php echo $original_file_name; ?>
-                                                        </a>
-                                                        <br>
+                                                            <span onclick="requirementRemoval(<?php echo $student_requirement_list_id; ?>, <?php echo $student_requirement_id; ?>)" style="cursor: pointer;">
+        
+                                                                <i style="color: orange;" class="fas fa-times"></i>
+                                                            </span>
+        
+                                                            <a title="View File" href='<?php echo "../../".  $value['file'] ?>' target='__blank' rel='noopener noreferrer'>
+                                                                <?php echo $original_file_name; ?>
+                                                            </a>
+                                                            
+                                                            <br>
                                                         <?php
                                                     }
                                                 }
-                                                ?>
-                                            </div>
+                                            ?>
                                         </div>
                                     <?php endif; ?>
                                 <?php endforeach; ?>
