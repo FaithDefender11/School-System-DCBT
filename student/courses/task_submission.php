@@ -503,7 +503,6 @@
                         "second",
                         "first",
                         "second",
-                        $logout_url,
                         "second"
                     );
                 
