@@ -44,18 +44,6 @@
 
         ?>
 
-            <?php 
-                echo Helper::lmsTeacherNotificationHeader(
-                    $con, $teacherLoggedInId,
-                    $current_school_year_id,
-                    $teachingSubjects,
-                    "second",
-                    "second",
-                    "second",
-                    "second"
-                ); 
-            ?>
-
             <div class="content">
 
                 <nav>
