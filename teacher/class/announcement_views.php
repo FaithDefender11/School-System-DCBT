@@ -9,9 +9,6 @@
     include_once('../../includes/classes/Announcement.php');
 
 
-    echo Helper::RemoveSidebar();
-
-
     if(isset($_GET['id'])){
 
         $school_year = new SchoolYear($con);
@@ -35,7 +32,6 @@
         $back_url = "subject_announcement.php?id=$teacher_announcement_id";
 
         ?>
-        <div class="content">
             <!-- <nav>
                 <a href="<?php echo $back_url;?>">
                     <i class="bi bi-arrow-return-left fa-1x"></i>
@@ -50,7 +46,7 @@
                         </div>
                     </header>
                     
-                    <main>
+                    <main style="overflow-x: auto">
 
                         <table id="department_table" class="a" style="margin: 0">
                             <thead>
@@ -144,4 +140,6 @@
         </div>
         <?php
     }
-?>
+    ?>
+    </body>
+</html>
