@@ -221,7 +221,6 @@
                 "second",
                 "second",
                 "second",
-                $logout_url,
                 "first"
             );
         ?>
@@ -295,7 +294,7 @@
                             <h3>Calendar</h3>
                         </div>
                     </header>
-                    <button onclick="window.location.href = 'calendar.php'" class="btn btn-sm btn-primary">View assignments</button>
+                    <button onclick="window.location.href = 'calendar.php'" class="btn btn-info">View assignments</button>
                     <!-- <button onclick="window.location.href = 'announcement_calendar.php'" class="btn btn-sm btn-primary">View Announcement</button> -->
                 </div>
 
@@ -398,7 +397,7 @@
                             <li></li>
                         </ul> -->
 
-                    <button onclick="window.location.href = 'announcement_index.php?sy_id=<?= $current_school_year_id;?>'" class="btn btn-sm btn-primary">View all</button>
+                    <button onclick="window.location.href = 'announcement_index.php?sy_id=<?= $current_school_year_id;?>'" class="btn btn-info">View all</button>
                 </div>
 
             </div>
