@@ -178,7 +178,7 @@
                     </div>
                     <div class="action">
                         <div class="dropdown">
-                            <div class="icon">
+                            <div class="icon" style="cursor:pointer">
                                 <i class="bi bi-three-dots-vertical"></i>
                             </div>
                             <div class="dropdown-menu">
