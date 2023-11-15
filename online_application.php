@@ -81,16 +81,6 @@
           </div>
 
         </main>
-        <header>
-          <div class="title">
-            <h3>Or</h3>
-          </div>
-        </header>
-        <main>
-          <div class="action">
-            <a href="#">Check/edit submitted form</a>
-          </div>
-        </main>
       </div>
       <main>
         <div class="footer">
