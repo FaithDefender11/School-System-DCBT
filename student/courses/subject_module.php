@@ -248,7 +248,7 @@
 
         // var_dump($overview_audit_name);
 
-        $doesAuditSuccess = $subjectModuleAudit->Inser  tAuditOfSubjectModule(
+        $doesAuditSuccess = $subjectModuleAudit->InsertAuditOfSubjectModule(
             $student_subject_id, $current_school_year_id,
             $overview_audit_name, $studentLoggedInId, $subject_code);
 
