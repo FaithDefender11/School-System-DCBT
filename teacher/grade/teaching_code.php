@@ -43,12 +43,25 @@
         // include_once('./addGradeSubjectCodeModal.php');
 
         ?>
+
+            <?php 
+                echo Helper::lmsTeacherNotificationHeader(
+                    $con, $teacherLoggedInId,
+                    $current_school_year_id,
+                    $teachingSubjects,
+                    "second",
+                    "second",
+                    "second",
+                    "second"
+                ); 
+            ?>
+
             <div class="content">
 
                 <nav>
                     <a href="<?php echo $back_url;?>">
                         <i class="bi bi-arrow-return-left"></i>
-                        <h3>Back</h3>
+                        Back
                     </a>
                 </nav>
 
