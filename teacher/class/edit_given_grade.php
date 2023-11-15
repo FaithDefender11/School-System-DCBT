@@ -66,8 +66,10 @@
             <main>
                 <div class="floating">
                     <header>
-                        <h3>Modify Grade</h3>
-                        <small>Maximum Score: <?php echo $max_score; ?></small>
+                        <div class="title">
+                            <h3>Modify Grade</h3>
+                            <small>Maximum Score: <?php echo $max_score; ?></small>
+                        </div>
                     </header>
                     <main>
                         <form method="post">
