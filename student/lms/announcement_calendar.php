@@ -1,6 +1,4 @@
-
-<?php 
-
+<?php
     include_once('../../includes/student_lms_header.php');
     include_once('../../includes/classes/SchoolYear.php');
     include_once('../../includes/classes/SubjectCodeAssignment.php');
@@ -9,7 +7,6 @@
     include_once('../../includes/classes/Enrollment.php');
     include_once('../../includes/classes/StudentSubject.php');
     require_once("../../includes/classes/Announcement.php");
-
 
     $school_year = new SchoolYear($con);
     $school_year_obj = $school_year->GetActiveSchoolYearAndSemester();
@@ -51,160 +48,124 @@
         $getAllAnnouncementOnMyEnrolledSubjects);
 
     # List of all Enrolled Subject subject_period_code_topic_id(s)
-
-
 ?>
 
-<!DOCTYPE html>
-<html>
+            <nav>
+              <a href="student_dashboard.php"
+                ><i class="bi bi-arrow-return-left"></i>Back</a
+              >
+            </nav>
 
-  <head>
+            <main>
+              <div class="floating">
+                <header>
+                  <div class="title">
+                    <h3>Announcement Calendar</h3>
+                  </div>
+                </header>
+                <main>
+                  <div id="calendar"></div>
+                </main>
+              </div>
+            </main>
+          </div>
+          <script>
+            $(document).ready(function () {
 
-   
-    <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.css"
-      rel="stylesheet"
-    />
-    <!-- JS for jQuery -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <!-- JS for full calender -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.js"></script>
-    <!-- bootstrap css and js -->
-    <link
-      rel="stylesheet"
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-    />
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-  
+              let studentId = `
+                <?php echo $student_id; ?>
+              `;
 
-    <style>
+              let current_school_year_id = `
+                <?php echo $current_school_year_id; ?>
+              `;
 
-    .fc-content {
-      width: auto !important;
-      white-space: normal !important;
-      overflow: visible !important;
-    }
-    </style>
-  </head>
+              let enrollment_id = `
+                <?php echo $enrollment_id; ?>
+              `;
 
-<body>
+              studentId = studentId.trim();
+              current_school_year_id = current_school_year_id.trim();
+              enrollment_id = enrollment_id.trim();
 
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-12">
-          <h4 style="font-weight: bold;" class="mt-2 text-primary text-center">
-            Announcement Calendar
-          </h4>
-          <br>
-          <div style="max-width: 70%;" id="calendar"></div>
-        </div>
-      </div>
-    </div>
-    <br />
-</body>
+              display_events(studentId, current_school_year_id, enrollment_id);
 
-<script>
+            }); //end document.ready block
 
-  $(document).ready(function () {
+            function display_events(studentId, current_school_year_id, enrollment_id) {
 
-    let studentId = `
-      <?php echo $student_id; ?>
-    `;
+              var events = []; // Initialize an empty array to store events
 
-    let current_school_year_id = `
-      <?php echo $current_school_year_id; ?>
-    `;
+              $.ajax({
+                url: `../../ajax/class/announcement_calendar.php?st_id=${studentId}&sy_id=${current_school_year_id}&e_id=${enrollment_id}`,
 
-    let enrollment_id = `
-      <?php echo $enrollment_id; ?>
-    `;
+                dataType: 'json',
 
-    studentId = studentId.trim();
-    current_school_year_id = current_school_year_id.trim();
-    enrollment_id = enrollment_id.trim();
+                success: function (response) {
 
-    display_events(studentId, current_school_year_id, enrollment_id);
+                  var result = response.data;
 
-  }); //end document.ready block
+                  console.log(response);
+                  // console.log(result);
 
-  function display_events(studentId, current_school_year_id, enrollment_id) {
+                  $.each(result, function (i, item) {
 
-    var events = []; // Initialize an empty array to store events
+                      events.push({
+                          announcement_id: result[i].announcement_id,
+                          title: result[i].title,
+                          start: result[i].start,
+                          end: result[i].end,
+                          // color: result[i].color,
+                          url: result[i].url
+                          // url: ''
+                      });
+                  });
 
-    $.ajax({
-      url: `../../ajax/class/announcement_calendar.php?st_id=${studentId}&sy_id=${current_school_year_id}&e_id=${enrollment_id}`,
+                  var calendar = $('#calendar').fullCalendar({
+                  
+                    defaultView: 'month',
+                    timeZone: 'local',
+                    editable: true,
+                    selectable: true,
+                    selectHelper: true,
 
-      dataType: 'json',
+                    select: function (startDate, endDate) {
 
-      success: function (response) {
+                      // console.log(startDate)
+                      // $('#event_start_date').val(moment(startDate).format('YYYY-MM-DD'));
+                      // $('#event_end_date').val(moment(endDate).format('YYYY-MM-DD'));
+                      // $('#event_entry_modal').modal('show');
 
-        var result = response.data;
+                    },
 
-        console.log(response);
-        // console.log(result);
+                    events: events,
 
-        $.each(result, function (i, item) {
+                    eventRender: function (event, element, view) {
 
-            events.push({
-                announcement_id: result[i].announcement_id,
-                title: result[i].title,
-                start: result[i].start,
-                end: result[i].end,
-                // color: result[i].color,
-                url: result[i].url
-                // url: ''
-            });
-        });
+                      element.bind('click', function () {
 
-        var calendar = $('#calendar').fullCalendar({
-         
-          defaultView: 'month',
-          timeZone: 'local',
-          editable: true,
-          selectable: true,
-          selectHelper: true,
+                        // alert(event.subject_code_assignment_id);
 
-          select: function (startDate, endDate) {
+                      });
 
-            // console.log(startDate)
-            // $('#event_start_date').val(moment(startDate).format('YYYY-MM-DD'));
-            // $('#event_end_date').val(moment(endDate).format('YYYY-MM-DD'));
-            // $('#event_entry_modal').modal('show');
+                    },
+                    eventAfterRender: function (event, element, view) {
+                      // Modify the event title to display only the end date
+                      // element.find('.fc-title').text(moment(event.end).format('YYYY-MM-DD'));
+                    }
+                  }); 
 
-          },
+                },
+                error: function (xhr, status, error) {
 
-          events: events,
+                  console.error('Error:', error);
+                  console.log('Status:', status);
+                  console.log('Response Text:', xhr.responseText);
+                  console.log('Response Code:', xhr.status);
 
-          eventRender: function (event, element, view) {
-
-            element.bind('click', function () {
-
-              // alert(event.subject_code_assignment_id);
-
-            });
-
-          },
-          eventAfterRender: function (event, element, view) {
-            // Modify the event title to display only the end date
-            // element.find('.fc-title').text(moment(event.end).format('YYYY-MM-DD'));
-          }
-        }); 
-
-      },
-      error: function (xhr, status, error) {
-
-        console.error('Error:', error);
-        console.log('Status:', status);
-        console.log('Response Text:', xhr.responseText);
-        console.log('Response Code:', xhr.status);
-
-      },
-    });
-  }
-
-   
-</script>
-
-
-</html>
+                },
+              });
+            }
+          </script>
+        </body>
+      </html>

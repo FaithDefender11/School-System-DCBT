@@ -25,14 +25,6 @@
     # List of all Enrolled Subject subject_period_code_topic_id(s)
 ?>
 
-            <div class="content-header">
-              <header>
-                <div class="title">
-                  <h1>Calendar</h1>
-                </div>
-              </header>
-            </div>
-
             <nav>
               <a href="student_dashboard.php"
                 ><i class="bi bi-arrow-return-left"></i>Back</a
