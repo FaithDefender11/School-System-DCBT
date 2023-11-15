@@ -35,8 +35,10 @@
             <?php
                 echo Helper::lmsStudentNotificationHeader(
                     $con, $studentLoggedInId,
-                    $school_year_id, $enrolledSubjectList,
+                    $current_school_year_id,
+                    $enrolledSubjectList,
                     $enrollment_id,
+                    "second",
                     "second",
                     "second",
                     "second"
