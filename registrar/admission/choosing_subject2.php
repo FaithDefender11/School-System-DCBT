@@ -151,7 +151,7 @@
                         <header class="mb-2">
 
                             <div class="title">
-                                <h5 style="font-weight: bold;" class="text-center text-primary">A.Y <?= "$current_school_year_term $period_short"?> Available subjects for <?php echo " <a title='View students grade records' href='$student_grade_record' target='_blank'>$program_name</a>" ?> </h5>
+                                <h3 style="font-weight: bold;" class="text-center text-primary">A.Y <?= "$current_school_year_term $period_short"?> Available subjects for <?php echo " <a title='View students grade records' href='$student_grade_record' target='_blank'>$program_name</a>" ?> </h3>
                             </div>
 
                         </header>

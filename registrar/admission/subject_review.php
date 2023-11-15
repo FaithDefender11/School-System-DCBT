@@ -108,7 +108,8 @@
                                         <i class="bi bi-file-earmark-x"></i>
                                         Mark as Regular
                                     </a>
-                                <?php elseif ($student_enrollment_student_status === "Regular"): ?>
+                                
+                                    <?php elseif ($student_enrollment_student_status === "Regular"): ?>
                                     <a onclick="enrollmentStudentStatusChanging(<?php echo $student_enrollment_id; ?>, <?php echo $student_id; ?>, <?php echo $current_school_year_id; ?>, 'Irregular')"
                                         href="#" class="dropdown-item" style="color: blue">
                                         <i class="bi bi-file-earmark-x"></i>
@@ -133,17 +134,6 @@
                                 </a>
 
                             </div>
-
-
-                            <!-- <button onclick="javascript: <?php echo $retakeFunc; ?>" 
-                                                        type="button" class="btn-sm <?php echo $retake;?>">Retake</button> -->
-
-                            <!-- <button onclick="enrollmentStudentStatusChanging(<?php echo $student_enrollment_id;?>, <?php echo $student_id;?>,<?php echo $current_school_year_id;?>, '<?php echo "Irregular"?>')" 
-                                type="button" class="btn-sm <?php echo $irreg;?>">Irregular</button>
-                                                        
-                            <button onclick="enrollmentStudentStatusChanging(<?php echo $student_enrollment_id;?>, <?php echo $student_id;?>,<?php echo $current_school_year_id;?>, '<?php echo "Regular"?>')"
-                                type="button" class="btn-sm <?php echo $reg;?>">Regular</button> -->
-
                         </div>
                     </div>
 

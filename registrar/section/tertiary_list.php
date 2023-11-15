@@ -5,6 +5,7 @@ include_once('../../includes/classes/Section.php');
 include_once('../../includes/classes/Enrollment.php');
 include_once('../../includes/classes/SchoolYear.php');
 include_once('../../includes/classes/Program.php');
+include_once('../../includes/classes/Department.php');
 
 $section = new Section($con, null);
 $school_year = new SchoolYear($con, null);

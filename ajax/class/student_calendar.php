@@ -53,7 +53,6 @@
         }
     }
 
-
     foreach ($subjectCodeAssignmentsArray as $key => $subjectCodeAssignmentIds) {
 
         $subjectCodeAssignmentExec = new SubjectCodeAssignment($con,
@@ -72,8 +71,8 @@
         $due_time_hours = date("h:i a", strtotime($due_date_db));
  
 
-        $url = "../../student/courses/task_submission.php?sc_id=$subjectCodeAssignmentIds";
-
+        $url = "../../student/courses/task_submission.php?sc_id=$subjectCodeAssignmentIds&ss_id=";
+// http://localhost/school-system-dcbt//student/courses/task_submission.php?sc_id=102&ss_id=3682
         $dataCalendar[] = array(
             'subject_code_assignment_id' => $subjectCodeAssignmentIds,
             'title' => $due_time_hours . " " . $assignment_name,

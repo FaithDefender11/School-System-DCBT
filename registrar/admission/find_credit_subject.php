@@ -9,6 +9,7 @@
     include_once('../../includes/classes/Pending.php');
     include_once('../../includes/classes/StudentSubject.php');
     include_once('../../includes/classes/SubjectProgram.php');
+    include_once('../../includes/classes/Program.php');
     
     echo Helper::RemoveSidebar();
 
@@ -46,6 +47,12 @@
 
         $student_program_id = $section->GetSectionProgramId($student_enrollment_course_id);
         $student_course_level = $student->GetStudentLevel($student_id);
+        $student_username = $student->GetUsername();
+
+        $student_firstname = $student->GetFirstName();
+        $student_lastname = $student->GetLastName();
+        $student_middle_name = $student->GetMiddleName();
+        $student_email = $student->GetEmail();
 
         $student_enrollment_course_id = $enrollment->GetEnrollmentFormCourseId($student_id, $enrollment_id, $current_school_year_id);
 
@@ -64,7 +71,9 @@
         $subject_program = new SubjectProgram($con);
 
 
+        $program = new Program($con, $student_program_id);
 
+        $program_name = $program->GetProgramAcronym();
 
 
         $selected_subject_program_id = NULL;
@@ -86,6 +95,25 @@
         $student_program_id,
         $student_id, $selected_subject_program_id);
 
+
+        $student_grade_record = "../student/record_details.php?id=$student_id&grade_records=show";
+
+
+        # If student is not enroleld yet, use their pending enrollees id.
+        # If enrolled, use the student id.
+
+        // var_dump($student_username);
+
+        $enrollee_id = NULL;
+
+        if($student_username == NULL){
+            $enrollee_id = $student->GetNonEnrolledStudentPendingId($student_firstname,
+                $student_lastname, $student_middle_name, $student_email);
+        }
+
+        // var_dump($enrollee_id);
+
+
         ?>
             <div class="content">
                 <nav>
@@ -99,12 +127,53 @@
                         <header class="mb-2">
 
                             <div class="title">
-                                <h4 class="text-center">School Subject Curriculum</h4>
+                                <!-- <h4 class="text-center">School Subject Curriculum</h4> -->
+                                <h3 style="font-weight: bold;" class="text-center text-primary">Curriculum subjects for <?php echo " <a title='View students grade records' href='$student_grade_record' target='_blank'>$program_name</a>" ?> </h3>
+
+                            </div>
+
+                            <div class="action">
+                                <div class="dropdown">
+
+                                    <button class="icon">
+                                        <i class="bi bi-three-dots-vertical"></i>
+                                    </button>
+
+                                    <div class="dropdown-menu">
+
+                                        <?php 
+                                            if($student_username == NULL){
+
+                                                ?>
+                                                    <a onclick="window.open('../requirements/view_new_enrollee.php?id=<?= $enrollee_id;?>', '_blank');"
+                                                        href="#" class="dropdown-item">
+                                                            <i class="bi bi-file-earmark-x"></i>
+                                                            View Credentials
+                                                    </a>
+                                                <?php
+
+                                            }else{
+
+                                                ?>
+                                                    <a onclick="window.open('../requirements/view_student.php?id=<?= $student_id;?>', '_blank');"
+                                                    href="#" class="dropdown-item">
+                                                        <i class="bi bi-file-earmark-x"></i>
+                                                        View Credentials
+                                                    </a>
+                                                <?php
+                                            }
+                                        ?>
+                                       
+
+
+                                    </div>
+
+                                </div>
                             </div>
 
                         </header>
 
-                        <div class="filters">
+                        <!-- <div class="filters">
                             <table>
                                 <tr>
                                     <th rowspan="2" style="border-right: 2px solid black">
@@ -113,15 +182,15 @@
                                     <th><button>Subject Code</button></th>
                                 </tr>
                             </table>
-                        </div>
+                        </div> -->
 
 
-                        <input type="hidden" id="student_program_id" value="<?php echo $student_program_id ?>">
-                        <input type="hidden" id="student_id" value="<?php echo $student_id ?>">
+                        <!-- <input type="hidden" id="student_program_id" value="<?php echo $student_program_id ?>"> -->
+                        <!-- <input type="hidden" id="student_id" value="<?php echo $student_id ?>"> -->
                         <!-- <input type="hidden" id="subject_program_id" value="<?php echo $subject_program_id ?>"> -->
 
 
-                        <form id="findCurriculumForm" method="POST" class="p-3">
+                        <!-- <form id="findCurriculumForm" method="POST" class="p-3">
                             <div class="input-group">
                                 <?php 
                                     $searchText = $search_word !== NULL ? $search_word : "";
@@ -150,7 +219,7 @@
 
                             </div>
 
-                        </form>
+                        </form> -->
 
 
                         <div class="col-md-8 show_search">
@@ -176,8 +245,8 @@
                                         <table id="credited_subject_table" class="a" style="margin: 0">
                                             <thead>
                                                 <tr class="text-center"> 
-                                                    <th rowspan="2">SS_ID</th>
-                                                    <th rowspan="2">SP_ID</th>
+                                                    <!-- <th rowspan="2">SS_ID</th> -->
+                                                    <!-- <th rowspan="2">SP_ID</th> -->
                                                     <th rowspan="2">Code</th>
                                                     <th rowspan="2">Description</th>
                                                     <th rowspan="2">Unit</th>
@@ -344,11 +413,12 @@
                                                                 </button>
                                                             ";
                                                         }
+                                                        //   <td>$ss_subject_program_id</td>
+                                                        //         <td>$subject_program_id</td>
 
                                                         echo "
                                                             <tr class='text-center'>
-                                                                <td>$ss_subject_program_id</td>
-                                                                <td>$subject_program_id</td>
+                                                              
                                                                 <td>$subject_code</td>
                                                                 <td>$subject_title</td>
                                                                 <td>$unit</td>
@@ -386,6 +456,20 @@
 
 
 <script>
+
+    var dropBtns = document.querySelectorAll(".icon");
+
+    dropBtns.forEach(btn => {
+        btn.addEventListener("click", (e) => {
+            const dropMenu = e.currentTarget.nextElementSibling;
+            if (dropMenu.classList.contains("show")) {
+                dropMenu.classList.toggle("show");
+            } else {
+                document.querySelectorAll(".dropdown-menu").forEach(item => item.classList.remove("show"));
+                dropMenu.classList.add("show");
+            }
+        });
+    });
     
     // Enrollment ID WILL BE NULL
     // FINALIZED

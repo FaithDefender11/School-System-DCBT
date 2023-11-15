@@ -391,7 +391,7 @@
                 $current_school_year_id);
 
 
-            
+            $created_student_username = NULL;
            
             ?>
                 <div class="content">
@@ -472,22 +472,22 @@
                                                 <?php
                                             }
 
-                                        if($isSectionFull){
-                                            ?>
-                                                <a data-bs-target="#changeSectionModalBtn" 
-                                                    data-bs-toggle="modal"
-                                                    class="dropdown-item" style="cursor:pointer;color: blue">
-                                                    <i class="bi bi-file-earmark-x"></i>
-                                                    Change Section
-                                                </a>
-                                                <a  href="../section/create_section.php?id=<?= $student_program_id;?>&st_id=<?= $student_id?>&c_id=<?= $student_course_id?>&info=subject_insertion&e_id=<?= $enrollment_id?>"
-                                                    class="dropdown-item" style="cursor:pointer;color: green">
-                                                    <i class="bi bi-file-earmark-x"></i>
-                                                    Create Section
-                                                </a>
-                                                
-                                            <?php
-                                        }
+                                            if($isSectionFull || !$isSectionFull){
+                                                ?>
+                                                    <a data-bs-target="#changeSectionModalBtn" 
+                                                        data-bs-toggle="modal"
+                                                        class="dropdown-item" style="cursor:pointer;color: blue">
+                                                        <i class="bi bi-file-earmark-x"></i>
+                                                        Change Section
+                                                    </a>
+                                                    <a  href="../section/create_section.php?id=<?= $student_program_id;?>&st_id=<?= $student_id?>&c_id=<?= $student_course_id?>&info=subject_insertion&e_id=<?= $enrollment_id?>"
+                                                        class="dropdown-item" style="cursor:pointer;color: green">
+                                                        <i class="bi bi-file-earmark-x"></i>
+                                                        Create Section
+                                                    </a>
+                                                    
+                                                <?php
+                                            }
 
                                         ?>
                                     </div>
@@ -788,6 +788,7 @@
                                             <input type="hidden" name="enrollment_id" id="enrollment_id" value="<?php echo $enrollment_id;?>">
                                             <input type="hidden" name="student_id" id="student_id" value="<?php echo $student_id;?>">
                                             <input type="hidden" name="school_year_id" id="school_year_id" value="<?php echo $current_school_year_id;?>">
+                                            <input type="hidden" name="generated_password" id="generated_password"">
                                             
                                             <button name="print_enrolled_subject" id="toClickButton" class="btn btn btn-sm btn-primary">Send email</button>
 
@@ -880,6 +881,7 @@
                                                         $student_lastname,
                                                         $created_student_unique_id);
 
+                                                    $generate_password = $student->GenerateRandomPassword();
 
                                                     $updateStudentEnrollmentFormBasedSuccess = false;
 
@@ -891,7 +893,8 @@
                                                             $student_enrollment_course_id,
                                                             $student_enrollment_student_status,
                                                             $created_student_unique_id,
-                                                            $created_student_username);
+                                                            $created_student_username,
+                                                            $generate_password);
 
                                                         # Create the Student Requirement Table
                                                         # Enrollment New Form.
@@ -1028,7 +1031,8 @@
                                                                 // Alert::success("Enrollment Form ID: $student_enrollment_form_id is now enrolled and New section has been created.", "../student/record_details.php?id=$student_id&enrolled_subject=show");
                                                                 
                                                                 Alert::successEnrollment("Enrollment Form ID: $student_enrollment_form_id is now enrolled and New section has been created.", "");
-                                                                $student_subject->SendingEmailAfterSuccessfulEnrollment($processEnrolled);
+                                                                $student_subject->SendingEmailAfterSuccessfulEnrollment(
+                                                                    $processEnrolled, $generate_password);
                                                                 
                                                                 // exit();
                                                             
@@ -1063,8 +1067,10 @@
                                                         );
 
                                                         Alert::successEnrollment("Enrollment Form ID: $student_enrollment_form_id is now enrolled.", "../student/record_details.php?id=$student_id&enrolled_subject=show");
+                                                        
                                                         #approvestate
-                                                        $student_subject->SendingEmailAfterSuccessfulEnrollment($processEnrolled);
+                                                        $student_subject->SendingEmailAfterSuccessfulEnrollment(
+                                                            $processEnrolled,  $generate_password);
 
                                                     }
 

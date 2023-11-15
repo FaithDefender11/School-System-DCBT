@@ -26,7 +26,7 @@
                 $current_school_year_id);
 
         
-        var_dump($student_requirement_id);
+        // var_dump($student_requirement_id);
 
         $student = new Student($con, $student_id);
         

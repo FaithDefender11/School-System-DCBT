@@ -25,7 +25,6 @@
             $pending_enrollees_id,
             $current_school_year_id);
 
-
         $studentRequirement = new StudentRequirement($con, $student_requirement_id);
 
         $student_type = $studentRequirement->GetStudentType();

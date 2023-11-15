@@ -139,7 +139,7 @@
         }
     }
 
-    print_r($reachedMaxEnrollmentArr);
+    // print_r($reachedMaxEnrollmentArr);
 
     # You placed the student to te ABE1-A Capacity: 3
     # ABE1-A has already 3 enrolled student
@@ -153,22 +153,22 @@
 
 <div class="content">
 
-    <?php echo Helper::RegistrarDepartmentSection(false,
-        "shs_index", "tertiary_index");?>
+    <!-- <?php echo Helper::RegistrarDepartmentSection(false,
+        "shs_index", "tertiary_index");?> -->
 
     <main>
         <div class="floating" id="shs-sy">
 
             <header>
-
                 <div class="title">
-                    <h3 style="font-weight: bold;">My processed conflict section enrollment form</h3>
+                    <!-- <h3 style="font-weight: bold;">My processed conflict section enrollment form</h3> -->
+                    <h3 style="font-weight: bold;">Dashboard</h3>
                 </div>
             </header>
 
             <main>
                 <table id="shs_program_table"
-                    class="a" style="margin: 0">
+                    class="a" style="margin: 0; display: none">
                     <thead>
                         <tr>
                             <th>ID</th>

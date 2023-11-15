@@ -2195,13 +2195,16 @@
     }
 
     public function SendingEmailAfterSuccessfulEnrollment(
-        $processEnrolled){
+        $processEnrolled, $generatedPassword){
 
         echo "<script>\n";
         echo "let processEnrolledJs = `$processEnrolled`;\n";
         echo "processEnrolledJs = processEnrolledJs.trim();\n";
         echo "if (processEnrolledJs == false) {\n";
+        echo "var generatedPasswordInput = document.getElementById('generated_password');\n";
+        echo "generatedPasswordInput.value = '$generatedPassword';\n";
         echo "var buttonToClick = document.getElementById('toClickButton');\n";
+
         echo "buttonToClick.click();\n";
         echo "\$processEnrolled = true;\n";
         echo "}\n";

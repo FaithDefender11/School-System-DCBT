@@ -86,13 +86,10 @@ class Student{
         return isset($this->sqlData['is_tertiary']) ? $this->sqlData["is_tertiary"] : null; 
     }
     public function GetUsername() {
-        return isset($this->sqlData['username']) ? $this->sqlData["username"] : ""; 
+        return isset($this->sqlData['username']) ? $this->sqlData["username"] : NULL; 
     }
     public function GetEmail() {
         return isset($this->sqlData['email']) ? $this->sqlData["email"] : ""; 
-    }
-    public function GetStudentProfile() {
-        return isset($this->sqlData['profilePic']) ? $this->sqlData["profilePic"] : "";
     }
     public function GetFirstName() {
         return isset($this->sqlData['firstname']) ? ucwords($this->sqlData["firstname"]) : ""; 
@@ -110,6 +107,27 @@ class Student{
             return $sql->fetchColumn();
         }
         return -1;
+    }
+
+    public function GetNonEnrolledStudentPendingId($firstname, $lastname, $middle_name, $email) {
+
+        $sql = $this->con->prepare("SELECT pending_enrollees_id FROM pending_enrollees
+            WHERE firstname=:firstname
+            AND lastname=:lastname
+            AND middle_name=:middle_name
+            AND email=:email
+        ");
+        
+        $sql->bindValue(":firstname", $firstname);
+        $sql->bindValue(":lastname", $lastname);
+        $sql->bindValue(":middle_name", $middle_name);
+        $sql->bindValue(":email", $email);
+        $sql->execute();
+
+        if($sql->rowCount() > 0){
+            return $sql->fetchColumn();
+        }
+        return NULL;
     }
 
     public function GetStudentCourseLevel() {
@@ -416,16 +434,21 @@ class Student{
         $student_enrollment_course_level, $to_change_course_id, 
         $student_enrollment_student_status,
         $created_student_unique_id = null,
-        $created_student_username = null){
+        $created_student_username = null,
+        $generate_password = ""){
 
         // Update the student's password in the database
+
+
+        $hashed_password = password_hash($generate_password, PASSWORD_BCRYPT);
 
         $query = $this->con->prepare("UPDATE student 
             SET course_id=:change_course_id,
                 student_statusv2=:change_student_statusv2,
                 course_level=:change_course_level,
                 student_unique_id=:change_student_unique_id,
-                username=:change_username
+                username=:change_username,
+                password=:generate_username
 
             WHERE student_id=:student_id
             AND student_unique_id IS NULL
@@ -437,6 +460,7 @@ class Student{
         $query->bindParam(":change_course_level", $student_enrollment_course_level);
         $query->bindParam(":change_student_unique_id", $created_student_unique_id);
         $query->bindParam(":change_username", $created_student_username);
+        $query->bindParam(":generate_username", $hashed_password);
 
         $query->bindParam(":student_id", $student_id);
         // $query->bindParam(":course_id", $coursen_level);
@@ -875,6 +899,27 @@ class Student{
         return $ageInterval->y;
 
     }
+
+    function GenerateRandomPassword() {
+        $uppercaseLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $lowercaseLetters = 'abcdefghijklmnopqrstuvwxyz';
+        $numbers = '0123456789';
+
+        // Generate the first letter (uppercase)
+        $firstLetter = $uppercaseLetters[rand(0, strlen($uppercaseLetters) - 1)];
+
+        // Generate the next two letters (lowercase)
+        $nextTwoLetters = substr(str_shuffle($lowercaseLetters), 0, 2);
+
+        // Generate 5 random numbers
+        $randomNumbers = substr(str_shuffle($numbers), 0, 5);
+
+        // Concatenate the letters and numbers
+        $password = $firstLetter . $nextTwoLetters . $randomNumbers;
+
+        return $password;
+    }
+
     public function CheckEnrolleeExists($firstname, $lastname, $middle_name,
          $birthday, $email){
 

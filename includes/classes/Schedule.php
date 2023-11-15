@@ -2464,7 +2464,7 @@
             return $query->fetchAll(PDO::FETCH_ASSOC);
         }
 
-        return null;
+        return [];
     }
 
      public function GetAssignedSubjectScheduleTeacherId($subject_code,

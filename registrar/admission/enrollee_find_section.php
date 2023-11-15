@@ -250,7 +250,7 @@
 
                 $insert_enrollment_id = $con->lastInsertId();
 
-                var_dump($insert_enrollment_id);
+                // var_dump($insert_enrollment_id);
 
                 if($insert_enrollment_id != NULL){
 
@@ -279,8 +279,8 @@
                         $description, $current_school_year_id, $registrarUserId
                     );
 
-                    var_dump($doesAuditInserted);
-                    return;
+                    // var_dump($doesAuditInserted);
+                    // return;
                 }
 
                 // Approved Request

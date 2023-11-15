@@ -37,7 +37,7 @@
             $enrollment_id = $_POST['enrollment_id'] ?? NULL;
             $student_id = $_POST['student_id'] ?? NULL;
             $school_year_id = $_POST['school_year_id'] ?? NULL;
-
+            $generated_password = $_POST['generated_password'] ?? "";
 
             $student = new Student($con, $student_id);
 
@@ -46,7 +46,14 @@
             $lastname = $student->GetLastName();
             $middle = $student->GetMiddleName();
 
+
+            $student_username = $student->GetUsername();
             
+
+            // var_dump($student_username);
+            // var_dump($generated_password);
+
+            // return;
 
             $enrollment = new Enrollment($con);
             
@@ -278,7 +285,9 @@
                     $isEmailSent = $email->SendEnrolledSubjectListViaPdf(
                         $studentEmail,
                         $pdfContent, // Send the PDF content directly
-                        $pdfName
+                        $pdfName,
+                        $student_username,
+                        $generated_password
                     );
 
                     $url = "../student/record_details.php?id=$student_id&enrolled_subject=show";
