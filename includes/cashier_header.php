@@ -9,17 +9,10 @@
 
     $cashierLoggedIn = isset($_SESSION["cashierLoggedIn"]) 
         ? $_SESSION["cashierLoggedIn"] : "";
-
-    $cashierUserId = isset($_SESSION["cashierUserId"]) 
-        ? $_SESSION["cashierUserId"] : "";
     
     $cashierLoggedInObj = new User($con, $cashierLoggedIn);
 
-    if (!isset($_SESSION['cashierLoggedIn']) 
-        || $_SESSION['cashierLoggedIn'] == ''
-        
-        || !isset($_SESSION['cashierUserId']) 
-        || $_SESSION['cashierUserId'] == '') {
+    if (!isset($_SESSION['cashierLoggedIn']) || $_SESSION['cashierLoggedIn'] == '') {
     
         if ($_SERVER['SERVER_NAME'] === 'localhost') {
             header("Location: /school-system-dcbt/enrollment_login.php");
