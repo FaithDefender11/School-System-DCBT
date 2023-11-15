@@ -306,8 +306,6 @@
 
                                             $equivalent_totalProgressAct = round($pecentage_equivalent_total, 0, PHP_ROUND_HALF_UP);
                                             $equivalent_totalProgressAct = $equivalent_totalProgressAct . "%";
-
-                                            echo "$equivalent_totalProgressAct";
                                         } 
                                     ?>
                                     <div class="progress-bar" style="width: <?= $equivalent_totalProgressAct;?>">
