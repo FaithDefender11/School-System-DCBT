@@ -1,5 +1,4 @@
-<?php 
-
+<?php
     include_once('../../includes/student_lms_header.php');
     include_once('../../includes/classes/Section.php');
     include_once('../../includes/classes/Enrollment.php');
@@ -12,9 +11,6 @@
     include_once('../../includes/classes/Announcement.php');
     include_once('../../includes/classes/SubjectProgram.php');
     include_once('../../includes/classes/SubjectCodeAssignment.php');
-
-    // echo Helper::RemoveSidebar();
-
 
     if(isset($_GET['id'])
         ){
@@ -42,46 +38,39 @@
 
         $subject_title = $subjectProgram->GetTitle();
 
-        // var_dump($subject_code);
-
         $allGivenAssignments = $subjectCodeAssignment->GetSubjectCodeAssignments(
             $subject_code, $school_year_id);
-
-        // var_dump($allGivenAssignments);
-        
-        // $back_url = "index.php?id=$student_subject_id";
         $back_url = "subject_module.php?id=$student_subject_id";
+?>
 
+            <?php
+                echo Helper::lmsStudentNotificationHeader(
+                    $con, $studentLoggedInId,
+                    $school_year_id, $enrolledSubjectList,
+                    $enrollment_id,
+                    "second",
+                    "first",
+                    "second"
+                );
+            ?>
 
+            <nav>
+                <a href="<?= $back_url; ?>">
+                    <i class="bi bi-arrow-return-left"></i>
+                    Back
+                </a>
+            </nav>
 
-
-        
-        ?>
-
-            <div class="content">
-
-                <nav style="min-width: 100%; margin-bottom: 7px;
-                    display: flex;flex-direction: row;">
-                    <a href="<?php echo $back_url;?>">
-                        <i class="bi bi-arrow-return-left fa-1x"></i>
-                        <h3>Back</h3>
-                    </a>
-
-                </nav>
-
-                <main>
-                    <div class="floating" id="shs-sy">
-                        <header>
-                            <div class="title">
-                                <h3><?= $subject_title;?> Scores</h3>
-                            </div>
-
-                        </header>
-                        
-                        <main>
-                            <?php if(count($allGivenAssignments) > 0):?>
-
-                            <table id="progress_table" class="a" style="margin: 0">
+            <main>
+                <div class="floating">
+                    <header>
+                        <div class="title">
+                            <h3><?= $subject_title;?> Scores</h3>
+                        </div>
+                    </header>
+                    <main style="overflow-x: auto">
+                        <?php if(count($allGivenAssignments) > 0):?>
+                            <table class="a" id="progress_table">
                                 <thead>
                                     <tr>
                                         <th>Assignment</th>
@@ -94,7 +83,6 @@
                                 </thead>
                                 <tbody>
                                     <?php
-
                                         $now = date("Y-m-d H:i:s");
                                         $totalScore = 0;
                                         $totalOver = 0;
@@ -210,10 +198,8 @@
                                                     $score = "?";
                                                     $submitted_grade_status = "";
                                                     $equivalent = "";
-
                                                 }
                                             }
-
 
                                             echo "
                                                 <tr>
@@ -226,46 +212,35 @@
                                                 </tr>
                                             ";
                                         }
-
                                     ?>
                                 </tbody>
                                 <?php if(true): ?>
-                                    <tr class="text-right">
+                                    <tr>
                                         <td colspan="6">Overall: 
-
-                                        <?php 
-                                            
-                                            if($totalOver > 0){
-                                                 $pecentage_equivalent_total = ($totalScore / $totalOver) * 100;
-                                                $equivalent_total = round($pecentage_equivalent_total, 0, PHP_ROUND_HALF_UP);
-                                                $equivalent_total = $equivalent_total . "%";
+                                            <?php
+                                                if($totalOver > 0){
+                                                    $pecentage_equivalent_total = ($totalScore / $totalOver) * 100;
+                                                    $equivalent_total = round($pecentage_equivalent_total, 0, PHP_ROUND_HALF_UP);
+                                                    $equivalent_total = $equivalent_total . "%";
 
                                                 echo "$totalScore / $totalOver = $equivalent_total";
                                             }else{
                                                 echo "??";
                                             }
-                                           
-                                            
-                                        ?></td>
+                                            ?>
+                                        </td>
                                     </tr>
                                 <?php endif; ?>
                             </table>
-                                <?php else:?>
-                                    <div class="col-md-12">
-                                        <h4 class="text-center">No data</h4>
-                                    </div>
-
-                            <?php endif;?>
-
-                            
-
-                        </main>
-                        
-                    </div>
-                </main>
-            </div>
-
-        <?php
-
+                        <?php else: ?>
+                            <h4 style="text-align: center;">No Data</h4>
+                        <?php endif; ?>
+                    </main>
+                </div>
+            </main>
+        </div>
+    <?php
     }
-?>
+    ?>
+    </body>
+</html>

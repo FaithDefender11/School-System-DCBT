@@ -1,51 +1,61 @@
-const currentMonth = new Date();
-const daysContainer = document.querySelector('.days');
-const currentMonthElement = document.getElementById('current-month');
+document.addEventListener("DOMContentLoaded", function() {
+  const calendarBody = document.getElementById("calendar-body");
+  const prevMonthButton = document.getElementById("prev-month");
+  const nextMonthButton = document.getElementById("next-month");
+  const currentMonthYear = document.getElementById("current-month-year");
 
-function renderCalendar() {
-  const year = currentMonth.getFullYear();
-  const month = currentMonth.getMonth();
+  let currentDate = new Date();
+  renderCalendar(currentDate);
 
-  currentMonthElement.textContent = new Date(year, month, 1).toLocaleString(
-    'en-US',
-    { month: 'long', year: 'numeric' }
-  );
+  prevMonthButton.addEventListener("click", function() {
+      currentDate.setMonth(currentDate.getMonth() - 1);
+      renderCalendar(currentDate);
+  });
 
-  daysContainer.innerHTML = '';
+  nextMonthButton.addEventListener("click", function() {
+    currentDate.setMonth(currentDate.getMonth() + 1);
+    renderCalendar(currentDate);
+  });
+  
+  function renderCalendar(date) {
+      const year = date.getFullYear();
+      const month = date.getMonth();
+      const firstDay = new Date(year, month, 1);
+      const lastDay = new Date(year, month + 1, 0);
 
-  const firstDay = new Date(year, month, 1);
-  const lastDay = new Date(year, month + 1, 0);
-  const today = new Date();
+      calendarBody.innerHTML = "";
+      currentMonthYear.textContent = `${new Intl.DateTimeFormat('en-US', { month: 'long' }).format(date)} ${year}`;
 
-  for (
-    let day = new Date(firstDay);
-    day <= lastDay;
-    day.setDate(day.getDate() + 1)
-  ) {
-    const dayElement = document.createElement('div');
-    dayElement.textContent = day.getDate();
-    daysContainer.appendChild(dayElement);
+      let day = new Date(firstDay);
+      day.setDate(day.getDate() - day.getDay());
 
-    if (day.toDateString() === today.toDateString()) {
-      dayElement.classList.add('current-day');
-    }
+      while (day <= lastDay) {
+          const tr = document.createElement("tr");
+          for (let i = 0; i < 7; i++) {
+              const td = document.createElement("td");
+              td.textContent = day.getDate();
+              if (day.getMonth() !== month) {
+                  td.classList.add("inactive");
+              }
+              if (isToday(day)) {
+                  td.classList.add("today");
+              }
+              td.addEventListener("click", function() {
+                const clickedDate = new Date(day);
+                const formattedDate = clickedDate.toISOString().slice(0, 10); // Format the date as YYYY-MM-DD
+                window.location.href = `calendar.php`;
+              });
+              tr.appendChild(td);
+              day.setDate(day.getDate() + 1);
+          }
+          calendarBody.appendChild(tr);
+      }
   }
-}
 
-function previousMonth() {
-  currentMonth.setMonth(currentMonth.getMonth() - 1);
-  renderCalendar();
-}
-
-function nextMonth() {
-  currentMonth.setMonth(currentMonth.getMonth() + 1);
-  renderCalendar();
-}
-
-renderCalendar();
-
-const daysRow = document.querySelector('.days_headers');
-
-function renderDays() {
-  daysRow.innerHTML = '';
-}
+  function isToday(date) {
+      const today = new Date();
+      return date.getDate() === today.getDate() &&
+             date.getMonth() === today.getMonth() &&
+             date.getFullYear() === today.getFullYear();
+  }
+});

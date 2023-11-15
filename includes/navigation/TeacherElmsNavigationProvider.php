@@ -50,7 +50,7 @@
                 $sideBarNavigationItem .= Helper::createNavByIcon("Class", 
                     "bi bi-clipboard-data icon",
                     $classes_lms_url,
-                    Constants::$navigationClass . Helper::GetActiveClass($page, "class"), true);
+                    Constants::$navigationClass . Helper::GetActiveClass($page, "class"));
  
                 $sideBarNavigationItem .= Helper::createNavByIcon("Grade", 
                     "bi bi-book icon",
