@@ -16,6 +16,27 @@
     // echo Helper::RemoveSidebar();
     
     ?>
+        <head>
+ 
+            <!--Link JavaScript-->
+            <script src="../../assets/js/elms-sidebar.js" defer></script>
+            <script src="../../assets/js/elms-dropdown.js" defer></script>
+            <script src="../../assets/js/table-dropdown.js" defer></script>
+            <script src="../../assets/js/calendar.js" defer></script>
+            <!--Link styleshets-->
+            <link rel="stylesheet" href="../../assets/css/fonts.css" />
+            <link rel="stylesheet" href="../../assets/css/content.css" />
+            <link rel="stylesheet" href="../../assets/css/buttons.css" />
+            <link rel="stylesheet" href="../../assets/css/table.css" />
+            <link rel="stylesheet" href="../../assets/css/calendar.css" />
+            <style>
+            body {
+                background-color: white;
+                margin: 0;
+            }
+            </style>
+
+        </head>
     <?php
 
  
@@ -169,6 +190,7 @@
     
 ?>
 
+    
 
         <?php 
             echo Helper::lmsTeacherNotificationHeader(
@@ -421,7 +443,5 @@
 
         </main>
     </div>
-    <script src="../../assets/js/elms-sidebar.js"></script>
-    <script src="../../assets/js/elms-dropdown.js"></script>
     </body>
 </html>
