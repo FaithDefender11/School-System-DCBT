@@ -2206,12 +2206,12 @@ class Helper {
                         <?php if($notificationCount > 0):?>
 
                             <div class="action">
-                                <button onclick="window.location.href = '<?php echo $showAllPath . "index.php"; ?>'" class="default">See all</button>
+                                <button onclick="window.location.href = '<?php echo $showAllPath . "index.php"; ?>'" class="default">View all</button>
                                 <button class="clean">Mark all read</button>
                             </div>
                             <?php else:?>
                                 <div class="action">
-                                    <button onclick="window.location.href = '<?php echo $showAllPath . "index.php"; ?>'" class="default">Show all</button>
+                                    <button onclick="window.location.href = '<?php echo $showAllPath . "index.php"; ?>'" class="default">View all</button>
                                     <button class="clean">Mark all read</button>
                                     <!-- <h5 class="text-center">No notification.</h5> -->
                                 </div>
@@ -2745,13 +2745,13 @@ class Helper {
                         <?php if($notificationCount > 0):?>
 
                             <div class="action">
-                                <button onclick="window.location.href = '<?php echo $showAllPath . "index.php"; ?>'" class="default">Show All</button>
+                                <button onclick="window.location.href = '<?php echo $showAllPath . "index.php"; ?>'" class="default">View All</button>
                                 <button class="clean">Mark all read</button>
                             </div>
 
                             <?php else:?>
                                 <div class="action">
-                                    <button onclick="window.location.href = '<?php echo $showAllPath . "index.php"; ?>'" class="default">Show all</button>
+                                    <button onclick="window.location.href = '<?php echo $showAllPath . "index.php"; ?>'" class="default">View all</button>
                                     <button class="clean">Mark all read</button>
                                     <!-- <h5 class="text-center">No notification.</h5> -->
                                 </div>
