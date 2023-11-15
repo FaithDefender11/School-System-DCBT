@@ -62,10 +62,9 @@
         $recordsPerPageDropdown .= '</select>';
     }
 
-    
+    $back_url = "http://dcbt.online/teacher/dashboard/index.php";
+    header("Location: $back_url");
 
-    // $recordsPerPageDropdown = "";
-    // echo $selectedTermId;
 ?>
 
             <nav>
