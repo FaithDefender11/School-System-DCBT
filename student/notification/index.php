@@ -302,7 +302,7 @@
             
                                                 $button_url = "
                                                     <button onclick='window.location.href=\"$assignment_notification_url\"' class='btn btn-primary btn-sm'>
-                                                        <i class='fas fa-eye'></i>
+                                                        View
                                                     </button>
                                                 ";
             
@@ -369,7 +369,7 @@
             
                                                 $button_url = "
                                                     <button onclick='window.location.href=\"$assignment_notification_url\"' class='btn btn-primary btn-sm'>
-                                                        <i class='fas fa-eye'></i>
+                                                        View
                                                     </button>
                                                 ";
             
@@ -420,7 +420,7 @@
             
                                                 $button_url = "
                                                     <button onclick='window.location.href=\"$assignment_notification_url\"' class='btn btn-primary btn-sm'>
-                                                        <i class='fas fa-eye'></i>
+                                                        View
                                                     </button>
                                                 ";
             
@@ -452,7 +452,7 @@
                                                 
                                                 $button_url = "
                                                     <button onclick='window.location.href=\"$announcement_url\"' class='btn btn-primary btn-sm'>
-                                                        <i class='fas fa-eye'></i>
+                                                        View
                                                     </button>
                                                 ";
                                             }
