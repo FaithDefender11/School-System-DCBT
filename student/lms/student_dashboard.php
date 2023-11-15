@@ -220,8 +220,8 @@
                             <h3>Calendar</h3>
                         </div>
                     </header>
-                    <button onclick="window.location.href = 'student_calendar.php'" class="btn btn-sm btn-primary">View Assignment</button>
-                    <button onclick="window.location.href = 'announcement_calendar.php'" class="btn btn-sm btn-primary">View Announcement</button>
+                    <button onclick="window.location.href = 'student_calendar.php'" class="btn btn-sm btn-info">View Assignment</button>
+                    <button onclick="window.location.href = 'announcement_calendar.php'" class="btn btn-sm btn-info">View Announcement</button>
                 </div>
 
                 <div class="floating">
@@ -292,7 +292,7 @@
                         </div>
                     </header>
 
-                    <button onclick="window.location.href = 'announcement_index.php?sy_id=<?= $school_year_id;?>'" class="btn btn-sm btn-primary">View all</button>
+                    <button onclick="window.location.href = 'announcement_index.php?sy_id=<?= $school_year_id;?>'" class="btn btn-sm btn-info">View all</button>
                 </div>
 
             </div>
