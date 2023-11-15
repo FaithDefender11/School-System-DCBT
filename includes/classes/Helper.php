@@ -2003,13 +2003,13 @@ class Helper {
         // var_dump($notificationCount);
 
         ?>
-            <div style="min-height: 70px;" class="icons">
+            <div class="icons">
 
                 <button class="sidebar" id="sidebar-btn">
                     <i class="bi bi-list"></i>
                 </button>
 
-                <div style="width: 76%;" class="notif">
+                <div class="notif">
                     
                     <button
                         class="icon"
@@ -2366,13 +2366,13 @@ class Helper {
 
         ?>
 
-            <div style="min-height: 70px;" class="icons">
+            <div class="icons">
 
                 <button class="sidebar" id="sidebar-btn">
                     <i class="bi bi-list"></i>
                 </button>
 
-                <div style="width: 76%;" class="notif">
+                <div class="notif">
                     <button
                         class="icon"
                         data-toggle="tooltip"
