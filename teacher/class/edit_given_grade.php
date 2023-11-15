@@ -1,5 +1,4 @@
-<?php 
-
+<?php
     include_once('../../includes/teacher_header.php');
     include_once('../../includes/classes/Section.php');
     include_once('../../includes/classes/SubjectPeriodCodeTopic.php');
@@ -7,7 +6,6 @@
     include_once('../../includes/classes/Schedule.php');
     include_once('../../includes/classes/SubjectCodeAssignment.php');
     include_once('../../includes/classes/SubjectAssignmentSubmission.php');
-    
 
     if(isset($_GET['id'])){
 
@@ -56,49 +54,42 @@
             # Check if it rewached the max score, it fnot proceed to editing.
 
         }
+?>
 
-        ?>
-            <div class='content'>
+            <nav>
+                <a href="<?= $back_url; ?>">
+                    <i class="bi bi-arrow-return-left"></i>
+                    Back
+                </a>
+            </nav>
 
-                <nav>
-                    <a href="<?php echo $back_url;?>">
-                        <i class="bi bi-arrow-return-left fa-1x"></i>
-                        <h3>Back</h3>
-                    </a>
-                </nav>
-
-
-                <div class='col-md-10 offset-md-1'>
-                    <div class='card'>
-
-                        <div class='card-header'>
-                            <h4 class='text-center text-muted mb-3'>Modify Grade</h4>
-                            <span>Maximum Score: <?php echo $max_score; ?></span>
-                        </div>
-
-                        <div class="card-body">
-                            <form method='POST' enctype="multipart/form-data">
-
-                                <div class='form-group mb-2'>
-                                    <label for="subject_grade" class='mb-2'>* Given Grade</label>
-
-                                    <input maxlength="3" value="<?php echo $subject_grade; ?>" required class='form-control' type='text' 
-                                        placeholder='Add Handout' id="subject_grade" name='subject_grade'>
-                                </div>
-
-                                <div class="modal-footer">
-                                    <button type='submit' class='btn btn-success' name='edit_given_assignment_<?php echo $subject_assignment_submission_id; ?>'>Save Section</button>
-                                </div>
-
-                            </form>
-                        </div>
-
-                    </div>
+            <main>
+                <div class="floating">
+                    <header>
+                        <h3>Modify Grade</h3>
+                        <small>Maximum Score: <?php echo $max_score; ?></small>
+                    </header>
+                    <main>
+                        <form method="post">
+                            <div class="row">
+                                <span>
+                                    <label for="subject_grade">* Given Grade</label>
+                                    <div>
+                                        <input maxlength="3" value="<?php echo $subject_grade; ?>" required class='form-control' type='text' 
+                                            placeholder='Add Handout' id="subject_grade" name='subject_grade'>
+                                    </div>
+                                </span>
+                            </div>
+                            <div class="action">
+                                <button type="submit" class="clean" name="edit_given_assignment_<?php echo $subject_assignment_submission_id; ?>">Save Section</button>
+                            </div>
+                        </form>
+                    </main>
                 </div>
-                
-            </div>
-        <?php
-
+            </main>
+        </div>
+    <?php 
     }
-
     ?>
+    </body>
+</html>
