@@ -32,12 +32,13 @@
         $content = $announcement->GetContent();
         $subject_code = $announcement->GetSubjectCode();
         $creation = $announcement->GetDateCreation();
+        $school_year_id = $announcement->GetSchoolYearId();
         $creation = date("F d, Y h:i a", strtotime($creation));
 
 
         $markAsSViewed = $announcement->StudentAnnouncementAsViewed($announcement_id, $studentLoggedInId);
 
-        $back_url = "index.php?c=$subject_code";
+        $back_url = "https://dcbt.online/student/lms/announcement_index.php?sy_id=$school_year_id";
 ?>
 
             <nav>
