@@ -1,5 +1,4 @@
 <?php 
-
 require_once("includes/config.php");
 require_once("includes/classes/Account.php");
 require_once("includes/classes/Constants.php"); 
@@ -121,9 +120,6 @@ if(isset($_POST["enrollment_log_in_btn"])) {
         exit();
     }
 
-    // var_dump($wasSuccessful);
-    // return;
-
     if(sizeof($wasSuccessful) > 0 
         && $wasSuccessful[0] == "enrollment_users_staff" 
         && $wasSuccessful[1] == true 
@@ -132,7 +128,6 @@ if(isset($_POST["enrollment_log_in_btn"])) {
 
         # Username.
 
-       
         $_SESSION["adminLoggedIn"] =  $wasSuccessful[4];
         $_SESSION["adminUserId"] = $wasSuccessful[3];
         $_SESSION["role"] = "admin";
@@ -178,16 +173,12 @@ if(isset($_POST["enrollment_log_in_btn"])) {
         ){
     
         $_SESSION["superAdminLoggedIn"] = $username;
-        $_SESSION["superAdminUserId"] = $wasSuccessful[3];
+        $_SESSION["superAdminUserId"] = $wasSuccessful[2];
         $_SESSION["role"] = "super_admin";
 
         header("Location: super_admin/dashboard/index.php");
         exit();
         
-    }
-
-    else{
-      // echo "hey";
     }
 
 
@@ -258,6 +249,8 @@ function getInputValue($name) {
 <html>
 
 <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>Authentication Login</title>
 
@@ -292,7 +285,7 @@ function getInputValue($name) {
             <div class="form-element">
               <label for="username">Username</label>
               <div>
-                <input type="text" name="username" id="username" value="a.12R@dcbt.edu.ph" value="<?php getInputValue('username'); ?>" required />
+                <input type="text" name="username" id="username" value="a.12R@dcbt.edu" value="<?php getInputValue('username'); ?>" required />
               </div>
             </div>
             <div class="form-element">
