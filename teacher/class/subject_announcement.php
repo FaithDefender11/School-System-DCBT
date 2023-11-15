@@ -36,8 +36,8 @@
                         </div>
                         <div class="action">
                             <button class="btn btn-info">
-                                <a style="color: white;" href="announcement_views.php?id=<?php echo $teacher_announcement_id ?>">
-                                    <i class="fas fa-eye"></i>
+                                <a href="announcement_views.php?id=<?php echo $teacher_announcement_id ?>">
+                                    <i class="fas fa-eye" style="color: white"></i>
                                 </a>
                             </button>
                         </div>
