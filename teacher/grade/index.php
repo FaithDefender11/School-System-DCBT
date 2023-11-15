@@ -62,8 +62,7 @@
         $recordsPerPageDropdown .= '</select>';
     }
 
-    $back_url = "http://dcbt.online/teacher/dashboard/index.php";
-    header("Location: $back_url");
+    $back_url = "https://dcbt.online/teacher/dashboard/index.php";
 
 ?>
 
