@@ -68,17 +68,17 @@
     // echo $selectedTermId;
 ?>
 
-            <?php 
-                echo Helper::lmsTeacherNotificationHeader(
-                    $con, $teacherLoggedInId,
-                    $current_school_year_id,
-                    $teachingSubjects,
-                    "second",
-                    "second",
-                    "second",
-                    "second"
-                ); 
-            ?>
+        <?php 
+            echo Helper::lmsTeacherNotificationHeader(
+                $con, $teacherLoggedInId,
+                $current_school_year_id,
+                $teachingSubjects,
+                "second",
+                "second",
+                "second",
+                "first"
+            );
+        ?>
 
             <nav>
                 <a href="<?= $back_url; ?>">
