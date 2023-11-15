@@ -1,5 +1,4 @@
-<?php 
-
+<?php
     include_once('../../includes/student_lms_header.php');
     include_once('../../includes/classes/SchoolYear.php');
     include_once('../../includes/classes/SubjectCodeHandout.php');
@@ -11,11 +10,7 @@
     include_once('../../includes/classes/Teacher.php');
     include_once('../../includes/classes/Student.php');
 
-    // echo Helper::RemoveSidebar();
-
-
     if(
-        
         isset($_GET['id']) &&
         isset($_GET['ss_id'])
         ){
@@ -88,69 +83,59 @@
             $new_url = str_replace("/student/", "", $base_url);
             $logout_url = "$new_url/lms_logout.php";
         }
+?>
 
-        ?>
+            <?php 
+                echo Helper::lmsTeacherNotificationHeader(
+                    $con, $teacherLoggedInId,
+                    $current_school_year_id,
+                    $teachingSubjects,
+                    "second",
+                    "first",
+                    "second",
+                    "second"
+                ); 
+            ?>
 
-            <div class="content">
-               
+            <div class="content-header">
+                <header>
+                    <div class="title">
+                        <h1><?= $handoutTopic;?> <em>Handout</em></h1>
+                    </div>
+                </header>
+            </div>
 
-                <?php
-                
-                    echo Helper::lmsStudentNotificationHeader(
-                        $con, $studentLoggedInId,
-                        $current_school_year_id,
-                        $enrolledSubjectList,
-                        $enrollment_id,
-                        "second",
-                        "first",
-                        "second",
-                        $logout_url,
-                        "second"
-                    );
-                
-                ?>
-
-                <div class="content-header">
-                    <header>
-                        <div class="title">
-                            <h1><?= $handoutTopic;?> <em>Handout</em></h1>
-                        </div>
-                    </header>
-                </div>
-
-                <nav>
-                    <a href="<?=$back_url;?>"
+            <nav>
+                <a href="<?=$back_url;?>"
                     ><i class="bi bi-arrow-return-left"></i>Back</a
-                    >
-                </nav>
+                >
+            </nav>
 
-                <main>
-                    <div class="floating noBorder">
+            <main>
+                <div class="floating noBorder">
                     <header>
                         <div class="title">
-                        <h3><?= $handout_name;?></h3>
+                            <h3><?= $handout_name;?></h3>
                         </div>
                     </header>
                     <main>
                         <form action="">
-                        <div class="row">
-                            <span>
-                                <label for="file">File</label>
-                                <div>
-                                    <p>
-                                        <?php 
-
+                            <div class="row">
+                                <span>
+                                    <label for="file">File</label>
+                                    <div>
+                                        <?php
                                             $extension = pathinfo($handout_file, PATHINFO_EXTENSION);
 
                                             $pos = strpos($handout_file, "img_");
-
+    
                                             $original_file_name = "";
-
+    
                                             // Check if "img_" was found
                                             if ($pos !== false) {
                                                 $original_file_name = substr($handout_file, $pos + strlen("img_"));
                                             }
-
+    
                                             if (in_array(strtolower($extension), ['pdf', 'docx', 'doc'])) {
                                                 ?>
                                                     
@@ -161,16 +146,16 @@
                                                 <?php
                                             }
                                         ?>
-                                    </p>
-                                </div>
-                            </span>
-                        </div>
+                                    </div>
+                                </span>
+                            </div>
                         </form>
                     </main>
-                    </div>
-                </main>
-
-            </div>
-        <?php
+                </div>
+            </main>
+        </div>
+    <?php
     }
-?>
+    ?>
+    </body>
+</html>

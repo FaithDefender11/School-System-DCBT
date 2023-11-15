@@ -1,5 +1,4 @@
-<?php 
-
+<?php
     include_once('../../includes/teacher_header.php');
     include_once('../../includes/classes/SubjectPeriodCodeTopic.php');
     include_once('../../includes/classes/SchoolYear.php');
@@ -7,7 +6,6 @@
     include_once('../../includes/classes/SubjectCodeAssignment.php');
     include_once('../../includes/classes/SubjectPeriodCodeTopicTemplate.php');
     include_once('../../includes/classes/SubjectCodeAssignmentTemplate.php');
-    
 
     if(isset($_GET['id'])){
 
@@ -131,63 +129,78 @@
                 //     $imagePath = str_replace('../../', '', $imagePath);
                 // }
         }
-
-        ?>
-            <div class='content'>
-
-                <nav>
-                    <a href="<?php echo $back_url;?>">
-                        <i class="bi bi-arrow-return-left fa-1x"></i>
-                        <h3>Back</h3>
-                    </a>
-                </nav>
-
-
-                <div class='col-md-10 offset-md-1'>
-                    <div class='card'>
-
-                        <div class='card-header'>
-                            <h4 class='text-center text-muted mb-3'>Add Handout to: <?php echo $subjectPeriodCodeTopic->GetTopic(); ?></h4>
-                        </div>
-
-                        <div class="card-body">
-                            <form method='POST' enctype="multipart/form-data">
-
-                                <div class='form-group mb-2'>
-                                    <label for="handout_name" class='mb-2'>* Handout Name</label>
-
-                                    <input required class='form-control' type='text' 
-                                        placeholder='Add Handout' id="handout_name" name='handout_name'>
-                                </div>
-
-                                <div class='form-group mb-2'>
-                                    <label for="assignment_image" class='mb-2'>* File</label>
-
-                                    <input class='form-control' type='file' id="assignment_image" 
-                                        name='assignment_image'>
-
-                                </div>
-                                
-                                <div class="modal-footer">
-                                    <button type='submit' class='btn btn-success' name='add_handout_topic_<?php echo $subject_period_code_topic_id; ?>'>Save Section</button>
-                                </div>
-
-                            </form>
-                        </div>
-
-                    </div>
-                </div>
-                
-            </div>
-        <?php
-
-    }
 ?>
 
-<script>
-    // $(document).ready(function () {
-    //     $('.summernote').summernote({
-    //         height:250
-    //     });
-    // });
-</script>
+
+            <?php 
+                echo Helper::lmsTeacherNotificationHeader(
+                    $con, $teacherLoggedInId,
+                    $current_school_year_id,
+                    $teachingSubjects,
+                    "second",
+                    "first",
+                    "second",
+                    "second"
+                ); 
+            ?>
+
+            <nav>
+                <a href="<?= $back_url; ?>">
+                    <i class="bi bi-arrow-return-left"></i>
+                    Back
+                </a>
+            </nav>
+
+            <main>
+                <div class="floating">
+                    <header>
+                        <div class="title">
+                            <h3>Add Handout to: <?php echo $subjectPeriodCodeTopic->GetTopic(); ?></h3>
+                        </div>
+                    </header>
+                    <main>
+                        <form method="post" enctype="multipart/form-data">
+                            <div class="row">
+                                <span>
+                                    <label for="handout_name">* Handout Name</label>
+                                    <div>
+                                        <input required class='form-control' type='text' 
+                                            placeholder='Add Handout' id="handout_name" name='handout_name'>
+                                    </div>
+                                </span>
+                            </div>
+                            <div class="row">
+                                <span>
+                                   <label for="assignment_image">* File</label>
+                                    <div>
+                                        <input class='form-control' type='file' id="assignment_image" 
+                                            name='assignment_image'>
+                                    </div> 
+                                </span>
+                            </div>
+                            <div class="action">
+                                <button 
+                                    type="submit" 
+                                    class="clean large"
+                                    name="add_handout_topic_<?php echo $subject_period_code_topic_id; ?>"
+                                >
+                                    Save Section
+                                </button>
+                            </div>
+                        </form>
+                    </main>
+                </div>
+            </main>
+        </div>
+    <?php
+    }
+    ?>
+    <script>
+        // $(document).ready(function () {
+        //     $('.summernote').summernote({
+        //         height:250
+        //     });
+        // });
+    </script>
+    </body>
+</html>

@@ -1,5 +1,4 @@
-<?php 
-
+<?php
     include_once('../../includes/teacher_header.php');
     include_once('../../includes/classes/Section.php');
     include_once('../../includes/classes/SchoolYear.php');
@@ -16,43 +15,13 @@
     include_once('../../includes/classes/Enrollment.php');
     include_once('../../includes/classes/Notification.php');
     include_once('../../includes/classes/Student.php');
- 
-    // echo Helper::RemoveSidebar();
-    
-    ?>
-        <head>
-                <!--Link JavaScript-->
-            <script src="../../assets/js/elms-sidebar.js" defer></script>
-            <script src="../../assets/js/elms-dropdown.js" defer></script>
-            <script src="../../assets/js/table-dropdown.js" defer></script>
-
-            <link
-                rel="stylesheet"
-                href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-                integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-                crossorigin="anonymous"
-                />
-                <link
-                rel="stylesheet"
-                href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
-                />
-                <!--Link Fonts-->
-                <link
-                rel="stylesheet"
-                href="https://fonts.googleapis.com/css?family=Lato"
-                />
-                <link
-                rel="stylesheet"
-                href="https://fonts.googleapis.com/css?family=Arimo"
-                />
-        </head>
-    <?php
 
     if(
         isset($_GET['c'])
         // && isset($_GET['c_id'])
         && isset($_GET['sy_id'])
         ){
+
 
 
         $subject_code = $_GET['c'];
@@ -217,67 +186,93 @@
             $new_url = str_replace("/teacher/", "", $base_url);
             $logout_url = "$new_url/lms_logout.php";
         }
- 
-
-        ?>
-
-            <div style="min-width: 100%;" class="content">
-                
-                <?php 
-                    echo Helper::lmsTeacherNotificationHeader(
-                        $con, $teacherLoggedInId,
-                        $current_school_year_id,
-                        $teachingSubjects,
-                        "second",
-                        "first",
-                        "second",
-                        "second"
-                    );
-                    
-                ?>
 
 
-                <div class="content-header">
-                    <header>
+        $getx = $con->prepare("SELECT 
 
-                        <div class="title">
-                            <h1><span style="font-size: 27px;"><?= $subject_title?></span>  <em style="font-size: 27px;"><?= "SY$fomatTerm-$period_short";?></em></h1>
-                        </div>
+            t1.*
+        
+            FROM subject_period_code_topic as t1 
 
-                        <div class="action">
-                            <div class="dropdown">
-                                <button class="icon">
-                                    <i class="bi bi-three-dots-vertical"></i>
-                                </button>
-                                <div class="dropdown-menu">
+            WHERE t1.subject_code=:subject_code
+            AND t1.school_year_id=:school_year_id
+            AND t1.teacher_id=:teacher_id
 
-                                    <a 
-                                        href="../announcement/index.php?c_id=<?= $course_id; ?>&c=<?=$subject_code;?>&sy_id=<?= $school_year_id;?>"
-                                        class="dropdown-item" style="color: inherit">
-                                        <i class="bi bi-megaphone-fill"></i>
-                                        Announcement
-                                    </a>
-                                    
-                                </div>
+
+            ORDER BY
+            CASE subject_period_name
+                WHEN 'Prelim' THEN 1
+                WHEN 'Midterm' THEN 2
+                WHEN 'Pre-final' THEN 3
+                WHEN 'Final' THEN 4
+                ELSE 5  
+            END
+
+        ");
+
+        $getx->bindValue(":subject_code", $subject_code);
+        $getx->bindValue(":school_year_id", $school_year_id);
+        $getx->bindValue(":teacher_id", $teacher_id);
+        $getx->execute();
+
+        if($getx->rowCount() > 0){
+
+            $ads = $getx->fetchAll(PDO::FETCH_ASSOC);
+            // var_dump($ads);
+
+        }
+?>
+
+            <?php 
+                echo Helper::lmsTeacherNotificationHeader(
+                    $con, $teacherLoggedInId,
+                    $current_school_year_id,
+                    $teachingSubjects,
+                    "second",
+                    "first",
+                    "second",
+                    "second"
+                ); 
+            ?>
+
+            <div class="content-header">
+                <header>
+                    <div class="title">
+                        <h1><?= $subject_title?> <em><?= "SY$fomatTerm-$period_short";?></em></h1>
+                    </div>
+                    <div class="action">
+                        <div class="dropdown">
+                            <button class="icon">
+                                <i class="bi bi-three-dots-vertical"></i>
+                            </button>
+                            <div class="dropdown-menu">
+                                <a 
+                                    href="../announcement/index.php?c_id=<?= $course_id; ?>&c=<?=$subject_code;?>"
+                                    class="dropdown-item" 
+                                    style="color: inherit"
+                                >
+                                    <i class="bi bi-megaphone-fill"></i>
+                                    Announcement
+                                </a>
                             </div>
                         </div>
+                    </div>
+                </header>
+            </div>
 
-                    </header>
-                </div>
+            <nav>
+                <a href="<?= $back_url; ?>">
+                    <i class="bi bi-arrow-return-left"></i>
+                    Back
+                </a>
+            </nav>
 
-                <nav>
-                    <a href="<?php echo $back_url; ?>">
-                        <i class="bi bi-arrow-return-left"></i>Back
-                    </a>
-                </nav>
-
-                <main>
-
-                        <div class='card'>
-                        <div class='card-header'>
-                            <?php if(count($ungradedSubmissionArr) > 0):?>
-                                
-                                <?php 
+            <main>
+                <div class="floating">
+                    <header>
+                        <div class="title">
+                            <?php if(count($ungradedSubmissionArr) > 0): ?>
+                                <?php
                                     $topicCount = [];
 
                                     echo "<h5 style='margin-bottom: 7px;'>(".count($ungradedSubmissionArr).") To check</h5>";
@@ -338,12 +333,15 @@
                                         $url_overview = "../dashboard/todos_tasks.php?c_id=$course_id&c=$subject_code";
                                         
                                         echo "
-                                            <p style='margin:0'>○
-                                                <a style='color:inherit' href='$url_overview'
-                                                class='m-0 text-right'> $topicName ($count)</a>
-                                            </p>
+                                            <small>○
+                                                <a 
+                                                    style='color:inherit' 
+                                                    href='$url_overview'
+                                                > 
+                                                    $topicName ($count)
+                                                </a>
+                                            </small>
                                         ";
-                                        echo "<br>";
 
                                     }
 
@@ -358,385 +356,313 @@
                                     //         class='m-0 text-right'>Assignment Title: $assignmentTitle ($count) Code: $topic_subject_code</a>";
 
                                     // }
-                                
-                                
                                 ?>
-
-                            <?php else:?>
-
-                                <h5 style="margin-bottom: 7px;">No to check assignments</h5>
-
-                            <?php endif;?>
-
-                            
+                            <?php else: ?>
+                                <h4>No assignments to check</h4>
+                            <?php endif; ?>
                         </div>
-                    </div>
+                    </header>
+                </div>
+                <?php
+                    $sql = $con->prepare("SELECT 
 
-                    <!-- <div class='card'>
-                        <div id="notification_div" class='card-header'>
-                            <?php if(count($announcementList) > 0):?>
+                    t1.*
+                
+                    FROM subject_period_code_topic as t1 
 
-                                <p style="margin-bottom: 7px;"><?php echo count($announcementList); ?> Announcement(s)</p>
-                                <?php 
+                    WHERE t1.subject_code=:subject_code
+                    AND t1.school_year_id=:school_year_id
+                    AND t1.teacher_id=:teacher_id
 
-                                    $i= 0;
-                                    foreach ($announcementList as $key => $value) {
 
-                                        $title = $value['title'];
-                                        $announcement_id = $value['announcement_id'];
-                                        $i++;
+                    ORDER BY
+                    CASE subject_period_name
+                        WHEN 'Prelim' THEN 1
+                        WHEN 'Midterm' THEN 2
+                        WHEN 'Pre-final' THEN 3
+                        WHEN 'Final' THEN 4
+                        ELSE 5  
+                    END
 
-                                        $removeAnnouncement = "removeAnnouncement($announcement_id, $teacher_id)";
+                    ");
 
-                                        # code...
-                                        echo "
-                                            <a href='subject_announcement.php?id=$announcement_id'>
-                                                <span>$i. $title </span>
-                                            </a>
-                                            <span><i onclick='$removeAnnouncement' style='color: orange' class='fas fa-times'></i></span>
-                                            <br>
-                                        ";
-                                    }
-                                ?>
-                            <?php else:?>
-                                <h5 style="margin-bottom: 7px;">No to check assignments</h5>
-                            <?php endif;?>
-                        </div>
-                    </div> -->
+                    $sql->bindValue(":subject_code", $subject_code);
+                    $sql->bindValue(":school_year_id", $school_year_id);
+                    $sql->bindValue(":teacher_id", $teacher_id);
+                    $sql->execute();
 
-                        <?php 
+                    if($sql->rowCount() > 0){
+
+                        $i = 0;
                         
-                            $sql = $con->prepare("SELECT 
+                        while($row = $sql->fetch(PDO::FETCH_ASSOC)){
 
-                                t1.*
-                            
-                                FROM subject_period_code_topic as t1 
+                            $subject_period_code_topic_id = $row['subject_period_code_topic_id'];
+                            $subject_period_name = $row['subject_period_name'];
 
-                                WHERE t1.subject_code=:subject_code
-                                AND t1.school_year_id=:school_year_id
-                                AND t1.teacher_id=:teacher_id
+                            $topic = $row['topic'];
+                            $description = $row['description'];
 
-
-                                ORDER BY
-                                CASE subject_period_name
-                                    WHEN 'Prelim' THEN 1
-                                    WHEN 'Midterm' THEN 2
-                                    WHEN 'Pre-final' THEN 3
-                                    WHEN 'Final' THEN 4
-                                    ELSE 5  
-                                END
-
-                            ");
-
-                            $sql->bindValue(":subject_code", $subject_code);
-                            $sql->bindValue(":school_year_id", $school_year_id);
-                            $sql->bindValue(":teacher_id", $teacher_id);
-                            $sql->execute();
-
-                            if($sql->rowCount() > 0){
-
-                                $i = 0;
-                                
-                                while($row = $sql->fetch(PDO::FETCH_ASSOC)){
-
-                                    $subject_period_code_topic_id = $row['subject_period_code_topic_id'];
-                                    $subject_period_name = $row['subject_period_name'];
-
-                                    $topic = $row['topic'];
-                                    $description = $row['description'];
-
-                                    $i++;
+                            $i++;
 
 
-                                    $subjectCodeHandout = new SubjectCodeHandout($con);
-                                   
-                                    $subjectCodeAssignment = new SubjectCodeAssignment($con);
+                            $subjectCodeHandout = new SubjectCodeHandout($con);
+                        
+                            $subjectCodeAssignment = new SubjectCodeAssignment($con);
 
-                                    $givenAssignmentsInsideTopicSection = $subjectCodeAssignment
-                                        ->GetTotalGivenAssignmentByTopicSection($subject_period_code_topic_id);
+                            $givenAssignmentsInsideTopicSection = $subjectCodeAssignment
+                                ->GetTotalGivenAssignmentByTopicSection($subject_period_code_topic_id);
 
-                                    $givenHandoutInsideTopicSection = $subjectCodeHandout
-                                        ->GetTotalGivenHandoutByTopicSection($subject_period_code_topic_id);
+                            $givenHandoutInsideTopicSection = $subjectCodeHandout
+                                ->GetTotalGivenHandoutByTopicSection($subject_period_code_topic_id);
 
-                                    $sectionModuleMerge = array_merge($givenAssignmentsInsideTopicSection,
-                                        $givenHandoutInsideTopicSection);
+                            $sectionModuleMerge = array_merge($givenAssignmentsInsideTopicSection,
+                                $givenHandoutInsideTopicSection);
 
-                                    $sectionModuleItemsCount = count($sectionModuleMerge);
+                            $sectionModuleItemsCount = count($sectionModuleMerge);
+                            ?>
+                            <div class="floating">
+                                <header>
+                                    <div class="title">
+                                        <h3><?= $topic; ?> <em><?= $subject_period_name;?></em></h3>
+                                        <small><?= $description; ?></small>
+                                    </div>
+                                    <div class="action">
+                                        <?php
+                                            $subjectPeriodCodeTopic = new SubjectPeriodCodeTopic($con, $subject_period_code_topic_id);
 
-                                    ?>
+                                            $topic_name = $subjectPeriodCodeTopic->GetTopic();
 
-                                        <div style="width: 98%;" class="floating">
+                                            $subjectPeriodCodeTopicTemplate = new SubjectPeriodCodeTopicTemplate($con);
+                                            $subject_period_code_topic_template_id = $subjectPeriodCodeTopicTemplate->GetTopicTemplateIdByTopicName($topic_name);
 
-                                            <header>
+                                            
 
-                                                <div class="title">
-                                                    <h3><?= $topic; ?> <em><?= $subject_period_name;?></em></h3>
-                                                    <small><?= $description; ?></small>
-                                                </div>
+                                            $subjectCodeHandout = new SubjectCodeHandout($con);
+                                            
+                                            $subjectCodeAssignmentTemplate = new SubjectCodeAssignmentTemplate($con);
 
-                                                <div>
+                                            # HANDOUTS (TEMPLATE AND NON TEMPLATE).
 
-                                                    <?php
+                                            $codeHandoutTemplateList = $subjectCodeAssignmentTemplate->GetCodeHandoutTopicTemplateList(
+                                                $subject_period_code_topic_template_id);
 
-                                                        $subjectPeriodCodeTopic = new SubjectPeriodCodeTopic($con, $subject_period_code_topic_id);
+                                            $nonTemplateHandout = $subjectCodeHandout->GetNonTemplateHandoutBasedOnSubjectTopic(
+                                                $subject_period_code_topic_id);
+                                            
+                                            $topicHandoutsMerge = array_merge($codeHandoutTemplateList, $nonTemplateHandout);
 
-                                                        $topic_name = $subjectPeriodCodeTopic->GetTopic();
+                                            $totalHandoutCount = count($topicHandoutsMerge);
 
-                                                        $subjectPeriodCodeTopicTemplate = new SubjectPeriodCodeTopicTemplate($con);
-                                                        $subject_period_code_topic_template_id = $subjectPeriodCodeTopicTemplate->GetTopicTemplateIdByTopicName($topic_name);
+                                            # ASSIGNMENTS (TEMPLATE AND NON TEMPLATE).
 
-                                                        
-
-                                                        $subjectCodeHandout = new SubjectCodeHandout($con);
-                                                        
-                                                        $subjectCodeAssignmentTemplate = new SubjectCodeAssignmentTemplate($con);
-
-                                                        # HANDOUTS (TEMPLATE AND NON TEMPLATE).
-
-                                                        $codeHandoutTemplateList = $subjectCodeAssignmentTemplate->GetCodeHandoutTopicTemplateList(
-                                                            $subject_period_code_topic_template_id);
-
-                                                        $nonTemplateHandout = $subjectCodeHandout->GetNonTemplateHandoutBasedOnSubjectTopic(
-                                                            $subject_period_code_topic_id);
-                                                        
-                                                        $topicHandoutsMerge = array_merge($codeHandoutTemplateList, $nonTemplateHandout);
-
-                                                        $totalHandoutCount = count($topicHandoutsMerge);
-
-                                                        # ASSIGNMENTS (TEMPLATE AND NON TEMPLATE).
-
-                                                        $subjectCodeAssignmentTemplate = new SubjectCodeAssignmentTemplate($con);
-                                                        $subjectCodeAssignment = new SubjectCodeAssignment($con);
+                                            $subjectCodeAssignmentTemplate = new SubjectCodeAssignmentTemplate($con);
+                                            $subjectCodeAssignment = new SubjectCodeAssignment($con);
 
 
-                                                        $codeAssignmentTemplateList = $subjectCodeAssignmentTemplate->GetCodeAssignmentTopicTemplateList(
-                                                            $subject_period_code_topic_template_id);
+                                            $codeAssignmentTemplateList = $subjectCodeAssignmentTemplate->GetCodeAssignmentTopicTemplateList(
+                                                $subject_period_code_topic_template_id);
 
-                                                        $nonTemplateAssignment = $subjectCodeAssignment->GetNonTemplateAssignmentBasedOnSubjectTopic(
-                                                            $subject_period_code_topic_id);
+                                            $nonTemplateAssignment = $subjectCodeAssignment->GetNonTemplateAssignmentBasedOnSubjectTopic(
+                                                $subject_period_code_topic_id);
 
 
-                                                        $assignmentHandoutsMerge = array_merge($codeAssignmentTemplateList,
-                                                            $nonTemplateAssignment);
+                                            $assignmentHandoutsMerge = array_merge($codeAssignmentTemplateList,
+                                                $nonTemplateAssignment);
 
-                                                        $totalAssignmentCount = count($assignmentHandoutsMerge);
+                                            $totalAssignmentCount = count($assignmentHandoutsMerge);
+                                        ?>
+                                        <button 
+                                            class='clean'
+                                            onclick="window.location.href='section_topic.php?id=<?php echo $subject_period_code_topic_template_id;?>&ct_id=<?php echo $subject_period_code_topic_id; ?>'"
+                                        >
+                                            <i class="fas fa-plus"></i> 
+                                            View
+                                        </button>
+                                        <button 
+                                            onclick="window.location.href = '../module/handout_index.php?id=<?php echo $subject_period_code_topic_template_id;?>&sct_id=<?php echo $subject_period_code_topic_id ?>' " 
+                                            class="information" 
+                                            data-toggle="tooltip" 
+                                            data-placement="bottom" 
+                                            title="Handout"
+                                        >
+                                            <?= $totalHandoutCount; ?> 
+                                            <i class="bi bi-file-earmark">+</i>
+                                        </button>
+                                        <?php
+                                             // echo $subject_period_code_topic_id;
+                                                            
+                                             $task_query = $con->prepare("SELECT * FROM task_type
+                                             WHERE enabled = 1");
+                                         
+                                            $task_query->execute();
 
+                                            if($task_query->rowCount() > 0){
+
+                                                while($row = $task_query->fetch(PDO::FETCH_ASSOC)){
+
+                                                    $task_type_id =  $row['task_type_id'];
+                                                    $task_name =  $row['task_name'];
+                                                    
+
+                                                    $taskType = new TaskType($con);
+
+                                                    $module_count = $taskType->GetTaskTypeModuleCount($task_type_id,
+                                                        $subject_period_code_topic_id);
+                                                    
                                                     ?>
 
-
-                                                    <a href="section_topic.php?id=<?php echo $subject_period_code_topic_template_id;?>&ct_id=<?php echo $subject_period_code_topic_id; ?>">
-                                                        <button class='btn btn-sm btn-success'><i class="fas fa-plus"></i> View</button>
-                                                    </a>
-
-                                                    <button onclick="window.location.href = '../module/handout_index.php?id=<?php echo $subject_period_code_topic_template_id;?>&sct_id=<?php echo $subject_period_code_topic_id ?>' " class="ml-1 task bg-primary" data-toggle="tooltip" data-placement="bottom" title="Handout">
-                                                        <?= $totalHandoutCount; ?> <i class="bi bi-file-earmark">+</i>
+                                                    <button 
+                                                        class="default"
+                                                        onclick="window.location.href='../module/task.php?id=<?= $task_type_id; ?>&sctt_id=<?php echo $subject_period_code_topic_template_id;?>&sct_id=<?php echo $subject_period_code_topic_id ?>'"
+                                                        title="<?= $task_name; ?>"
+                                                    >
+                                                        <?= $module_count; ?> <i class="bi bi-file-earmark">+</i>
                                                     </button>
-
                                                     <?php
-                                                    
-                                                        // echo $subject_period_code_topic_id;
-                                                            
-                                                        $task_query = $con->prepare("SELECT * FROM task_type
-                                                            WHERE enabled = 1");
-                                                        
-                                                        $task_query->execute();
-
-                                                        if($task_query->rowCount() > 0){
-
-                                                            while($row = $task_query->fetch(PDO::FETCH_ASSOC)){
-
-                                                                $task_type_id =  $row['task_type_id'];
-                                                                $task_name =  $row['task_name'];
-                                                                
-
-                                                                $taskType = new TaskType($con);
-
-                                                                $module_count = $taskType->GetTaskTypeModuleCount($task_type_id,
-                                                                    $subject_period_code_topic_id);
-                                                                
-                                                                ?>
-
-                                                                <a style="color: inherit;" href = '../module/task.php?id=<?= $task_type_id; ?>&sctt_id=<?php echo $subject_period_code_topic_template_id;?>&sct_id=<?php echo $subject_period_code_topic_id ?>'
-                                                                    
-                                                                    title="<?= $task_name; ?>"
-                                                                    >
-                                                                    
-                                                                        <button class="ml- task bg-dark">
-                                                                            <?= $module_count; ?> <i class="bi bi-file-earmark">+</i>
-                                                                        </button>
-                                                                    </a>
-
-                                                                <?php
-
-                                                            }
-                                                        }
-                                                    
-                                                    ?>
-
-<span class="ml-3 mr-3">
-
-                                                    <?= $sectionModuleItemsCount == 0 ? "" : $sectionModuleItemsCount; ?> 
-                                                    <?= $sectionModuleItemsCount > 1 ? "Sections" : ($sectionModuleItemsCount == 1 ? "Section" : ""); ?>
-</span>
-                                                
-                                                </div>
-
-                                                <div class="action">
-
-
-                                                    <div class="dropdown">
-                                                        <button class="table-drop">
-                                                            <i class="bi bi-chevron-up"></i>
-                                                            <i class="bi bi-chevron-down"></i>
-                                                        </button>
-                                                    </div>
-                                                </div>
-
-                                            </header>
-
-                                            <main>
-
-                                                <table class="b">
-
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Section</th>
-                                                            <th>No. submitted / Total tudent</th>
-                                                            <th>Max Score</th>
-                                                            <th>Due</th>
-                                                            <!-- <th>Action</th> -->
-                                                        </tr>
-                                                    </thead>
-
-                                                    <tbody>
-                                                        <?php 
-                                                        
-                                                            $subjectTopicAssignmentList = $subjectCodeAssignment->
-                                                                GetSubjectTopicAssignmentList($subject_period_code_topic_id);
-                                                            
-                                                            $handoutList = $subjectCodeAssignment->
-                                                                GetSubjectTopicHandoutList($subject_period_code_topic_id);
-                                                            
-                                                            $mergedList = array_merge($handoutList, $subjectTopicAssignmentList);
-
-                                                            $submission = new SubjectAssignmentSubmission($con);
-
-                                                            // print_r($mergedList);
-
-                                                            if(count($mergedList) > 0){
-
-                                                                foreach ($mergedList as $key => $row_ass) {
-
-                                                                    $assignment_name = isset($row_ass['assignment_name']) ? $row_ass['assignment_name'] : "";
-                                                                    $subject_code_assignment_id = isset($row_ass['subject_code_assignment_id']) ? $row_ass['subject_code_assignment_id'] : "";
-                                                                    $due_date = isset($row_ass['due_date']) ? date("M d", strtotime($row_ass['due_date'])) : "";
-                                                                    $assignment_picture = "";
-                                                                    $max_score = isset($row_ass['max_score']) ? $row_ass['max_score'] : "";
-
-
-                                                                    // $edit_given_assignment_url = "edit.php?id=$subject_code_assignment_id";
-                                                                    $edit_given_assignment_url = "#";
-
-                                                                    $view_specific_assignment_url = "submission_list.php?id=$subject_code_assignment_id";
-
-                                                                    $section_output = "";
-
-                                                                    $handout_name = isset($row_ass['handout_name']) ? $row_ass['handout_name'] : "";
-                                                                    $subject_code_handout_id = isset($row_ass['subject_code_handout_id']) ? $row_ass['subject_code_handout_id'] : NULL;
-                                                                    
-                                                                    $student_submitted_total = "";
-
-                                                                    $total = $submission->GetTotalSubmittedOnAssignment($subject_code_assignment_id);
-
-                                                                    $totalCount = count($total);
-
-                                                                    // echo count($total);
-
-                                                                    $student_submitted_total = $subject_code_assignment_id !== "" ? $totalCount . " / $totalStudents" : "~";
-
-                                                                    // echo var_dump($subject_code_assignment_id);
-                                                                    // echo "<br>";
-
-                                                                    $remove_btn = "";
-
-                                                                    if($assignment_name === "" && $subject_code_handout_id !== NULL){
-                                                                        
-                                                                        $removeHandout = "removeHandout($subject_code_handout_id, $current_school_year_id, $teacher_id)";
-                                                                        // <a style='color: inherit;' href='module_edit.php?id=$subject_code_handout_id'>
-
-                                                                        $section_output = "
-                                                                                <i class='fas fa-file'></i>&nbsp $handout_name
-                                                                        ";
-                                                                        $remove_btn = "
-                                                                            <button onclick='$removeHandout' class='btn btn-sm btn-danger'>
-                                                                                <i class='fas fa-times'></i>
-                                                                            </button>
-                                                                        ";
-                                                                    }
-
-                                                                    else if($assignment_name != "" && $subject_code_assignment_id != 0){
-
-                                                                        $removeAssignment = "removeAssignment($subject_code_assignment_id, $current_school_year_id, $teacher_id)";
-
-                                                                            // <a style='color: inherit;' href='$edit_given_assignment_url'>
-                                                                        $section_output = "
-                                                                            $assignment_name
-                                                                        ";
-                                                                        
-                                                                        $remove_btn = "
-                                                                            <button onclick='$removeAssignment' class='btn btn-sm btn-danger'>
-                                                                                <i class='fas fa-trash'></i>
-                                                                            </button>
-                                                                        ";
-                                                                    }
-
-                                                                        // $student_submitted_total = "? / ?";
-
-                                                                        // <td>
-                                                                        //         <button title='View students submissions' onclick='location.href=\"$view_specific_assignment_url\"' class='btn btn-sm btn-primary'>
-                                                                        //             <i class='fas fa-eye'></i>
-                                                                        //         </button>
-                                                                        //         $remove_btn
-
-                                                                        //     </td>
-
-                                                                    echo "
-                                                                        <tr class='text-center'>
-                                                                            <td>
-                                                                                    $section_output
-                                                                            </td>
-                                                                            
-                                                                            <td>
-                                                                                $student_submitted_total
-                                                                            </td>
-                                                                            <td>$max_score</td>
-                                                                            <td>$due_date</td>
-                                                                            
-                                                                        </tr>
-                                                                    ";
-                                                                }
-
-                                                            }
-                                                        
-                                                        ?>
-                                                    </tbody>
-                                                </table>
-                                            </main>
+                                                }
+                                            }
+                                        ?>
+                                        <small><?= $sectionModuleItemsCount; ?></small>
+                                        <small><?= $sectionModuleItemsCount > 1 ? "Sections" : ($sectionModuleItemsCount == 1 ? "Section" : ""); ?></small>
+                                        <div class="dropdown">
+                                            <button class="table-drop">
+                                                <i class="bi bi-chevron-up"></i>
+                                                <i class="bi bi-chevron-down"></i>
+                                            </button>
                                         </div>
-                                          
+                                    </div>
+                                </header>
+                                <main>
+                                    <table class="d">
+                                        <thead>
+                                            <tr>
+                                                <th>Section</th>
+                                                <th>No. submitted / Total student</th>
+                                                <th class="d-1">Max Score</th>
+                                                <th class="d-1">Due</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php
+                                                $subjectTopicAssignmentList = $subjectCodeAssignment->
+                                                GetSubjectTopicAssignmentList($subject_period_code_topic_id);
+                                            
+                                                $handoutList = $subjectCodeAssignment->
+                                                    GetSubjectTopicHandoutList($subject_period_code_topic_id);
+                                                
+                                                $mergedList = array_merge($handoutList, $subjectTopicAssignmentList);
 
-                                    <?php
-                                }
-                            }
+                                                $submission = new SubjectAssignmentSubmission($con);
 
-                        ?>
+                                                // print_r($mergedList);
 
-                       
-                        
-                </main>
+                                                if(count($mergedList) > 0){
 
-            </div>
-        <?php
+                                                    foreach ($mergedList as $key => $row_ass) {
 
-    }
-?>
+                                                        $assignment_name = isset($row_ass['assignment_name']) ? $row_ass['assignment_name'] : "";
+                                                        $subject_code_assignment_id = isset($row_ass['subject_code_assignment_id']) ? $row_ass['subject_code_assignment_id'] : "";
+                                                        $due_date = isset($row_ass['due_date']) ? date("M d", strtotime($row_ass['due_date'])) : "";
+                                                        $assignment_picture = "";
+                                                        $max_score = isset($row_ass['max_score']) ? $row_ass['max_score'] : "";
+
+
+                                                        // $edit_given_assignment_url = "edit.php?id=$subject_code_assignment_id";
+                                                        $edit_given_assignment_url = "#";
+
+                                                        $view_specific_assignment_url = "submission_list.php?id=$subject_code_assignment_id";
+
+                                                        $section_output = "";
+
+                                                        $handout_name = isset($row_ass['handout_name']) ? $row_ass['handout_name'] : "";
+                                                        $subject_code_handout_id = isset($row_ass['subject_code_handout_id']) ? $row_ass['subject_code_handout_id'] : NULL;
+                                                        
+                                                        $student_submitted_total = "";
+
+                                                        $total = $submission->GetTotalSubmittedOnAssignment($subject_code_assignment_id);
+
+                                                        $totalCount = count($total);
+
+                                                        // echo count($total);
+
+                                                        $student_submitted_total = $subject_code_assignment_id !== "" ? $totalCount . " / $totalStudents" : "~";
+
+                                                        // echo var_dump($subject_code_assignment_id);
+                                                        // echo "<br>";
+
+                                                        $remove_btn = "";
+
+                                                        if($assignment_name === "" && $subject_code_handout_id !== NULL){
+                                                            
+                                                            $removeHandout = "removeHandout($subject_code_handout_id, $current_school_year_id, $teacher_id)";
+                                                            // <a style='color: inherit;' href='module_edit.php?id=$subject_code_handout_id'>
+
+                                                            $section_output = "
+                                                                    <i class='fas fa-file'></i>&nbsp $handout_name
+                                                            ";
+                                                            $remove_btn = "
+                                                                <button onclick='$removeHandout' class='btn btn-sm btn-danger'>
+                                                                    <i class='fas fa-times'></i>
+                                                                </button>
+                                                            ";
+                                                        }
+
+                                                        else if($assignment_name != "" && $subject_code_assignment_id != 0){
+
+                                                            $removeAssignment = "removeAssignment($subject_code_assignment_id, $current_school_year_id, $teacher_id)";
+
+                                                                // <a style='color: inherit;' href='$edit_given_assignment_url'>
+                                                            $section_output = "
+                                                                $assignment_name
+                                                            ";
+                                                            
+                                                            $remove_btn = "
+                                                                <button onclick='$removeAssignment' class='btn btn-sm btn-danger'>
+                                                                    <i class='fas fa-trash'></i>
+                                                                </button>
+                                                            ";
+                                                        }
+
+                                                            // $student_submitted_total = "? / ?";
+
+                                                            // <td>
+                                                            //         <button title='View students submissions' onclick='location.href=\"$view_specific_assignment_url\"' class='btn btn-sm btn-primary'>
+                                                            //             <i class='fas fa-eye'></i>
+                                                            //         </button>
+                                                            //         $remove_btn
+
+                                                            //     </td>
+
+                                                        echo "
+                                                            <tr>
+                                                                <td>
+                                                                        $section_output
+                                                                </td>
+                                                                <td>
+                                                                    $student_submitted_total
+                                                                </td>
+                                                                <td class='d-1'>$max_score</td>
+                                                                <td class='d-1'>$due_date</td>
+                                                            </tr>
+                                                        ";
+                                                    }
+
+                                                }
+                                            ?>
+                                        </tbody>
+                                    </table>
+                                </main>
+                            </div>
+                        <?php
+                        }
+                    }
+                ?>
+            </main>
+        </div>
+    <?php
+        }
+    ?>
+    <script src="../../assets/js/dropdownMenu.js"></script>
+    </body>
+</html>
