@@ -1,4 +1,4 @@
-<?php 
+<?php
     $lrn = $pending->GetPendingLRN();
     $firstname = $pending->GetPendingFirstName();
     $lastname = $pending->GetPendingLastName();
@@ -30,8 +30,7 @@
     // var_dump($department_name);
 
     $type_status = $department_name === "Tertiary" ? 1 : 0;
-
-    
+ 
     $parent = new PendingParent($con, $enrollee_id);
     $studentRequirement = new StudentRequirement($con, $enrollee_id);
 
@@ -59,7 +58,7 @@
     $father_occupation = $parent->GetFatherOccupation();
 
 
-    // Father
+    // Mother
     $mother_firstname = $parent->GetMotherFirstName();
     $mother_lastname = $parent->GetMotherLastName();
     $mother_middle = $parent->GetMotherMiddleName();
@@ -131,7 +130,8 @@
 
         $email = "";
 
-        $lrn = isset($_POST['lrn']) ? Helper::sanitizeFormString($_POST['lrn']) : NULL;
+        $lrn = isset($_POST['lrn']) ? Helper::sanitizeFormString($_POST['lrn']) : '';
+
         
         // echo "firstname: $firstname<br>";
         // echo "middle_name: $middle_name<br>";
@@ -206,283 +206,290 @@
             // echo "Error";
         }
     }
-
 ?>
 
-<div class="content">
-    <nav>
-        <a href="<?php echo $logout_url;?>">
-            <i class="fas fa-sign-out-alt"></i>
-            <h3>Logout</h3>
-        </a>
-    </nav>
-    <main>
-        <div class="floating noBorder">
-            <header>
-                <div class="title">
-                    <h2 style="color: var(--titleTheme)">New Enrollment Form</h2>
-                    <small>SY <?php echo $current_term; ?> &nbsp; <?php echo $current_semester; ?> Semester </small>
-                </div>
-            </header>
-
-            <div class="progress">
-                <span class="dot active"><p>Preferred Course/Strand</p></span>
-                <span class="line active"></span>
-                <span class="dot active"> <p>Personal Information</p></span>
-                <span class="line inactive"></span>
-                <span class="dot inactive"> <p>Validate Details</p></span>
-                <span class="line inactive"></span>
-                <span class="dot inactive"> <p>Finished</p></span>
-            </div>
-
+            <nav>
+                <a href="<?php echo $logout_url;?>">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <h3>Logout</h3>
+                </a>
+            </nav>
             <main>
-                <form method="POST">
+                <div class="floating noBorder">
                     <header>
-
-                        <?php if($type_status == 0):?>
-
-                            <div class="title">
-                                <h4 style="font-weight: bold;">Student Information</h4>
-                                <div class="row">
-                                    <span style="margin-left: 660px;">
-                                        <label for="lrn">LRN</label>
-                                        <input class="form-control" placeholder="236-736-050-357" style="width: 250px;" id="lrn" type="text" name="lrn" 
-                                        value="<?php echo ($lrn != "") ? $lrn : ''; ?>"id="lrn">
-                                    </span>
-                                </div>
-                            </div>
-
-                        <?php endif;?>
-                        
-
+                        <div class="title">
+                            <h2 style="color: var(--titleTheme)">New Enrollment Form</h2>
+                            <small>SY <?php echo $current_term; ?> &nbsp; <?php echo $current_semester; ?> Semester </small>
+                        </div>
                     </header>
-                    <div class="row">
-                        <span>
-                            <label for="name">Name</label>
-                            <div>
-                                <?php 
-                                    Helper::EchoErrorField(Constants::$lastNameRequired,
-                                        Constants::$invalidLastNameCharacters,
-                                        Constants::$lastNameIsTooShort, Constants::$lastNameIsTooLong
-                                    );
-                                ?>
-                                <input class=" form-control" type="text"
-                                    name="lastname" id="lastName"  placeholder="Last name" 
-                                    value="<?php  
-                                        echo Helper::DisplayText('lastname', $lastname);
-                                    ?>">
-                                <small>Last name <span class="red">*</span></small>
-                            </div>
-                        <div>
-                            <?php 
-                                Helper::EchoErrorField(Constants::$firstNameRequired, Constants::$invalidFirstNameCharacters,
-                                    Constants::$firstNameIsTooShort, Constants::$firstNameIsTooLong);
-                            ?>
-                            <input class=" form-control"
-                                type="text" name="firstname" 
-                                placeholder="First name"
-                                id="firstName" 
-                                value="<?php
-                                    echo Helper::DisplayText('firstname', $firstname);
-                                ?>"
-                             >
-                            <small>First name <span class="red">*</span></small>
-                        </div>
 
-                        <div>
-                            <?php
-                                Helper::EchoErrorField(
-                                    Constants::$middleNameRequired,
-                                    Constants::$invalidMiddleNameCharacters,
-                                    Constants::$middleNameIsTooShort,
-                                    Constants::$middleNameIsTooLong);
-                            ?>
-                            <input class=" form-control" type="text" name="middle_name" id="middleName" 
-                                placeholder="Middle name"
-                                value="<?php
-                                    echo Helper::DisplayText('middle_name', $middle_name);
-                                ?>">
-                            <small>Middle name</small>
-                        </div>
-                        <div>
-                            <?php
-                                echo Helper::getError(Constants::$invalidSuffixNameCharacters);
-                            ?>
-                            <input maxlength="3" class="form-control" 
-                            type="text" name="suffix" id="suffixName" placeholder="e.g. Jr, Sr, II"
-                            value="<?php 
-                                echo Helper::DisplayText('suffix', $suffix);;
-                            ?>">
-                            <small>Suffix name</small>
-                        </div>
-                        </span>
+                    <div class="progress">
+                        <span class="dot active"><p>Preferred Course/Strand</p></span>
+                        <span class="line active"></span>
+                        <span class="dot active"> <p>Personal Information</p></span>
+                        <span class="line inactive"></span>
+                        <span class="dot inactive"> <p>Validate Details</p></span>
+                        <span class="line inactive"></span>
+                        <span class="dot inactive"> <p>Finished</p></span>
                     </div>
-                    <div class="row">
-                        <span>
-                            <?php
-                                echo Helper::getError(Constants::$civilStatusRequired);
-                                echo Helper::getError(Constants::$invalidCivilStatusCharacters);
-                            ?>
-                            <label for="status">Status <span class="red">*</span></label>
-                            <div>
-                                <select class="form-control" id="status" name="civil_status" class="form-control">
-                                    <option value="Single"<?php echo ($civil_status == "Single") ? " selected" : ""; ?>>Single</option>
-                                    <option value="Married"<?php echo ($civil_status == "Married") ? " selected" : ""; ?>>Married</option>
-                                </select>
-                            </div>
-                        </span>
 
-                        <span>
-                            <!-- <p style="color:orange; font-size: 11px;">Input error</p> -->
-                            <?php
-                                echo Helper::getError(Constants::$nationalityRequired);
-                                echo Helper::getError(Constants::$invalidNationalityCharacters);
-                            ?>
+                    <main>
+                        <form method="POST">
+                            <?php if($type_status  == 0): ?>
+                                <header>
+                                    <div class="title">
+                                        <h3>Student Information</h3>
+                                    </div>
+                                </header>
+                                    <div class="row">
+                                        <span>
+                                            <label for="lrn">LRN</label>
+                                            <div>
+                                                <input 
+                                                    class="form-control"
+                                                    id="lrn" 
+                                                    type="text" 
+                                                    name="lrn" 
+                                                    style="width: 200px" 
+                                                    placeholder="236-736-050-357"
+                                                    value="<?php echo ($lrn != "") ? $lrn : ''; ?>"
+                                                >
+                                            </div>
+                                        </span>
+                                    </div>
+                            <?php else: ?>
+                                <header>
+                                    <div class="title">
+                                        <h3>Student Information</h3>
+                                    </div>
+                                </header>
+                            <?php endif; ?>
                             
-                            <label for="citizenship">Citizenship <span class="red">*</span></label>
-                            <div>
-                                <input class="form-control" style="width: 220px;" 
-                                    type="text" name="nationality" 
-                                    id="nationality"
-                                    value="<?php 
-                                        echo Helper::DisplayText('nationality', $nationality);
-                                        // if(count(Helper::$errorArray) > 0){
-                                        //     Helper::getInputValue('nationality');
-                                        // }else{
-                                        //     echo $nationality;
-                                        // }
-                                    ?>"
+                            <div class="row">
+                                <span>
+                                    <label for="name">Name</label>
+                                    <div>
+                                        <?php 
+                                            Helper::EchoErrorField(Constants::$lastNameRequired,
+                                                Constants::$invalidLastNameCharacters,
+                                                Constants::$lastNameIsTooShort, Constants::$lastNameIsTooLong
+                                            );
+                                        ?>
+                                        <input class=" form-control" type="text"
+                                            name="lastname" id="lastName"  placeholder="Last name" 
+                                            value="<?php  
+                                                echo Helper::DisplayText('lastname', $lastname);
+                                            ?>">
+                                        <small>Last name <span class="red">*</span></small>
+                                    </div>
+                                <div>
+                                    <?php 
+                                        Helper::EchoErrorField(Constants::$firstNameRequired, Constants::$invalidFirstNameCharacters,
+                                            Constants::$firstNameIsTooShort, Constants::$firstNameIsTooLong);
+                                    ?>
+                                    <input class=" form-control"
+                                        type="text" name="firstname" 
+                                        placeholder="First name"
+                                        id="firstName" 
+                                        value="<?php
+                                            echo Helper::DisplayText('firstname', $firstname);
+                                        ?>"
                                     >
-                            </div>
-                        </span>
-                        <span>
-                            <?php
-                                echo Helper::getError(Constants::$genderRequired);
-                                echo Helper::getError(Constants::$invalidGenderCharacters);
-                            ?>
-                            <label for="gender">Gender <span class="red">*</span></label>
-                            <div>
-                                <select class="form-control" name="sex" id="sex">
-                                    <option value="Male"<?php echo ($sex == "Male") ? " selected" : ""; ?>>Male</option>
-                                    <option value="Female"<?php echo ($sex == "Female") ? " selected" : ""; ?>>Female</option>
-                                </select>
-                            </div>
-                        </span>
-                    </div>
-                    <div class="row">
-                        <span>
-                            <label for="birthdate">Birthdate <span class="red">*</span></label>
-                            <div>
-                                <input type="date" id="birthday" name="birthday" class="form-control" required value="<?php echo ($birthday != "") ? $birthday : "2023-06-17"; ?>">
-                            </div>
-                        </span>
+                                    <small>First name <span class="red">*</span></small>
+                                </div>
 
-                        <span>
-                            <?php
-                                // echo Helper::getError(Constants::$religionRequired);
-                                // echo Helper::getError(Constants::$invalidReligionCharacters);
-                            ?>
-                        <label for="religion">Religion</label>
-                        <div>
-                            <!-- <select class="form-control" name="religion" id="religion">
-                                <option value="Catholic"<?php echo ($religion == "Catholic") ? " selected" : ""; ?>>Catholic</option>
-                                <option value="Christian"<?php echo ($religion == "Christian") ? " selected" : ""; ?>>Christian</option>
-                                <option value="Other"<?php echo ($religion == "Other") ? " selected" : ""; ?>>Other</option>
-                            </select> -->
-                            <input placeholder="Catholic, Christian" type="text" id="religion" name="religion" class="form-control" value="<?php echo ($religion != "") ? $religion : ""; ?>">
-                        </div>
-                        </span>
-                        <span>
-                            <?php
-                                Helper::EchoErrorField(
-                                    Constants::$birthPlaceRequired,
-                                    Constants::$invalidBirthPlaceCharacters,
-                                    Constants::$birthPlaceIsTooShort,
-                                    Constants::$birthPlaceIsTooLong
-                                );
-                            ?>
-                            <label for="birthplace">Birthplace <span class="red">*</span></label>
-                            <div>
-                                <input type="text" id="birthplace" name="birthplace" 
-                                    class="form-control"  placeholder="City/Municipality"
+                                <div>
+                                    <?php
+                                        Helper::EchoErrorField(
+                                            Constants::$middleNameRequired,
+                                            Constants::$invalidMiddleNameCharacters,
+                                            Constants::$middleNameIsTooShort,
+                                            Constants::$middleNameIsTooLong);
+                                    ?>
+                                    <input class=" form-control" type="text" name="middle_name" id="middleName" 
+                                        placeholder="Middle name"
+                                        value="<?php
+                                            echo Helper::DisplayText('middle_name', $middle_name);
+                                        ?>">
+                                    <small>Middle name</small>
+                                </div>
+                                <div>
+                                    <?php
+                                        echo Helper::getError(Constants::$invalidSuffixNameCharacters);
+                                    ?>
+                                    <input maxlength="3" class="form-control" 
+                                    type="text" name="suffix" id="suffixName" placeholder="e.g. Jr, Sr, II"
                                     value="<?php 
-                                        echo Helper::DisplayText('birthplace', $birthplace);
+                                        echo Helper::DisplayText('suffix', $suffix);;
                                     ?>">
+                                    <small>Suffix name</small>
+                                </div>
+                                </span>
+                            </div>
+                            <div class="row">
+                                <span>
+                                    <?php
+                                        echo Helper::getError(Constants::$civilStatusRequired);
+                                        echo Helper::getError(Constants::$invalidCivilStatusCharacters);
+                                    ?>
+                                    <label for="status">Status <span class="red">*</span></label>
+                                    <div>
+                                        <select class="form-control" id="status" name="civil_status" class="form-control">
+                                            <option value="Single"<?php echo ($civil_status == "Single") ? " selected" : ""; ?>>Single</option>
+                                            <option value="Married"<?php echo ($civil_status == "Married") ? " selected" : ""; ?>>Married</option>
+                                        </select>
+                                    </div>
+                                </span>
 
+                                <span>
+                                    <!-- <p style="color:orange; font-size: 11px;">Input error</p> -->
+                                    <?php
+                                        echo Helper::getError(Constants::$nationalityRequired);
+                                        echo Helper::getError(Constants::$invalidNationalityCharacters);
+                                    ?>
+                                    
+                                    <label for="citizenship">Citizenship <span class="red">*</span></label>
+                                    <div>
+                                        <input class="form-control"
+                                            type="text" name="nationality" 
+                                            id="nationality"
+                                            value="<?php 
+                                                echo Helper::DisplayText('nationality', $nationality);
+                                                // if(count(Helper::$errorArray) > 0){
+                                                //     Helper::getInputValue('nationality');
+                                                // }else{
+                                                //     echo $nationality;
+                                                // }
+                                            ?>"
+                                            >
+                                    </div>
+                                </span>
+                                <span>
+                                    <?php
+                                        echo Helper::getError(Constants::$genderRequired);
+                                        echo Helper::getError(Constants::$invalidGenderCharacters);
+                                    ?>
+                                    <label for="gender">Gender <span class="red">*</span></label>
+                                    <div>
+                                        <select class="form-control" name="sex" id="sex">
+                                            <option value="Male"<?php echo ($sex == "Male") ? " selected" : ""; ?>>Male</option>
+                                            <option value="Female"<?php echo ($sex == "Female") ? " selected" : ""; ?>>Female</option>
+                                        </select>
+                                    </div>
+                                </span>
                             </div>
-                        </span>
-                    </div>
-                    <div class="row">
-                        <span>
-                            <?php
-                                Helper::EchoErrorField(
-                                    Constants::$addressRequired,
-                                    Constants::$invalidAddressCharacters,
-                                    Constants::$addressIsTooShort,
-                                    Constants::$addressIsTooLong);
-                                ?>
-                            <label for="address">Address <span class="red">*</span></label>
-                            <div>
-                                <input autocomplete="offpro" style="text-align: start;" type="text" 
-                                id="address" name="address" placeholder="House No Street Name Barangay City/Municipality"
-                                class="form-control" 
-                                value="<?php
-                                    echo Helper::DisplayText('address', $address);
-                                ?>">
+                            <div class="row">
+                                <span>
+                                    <label for="birthdate">Birthdate <span class="red">*</span></label>
+                                    <div>
+                                        <input type="date" id="birthday" name="birthday" class="form-control" required value="<?php echo ($birthday != "") ? $birthday : "2023-06-17"; ?>">
+                                    </div>
+                                </span>
+
+                                <span>
+                                    <?php
+                                        // echo Helper::getError(Constants::$religionRequired);
+                                        // echo Helper::getError(Constants::$invalidReligionCharacters);
+                                    ?>
+                                <label for="religion">Religion</label>
+                                <div>
+                                    <!-- <select class="form-control" name="religion" id="religion">
+                                        <option value="Catholic"<?php echo ($religion == "Catholic") ? " selected" : ""; ?>>Catholic</option>
+                                        <option value="Christian"<?php echo ($religion == "Christian") ? " selected" : ""; ?>>Christian</option>
+                                        <option value="Other"<?php echo ($religion == "Other") ? " selected" : ""; ?>>Other</option>
+                                    </select> -->
+                                    <input placeholder="Catholic, Christian" type="text" id="religion" name="religion" class="form-control" value="<?php echo ($religion != "") ? $religion : ""; ?>">
+                                </div>
+                                </span>
+                                <span>
+                                    <?php
+                                        Helper::EchoErrorField(
+                                            Constants::$birthPlaceRequired,
+                                            Constants::$invalidBirthPlaceCharacters,
+                                            Constants::$birthPlaceIsTooShort,
+                                            Constants::$birthPlaceIsTooLong
+                                        );
+                                    ?>
+                                    <label for="birthplace">Birthplace <span class="red">*</span></label>
+                                    <div>
+                                        <input type="text" id="birthplace" name="birthplace" 
+                                            class="form-control"  placeholder="City/Municipality"
+                                            value="<?php 
+                                                echo Helper::DisplayText('birthplace', $birthplace);
+                                            ?>">
+
+                                    </div>
+                                </span>
                             </div>
-                        </span>
-                    </div>
-                    <div class="row">
-                        <span>
-                            <?php
-                                echo Helper::getError(Constants::$ContactNumberRequired);
-                                echo Helper::getError(Constants::$invalidContactNumberCharacters);
-                                echo Helper::getError(Constants::$invalidContactNumber2Characters);
-                            ?>
-                            <label for="phone">Contact no. <span class="red">*</span></label>
-                            <div>
-                                <input type="tel" id="contact_number"
-                                    name="contact_number" class="form-control"
-                                    placeholder="09151516123"
-                                    value="<?php
-                                        echo Helper::DisplayText('contact_number', $contact_number);
-                                    ?>">
+                            <div class="row">
+                                <span>
+                                    <?php
+                                        Helper::EchoErrorField(
+                                            Constants::$addressRequired,
+                                            Constants::$invalidAddressCharacters,
+                                            Constants::$addressIsTooShort,
+                                            Constants::$addressIsTooLong);
+                                        ?>
+                                    <label for="address">Address <span class="red">*</span></label>
+                                    <div>
+                                        <input autocomplete="offpro" style="text-align: start;" type="text" 
+                                        id="address" name="address" placeholder="House No Street Name Barangay City/Municipality"
+                                        class="form-control" 
+                                        value="<?php
+                                            echo Helper::DisplayText('address', $address);
+                                        ?>">
+                                    </div>
+                                </span>
                             </div>
-                        </span>
-                        <span>
-                            <?php
-                                echo Helper::getError(Constants::$EmailRequired);
-                                echo Helper::getError(Constants::$invalidEmailCharacters);
-                            ?>
-                            <label for="email">Email <span class="red">*</span></label>
-                            <div>
-                                <input disabled autocomplete="off" type="email" id="email" name="email" 
-                                class=" form-control" 
-                                value="<?php 
-                                    echo Helper::DisplayText('email', $email);
-                                ?>">
+                            <div class="row">
+                                <span>
+                                    <?php
+                                        echo Helper::getError(Constants::$ContactNumberRequired);
+                                        echo Helper::getError(Constants::$invalidContactNumberCharacters);
+                                        echo Helper::getError(Constants::$invalidContactNumber2Characters);
+                                    ?>
+                                    <label for="phone">Contact no. <span class="red">*</span></label>
+                                    <div>
+                                        <input type="tel" id="contact_number"
+                                            name="contact_number" class="form-control"
+                                            placeholder="09151516123"
+                                            value="<?php
+                                                echo Helper::DisplayText('contact_number', $contact_number);
+                                            ?>">
+                                    </div>
+                                </span>
+                                <span>
+                                    <?php
+                                        echo Helper::getError(Constants::$EmailRequired);
+                                        echo Helper::getError(Constants::$invalidEmailCharacters);
+                                    ?>
+                                    <label for="email">Email <span class="red">*</span></label>
+                                    <div>
+                                        <input disabled autocomplete="off" type="email" id="email" name="email" 
+                                        class=" form-control" 
+                                        value="<?php 
+                                            echo Helper::DisplayText('email', $email);
+                                        ?>">
+                                    </div>
+                                </span>
                             </div>
-                        </span>
-                    </div>
-                    <div class="action">
-                        <button style="margin-right: 9px;"
-                            type="button"
-                                class="default large"
-                                onclick="window.location.href = 'process.php?new_student=true&step=preferred_course';"
+                            <div class="action">
+                                <button
+                                    type="button"
+                                    class="default large"
+                                    onclick="window.location.href = 'process.php?new_student=true&step=preferred_course';"
                                 >
-                                Return
-                        </button>
-                        <button
-                            class="default success large"
-                            name="student_details_btn_<?php echo $pending_enrollees_id ?>" 
-                            type="submit"
-                            >
-                            Proceed
-                        </button>
-                    </div>
-                </form>
+                                    Return
+                                </button>
+                                <button
+                                    class="clean large"
+                                    name="student_details_btn_<?php echo $pending_enrollees_id ?>" 
+                                    type="submit"
+                                    >
+                                    Proceed
+                                </button>
+                            </div>
+                        </form>
+                    </main>
+                </div>
             </main>
-        </div>
-    </main>
-</div>
- 

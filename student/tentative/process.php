@@ -1,5 +1,4 @@
-<?php 
-
+<?php
     // include_once('../../includes/student_header.php');
     include_once('../../includes/pending_enrollee_header.php');
     include_once('../../includes/classes/Pending.php');
@@ -171,91 +170,86 @@
                 // echo "hey";
 
                 if(isset($_GET['step']) && $_GET['step'] == 4){
+?>
 
-                    ?>
-                        <div class="content">
-                            
-                            <main>
-                                <div class="floating noBorder">
-                                <header>
-                                    <div class="title">
-                                    <h2 style="color: var(--titleTheme)">New Student Form</h2>
-                                    <small>SY <?php echo $current_term;?></small>
-                                    </div>
-                                </header>
-                                <div class="progress">
-                                    <span class="dot active"><p>Preferred Course/Strand</p></span>
-                                    <span class="line active"></span>
-                                    <span class="dot active"> <p>Personal Information</p></span>
-                                    <span class="line active"></span>
-                                    <span class="dot active"> <p>Validate Details</p></span>
-                                    <span class="line active"></span>
-                                    <span class="dot active"> <p>Finished</p></span>
-                                </div>
-                                    <div class="floating noBorder">
-
-                                        <header>
-                                            <div class="title">
-                                                <h2>You've successfully completed your form!</h2>
-                                            </div>
-                                        </header>
-
-                                        <header>
-                                            <div class="title">
-                                                <h3 style="color: black">What's next?</h3>
-                                                <p>
-                                                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                                                Laudantium, molestias culpa dicta earum cupiditate non a ipsam
-                                                repellat nulla, quisquam cum cumque, iste omnis ab error. Debitis
-                                                rem asperiores cumque?
-                                                </p>
-                                                <ul>
-                                                <li>Please kindly walk in to registrar for completion your requirements</li>
-                                                </ul>
-                                            </div>
-                                        </header>
-                                        
-                                </div>
-                            </main>
-
-                            <div style="margin-top: 10px; text-align:right;" class="col-md-11">
-                                <a href="profile.php?fill_up_state=finished">
-                                    <button class="default large">Return to Home</button>
-                                </a>
+                <main>
+                    <div class="floating noBorder">
+                        <header>
+                            <div class="title">
+                                <h2 style="color: var(--titleTheme)">New Student Form</h2>
+                                <small>SY <?php echo $current_term;?></small>
                             </div>
-                        </div> 
-                            
-                    <?php
+                        </header>
+                        <div class="progress">
+                            <span class="dot active"><p>Preferred Course/Strand</p></span>
+                            <span class="line active"></span>
+                            <span class="dot active"> <p>Personal Information</p></span>
+                            <span class="line active"></span>
+                            <span class="dot active"> <p>Validate Details</p></span>
+                            <span class="line active"></span>
+                            <span class="dot active"> <p>Finished</p></span>
+                        </div>
+                        <div class="floating noBorder">
+                            <header>
+                                <div class="title">
+                                    <h2>You've successfully completed your form!</h2>
+                                </div>
+                            </header>
+                            <header>
+                                <div class="title">
+                                    <h3 style="color: black">What's next?</h3>
+                                    <p>
+                                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                                        Laudantium, molestias culpa dicta earum cupiditate non a ipsam
+                                        repellat nulla, quisquam cum cumque, iste omnis ab error. Debitis
+                                        rem asperiores cumque?
+                                    </p>
+                                    <ul>
+                                        <li>Please kindly walk in to registrar for completion your requirements</li>
+                                    </ul>
+                                </div>
+                            </header>
+                        </div>
+                        <div class="action">
+                            <button 
+                                class="default large"
+                                onclick="window.location.href='profile.php?fill_up_state=finished'"
+                            >
+                                Return to Home
+                            </button>
+                        </div>
+                    </div>
+                </main>
+                <?php
                 }
-
             }
         }
     }
+        ?>
+        </div>
+        <script>
+            $(document).ready(function () {
 
-?>
+                var hasAcceptedTerms = localStorage.getItem("acceptedTerms");
 
-<script>
+                // If the user has not accepted the terms, show the modal
+                if (!hasAcceptedTerms) {
+                $("#termsModal").modal({
+                    backdrop: "static", // Prevent closing by clicking outside the modal
+                    keyboard: false // Prevent closing by pressing ESC key
+                });
+                }
 
-  $(document).ready(function () {
+                // Handle the accept button click
+                $("#acceptTerms").click(function () {
+                // Store in local storage that the user has accepted the terms
+                localStorage.setItem("acceptedTerms", "true");
+                // Close the modal
+                $("#termsModal").modal("hide");
+                });
 
-    var hasAcceptedTerms = localStorage.getItem("acceptedTerms");
+            });
 
-    // If the user has not accepted the terms, show the modal
-    if (!hasAcceptedTerms) {
-      $("#termsModal").modal({
-        backdrop: "static", // Prevent closing by clicking outside the modal
-        keyboard: false // Prevent closing by pressing ESC key
-      });
-    }
-
-    // Handle the accept button click
-    $("#acceptTerms").click(function () {
-      // Store in local storage that the user has accepted the terms
-      localStorage.setItem("acceptedTerms", "true");
-      // Close the modal
-      $("#termsModal").modal("hide");
-    });
-
-  });
-
-</script>
+        </script>
+    </body>
+</html>
