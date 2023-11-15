@@ -248,7 +248,7 @@
 
         // var_dump($overview_audit_name);
 
-        $doesAuditSuccess = $subjectModuleAudit->InsertAuditOfSubjectModule(
+        $doesAuditSuccess = $subjectModuleAudit->Inser  tAuditOfSubjectModule(
             $student_subject_id, $current_school_year_id,
             $overview_audit_name, $studentLoggedInId, $subject_code);
 
@@ -316,7 +316,7 @@
 
                             <header>
                                 <div class="title">
-                                    <h4>Progress</h4>
+                                    <h4 style="color: black;">Progress</h4>
                                 </div>
                             </header>
                             <main>
@@ -357,8 +357,9 @@
                                 <header>
                                         
                                     <div class="title">
-                                        <h4>Scorese</h4>
+                                        <h4 style="color: black;">Scores</h4>
                                     </div>
+
                                 </header>
                                 <main>
                                     <div class="progress" style="position: relative; height: 20px">
