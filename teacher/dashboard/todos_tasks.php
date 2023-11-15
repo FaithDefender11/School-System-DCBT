@@ -13,8 +13,6 @@
     include_once('../../includes/classes/SubjectCodeAssignmentTemplate.php');
     include_once('../../includes/classes/SubjectCodeHandout.php');
     include_once('../../includes/classes/TaskType.php');
- 
-    echo Helper::RemoveSidebar();
 
     
     if(
@@ -58,25 +56,37 @@
 
         ?>
 
+            <?php 
+                echo Helper::lmsTeacherNotificationHeader(
+                    $con, $teacherLoggedInId,
+                    $current_school_year_id,
+                    $teachingSubjects,
+                    "second",
+                    "second",
+                    "second",
+                    "first"
+                ); 
+            ?>
+
             <div class="content">
 
                 <nav>
                     <a href="<?php echo $back_url;?>">
-                        <i class="bi bi-arrow-return-left fa-1x"></i>
-                        <h3>Back</h3>
+                        <i class="bi bi-arrow-return-left"></i>
+                        Back
                     </a>
                 </nav>
 
                 <main>
                     <div class="floating" id="shs-sy">
-                        <header class="mb-3">
+                        <header>
                             <div class="title">
 
                                 <h4 style="font-weight: bold;" class="text-primary"><?php echo "$subject_title - SY $current_school_year_term $period_shortcut"; ?></h4>
 
                             </div>
                         </header>
-                        <main>
+                        <main style="overflow-x: auto">
 
                             <?php if(count($givenAssignmentsTodos) > 0): ?>
 
