@@ -473,7 +473,7 @@
                                             $totalAssignmentCount = count($assignmentHandoutsMerge);
                                         ?>
                                         <button 
-                                            class='clean'
+                                            class='btn btn-success'
                                             onclick="window.location.href='section_topic.php?id=<?php echo $subject_period_code_topic_template_id;?>&ct_id=<?php echo $subject_period_code_topic_id; ?>'"
                                         >
                                             <i class="fas fa-plus"></i> 
@@ -481,7 +481,7 @@
                                         </button>
                                         <button 
                                             onclick="window.location.href = '../module/handout_index.php?id=<?php echo $subject_period_code_topic_template_id;?>&sct_id=<?php echo $subject_period_code_topic_id ?>' " 
-                                            class="information" 
+                                            class="btn btn-info" 
                                             data-toggle="tooltip" 
                                             data-placement="bottom" 
                                             title="Handout"
@@ -513,7 +513,7 @@
                                                     ?>
 
                                                     <button 
-                                                        class="default"
+                                                        class="btn btn-info"
                                                         onclick="window.location.href='../module/task.php?id=<?= $task_type_id; ?>&sctt_id=<?php echo $subject_period_code_topic_template_id;?>&sct_id=<?php echo $subject_period_code_topic_id ?>'"
                                                         title="<?= $task_name; ?>"
                                                     >

@@ -76,7 +76,6 @@
                 "second",
                 "second",
                 "second",
-                $logout_url,
                 "first"
             );
         ?>

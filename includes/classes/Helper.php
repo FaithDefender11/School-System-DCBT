@@ -2775,7 +2775,7 @@ class Helper {
                 </button>
             
                 <div class="username">
-                    <button title="Profile" onclick="window.location.href='#'"><?= "$lastname, $firstname"?></button>
+                    <button title="Profile" onclick="window.location.href='<?= $profile_url; ?>'"><?= "$lastname, $firstname"?></button>
                 </div>
 
             </div>
