@@ -35,7 +35,7 @@
                             <small><?php echo $creation; ?></small>
                         </div>
                         <div class="action">
-                            <button class="btn btn-info">
+                            <button class="btn btn-sm btn-info">
                                 <a href="announcement_views.php?id=<?php echo $teacher_announcement_id ?>">
                                     <i class="fas fa-eye" style="color: white"></i>
                                 </a>
