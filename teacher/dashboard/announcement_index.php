@@ -62,8 +62,8 @@
 
                 <nav>
                     <a href="<?php echo $back_url;?>">
-                        <i class="bi bi-arrow-return-left fa-1x"></i>
-                        <h3>Back</h3>
+                        <i class="bi bi-arrow-return-left"></i>
+                        Back
 
                     </a>
                 </nav>
@@ -80,7 +80,7 @@
 
                             <div class="action">
                                 <a href="announcement_create.php?sy_id=<?= $school_year_id;?>">
-                                    <button type="button" class="default success large">+ Add announcement</button>
+                                    <button type="button" class="clean large">+ Add announcement</button>
                                 </a>
                             </div>
                             
