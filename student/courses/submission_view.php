@@ -197,16 +197,17 @@
         }
     </style>
 
-            <?php 
-                echo Helper::lmsTeacherNotificationHeader(
-                    $con, $teacherLoggedInId,
+            <?php
+                echo Helper::lmsStudentNotificationHeader(
+                    $con, $studentLoggedInId,
                     $current_school_year_id,
-                    $teachingSubjects,
+                    $enrolledSubjectList,
+                    $enrollment_id,
                     "second",
                     "first",
                     "second",
                     "second"
-                ); 
+                );
             ?>
 
             <div class="content-header">

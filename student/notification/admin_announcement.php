@@ -1,5 +1,4 @@
-<?php 
-
+<?php
     include_once('../../includes/student_lms_header.php');
     include_once('../../includes/classes/Student.php');
     include_once('../../includes/classes/SubjectPeriodCodeTopic.php');
@@ -8,7 +7,6 @@
     include_once('../../includes/classes/SubjectCodeAssignment.php');
     include_once('../../includes/classes/Announcement.php');
     include_once('../../includes/classes/Notification.php');
-
 
     if(isset($_GET['id'])){
 
@@ -40,34 +38,44 @@
         $markAsSViewed = $announcement->StudentAnnouncementAsViewed($announcement_id, $studentLoggedInId);
 
         $back_url = "index.php";
-        ?>
+?>
 
-        <div class="content">
+            <?php
+                echo Helper::lmsStudentNotificationHeader(
+                    $con, $studentLoggedInId,
+                    $current_school_year_id,
+                    $enrolledSubjectList,
+                    $enrollment_id,
+                    "first",
+                    "second",
+                    "first",
+                    "second"
+                );
+            ?>
+
             <nav>
                 <a href="<?php echo $back_url;?>">
-                    <i class="bi bi-arrow-return-left fa-1x"></i>
-                    <h3>Back</h3>
+                    <i class="bi bi-arrow-return-left"></i>
+                    Back
                 </a>
             </nav>
-            <div class="row col-md-10">
-                <div class="offset-md-2">
-                    <div class="card">
-                        <div class="card-header">
-                            <h4 class="text-center"><?php  echo $title;?></h4>
-                            <span><?php echo $creation; ?></span>
-                        </div>
-                        <div class="card-body">
-                            <p>
-                                <?php  echo $content;?>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-                
-        </div>
-          
-        <?php
-    }
 
-?>
+            <main>
+                <div class="floating">
+                    <header>
+                        <div class="title">
+                            <h3><?php  echo $title;?></h3>
+                            <small><?php echo $creation; ?></small>
+                        </div>
+                    </header>
+                    <main>
+                        <p><?php  echo $content;?></p>
+                    </main>
+                </div>
+            </main>
+        </div>
+    <?php
+    }
+    ?>
+    </body>
+</html>

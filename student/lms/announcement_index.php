@@ -1,5 +1,4 @@
-<?php 
-
+<?php
     include_once('../../includes/student_lms_header.php');
     include_once('../../includes/classes/Section.php');
     include_once('../../includes/classes/SchoolYear.php');
@@ -8,8 +7,6 @@
     include_once('../../includes/classes/TaskType.php');
     include_once('../../includes/classes/Enrollment.php');
     include_once('../../includes/classes/Teacher.php');
- 
-    // echo Helper::RemoveSidebar();
 
     $school_year = new SchoolYear($con);
     $school_year_obj = $school_year->GetActiveSchoolYearAndSemester();
@@ -60,26 +57,39 @@
     $announcementCount = $result['announcement_count'];
     // var_dump($announcementCount);
 
-    ?>
-        <div class="content">
+    $back_url = "student_dashboard.php";
+?>
+
+            <?php
+                echo Helper::lmsStudentNotificationHeader(
+                    $con, $studentLoggedInId,
+                    $current_school_year_id,
+                    $enrolledSubjectList,
+                    $enrollment_id,
+                    "second",
+                    "second",
+                    "second",
+                    "first"
+                );
+            ?>
+
+            <nav>
+                <a href="<?= $back_url; ?>">
+                    <i class="bi bi-arrow-return-left"></i>
+                    Back
+                </a>
+            </nav>
 
             <main>
-            
-                <div class="floating" id="shs-sy">
-
+                <div class="floating">
                     <header>
-
                         <div class="title">
-                            <h4>Announcement for <span class="text-muted"><?= "$current_school_year_term $current_school_year_period Semester"?></span></h4>
+                            <h3>Announcement for <em><?= "$current_school_year_term $current_school_year_period Semester"?></em></h3>
                         </div>
                     </header>
-
-                    <main>
-
-                    <?php if(count($mergeAnnouncement) > 0):?>
-
-                            <table style="width: 100%" id="teacher_global_announcement_table" class="a" >
-                                
+                    <main style="overflow-x: auto">
+                        <?php if(count($getAllAnnouncementOnMyEnrolledSubjects) > 0):?>
+                            <table class="a" id="teacher_global_announcement_table">
                                 <thead>
                                     <tr>
                                         <th>Subject</th>  
@@ -90,9 +100,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-
-                                    <?php 
-
+                                    <?php
                                         foreach ($mergeAnnouncement as $key => $value) {
 
                                             $announcement_id = $value['announcement_id'];
@@ -144,73 +152,57 @@
                                                     <td>$toWhomName</td>
                                                     <td>$announcement_creation</td>
                                                     <td>
-
                                                         <a href='../dashboard/announcement.php?id=$announcement_id'>
                                                             <button class='btn-sm btn btn-primary'>
                                                                 <i class='fas fa-eye'></i>
                                                             </button>
                                                         </a>
-
                                                     </td>
-
                                                 </tr>
                                             ";
-
                                         }
-                                        
                                     ?>
-
                                 </tbody>
                             </table>
-                        <?php else:?>
-                            <div class="col-md-12">
-                                <h4 class="text-info text-center">No announcement data.</h4>
-                            </div>
-                    <?php endif;?>
-
-
+                        <?php else: ?>
+                            <h4 style="text-align: center">No Announcement</h4>
+                        <?php endif; ?>
                     </main>
                 </div>
             </main>
-            
         </div>
-    <?php
+        <script>
+            $(document).ready(function () {
 
-?>
+                // Function to check for updates
+                // function checkForUpdates(lastCount) {
+                //     $.ajax({
+                //         url: 'check_updates.php', // PHP file to check updates
+                //         type: 'GET',
+                //         data: { last_count: lastCount }, // Send the client's last count
+                //         success: function (data) {
+                //             data = data.trim();
 
+                //             console.log(data)
+                            
+                //             if (data == 'update_available') {
+                //                 // Reload the page if an update is available
+                //                 location.reload(true);
+                //             }
 
+                //         },
+                //         complete: function () {
+                //             // Schedule the next check after a certain interval (e.g., every 5 seconds)
+                //             setTimeout(function() {
+                //                 checkForUpdates(<?php echo $announcementCount; ?>); // Corrected PHP echo
+                //             }, 5000);
+                //         }
+                //     });
+                // }
 
-<script>
-    $(document).ready(function () {
-
-        // Function to check for updates
-        // function checkForUpdates(lastCount) {
-        //     $.ajax({
-        //         url: 'check_updates.php', // PHP file to check updates
-        //         type: 'GET',
-        //         data: { last_count: lastCount }, // Send the client's last count
-        //         success: function (data) {
-        //             data = data.trim();
-
-        //             console.log(data)
-                    
-        //             if (data == 'update_available') {
-        //                 // Reload the page if an update is available
-        //                 location.reload(true);
-        //             }
-
-        //         },
-        //         complete: function () {
-        //             // Schedule the next check after a certain interval (e.g., every 5 seconds)
-        //             setTimeout(function() {
-        //                 checkForUpdates(<?php echo $announcementCount; ?>); // Corrected PHP echo
-        //             }, 5000);
-        //         }
-        //     });
-        // }
-
-        // Initial check when the page loads
-        // checkForUpdates(<?php echo $announcementCount; ?>);
-    });
-</script>
-
+                // Initial check when the page loads
+                // checkForUpdates(<?php echo $announcementCount; ?>);
+            });
+        </script>
+    </body>
+</html>
