@@ -13,6 +13,8 @@
     $current_school_year_term = $school_year_obj['term'];
 
     $teacher_id = $_SESSION['teacherLoggedInId'];
+
+    $back_url = "index.php";
 ?>
 
       <nav>
