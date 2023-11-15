@@ -171,5 +171,6 @@
                 <?php endif; ?>
             </main>
         </div>
+        <script src="../../assets/js/dropdownMenu.js"></script>
     </body>
 </html>
