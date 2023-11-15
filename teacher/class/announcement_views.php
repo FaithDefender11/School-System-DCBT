@@ -28,6 +28,11 @@
         $creation = $teacherAnnouncement->GetDateCreation();
         $creation = date("F d, Y h:i a", strtotime($creation));
 
+        $subjectCodeAssignment = new SubjectCodeAssignment($con);
+
+        $teachingSubjectCode = $subjectCodeAssignment
+            ->GetTeacherTeachingSubjects($teacherLoggedInId,
+                $school_year_id);
 
         $back_url = "subject_announcement.php?sy_id=$school_year_id";
 
