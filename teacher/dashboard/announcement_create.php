@@ -1,5 +1,4 @@
-<?php 
-
+<?php
     include_once('../../includes/teacher_header.php');
     include_once('../../includes/classes/Student.php');
     include_once('../../includes/classes/SubjectPeriodCodeTopic.php');
@@ -10,10 +9,6 @@
     include_once('../../includes/classes/Notification.php');
     include_once('../../includes/classes/Section.php');
     include_once('../../includes/classes/SubjectProgram.php');
-
-    echo Helper::RemoveSidebar();
-
-
 
     if(
         // isset($_GET['c'])
@@ -132,99 +127,95 @@
 
 
         }
+?>
 
-        ?>
-
-        <div class='content'>
-
-            <nav style="min-width: 100%; margin-bottom: 7px;
-                display: flex;flex-direction: row;">
-                <a href="<?php echo $back_url;?>">
-                    <i class="bi bi-arrow-return-left fa-1x"></i>
-                    <h3>Back</h3>
+            <nav>
+                <a href="<?= $back_url; ?>">
+                    <i class="bi bi-arrow-return-left"></i>
+                    Back
                 </a>
             </nav>
 
-            <div class='col-md-10 offset-md-1'>
-                <div class='card'>
-
-                    <div class='card-header'>
-                        <h4 class='text-center mb-3'>Add announcement</h4>
-                    </div>
-
-                    <div class="card-body">
-                        <form method='POST' enctype="multipart/form-data">
-
-                            <div class='form-group mb-2'>
-                                <label for="title"  class='mb-2'>* Subject</label>
-
-                                <input required class='form-control' type='text' 
-                                    placeholder='Add Assignment' id="title" name='title'>
+            <main>
+                <div class="floating">
+                    <header>
+                        <div class="title">
+                            <h3>Add announcement</h3>
+                        </div>
+                    </header>
+                    <main>
+                        <form method="post" enctype="multipart/form-data">
+                            <div class="row">
+                                <span>
+                                    <label for="title"  >* Subject</label>
+                                    <div>
+                                        <input required class='form-control' type='text' 
+                                            placeholder='Add Assignment' id="title" name='title'>
+                                    </div>
+                                </span>
                             </div>
-
-                            <div class='form-group mb-2'>
-                                <label for="content" class='mb-2'>* Content</label>
-        
-                                <textarea class="form-control" name="content" id="content"></textarea>
+                            <div class="row">
+                                <span>
+                                    <label for="content" >* Content</label>
+                                    <div>
+                                        <textarea class="form-control" name="content" id="content"></textarea>
+                                    </div>
+                                </span>
                             </div>
-
-                            <div class='form-group mb-2'>
-                                <label for="title" class='mb-2'>* Teaching Subjects</label>
-                                <?php
-
-                                    echo "<br>";
-                                    echo "
-                                        <input type='checkbox' id='select-all' class='select-all-checkbox'>
-                                        <span>All Subjects: </span> &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp;  &nbsp; 
-                                    ";
-                                    echo "<br>";
-
-                                    foreach ($teachingSubjectCode as $row) {
-
-                                        $section = new Section($con, $row['course_id']);
-
-                                        $sectionName = $section->GetSectionName();
-
-                                        $subjectProgram = new SubjectProgram($con, $row['subject_program_id']);
+                            <div class="row">
+                                <div class="form-group mb-2">
+                                    <label for="title">* Teaching Subjects</label>
+                                    <?php
+                                        echo "<br>";
+                                        echo "
+                                            <input type='checkbox' id='select-all' class='select-all-checkbox'>
+                                            <span>All Subjects: </span> &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp;  &nbsp; 
+                                        ";
+                                        echo "<br>";
+    
+                                        foreach ($teachingSubjectCode as $row) {
+    
+                                            $section = new Section($con, $row['course_id']);
+    
+                                            $sectionName = $section->GetSectionName();
+    
+                                            $subjectProgram = new SubjectProgram($con, $row['subject_program_id']);
+                                            
+                                            $programCode = $subjectProgram->GetSubjectProgramRawCode();
+    
+                                            $sectionSubjectCode = $section->CreateSectionSubjectCode($sectionName, $programCode);
                                         
-                                        $programCode = $subjectProgram->GetSubjectProgramRawCode();
-                                        $subject_title = $subjectProgram->GetTitle();
-
-                                        $sectionSubjectCode = $section->CreateSectionSubjectCode($sectionName, $programCode);
-                                    
-                                        echo '<input type="checkbox" name="selectedSubjects[]" value="' . $sectionSubjectCode . '"> '.$subject_title. ' ('. $sectionSubjectCode .')<br>';
-                                    
-                                    }
-
-                                
-
-                                ?>
+                                            echo '<input type="checkbox" name="selectedSubjects[]" value="' . $sectionSubjectCode . '"> ' . $sectionSubjectCode . '<br>';
+                                        
+                                        }
+                                    ?>
+                                </div>
                             </div>
-                        
-                            
-                            <div class="modal-footer">
-                                <button type='submit' class='btn btn-success' name='add_announcement_<?php echo $school_year_id; ?>'>Add announcement</button>
+                            <div class="action">
+                                <button 
+                                    type="submit" 
+                                    class="clean large"
+                                    name='add_announcement_<?php echo $school_year_id; ?>'
+                                >
+                                    Add announcement
+                                </button>
                             </div>
-
                         </form>
-                    </div>
-
+                    </main>
                 </div>
-            </div>
+            </main>
         </div>
-
-        <?php
+    <?php
     }
-
-?>
-
-<script>
-
-    // JavaScript to handle "Select All" checkbox
-    document.querySelector('.select-all-checkbox').addEventListener('change', function () {
-        const checkboxes = document.querySelectorAll('input[name="selectedSubjects[]"]');
-        for (const checkbox of checkboxes) {
-            checkbox.checked = this.checked;
-        }
-    });
-</script>
+    ?>
+    <script>
+        // JavaScript to handle "Select All" checkbox
+        document.querySelector('.select-all-checkbox').addEventListener('change', function () {
+            const checkboxes = document.querySelectorAll('input[name="selectedSubjects[]"]');
+            for (const checkbox of checkboxes) {
+                checkbox.checked = this.checked;
+            }
+        });
+    </script>
+    </body>
+</html>
