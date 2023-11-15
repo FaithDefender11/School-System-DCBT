@@ -29,7 +29,7 @@
         $creation = date("F d, Y h:i a", strtotime($creation));
 
 
-        $back_url = "subject_announcement.php?id=$teacher_announcement_id";
+        $back_url = "subject_announcement.php?sy_id=$school_year_id";
 
         ?>
             <nav>
