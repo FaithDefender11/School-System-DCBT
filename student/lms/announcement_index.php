@@ -155,7 +155,7 @@
 
                                                         <a href='../dashboard/announcement.php?id=$announcement_id'>
                                                             <button class='btn-sm btn btn-primary'>
-                                                                <i class='fas fa-eye'></i>
+                                                                View
                                                             </button>
                                                         </a>
 
