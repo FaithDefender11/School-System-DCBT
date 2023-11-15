@@ -67,18 +67,21 @@
 
     }
 ?>
-      <?php
-          echo Helper::lmsStudentNotificationHeader(
-            $con, $studentLoggedInId,
-            $current_school_year_id,
-            $enrolledSubjectList,
-            $enrollment_id,
-            "second",
-            "second",
-            "second",
-            "first"
-        );
-      ?>
+        <?php
+            echo Helper::lmsStudentNotificationHeader(
+                $con,
+                $studentLoggedInId,
+                $school_year_id,
+                $enrolledSubjectList,
+                $enrollment_id,
+                
+                "second",
+                "second",
+                "second",
+                $logout_url,
+                "first"
+            );
+        ?>
       <div class="content-header">
         <header>
           <div class="title">
