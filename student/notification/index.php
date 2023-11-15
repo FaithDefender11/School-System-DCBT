@@ -253,7 +253,7 @@
                                                 
                                                 $button_url = "
                                                     <button title='View notification' onclick='window.location.href=\"$announcement_url\"' class='btn btn-primary btn-sm'>
-                                                        <i class='fas fa-eye'></i>
+                                                        View
                                                     </button>
                                                 ";
                                                 
