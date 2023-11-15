@@ -1,5 +1,4 @@
-<?php 
-
+<?php
     include_once('../../includes/student_lms_header.php');
     include_once('../../includes/classes/Section.php');
     include_once('../../includes/classes/Enrollment.php');
@@ -12,9 +11,6 @@
     include_once('../../includes/classes/Announcement.php');
     include_once('../../includes/classes/SubjectProgram.php');
     include_once('../../includes/classes/SubjectCodeAssignment.php');
-
-    echo Helper::RemoveSidebar();
-
 
     if(isset($_GET['id'])
         ){
@@ -54,33 +50,36 @@
 
 
         // var_dump($subject_code);
-        
-        ?>
+?>
 
-            <div class="content">
+            <?php
+                echo Helper::lmsStudentNotificationHeader(
+                    $con, $studentLoggedInId,
+                    $school_year_id, $enrolledSubjectList,
+                    $enrollment_id,
+                    "second",
+                    "second",
+                    "second"
+                );
+            ?>
 
-                <nav style="min-width: 100%; margin-bottom: 7px;
-                    display: flex;flex-direction: row;">
-                    <a href="<?php echo $back_url;?>">
-                        <i class="bi bi-arrow-return-left fa-1x"></i>
-                        <h3>Back</h3>
-                    </a>
+            <nav>
+                <a href="<?= $back_url; ?>">
+                    <i class="bi bi-arrow-return-left"></i>
+                    Back
+                </a>
+            </nav>
 
-                </nav>
-
-                <main>
-                    <div class="floating" id="shs-sy">
-                        <header>
-                            <div class="title">
-                                <h3><?= $subject_title;?> Progress</h3>
-                            </div>
-
-                        </header>
-                        
-                        <main>
-                            <?php if(count($allGivenAssignments) > 0):?>
-
-                            <table id="progress_table" class="a" style="margin: 0">
+            <main>
+                <div class="floating">
+                    <header>
+                        <div class="title">
+                            <h3><?= $subject_title;?> Progress</h3>
+                        </div>
+                    </header>
+                    <main>
+                        <?php if(count($allGivenAssignments) > 0):?>
+                            <table class="a" id="progress_table">
                                 <thead>
                                     <tr>
                                         <th>Assignment</th>
@@ -92,179 +91,162 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php
+                                <?php
+                                    $now = date("Y-m-d H:i:s");
+                                    $totalScore = 0;
+                                    $totalOver = 0;
 
-                                        $now = date("Y-m-d H:i:s");
-                                        $totalScore = 0;
-                                        $totalOver = 0;
+                                    foreach ($allGivenAssignments as $key => $row) {
+                                        
+                                        $subject_code_assignment_id = $row['subject_code_assignment_id'];
+                                        $assignment_name = $row['assignment_name'];
 
-                                        foreach ($allGivenAssignments as $key => $row) {
-                                            
-                                            $subject_code_assignment_id = $row['subject_code_assignment_id'];
-                                            $assignment_name = $row['assignment_name'];
+                                        $max_score = $row['max_score'];
 
-                                            $max_score = $row['max_score'];
-
-                                            
-                                            $date_creation = $row['date_creation'];
-                                            $start_date = date("M d, h:i a", strtotime($date_creation));
-                                            
-                                            $due_date_db = $row['due_date'];
-                                            
-                                            $due_date = date("M d, h:i a", strtotime($due_date_db));
-
-
-                                            $submitted_status = "";
+                                        
+                                        $date_creation = $row['date_creation'];
+                                        $start_date = date("M d, h:i a", strtotime($date_creation));
+                                        
+                                        $due_date_db = $row['due_date'];
+                                        
+                                        $due_date = date("M d, h:i a", strtotime($due_date_db));
 
 
-                                            $submitted_grade_status = "";
+                                        $submitted_status = "";
 
 
-                                            $score = 0;
-
-                                            $total = "";
-
-                                            $subjectAssignmentSubmission = new SubjectAssignmentSubmission($con);
-
-                                            $statusSubmission = $subjectAssignmentSubmission
-                                                ->CheckStatusSubmission(
-                                                $subject_code_assignment_id,
-                                                $studentLoggedInId, $school_year_id);
-
-                                            
-                                            $equivalent = "";
-
-                                            
-
-                                            if($statusSubmission !== NULL){
-
-                                                $submitted_grade =  $statusSubmission['subject_grade'];
-                                                // $graded_over_score =  $statusSubmission['max_score'];
-                                                $date_graded =  $statusSubmission['date_graded'];
+                                        $submitted_grade_status = "";
 
 
-                                                $score = $submitted_grade;
+                                        $score = 0;
 
-                                                if($submitted_grade != NULL){
-                                                    
-                                                    $submitted_grade_status = "
-                                                        <i style='color: green;' class='fas fa-check'></i>
-                                                    ";
+                                        $total = "";
 
-                                                    $totalScore += $submitted_grade;
-                                                    $totalOver += $max_score;
-                                                    
+                                        $subjectAssignmentSubmission = new SubjectAssignmentSubmission($con);
 
-                                                    $pecentage_equivalent = ($submitted_grade / $max_score) * 100;
-                                                    $equivalent = round($pecentage_equivalent, 0, PHP_ROUND_HALF_UP);
-                                                    $equivalent = $equivalent . "%";
-                                                    
-                                                }
+                                        $statusSubmission = $subjectAssignmentSubmission
+                                            ->CheckStatusSubmission(
+                                            $subject_code_assignment_id,
+                                            $studentLoggedInId, $school_year_id);
 
-                                                if($submitted_grade == NULL && $date_graded == NULL){
-                                                    $submitted_grade_status = "
-                                                        <i style='color: orange;' class='fas fa-times'></i>
-                                                    ";
-                                                    $score = "??";
-                                                }
+                                        
+                                        $equivalent = "";
 
-                                                $submitted_status = "
+                                        
+
+                                        if($statusSubmission !== NULL){
+
+                                            $submitted_grade =  $statusSubmission['subject_grade'];
+                                            // $graded_over_score =  $statusSubmission['max_score'];
+                                            $date_graded =  $statusSubmission['date_graded'];
+
+
+                                            $score = $submitted_grade;
+
+                                            if($submitted_grade != NULL){
+                                                
+                                                $submitted_grade_status = "
                                                     <i style='color: green;' class='fas fa-check'></i>
                                                 ";
 
-                                            }else if($statusSubmission == NULL){
+                                                $totalScore += $submitted_grade;
+                                                $totalOver += $max_score;
+                                                
 
-                                                $submitted_status = "
-                                                    <i style='color: red;' class='fas fa-times'></i>
-                                                ";
-                                                $submitted_grade_status = "
-                                                        <i style='color: red;' class='fas fa-times'></i>
-                                                ";
-
-                                                $nowTimestamp = strtotime($now);
-
-                                                if(strtotime($due_date_db) <=  $nowTimestamp){
-                                                    $submitted_status = "
-                                                        <i style='color: orange;' class='fas fa-flag'></i>
-                                                    ";
-
-                                                    $submitted_grade_status = "
-                                                        <i style='color: orange;' class='fas fa-flag'></i>
-                                                    ";
-                                                    $equivalent = "";
-
-                                                    $totalOver += $max_score;
-                                                    // $totalScore += $max_score;
-
-                                                }else if(strtotime($due_date_db) >  $nowTimestamp){
-
-                                                    // $submitted_status = "
-                                                    //     <i style='color: red;' class='fas fa-times'></i>
-                                                    // ";
-                                                    // $submitted_grade_status = "
-                                                    //         <i style='color: red;' class='fas fa-times'></i>
-                                                    // ";
-
-                                                    $submitted_status = "-";
-                                                    $score = "?";
-                                                    $submitted_grade_status = "";
-                                                    $equivalent = "";
-
-                                                }
+                                                $pecentage_equivalent = ($submitted_grade / $max_score) * 100;
+                                                $equivalent = round($pecentage_equivalent, 0, PHP_ROUND_HALF_UP);
+                                                $equivalent = $equivalent . "%";
+                                                
                                             }
 
+                                            if($submitted_grade == NULL && $date_graded == NULL){
+                                                $submitted_grade_status = "
+                                                    <i style='color: orange;' class='fas fa-times'></i>
+                                                ";
+                                                $score = "??";
+                                            }
 
-                                            echo "
-                                                <tr>
-                                                    <td>$assignment_name</td>
-                                                    <td>$start_date</td>
-                                                    <td>$due_date</td>
-                                                    <td>$submitted_status</td>
-                                                    <td>$submitted_grade_status</td>
-                                                    <td>$score / $max_score  &nbsp; $equivalent </td>
-                                                </tr>
+                                            $submitted_status = "
+                                                <i style='color: green;' class='fas fa-check'></i>
                                             ";
+
+                                        }else if($statusSubmission == NULL){
+
+                                            $submitted_status = "
+                                                <i style='color: red;' class='fas fa-times'></i>
+                                            ";
+                                            $submitted_grade_status = "
+                                                    <i style='color: red;' class='fas fa-times'></i>
+                                            ";
+
+                                            $nowTimestamp = strtotime($now);
+
+                                            if(strtotime($due_date_db) <=  $nowTimestamp){
+                                                $submitted_status = "
+                                                    <i style='color: orange;' class='fas fa-flag'></i>
+                                                ";
+
+                                                $submitted_grade_status = "
+                                                    <i style='color: orange;' class='fas fa-flag'></i>
+                                                ";
+                                                $equivalent = "";
+
+                                                $totalOver += $max_score;
+                                                // $totalScore += $max_score;
+
+                                            }else if(strtotime($due_date_db) >  $nowTimestamp){
+
+                                                // $submitted_status = "
+                                                //     <i style='color: red;' class='fas fa-times'></i>
+                                                // ";
+                                                // $submitted_grade_status = "
+                                                //         <i style='color: red;' class='fas fa-times'></i>
+                                                // ";
+
+                                                $submitted_status = "-";
+                                                $score = "?";
+                                                $submitted_grade_status = "";
+                                                $equivalent = "";
+
+                                            }
                                         }
 
+                                        echo "
+                                            <tr>
+                                                <td>$assignment_name</td>
+                                                <td>$start_date</td>
+                                                <td>$due_date</td>
+                                                <td>$submitted_status</td>
+                                                <td>$submitted_grade_status</td>
+                                                <td>$score / $max_score  &nbsp; $equivalent </td>
+                                            </tr>
+                                        ";
+                                    }
+                                ?>
+                            </tbody>
+                        <?php if(true): ?>
+                            <tr>
+                                <td colspan="6">Overall: 
+                                    <?php
+                                        $pecentage_equivalent_total = ($totalScore / $totalOver) * 100;
+                                        $equivalent_total = round($pecentage_equivalent_total, 0, PHP_ROUND_HALF_UP);
+                                        $equivalent_total = $equivalent_total . "%";
+
+                                        echo "$totalScore / $totalOver = $equivalent_total";
                                     ?>
-                                </tbody>
-                                <?php if(true): ?>
-                                    <tr class="text-right">
-                                        <td colspan="6">Overall: 
-
-                                        <?php 
-                                            
-                                            if($totalOver > 0){
-                                                 $pecentage_equivalent_total = ($totalScore / $totalOver) * 100;
-                                                $equivalent_total = round($pecentage_equivalent_total, 0, PHP_ROUND_HALF_UP);
-                                                $equivalent_total = $equivalent_total . "%";
-
-                                                echo "$totalScore / $totalOver = $equivalent_total";
-                                            }else{
-                                                echo "??";
-                                            }
-                                           
-                                            
-                                        ?></td>
-                                    </tr>
-                                <?php endif; ?>
+                                </td>
+                            </tr>
+                        <?php endif; ?>
                             </table>
-                                <?php else:?>
-                                    <div class="col-md-12">
-                                        <h4 class="text-center">No data</h4>
-                                    </div>
-
-                            <?php endif;?>
-
-                            
-
-                        </main>
-                        
-                    </div>
-                </main>
-            </div>
-
-        <?php
-
+                        <?php else: ?>
+                            <h4 style="text-align: center">No Data</h4>
+                        <?php endif; ?>
+                    </main>
+                </div>
+            </main>
+        </div>
+    <?php
     }
-?>
+    ?>
+    </body>
+</html>
