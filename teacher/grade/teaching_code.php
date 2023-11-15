@@ -77,7 +77,7 @@
                             
                         </header>
 
-                        <main>
+                        <main style="overflow-x: auto">
                             <table id="shs_program_table"
                                 class="a" style="margin: 0">
                                 <thead>
