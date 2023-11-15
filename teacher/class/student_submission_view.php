@@ -94,17 +94,6 @@
         $subject_code_assignment_id, $student_id, $school_year_id);
 ?>
 
-            <?php
-                echo Helper::lmsTeacherNotificationHeader(
-                    $con, $teacherLoggedInId,
-                    $current_school_year_id,
-                    $teachingSubjects,
-                    "second",
-                    "second",
-                    "second"
-                );
-            ?>
-
             <nav>
                 <a href="<?= $back_url; ?>">
                     <i class="bi bi-arrow-return-left"></i>
