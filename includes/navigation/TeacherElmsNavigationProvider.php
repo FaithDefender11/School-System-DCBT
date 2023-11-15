@@ -1,5 +1,5 @@
 <?php
-
+include_once("../../includes/classes/Teacher.php");
     class TeacherElmsNavigationProvider {
 
         private $con, $userLoggedInObj;
@@ -33,10 +33,14 @@
                 $logout_url = "$new_url/lms_logout.php";
             }
 
+            $teacherLoggedInId = isset($_SESSION["teacherLoggedInId"]) 
+                ? $_SESSION["teacherLoggedInId"] : "";
+            $teacherLoggedInObj = new teacher($this->con, $teacherLoggedInId);
+            $teacher_id = $teacherLoggedInObj->GetteacherId();
+            $user_lms_url = $base_url . "profile/my_profile.php?id=" . $teacher_id;
+
             $dashboard_lms_url = $base_url .  "dashboard/index.php";
-            $classes_lms_url = $base_url .  "class/index.php";
             $grade_url = $base_url .  "grade/index.php";
-            $notification_url = $base_url .  "notification/index.php";
             $sideBarNavigationItem = "";
 
             if(User::IsTeacherAuthenticated()) {
@@ -51,11 +55,10 @@
                     $grade_url,
                     Constants::$navigationClass . Helper::GetActiveClass($page, "grade"));
 
-                $sideBarNavigationItem .= Helper::createNavByIcon("Notification", 
-                    "bi bi-book icon",
-                    $notification_url,
-                    Constants::$navigationClass . Helper::GetActiveClass($page, "notification"));
-
+                $sideBarNavigationItem .= Helper::createNavByIcon("User", 
+                    "bi bi-person-circle", 
+                    $user_lms_url, 
+                    Constants::$navigationClass . Helper::GetActiveClass($page, "user"));
 
                 $sideBarNavigationItem .= Helper::createNavByIcon("Log Out", 
                     "bi bi-box-arrow-right icon", $logout_url, Constants::$navigationClass);

@@ -97,11 +97,15 @@
     });
     
 
-    // var_dump($unViewedCount);
-
-    // echo count($adminAnnouncement);
+    $back_url = "https://dcbt.online/teacher/dashboard/index.php";
 ?>
 
+            <nav>
+                <a href="<?= $back_url; ?>">
+                    <i class="bi bi-arrow-return-left"></i>
+                    Back
+                </a>
+            </nav>
 
 <div class="content">
     <main>

@@ -1981,6 +1981,21 @@ class Helper {
             return ($dateA > $dateB) ? -1 : 1; // Change from 1 to -1 for descending order
         });
 
+        if ($_SERVER['SERVER_NAME'] === 'localhost') {
+            // Running on localhost
+            $base_url = 'http://localhost/school-system-dcbt/teacher/';
+        } else {
+            // Running on web hosting
+            // $base_url = 'https://sub.dcbt.online/registrar/';
+            $base_url = 'http://' . $_SERVER['HTTP_HOST'] . '/teacher/';
+        }
+
+        $teacherLoggedInId = isset($_SESSION["teacherLoggedInId"]) 
+                ? $_SESSION["teacherLoggedInId"] : "";
+            $teacherLoggedInObj = new teacher($con, $teacherLoggedInId);
+            $teacher_id = $teacherLoggedInObj->GetteacherId();
+            $user_lms_url = $base_url . "profile/my_profile.php?id=" . $teacher_id;
+
 
         $notificationCount = count($studentSubmittedAndAdminAnnouncement);
 
@@ -2208,21 +2223,9 @@ class Helper {
 
 
                 </div>
-
-                <?php 
-                
-                    $assignment_calendar_url = $showCalendar . "calendar.php";
-                
-                ?>
-
-                <button  class="calendar-btn" title="Assignment calendar"
-                    onclick="window.location.href = '<?= $assignment_calendar_url; ?>'">
-                    <i class="bi bi-calendar-event"></i>
-
-                </button>
                 
                 <div class="username">
-                    <button title="Profile" onclick="window.location.href='#'"><?= "$lastname, $firstname"?></button>
+                    <button title="Profile" onclick="window.location.href='<?= $user_lms_url; ?>'"><?= "$lastname, $firstname"?></button>
                 </div>
 
             </div>
@@ -2759,20 +2762,6 @@ class Helper {
                     </div>
  
                 </div>
-
-
-                <?php 
-                
-                    $task_calendar_url = $showCalendar . "student_calendar.php";
-
-                
-                ?>
-
-                <!-- $notificationPath . "admin_announcement.php?id=$announcement_id&n_id=$notification_id&notification=true -->
-                <button  class="calendar-btn" title="Task calendar"
-                    onclick="window.location.href = '<?= $task_calendar_url; ?>'">
-                    <i class="bi bi-calendar-event"></i>
-                </button>
             
                 <div class="username">
                     <button title="Profile" onclick="window.location.href='<?= $profile_url; ?>'"><?= "$lastname, $firstname"?></button>
