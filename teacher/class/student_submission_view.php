@@ -118,12 +118,9 @@
                                     </button>
                                 <?php endif; ?>
                                 <?php if ($get_grade !== NULL): ?>
-                                    <button 
-                                        class="default"
-                                        onclick="window.location.href='edit_given_grade.php?id=<?php echo $subject_assignment_submission_id ?>&c=<?php echo $subject_code ?>'"
-                                    >
-                                        <?php echo $get_grade ?>
-                                    </button>
+                                    <a style='color: inherit' href='edit_given_grade.php?id=<?php echo $subject_assignment_submission_id ?>&c=<?php echo $subject_code ?>'>
+                                        <i style="color: blueviolet;" class="fas fa-edit"></i> <?php echo $get_grade ?>
+                                    </a>
                                     <small>Remark: <?php echo "$get_grade / $max_score"?></small>
                                 <?php else: ?>
                                     <?php if ($subject_assignment_submission_id != 0): ?>
