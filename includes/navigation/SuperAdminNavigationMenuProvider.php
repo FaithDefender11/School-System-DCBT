@@ -33,14 +33,14 @@
         $dashboard_url = $base_url .  "dashboard/index.php";
         $account_url = $base_url .  "users/index.php";
 
-        $sideBarNavigationItem = Helper::createNavByIcon("Dashboard", 
+        $sideBarNavigationItem = Helper::createNavByIconARC("Dashboard", 
             "bi bi-clipboard-data icon ", $dashboard_url, Constants::$navigationClass . Helper::GetActiveClass($page, "dashboard"));
   
-        $sideBarNavigationItem .= Helper::createNavByIcon("Users", 
+        $sideBarNavigationItem .= Helper::createNavByIconARC("Users", 
             "bi bi-person-circle", $account_url, Constants::$navigationClass . Helper::GetActiveClass($page, "users"));
 
         if(User::isSuperAdminLoggedIn()) {
-            $sideBarNavigationItem .= Helper::createNavByIcon("Log Out", 
+            $sideBarNavigationItem .= Helper::createNavByIconARC("Log Out", 
                 "bi bi-box-arrow-right icon", $logout_url, Constants::$navigationClass);
         }
 

@@ -1,5 +1,5 @@
 <?php
-    include_once('../../includes/classes/Student.php');
+
     class StudentElmsNavigationProvider {
 
         private $con, $userLoggedInObj;
@@ -36,26 +36,11 @@
             $dashboard_lms_url = $base_url .  "lms/student_dashboard.php";
             $notification_lms_url = $base_url .  "notification/index.php";
 
-            $studentLoggedInId = isset($_SESSION["studentLoggedInId"]) 
-                ? $_SESSION["studentLoggedInId"] : "";
-            $studentLoggedInObj = new Student($this->con, $studentLoggedInId);
-            $student_id = $studentLoggedInObj->GetStudentId();
-            $user_lms_url = $base_url . "profile/my_profile.php?id=" . $student_id;
-
             $sideBarNavigationItem = "";
 
             if(User::IsStudentEnrolledAuthenticatedLMS()) {
 
-                $sideBarNavigationItem .= Helper::createNavByIcon("User", 
-                    "bi bi-person-circle",
-                    $user_lms_url,
-                    Constants::$navigationClass . Helper::GetActiveClass($page, "profile"));
-
-                $sideBarNavigationItem .= Helper::createNavByIcon("Courses", 
-                    "bi bi-clipboard-data icon",
-                    $courses_lms_url,
-                    Constants::$navigationClass . Helper::GetActiveClass($page, "courses"));
-
+                
                 $sideBarNavigationItem .= Helper::createNavByIcon("Dashboard", 
                     "bi bi-clipboard-data icon",
                     $dashboard_lms_url,
@@ -68,7 +53,7 @@
                     Constants::$navigationClass . Helper::GetActiveClass($page, "courses"), true);
 
                 $sideBarNavigationItem .= Helper::createNavByIcon("Notification", 
-                    "bi bi-bell-fill icon",
+                    "bi bi-clipboard-data icon",
                     $notification_lms_url,
                     Constants::$navigationClass . Helper::GetActiveClass($page, "notification"));
 

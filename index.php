@@ -11,7 +11,9 @@
     $currentURL = "http://$_SERVER[HTTP_HOST]$_SERVER[SCRIPT_NAME]";
     $baseURL = dirname($currentURL);
 
-
+    $test = "test";
+    
+        
     if(isset($_POST['samp_btn'])
       && isset($_POST['username'])
       && isset($_POST['password'])
@@ -60,9 +62,6 @@
     <meta name="viewport" content="width=device-width, inital-scale=1" />
     <link rel="icon" href="assets/images/icons/DCBT-Logo.jpg" type="image/png">
     <title>Daehan College of Business & Technology</title>
-    <!--Link JavaScript-->
-    <script src="assets/js/image-slider.js" defer></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
     <!--Link stylesheets-->
     <link rel="stylesheet" href="assets/css/home.css" />
     <link rel="stylesheet" href="assets/css/fonts.css" />
@@ -89,7 +88,7 @@
         <i class="bi bi-list"></i>
       </label>
       <label class="logo">
-        <a href="index.php">
+        <a href="DCBT-landing-page.html">
           <img src="assets/images/home/DCBT-Logo.jpg" alt="DCBT" />
         </a>
       </label>
@@ -111,6 +110,8 @@
         </div>
       </div>
       <main>
+
+      
         <div class="slide-1" id="admissions">
           <div class="carousel">
             <img src="assets/images/home/DCBT-Cover.jpg" alt="Cover" />
@@ -141,6 +142,8 @@
             </div>
           </header>
         </div>
+
+
         <div class="slide-2">
           <header>
             <div class="title">
@@ -153,50 +156,31 @@
             </div>
           </header>
           <main>
-            <?php
-              // Function to display programs
-              function displayPrograms($programs) {
-                foreach ($programs as $program) {
-                  echo "<p>{$program['program_name']} ({$program['acronym']})</p>";
-                }
-              }
-            ?>
             <div class="item">
               <h3>ACADEMIC TRACK</h3>
-              <?php
-                // Fetch SHS Academic programs
-                $shsAcademicProgramQuery = $con->prepare("SELECT program_name, acronym FROM program
-                  WHERE department_id = 8 AND track = 'Academic'");
-                $shsAcademicProgramQuery->execute();
-                $shsAcademicPrograms = $shsAcademicProgramQuery->fetchAll(PDO::FETCH_ASSOC);
-              ?>
               <div>
-                <?php displayPrograms($shsAcademicPrograms); ?>
+                <p>Accountancy, Business and Management (ABM)</p>
+                <p>Humanities and Social Science (HUMMS)</p>
+                <p>General Academic Strand (GAS)</p>
               </div>
               <h3>TECH-VOCATIONAL TRACK</h3>
-              <?php
-                // Fetch SHS Tech-Vocational programs
-                $shsTVLProgramQuery = $con->prepare("SELECT program_name, acronym FROM program
-                  WHERE department_id = 8 AND track = 'Tech-vocational'");
-                $shsTVLProgramQuery->execute();
-                $shsTVLPrograms = $shsTVLProgramQuery->fetchAll(PDO::FETCH_ASSOC);
-              ?>
               <div>
-                <?php displayPrograms($shsTVLPrograms); ?>
+                <p>Information and Communication Technology (ICT)</p>
+                <p>
+                  Industrial Arts - Consumer Electronics/Electrical Installation
+                  Maintenance (IA)
+                </p>
               </div>
               <h3>ARTS & DESIGN TRACK</h3>
             </div>
             <div class="item">
               <h3>BACHELOR'S DEGREE PROGRAMS</h3>
-              <?php
-                // Fetch Tertiary Bachelor's Degree program
-                $tertiaryBachelorsDegreeQuery = $con->prepare("SELECT program_name, acronym FROM program
-                  WHERE department_id = 9 AND track = 'Bachelor\'s Degree'");
-                $tertiaryBachelorsDegreeQuery->execute();
-                $tertiaryBachelorsDegreePrograms = $tertiaryBachelorsDegreeQuery->fetchALL(PDO::FETCH_ASSOC);
-              ?>
               <div>
-                <?php displayPrograms($tertiaryBachelorsDegreePrograms); ?>
+                <p>Bachelor of Christian Ministries (BCM)</p>
+                <p>Bachelor of Arts in English (ABE)</p>
+                <p>Bachelor of Science in Entrepreneurship (BSENTREP)</p>
+                <p>Bachelor of Science in Teachers Education (BTTE)</p>
+                <p>Bachelor of Physical Education (BPE)</p>
               </div>
             </div>
           </main>
@@ -276,24 +260,58 @@
           </main>
         </div>
 
-        <div class="slide-2" id="img-slides" style="background-color: var(--theme1)">
+        <div class="slide-2" style="background-color: var(--theme1)">
           <header>
             <div class="title">
               <h2>Facilities</h2>
             </div>
           </header>
           <main>
-            <div class="wrapper">
-              <i id="left" class="fa-solid fa-angle-left"></i>
-              <div class="carousel">
-                <img src="assets/images/home/slide-1.jpg" alt="" draggable="false" />
-                <img src="assets/images/home/slide-2.jpg" alt="" draggable="false" />
-                <img src="assets/images/home/slide-3.jpg" alt="" draggable="false" />
-                <img src="assets/images/home/slide-4.jpg" alt="" draggable="false" />
-                <img src="assets/images/home/slide-5.jpg" alt="" draggable="false" />
-                <img src="assets/images/home/slide-6.jpg" alt="" draggable="false" />
+            <div class="slideshow-container">
+              <s id="s1"></s>
+              <s id="s2"></s>
+              <s id="s3"></s>
+              <s id="s4"></s>
+              <s id="s5"></s>
+              <s id="s6"></s>
+
+              <div class="slider">
+                <div>
+                  <img src="assets/images/home/slide-1.jpg" alt="" />
+                </div>
+                <div>
+                  <img src="assets/images/home/slide-2.jpg" alt="" />
+                </div>
+                <div>
+                  <img src="assets/images/home/slide-3.jpg" alt="" />
+                </div>
+                <div>
+                  <img src="assets/images/home/slide-4.jpg" alt="" />
+                </div>
+                <div>
+                  <img src="assets/images/home/slide-5.jpg" alt="" />
+                </div>
+                <div>
+                  <img src="assets/images/home/slide-6.jpg" alt="" />
+                </div>
               </div>
-              <i id="right" class="fa-solid fa-angle-right"></i>
+
+              <div class="prevNext">
+                <div><a href="#s6"></a><a href="#s4"></a></div>
+                <div><a href="#s1"></a><a href="#s3"></a></div>
+                <div><a href="#s2"></a><a href="#s4"></a></div>
+                <div><a href="#s1"></a><a href="#s1"></a></div>
+                <div><a href="#s3"></a><a href="#s5"></a></div>
+              </div>
+
+              <div class="bullets">
+                <a href="#s1">1</a>
+                <a href="#s2">2</a>
+                <a href="#s3">3</a>
+                <a href="#s4">4</a>
+                <a href="#s5">5</a>
+                <a href="#s6">6</a>
+              </div>
             </div>
           </main>
         </div>
@@ -310,6 +328,8 @@
             <h4>Copyright © 2019. All Rights Reserved</h4>
           </div>
         </div>
+
+
       </main>
 
       <div class="login-element" id="login-form">
@@ -325,7 +345,7 @@
           <main>
             <div class="action">
               <button type="button" class="default" onclick="window.location.href ='lms_login.php'">ELMS</button>
-              <button type="button" class="default" onclick="window.location.href ='enrollment_login.php'">Enrollment</button>
+              <button type="button" class="default" onclick="window.location.href ='online_application.php'">Enrollment</button>
             </div>
           </main>
         </div>

@@ -1,5 +1,4 @@
 <?php
-include_once('../../includes/classes/Student.php');
 class Helper {
 
     public static $errorArray = array();
@@ -1444,6 +1443,7 @@ class Helper {
             $output = "Tertiary";
         }
 
+        
         return "
             <div class='title'>
                 <small><em>$output &nbsp</em></small>
@@ -1985,6 +1985,7 @@ class Helper {
 
         $notificationCount = count($studentSubmittedAndAdminAnnouncement);
 
+
         $totalAdminNotifCount = count($adminAnnouncement);
 
         $totalViewedAdminNotificationCount = $notification->GetTeacherViewedNotificationFromAdminCount(
@@ -2002,9 +2003,8 @@ class Helper {
 
         // var_dump($notificationCount);
 
-
         ?>
-            <div class="icons">
+            <div style="min-height: 70px;" class="icons">
 
                 <button class="sidebar" id="sidebar-btn">
                     <i class="bi bi-list"></i>
@@ -2019,12 +2019,12 @@ class Helper {
                         title="Notification">
 
                         <i class="bi bi-bell-fill"></i>
+                        <!-- <span class="<?= $notificationCount > 0 ? "badge-1" : "" ?>"><?= $notificationCount > 0 ? $notificationCount : "" ?></span> -->
                         <span class="<?= $totalUnviewed > 0 ? "badge-1" : "" ?>"><?= $totalUnviewed > 0 ? $totalUnviewed : "" ?></span>
 
                     </button>
                     
-                    <div class="notif-menu">
-
+                    <div  class="notif-menu">
                         <?php 
 
                             $announcement_url = "";
@@ -2187,17 +2187,24 @@ class Helper {
                                             </header>
                                         </div>
                                     </a>
-
                                 <?php
                             }
-                        
                         ?>
 
-                      
-                        <div class="action">
-                            <button onclick="window.location.href = '<?php echo $showAllPath . "index.php"; ?>'"  class="default">See all</button>
-                            <button class="clean">Mark all read</button>
-                        </div>
+                        <?php if($notificationCount > 0):?>
+
+                            <div class="action">
+                                <button onclick="window.location.href = '<?php echo $showAllPath . "index.php"; ?>'" class="default">See all</button>
+                                <button class="clean">Mark all read</button>
+                            </div>
+                            <?php else:?>
+                                <div class="action">
+                                    <button onclick="window.location.href = '<?php echo $showAllPath . "index.php"; ?>'" class="default">Show all</button>
+                                    <button class="clean">Mark all read</button>
+                                    <!-- <h5 class="text-center">No notification.</h5> -->
+                                </div>
+                        <?php endif;?>
+
                     </div>  
 
 
@@ -2216,7 +2223,32 @@ class Helper {
                 </button>
                 
                 <div class="username">
-                    <button title="Profile" onclick="window.location.href='#'"><?= "$lastname, $firstname"?></button>
+                    <a href="#" title="View profile"><?= "$lastname, $firstname"?></a>
+                </div>
+
+                <div class="log-out">
+
+                    <button class="log-out-btn">
+                        <i class="bi bi-chevron-down"></i>
+                    </button>
+
+                    <div class="log-out-item">
+
+                        <button class="item">
+                           
+                            <i class="bi bi-box-arrow-in-left">
+                                <span>Profile</span>
+                            </i>
+                        </button>
+
+                        <a style="color: inherit;" href="<?= $logout_url;?>" class="item">
+                            
+                            <i class="bi bi-box-arrow-in-left">
+                                <span>Log-out</span>
+                            </i>
+                        </a>
+
+                    </div>
                 </div>
 
             </div>
@@ -2287,13 +2319,14 @@ class Helper {
         $firstname = ucwords($student->GetFirstName());
         $lastname = ucwords($student->GetLastName());
 
-        $studentEnrolledSubjectAssignmentNotif = $notif->GetStudentAssignmentNotification(
+        $studentEnrolledSubjectAssignmentNotif = $notif->GetStudentAssignmentNotificationv2(
             $enrolledSubjectList, $school_year_id);
+
 
         $gradedAssignments = $notif->GetStudentGradedAssignmentNotification(
             $enrolledSubjectList, $school_year_id, $studentLoggedInId);
 
-
+  
         $allAdminNotification = $notif->GetAdminAnnouncement($school_year_id);
 
         // var_dump($school_year_id);
@@ -2303,7 +2336,9 @@ class Helper {
             $enrolledSubjectList, $school_year_id, $studentLoggedInId);
 
         $mergedArray = array_merge($studentEnrolledSubjectAssignmentNotif,
-            $allAdminNotification);
+            $allAdminNotification, $gradedAssignments, $studentsDueDateNotif);
+
+        // var_dump($mergedArray);
 
         $notificationCount = count($mergedArray);
 
@@ -2321,18 +2356,6 @@ class Helper {
             return ($dateA > $dateB) ? -1 : 1; // Change from 1 to -1 for descending order
         });
 
-        if ($_SERVER['SERVER_NAME'] === 'localhost') {
-            $base_url = 'http://localhost/school-system-dcbt/student/';
-        } else {
-            $base_url = 'http://' . $_SERVER['HTTP_HOST'] . '/student/';
-        }
-
-        $studentLoggedInId = isset($_SESSION["studentLoggedInId"]) 
-                ? $_SESSION["studentLoggedInId"] : "";
-        $studentLoggedInObj = new Student($con, $studentLoggedInId);
-        $student_id = $studentLoggedInObj->GetStudentId();
-        $profile_url = $base_url . "profile/my_profile.php?id=" . $student_id;
-
         $totalViewed = 0;
     
         foreach ($mergedArray as $key => $value) {
@@ -2349,13 +2372,16 @@ class Helper {
 
             }
         }
-
-        $unViewedCount = ($notificationCount - $totalViewed);
         
+        $unViewedCount = ($notificationCount - $totalViewed);
+
+
+        // var_dump($notificationCount);
 
         ?>
 
-            <div class="icons">
+            <div style="min-height: 70px;" class="icons">
+
                 <button class="sidebar" id="sidebar-btn">
                     <i class="bi bi-list"></i>
                 </button>
@@ -2368,12 +2394,15 @@ class Helper {
                         title="Notification">
 
                         <i class="bi bi-bell-fill"></i>
+                        <!-- <span class="<?= $notificationCount > 0 ? "badge-1" : "" ?>"><?= $notificationCount > 0 ? $notificationCount : "" ?></span> -->
                         <span class="<?= $unViewedCount > 0 ? "badge-1" : "" ?>"><?= $unViewedCount > 0 ? $unViewedCount : "" ?></span>
                         
                     </button>
                     
                     <div class="notif-menu">
+            
                         <?php 
+
                             $notification_url = "";
 
                             foreach ($mergedArray as $key => $notification) {
@@ -2391,9 +2420,9 @@ class Helper {
                                 $sender_role = $notification['sender_role'];
 
                                 $subject_code = $notification['subject_code'];
-                                // $users_id = $notification['users_id'];
+ 
 
-                                $subject_code_assignment_id = $notification['subject_code_assignment_id'];
+                               $subject_code_assignment_id = $notification['subject_code_assignment_id'];
 
                                 $subjectCodeAssignment = new SubjectCodeAssignment($con, $subject_code_assignment_id);
 
@@ -2406,6 +2435,9 @@ class Helper {
                                 $subjectProgram = new SubjectProgram($con, $subjectProgramId);
 
                                 $subject_title = $subjectProgram->GetTitle();
+
+
+
 
                                 $subject_code_assignment_id = $notification['subject_code_assignment_id'];
                                 $announcement_id = $notification['announcement_id'];
@@ -2490,10 +2522,9 @@ class Helper {
 
                                     }
 
-                                    $notification_url = $coursesPath. "task_submission.php?sc_id=$subject_code_assignment_id&ss_id=$get_student_subject_id&&n_id=$notification_id&notification=true";
-                                    
-                                    // $notification_url = "task_submission.php?sc_id=$subject_code_assignment_id&ss_id=$get_student_subject_id&&n_id=$notification_id&notification=true";
-                                    // $assignment_notification_url = "../courses/task_submission.php?sc_id=$subject_code_assignment_id&ss_id=$get_student_subject_id&&n_id=$notification_id&notification=true";
+                                    $notification_url = $coursesPath. "task_submission.php?sc_id=$subject_code_assignment_id&ss_id=$get_student_subject_id&n_id=$notification_id&notification=true";
+                                    // $notification_url = "task_submission.php?sc_id=$subject_code_assignment_id&ss_id=$get_student_subject_id&n_id=$notification_id&notification=true";
+                                    // $assignment_notification_url = "../courses/task_submission.php?sc_id=$subject_code_assignment_id&ss_id=$get_student_subject_id&n_id=$notification_id&notification=true";
 
                                     $button_url = "
                                         <button onclick='window.location.href=\"$notification_url\"' class='btn btn-primary btn-sm'>
@@ -2540,7 +2571,7 @@ class Helper {
 
                                     }
 
-                                    $notification_url = $coursesPath. "task_submission.php?sc_id=$subject_code_assignment_id&ss_id=$get_student_subject_id&&n_id=$notification_id&notification=true";
+                                    $notification_url = $coursesPath. "task_submission.php?sc_id=$subject_code_assignment_id&ss_id=$get_student_subject_id&n_id=$notification_id&notification=true";
 
                                     $button_url = "
                                         <button onclick='window.location.href=\"$notification_url\"' class='btn btn-primary btn-sm'>
@@ -2549,8 +2580,6 @@ class Helper {
                                     ";
 
                                 }
-
-
 
                                 if($announcement_id != NULL 
                                     && $subject_code != NULL
@@ -2677,6 +2706,8 @@ class Helper {
 
                                 }
 
+
+
                                 $status = "
                                         <i style='color: orange' class='fas fa-times'></i>
                                     ";
@@ -2699,19 +2730,23 @@ class Helper {
                                         <i style='color: green' class='fas fa-check'></i>
                                     ";
                                 }
+
                                 ?>
 
 
                                 
                                     <a href="<?= $notification_url; ?>" class="notif-item">
                                         <div class="col">
+
                                             <header>
                                                 <div class="title">
-                                                    <h5><?= $sender_name;?> <?= $status; ?></h5>
+                                                    <h5><?= $sender_name;?></h6>
                                                     <span><?="$type: ";?><?= $title;?></span>
                                                     <small><?= $date_creation;?></small>
+                                                    <span><?= $status;?></span>
                                                 </div>
                                             </header>
+
                                         </div>
                                     </a>
 
@@ -2719,28 +2754,24 @@ class Helper {
                             }
                         
                         ?>
-                        <?php if($notificationCount > 0): ?>
+
+                        <?php if($notificationCount > 0):?>
+
                             <div class="action">
-                                <button 
-                                    class="default"
-                                    onclick="window.location.href='<?php echo $showAllPath . 'index.php'; ?>'"
-                                >
-                                    Show all
-                                </button>
+                                <button onclick="window.location.href = '<?php echo $showAllPath . "index.php"; ?>'" class="default">Show All</button>
                                 <button class="clean">Mark all read</button>
                             </div>
-                        <?php else: ?>
-                            <div class="action">
-                                <button 
-                                    class="default"
-                                    onclick="window.location.href='<?php echo $showAllPath . 'index.php'; ?>'"
-                                >
-                                    Show all
-                                </button>
-                                <button class="clean">Mark all read</button>
-                            </div>
-                        <?php endif; ?>
+
+                            <?php else:?>
+                                <div class="action">
+                                    <button onclick="window.location.href = '<?php echo $showAllPath . "index.php"; ?>'" class="default">Show all</button>
+                                    <button class="clean">Mark all read</button>
+                                    <!-- <h5 class="text-center">No notification.</h5> -->
+                                </div>
+                        <?php endif;?>
+
                     </div>
+ 
                 </div>
 
 
@@ -2758,60 +2789,40 @@ class Helper {
                 </button>
             
                 <div class="username">
-                    <button onclick="window.location.href='<?= $profile_url; ?>'" title="Profile"><?= "$lastname, $firstname"?></button>
+                    <a href="#" title="View profile"><?= "$lastname, $firstname"?></a>
                 </div>
+
+                <div class="log-out">
+
+                    <button class="log-out-btn">
+                        <i class="bi bi-chevron-down"></i>
+                    </button>
+
+                    <div class="log-out-item">
+
+                        <button class="item">
+                        
+                            <i class="bi bi-box-arrow-in-left">
+                                <span>Profile</span>
+                            </i>
+                        </button>
+
+                        <a style="color: inherit;" href="<?= $logout_url;?>" class="item">
+                            
+                            <i class="bi bi-box-arrow-in-left">
+                                <span>Log-out</span>
+                            </i>
+                        </a>
+
+                    </div>
+                </div>
+
             </div>
         <?php
     }
 
     public static function DoesEnrollmentPrinted($printed = null) {
         return $printed;
-    }
-
-    public static function enrollmentStudentHeader($con, $studentLoggedInId) {
-        $student = new Student($con, $studentLoggedInId);
-
-        $firstname = ucwords($student->GetFirstName());
-        $lastname = ucwords($student->GetLastName());
-
-        ?>
-        <div class="icons">
-            <button class="sidebar">
-            <i class="bi bi-list"></i>
-            </button>
-            <div class="username" style="width: 100%; justify-content: flex-end">
-                <button title="Username"><?= "$lastname, $firstname" ?></button>
-            </div>
-        </div>
-    <?php
-    }
-
-    public static function pendingStudentHeader($con, $enrolleeLoggedInObj) {
-        $enrolleeLoggedIn = isset($_SESSION["enrollee_id"]) 
-        ? $_SESSION["enrollee_id"] : "";
-
-        $enrolleeLoggedInObj = new Pending($con, $enrolleeLoggedIn);
-        if (!isset($_SESSION['enrollee_id']) 
-        || $_SESSION['enrollee_id'] == '') {
-
-        header("Location: /school-system-dcbt/index.php");
-        exit();
-        }
-        ?>
-        <div class="icons">
-            <button class="sidebar">
-            <i class="bi bi-list"></i>
-            </button>
-            <div class="username" style="width: 100%; justify-content: flex-end">
-                <button 
-                    title="Username"
-            >
-                <?php echo $enrolleeLoggedInObj->GetPendingLastName(); ?>, 
-                <?php echo $enrolleeLoggedInObj->GetPendingFirstName(); ?>
-            </button>
-            </div>
-        </div>
-    <?php
     }
 }
 ?>
