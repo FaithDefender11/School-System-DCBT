@@ -74,7 +74,7 @@
                         </div>
                     </header>
 
-                    <main>
+                    <main style="overflow-x: auto">
 
                     <?php if(count($mergeAnnouncement) > 0):?>
 
