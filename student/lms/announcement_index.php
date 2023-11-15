@@ -61,6 +61,14 @@
     // var_dump($announcementCount);
 
     ?>
+    
+        <nav>
+            <a href="student_dashboard.php"
+            >
+                <i class="bi bi-arrow-return-left"></i>Back</a
+            >
+        </nav>
+        
         <div class="content">
 
             <main>
