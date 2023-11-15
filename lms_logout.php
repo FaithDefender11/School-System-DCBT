@@ -52,7 +52,6 @@ if (isset($_SESSION['role'])) {
 
             header("Location: $url_users_online");
             session_destroy();
-
             exit();
         }
         // elseif ($_SESSION['role'] === "student") {
