@@ -35,7 +35,7 @@
             ->GetTeacherTeachingSubjects($teacherLoggedInId,
                 $school_year_id);
 
-        $back_url = "https://dcbt.online/dashboard/announcement_index.php?sy_id=$school_year_id";
+        $back_url = "https://dcbt.online/teacher/dashboard/announcement_index.php?sy_id=$school_year_id";
 
         ?>
             <nav>
