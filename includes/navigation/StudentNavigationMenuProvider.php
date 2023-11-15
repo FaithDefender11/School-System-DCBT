@@ -44,20 +44,20 @@
 
         if(User::IsStudentEnrolledAuthenticated()) {
 
-            $sideBarNavigationItem .= Helper::createNavByIconARC("Registration", 
+            $sideBarNavigationItem .= Helper::createNavByIcon("Registration", 
                 "bi bi-clipboard-data icon",
                 $registration_enrollment_url,Constants::$navigationClass . Helper::GetActiveClass($page, "registration"));
             
-            $sideBarNavigationItem .= Helper::createNavByIconARC("Apply Semester", 
-                "bi bi-clipboard-data icon",
+            $sideBarNavigationItem .= Helper::createNavByIcon("Apply Semester", 
+                "bi bi-clipboard2-check",
                 $ongoing_enrollment_url, Constants::$navigationClass . Helper::GetActiveClass($page, "ongoing_enrollment"));
             
-            $sideBarNavigationItem .= Helper::createNavByIconARC("Requirements", 
+            $sideBarNavigationItem .= Helper::createNavByIcon("Requirements", 
                 "bi bi-clipboard-data icon",
                 $requirements_url, Constants::$navigationClass . Helper::GetActiveClass($page, "requirements"));
 
 
-            $sideBarNavigationItem .= Helper::createNavByIconARC("Log Out", 
+            $sideBarNavigationItem .= Helper::createNavByIcon("Log Out", 
                 "bi bi-box-arrow-right icon", $logout_url, Constants::$navigationClass);
         } 
 
