@@ -52,19 +52,6 @@
         $back_url = "student_dashboard.php";
 ?>
 
-            <?php
-                echo Helper::lmsStudentNotificationHeader(
-                    $con, $studentLoggedInId,
-                    $current_school_year_id,
-                    $enrolledSubjectList,
-                    $enrollment_id,
-                    "second",
-                    "second",
-                    "second",
-                    "first"
-                );
-            ?>
-
             <nav>
                 <a href="<?php echo "$back_url"; ?>">
                     <i class="bi bi-arrow-return-left"></i>
