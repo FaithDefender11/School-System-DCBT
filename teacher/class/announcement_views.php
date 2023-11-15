@@ -26,6 +26,7 @@
         $content = $teacherAnnouncement->GetContent();
         $subject_code = $teacherAnnouncement->GetSubjectCode();
         $creation = $teacherAnnouncement->GetDateCreation();
+        $school_year_id = $teacherAnnouncement->GetSchoolYearId();
         $creation = date("F d, Y h:i a", strtotime($creation));
 
         $subjectCodeAssignment = new SubjectCodeAssignment($con);
