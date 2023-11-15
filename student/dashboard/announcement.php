@@ -40,18 +40,6 @@
         $back_url = "index.php?c=$subject_code";
 ?>
 
-            <?php 
-                echo Helper::lmsTeacherNotificationHeader(
-                    $con, $teacherLoggedInId,
-                    $current_school_year_id,
-                    $teachingSubjects,
-                    "second",
-                    "second",
-                    "second",
-                    "first"
-                ); 
-            ?>
-
             <nav>
                 <a href="<?= $back_url; ?>">
                     <i class="bi bi-arrow-return-left"></i>
