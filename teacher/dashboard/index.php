@@ -1,6 +1,4 @@
-
-<?php 
-
+<?php
     include_once('../../includes/teacher_header.php');
     include_once('../../includes/classes/SchoolYear.php');
     include_once('../../includes/classes/SubjectCodeAssignment.php');
@@ -13,33 +11,6 @@
     include_once('../../includes/classes/Notification.php');
     include_once('../../includes/classes/Student.php');
 
-    // echo Helper::RemoveSidebar();
-    
-    ?>
-        <head>
- 
-            <!--Link JavaScript-->
-            <script src="../../assets/js/elms-sidebar.js" defer></script>
-            <script src="../../assets/js/elms-dropdown.js" defer></script>
-            <script src="../../assets/js/table-dropdown.js" defer></script>
-            <script src="../../assets/js/calendar.js" defer></script>
-            <!--Link styleshets-->
-            <link rel="stylesheet" href="../../assets/css/fonts.css" />
-            <link rel="stylesheet" href="../../assets/css/content.css" />
-            <link rel="stylesheet" href="../../assets/css/buttons.css" />
-            <link rel="stylesheet" href="../../assets/css/table.css" />
-            <link rel="stylesheet" href="../../assets/css/calendar.css" />
-            <style>
-            body {
-                background-color: white;
-                margin: 0;
-            }
-            </style>
-
-        </head>
-    <?php
-
- 
     $school_year = new SchoolYear($con);
     $school_year_obj = $school_year->GetActiveSchoolYearAndSemester();
 
@@ -186,262 +157,209 @@
         $logout_url = "$new_url/lms_logout.php";
     }
 
-    // var_dump($logout_url);
-    
 ?>
 
-    
+            <?php 
+                echo Helper::lmsTeacherNotificationHeader(
+                    $con, $teacherLoggedInId,
+                    $current_school_year_id,
+                    $teachingSubjects,
+                    "second",
+                    "second",
+                    "second",
+                    "first"
+                );
+            ?>
 
-        <?php 
-            echo Helper::lmsTeacherNotificationHeader(
-                $con, $teacherLoggedInId,
-                $current_school_year_id,
-                $teachingSubjects,
-                "second",
-                "second",
-                "second",
-                "first"
-            );
-        ?>
-
-        <div class="content-header">
-
-            <header>
-                <div class="title">
-                    <h1>Dashboard</h1>
-                </div>
-                <div class="action">
+            <div class="content-header">
+                <header>
+                    <div class="title">
+                        <h1>Dashboard</h1>
+                    </div>
+                    <div class="action">
                         <div class="dropdown">
-                            <button class="icon">
+                            <div class="icon">
                                 <i class="bi bi-three-dots-vertical"></i>
-                            </button>
+                            </div>
                             <div class="dropdown-menu">
-
                                 <a 
                                     href="announcement_index.php?sy_id=<?= $current_school_year_id;?>"
                                     class="dropdown-item" style="color: inherit">
                                     <i class="bi bi-megaphone-fill"></i>
                                     Announcement
                                 </a>
-                                
                             </div>
                         </div>
                     </div>
-            </header>
+                </header>
+            </div>
 
-            
-        </div>
-
-        <div class="tabs">
-            <button
-                class="tab"
-                onclick="window.location.href='index.php'">
-                Enrolled
-            </button>
-
-            <button
-                class="tab"
+            <div class="tabs">
+                <button
+                    class="tab"
+                    onclick="window.location.href='index.php'">
+                    Enrolled
+                </button>
+                <button
+                    class="tab"
                     style="background-color: var(--theme); color: white"
                     onclick="window.location.href='completed_subjects.php'">
                     Completed
-            </button>
-        </div>
-
-        <main>
-                    
-            <div class="bars right">
-                <!-- <div class="floating">
-                    <main>
-                        <div class="calendar">
-                            <div class="header">
-                            <button class="prev-btn" onclick="previousMonth()">
-                                &lt;
-                            </button>
-                            <h1 id="current-month"></h1>
-                            <button class="next-btn" onclick="nextMonth()">&gt;</button>
-                            </div>
-                            <div class="days"></div>
-                        </div>
-                        <button onclick="window.location.href = 'calendar.php' " class="btn btn-sm btn-info">View all</button>
-                    </main>
-                </div> -->
-
-                <div class="floating">
-                    
-                    <header>
-                        <div class="title">
-                            <h3>Calendar</h3>
-                        </div>
-                    </header>
-                    <button onclick="window.location.href = 'calendar.php'" class="btn btn-info">View assignments</button>
-                    <!-- <button onclick="window.location.href = 'announcement_calendar.php'" class="btn btn-sm btn-primary">View Announcement</button> -->
-                </div>
-
-                <div class="floating">
-
-                    <header>
-
-                        <div class="title">
-
-                            <?php if(count($ungradedSubmissionArr)>0): ?>
-                                <h3>To-dos <em>(<?= count($ungradedSubmissionArr); ?>)</em></h3>
-                            
-                            <?php else:?>
-                                <h3><em>No To-dos</em></h3>
-                            <?php endif;?>
-
-                        </div>
-
-                    </header>
-
-                    <ul>
-                        <?php
-                            foreach ($ungradedSubmissionArr as $key => $submission_id) {
-
-                                $subjectAssignmentSubmission = new SubjectAssignmentSubmission($con, $submission_id);
-                                
-                                $subjectCodeAssignmentId = $subjectAssignmentSubmission->GetSubjectCodeAssignmentId();
-                            
-                                $subjectCodeAssignment = new SubjectCodeAssignment($con, $subjectCodeAssignmentId);
-                                
-                                $assignment_title = $subjectCodeAssignment->GetAssignmentName();
-                                $topicId = $subjectCodeAssignment->GetSubjectPeriodCodeTopicId();
-                                
-                                $subjectPeriodCodeTopic = new SubjectPeriodCodeTopic($con, $topicId);
-                                
-                                $topicName = $subjectPeriodCodeTopic->GetTopic();
-                                $getSubjectCode = $subjectPeriodCodeTopic->GetSubjectCode();
-
-
-                                $program_code = $subjectPeriodCodeTopic->GetProgramCode();
-                                $courseId = $subjectPeriodCodeTopic->GetCourseId();
-
-                                $subjectProgram = new SubjectProgram($con);
-                                $subjectTitle = $subjectProgram->GetSubjectProgramTitleByRawCode($program_code);
-
-                                if (!isset($topicCodeCount[$getSubjectCode])) {
-
-                                    $topicCodeCount[$getSubjectCode] = [
-                                        'count' => 1,
-                                        'courseId' => $courseId,
-                                        'teaching_code' => $getSubjectCode,
-                                        'program_code' => $program_code,
-                                        'subjectTitle' => $subjectTitle,
-                                        
-                                    ];
-                                } else {
-                                    $topicCodeCount[$getSubjectCode]['count']++;
-                                }
-                            }
-
-                            if(count($topicCodeCount) > 0){
-
-
-                                foreach ($topicCodeCount as $getSubjectCode => $data) {
-                                    $count = $data['count'];
-                                    $teaching_code = $data['teaching_code'];
-                                    $program_code = $data['program_code'];
-                                    $courseId = $data['courseId'];
-                                    $subjectTitle = $data['subjectTitle'];
-                                
-                                    // $class_subject_url = "section_topic_grading.php?ct_id=$subject_period_code_topic_id";
-
-                                    // $class_subject_url = "../class/index.php?c_id=$courseId&c=$teaching_code";
-
-                                    $class_subject_url = "todos_tasks.php?c_id=$courseId&c=$teaching_code";
-                                    
-                                    //    <p style='margin:0'>
-                                    //         <a style='color:inherit' href='$class_subject_url'
-                                    //         class='m-0 text-right'>○ $subjectTitle ($count)</a>
-                                    //     </p>
-                                    echo "
-                                        <li>
-                                            <a href='$class_subject_url'>$subjectTitle <span>($count)</span></a>
-                                        </li>
-                                    ";
-                                }
-                            }
-                        ?>
-                    </ul>
-                </div>
-
-                <div class="floating">
-                    <header>
-                        <div class="title">
-                            <h3>Announcements <em>(<?= $teachingSubjectCodeAnnouncementCount;?>)</em></h3>
-                        </div>
-                    </header>
-
-                        <!-- <ul>
-                            <li></li>
-                        </ul> -->
-
-                    <button onclick="window.location.href = 'announcement_index.php?sy_id=<?= $current_school_year_id;?>'" class="btn btn-info">View all</button>
-                </div>
-
+                </button>
             </div>
 
-
-            <?php if(count($teachingSubjectCode) > 0): ?>
-                <?php 
-                
-                    foreach ($teachingSubjectCode as $key => $row) {
-
-                        $subject_code = $row['subject_code'];
-                        $school_year_id = $row['school_year_id'];
-                        $subject_title = $row['subject_title'];
-                        $course_id = $row['course_id'];
-                        $program_section = $row['program_section'];
-
-                        $class_url = "../class/index.php?c=$subject_code&sy_id=$school_year_id";
-                        // $class_url = "../class/index.php?c_id=$course_id&c=$subject_code";
-
-
-                        ?>
-
-                            <div style="width: 100%" class="floating noOutline">
-                                
-                                <a href="<?php echo $class_url; ?>">
-                                    <header>
-                                        <div class="title">
-                                            <h3><?= $subject_title; ?> <em >  <?= "SY$fomatTerm-$period_short";?></em></h3>
-                                            <small><?= "$subject_code" ?></small>
-                                        </div>
-                                    </header>
-                                </a>
-
-                                <main>
-
-                                    <div class="progress" style="height: 20px">
-                                        <div class="progress-bar" style="width: 25%">25%</div>
-                                    </div>
-
-                                    <div class="action">
-                                        <button
-                                        class="task"
-                                        data-toggle="tooltip"
-                                        data-placement="bottom"
-                                        title="No Assignments Due"
-                                        >
-                                        <i class="bi bi-file-earmark">0</i>
-                                        </button>
-                                    </div>
-
-                                </main>
-                                
+            <main>
+                <div class="bars right">
+                    <div class="floating">
+                        <header>
+                            <div class="title">
+                                <h3>Calendar</h3>
                             </div>
-
-                        <?php
-
-                    }
-                ?>
-                <?php else:?>
-                    <div class="col-md-12">
-                        <h4 class="text-center text-primary">No teaching subject.</h4>
+                        </header>
+                        <button onclick="window.location.href = 'calendar.php'" class="btn btn-info">View assignments</button>
                     </div>
-            <?php endif;?>
 
-        </main>
-    </div>
+                    <div class="floating">
+                        <header>
+                            <div class="title">
+                                <?php if(count($ungradedSubmissionArr)>0): ?>
+                                    <h3>To-dos <em>(<?= count($ungradedSubmissionArr); ?>)</em></h3>
+                                <?php else:?>
+                                    <h3><em>No To-dos</em></h3>
+                                <?php endif;?>
+                            </div>
+                        </header>
+                        <ul>
+                            <?php
+                                foreach ($ungradedSubmissionArr as $key => $submission_id) {
+
+                                    $subjectAssignmentSubmission = new SubjectAssignmentSubmission($con, $submission_id);
+                                    
+                                    $subjectCodeAssignmentId = $subjectAssignmentSubmission->GetSubjectCodeAssignmentId();
+                                
+                                    $subjectCodeAssignment = new SubjectCodeAssignment($con, $subjectCodeAssignmentId);
+                                    
+                                    $assignment_title = $subjectCodeAssignment->GetAssignmentName();
+                                    $topicId = $subjectCodeAssignment->GetSubjectPeriodCodeTopicId();
+                                    
+                                    $subjectPeriodCodeTopic = new SubjectPeriodCodeTopic($con, $topicId);
+                                    
+                                    $topicName = $subjectPeriodCodeTopic->GetTopic();
+                                    $getSubjectCode = $subjectPeriodCodeTopic->GetSubjectCode();
+    
+    
+                                    $program_code = $subjectPeriodCodeTopic->GetProgramCode();
+                                    $courseId = $subjectPeriodCodeTopic->GetCourseId();
+    
+                                    $subjectProgram = new SubjectProgram($con);
+                                    $subjectTitle = $subjectProgram->GetSubjectProgramTitleByRawCode($program_code);
+    
+                                    if (!isset($topicCodeCount[$getSubjectCode])) {
+    
+                                        $topicCodeCount[$getSubjectCode] = [
+                                            'count' => 1,
+                                            'courseId' => $courseId,
+                                            'teaching_code' => $getSubjectCode,
+                                            'program_code' => $program_code,
+                                            'subjectTitle' => $subjectTitle,
+                                            
+                                        ];
+                                    } else {
+                                        $topicCodeCount[$getSubjectCode]['count']++;
+                                    }
+                                }
+    
+                                if(count($topicCodeCount) > 0){
+    
+    
+                                    foreach ($topicCodeCount as $getSubjectCode => $data) {
+                                        $count = $data['count'];
+                                        $teaching_code = $data['teaching_code'];
+                                        $program_code = $data['program_code'];
+                                        $courseId = $data['courseId'];
+                                        $subjectTitle = $data['subjectTitle'];
+                                    
+                                        // $class_subject_url = "section_topic_grading.php?ct_id=$subject_period_code_topic_id";
+    
+                                        // $class_subject_url = "../class/index.php?c_id=$courseId&c=$teaching_code";
+    
+                                        $class_subject_url = "todos_tasks.php?c_id=$courseId&c=$teaching_code";
+                                        
+                                        //    <p style='margin:0'>
+                                        //         <a style='color:inherit' href='$class_subject_url'
+                                        //         class='m-0 text-right'>○ $subjectTitle ($count)</a>
+                                        //     </p>
+                                        echo "
+                                            <li>
+                                                <a href='$class_subject_url'>$subjectTitle <span>($count)</span></a>
+                                            </li>
+                                        ";
+                                    }
+                                }
+                            ?>
+                        </ul>
+                    </div>
+
+                    <div class="floating">
+                        <header>
+                            <div class="title">
+                                <h3>Announcements <em>(<?= $teachingSubjectCodeAnnouncementCount;?>)</em></h3>
+                            </div>
+                        </header>
+                        <button onclick="window.location.href = 'announcement_index.php?sy_id=<?= $current_school_year_id;?>'" class="btn btn-info">View all</button>
+                    </div>
+                </div>
+
+                <?php if(count($teachingSubjectCode) > 0): ?>
+                    <?php
+                        foreach ($teachingSubjectCode as $key => $row) {
+
+                            $subject_code = $row['subject_code'];
+                            $school_year_id = $row['school_year_id'];
+                            $subject_title = $row['subject_title'];
+                            $course_id = $row['course_id'];
+                            $program_section = $row['program_section'];
+    
+                            $class_url = "../class/index.php?c=$subject_code&sy_id=$school_year_id";
+                            // $class_url = "../class/index.php?c_id=$course_id&c=$subject_code";
+    
+    
+                            ?>
+    
+                                <div class="floating noOutline">
+                                    
+                                    <a href="<?php echo $class_url; ?>">
+                                        <header>
+                                            <div class="title">
+                                                <h3><?= $subject_title; ?> <em >  <?= "SY$fomatTerm-$period_short";?></em></h3>
+                                                <small><?= "$subject_code" ?></small>
+                                            </div>
+                                        </header>
+                                    </a>
+    
+                                    <main>
+                                        <div class="progress" style="height: 20px">
+                                            <div class="progress-bar" style="width: 25%">25%</div>
+                                        </div>
+                                        <div class="action">
+                                            <button
+                                            class="task"
+                                            data-toggle="tooltip"
+                                            data-placement="bottom"
+                                            title="No Assignments Due"
+                                            >
+                                            <i class="bi bi-file-earmark">0</i>
+                                            </button>
+                                        </div>
+                                    </main>
+                                </div>
+                            <?php
+                        }
+                    ?>
+                <?php else: ?>
+                    <h4 class="text-center">No teaching subject.</h4>
+                <?php endif; ?>
+            </main>
+        </div>
     </body>
 </html>
