@@ -76,7 +76,7 @@
                 "second",
                 "second",
                 "second",
-                "first"
+                "second"
             );
         ?>
 
