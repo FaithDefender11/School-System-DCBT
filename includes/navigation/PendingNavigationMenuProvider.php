@@ -66,7 +66,7 @@
             }
 
             return "
-                <div class='navigationContainer'>
+                <div class='navigationItems'>
                     $result
                 </div>
             ";

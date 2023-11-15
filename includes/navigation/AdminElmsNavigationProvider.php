@@ -28,7 +28,7 @@
         
         if ($_SERVER['SERVER_NAME'] !== 'localhost') {
             $new_url = str_replace("/admin_lms/", "", $base_url);
-            $logout_url = "$new_url/lms_logout.php";
+            $logout_url = "$new_url/logout.php";
         }
 
         $dashboard_url = $base_url .  "dashboard/index.php";
@@ -41,25 +41,25 @@
  
         // $class = "navigationItem ";
   
-        $sideBarNavigationItem = Helper::createNavByIconARC("Dashboard", 
+        $sideBarNavigationItem = Helper::createNavByIcon("Dashboard", 
             "bi bi-clipboard-data icon ", $dashboard_url, Constants::$navigationClass . Helper::GetActiveClass($page, "dashboard"));
         
-        $sideBarNavigationItem .= Helper::createNavByIconARC("Subject", 
+        $sideBarNavigationItem .= Helper::createNavByIcon("Subject", 
             "bi bi-calendar icon ", $subject_url, Constants::$navigationClass . Helper::GetActiveClass($page, "subject"));
 
-        $sideBarNavigationItem .= Helper::createNavByIconARC("Section", 
+        $sideBarNavigationItem .= Helper::createNavByIcon("Section", 
             "bi bi-calendar icon ", $section_url, Constants::$navigationClass . Helper::GetActiveClass($page, "section"));
 
-        $sideBarNavigationItem .= Helper::createNavByIconARC("Announcement", 
+        $sideBarNavigationItem .= Helper::createNavByIcon("Announcement", 
             "bi bi-clipboard-data icon", $announcement_url, Constants::$navigationClass . Helper::GetActiveClass($page, "announcement"));
 
 
-        $sideBarNavigationItem .= Helper::createNavByIconARC("Account", 
+        $sideBarNavigationItem .= Helper::createNavByIcon("Account", 
             "bi bi-person ", $account_url, Constants::$navigationClass . Helper::GetActiveClass($page, "account"));
 
         if(User::isAdminLoggedIn()) {
 
-            $sideBarNavigationItem .= Helper::createNavByIconARC("Log Out", 
+            $sideBarNavigationItem .= Helper::createNavByIcon("Log Out", 
                 "bi bi-box-arrow-right icon", $logout_url, Constants::$navigationClass);
         }
 

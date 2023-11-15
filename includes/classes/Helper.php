@@ -1895,6 +1895,7 @@ class Helper {
         $announcementPath = "",
         $studentAssignmentPath = "",
         $showAllPath = "",
+        $logout_url = null,
         $showCalendar = ""
 
         ){
@@ -2222,7 +2223,32 @@ class Helper {
                 </button>
                 
                 <div class="username">
-                    <button title="Profile" onclick="window.location.href='#'"><?= "$lastname, $firstname"?></button>
+                    <a href="#" title="View profile"><?= "$lastname, $firstname"?></a>
+                </div>
+
+                <div class="log-out">
+
+                    <button class="log-out-btn">
+                        <i class="bi bi-chevron-down"></i>
+                    </button>
+
+                    <div class="log-out-item">
+
+                        <button class="item">
+                           
+                            <i class="bi bi-box-arrow-in-left">
+                                <span>Profile</span>
+                            </i>
+                        </button>
+
+                        <a style="color: inherit;" href="<?= $logout_url;?>" class="item">
+                            
+                            <i class="bi bi-box-arrow-in-left">
+                                <span>Log-out</span>
+                            </i>
+                        </a>
+
+                    </div>
                 </div>
 
             </div>
@@ -2238,6 +2264,7 @@ class Helper {
         $notificationPath = "",
         $coursesPath = "",
         $showAllPath = "",
+        $logout_url = null,
         $showCalendar = ""){
         
         if($showAllPath == "first"){
@@ -2345,18 +2372,6 @@ class Helper {
 
             }
         }
-
-        if ($_SERVER['SERVER_NAME'] === 'localhost') {
-            $base_url = 'http://localhost/school-system-dcbt/student/';
-        } else {
-            $base_url = 'http://' . $_SERVER['HTTP_HOST'] . '/student/';
-        }
-
-        $studentLoggedInId = isset($_SESSION["studentLoggedInId"]) 
-                ? $_SESSION["studentLoggedInId"] : "";
-        $studentLoggedInObj = new Student($con, $studentLoggedInId);
-        $student_id = $studentLoggedInObj->GetStudentId();
-        $profile_url = $base_url . "profile/my_profile.php?id=" . $student_id;
         
         $unViewedCount = ($notificationCount - $totalViewed);
 
@@ -2774,7 +2789,32 @@ class Helper {
                 </button>
             
                 <div class="username">
-                    <button title="Profile" onclick="window.location.href='#'"><?= "$lastname, $firstname"?></button>
+                    <a href="#" title="View profile"><?= "$lastname, $firstname"?></a>
+                </div>
+
+                <div class="log-out">
+
+                    <button class="log-out-btn">
+                        <i class="bi bi-chevron-down"></i>
+                    </button>
+
+                    <div class="log-out-item">
+
+                        <button class="item">
+                        
+                            <i class="bi bi-box-arrow-in-left">
+                                <span>Profile</span>
+                            </i>
+                        </button>
+
+                        <a style="color: inherit;" href="<?= $logout_url;?>" class="item">
+                            
+                            <i class="bi bi-box-arrow-in-left">
+                                <span>Log-out</span>
+                            </i>
+                        </a>
+
+                    </div>
                 </div>
 
             </div>
@@ -2783,52 +2823,6 @@ class Helper {
 
     public static function DoesEnrollmentPrinted($printed = null) {
         return $printed;
-    }
-
-    public static function enrollmentStudentHeader($con, $studentLoggedInId) {
-        $student = new Student($con, $studentLoggedInId);
-
-        $firstname = ucwords($student->GetFirstName());
-        $lastname = ucwords($student->GetLastName());
-
-        ?>
-        <div class="icons">
-            <button class="sidebar">
-            <i class="bi bi-list"></i>
-            </button>
-            <div class="username" style="width: 100%; justify-content: flex-end">
-                <button title="Username"><?= "$lastname, $firstname" ?></button>
-            </div>
-        </div>
-    <?php
-    }
-
-    public static function pendingStudentHeader($con, $enrolleeLoggedInObj) {
-        $enrolleeLoggedIn = isset($_SESSION["enrollee_id"]) 
-        ? $_SESSION["enrollee_id"] : "";
-
-        $enrolleeLoggedInObj = new Pending($con, $enrolleeLoggedIn);
-        if (!isset($_SESSION['enrollee_id']) 
-        || $_SESSION['enrollee_id'] == '') {
-
-        header("Location: /school-system-dcbt/index.php");
-        exit();
-        }
-        ?>
-        <div class="icons">
-            <button class="sidebar">
-            <i class="bi bi-list"></i>
-            </button>
-            <div class="username" style="width: 100%; justify-content: flex-end">
-                <button 
-                    title="Username"
-            >
-                <?php echo $enrolleeLoggedInObj->GetPendingLastName(); ?>, 
-                <?php echo $enrolleeLoggedInObj->GetPendingFirstName(); ?>
-            </button>
-            </div>
-        </div>
-    <?php
     }
 }
 ?>

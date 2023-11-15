@@ -25,13 +25,13 @@
         || $_SESSION['adminUserId'] == '') {
 
         if ($_SERVER['SERVER_NAME'] === 'localhost') {
-            header("Location: /school-system-dcbt/lms_login.php");
+            header("Location: /school-system-dcbt/enrollment_login.php");
             session_destroy();
             exit();
         }
         
         # If Online,
-        header("Location: /lms_login.php");
+        header("Location: /enrollment_login.php");
         session_destroy();
         exit();
     }
@@ -47,8 +47,6 @@
     <head>
         <title><?php echo "Administrator " . $document_title; ?></title>
 
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
@@ -121,7 +119,7 @@
         </div>
 
        <div class="mainSectionContainer">
-            <div class="mainContentContainer">
+            <div class="mainContentContainer"> 
                 <!-- CONTENT GOES HERE-->
 
 <script>
