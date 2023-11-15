@@ -49,7 +49,6 @@
         <script src="../../assets/js/elms-sidebar.js" defer></script>
         <script src="../../assets/js/elms-dropdown.js" defer></script>
         <script src="../../assets/js/table-dropdown.js" defer></script>
-        <script src="../../assets/js/calendar.js" defer></script>
         <script src="../../assets/js/dropdownMenu.js" defer></script>
         <!-- Include Moment.js CDN -->
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script>
