@@ -1,7 +1,10 @@
 <?php
     include_once("../../includes/teacher_header.php");
     include_once("../../includes/classes/Teacher.php");
+    include_once('../../includes/classes/Enrollment.php');
     include_once("../../includes/classes/SchoolYear.php");
+    include_once('../../includes/classes/Announcement.php');
+    include_once('../../includes/classes/Notification.php');
 
     if(isset($GET['id'])) {
         $teacher_id = $_GET['id'];
