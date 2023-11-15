@@ -35,7 +35,7 @@
                             <small><?php echo $creation; ?></small>
                         </div>
                         <div class="action">
-                            <button class="btn btn-sm btn-info">
+                            <button class="btn btn-info">
                                 <a style="color: inherit;" href="announcement_views.php?id=<?php echo $teacher_announcement_id ?>">
                                     <i class="fas fa-eye"></i>
                                 </a>
