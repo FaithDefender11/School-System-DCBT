@@ -16,48 +16,6 @@
     // echo Helper::RemoveSidebar();
     
     ?>
-        <head>
- 
-            <!--Link JavaScript-->
-            <script src="../../assets/js/elms-sidebar.js" defer></script>
-            <script src="../../assets/js/elms-dropdown.js" defer></script>
-            <script src="../../assets/js/table-dropdown.js" defer></script>
-            <script src="../../assets/js/calendar.js" defer></script>
-            <!--Link styleshets-->
-            <link rel="stylesheet" href="../../assets/css/fonts.css" />
-            <link rel="stylesheet" href="../../assets/css/content.css" />
-            <link rel="stylesheet" href="../../assets/css/buttons.css" />
-            <link rel="stylesheet" href="../../assets/css/table.css" />
-            <link rel="stylesheet" href="../../assets/css/calendar.css" />
-            <!--Custom CSS-->
-            <!-- <link
-                rel="stylesheet"
-                href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-                integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-                crossorigin="anonymous"
-            /> -->
-            <link
-            rel="stylesheet"
-            href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
-            />
-            <!--Link Fonts-->
-            <link
-            rel="stylesheet"
-            href="https://fonts.googleapis.com/css?family=Lato"
-            />
-            <link
-            rel="stylesheet"
-            href="https://fonts.googleapis.com/css?family=Arimo"
-            />
-
-            <style>
-            body {
-                background-color: white;
-                margin: 0;
-            }
-            </style>
-
-        </head>
     <?php
 
  
@@ -211,7 +169,6 @@
     
 ?>
 
-    <div class="content">
 
         <?php 
             echo Helper::lmsTeacherNotificationHeader(
@@ -464,8 +421,7 @@
 
         </main>
     </div>
-
-<?php
-
-
-?>
+    <script src="../../assets/js/elms-sidebar.js"></script>
+    <script src="../../assets/js/elms-dropdown.js"></script>
+    </body>
+</html>
