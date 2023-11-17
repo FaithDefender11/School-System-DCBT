@@ -1,5 +1,4 @@
 <?php
-
     require_once('../../includes/config.php');
     require_once('../../includes/navigation/StudentNavigationMenuProvider.php');
     require_once('../../includes/navigation/PendingNavigationMenuProvider.php');
@@ -11,9 +10,9 @@
     require_once('../../includes/classes/Alert.php');
 
     $enrolleeLoggedIn = isset($_SESSION["enrollee_id"]) 
-        ? $_SESSION["enrollee_id"] : "";
+    ? $_SESSION["enrollee_id"] : "";
 
-    
+
     $enrolleeLoggedInObj = new Pending($con, $enrolleeLoggedIn);
 
     if (!isset($_SESSION['enrollee_id']) 
@@ -25,92 +24,63 @@
 
     $page = Helper::GetUrlPath();
     $document_title = Helper::DocumentTitlePage($page);
-
 ?>
 
 <!DOCTYPE html>
-
-<html>
-    <head>
-        
-        <title><?php echo "Enrollee " . $document_title; ?></title>
-
-        <!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-
-        <!-- Bootstrap Icons CSS -->
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-
-        <!-- Font Awesome CSS -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
-        <!-- jQuery -->
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-        <!-- Popper.js and Bootstrap JS -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-
-        <!-- Custom CSS -->
-        <link rel="stylesheet" type="text/css" href="../../assets/css/main_style.css">
-        <link rel="stylesheet" type="text/css" href="../../assets/css/content.css">
-        <link rel="stylesheet" type="text/css" href="../../assets/css/forms.css">
-        <link rel="stylesheet" type="text/css" href="../../assets/css/buttons.css">
-        <link rel="stylesheet" type="text/css" href="../../assets/css/fonts.css">
-        <link rel="stylesheet" type="text/css" href="../../assets/css/table.css">
-        <link rel="stylesheet" type="text/css" href="../../assets/css/scheduler.css">
-        <link rel="stylesheet" type="text/css" href="../../assets/css/student-form-responsive.css">
-        <link rel="stylesheet" href="../../assets/css/others/toggle-switch.css">
-
-        <!-- Google Fonts -->
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Arimo">
-
-        <!-- SweetAlert -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.24/sweetalert2.all.js"></script>
-
-        <!-- Modify the Logo of DCBT Here and Please apply some styling -->
-        <link rel="icon" href="../../assets/images/icons/DCBT-Logo.jpg" type="image/png">
-
-         <!-- Bootstrap 4 JavaScript -->
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-        
-    </head>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?php echo "Enrollee " . $document_title; ?></title>
+    <!--Link JavaScript-->
+    <script src="../../assets/js/elms-sidebar.js" defer></script>
+    <!-- link style sheets -->
+    <link rel="stylesheet" href="../../assets/css/buttons.css" />
+    <link rel="stylesheet" href="../../assets/css/content.css" />
+    <link rel="stylesheet" href="../../assets/css/sidebar.css" />
+    <link rel="stylesheet" href="../../assets/css/elms.css" />
+    <link rel="stylesheet" href="../../assets/css/fonts.css" />
+    <link rel="stylesheet" href="../../assets/css/table.css" />
+    <link rel="stylesheet" href="../../assets/css/forms.css" />
+    <link rel="stylesheet" href="../../assets/css/student-form-responsive.css" />
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!-- Bootstrap Icons CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <!-- Font Awesome CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+    <!-- Popper.js and Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- SweetAlert -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.24/sweetalert2.all.js"></script>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- link fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Arimo" />
+    <!-- Modify the Logo of DCBT Here and Please apply some styling -->
+    <link rel="icon" href="../../assets/images/icons/DCBT-Logo.jpg" type="image/png">
+    <!-- Bootstrap 4 JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</head>
 <body>
-    <div class="pageContainer">
-       
-        <div class="sidebar-nav" style="color: white;">
-            <div class="sidebar-profile">
-                <h3><?php echo $enrolleeLoggedInObj->GetPendingFirstName(); ?> <?php echo $enrolleeLoggedInObj->GetPendingLastName(); ?> </h3>
-                <em class="user_email">
-                     <?php echo $enrolleeLoggedInObj->GetPendingEmail(); ?>
-                </em>
-                <p style="font-weight: bold;" class="role_name">Student</p>
-            </div>
+    <div class="sidebar-nav">
+        <?php
+            $pendingNav = new PendingStudentNavigationMenu($con, $enrolleeLoggedIn);
 
-            <?php
-
-                // var_dump($enrolleeLoggedIn);
-
-                $pendingNav = new PendingStudentNavigationMenu($con, $enrolleeLoggedIn);
-
-                // Pending Application Procedure
-                if(isset($_SESSION['status']) 
-                    && $_SESSION['status'] == "pending"){
-                    echo $pendingNav->create($page);
-                }
-
-            ?>
-          
-        </div>
-
-        <div class="mainSectionContainer">
-            <div class="mainContentContainer">
-
-
-<script>
-    $(document).ready(function() {
-        $('.navigationItem').click(function() {
-            $('.navigationItem').removeClass('active'); // Remove "active" class from all navigation items
-            $(this).addClass('active'); // Add "active" class to the clicked navigation item
-        });
-    });
-</script>
+            // Pending Application Procedure
+            if(isset($_SESSION['status']) 
+                && $_SESSION['status'] == "pending"){
+                echo $pendingNav->create($page);
+            }
+        ?>
+    </div>
+    <div class="content" id="elms-content">
+        <script>
+            $(document).ready(function() {
+                $('.navigationItem').click(function() {
+                    $('.navigationItem').removeClass('active'); // Remove "active" class from all navigation items
+                    $(this).addClass('active'); // Add "active" class to the clicked navigation item
+                });
+            });
+        </script>
