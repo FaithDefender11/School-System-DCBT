@@ -198,14 +198,9 @@
                             <header>
                                 <div class="title">
                                     <h3 style="color: black">What's next?</h3>
-                                    <p>
-                                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                                        Laudantium, molestias culpa dicta earum cupiditate non a ipsam
-                                        repellat nulla, quisquam cum cumque, iste omnis ab error. Debitis
-                                        rem asperiores cumque?
-                                    </p>
                                     <ul>
-                                        <li>Please kindly walk in to registrar for completion your requirements</li>
+                                        <li>Please kindly walk in to registrar for completion your requirements.</li>
+                                        <li>Check your email after you are officially enrolled.</li>
                                     </ul>
                                 </div>
                             </header>

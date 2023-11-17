@@ -7,8 +7,6 @@
     include_once('../../includes/classes/Section.php');
     include_once('../../includes/classes/SchoolYear.php');
 
-        // echo Helper::RemoveSidebar();
-
         if(isset($_SESSION['username'])
         && isset($_SESSION['enrollee_id'])
         && isset($_SESSION['status']) 
