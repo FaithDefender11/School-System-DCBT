@@ -2224,32 +2224,7 @@ class Helper {
                 </button>
                 
                 <div class="username">
-                    <a href="#" title="View profile"><?= "$lastname, $firstname"?></a>
-                </div>
-
-                <div class="log-out">
-
-                    <button class="log-out-btn">
-                        <i class="bi bi-chevron-down"></i>
-                    </button>
-
-                    <div class="log-out-item">
-
-                        <button class="item">
-                           
-                            <i class="bi bi-box-arrow-in-left">
-                                <span>Profile</span>
-                            </i>
-                        </button>
-
-                        <a style="color: inherit;" href="<?= $logout_url;?>" class="item">
-                            
-                            <i class="bi bi-box-arrow-in-left">
-                                <span>Log-out</span>
-                            </i>
-                        </a>
-
-                    </div>
+                    <button title="Profile"><?= "$lastname, $firstname"?></button>
                 </div>
 
             </div>
@@ -2790,32 +2765,8 @@ class Helper {
                 </button>
             
                 <div class="username">
-                    <a href="#" title="View profile"><?= "$lastname, $firstname"?></a>
-                </div>
-
-                <div class="log-out">
-
-                    <button class="log-out-btn">
-                        <i class="bi bi-chevron-down"></i>
-                    </button>
-
-                    <div class="log-out-item">
-
-                        <button class="item">
-                        
-                            <i class="bi bi-box-arrow-in-left">
-                                <span>Profile</span>
-                            </i>
-                        </button>
-
-                        <a style="color: inherit;" href="<?= $logout_url;?>" class="item">
-                            
-                            <i class="bi bi-box-arrow-in-left">
-                                <span>Log-out</span>
-                            </i>
-                        </a>
-
-                    </div>
+                    <button title="Profile"><?= "$lastname, $firstname"?></button>
+                    
                 </div>
 
             </div>
