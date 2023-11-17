@@ -1,8 +1,10 @@
 <?php
+
 include('../../includes/config.php');
 include('../../includes/classes/SchoolYear.php');
 include('../../includes/classes/Section.php');
 include('../../includes/classes/Enrollment.php');
+
 
 $school_year = new SchoolYear($con, null);
 $school_year_obj = $school_year->GetActiveSchoolYearAndSemester();

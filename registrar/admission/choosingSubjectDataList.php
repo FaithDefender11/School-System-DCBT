@@ -502,7 +502,7 @@ if ($row != null) {
             }
 
 
-
+            $student_subject_enrolled = $student_subject_enrolled == "" ? 0 : $student_subject_enrolled;
             $button_url = "";
             $data[] = array(
                 "code" => "$subject_code",

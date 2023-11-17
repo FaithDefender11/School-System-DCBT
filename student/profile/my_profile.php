@@ -17,6 +17,11 @@
     if(isset($_GET['id'])) {
         $student_id = $_GET['id'];
 
+        $school_year = new SchoolYear($con);
+        $school_year_obj = $school_year->GetActiveSchoolYearAndSemester();
+
+        $current_school_year_id = $school_year_obj['school_year_id'];
+
         // Fetch the student data using the ID
         $student = new Student($con, $student_id);
 
@@ -41,6 +46,7 @@
                     "second",
                     "second",
                     "second",
+                    "",
                     "second"
                 );
             ?>

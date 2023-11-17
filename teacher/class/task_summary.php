@@ -158,12 +158,21 @@
                 </header>
             </div>
 
-            <nav>
-                <a href="<?= $back_url; ?>">
-                    <i class="bi bi-arrow-return-left"></i>
-                    Back
-                </a>
-            </nav>
+            <?php 
+
+                if(isset($_GET['calendar_clicked']) == false){
+                    ?>
+                     <nav>
+                        <a href="<?= $back_url; ?>">
+                            <i class="bi bi-arrow-return-left"></i>
+                            Back
+                        </a>
+                    </nav>
+                    <?php
+                }
+
+            ?>
+           
             
 
             <main>

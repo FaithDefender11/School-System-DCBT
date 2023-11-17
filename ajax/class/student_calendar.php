@@ -1,5 +1,6 @@
 <?php 
 
+    # 
     require_once("../../includes/config.php");
     require_once("../../includes/classes/SubjectCodeAssignment.php");
     require_once("../../includes/classes/SubjectPeriodCodeTopic.php");
@@ -17,10 +18,10 @@
     if(isset($_GET['sy_id'])){
         $school_year_id = $_GET['sy_id'];
     }
-     if(isset($_GET['e_id'])){
+    if(isset($_GET['e_id'])){
         $enrollment_id = $_GET['e_id'];
     }
-
+    
     // echo $student_id;
     // echo $school_year_id;
 
@@ -31,6 +32,8 @@
     $getEnrolledSubjects = $subjectPeriodCodeTopic->GetAllSubjectTopicEnrolledBased(
         $school_year_id, $student_id, $enrollment_id
     );
+
+    // var_dump($getEnrolledSubjects);
 
     foreach ($getEnrolledSubjects as $key => $subject_period_code_topic_id) {
         
@@ -72,7 +75,7 @@
  
 
         $url = "../../student/courses/task_submission.php?sc_id=$subjectCodeAssignmentIds&ss_id=";
-// http://localhost/school-system-dcbt//student/courses/task_submission.php?sc_id=102&ss_id=3682
+        
         $dataCalendar[] = array(
             'subject_code_assignment_id' => $subjectCodeAssignmentIds,
             'title' => $due_time_hours . " " . $assignment_name,

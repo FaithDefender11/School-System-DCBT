@@ -100,7 +100,7 @@
             # Change into Regular
 
             $wasSuccess = $enrollment->FormUpdateStudentStatus($current_school_year_id,
-            $student_id, $student_enrollment_id, $type);
+                $student_id, $student_enrollment_id, $type);
 
             if($wasSuccess){
 
@@ -144,7 +144,9 @@
                 $student_enrollment_id,
                 $description, $current_school_year_id, $registrarUserId
             );
-
+            $removeAllGivenSubjects = $studentSubject->RemoveAllInsertedStudentSubjectList(
+                $student_enrollment_id, $current_school_year_id, $student_id);
+        
             $wasSuccess = $enrollment->FormUpdateStudentStatus($current_school_year_id,
             $student_id, $student_enrollment_id, $type);
 

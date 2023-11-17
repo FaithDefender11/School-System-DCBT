@@ -768,6 +768,8 @@
         $enrollment_currently_registrar_id = $enrollment->GetEnrollmentCurrentRegistrarId($student_id,
             $student_enrollment_id);
 
+        
+
         $user = new User($con, $enrollment_currently_registrar_id);
 
         $registrarName = "";
@@ -837,6 +839,8 @@
 
         $student_enrollment_student_status = $enrollment->GetEnrollmentFormStudentStatus($student_id,
             $student_enrollment_id, $current_school_year_id);
+
+        // var_dump($student_enrollment_student_status);
 
 
         $student_enrollment_is_tertiary = $enrollment->GetEnrollmentFormIsTertiary($student_id,
@@ -1279,7 +1283,6 @@
         }).then((result) => {
             if (result.isConfirmed) {
                 // console.log(student_enrollment_form_id)
-
                     $.ajax({
                     url: '../../ajax/admission/changingFormStatus.php',
                     type: 'POST',

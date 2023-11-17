@@ -485,9 +485,7 @@
                                                         <i class="bi bi-file-earmark-x"></i>
                                                         Create Section
                                                     </a>
-                                                    
                                                 <?php
-                                                
                                             }
 
                                         ?>

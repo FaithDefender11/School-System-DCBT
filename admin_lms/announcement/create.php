@@ -56,12 +56,12 @@
             if (isset($_POST['student_selected'])) {
 
                 $student_selected = "";
-                echo "hey";
+                // echo "hey";
 
                 if(count($getAllStudents) > 0){
 
                     
-
+                    
                 }
                 
             }

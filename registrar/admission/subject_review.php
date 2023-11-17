@@ -8,11 +8,8 @@
         // Update its student_statusv2 in the student table.
         // redirect to this page.
     }
-
-
  
     // echo $registrarUserId;
-
 
     $selected_course_id = $_GET['selected_course_id'];
 
@@ -290,7 +287,9 @@
                                     <th style="min-width: 186px;" >Time</th>
                                     <th >Room</th>
                                     <th >Unit</th>
-                                    <th >Action</th>
+                                    <?php echo $student_enrollment_student_status == "Irregular" ? "
+                                        <th>Action</th>
+                                    " : "" ?>
                                 </tr>
                             </thead>
                             <tbody>
@@ -413,6 +412,22 @@
                                             }
                                             $totalUnits += $unit;
 
+                                            $lastTd = "
+                                            ";
+
+                                            if($student_enrollment_student_status == "Irregular"){
+                                                // <button 
+                                                //     class='btn btn-sm btn-primary'
+                                                //     onclick=\"window.location.href = '" . $change_section_subject_url . "'\"
+                                                //     >
+                                                //     <i class='fas fa-pencil'></i>
+                                                // </button>
+                                                $lastTd = "
+                                                    <td>
+                                                        $removeSubjectLoadBtn
+                                                    </td>
+                                                ";
+                                            }
                                             echo "
                                                 <tr class='text-center'>
                                                     <td>$subject_title</td>
@@ -422,15 +437,8 @@
                                                     <td>$scheduleOutput</td>
                                                     <td>$roomOutput</td>
                                                     <td>$unit</td>
-                                                    <td>
-                                                        <button 
-                                                            class='btn btn-sm btn-primary'
-                                                            onclick=\"window.location.href = '" . $change_section_subject_url . "'\"
-                                                            >
-                                                            <i class='fas fa-pencil'></i>
-                                                        </button>
-                                                        $removeSubjectLoadBtn
-                                                    </td>
+                                                    $lastTd
+                                                    
 
                                                 </tr>
                                             ";
@@ -572,7 +580,7 @@
 
             }).then((result) => {
                 if (result.isConfirmed) {
-                    $url = `choosing_subject.php?e_id=${enrollmentId}&st_id=${student_id}`;
+                    $url = `choosing_subject2.php?e_id=${enrollmentId}&st_id=${student_id}`;
                     window.location.href = $url;
                 }
             });

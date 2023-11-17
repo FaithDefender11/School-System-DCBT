@@ -46,6 +46,8 @@
         $subject_code_assignment_id = $_GET['sc_id'];
         $student_subject_id = $_GET['ss_id'];
 
+        // var_dump($student_subject_id);
+
         # 
         if(isset($_GET['n_id'])
             && isset($_GET['notification'])
@@ -503,6 +505,7 @@
                         "second",
                         "first",
                         "second",
+                        "",
                         "second"
                     );
                 
@@ -572,11 +575,18 @@
                     
                 </div>
 
-                <nav>
+                <?php 
+                    if($_GET['ss_id'] != ""){
+                        ?>
+                        <nav>
                     <a href="<?= $back_url;?>"
                     ><i class="bi bi-arrow-return-left"></i>Back</a
                     >
                 </nav>
+                        <?php
+                    }
+                ?>
+                
 
                 <main>
                     <div class="bars">

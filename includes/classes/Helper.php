@@ -1233,6 +1233,7 @@ class Helper {
         return "
             <div class='$active_class'>
                 <a $textLink href='$link'>
+                    <span class='badge'>5</span>
                     <i style='color: white;' class='$icon'>
                         <span class='span_text'>$text</span>
                     </i>
@@ -1246,6 +1247,7 @@ class Helper {
         return "
             <div class='$active_class'>
                 <a href='$link'>
+                    <span class='notification_count'>5</span>
                     <i style='color: white;' class='$icon'></i>
                     <span class='span_text'>$text</span>
                 </a>
@@ -1893,6 +1895,7 @@ class Helper {
         $announcementPath = "",
         $studentAssignmentPath = "",
         $showAllPath = "",
+        $logout_url = null,
         $showCalendar = ""
 
         ){
@@ -1979,21 +1982,6 @@ class Helper {
             return ($dateA > $dateB) ? -1 : 1; // Change from 1 to -1 for descending order
         });
 
-        if ($_SERVER['SERVER_NAME'] === 'localhost') {
-            // Running on localhost
-            $base_url = 'http://localhost/school-system-dcbt/teacher/';
-        } else {
-            // Running on web hosting
-            // $base_url = 'https://sub.dcbt.online/registrar/';
-            $base_url = 'http://' . $_SERVER['HTTP_HOST'] . '/teacher/';
-        }
-
-        $teacherLoggedInId = isset($_SESSION["teacherLoggedInId"]) 
-                ? $_SESSION["teacherLoggedInId"] : "";
-            $teacherLoggedInObj = new teacher($con, $teacherLoggedInId);
-            $teacher_id = $teacherLoggedInObj->GetteacherId();
-            $user_lms_url = $base_url . "profile/my_profile.php?id=" . $teacher_id;
-
 
         $notificationCount = count($studentSubmittedAndAdminAnnouncement);
 
@@ -2016,13 +2004,13 @@ class Helper {
         // var_dump($notificationCount);
 
         ?>
-            <div class="icons">
+            <div style="min-height: 70px;" class="icons">
 
                 <button class="sidebar" id="sidebar-btn">
                     <i class="bi bi-list"></i>
                 </button>
 
-                <div class="notif">
+                <div style="width: 76%;" class="notif">
                     
                     <button
                         class="icon"
@@ -2083,7 +2071,7 @@ class Helper {
                                 $assignment_notification_url = "";
 
                                 $status = "
-                                    <i style='color: orange' class='fas fa-times'></i>
+                                    <i style='color: orange' class='bi bi-x'></i>
                                 ";
 
 
@@ -2134,7 +2122,7 @@ class Helper {
 
                                         if($teacherAnnouncementViewed){
                                             $status = "
-                                                <i style='color: green' class='fas fa-check'></i>
+                                                <i style='color: green' class='bi bi-check'></i>
                                         ";
 
                                     }
@@ -2180,7 +2168,7 @@ class Helper {
 
                                 if($studentViewed){
                                     $status = "
-                                        <i style='color: green' class='fas fa-check'></i>
+                                        <i style='color: green' class='bi bi-check'></i>
                                     ";
                                 }
 
@@ -2206,12 +2194,12 @@ class Helper {
                         <?php if($notificationCount > 0):?>
 
                             <div class="action">
-                                <button onclick="window.location.href = '<?php echo $showAllPath . "index.php"; ?>'" class="default">View all</button>
+                                <button onclick="window.location.href = '<?php echo $showAllPath . "index.php"; ?>'" class="default">See all</button>
                                 <button class="clean">Mark all read</button>
                             </div>
                             <?php else:?>
                                 <div class="action">
-                                    <button onclick="window.location.href = '<?php echo $showAllPath . "index.php"; ?>'" class="default">View all</button>
+                                    <button onclick="window.location.href = '<?php echo $showAllPath . "index.php"; ?>'" class="default">Show all</button>
                                     <button class="clean">Mark all read</button>
                                     <!-- <h5 class="text-center">No notification.</h5> -->
                                 </div>
@@ -2221,9 +2209,46 @@ class Helper {
 
 
                 </div>
+
+                <?php 
+                
+                    $assignment_calendar_url = $showCalendar . "calendar.php";
+                
+                ?>
+
+                <button  class="calendar-btn" title="Assignment calendar"
+                    onclick="window.location.href = '<?= $assignment_calendar_url; ?>'">
+                    <i class="bi bi-calendar-event"></i>
+
+                </button>
                 
                 <div class="username">
-                    <button title="Profile" onclick="window.location.href='<?= $user_lms_url; ?>'"><?= "$lastname, $firstname"?></button>
+                    <a href="#" title="View profile"><?= "$lastname, $firstname"?></a>
+                </div>
+
+                <div class="log-out">
+
+                    <button class="log-out-btn">
+                        <i class="bi bi-chevron-down"></i>
+                    </button>
+
+                    <div class="log-out-item">
+
+                        <button class="item">
+                           
+                            <i class="bi bi-box-arrow-in-left">
+                                <span>Profile</span>
+                            </i>
+                        </button>
+
+                        <a style="color: inherit;" href="<?= $logout_url;?>" class="item">
+                            
+                            <i class="bi bi-box-arrow-in-left">
+                                <span>Log-out</span>
+                            </i>
+                        </a>
+
+                    </div>
                 </div>
 
             </div>
@@ -2350,30 +2375,18 @@ class Helper {
         
         $unViewedCount = ($notificationCount - $totalViewed);
 
-        if ($_SERVER['SERVER_NAME'] === 'localhost') {
-            $base_url = 'http://localhost/school-system-dcbt/student/';
-        } else {
-            $base_url = 'http://' . $_SERVER['HTTP_HOST'] . '/student/';
-        }
-
-        $studentLoggedInId = isset($_SESSION["studentLoggedInId"]) 
-                ? $_SESSION["studentLoggedInId"] : "";
-        $studentLoggedInObj = new Student($con, $studentLoggedInId);
-        $student_id = $studentLoggedInObj->GetStudentId();
-        $profile_url = $base_url . "profile/my_profile.php?id=" . $student_id;
-
 
         // var_dump($notificationCount);
 
         ?>
 
-            <div class="icons">
+            <div style="min-height: 70px;" class="icons">
 
                 <button class="sidebar" id="sidebar-btn">
                     <i class="bi bi-list"></i>
                 </button>
 
-                <div class="notif">
+                <div style="width: 76%;" class="notif">
                     <button
                         class="icon"
                         data-toggle="tooltip"
@@ -2696,7 +2709,7 @@ class Helper {
 
 
                                 $status = "
-                                        <i style='color: orange' class='fas fa-times'></i>
+                                        <i style='color: orange' class='bi bi-x'></i>
                                     ";
  
                                 #
@@ -2708,13 +2721,13 @@ class Helper {
 
                                 if($studentViewed){
                                     $status = "
-                                        <i style='color: green' class='fas fa-check'></i>
+                                        <i style='color: green' class='bi bi-check'></i>
                                     ";
                                 }
 
                                 if($studentViewedDue){
                                     $status = "
-                                        <i style='color: green' class='fas fa-check'></i>
+                                        <i style='color: green' class='bi bi-check'></i>
                                     ";
                                 }
 
@@ -2745,13 +2758,13 @@ class Helper {
                         <?php if($notificationCount > 0):?>
 
                             <div class="action">
-                                <button onclick="window.location.href = '<?php echo $showAllPath . "index.php"; ?>'" class="default">View All</button>
+                                <button onclick="window.location.href = '<?php echo $showAllPath . "index.php"; ?>'" class="default">Show All</button>
                                 <button class="clean">Mark all read</button>
                             </div>
 
                             <?php else:?>
                                 <div class="action">
-                                    <button onclick="window.location.href = '<?php echo $showAllPath . "index.php"; ?>'" class="default">View all</button>
+                                    <button onclick="window.location.href = '<?php echo $showAllPath . "index.php"; ?>'" class="default">Show all</button>
                                     <button class="clean">Mark all read</button>
                                     <!-- <h5 class="text-center">No notification.</h5> -->
                                 </div>
@@ -2760,17 +2773,52 @@ class Helper {
                     </div>
  
                 </div>
+
+
+                <?php 
+                
+                    $task_calendar_url = $showCalendar . "student_calendar.php";
+
+                
+                ?>
+
+                <!-- $notificationPath . "admin_announcement.php?id=$announcement_id&n_id=$notification_id&notification=true -->
+                <button  class="calendar-btn" title="Task calendar"
+                    onclick="window.location.href = '<?= $task_calendar_url; ?>'">
+                    <i class="bi bi-calendar-event"></i>
+                </button>
             
                 <div class="username">
-                    <button title="Profile" onclick="window.location.href='<?= $profile_url; ?>'"><?= "$lastname, $firstname"?></button>
+                    <a href="#" title="View profile"><?= "$lastname, $firstname"?></a>
+                </div>
+
+                <div class="log-out">
+
+                    <button class="log-out-btn">
+                        <i class="bi bi-chevron-down"></i>
+                    </button>
+
+                    <div class="log-out-item">
+
+                        <button class="item">
+                        
+                            <i class="bi bi-box-arrow-in-left">
+                                <span>Profile</span>
+                            </i>
+                        </button>
+
+                        <a style="color: inherit;" href="<?= $logout_url;?>" class="item">
+                            
+                            <i class="bi bi-box-arrow-in-left">
+                                <span>Log-out</span>
+                            </i>
+                        </a>
+
+                    </div>
                 </div>
 
             </div>
         <?php
-    }
-
-    public static function DoesEnrollmentPrinted($printed = null) {
-        return $printed;
     }
 
     public static function enrollmentStudentHeader($con, $studentLoggedInId) {
@@ -2818,5 +2866,6 @@ class Helper {
         </div>
     <?php
     }
+
 }
 ?>

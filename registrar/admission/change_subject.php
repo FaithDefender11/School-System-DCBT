@@ -54,7 +54,7 @@
 
         $back_url= "process_enrollment.php?subject_review=show&st_id=$student_subject_student_id&selected_course_id=$student_course_id";
 
-        // http://localhost/school-system-dcbt/registrar/admission/process_enrollment.php?
+        // http://localhost/sistem/registrar/admission/process_enrollment.php?
         // subject_review=show&st_id=544&selected_course_id=816
 
 

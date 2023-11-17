@@ -131,7 +131,7 @@ class Email {
 
         if ($_SERVER['SERVER_NAME'] === 'localhost') {
             // Running on localhost
-            // $base_url = 'http://localhost/school-system-dcbt/student/';
+            // $base_url = 'http://localhost/sistem/student/';
             $link = domainName . "verify_student.php?token=$token";
 
         } else {
@@ -178,11 +178,22 @@ class Email {
   
 
     public function SendEnrolledSubjectListViaPdf(
-            $email_address, $pdfContent, $pdfName, $username = "", $generated_password = "") {
+            $email_address, $pdfContent, $pdfName,
+            
+            $username = "", $generated_password = "", $doesValidForCredentials) {
 
-        $subject = "You have successfully enrolled";
-        $message = "Here is your Enrollment details <br> <br> Un: $username <br> <br> Pw: $generated_password <br> <br> Yours in Administrator <br> <br> Admin name";
+        $subject = "Welcome to Daehan College of Business Technology - Your Enrollment is Complete";
 
+        $credentialsMessage = "";
+
+        if($doesValidForCredentials){
+
+            $credentialsMessage = "<br> Un: $username <br> <br> Pw: $generated_password <br> <br> Yours in Administrator <br> <br> Admin name";
+        }
+
+
+        $message = "Here is your Enrollment details <br> $credentialsMessage";
+            
         // $email_message = "Admin has recently created your account. <br> <br> Un: $username <br> <br> Pw: $generated_password <br> <br> Yours in Administrator <br> <br> $adminName, <br> <br> Note: If you have received this email and its not you or in error, please notify the sender immediately and delete this email.";
 
         $this->mailer->addAddress($email_address);
@@ -219,7 +230,7 @@ class Email {
 
         // echo $baseUrl;
 
-        // $url = "http://localhost/school-system-dcbt//verify_student.php?token=$token";
+        // $url = "http://localhost/sistem//verify_student.php?token=$token";
 
         $link = LOCAL_BASE_URL . "//" . "verify_student.php?token=$token";
         // echo $link;

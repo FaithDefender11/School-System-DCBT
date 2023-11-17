@@ -263,16 +263,17 @@
                 $subject_program_id = $row['subject_program_id'];
  
                 # 2. Remove the credited subjects within semester course level (if ever)
-
                 $checkSubjectProgramOfferedWithinSemester = $subjectProgram
                     ->CheckSubjectProgramIsWithinSemesterOffered(
                         $subject_program_id,
                         $current_school_year_period, $student_course_level);
 
                 if($checkSubjectProgramOfferedWithinSemester == true){
+
                     $removeAllCreditedSubjectsWithinSemester = $this->RemoveAllInsertedCreditedStudentSubjectList(
                         $current_school_year_id, $student_id,
                         $subject_program_id);
+                
                 }
                 
                 # 3. Add Block Sections Subjects.
@@ -298,10 +299,8 @@
 
                     $subject_title = $subject_program->GetTitle();
 
-
                     $now = date("Y-m-d H:i:s");
                     $date_creation = date("M d, Y h:i a", strtotime($now));
-
 
                     $description = "Registrar '$registrarName' has been placed a subject load of '$subject_title ($student_subject_code)' via block section population on $date_creation";
 

@@ -6,10 +6,11 @@
     include_once('../../includes/classes/Announcement.php');
     include_once('../../includes/classes/Notification.php');
 
-    if(isset($GET['id'])) {
+    if(isset($_GET['id'])) {
+        
         $teacher_id = $_GET['id'];
 
-        $teacher = new Teacher($con, $teacher_id);
+        $teacher = new Teacher($con, $teacherLoggedInId);
 
         if($teacher) {
             $profilePic = $teacher->GetTeacherProfile();
@@ -19,7 +20,6 @@
             echo "Teacher not found.";
         }
 
-        $teacher_id = $_SESSION['$teacherLoggedIn'];
     
 ?>
 

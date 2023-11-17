@@ -775,7 +775,7 @@
 
                                             $url = "../admission/process_enrollment.php?subject_review=show&st_id=$student_id&selected_course_id=$course_id";
 
-                                            Alert::success("Proceeding to Subject Review", 
+                                            Alert::successAutoRedirect("Proceeding to Subject Review", 
                                                 "$url");
 
                                             exit();
@@ -835,7 +835,8 @@
                     <main>
                         <header>
                             <div class="title">
-                            <h3>Admission Type</h3>
+                            <h3 style="font-weight: bold;">Admission Type</h3>
+                            <br>
                             </div>
                         </header>
                         
@@ -850,6 +851,7 @@
                                             name="admission_type"
                                             value="1"
                                             id="new_standard"
+                                            required
                                             <?php 
                                                 echo ($admission_type_url == 1 || $stored_admission_type_id == 1) ? "checked" : "";
                                                 echo $current_school_year_period == "Second" ? "disabled" : ""; 

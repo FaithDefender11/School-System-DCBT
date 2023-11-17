@@ -19,18 +19,15 @@
             <div class="title">
                 <h4 style="font-weight: bold;">Student Information</h4>
                 <div class="row">
-                    <span style="margin-left: 500px;">
+                    <!-- <span style="margin-left: 500px;">
                         <small style="font-weight: bold;">LRN</small>
-                        <?php 
-                            // echo Helper::getError(Constants::$LRNRequired);
-                            // echo Helper::getError(Constants::$LRNUnique);
-                        ?>
                         <input class="form-control" style="width: 250px;"
                             type="text" name="lrn" id="lrn"    
                             value="<?php  
                             echo Helper::DisplayText('lrn', $lrn);
                             ?>">
-                    </span>
+                    </span> -->
+                    <span id="populateLRN"></span>
                 </div>
             </div>
         </header>

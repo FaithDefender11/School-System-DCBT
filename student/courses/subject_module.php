@@ -269,6 +269,7 @@
                     "second",
                     "first",
                     "second",
+                    $logout_url,
                     "second"
                 );
             ?>
@@ -281,6 +282,7 @@
                 </header>
             </div>
 
+            
             <nav>
                 <a href="<?php echo $back_url; ?>">
                     <i class="bi bi-arrow-return-left"></i>Back

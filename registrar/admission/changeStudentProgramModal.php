@@ -31,13 +31,13 @@
 
                         <div id="errorMessage" class="alert alert-warning d-none"></div>
 
-                        <div class='form-group mb-2'>
+                        <!-- <div class='form-group mb-2'>
                             <label for="" class="mb-2">Previous Enrolled Section</label>
                             
                             <input  value="<?php echo $student_current_program_section; ?>" class='form-control'
                                 name="current_program_section" id="current_program_section" style="pointer-events: none;" type="text">
                            
-                        </div>
+                        </div> -->
 
                         <div class='form-group mb-2'>
 

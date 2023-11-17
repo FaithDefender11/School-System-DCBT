@@ -71,7 +71,7 @@
         $enrollment_section_level = $section->GetSectionGradeLevel($student_enrollment_course_id);
         $enrollment_section_program_id = $section->GetSectionProgramId($student_enrollment_course_id);
         
-        $back_url = "http://localhost/school-system-dcbt/registrar/admission/process_enrollment.php?subject_review=show&st_id=$student_id&selected_course_id=$student_enrollment_course_id";
+        $back_url = "http://localhost/sistem/registrar/admission/process_enrollment.php?subject_review=show&st_id=$student_id&selected_course_id=$student_enrollment_course_id";
 
         $department_type = $program_department_name == "Senior High School" ? "SHS" : ( $program_department_name == "Tertiary" ? "Tertiary" : "");
  

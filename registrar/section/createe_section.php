@@ -54,7 +54,6 @@
 
         $trackDropdown = $section->createProgramSelection($program_id);
 
-
                 
         $courseLevelDropdown = $section->
             CreateCourseLevelDropdownDepartmentBased($departmentName);
@@ -145,7 +144,25 @@
             
         }
 
+        // $getProgramDepartmentName = $program->GetProgramDepartmentName();
+        $programAcronym = $program->GetProgramSectionName();
 
+        // var_dump($getProgramDepartmentName);
+
+        $startFirst = "";
+        $startSecond = "";
+
+        if($departmentName == "Senior High School"){
+        // if($getProgramDepartmentName == "shs"){
+            $startFirst = "11";
+            $startSecond = "12";
+
+        }else if($departmentName == "Tertiary"){
+            $startFirst = "1";
+            $startSecond = "2";
+        }
+        # STEM11-A
+        $placeholder = "e.g. " . $programAcronym . "" . $startFirst . "-A, $programAcronym" . "" . $startSecond . "-A";
 
         ?>
             <div class='content'>
@@ -161,7 +178,7 @@
                     <div class='card'>
                         
                         <div class='card-header'>
-                            <h4 class='text-center mb-3'><?php echo $program->GetProgramSectionName();?> Section creation</h4>
+                            <h3 class='text-center mb-3'> <?php echo $program->GetProgramName();?> Section maintenance ( <?php echo $program->GetProgramSectionName();?> )</h3>
                         </div>
 
                         <div class="card-body">
@@ -172,7 +189,8 @@
                                     <label class='mb-2'>* Section Name</label>
 
                                     <input required class='form-control' type='text' 
-                                        value="<?php echo $program->GetProgramSectionName(); ?>" placeholder='e.g: STEM11-A, ABM11-A' name='program_section'>
+                                        placeholder="<?= $placeholder;?>" name='program_section'>
+                                    
                                 </div>
 
                                 <?php echo $courseLevelDropdown;  ?>

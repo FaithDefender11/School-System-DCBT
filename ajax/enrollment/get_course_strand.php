@@ -1,10 +1,15 @@
 <?php 
 
     require_once("../../includes/config.php");
+    require_once("../../includes/classes/Department.php");
     
     if (isset($_POST['selected_department_id'])) {
 
         $selected_department_id = $_POST['selected_department_id'];
+
+        $department = new Department($con, $selected_department_id);
+
+        $department_name = $department->GetDepartmentName();
        
         $query = $con->prepare("SELECT * FROM program
             WHERE department_id=:department_id
@@ -27,11 +32,24 @@
             }
         }
 
-        if(empty($data)){
+        $result = array();
+
+        $result = array(
+            'data' => $data,
+            'department_name' => $department_name
+        );      
+        
+        if(empty($result)){
             echo json_encode([]);
         }else{
-            echo json_encode($data);
+            echo json_encode($result);
         }
+
+        // if(empty($data)){
+        //     echo json_encode([]);
+        // }else{
+        //     echo json_encode($data);
+        // }
     }
 
     else{

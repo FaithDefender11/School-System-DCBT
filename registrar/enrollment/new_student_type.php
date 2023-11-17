@@ -32,7 +32,8 @@
 
         <header>
             <div class="title">
-                <h3>Student type</h3>
+                <h3 style="font-weight: bold;">Student type</h3>
+                <br>
             </div>
         </header>
 
@@ -49,7 +50,8 @@
         
         <header>
             <div class="title">
-            <h3>Program & Section</h3>
+            <h3 style="font-weight: bold;">Program & Section</h4>
+            <br>
             </div>
         </header>
 

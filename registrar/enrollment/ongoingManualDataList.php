@@ -156,6 +156,29 @@ if ($row != null) {
         $admission_status = $row['admission_status'];
         $name = ucfirst($row['firstname']) . " " . ucfirst($row['lastname']);
 
+        $doesOngoingStudentHasEnrollment = $enrollment->DoesOngoingStudentHasEnrollment($student_id,
+            $current_school_year_id);
+
+        // var_dump($doesOngoingStudentHasEnrollment);
+
+        $button_url = "";
+
+        $processForm = "processForm(\"$enrollment_form_id\", $student_id, $current_school_year_id)";
+        if($doesOngoingStudentHasEnrollment){
+            $button_url = "
+                <button type='button' class='default clean'>
+                    Has form
+                </button>
+            ";
+
+        }else{
+            $button_url = "
+                <button type='button' onclick='$processForm' class='default'>
+                    Create form
+                </button>
+            ";
+        }
+        
         $student_unique_id = "
             <a style='color: inherit' href='../student/record_details.php?id=$student_id&details=show'>
                 $student_unique_id
@@ -165,13 +188,14 @@ if ($row != null) {
         $student_statusv2 = $row['student_statusv2'];
 
                                                       
-        $processForm = "processForm(\"$enrollment_form_id\", $student_id, $current_school_year_id)";
         
-        $button_url = "
-            <button type='button' onclick='$processForm' class='btn-sm btn btn-primary'>
-                Create form
-            </button>
-        ";
+        // $button_url = "
+        //     <button type='button' onclick='$processForm' class='btn-sm btn btn-primary'>
+        //         Create form
+        //     </button>
+        // ";
+
+
 
         $data[] = array(
             "student_id" => $student_unique_id,

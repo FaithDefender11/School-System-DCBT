@@ -40,6 +40,7 @@
             $generated_password = $_POST['generated_password'] ?? "";
 
             $student = new Student($con, $student_id);
+            $enrollment = new Enrollment($con);
 
             $studentEmail = $student->GetEmail();
             $firstname = $student->GetFirstName();
@@ -49,6 +50,16 @@
 
             $student_username = $student->GetUsername();
             
+            $student_admission_status = $student->GetAdmissionStatus();
+
+            
+            $student_enrollment_course_id = $enrollment->GetEnrollmentFormCourseId($student_id,
+                $enrollment_id, $school_year_id);
+
+            $enrollment_is_new = $enrollment->GetEnrollmentIsNewEnrollee($enrollment_id,
+                $student_enrollment_course_id, $school_year_id);
+
+
 
             // var_dump($student_username);
             // var_dump($generated_password);
@@ -282,12 +293,17 @@
 
                     $email = new Email();
 
+                    // 
+
+                    $doesValidForCredentials = $enrollment_is_new == 1 && $student_admission_status === "New";
+
                     $isEmailSent = $email->SendEnrolledSubjectListViaPdf(
                         $studentEmail,
                         $pdfContent, // Send the PDF content directly
                         $pdfName,
                         $student_username,
-                        $generated_password
+                        $generated_password,
+                        $doesValidForCredentials
                     );
 
                     $url = "../student/record_details.php?id=$student_id&enrolled_subject=show";
@@ -332,7 +348,7 @@
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Oh no!',
-                                    text: 'Email is not delivered. Kindly manually send.',
+                                    text: 'Email is not delivered.',
                                     backdrop: false,
                                     allowEscapeKey: false,
                                 }).then((result) => {

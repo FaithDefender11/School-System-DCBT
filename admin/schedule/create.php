@@ -12,7 +12,6 @@
     include_once('../../includes/classes/Room.php');
 
 
-
     // var_dump($getAllDefaultTopicTemplate);
 
 
@@ -380,7 +379,7 @@
                                         if($query->rowCount() > 0){
                                         
                                             echo "<option value='' disabled selected>Select Room</option>";
-                                            // echo "<option value='0'>TBA</option>";
+                                            echo "<option value='0'>TBA</option>";
 
                                             while($row = $query->fetch(PDO::FETCH_ASSOC)) {
 

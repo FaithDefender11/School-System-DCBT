@@ -301,8 +301,9 @@
             <?php if(count($allEnrolledSubjectCode) > 0): ?>
                 <?php 
                 
-                $totalOverProgress = 0;
-                $totalProgressOkayStatus = 0;
+                    $totalOverProgress = 0;
+                    $totalProgressOkayStatus = 0;
+
                     foreach ($allEnrolledSubjectCode as $key => $row_inner) {
 
                         $program_code = $row_inner['program_code'];
@@ -416,10 +417,39 @@
                                 </a>
 
                                 <main>
+                                    <?php 
+                                                
+                                        $equivalent_totalProgressAct = 0;
 
-                                    <div class="progress" style="height: 20px">
+                                        if($totalOverProgress > 0){
+
+                                            // $pecentage_equivalent_total = ($totalScore / $totalOverProgress) * 100;
+                                            $pecentage_equivalent_total = ($totalProgressOkayStatus / $totalOverProgress) * 100;
+
+                                            // $totalProgressOkayStatus++;
+
+                                            $equivalent_totalProgressAct = round($pecentage_equivalent_total, 0, PHP_ROUND_HALF_UP);
+                                            // $progressPercentage  = $equivalent_totalProgressAct;
+                                            // var_dump($equivalent_totalProgressAct);
+                                            
+                                            $equivalent_totalProgressAct = $equivalent_totalProgressAct == 0 ? "" : $equivalent_totalProgressAct . "%";
+                                            // $equivalent_totalProgressAct = 0 . "%";
+                                           
+                                            echo "
+                                                <div class='progress' style='height: 20px; '>
+                                                    <div class='progress-bar' style='width: $equivalent_totalProgressAct'>$equivalent_totalProgressAct</div>
+                                                </div>
+                                            ";
+
+                                        }else{
+                                            echo "";
+                                        }
+                                    ?>
+
+
+                                    <!-- <div class="progress" style="height: 20px">
                                         <div class="progress-bar" style="width: 25%">25%</div>
-                                    </div>
+                                    </div> -->
 
                                     <div class="action">
                                         
@@ -438,21 +468,21 @@
                                             data-placement="bottom"
                                             title="Section modules"
                                             >
-                                        <i class=""> <?= $moduleCount;?> modules</i>
+                                            <i class=""> <?= $moduleCount;?> modules</i>
                                         </button>
                                          &nbsp; <?php 
                                                 
-                                                $equivalent_totalProgressAct = 0;
+                                                // $equivalent_totalProgressAct = 0;
 
                                                 if($totalOverProgress > 0){
 
                                                     // $pecentage_equivalent_total = ($totalScore / $totalOverProgress) * 100;
-                                                    $pecentage_equivalent_total = ($totalProgressOkayStatus / $totalOverProgress) * 100;
+                                                    // $pecentage_equivalent_total = ($totalProgressOkayStatus / $totalOverProgress) * 100;
 
-                                                    // $totalProgressOkayStatus++;
+                                                    // // $totalProgressOkayStatus++;
 
-                                                    $equivalent_totalProgressAct = round($pecentage_equivalent_total, 0, PHP_ROUND_HALF_UP);
-                                                    $equivalent_totalProgressAct = $equivalent_totalProgressAct . "%";
+                                                    // $equivalent_totalProgressAct = round($pecentage_equivalent_total, 0, PHP_ROUND_HALF_UP);
+                                                    // $equivalent_totalProgressAct = $equivalent_totalProgressAct . "%";
 
                                                     // echo "$totalProgressOkayStatus / $totalOverProgress = $equivalent_totalProgressAct";
                                                         // <a style='text-decoration: none; color:inherit;' href='../courses/activity_progress.php?id=$student_subject_id'>Module progress: $equivalent_totalProgressAct</a>

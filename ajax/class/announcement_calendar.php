@@ -63,21 +63,8 @@
 
         $title = $value['title'];
         $announcement_id = $value['announcement_id'];
-
-        // $assignment_name = $subjectCodeAssignmentExec->GetAssignmentName();
-        // $assignment_topic_id = $subjectCodeAssignmentExec->GetSubjectPeriodCodeTopicId();
-        
-        // $start_date = $subjectCodeAssignmentExec->GetDateCreation();
-        // $start_date = date("Y-m-d", strtotime($start_date));
-
-        // $due_date_db = $subjectCodeAssignmentExec->GetDueDate();
-        // $due_date = date("Y-m-d", strtotime($due_date_db));
-
-        // $due_time_hours = date("h:i a", strtotime($due_date_db));
  
-
-        // $url = "../../student/courses/task_submission.php?sc_id=$subjectCodeAssignmentIds";
-        $url = "../../student/dashboard/announcement.php?id=$announcement_id";
+        $url = "../../student/dashboard/announcement.php?id=$announcement_id&calendar_clicked=true";
 
         $dataCalendar[] = array(
             'announcement_id' => $announcement_id,

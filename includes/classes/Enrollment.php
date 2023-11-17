@@ -1846,6 +1846,23 @@
         return $sql->fetchColumn();
     }
 
+    public function DoesOngoingStudentHasEnrollment(
+        $student_id, $school_year_id = null) {
+        
+        $sql = $this->con->prepare("SELECT enrollment_id FROM enrollment 
+
+            WHERE student_id = :student_id
+            AND school_year_id = :school_year_id
+        ");
+
+        $sql->bindValue(":student_id", $student_id);
+        $sql->bindValue(":school_year_id", $school_year_id);
+
+        $sql->execute();
+
+        return $sql->rowCount() > 0;
+    }
+
     
 
     public function GetEnrollmentIsTransferee($student_id, 
@@ -2218,12 +2235,15 @@
     public function ChangeEnrollmentProgramCourseId($current_school_year_id,
         $student_id, $enrollment_id, $chosen_course_id, $course_department_type){
 
-        # Automatic IRregular.
-        $student_status = "Irregular";
+        # Automatic Irregular.
+        // $student_status = "Irregular";
+
+        # If enrollment regular, populate the regular subjects
+        # if enrollment irregular, it should remove all subjects that sits in  with the enrollment course id
 
         $update_tentative = $this->con->prepare("UPDATE enrollment
             SET course_id=:course_id,
-                student_status=:student_status,
+                -- student_status=:student_status,
                 is_tertiary=:is_tertiary
 
             WHERE enrollment_id=:enrollment_id
@@ -2233,7 +2253,7 @@
             ");
 
         $update_tentative->bindValue(":course_id", $chosen_course_id);
-        $update_tentative->bindValue(":student_status", $student_status);
+        // $update_tentative->bindValue(":student_status", $student_status);
         $update_tentative->bindValue(":enrollment_id", $enrollment_id);
         $update_tentative->bindValue(":student_id", $student_id);
         $update_tentative->bindValue(":school_year_id", $current_school_year_id);
@@ -2296,13 +2316,11 @@
     public function FormUpdateStudentStatus($current_school_year_id,
         $student_id, $enrollment_id, $type){
 
-        $resetRetake = 0;
 
         $updateSuccess = false;
         if($type == "Regular"){
             $update_tentative = $this->con->prepare("UPDATE enrollment
-                SET student_status=:student_status,
-                    retake=:retake
+                SET student_status=:student_status
 
                 WHERE student_id=:student_id
                 AND school_year_id=:school_year_id
@@ -2310,7 +2328,6 @@
                 ");
 
             $update_tentative->bindParam(":student_status", $type);
-            $update_tentative->bindParam(":retake", $resetRetake);
             $update_tentative->bindParam(":student_id", $student_id);
             $update_tentative->bindParam(":school_year_id", $current_school_year_id);
             $update_tentative->bindParam(":enrollment_id", $enrollment_id);
@@ -2318,6 +2335,7 @@
             if($update_tentative->execute() && $update_tentative->rowCount() > 0){
                 $updateSuccess = true;
             }   
+
         }
         if($type == "Irregular"){
 

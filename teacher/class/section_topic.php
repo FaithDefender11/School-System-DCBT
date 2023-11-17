@@ -196,7 +196,7 @@
                                 $nonTemplateAssignment);
 
 
-                            // print_r($mergeHandoutWithAssignmentList);
+                            // var_dump($mergeHandoutWithAssignmentList);
 
                             if(count($mergeHandoutWithAssignmentList) > 0){
                                 ?>

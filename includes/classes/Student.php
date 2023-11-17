@@ -72,7 +72,9 @@ class Student{
     public function DoesApplicableToApplyNextYear() {
         return isset($this->sqlData['nsy_applicable']) ? $this->sqlData["nsy_applicable"] : 0; 
     }
-
+    public function GetStudentProfile() {
+        return isset($this->sqlData['profilePic']) ? $this->sqlData["profilePic"] : "";
+    }
  
     public function GetIsGraduated() {
         return isset($this->sqlData['is_graduated']) ? $this->sqlData["is_graduated"] : null; 
@@ -90,9 +92,6 @@ class Student{
     }
     public function GetEmail() {
         return isset($this->sqlData['email']) ? $this->sqlData["email"] : ""; 
-    }
-    public function GetStudentProfile() {
-        return isset($this->sqlData['profilePic']) ? $this->sqlData["profilePic"] : "";
     }
     public function GetFirstName() {
         return isset($this->sqlData['firstname']) ? ucwords($this->sqlData["firstname"]) : ""; 

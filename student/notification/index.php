@@ -10,7 +10,11 @@
     include_once('../../includes/classes/Notification.php');
     include_once('../../includes/classes/Teacher.php');
     include_once('../../includes/classes/User.php');
+
+
+
     include_once('../../includes/classes/SubjectAssignmentSubmission.php');
+
 
     $student_id = $_SESSION['studentLoggedInId'];
 
@@ -138,7 +142,7 @@
             <?php
                 echo Helper::lmsStudentNotificationHeader(
                     $con, $studentLoggedInId,
-                    $current_school_year_id,
+                    $school_year_id,
                     $enrolledSubjectList,
                     $enrollment_id,
                     "first",
@@ -460,7 +464,7 @@
                                   
             
                                             $status = "
-                                                    <i style='color: orange' class='fas fa-times'></i>
+                                                    <i style='color: orange' class='bi bi-x'></i>
                                                 ";
              
                                             #
@@ -473,13 +477,13 @@
             
                                             if($studentViewed){
                                                 $status = "
-                                                    <i style='color: green' class='fas fa-check'></i>
+                                                    <i style='color: green' class='bi bi-check'></i>
                                                 ";
                                             }
             
                                             if($studentViewedDue){
                                                 $status = "
-                                                    <i style='color: green' class='fas fa-check'></i>
+                                                    <i style='color: green' class='bi bi-check'></i>
                                                 ";
                                             }
             

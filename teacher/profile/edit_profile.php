@@ -12,7 +12,7 @@
         $address = $teacher->GetTeacherAddress();
         $contact_number = $teacher->GetTeacherContactNumber();
 
-        if($_SERVER['REQUES_METHOD'] == 'POST' && isset($_POST['save_profile_changes' . $teacher_id])) {
+        if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_profile_changes' . $teacher_id])) {
             $image = $_FILES['profilePic'] ?? null;
             $address = $_POST['address'];
             $contact_number = $_POST['contact_number'];

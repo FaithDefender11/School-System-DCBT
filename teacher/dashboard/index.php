@@ -36,6 +36,8 @@
         $teacher_id,
         $current_school_year_id);
 
+
+
     $teachingTopicIdsArr = [];
 
 
@@ -157,6 +159,7 @@
         $logout_url = "$new_url/lms_logout.php";
     }
 
+
 ?>
 
             <?php 
@@ -267,6 +270,8 @@
                                     } else {
                                         $topicCodeCount[$getSubjectCode]['count']++;
                                     }
+
+
                                 }
     
                                 if(count($topicCodeCount) > 0){
@@ -289,6 +294,8 @@
                                         //         <a style='color:inherit' href='$class_subject_url'
                                         //         class='m-0 text-right'>○ $subjectTitle ($count)</a>
                                         //     </p>
+
+                                        
                                         echo "
                                             <li>
                                                 <a href='$class_subject_url'>$subjectTitle <span>($count)</span></a>
@@ -319,10 +326,18 @@
                             $subject_title = $row['subject_title'];
                             $course_id = $row['course_id'];
                             $program_section = $row['program_section'];
+
+                            $subjectProgram = new SubjectProgram($con);
+
+                            $program_code = $subjectProgram->GetSubjectProgramCodeByTitle($subject_title);
     
                             $class_url = "../class/index.php?c=$subject_code&sy_id=$school_year_id";
                             // $class_url = "../class/index.php?c_id=$course_id&c=$subject_code";
+                            
+                            $moduleCount = $subjectPeriodCodeTopic->GetSubjectModulePerCountSubject($program_code);
     
+
+                            // var_dump($moduleCount);
     
                             ?>
     
@@ -339,17 +354,19 @@
     
                                     <main>
                                         <div class="progress" style="height: 20px">
-                                            <div class="progress-bar" style="width: 25%">25%</div>
+                                            <div class="progress-bar" style="width: 0%">0%</div>
                                         </div>
                                         <div class="action">
-                                            <button
-                                            class="task"
-                                            data-toggle="tooltip"
-                                            data-placement="bottom"
-                                            title="No Assignments Due"
-                                            >
-                                            <i class="bi bi-file-earmark">0</i>
+
+                                            <button style="pointer-events: none;"
+                                                class="task"
+                                                data-toggle="tooltip"
+                                                data-placement="bottom"
+                                                title="Section modules"
+                                                >
+                                                <i class=""> <?= $moduleCount;?> modules</i>
                                             </button>
+                                             
                                         </div>
                                     </main>
                                 </div>

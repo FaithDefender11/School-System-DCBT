@@ -962,6 +962,28 @@ class SubjectProgram{
 
         return NULL;
     }
+
+    public function GetSubjectProgramCodeByTitle($subject_title){
+     
+        $sql = $this->con->prepare("SELECT t1.subject_code 
+        
+            FROM subject_program AS t1
+ 
+            WHERE t1.subject_title=:subject_title
+            LIMIT 1
+        ");
+
+        $sql->bindParam(":subject_title", $subject_title);
+        $sql->execute();
+
+        if($sql->rowCount() > 0){
+
+        //    return $sql->fetchAll(PDO::FETCH_ASSOC);
+           return $sql->fetchColumn();
+        }
+
+        return NULL;
+    }
     
     public function CheckSubjectProgramIsWithinSemesterOffered(
         $subject_program_id, $period, $student_enrollment_course_level){

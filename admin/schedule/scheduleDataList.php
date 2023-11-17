@@ -297,6 +297,8 @@ if ($row != null) {
             
         ";
 
+        $button_url = "";
+
         $data[] = array(
 
             "program_section" => $program_section,

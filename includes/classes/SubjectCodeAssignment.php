@@ -667,7 +667,9 @@ class SubjectCodeAssignment{
 
         $getSubjectTopicAssignments = $this->con->prepare("SELECT 
 
-            t1.subject_code_assignment_id
+            t1.subject_code_assignment_id,
+            t1.assignment_name,
+            t1.date_creation
             -- ,  t1.assignment_name
 
             FROM subject_code_assignment as t1

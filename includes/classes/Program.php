@@ -78,6 +78,9 @@ class Program{
     public function GetProgramSectionName() {
         return isset($this->sqlData['acronym']) ? ucfirst($this->sqlData["acronym"]) : ""; 
     }
+    public function GetProgramDepartmentName() {
+        return isset($this->sqlData['department_name']) ? $this->sqlData["department_name"] : ""; 
+    }
 
     public function CreateProgramDropdownDepartmentBased($department_name = null){
 

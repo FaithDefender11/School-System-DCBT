@@ -398,10 +398,10 @@
                                 <?php 
                                 
                                     if(count($allOngoingActive) > 0){
-
                                         ?>
                                             <table id="ongoing_table" class="a" style="margin: 0">
-                                                <thead>
+                                                
+                                            <thead>
                                                     <tr>
                                                         <th>Student ID</th>
                                                         <th>Name</th>
@@ -411,6 +411,7 @@
                                                         <th>Action</th>
                                                     </tr>
                                                 </thead>
+
                                                 <tbody>
                                                 </tbody>
                                             </table>

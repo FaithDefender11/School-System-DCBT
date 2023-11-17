@@ -6,6 +6,7 @@
     include_once('../../includes/classes/SubjectAssignmentSubmission.php');
     include_once('../../includes/classes/Enrollment.php');
     include_once('../../includes/classes/StudentSubject.php');
+    include_once('../../includes/classes/Announcement.php');
 
 
     $school_year = new SchoolYear($con);
@@ -22,7 +23,88 @@
     $enrollment_id = $enrollment->GetEnrollmentIdNonDependent($student_id,
         $current_school_year_id);
 
-    # List of all Enrolled Subject subject_period_code_topic_id(s)
+
+        
+    $studentSubject = new StudentSubject($con);
+
+    $allEnrolledSubjectCode = $studentSubject->GetAllEnrolledSubjectCodeELMS
+        ($student_id, $school_year_id, $enrollment_id);
+
+    $enrolledSubjectList = [];
+
+    foreach ($allEnrolledSubjectCode as $key => $value) {
+        # code...
+        $subject_code = $value['student_subject_code'];
+        array_push($enrolledSubjectList, $subject_code);
+    }
+
+    $announcement = new Announcement($con);
+
+    $getAllAnnouncementOnMyEnrolledSubjects = $announcement->GetAllTeacherAnnouncementUnderEnrolledSubjects(
+        $school_year_id, $enrolledSubjectList);
+
+    $getAllAnnouncementFromAdmin = $announcement->GetAllAnnouncementFromAdmin(
+        $school_year_id);
+
+    $mergeAnnouncement = array_merge($getAllAnnouncementFromAdmin,
+      $getAllAnnouncementOnMyEnrolledSubjects);
+
+    // var_dump($mergeAnnouncement);
+
+    $subjectPeriodCodeTopic = new SubjectPeriodCodeTopic($con);
+    $subjectCodeAssignment = new SubjectCodeAssignment($con);
+
+    $subjectCodeAssignmentsArray = array();
+
+    $getEnrolledSubjects = $subjectPeriodCodeTopic->GetAllSubjectTopicEnrolledBased(
+        $school_year_id, $student_id, $enrollment_id
+    );
+
+
+    foreach ($getEnrolledSubjects as $key => $subject_period_code_topic_id) {
+        
+        # All assignments based on enrolled subjects (Not Due assignment)
+        $assignmentList = $subjectCodeAssignment->
+            GetAllAssignmentopicBased($subject_period_code_topic_id);
+
+        // print_r($assignmentList);
+
+        if (!empty($assignmentList)) {
+
+            foreach ($assignmentList as $key => $value) {
+
+              // if($value['subject_code_assignment_id'] !==)
+              $subjectCodeAssignment_id = $value['subject_code_assignment_id'];
+              $subjectCodeAssignment_date_creation = $value['date_creation'];
+              $subjectCodeAssignment_assignment_name = $value['assignment_name'];
+
+              // array_push($subjectCodeAssignmentsArray, 
+              //     $subjectCodeAssignment_id);
+
+              $subjectCodeAssignmentx = array(
+                'subject_code_assignment_id' => $subjectCodeAssignment_id,
+                'title' => $subjectCodeAssignment_assignment_name,
+                'date_creation' => $subjectCodeAssignment_date_creation
+              );
+
+              // Add the associative array to $subjectCodeAssignmentsArray
+              $subjectCodeAssignmentsArray[] = $subjectCodeAssignmentx;
+
+            }
+        }
+    }
+
+    // $calendarMerge = array_merge($mergeAnnouncement, $subjectCodeAssignmentsArray);
+
+    // function sortByDateCreation($a, $b) {
+    //     return strtotime($a['date_creation']) - strtotime($b['date_creation']);
+    // }
+
+    // usort($calendarMerge, 'sortByDateCreation');
+
+    // var_dump($calendarMerge);
+
+
 ?>
 
             <nav>
@@ -172,7 +254,7 @@
                           // url: ''
                       });
                   });
-
+                  
                   var calendar = $('#calendar').fullCalendar({
                     // eventLimit: false,
                     // defaultView: 'list', 

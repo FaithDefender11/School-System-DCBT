@@ -134,13 +134,6 @@
         # If teacher subject_schedule data is equal/less to 1
         # subject_period_code_topic adjustment, subject_schedule adjustment
 
-
-        $getTeacherScheduleCount = $schedule
-            ->GetSubjectScheduleCountForTeacher(
-            "STEM11-B-STEM201",
-            $current_school_year_id);
-
-        // var_dump($getTeacherScheduleCount);
             
         
         
@@ -161,7 +154,10 @@
             $schedule_subject_code,
             $current_school_year_id);
 
-        // var_dump($getTeacherScheduleCount);
+        $doesSchedulehasTeacher = $schedule
+            ->GetSubjectScheduleHasTeacher($schedule_subject_code, $current_school_year_id);
+
+        // var_dump($doesSchedulehasTeacher);
 
 
         if($_SERVER['REQUEST_METHOD'] === "POST" 
@@ -327,7 +323,7 @@
 
                                     <!-- <label for="room_id">* Room</label> -->
 
-                                    <label for="room_id">* Room ( Note: Leave it blank serves as TBA )</label>
+                                    <label for="room_id">* Room</label>
 
                                     <select name="room_id" id="room_id" class="form-control">
                                         
@@ -472,16 +468,85 @@
 
                                         $disabled = "";
                                         $text = "* Teacher ( Note: Leave it blank serves as TBA )";
-                                        if($getTeacherScheduleCount > 1){
-                                            $disabled = "pointer-events: none;";
+
+                                        if($getTeacherScheduleCount > 1 && $doesSchedulehasTeacher){
+                                        // if(false){
+                                            
+                                            $disabled = "";
+                                            // $disabled = "pointer-events: none;";
                                             $text = "* Teacher";
+                                            ?>
 
+                                            <label for="">Teacher</label>
+
+                                            <select style="<?= $disabled; ?>" class="form-control" 
+                                                name="searchInputTeacher" id="">
+
+                                                <?php
+                                                    $query = $con->prepare("SELECT * FROM teacher
+                                                        WHERE teacher_status = :teacher_status
+                                                        AND teacher_id=:teacher_id
+                                                    ");
+                                                    $query->bindValue(":teacher_status", "Active");
+                                                    $query->bindValue(":teacher_id", $schedule_teacher_id);
+                                                    
+                                                    $query->execute();
+
+                                                    if($query->rowCount() > 0){
+                                                    
+
+                                                        echo "<option value='' disabled selected>Select Instructor</option>";
+
+                                                        if($schedule_teacher_id === NULL){
+                                                            echo "<option selected value='0'>TBA</option>";
+                                                        }else{
+                                                            echo "<option value='0'>TBA</option>";
+                                                        }
+
+                                                        while($row = $query->fetch(PDO::FETCH_ASSOC)) {
+
+                                                            $teacher_id = $row['teacher_id'];
+
+                                                            $teacher = new Teacher($con, $teacher_id);
+
+                                                            $fullname = $teacher->GetTeacherFullName();
+
+                                                            $selected = "";
+
+                                                            if($teacher_id === $schedule_teacher_id){
+                                                                $selected = "selected";
+                                                            }
+
+                                        
+                                                            // if($schedule_teacher_id === NULL){
+                                                            //     echo "<option selected value='0'>TBA</option>";
+                                                            // }else{
+                                                            //     echo "<option $selected value='$teacher_id'>$fullname</option>";
+                                                            // }
+
+                                                            
+
+                                                            echo "<option $selected value='$teacher_id'>$fullname</option>";
+                                                        }
+                                                    }else{
+                                                        echo "<option value=''>No Available Teacher. Please Contact the Admin.</option>";
+                                                    }
+
+                                                    
+                                                ?>
+                                            </select>
+                                            <?php
+                                        }else{
+                                            ?>
+                                                <label for="searchInputTeacherx"><?= $text;?></label>
+                                                <input style="<?= $disabled; ?>" class="form-control" type="text" name="searchInputTeacher" id="searchInputTeacher" placeholder="Search teacher..." value="<?= htmlspecialchars($selectedTeacherFullName) ?>">
+                                                <input type="hidden" id="selectedTeacherId" name="selectedTeacherId" value="<?= htmlspecialchars($selectedTeacherId) ?>">
+                                            <?php
                                         }
-                                    ?>
-                                    <label for="searchInputTeacher"><?= $text;?></label>
 
-                                    <input style="<?= $disabled; ?>" class="form-control" type="text" name="searchInputTeacher" id="searchInputTeacher" placeholder="Search teacher..." value="<?= htmlspecialchars($selectedTeacherFullName) ?>">
-                                    <input type="hidden" id="selectedTeacherId" name="selectedTeacherId" value="<?= htmlspecialchars($selectedTeacherId) ?>">
+                                    ?>
+
+                                    
                                 
                                 </div>
 

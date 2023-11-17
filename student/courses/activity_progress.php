@@ -12,6 +12,8 @@
     include_once('../../includes/classes/SubjectProgram.php');
     include_once('../../includes/classes/SubjectCodeAssignment.php');
     include_once('../../includes/classes/SubjectCodeHandoutStudent.php');
+    include_once('../../includes/classes/Notification.php');
+    include_once('../../includes/classes/Teacher.php');
 
     if(isset($_GET['id'])
         ){
@@ -70,6 +72,8 @@
                     $enrollment_id,
                     "second",
                     "second",
+                    "second",
+                    "",
                     "second"
                 );
             ?>
