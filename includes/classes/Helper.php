@@ -1833,6 +1833,9 @@ class Helper {
                     .mainSectionContainer {
                         padding: 0;
                     }
+                    #elms-content {
+                        padding: 0;
+                    }
                 </style>
             </head>
         ';
