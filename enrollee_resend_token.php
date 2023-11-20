@@ -105,7 +105,7 @@
         $emailAlreadyActivated = $pending->CheckEnrolleeEmailAlreadyActivated($email_address);
 
         if($emailAlreadyActivated){
-             echo "
+            echo "
                 <script>
                     $(document).ready(function() {
                         Swal.fire({
@@ -127,7 +127,7 @@
         $emailAlreadyExists = $pending->CheckEnrolleeEmailIsNotExists($email_address);
 
         if($emailAlreadyExists){
-             echo "
+            echo "
                 <script>
                     $(document).ready(function() {
                         Swal.fire({
@@ -327,7 +327,6 @@
                             <div>
                                 <input 
                                     required
-                                            
                                     type="text" 
                                     id="email" 
                                     name="email_address"

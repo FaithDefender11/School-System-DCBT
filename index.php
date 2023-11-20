@@ -1,7 +1,7 @@
 <?php
 
     include('includes/config.php');
-
+    include('includes/classes/Department.php');
     // require_once('./classes/StudentEnroll.php');
     // require_once('enrollment/classes/StudentEnroll.php');
     // require_once('includes/classes/form-helper/Constants.php');
@@ -20,34 +20,35 @@
       $username =  $_POST['username'];
       $password =  $_POST['password'];
 
-    //   $wasSuccess = $enroll->loginStudentUser($username, $password);
+ 
 
-    //   // if(sizeof($object) > 0 && $object[1] == true){
-    //   if(sizeof($wasSuccess) > 0 && $wasSuccess[1] == true && $wasSuccess[2] == "enrolled"){
 
-    //       $_SESSION['username'] = $wasSuccess[0];
-    //       $_SESSION['status'] = "enrolled";
 
-    //       // $current_url = "http://" . $_SERVER['HTTP_HOST'] ;
-    //       $current_url = "http://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 
-    //       $url = "http://localhost/dcbt/enrollment/profile.php";
-    //       header("Location: " . $url . "");
-    //       // echo $current_url;
-    //       // header("Location: " . $current_url . "profile.php");
-    //   }
 
-    //   if(sizeof($wasSuccess) > 0 && $wasSuccess[1] == true && $wasSuccess[2] != "enrolled"){
-    //       $_SESSION['username'] = $wasSuccess[0];
-    //       $_SESSION['status'] = "pending";
 
-    //       // $current_url = "http://" . $_SERVER['HTTP_HOST'] ;
-    //       $current_url = "http://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 
-    //       $url = "http://localhost/dcbt/enrollment/profile.php?fill_up_state=finished";
-    //       header("Location: " . $url . "");
-    //   }
+    }
 
+
+
+    $shsTrackArr = [];
+    $tertiaryTrackArr = [];
+
+    $shsTrack = $con->prepare("SELECT t1.track 
+    
+      FROM program  as t1
+      INNER JOIN department as t2 ON t2.department_id=t1.department_id
+      WHERE t2.department_name=:department_name
+
+      GROUP BY t1.track
+    ");
+
+    $shsTrack->bindValue(":department_name", "Senior High School");
+    $shsTrack->execute();
+
+    if($shsTrack->rowCount() > 0){
+      $shsTrackArr = $shsTrack->fetchAll(PDO::FETCH_ASSOC);
     }
 
 
@@ -141,6 +142,7 @@
             </div>
           </header>
         </div>
+
         <div class="slide-2">
           <header>
             <div class="title">
@@ -153,6 +155,7 @@
             </div>
           </header>
           <main>
+
             <?php
               // Function to display programs
               function displayPrograms($programs) {
@@ -161,44 +164,111 @@
                 }
               }
             ?>
+            
+            
             <div class="item">
-              <h3>ACADEMIC TRACK</h3>
-              <?php
-                // Fetch SHS Academic programs
-                $shsAcademicProgramQuery = $con->prepare("SELECT program_name, acronym FROM program
-                  WHERE department_id = 8 AND track = 'Academic'");
-                $shsAcademicProgramQuery->execute();
-                $shsAcademicPrograms = $shsAcademicProgramQuery->fetchAll(PDO::FETCH_ASSOC);
+              <?php 
+              
+                if(count($shsTrackArr) > 0){
+
+                  foreach ($shsTrackArr as $key => $value) {
+                    $track_shs = $value['track'];
+
+                    # code...
+                    // ○
+                    echo "
+                      <h4>$track_shs Track</h4>
+                    ";
+
+                      $query = $con->prepare("SELECT * FROM program 
+                      
+                        WHERE track=:track");
+
+                      $query->bindValue(":track", $track_shs);
+                      $query->execute();
+
+                      if($query->rowCount() > 0){
+                        $result = $query->fetchAll(PDO::FETCH_ASSOC);
+                      }
+
+                      if(count($result) > 0){
+
+                          echo "<div>";
+
+                          foreach ($result as $key => $value) {
+
+                            $track = $value['track'];
+                            $department_id = $value['department_id'];
+                            $program_name = $value['program_name'];
+                            $acronym = $value['acronym'];
+
+                            $department = new Department($con, $department_id);
+                            $name = $department->GetDepartmentName();
+                            
+                              # code...
+                              echo "
+                                <p>$acronym ($program_name) </p>
+                              ";
+
+                          }
+                          echo "</div>";
+
+                      }
+
+                  }
+                }
               ?>
-              <div>
-                <?php displayPrograms($shsAcademicPrograms); ?>
-              </div>
-              <h3>TECH-VOCATIONAL TRACK</h3>
-              <?php
-                // Fetch SHS Tech-Vocational programs
-                $shsTVLProgramQuery = $con->prepare("SELECT program_name, acronym FROM program
-                  WHERE department_id = 8 AND track = 'Tech-vocational'");
-                $shsTVLProgramQuery->execute();
-                $shsTVLPrograms = $shsTVLProgramQuery->fetchAll(PDO::FETCH_ASSOC);
-              ?>
-              <div>
-                <?php displayPrograms($shsTVLPrograms); ?>
-              </div>
-              <h3>ARTS & DESIGN TRACK</h3>
             </div>
+
             <div class="item">
-              <h3>BACHELOR'S DEGREE PROGRAMS</h3>
-              <?php
-                // Fetch Tertiary Bachelor's Degree program
-                $tertiaryBachelorsDegreeQuery = $con->prepare("SELECT program_name, acronym FROM program
-                  WHERE department_id = 9 AND track = 'Bachelor\'s Degree'");
-                $tertiaryBachelorsDegreeQuery->execute();
-                $tertiaryBachelorsDegreePrograms = $tertiaryBachelorsDegreeQuery->fetchALL(PDO::FETCH_ASSOC);
-              ?>
-              <div>
-                <?php displayPrograms($tertiaryBachelorsDegreePrograms); ?>
-              </div>
+                <h4>BACHELOR'S DEGREE PROGRAMS</h4>
+               <?php 
+                  $query = $con->prepare("SELECT * FROM program as t1
+
+                    INNER JOIN department as t2 ON t2.department_id=t1.department_id
+                    WHERE t2.department_name=:department_name
+
+                  ");
+
+                  $query->bindValue(":department_name", "Tertiary");
+                  $query->execute();
+
+                  if($query->rowCount() > 0){
+                    $result = $query->fetchAll(PDO::FETCH_ASSOC);
+                  }
+
+                  if(count($result) > 0){
+
+                      echo "
+                        <div>
+                      ";
+
+                      foreach ($result as $key => $value) {
+
+                        $track = $value['track'];
+                        $department_id = $value['department_id'];
+                        $program_name = $value['program_name'];
+                        $acronym = $value['acronym'];
+
+                        $department = new Department($con, $department_id);
+                        $name = $department->GetDepartmentName();
+                        
+                          # code...
+                          echo "
+                            <p> $program_name ($acronym) </p>
+                          ";
+
+                      }
+                      echo "
+                        </div>
+                      ";
+                  }
+
+                ?>
             </div>
+
+
+
           </main>
         </div>
 
