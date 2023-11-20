@@ -179,7 +179,7 @@
 
 
                 $initializedEnrollee = $studentRequirement->InitializedPendingEnrolleeRequirement(
-                    $pending_enrollees_id, $pending_type, $school_year_id);
+                    $pending_enrollees_id, $school_year_id);
                 
                 // $url = "process.php?new_student=true&step=student_requirements";
 
