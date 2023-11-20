@@ -71,34 +71,6 @@
 <div class="content">
     <main>
 
-        <div class="floating">
-          <header>
-            <div class="title">
-              <h3>Find Account</h3>
-            </div>
-          </header>
-          <div class="filters">
-            <table class="a">
-              <tr>
-                <th rowspan="2" style="border-right: 2px solid black">
-                  Search by
-                </th>
-                <th><button>ID number</button></th>
-                <th><button>Account type</button></th>
-                <th><button>Email</button></th>
-                <th><button>Name</button></th>
-              </tr>
-
-              
-            </table>
-          </div>
-          <main>
-            <input type="text" />
-            <button type="submit"><i class="bi bi-search"></i>Search</button>
-          </main>
-
-        </div>
-
         <div class="floating" id="shs-sy">
 
             <header>
@@ -106,7 +78,10 @@
                     <h3 style="font-weight: bold;">Account details for <span class="text-primary">Pending Enrollees </span> | 
                         <a href="index.php" class="text-muted">
                             Enrolled students
-                        </a>
+                        </a> | 
+                        <span class="text-info"><a href="users.php" class="text-muted">
+                                Authorized Users
+                            </a>
                     </h3>
                 </div>
             </header>
@@ -158,6 +133,10 @@
 
                                 while($row = $query->fetch(PDO::FETCH_ASSOC)){
 
+                                    $is_enrolled = $row['is_enrolled'];
+
+                                    // var_dump($is_enrolled);
+
                                     $pending_enrollees_id = $row['pending_enrollees_id'];
 
                                     $enrolleeFullName = ucwords($row['firstname']) . " " . ucwords($row['middle_name']) . " " . ucwords($row['lastname']);
@@ -170,7 +149,6 @@
                                     $sy = new SchoolYear($con, $school_year_id);
                                     $period = $sy->GetPeriod();
                                     $term = $sy->GetTerm();
-
 
                                     $student_status =  ($row['student_status']);
 
@@ -272,7 +250,7 @@
                             setTimeout(() => {
                                 Swal.close();
                                 // location.reload();
-                                window.location.href = "index.php";
+                                window.location.href = "un_enrolled.php";
                             }, 1900);
  
                         }

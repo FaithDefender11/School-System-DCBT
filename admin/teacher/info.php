@@ -17,10 +17,10 @@
         $teacher_status = $teacher->GetStatus();
         $teacher_status = trim($teacher_status);
 
-        var_dump($teacher_status);
-        echo "<br>";
+        // var_dump($teacher_status);
+        // echo "<br>";
         $teacher_status_toggle = $teacher_status == "Inactive" ? "Active" : "Inactive";
-        var_dump($teacher_status_toggle);
+        // var_dump($teacher_status_toggle);
 
         $teacher_creation = $teacher->GetCreation();
 
@@ -46,7 +46,7 @@
         $current_school_year_id = $school_year_obj['school_year_id'];
 
 
-        var_dump($teacher_status);
+        // var_dump($teacher_status);
 
         ?>
         <style>
@@ -149,31 +149,23 @@
 
                         console.log(response);
 
+                        if(response != ""){
+
                             Swal.fire({
                                 icon: 'success',
-                                title: `Successfully reset the password.`,
+                                title: `Email reset password has been sent to: ${response}`,
                             });
 
                             setTimeout(() => {
                                 Swal.close();
                                 // location.reload();
-                                window.location.href = "index.php";
-                            }, 2000);
+                                // window.location.href = "index.php";
+                            }, 1900);
+
+                        }
 
 
- 
-
-                        // if (response === "success_update") {
-
-                        //     Swal.fire({
-                        //         icon: 'success',
-                        //         title: `Selected form has been rejected.`,
-                        //     });
-                        // } 
-
-                        // else {
-                        //     console.log('Update failed');
-                        // }
+                       
                     },
                     error: function(jqXHR, textStatus, errorThrown) {
                         console.log('AJAX Error:', textStatus, errorThrown);

@@ -47,15 +47,15 @@
         $sideBarNavigationItem .= Helper::createNavByIconARC("Subject", 
             "bi bi-calendar icon ", $subject_url, Constants::$navigationClass . Helper::GetActiveClass($page, "subject"));
 
-        $sideBarNavigationItem .= Helper::createNavByIconARC("Section", 
-            "bi bi-calendar icon ", $section_url, Constants::$navigationClass . Helper::GetActiveClass($page, "section"));
+        // $sideBarNavigationItem .= Helper::createNavByIconARC("Section", 
+        //     "bi bi-calendar icon ", $section_url, Constants::$navigationClass . Helper::GetActiveClass($page, "section"));
 
         $sideBarNavigationItem .= Helper::createNavByIconARC("Announcement", 
             "bi bi-clipboard-data icon", $announcement_url, Constants::$navigationClass . Helper::GetActiveClass($page, "announcement"));
 
 
-        $sideBarNavigationItem .= Helper::createNavByIconARC("Account", 
-            "bi bi-person ", $account_url, Constants::$navigationClass . Helper::GetActiveClass($page, "account"));
+        // $sideBarNavigationItem .= Helper::createNavByIconARC("Account", 
+        //     "bi bi-person ", $account_url, Constants::$navigationClass . Helper::GetActiveClass($page, "account"));
 
         if(User::isAdminLoggedIn()) {
 

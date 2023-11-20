@@ -95,6 +95,7 @@ class User {
         return isset($this->sqlData['unique_id']) ? $this->sqlData["unique_id"] : ""; 
 
     }
+   
 
     public function getLastName() {
         return isset($this->sqlData['lastName']) ? $this->sqlData["lastName"] : ""; 

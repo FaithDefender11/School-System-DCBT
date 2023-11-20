@@ -35,6 +35,9 @@
                 $isEmailSent = $email->SendTemporaryPassword($student_email, $temporaryPassword[0]);
 
                 if ($isEmailSent) {
+
+                    
+
                     Alert::success("Email reset password has been sent to: $student_email", "");
                 } else {
                     echo "Sending reset password via email went wrong";
