@@ -45,7 +45,7 @@
 
                 <main>
                     <div class="action">
-                        <a href="task_type_index.php">
+                        <a target="__blank" href="task_type_index.php">
                             <button type="button" class="btn btn-sm btn-info">+ Task</button>
                         </a>
                     </div>

@@ -16,6 +16,10 @@
     include_once('../../includes/classes/PendingParent.php');
     include_once('../../includes/classes/Pending.php');
     include_once('../../includes/classes/StudentRequirement.php');
+    include_once('../../includes/classes/Email.php');
+
+    require_once __DIR__ . '../../../vendor/autoload.php';
+
 
     echo Helper::RemoveSidebar();
 
@@ -239,8 +243,10 @@
             // $age = $pending->CalculateAge($birthday);
 
             // Password -> July 25, 2023 -> 20230725 OR 123456
-            $password = "123456";
+
+            // $password = "123456";
             
+            $password = $student->GenerateEnrolleePassword($birthday, $lastname);
 
             $section = new Section($con, $course_id);
 
@@ -365,7 +371,6 @@
                     $father_lastname = $parent->ValidateFatherLastname(
                         $_POST['father_lastname'], true);
                 }
-
             }
 
             # FATHER OCCUPATION.
@@ -718,8 +723,6 @@
                             $is_transferee = $admission_type == 2 ? 1 : 0;
                             // $is_tertiary = "";
 
-
-
                             
                             $studentRequirement = new StudentRequirement($con);
 
@@ -741,6 +744,11 @@
                             $student_enrollment_id = 0;
 
                             if($newEnrollmentSuccess){
+
+                                # Sent an email for student
+
+                                // $email = new Email();
+                                // $email->SendNewEnrolleeCredentialsAfterCreation($email, $password, "");
 
                                 $student_enrollment_id = $con->lastInsertId();
 
@@ -774,15 +782,46 @@
                                         if($wasStudentSubjectPopulated){
 
                                             $url = "../admission/process_enrollment.php?subject_review=show&st_id=$student_id&selected_course_id=$course_id";
+                                            // Alert::successAutoRedirect("Proceeding to Subject Review", 
+                                            //     "$url");
+                                            // exit();
 
-                                            Alert::successAutoRedirect("Proceeding to Subject Review", 
-                                                "$url");
+                                            try {
 
-                                            exit();
-                                        }
+                                                $emailSent = new Email();
 
-                                    }
+                                                if (!empty($email) && filter_var($email, FILTER_VALIDATE_EMAIL)) {
 
+                                                    $isEmailSent = $emailSent->SendNewEnrolleeCredentialsAfterCreation(
+                                                            $email, $password, "Gerlie Atienza");
+
+                                                    if ($isEmailSent) {
+
+                                                        // Alert::success("Teacher credentials has been delivered to teacher provided email: $teacher_email", "index.php");
+                                                        // exit();
+                                                        Alert::successAutoRedirect("Proceeding to Subject Review. Enrollee credentials has been sent to: $email", 
+                                                            "$url");
+
+                                                        exit();
+
+                                                    } else {
+                                                        echo "Sending credentials via email went wrong";
+                                                    }
+
+                                                } 
+                                                else {
+                                                    echo "Invalid enrollee provided email address";
+                                                }
+
+                                                } catch (Exception $e) {
+                                                    // Handle PHPMailer exceptions
+                                                    echo 'Message could not be sent. PHPMailer Error: ' . $e->getMessage();
+                                                    // Handle other exceptions as needed
+                                                }
+                                                    
+                                            }
+
+                                        }   
 
                                     // $url = "../admission/process_enrollment.php?subject_review=show&st_id=$student_id&selected_course_id=$course_id";
 
@@ -796,10 +835,39 @@
                                     
                                     $url = "../admission/process_enrollment.php?subject_review=show&st_id=$student_id&selected_course_id=$course_id";
                                     
-                                    Alert::successAutoRedirect("Proceeding to Subject Review", 
-                                        "$url");
+                                    
+                                    try {
+                                        $emailSent = new Email();
 
-                                    exit();
+                                        // Assuming $url and $email are defined somewhere in your code
+                                        // If not, please replace them with the correct values
+
+                                        if (!empty($email) && filter_var($email, FILTER_VALIDATE_EMAIL)) {
+
+                                            $isEmailSent = $emailSent->SendNewEnrolleeCredentialsAfterCreation(
+                                                $email, $password, "Gerlie Atienza"
+                                            );
+
+                                            if ($isEmailSent) {
+                                                // If the email is sent successfully, redirect to the specified URL
+                                                Alert::successAutoRedirect("Proceeding to Subject Review", $url);
+                                                exit();
+                                            } else {
+                                                echo "Sending credentials via email went wrong";
+                                            }
+
+                                        } else {
+                                            echo "Invalid enrollee provided email address";
+                                        }
+
+                                    } catch (Exception $e) {
+                                        // Handle PHPMailer exceptions
+                                        echo 'Message could not be sent. PHPMailer Error: ' . $e->getMessage();
+                                        // Handle other exceptions as needed
+                                    }
+
+                                     
+
 
                                 }
 

@@ -4,6 +4,11 @@ require_once("includes/classes/Account.php");
 require_once("includes/classes/Constants.php"); 
 require_once("includes/classes/FormSanitizer.php"); 
 require_once("includes/classes/SchoolYear.php"); 
+require_once("includes/classes/UserLog.php"); 
+require_once("includes/classes/Student.php"); 
+require_once("includes/classes/Teacher.php"); 
+require_once("includes/classes/User.php"); 
+require_once("includes/classes/Pending.php"); 
 
 $account = new Account($con);
 
@@ -173,8 +178,12 @@ if(isset($_POST["enrollment_log_in_btn"])) {
         ){
     
         $_SESSION["superAdminLoggedIn"] = $username;
-        $_SESSION["superAdminUserId"] = $wasSuccessful[2];
+        $_SESSION["superAdminUserId"] = $wasSuccessful[3];
         $_SESSION["role"] = "super_admin";
+
+        // var_dump($username);
+        // var_dump($wasSuccessful[3]);
+        // return;
 
         header("Location: super_admin/dashboard/index.php");
         exit();
@@ -285,7 +294,7 @@ function getInputValue($name) {
             <div class="form-element">
               <label for="username">Username</label>
               <div>
-                <input type="text" name="username" id="username" value="a.12R@dcbt.edu.ph" value="<?php getInputValue('username'); ?>" required />
+                <input type="text" name="username" id="username" value="atienza.0000003Rdcbt.edu.ph" value="<?php getInputValue('username'); ?>" required />
               </div>
             </div>
             <div class="form-element">

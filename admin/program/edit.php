@@ -16,6 +16,7 @@
         $program_department_id = $program->GetProgramDepartmentId();
         $program_acronym = $program->GetProgramAcronym();
         $program_track = $program->GetProgramTrack();
+        $program_status = $program->GetStatus();
 
         $promptIfIDNotExists = $program->CheckIdExists($program_id);
 
@@ -44,6 +45,7 @@
             isset($_POST['dean']) &&
             isset($_POST['department_id']) &&
             isset($_POST['track']) &&
+            isset($_POST['status']) &&
             isset($_POST['acronym'])
             ){
 
@@ -52,6 +54,7 @@
             $department_id = $_POST['department_id'];
             $track = $_POST['track'];
             $acronym = $_POST['acronym'];
+            $status = $_POST['status'];
 
             // Prepare the statement
             $stmt = $con->prepare("UPDATE program 
@@ -60,7 +63,8 @@
                     department_id = :department_id,
                     track = :track,
                     acronym = :acronym,
-                    program_name = :program_name 
+                    program_name = :program_name,
+                    status = :status 
                 WHERE program_id = :program_id");
 
             // Bind the parameters
@@ -69,10 +73,11 @@
             $stmt->bindParam(':track', $track);
             $stmt->bindParam(':acronym', $acronym);
             $stmt->bindParam(':program_name', $program_name);
+            $stmt->bindParam(':status', $status);
             $stmt->bindParam(':program_id', $program_id);
 
             if ($stmt->execute()) {
-                Alert::success("Program Successfully Created", $back_url);
+                Alert::success("Program successfully modified", $back_url);
                 exit();
             } else {
                 Alert::error("Error Occured", "index.php");
@@ -100,7 +105,7 @@
                             <span>
                                 <label for="program_name">Program Name</label>
                                 <div>
-                                    <input type="text" name="program_name" value="<?php echo $program_name; ?>">
+                                    <input class='form-control' type="text" name="program_name" value="<?php echo $program_name; ?>">
                                 </div>
                                 <div>
                                     <?php echo $departmentDropdown ?>
@@ -109,7 +114,7 @@
                             <span>
                                 <label for="dean">Dean</label>
                                 <div>
-                                    <input type="text" name="dean" value="<?php echo $program_dean; ?>">
+                                    <input class='form-control' type="text" name="dean" value="<?php echo $program_dean; ?>">
                                 </div>
                             </span>
                         </div>
@@ -117,15 +122,26 @@
                             <span>
                                 <label for="track">Track</label>
                                 <div>
-                                    <input type="text" name="track" value="<?php  echo $program_track; ?>">
+                                    <input class='form-control' type="text" name="track" value="<?php  echo $program_track; ?>">
                                 </div>
                             </span>
                             <span>
                                 <label for="acronym">Acronym</label>
                                 <div>
-                                    <input type="text" name="acronym" value="<?php echo $program_acronym; ?>">
+                                    <input class='form-control' type="text" name="acronym" value="<?php echo $program_acronym; ?>">
                                 </div>
                             </span>
+
+                        </div>
+                        <div class="row">
+                            <div class='form-group mb-2'>
+                                <label class='mb-2'>Status</label>
+
+                                <select id='status' class='form-control' name='status'>
+                                    <option <?php echo $program_status == 1 ? "selected" : "" ?> value="1" >Active</option>
+                                    <option <?php echo $program_status == 0 ? "selected" : "" ?> value="0" >Inactive</option>
+                                </select>
+                            </div>
                         </div>
                         <div class="action">
                             <button type="submit" class="clean large" name="program_edit_btn_<?php echo $program_id;?>">Save</button>

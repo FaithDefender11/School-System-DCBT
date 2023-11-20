@@ -614,7 +614,7 @@
                 'emptyTable': "No available data for payment history.",
             },
             'columns': [
-                { data: 'enrollment_form_id', orderable: true },  
+                { data: 'enrollment_form_id', orderable: false },  
                 { data: 'student_no', orderable: false },  
                 { data: 'name', orderable: false },
                 { data: 'term_semester', orderable: false },

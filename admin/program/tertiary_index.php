@@ -69,6 +69,7 @@
                         <th>Program ID</th>
                         <th>Program Name</th>
                         <th>Track</th>
+                        <th>Status</th>
                         <th>Action</th>
                     </tr>
                     </thead>
@@ -94,33 +95,52 @@
 
                             $removeProgramBtn = "removeProgramBtn($program_id)";
 
+                            $status = $row['status'];
+
+                            $output = "
+                                <i class='fas fa-check' style='color: green'></i>
+                            ";
+
+                            if($status == 0){
+                                $output = "
+                                <i class='fas fa-times' style='color: orange'></i>
+                                "; 
+                            }
+
+                            // <div class='dropdown'>
+                            //     <button class='btn btn-primary dropdown-toggle' type='button' id='dropdownMenuButton' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
+                            //         Actions
+                            //     </button>
+
+                            //     <div class='dropdown-menu' aria-labelledby='dropdownMenuButton'>
+                            //         <a class='dropdown-item' href='edit.php?id=$program_id'>
+                            //             <button style='width: 100%' class='btn btn btn-primary'>
+                            //                 Edit
+                            //             </button>
+                            //         </a>
+
+                            //         <a class='dropdown-item' href='#'>
+                            //             <button style='width: 100%' onclick='$removeProgramBtn' class='btn btn-danger'>
+                            //                 Remove
+                            //             </button>
+                            //         </a>
+                            //     </div>
+                            // </div>
+                            
                             echo "
                             <tr>
                                 <td>$program_id</td>
                                 <td>$program_name</td>
                                 <td>$track</td>
+                                <td>$output</td>
 
                                 <td>
-                                    <div class='dropdown'>
-                                        <button class='btn btn-primary dropdown-toggle' type='button' id='dropdownMenuButton' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
-                                            Actions
+                                    
+                            <a class='dropdown-item' href='edit.php?id=$program_id'>
+                                        <button style='width: 100%' class='btn btn btn-primary'>
+                                            Edit
                                         </button>
-
-                                        <div class='dropdown-menu' aria-labelledby='dropdownMenuButton'>
-                                            <a class='dropdown-item' href='edit.php?id=$program_id'>
-                                                <button style='width: 100%' class='btn btn btn-primary'>
-                                                    Edit
-                                                </button>
-                                            </a>
-
-                                            <a class='dropdown-item' href='#'>
-                                                <button style='width: 100%' onclick='$removeProgramBtn' class='btn btn-danger'>
-                                                    Remove
-                                                </button>
-                                            </a>
-                                        </div>
-                                    </div>
-
+                                    </a>
                                 </td>
 
                             </tr>

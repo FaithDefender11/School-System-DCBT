@@ -28,11 +28,13 @@ class Email {
             return false;
         }
 
+        // $email_message = "Please copy the full token that you will use for logging in: $token Note: Please change your password immediately!";
+       
         $email_message = "Please copy the full token that you will use for logging in: $token Note: Please change your password immediately!";
 
         try {
             $this->mailer->addAddress($email_address);
-            $this->mailer->Subject = "Temporary Password";
+            $this->mailer->Subject = "Password has been reset";
             $this->mailer->Body = $email_message;
 
             return $this->mailer->send();
@@ -51,7 +53,7 @@ class Email {
             return false;
         }
 
-        $email_message = "Admin has recently reset your password. <br> <br> Un: $username <br> <br> New Pw: $new_generated_password <br> <br> Yours in Administrator <br> <br> $adminName, <br> <br> Note: If you have received this email and its not you or in error, please notify the sender immediately and delete this email.";
+        $email_message = "Admin has recently reset your password. <br> <br> Note: This serve as your password credentials. <br> <br> Un: $username <br> <br> New Pw: $new_generated_password <br> <br> Yours in Administrator <br> <br> $adminName, <br> <br> Note: If you have received this email and its not you or in error, please notify the sender immediately and delete this email.";
 
         try {
             $this->mailer->addAddress($email_address);
@@ -65,7 +67,32 @@ class Email {
         }
     }
 
-    public function SendTeacherCredentialsAfterCreation($email_address, $username,  $generated_password, $adminName) {
+    public function SendEnrolleeTemporaryPassword(
+        $email_address,
+        $new_generated_password, $adminName) {
+
+        // Basic email validation
+        if (!filter_var($email_address, FILTER_VALIDATE_EMAIL)) {
+            // echo "email_address: $email_address Invalid email address";
+            return false;
+        }
+
+        $email_message = "Admin has recently reset your password. <br> <br> Note: This serve as your password credentials. <br> <br> Un: $email_address <br> <br> New Pw: $new_generated_password <br> <br> Yours in Administrator <br> <br> $adminName, <br> <br> Note: If you have received this email and its not you or in error, please notify the sender immediately and delete this email.";
+
+        try {
+            $this->mailer->addAddress($email_address);
+            $this->mailer->Subject = "Reset password";
+            $this->mailer->Body = $email_message;
+
+            return $this->mailer->send();
+        } catch (Exception $e) {
+            echo 'Mailer Error: ' . $this->mailer->ErrorInfo;
+            return false;
+        }
+    }
+
+    public function SendTeacherCredentialsAfterCreation(
+            $email_address, $username,  $generated_password, $adminName) {
         // Basic email validation
         if (!filter_var($email_address, FILTER_VALIDATE_EMAIL)) {
             // echo "email_address: $email_address Invalid email address";
@@ -86,8 +113,34 @@ class Email {
         }
     }
 
-    public function SendUserCredentialsAfterCreation($email_address, $username,  $generated_password, $adminName) {
+    public function SendNewEnrolleeCredentialsAfterCreation(
+            $email_address,  $generated_password, $registrarName) {
         // Basic email validation
+        if (!filter_var($email_address, FILTER_VALIDATE_EMAIL)) {
+            // echo "email_address: $email_address Invalid email address";
+            return false;
+        }
+
+        $email_message = "Registrar has recently created your account. <br> <br> Un: $email_address <br> <br> Pw: $generated_password <br> <br> Yours in Registrar <br> <br> $registrarName, <br> <br> Note: If you have received this email and its not you or in error, please notify the sender immediately and delete this email.";
+
+        try {
+            $this->mailer->addAddress($email_address);
+            $this->mailer->Subject = "New enrollee successfully creation of account";
+            $this->mailer->Body = $email_message;
+
+            return $this->mailer->send();
+        } catch (Exception $e) {
+            echo 'Mailer Error: ' . $this->mailer->ErrorInfo;
+            return false;
+        }
+    }
+
+    public function SendUserCredentialsAfterCreation(
+        $email_address, $username,  $generated_password, $adminName, $role) {
+        // Basic email validation
+
+        $role = ucfirst($role);
+        
         if (!filter_var($email_address, FILTER_VALIDATE_EMAIL)) {
             // echo "email_address: $email_address Invalid email address";
             return false;
@@ -98,7 +151,7 @@ class Email {
         try {
 
             $this->mailer->addAddress($email_address);
-            $this->mailer->Subject = "Teacher successfully creation of account";
+            $this->mailer->Subject = "$role successfully creation of account";
             $this->mailer->Body = $email_message;
 
             return $this->mailer->send();
@@ -131,7 +184,6 @@ class Email {
 
         if ($_SERVER['SERVER_NAME'] === 'localhost') {
             // Running on localhost
-            // $base_url = 'http://localhost/sistem/student/';
             $link = domainName . "verify_student.php?token=$token";
 
         } else {
@@ -145,7 +197,51 @@ class Email {
 
         // $link = domainName . "verify_student.php?token=$token";
        
-        $email_message = "(Verification) click if it was you. $link (The token will lasts only 5 minutes)";
+        // $email_message = "(Verification) click if it was you. $link (The token will lasts only 5 minutes)";
+
+        $linkInEmail = "
+            <p><a href='$link' target='_new'>Click Here to Activate Your Account</a></p>
+        ";
+
+        $email_message = "Thank you for your pre-registration! We're thrilled to have you on board. To complete the enrollment process and validate your account, simply click on the link below: <br> <br> $linkInEmail";
+
+        $this->mailer->addAddress($email_address);
+        $this->mailer->Subject = "Daehan College of Business Technology Enrollment Verification";
+        $this->mailer->Body = $email_message;
+
+        if ($this->mailer->send()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function sendVerificationEmailInsideConfig($email_address, $token) {
+
+        $link = "";
+
+        if ($_SERVER['SERVER_NAME'] === 'localhost') {
+            // Running on localhost
+            $link = domainName . "../../verify_student.php?token=$token";
+
+        } else {
+            // Running on web hosting
+            // $base_url = 'https://sub.dcbt.online/';
+            // $base_url = 'http://' . $_SERVER['HTTP_HOST'] . '/student/';
+
+            $link = 'http://' . $_SERVER['HTTP_HOST'] . '/../../verify_student.php?token=' . $token;
+            // $link = domainName . "verify_student.php?token=$token";
+        }
+
+        // $link = domainName . "verify_student.php?token=$token";
+       
+        // $email_message = "(Verification) click if it was you. $link (The token will lasts only 5 minutes)";
+
+        $linkInEmail = "
+            <p><a href='$link' target='_new'>Click Here to Activate Your Account</a></p>
+        ";
+
+        $email_message = "Thank you for your pre-registration! We're thrilled to have you on board. To complete the enrollment process and validate your account, simply click on the link below: <br> <br> $linkInEmail";
 
         $this->mailer->addAddress($email_address);
         $this->mailer->Subject = "Daehan College of Business Technology Enrollment Verification";
@@ -186,8 +282,7 @@ class Email {
 
         $credentialsMessage = "";
 
-        if($doesValidForCredentials){
-
+        if($doesValidForCredentials == true){
             $credentialsMessage = "<br> Un: $username <br> <br> Pw: $generated_password <br> <br> Yours in Administrator <br> <br> Admin name";
         }
 

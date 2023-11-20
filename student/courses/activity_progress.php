@@ -194,7 +194,7 @@
                                             if($singleHandoutViewed == true){
 
                                                 $submitted_graded_status =  "
-                                                    <i style='color: green;' class='fas fa-check'></i>
+                                                    <i style='color: green;' class='bi bi-check'></i>
                                                 ";
                                                 $submitted_status = $submitted_graded_status;
                                                 $totalProgressOkayStatus++;
@@ -204,7 +204,7 @@
                                                 $totalProgressOkayStatus++;
 
                                                 $submitted_status = "
-                                                    <i style='color: green;' class='fas fa-check'></i>
+                                                    <i style='color: green;' class='bi bi-check'></i>
                                                 ";
                                                 $submitted_graded_status =  $submitted_status;
 
@@ -238,7 +238,7 @@
                                                 && $subject_code_handout_id == ""
                                             ){
                                                 $submitted_status = "
-                                                    <i style='color: orange;' class='fas fa-flag'></i>
+                                                    <i style='color: orange;' class='bi bi-flag-fill'></i>
                                                 ";
                                                 // echo "due";
                                             } 
@@ -271,7 +271,7 @@
                                                     $equivalent_total = round($pecentage_equivalent_total, 0, PHP_ROUND_HALF_UP);
                                                     $equivalent_total = $equivalent_total . "%";
     
-                                                    echo "$totalProgressOkayStatus / $totalOverProgress = $equivalent_total";
+                                                    echo "$equivalent_total";
                                                 }else{
                                                     echo "??";
                                                 }

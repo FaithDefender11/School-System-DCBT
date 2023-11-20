@@ -66,6 +66,9 @@
 
                                         $removeTaskType = "removeTaskType($task_type_id)";
                                         
+                                        // <button onclick='$removeTaskType' class='danger'>
+                                        //                     <i class='fas fa-trash'></i>
+                                        //             </button>
                                         echo "
                                             <tr>
                                                 <td>$task_name</td>
@@ -76,9 +79,7 @@
                                                             <i class='fas fa-pen'></i>
                                                         </button>
                                                     </a>
-                                                    <button onclick='$removeTaskType' class='danger'>
-                                                            <i class='fas fa-trash'></i>
-                                                    </button>
+                                                    
                                                 </td>
                                             </tr>
                                         ";

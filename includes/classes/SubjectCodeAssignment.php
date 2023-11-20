@@ -87,7 +87,7 @@ class SubjectCodeAssignment{
     public function InsertAssignment(
         $subject_period_code_topic_id,
         $assignment_name,$description,
-        $max_score,$allow_late_submission,
+        $max_score,
         $due_date, $type, $max_attempt,
         $task_type_id) {
 
@@ -95,39 +95,48 @@ class SubjectCodeAssignment{
         $due_date_convert = strtotime($due_date);
         $now = date("Y-m-d H:i:s");
 
+        $doesCorrect = true;
+
         if ($due_date_convert <= strtotime($now) ) {
             // The input date is greater than or equal to the current date
             // echo "The due date is in the future.";
             // echo "due_date should be greater";
-            Alert::error("Due date should be greater than now.", "");
-            exit();
+            Alert::errorNonRedirect("Due date should be greater than now.", "");
+            $doesCorrect = false;
+            // exit();
         } 
  
         // return;
 
-        $add = $this->con->prepare("INSERT INTO subject_code_assignment
-            (subject_period_code_topic_id, assignment_name, description,
-                max_score, allow_late_submission, due_date, type, max_attempt, task_type_id)
-            VALUES(:subject_period_code_topic_id, :assignment_name, :description,
-                :max_score, :allow_late_submission, :due_date, :type, :max_attempt, :task_type_id)");
+        if($doesCorrect == true){
 
-        
-        $add->bindValue(":subject_period_code_topic_id", $subject_period_code_topic_id);
-        $add->bindValue(":assignment_name", $assignment_name);
-        $add->bindValue(":description", $description);
-        $add->bindValue(":max_score", $max_score);
-        $add->bindValue(":allow_late_submission", $allow_late_submission);
-        $add->bindValue(":due_date", $due_date);
-        $add->bindValue(":type", $type);
-        $add->bindValue(":max_attempt", $max_attempt);
-        $add->bindValue(":task_type_id", $task_type_id);
 
-        $add->execute();
 
-        if($add->rowCount() > 0){
-            return true;
+            $add = $this->con->prepare("INSERT INTO subject_code_assignment
+                (subject_period_code_topic_id, assignment_name, description,
+                    max_score, due_date, type, max_attempt, task_type_id)
+                VALUES(:subject_period_code_topic_id, :assignment_name, :description,
+                    :max_score, :due_date, :type, :max_attempt, :task_type_id)");
+
+            
+            $add->bindValue(":subject_period_code_topic_id", $subject_period_code_topic_id);
+            $add->bindValue(":assignment_name", $assignment_name);
+            $add->bindValue(":description", $description);
+            $add->bindValue(":max_score", $max_score);
+            // $add->bindValue(":allow_late_submission", $allow_late_submission);
+            $add->bindValue(":due_date", $due_date);
+            $add->bindValue(":type", $type);
+            $add->bindValue(":max_attempt", $max_attempt);
+            $add->bindValue(":task_type_id", $task_type_id);
+
+            $add->execute();
+
+            if($add->rowCount() > 0){
+                $doesCorrect = true;
+            }
         }
-        return false;
+
+        return $doesCorrect;
     }
 
     public function InsertAssignmentTemplate(
@@ -169,7 +178,6 @@ class SubjectCodeAssignment{
         $assignment_name,
         $description,
         $max_score,
-        $allow_late_submission,
         $due_date, $max_attempt
     ) {
 
@@ -188,7 +196,7 @@ class SubjectCodeAssignment{
                 SET assignment_name = :assignment_name,
                     description = :description,
                     max_score = :max_score,
-                    allow_late_submission = :allow_late_submission,
+                    -- allow_late_submission = :allow_late_submission,
                     due_date = :due_date,
                     max_attempt = :max_attempt
 
@@ -201,7 +209,7 @@ class SubjectCodeAssignment{
             $update->bindValue(":assignment_name", $assignment_name);
             $update->bindValue(":description", $description);
             $update->bindValue(":max_score", $max_score);
-            $update->bindValue(":allow_late_submission", $allow_late_submission);
+            // $update->bindValue(":allow_late_submission", $allow_late_submission);
             $update->bindValue(":due_date", $due_date);
             $update->bindValue(":max_attempt", $max_attempt);
             $update->execute();
@@ -767,23 +775,96 @@ class SubjectCodeAssignment{
             t1.date_creation AS announcement_creation,
             t1.announcement_id,
             t1.teacher_id,
-            t1.subject_code
+            t1.subject_code,
+            t1.date_creation,
+            t1.users_id
 
             FROM announcement as t1
 
-            WHERE t1.teacher_id=:announcement_teacher_id
-            AND t1.school_year_id=:announcement_school_year_id
+            WHERE t1.school_year_id=:announcement_school_year_id
+
+            AND (
+                t1.teacher_id=:announcement_teacher_id
+                OR 
+                t1.for_teacher=:for_teacher
+                )
+
+
 
             ORDER BY t1.date_creation DESC
             -- GROUP BY t1.subject_code
         ");
 
-        $query->bindValue(":announcement_teacher_id", $teacher_id); 
         $query->bindValue(":announcement_school_year_id", $school_year_id); 
+        $query->bindValue(":announcement_teacher_id", $teacher_id); 
+        $query->bindValue(":for_teacher", 1); 
         $query->execute(); 
 
         if($query->rowCount() > 0){
             
+            return $query->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        return [];
+    }
+    public function GetTeacherTeachingSubjectsWithAnnouncementOnly(
+        $teacher_id, $school_year_id)  {
+
+        $query = $this->con->prepare("SELECT 
+            t1.title,
+            t1.content,
+            t1.date_creation AS announcement_creation,
+            t1.announcement_id,
+            t1.teacher_id,
+            t1.subject_code,
+            t1.date_creation,
+            t1.users_id
+
+            FROM announcement as t1
+
+            WHERE t1.school_year_id=:announcement_school_year_id
+            AND t1.teacher_id=:announcement_teacher_id
+
+            ORDER BY t1.date_creation DESC
+            -- GROUP BY t1.subject_code
+        ");
+
+        $query->bindValue(":announcement_school_year_id", $school_year_id); 
+        $query->bindValue(":announcement_teacher_id", $teacher_id); 
+        $query->execute(); 
+
+        if($query->rowCount() > 0){
+            
+            return $query->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        return [];
+    }
+
+    public function GetTeacherAnnouncementFromAdmin(
+        $school_year_id)  {
+
+        $query = $this->con->prepare("SELECT 
+            t1.title,
+            t1.content,
+            t1.date_creation AS announcement_creation,
+            t1.announcement_id,
+            t1.teacher_id,
+            t1.subject_code
+
+            FROM announcement as t1
+
+            WHERE t1.for_teacher=:for_teacher
+            AND t1.school_year_id=:school_year_id
+
+            ORDER BY t1.date_creation DESC
+        ");
+
+        $query->bindValue(":for_teacher", 1); 
+        $query->bindValue(":school_year_id", $school_year_id); 
+        $query->execute(); 
+
+        if($query->rowCount() > 0){
             return $query->fetchAll(PDO::FETCH_ASSOC);
         }
 

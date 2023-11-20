@@ -28,7 +28,7 @@
             // Pending Info to Student
             $generateStudentUniqueId = $student->GenerateUniqueStudentNumber();
             
-            // $username = strtolower($lastname) . '.' . $generateStudentUniqueId . '@dcbt.ph';
+            // $username = strtolower($lastname) . '.' . $generateStudentUniqueId . '@dcbt.edu.ph';
             $username = $student->GenerateStudentUsername($lastname, $generateStudentUniqueId);
 
             $selected_course_id_value = $_POST['selected_course_id'];
@@ -168,7 +168,7 @@
             $section_url = "process_enrollment.php?step3=true&id=$pending_enrollees_id&selected_course_id=$selected_course_id_value";
             // Pending Info to Student
             $generateStudentUniqueId = $student->GenerateUniqueStudentNumber();
-            $username = strtolower($lastname) . '.' . $generateStudentUniqueId . '@dcbt.ph';
+            $username = strtolower($lastname) . '.' . $generateStudentUniqueId . 'dcbt.edu.ph';
 
             $selected_course_id_value = $_POST['selected_course_id'];
 

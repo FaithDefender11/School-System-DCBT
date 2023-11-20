@@ -52,6 +52,10 @@
         $birthday = $_POST['birthday'];
         $religion = $_POST['religion'];
 
+        $teacher_status = $_POST['teacher_status'];
+
+        // var_dump($teacher_status);
+        // return;
         // echo $status;
 
 
@@ -131,11 +135,11 @@
         $update->bindParam(':birthplace', $birthplace);
         $update->bindParam(':birthday', $birthday);
         $update->bindParam(':religion', $religion);
-        $update->bindParam(':teacher_status', $status);
+        $update->bindParam(':teacher_status', $teacher_status);
         $update->bindParam(':teacher_id', $teacher_id);
 
         if ($update->execute()) {
-            Alert::success("Successfully Edited", "index.php");
+            Alert::success("Teacher successfully modified", "index.php");
             exit();
         }
     }
@@ -158,19 +162,19 @@
                             <span>
                                 <label for="name">Name</label>
                                 <div>
-                                    <input type="text" name="firstname" value="<?php echo $firstname; ?>">
+                                    <input class="form-control" type="text" name="firstname" value="<?php echo $firstname; ?>">
                                     <small>First Name</small>
                                 </div>
                                 <div>
-                                    <input type="text" name="middle_name" value="<?php echo $middle_name; ?>">
+                                    <input class="form-control" type="text" name="middle_name" value="<?php echo $middle_name; ?>">
                                     <small>Middle Name</small>
                                 </div>
                                 <div>
-                                    <input type="text" name="lastname" value="<?php echo $lastname; ?>">
+                                    <input class="form-control" type="text" name="lastname" value="<?php echo $lastname; ?>">
                                     <small>Last Name</small>
                                 </div>
                                 <div>
-                                    <input type="text" name="suffix" value="<?php echo $suffix; ?>">
+                                    <input class="form-control" type="text" name="suffix" value="<?php echo $suffix; ?>">
                                     <small>Suffix</small>
                                 </div>
                             </span>
@@ -179,7 +183,7 @@
                             <span>
                                 <label for="profilePic">Profile Pic</label>
                                 <div>
-                                <input type="file" name="profilePic">
+                                <input class="form-control" type="file" name="profilePic">
                                     <?php if ($profilePic): ?>
                                         <img style="width: 150px; border-radius: 100%;"src="<?php echo "../../".$profilePic; ?>" alt="Profile Picture">
                                     <?php else: ?>
@@ -195,7 +199,7 @@
                             <span>
                                 <label for="gender">Gender</label>
                                 <div>
-                                    <select name="gender" id="gender" required>
+                                    <select class="form-control" name="gender" id="gender" required>
                                         <option value="Male"<?php echo ($gender === 'Male' ? ' selected' : ''); ?>>Male</option>
                                         <option value="Female"<?php echo ($gender === 'Female' ? ' selected' : ''); ?>>Female</option>
                                     </select>
@@ -204,13 +208,13 @@
                             <span>
                                 <label for="email">Email</label>
                                 <div>
-                                    <input type="text" name="email" value="<?php echo $email; ?>">
+                                    <input class="form-control" type="text" name="email" value="<?php echo $email; ?>">
                                 </div>
                             </span>
                             <span>
                                 <label for="contact_number">Contact Number</label>
                                 <div>
-                                    <input type="text" name="contact_number" value="<?php echo $contact_number; ?>">
+                                    <input class="form-control" type="text" name="contact_number" value="<?php echo $contact_number; ?>">
                                 </div>
                             </span>
                         </div>
@@ -218,7 +222,7 @@
                             <span>
                                 <label for="address">Address</label>
                                 <div>
-                                    <input type="text" name="address" value="<?php echo $address; ?>">
+                                    <input class="form-control" type="text" name="address" value="<?php echo $address; ?>">
                                 </div>
                             </span>
                         </div>
@@ -226,25 +230,25 @@
                             <span>
                                 <label for="citizenship">Citizenship</label>
                                 <div>
-                                    <input type="text" name="citizenship" value="<?php echo $citizenship; ?>">
+                                    <input class="form-control" type="text" name="citizenship" value="<?php echo $citizenship; ?>">
                                 </div>
                             </span>
                             <span>
                                 <label for="birthplace">Birthplace</label>
                                 <div>
-                                    <input type="text" name="birthplace" value="<?php echo $birthplace; ?>">
+                                    <input class="form-control" type="text" name="birthplace" value="<?php echo $birthplace; ?>">
                                 </div>
                             </span>
                             <span>
                                 <label for="birthday">Birthday</label>
                                 <div>
-                                    <input type="date" name="birthday" value="<?php echo $birthday; ?>">
+                                    <input class="form-control" type="date" name="birthday" value="<?php echo $birthday; ?>">
                                 </div>
                             </span>
                             <span>
                                 <label for="religion">Religion</label>
                                 <div>
-                                    <input type="text" name="religion" value="<?php echo $religion; ?>">
+                                    <input class="form-control" type="text" name="religion" value="<?php echo $religion; ?>">
                                 </div>
                             </span>
                         </div>
@@ -258,13 +262,13 @@
                                 <div class="form-element">
                                     <label for="active">Active</label>
                                     <div>
-                                        <input type="radio" name="active" value="active"<?php echo ($status === 'Active' ? ' checked' : ''); ?>>
+                                        <input class="form-control" id="active" type="radio" name="teacher_status" value="Active"<?php echo ($status === 'Active' ? ' checked' : ''); ?>>
                                     </div>
                                 </div>
                                 <div class="form-element">
                                     <label for="inactive">Inactive</label>
                                     <div>
-                                        <input type="radio" name="inactive" value="non-active"<?php echo ($status === 'Inactive' ? ' checked' : ''); ?>>
+                                        <input class="form-control" id="inactive" type="radio" name="teacher_status" value="Inactive"<?php echo ($status === 'Inactive' ? ' checked' : ''); ?>>
                                     </div>
                                 </div>
                             </span>

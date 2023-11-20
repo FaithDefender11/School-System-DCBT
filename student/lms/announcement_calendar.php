@@ -47,6 +47,8 @@
     $mergeAnnouncement = array_merge($getAllAnnouncementFromAdmin,
         $getAllAnnouncementOnMyEnrolledSubjects);
 
+      // var_dump($mergeAnnouncement);
+
     # List of all Enrolled Subject subject_period_code_topic_id(s)
 ?>
 
@@ -97,6 +99,7 @@
               var events = []; // Initialize an empty array to store events
 
               $.ajax({
+                
                 url: `../../ajax/class/announcement_calendar.php?st_id=${studentId}&sy_id=${current_school_year_id}&e_id=${enrollment_id}`,
 
                 dataType: 'json',

@@ -2111,6 +2111,25 @@
 
         }
 
+        public function GetEnrollmentCourseIdNonEnrolledCount($course_id, $school_year_id){
+
+            $sql = $this->con->prepare("SELECT * FROM enrollment
+
+                WHERE enrollment_status =:enrollment_status
+                AND course_id = :course_id
+                AND school_year_id = :school_year_id
+            ");
+
+            $sql->bindValue(":enrollment_status", "tentative");
+            $sql->bindValue(":course_id", $course_id);
+            $sql->bindValue(":school_year_id", $school_year_id);
+
+            $sql->execute();
+        
+            return $sql->rowCount();
+
+        }
+
         public function GetEnrollmentCourseIdEnrolledCount($course_id, $school_year_id){
 
             $sql = $this->con->prepare("SELECT * FROM enrollment

@@ -307,7 +307,7 @@
                                             $subject_program = new SubjectProgram($con);
 
                                             $student_subject_enrolled = $subject_program->GetSectionSubjectEnrolledStudents($subject_program_id,
-                                                $course_id, $section_subject_code);
+                                                $course_id, $section_subject_code, $selected_school_year_id);
 
                                             $student_subject_enrolled = $student_subject_enrolled == 0 ? "" : $student_subject_enrolled;
                                         

@@ -258,7 +258,6 @@
                 "program_section"=> $program_section,
                 "status"=> $status,
                 "type"=> $admission_status,
-                "requirement"=> $requirement,
                 "view_button"=> $button
                 
             );

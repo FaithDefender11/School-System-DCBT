@@ -47,6 +47,8 @@
         array_push($enrolledSubjectList, $subject_code);
     }
 
+    // var_dump($enrolledSubjectList);
+
     $notif = new Notification($con);
 
 
@@ -55,6 +57,26 @@
 
     $studentEnrolledSubjectAssignmentNotif = $notif->GetStudentAssignmentNotificationv2(
         $enrolledSubjectList, $school_year_id);
+
+    $studentNotifFromNonAnsweredAssignment = $notif->GetStudentAssignmentNotificationNonSubmission(
+        $enrolledSubjectList, $school_year_id, $studentLoggedInId);
+    
+    $overallAssignments = array_merge($studentEnrolledSubjectAssignmentNotif, $studentNotifFromNonAnsweredAssignment);
+
+    
+    usort($overallAssignments, function($a, $b) {
+        $dateA = strtotime($a['date_creation']);
+        $dateB = strtotime($b['date_creation']);
+
+        if ($dateA == $dateB) {
+            return 0;
+        }
+        
+        return ($dateA > $dateB) ? -1 : 1; // Change from 1 to -1 for descending order
+    });
+
+    // var_dump($overallAssignments);
+
 
     $gradedAssignments = $notif->GetStudentGradedAssignmentNotification(
         $enrolledSubjectList, $school_year_id, $studentLoggedInId);
@@ -66,12 +88,30 @@
     
     $allAdminNotification = $notif->GetAdminAnnouncement($school_year_id);
 
-    // print_r($allAdminNotification);
+    $allTeacherNotification = $notif->GetTeacherAnnouncement($school_year_id, $enrolledSubjectList);
+
+    $adminTeacherNotification = array_merge($allTeacherNotification, $allAdminNotification);
+
+    usort($adminTeacherNotification, function($a, $b) {
+        $dateA = strtotime($a['date_creation']);
+        $dateB = strtotime($b['date_creation']);
+
+        if ($dateA == $dateB) {
+            return 0;
+        }
+        
+        return ($dateA > $dateB) ? -1 : 1; // Change from 1 to -1 for descending order
+    });
+
+    // print_r($adminTeacherNotification);
 
     // print_r($allAdminNotifcation);
 
-    $mergedArray = array_merge($studentEnrolledSubjectAssignmentNotif,
-        $allAdminNotification);
+    // $mergedArray = array_merge($studentEnrolledSubjectAssignmentNotif,
+    //     $adminTeacherNotification);
+
+        $mergedArray = array_merge($studentEnrolledSubjectAssignmentNotif,
+            $adminTeacherNotification, $gradedAssignments, $studentsDueDateNotif);
 
     // function sortByDateCreation($a, $b) {
     //     return strtotime($a['date_creation']) - strtotime($b['date_creation']);
@@ -178,16 +218,23 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+
                                     <?php
                                         foreach ($mergedArray as $key => $notification) {
                                 
                                             // $department_id = $row['department_id'];
                                             
                                             $notification_id = $notification['notification_id'];
+                                            $notif_student_id = $notification['student_id'];
             
+                                            // var_dump($student_id);
+                                            // echo "<br>";
+
                                             $notif_exec = new Notification($con, $notification_id);
             
                                             $sender_role = $notification['sender_role'];
+                                            $announcement_whom = $notification['announcement_whom'];
+
                                             $date_creation = $notification['date_creation'];
                                             $date_creation = date("M d, Y h:i a", strtotime($date_creation));
             
@@ -234,8 +281,9 @@
             
                                             // var_dump($sender_role);
                                             // echo "<br>";
-            
+                                            
                                             if($sender_role === "admin" && 
+                                                ($announcement_whom == "student" || $announcement_whom == "universal") &&
                                                 $announcement_id != NULL){
             
                                                 $announcement = new Announcement($con, $announcement_id);
@@ -262,6 +310,7 @@
                                                 ";
                                                 
                                             }
+                                            // var_dump($announcement_whom);
             
                                             # For teacher giving assignment Notif for Student todos
                                             if($subject_code_assignment_id != NULL && 
@@ -322,16 +371,67 @@
             
             
                                             // $hey = $subject_assignment_submission_student_id == $studentLoggedInId;
-            
                                             // var_dump($hey);
             
             
-                                            # Graded assignments Notification
+                                            # Graded submissons assignments Notification
             
                                             if($subject_code_assignment_id != NULL && 
                                                 $subject_code != NULL &&
                                                 $subject_assignment_submission_id != NULL &&
                                                 $subject_assignment_submission_student_id == $studentLoggedInId &&
+                                                $announcement_id == NULL &&
+                                                $sender_role != "auto"
+            
+                                                ){
+            
+                                                $assigment = new SubjectCodeAssignment($con, $subject_code_assignment_id);
+                                                $assigment_name = $assigment->GetAssignmentName();
+            
+                                                $subjectPeriodCodeTopicId = $assigment->GetSubjectPeriodCodeTopicId();
+            
+                                                $subjectPeriodCodeTopic = new SubjectPeriodCodeTopic($con,
+                                                    $subjectPeriodCodeTopicId);
+            
+                                                
+                                                $teacher_id = $subjectPeriodCodeTopic->GetTeacherId();
+            
+                                                // var_dump($teacher_id);
+                                                $teacher = new Teacher($con, $teacher_id);
+            
+                                                $sender_name = ucwords($teacher->GetTeacherFirstName()) . " " . ucwords($teacher->GetTeacherLastName());
+                                                $sender_name = trim($sender_name);
+            
+                                                $type = "Graded";
+                                                $title = "Assignment: <span style='font-weight: bold;'>$assigment_name</span> on <span style='font-weight: bold;'>$subject_title</span>";
+            
+            
+                                                $get_student_subject_id = NULL;
+            
+                                                if($subject_code != NULL){
+            
+                                                    $studentSubject = new StudentSubject($con);
+            
+                                                    $get_student_subject_id = $studentSubject->GetStudentSubjectIdBySectionSubjectCode(
+                                                        $subject_code, $student_id, $enrollment_id);
+            
+                                                }
+            
+                                                $assignment_notification_url = "../courses/task_submission.php?sc_id=$subject_code_assignment_id&ss_id=$get_student_subject_id&n_id=$notification_id&notification=true";
+            
+                                                $button_url = "
+                                                    <button onclick='window.location.href=\"$assignment_notification_url\"' class='btn btn-primary btn-sm'>
+                                                        View
+                                                    </button>
+                                                ";
+            
+                                            }
+
+                                            # Graded non submissons assignments Notification
+                                            if($subject_code_assignment_id != NULL && 
+                                                $subject_code != NULL &&
+                                                $subject_assignment_submission_id == NULL &&
+                                                $notif_student_id == $studentLoggedInId &&
                                                 $announcement_id == NULL &&
                                                 $sender_role != "auto"
             
@@ -433,7 +533,8 @@
             
                                             if($announcement_id != NULL 
                                                 && $subject_code != NULL
-                                                && $sender_role = "teacher"
+                                                && $sender_role == "teacher"
+                                                && $announcement_whom == ""
                                                 ){
             
             

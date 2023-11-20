@@ -91,7 +91,7 @@
                     </label>
                     
                     <div>
-                        <select  style="width: 350px;" 
+                        <select  style="width: 450px;" required
                             class='form-control' name="course_id" id="course_id">
                         
                             <?php 

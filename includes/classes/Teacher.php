@@ -617,7 +617,7 @@
             $html = "<span>
                         <label for=''>Department</label>
                         <div>
-                        <select name='department_id' required>
+                        <select class='form-control' name='department_id' required>
                             <option value=''>Choose Department</option>";
 
             if ($query->rowCount() > 0) {
@@ -683,14 +683,14 @@
             // Update the student's password in the database
             $query = $this->con->prepare("UPDATE teacher 
 
-                SET password=:password,
-                    suffix=:suffix
+                SET password=:password
+                    -- suffix=:suffix
                 WHERE teacher_id=:teacher_id
 
             ");
 
             $query->bindValue(":password", $hashed_password);
-            $query->bindValue(":suffix", $new_password);
+            // $query->bindValue(":suffix", $new_password);
 
             $query->bindValue(":teacher_id", $teacher_id);
 
@@ -708,14 +708,14 @@
             return $array;
         }
 
-        public function TeacherSetAsInactive($teacher_id){
+        public function TeacherSetAsInactive($teacher_id, $status){
             $query = $this->con->prepare("UPDATE teacher
 
                 SET teacher_status=:teacher_status
                 WHERE teacher_id=:teacher_id
                 ");
 
-            $query->bindValue(":teacher_status", "inactive");
+            $query->bindValue(":teacher_status", $status);
             $query->bindParam(":teacher_id", $teacher_id);
             $query->execute();
 
@@ -725,7 +725,7 @@
             return false;
         }
 
-        public function LmsLoginCheck($username, $password){
+        public function LmsLoginCheck($username, $password, $school_year_id = null){
 
             $in_active = "Inactive";
 
@@ -734,7 +734,10 @@
             $username = strtolower($username);
 
 
-            $username_parts = explode('@', $username);
+            // $username_parts = explode('@', $username);
+            $username_parts = explode('dcbt', $username);
+
+            $logs = new UserLog($this->con);
 
             if (count($username_parts) == 2) {
                 $char_before_at = strtoupper(substr($username_parts[0], -1)); // Get the last character and make it uppercase
@@ -772,6 +775,21 @@
                         }
 
                         if ($user && password_verify($password, $user['password'])) {
+
+                            $teacher = new Teacher($this->con, $teacher_id);
+
+                            $teacher_unique_id = $teacher->GetSchoolTeacherId();
+
+                            $teacherName = ucwords($teacher->GetTeacherFirstName()) . " " . ucwords($teacher->GetTeacherMiddleName()) . " " . ucwords($teacher->GetTeacherLastName());
+
+                            # Add Logs.
+
+                            $now = date("Y-m-d H:i:s");
+                            $date_creation = date("M d, Y h:i a", strtotime($now));
+
+                            $description = "Faculty ID: $teacher_unique_id $teacherName has logged in the LMS at $date_creation";
+                            $addStudentLogs = $logs->AddUserLogs("Faculty", $description, $school_year_id);
+
                             array_push($arr, $username); // [0]
                             array_push($arr, "teacher");
                             array_push($arr, $teacher_id); // [3]
@@ -808,6 +826,21 @@
                         }
 
                         if ($user && password_verify($password, $user['password'])) {
+
+                            $student = new Student($this->con, $student_id);
+
+                            $student_unique_id = $student->GetStudentUniqueId();
+
+                            $studentName = ucwords($student->GetFirstName()) . " " . ucwords($student->GetMiddleName()) . " " . ucwords($student->GetLastName());
+
+                            # Add Logs.
+
+                            $now = date("Y-m-d H:i:s");
+                            $date_creation = date("M d, Y h:i a", strtotime($now));
+
+                            $description = "Student ID: $student_unique_id $studentName has logged in the enrollment at $date_creation";
+                            $addStudentLogs = $logs->AddUserLogs("Student", $description, $school_year_id);
+
                             array_push($arr, $username); // [0]
                             array_push($arr, "student");
                             array_push($arr, $student_id); // [2]
@@ -840,7 +873,6 @@
                             array_push($arr, "admin");
                             array_push($arr, $admin_id); // [2]
                         }
-
                     }
                 }
                 else {

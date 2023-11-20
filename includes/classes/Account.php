@@ -55,10 +55,22 @@ class Account {
         $enrolled_username = strtolower($username);
         $users_username = strtolower($username);
 
-        $enrolled_username_parts = explode('@', $enrolled_username);
+        // $enrolled_username_parts = explode('@', $enrolled_username);
+        $enrolled_username_parts = explode('dcbt', $enrolled_username);
+
+        // var_dump($enrolled_username_parts);
+        // echo "<br>";
+
+        // var_dump($enrolled_username_parts);
+        // echo "<br>";
+        // return;
+
+        $logs = new UserLog($this->con);
+
 
         if (strpos($pending_email, "@gmail.com") !== false) {
 
+            // echo "hey";
             // Username contains "@gmail.com"
             // echo "Username contains '@gmail.com'";
             
@@ -80,8 +92,8 @@ class Account {
                 -- WHERE student_status != :rejected_student_status
                 -- WHERE student_status IS NULL
 
-                WHERE school_year_id=:school_year_id
-                AND email=:email
+                WHERE email=:email
+                AND school_year_id=:school_year_id
                 AND activated=:activated
                 AND is_enrolled = 0
                 LIMIT 1
@@ -95,6 +107,8 @@ class Account {
             $query->execute();
 
             if($query->rowCount() > 0){
+
+                // echo "ey";
 
                 $userPending = $query->fetch(PDO::FETCH_ASSOC); 
                 $user_password = $userPending['password'];
@@ -163,6 +177,21 @@ class Account {
                     }
 
                     if ($user && password_verify($password, $user['password'])) {
+
+                        $student = new Student($this->con, $student_id);
+
+                        $student_unique_id = $student->GetStudentUniqueId();
+
+                        $studentName = ucwords($student->GetFirstName()) . " " . ucwords($student->GetMiddleName()) . " " . ucwords($student->GetLastName());
+
+                        # Add Logs.
+
+                        $now = date("Y-m-d H:i:s");
+                        $date_creation = date("M d, Y h:i a", strtotime($now));
+
+                        $description = "Student ID: $student_unique_id $studentName has logged in the enrollment at $date_creation";
+                        $addStudentLogs = $logs->AddUserLogs("Student", $description, $school_year_id);
+
                         array_push($array, "enrolled_enrollee"); // [0]
                         array_push($array, $username); // [0]
                         array_push($array, true);
@@ -226,6 +255,21 @@ class Account {
                         $user_id = $row['user_id'];
                         $username = $row['username'];
 
+                        $user = new User($this->con, $user_id);
+
+                        $user_unique_id = $user->GetUniqueId();
+
+                        $userName = ucwords($user->getFirstName()) . " " . ucwords($user->getLastName());
+
+                        # Add Logs.
+
+                        $now = date("Y-m-d H:i:s");
+                        $date_creation = date("M d, Y h:i a", strtotime($now));
+
+                        $description = "$role ID: $user_unique_id $userName has logged in the enrollment at $date_creation";
+                        $addStudentLogs = $logs->AddUserLogs($role, $description, $school_year_id);
+
+
                         // echo "eehey";
                         // return;
 
@@ -253,48 +297,7 @@ class Account {
         else{
             array_push($this->errorArray, Constants::$loginFailed);
         }
-
-        // return;
-
-
-
-        // $query = $this->con->prepare("SELECT * FROM users
-        //     WHERE username=:username
-        //     LIMIT 1");
-
-        // $query->bindParam(":username", $username);
-        // // $query->bindParam(":password", $password);
-
-        // $query->execute();
-
-        // if($query->rowCount() > 0){
-            
-        //     $row = $query->fetch(PDO::FETCH_ASSOC);
-
-        //     $user_id = $row['user_id'];
-        //     $username = $row['username'];
-
-        //     // echo $username;
-        //     // echo "<br>";
-
-        //     // echo $password;
-        //     // echo "<br>";
-
-
-        //     if ($row && password_verify($password, $row['password'])) {
-                
-        //         $role = $row['role'];
-        //         $user_id = $row['user_id'];
-
-        //         array_push($array, true);
-        //         array_push($array, $role);
-        //         array_push($array, $user_id);
-        //     }
-
-        // }else{
-        //     array_push($this->errorArray, Constants::$loginFailed);
-        // }
-
+ 
         return $array;
     }
     public function enrollmentLogIn($username, $password,
@@ -446,17 +449,7 @@ class Account {
         $query->execute();
     }
 
-    private function storeTokenInDatabase($user_id, $token) {
-
-        $query = $this->con->prepare("UPDATE users 
-            SET remember_me_token=:token WHERE user_id=:user_id");
-
-        $query->bindParam(":token", $token);
-        $query->bindParam(":user_id", $user_id);
-        $query->execute();
-
-    }
-
+   
 
     public function studentLogIn($username, $password){
 

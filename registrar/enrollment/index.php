@@ -1,12 +1,25 @@
 <?php 
 
     include_once('../../includes/registrar_header.php');
+    include_once('../../includes/classes/Student.php');
 
 
     $sy_id = "";
     $selected_program_id = "";
     $school_year_search = "";
     $selected_course_id = "";
+
+    $student = new Student($con);
+
+    $birthday = '1999-07-26';
+    $lastName = 'Sirios';
+
+    // Generate the password using the function
+    $password = $student->GenerateEnrolleePassword($birthday, $lastName);
+
+    // // Output the password
+    // echo $password;
+
     
     if($_SERVER['REQUEST_METHOD'] === "POST" 
         && isset($_POST['enrollment_btn_search'])

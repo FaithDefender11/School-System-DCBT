@@ -498,9 +498,10 @@
                         <div class="cards">
                             <div class="card">
                                 <sup>Form ID</sup>
-                                <sub><?php echo $student_enrollment_form_id;?></sub>
+                                <sub><?php echo "<a style='color: inherit' href='../admission/enrollment_audit.php?id=$enrollment_id'>$student_enrollment_form_id</a>"?></sub>
                             </div>
                             <div class="card">
+                            
                                 <sup>Admission type</sup>
                                 <sub><?php echo $student_status;?></sub>
                             </div>
@@ -574,6 +575,7 @@
                             // var_dump($enrollment_details_grade_level);
                         
                         ?>
+
                         <div class="floating">
                             <header>
                                 <div class="title">
@@ -746,15 +748,16 @@
                                     </div>
 
                                 </form>
-<!-- 
-                                <div style="margin-top: 20px;" class="action">
-                                                    <button
-                                                        class="default large"
-                                                        name="pending_choose_section"
-                                                        type="button">
-                                                        Waiting
-                                                    </button>
-                                                </div> -->
+
+                                <!-- <div style="margin-top: 20px;" class="action">
+                                    <button
+                                        class="default large"
+                                        name="pending_choose_section"
+                                        type="button">
+                                        Waiting
+                                    </button>
+                                </div> -->
+
                             </main>
 
                         </div>
@@ -1018,10 +1021,7 @@
 
                                                             $successCreateNewSection = true;
 
-                                                            if(
-                                                                $successCreateNewSection == true
-                                                                // && $updateStudentEnrollmentFormBasedSuccess
-                                                                ){
+                                                            if($successCreateNewSection == true){
 
                                                                 // Alert::success("Enrollment Form ID: $student_enrollment_form_id is now enrolled. This section is now full,
                                                                 //     System has created new section.", "../student/record_details.php?id=$student_id&enrolled_subject=show");
@@ -1040,10 +1040,7 @@
                                                         
                                                     }
 
-                                                    if(
-                                                        // $updateStudentEnrollmentFormBasedSuccess == true
-                                                        $successCreateNewSection == false
-                                                        ){
+                                                    if($successCreateNewSection == false){
 
                                                         // Alert::success("Enrollment Form ID: $student_enrollment_form_id is now enrolled.", "../student/record_details.php?id=$student_id&enrolled_subject=show");
                                                     
@@ -1068,6 +1065,8 @@
                                                         Alert::successEnrollment("Enrollment Form ID: $student_enrollment_form_id is now enrolled.", "../student/record_details.php?id=$student_id&enrolled_subject=show");
                                                         
                                                         #approvestate
+                                                        # Check if enrollment form is new, the it should have 
+                                                        # the generate password only for new enrollee
                                                         $student_subject->SendingEmailAfterSuccessfulEnrollment(
                                                             $processEnrolled,  $generate_password);
 
@@ -1318,7 +1317,7 @@
                                             && $doesStudentEnrolled == false
                                             ){
                                                 ?>
-                                                    <div style="margin-top: 20px;" class="action">
+                                                    <!-- <div style="margin-top: 20px;" class="action">
                                                         
                                                         <button
                                                             class="default large information"
@@ -1330,7 +1329,7 @@
                                                             Registrar not evaluated
                                                         </button>
 
-                                                    </div>
+                                                    </div> -->
                                                 <?php
                                         }
 

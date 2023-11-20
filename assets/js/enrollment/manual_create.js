@@ -78,25 +78,25 @@ $(document).ready(function () {
 
           $('#course_id').html(options);
 
-          var anchorUrl = `../section/createe_section.php?id=${program_id}&manual_create=true`;
+          var createSectionUrl = `../section/createe_section.php?id=${program_id}&manual_create=true`;
 
           var anchorHtml = `
-                <a style="text-decoration: none; color: inherit" href="${anchorUrl}">
-                    <i class="fas fa-plus-circle"></i>
-                </a>
-            `;
+            <a style="text-decoration: none; color: inherit" href="${createSectionUrl}" target="_blank">
+                <i class="fas fa-plus-circle"></i>
+              </a>
+          `;
 
           $('#populateSectionCreate').html(anchorHtml);
 
           return;
         } else {
-          var anchorUrl = `../section/createe_section.php?id=${program_id}&manual_create=true`;
+          var createSectionUrl = `../section/createe_section.php?id=${program_id}&manual_create=true`;
 
           var anchorHtml = `
-                <a style="text-decoration: none; color: inherit" href="${anchorUrl}">
-                    <i class="fas fa-plus-circle"></i>
-                </a>
-            `;
+            <a style="text-decoration: none; color: inherit" href="${createSectionUrl}" target="_blank">
+                <i class="fas fa-plus-circle"></i>
+              </a>
+          `;
 
           $('#populateSectionCreate').html(anchorHtml);
 
@@ -109,21 +109,24 @@ $(document).ready(function () {
             var program_section = value.program_section;
             var enrollment_capacity = value.enrollment_capacity;
             var capacity = value.capacity;
+            var non_enrolled_count = value.non_enrolled_count;
             var program_id = value.program_id;
 
             disabled = enrollment_capacity == capacity ? 'disabled' : '';
 
             options +=
               '<option value="' +
-              value.course_id +
+              course_id +
               '" ' +
               disabled +
               ' >' +
-              value.program_section +
+              program_section +
               ' &nbsp; Enrolled: ' +
-              value.enrollment_capacity +
+              enrollment_capacity +
               ' / Capacity: ' +
-              value.capacity +
+              capacity + // Removed extra '+' here
+              ', Non-enrolled: ' +
+              non_enrolled_count +
               '</option>';
           });
 

@@ -3,45 +3,6 @@
     require_once("../../includes/config.php");
     require_once("../../includes/classes/User.php");
     
-
-
-
-    // $data_arr = [
-    //     [
-    //         'event_id' => 1,
-    //         'title' => 'Focusing Event 1',
-    //         'start' => '2023-09-21',
-    //         'end' => '2023-09-22',
-    //         'color' => '2312',
-    //         'url' => 'https://www.shinerweb.com'
-    //     ],
-    //     [
-    //         'event_id' => 1,
-    //         'title' => 'Focusing Event 2',
-    //         'start' => '2023-09-21',
-    //         'end' => '2023-09-22',
-    //         'color' => '2312',
-    //         'url' => 'https://www.shinerweb.com'
-    //     ],
-    //     [
-    //         'event_id' => 1,
-    //         'title' => 'Focusing Event 3',
-    //         'start' => '2023-09-23',
-    //         'end' => '2023-09-26',
-    //         'color' => '2312',
-    //         'url' => 'https://www.shinerweb.com'
-    //     ],
-    //     [
-    //         'event_id' => 2,
-    //         'title' => 'Hoping Event',
-    //        'start' => '2023-09-22',
-    //         'end' => '2023-09-23',
-    //         'color' => '23132',
-    //         'url' => 'https://www.shinerweb.com'
-    //     ],
-    //     // Add more events as needed
-    // ];
-
     $teacher_id = NULL;
     $school_year_id = NULL;
 

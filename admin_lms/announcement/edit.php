@@ -34,7 +34,9 @@
         $title = $announcement->GetTitle();
         $content = $announcement->GetContent();
         $for_students = $announcement->GetForStudents();
+        $for_teacher = $announcement->GetForTeachers();
         $teachers_id = $announcement->GetTeachersIds();
+
 
         // var_dump($teachers_id);
 
@@ -48,41 +50,41 @@
             $content = $_POST['content'];
 
             $student_selected = isset($_POST['student_selected']) ? $_POST['student_selected'] : NULL ;
+            $teacher_selected = isset($_POST['teacher_selected']) ? $_POST['teacher_selected'] : NULL ;
 
+            if($student_selected == NULL && $teacher_selected == NULL){
+                Alert::error("Please select audience for annoouncements", "");
+                exit();
+            }
             
             $teachers_id = NULL;
 
 
-            if (isset($_POST['selectedTeachers']) && is_array($_POST['selectedTeachers'])) {
+            // if (isset($_POST['selectedTeachers']) && is_array($_POST['selectedTeachers'])) {
 
-                // Loop through the selected teacher IDs
-                foreach ($_POST['selectedTeachers'] as $selectedTeacherId) {
+            //     // Loop through the selected teacher IDs
+            //     foreach ($_POST['selectedTeachers'] as $selectedTeacherId) {
 
-                    $teachers_id = implode(',', $_POST['selectedTeachers']);
+            //         $teachers_id = implode(',', $_POST['selectedTeachers']);
 
-                }
-
-              
-
-          
-
-                
-
-            } 
+            //     }
+            // } 
 
             
 
-            else {
-                // No teachers selected
-                // Handle this case if necessary
-            }
+            // else {
+            //     // No teachers selected
+            //     // Handle this case if necessary
+            // }
 
             $wasSuccess = $announcement->EditAdminAnnouncement(
                 $announcement_id,
-                $adminUserId,  $teachers_id,
+                $adminUserId,
                 $current_school_year_id, $title, $content,
-                $student_selected
+                $student_selected,
+                $teacher_selected
             );
+            
             if($wasSuccess){
                 Alert::successAutoRedirect("Announcement has been modified.", $back_url);
                 exit();
@@ -118,14 +120,14 @@
                                 <div class='form-group mb-2'>
                                     <label for="title" class='mb-2'>* Subject</label>
 
-                                    <input class='form-control' type='text' 
+                                    <input required class='form-control' type='text' 
                                         placeholder='Add Assignment' id="title" value="<?= $title; ?>" name='title'>
                                 </div>
 
 
                                 <div class='form-group mb-2'>
                                     <label for="content" class='mb-2'>* Content</label>
-                                    <textarea class="form-control"  name="content" id="content"><?= $content; ?></textarea>
+                                    <textarea required class="form-control"  name="content" id="content"><?= $content; ?></textarea>
                                 </div>
 
                                 <div class='form-group mb-2'>
@@ -136,25 +138,26 @@
                                         $selectedTeacherIdsArray = explode(',', $teachers_id);
 
                                         $for_students_checked = $for_students == 1 ? "checked" : "";
+                                        $for_teachers_checked = $for_teacher == 1 ? "checked" : "";
 
                                         echo "<br>";
                                         echo "
-                                            <input type='checkbox' id='select-all' class='select-all-checkbox'>
-                                            <span>Teachers: </span> &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp;  &nbsp; 
+                                            <input $for_teachers_checked name='teacher_selected' type='checkbox'>&nbsp; <span>Teacher: </span>
                                             <input $for_students_checked name='student_selected' type='checkbox'>&nbsp; <span>Student: </span>
                                         ";
                                         echo "<br>";
 
-                                        foreach ($allActiveTeacher as $teacher) {
+                                        // foreach ($allActiveTeacher as $teacher) {
 
-                                            $teacherName = ucwords(htmlspecialchars($teacher['firstname'])) . " " . ucwords(htmlspecialchars($teacher['lastname']));
-                                            $teacher_id = htmlspecialchars($teacher['teacher_id']);
+                                        //     $teacherName = ucwords(htmlspecialchars($teacher['firstname'])) . " " . ucwords(htmlspecialchars($teacher['lastname']));
+                                        //     $teacher_id = htmlspecialchars($teacher['teacher_id']);
                                         
-                                            $checked = in_array($teacher_id, $selectedTeacherIdsArray) ? 'checked' : '';
+                                        //     $checked = in_array($teacher_id, $selectedTeacherIdsArray) ? 'checked' : '';
 
-                                            echo '<input type="checkbox" name="selectedTeachers[]" value="' . $teacher_id . '" ' . $checked . '> ' . $teacherName . '<br>';
+                                        //     echo '<input type="checkbox" name="selectedTeachers[]" value="' . $teacher_id . '" ' . $checked . '> ' . $teacherName . '<br>';
 
-                                        }
+                                        // }
+
                                     ?>
                                 </div>
 

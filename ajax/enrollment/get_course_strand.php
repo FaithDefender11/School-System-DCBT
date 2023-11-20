@@ -13,6 +13,7 @@
        
         $query = $con->prepare("SELECT * FROM program
             WHERE department_id=:department_id
+            AND status = 1
         ");
 
         $query->bindParam(":department_id", $selected_department_id);

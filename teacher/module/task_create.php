@@ -70,7 +70,7 @@
             && isset($_POST['add_assignment_topic_'. $subject_period_code_topic_id])
             && isset($_POST['assignment_name'])
             && isset($_POST['max_score'])
-            && isset($_POST['allow_late_submission'])
+            // && isset($_POST['allow_late_submission'])
             && isset($_POST['type'])
             && isset($_POST['max_attempt'])
             && isset($_POST['due_date'])
@@ -94,7 +94,7 @@
                 $assignment_name = $_POST['assignment_name'];
                 $max_score = $_POST['max_score'];
 
-                $allow_late_submission = $_POST['allow_late_submission'];
+                // $allow_late_submission = $_POST['allow_late_submission'];
                 $due_date = $_POST['due_date'];
 
                 // $task_type_id = $_POST['task_type_id'];
@@ -129,7 +129,7 @@
                 $successCreate = $subjectCodeAssignment->InsertAssignment(
                     $subject_period_code_topic_id,
                     $assignment_name, $description, $max_score, 
-                    $allow_late_submission, $due_date, $type, $max_attempt, $task_type_id);
+                    $due_date, $type, $max_attempt, $task_type_id);
 
                 if($successCreate){
                     $subject_code_assignment_id = $con->lastInsertId();
@@ -253,7 +253,7 @@
                             </div>
 
 
-                            <div class='form-group mb-2'>
+                            <!-- <div class='form-group mb-2'>
 
                                 <label>* Allow Late Submission</label><br>
                                 <input type="radio" id="late_submission_yes" required name="allow_late_submission" value="yes">
@@ -262,7 +262,7 @@
                                 <input type="radio" checked id="late_submission_no" required name="allow_late_submission" value="no">
                                     
                                 <label for="late_submission_no">No</label><br>
-                            </div>
+                            </div> -->
 
                                 
 

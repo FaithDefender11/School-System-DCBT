@@ -6,9 +6,21 @@
     require_once("includes/classes/Teacher.php");
     require_once("includes/classes/Constants.php"); 
     require_once("includes/classes/FormSanitizer.php"); 
+    require_once("includes/classes/Teacher.php"); 
+    require_once("includes/classes/UserLog.php"); 
+    require_once("includes/classes/Student.php"); 
+    require_once("includes/classes/SchoolYear.php"); 
 
     $account = new Account($con);
     $teacher = new Teacher($con);
+
+    $school_year = new SchoolYear($con);
+    $school_year_obj = $school_year->GetActiveSchoolYearAndSemester();
+
+    $current_school_year_term = $school_year_obj['term'];
+    $current_school_year_period = $school_year_obj['period'];
+    $current_school_year_id = $school_year_obj['school_year_id'];
+
     
     // if (isset($_SESSION['enrollment_form_id'])) {
     //     unset($_SESSION['enrollment_form_id']);
@@ -66,8 +78,10 @@
         // echo "<br>";
 
         // return;
+
+
         
-        $wasSuccess = $teacher->LmsLoginCheck($username, $password);
+        $wasSuccess = $teacher->LmsLoginCheck($username, $password, $current_school_year_id);
 
         if(sizeof($wasSuccess) > 0
             && $wasSuccess[1] == "teacher"
@@ -246,7 +260,6 @@
                                 <div>
                                     <input type="text" name="username" id="username" value="" required />
                                 </div>
-                                <small><a href="#">Forgot username?</a></small>
                             </div>
                             <div class="form-element">
                                 <label for="password">Password</label>
@@ -259,7 +272,7 @@
                                     required
                                     />
                                 </div>
-                                <small><a href="#">Forgot password?</a></small>
+                                <!-- <small><a href="#">Forgot password?</a></small> -->
                             </div>
                             <div class="action">
                                 <input type="submit" name="teacher_lms_btn" value="Submit" />

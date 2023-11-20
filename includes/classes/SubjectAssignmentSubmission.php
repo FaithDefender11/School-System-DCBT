@@ -1072,15 +1072,17 @@ class SubjectAssignmentSubmission{
                 );
                 
 
-
+                // var_dump($statusSubmission);
+                // echo "<br>";
                 $submitted_grade = false;
 
                 if($statusSubmission !== NULL){
                     
                     $submitted_grade =  $statusSubmission['subject_grade'];
 
-                    // echo "<br>";
                     // var_dump($submitted_grade);
+                    // echo "<br>";
+
                 }
 
                 # What are the overall score to be added.
@@ -1097,7 +1099,7 @@ class SubjectAssignmentSubmission{
                 # then it should add the max_score.
 
                 if($this->CheckAssignmentIsDue($subjectCodeAssignmentId) == true
-                    && $studentHasSubmittedByNotGraded == false){
+                    || $studentHasSubmittedByNotGraded == false){
 
                     $subjectCodeAssignment = new SubjectCodeAssignment($this->con, $subjectCodeAssignmentId);
 

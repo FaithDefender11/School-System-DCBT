@@ -7,6 +7,7 @@
     include_once('../../includes/classes/SchoolYear.php');
     include_once('../../includes/classes/Announcement.php');
     include_once('../../includes/classes/Enrollment.php');
+    include_once('../../includes/classes/Notification.php');
 
     // echo Helper::RemoveSidebar();
 
@@ -46,50 +47,121 @@
             $title = $_POST['title'];
             $content = $_POST['content'];
 
-            $student_selected = isset($_POST['student_selected']) ? $_POST['student_selected'] : NULL ;
+            $student_selected = isset($_POST['student_selected']) ? $_POST['student_selected'] : NULL;
+            $teacher_selected = isset($_POST['teacher_selected']) ? $_POST['teacher_selected'] : NULL;
 
+            if($student_selected == NULL && $teacher_selected == NULL){
+                Alert::error("Please select audience for annoouncements", "");
+                exit();
+            }
             // var_dump($student_selected);
+            // var_dump($teacher_selected);
 
+            // return;
 
             $announcement = new Announcement($con);
+            $notification = new Notification($con);
+
+            if($student_selected == "on" && $teacher_selected != "on"){
+
+                # STUDENT ONLY
+                $wasSuccess = $announcement->InsertAnnouncementForStudentOnly(
+                    $adminUserId,
+                    $current_school_year_id,
+                    $title,
+                    $content
+                );
+
+                if($wasSuccess){
+
+                    $announcement_id = $con->lastInsertId();
+
+                    $wasInserted = $notification->InsertStudentOnlyNotificationFromAdmin(
+                        $announcement_id, $current_school_year_id);
+
+                    Alert::success("Announcement for student has been successfully created", $back_url);
+                    exit();
+                }
+            }
+
+
+
+            if($student_selected != "on" && $teacher_selected == "on"){
+
+                # TEACHER ONLY
+                $wasSuccess = $announcement->InsertAnnouncementForTeacherOnly(
+                    $adminUserId,
+                    $current_school_year_id,
+                    $title,
+                    $content
+                );
+                if($wasSuccess){
+
+                    $announcement_id = $con->lastInsertId();
+
+                    $wasInserted = $notification->InsertTeacherOnlyNotificationFromAdmin(
+                        $announcement_id, $current_school_year_id);
+
+                    Alert::success("Announcement for teacher has been successfully created", $back_url);
+                    exit();
+                }
+            }
+
+            if($student_selected == "on" && $teacher_selected == "on"){
+
+                # STUDENT AND TEACHER
+                $wasSuccess = $announcement->InsertAnnouncementForBothStudentAndTeacher(
+                    $adminUserId,
+                    $current_school_year_id,
+                    $title,
+                    $content
+                );
+                if($wasSuccess){
+
+                    $announcement_id = $con->lastInsertId();
+
+                    $wasInserted = $notification->InsertBothTeacherStudentNotificationFromAdmin(
+                        $announcement_id, $current_school_year_id);
+
+                    Alert::success("Announcement for both teachers and students has been successfully created", $back_url);
+                    exit();
+                }
+            }
 
             if (isset($_POST['student_selected'])) {
 
                 $student_selected = "";
                 // echo "hey";
-
-                if(count($getAllStudents) > 0){
-
-                    
-                    
-                }
                 
             }
-            if (isset($_POST['selectedTeachers']) && is_array($_POST['selectedTeachers'])) {
 
-                $teachers_id = "";
-                // Loop through the selected teacher IDs
-                foreach ($_POST['selectedTeachers'] as $selectedTeacherId) {
 
-                    $teachers_id = implode(',', $_POST['selectedTeachers']);
+            // if (isset($_POST['selectedTeachers']) && is_array($_POST['selectedTeachers'])) {
 
-                }
+            //     $teachers_id = "";
+            //     // Loop through the selected teacher IDs
+            //     foreach ($_POST['selectedTeachers'] as $selectedTeacherId) {
 
-                $wasSuccess = $announcement->InsertAdminAnnouncement(
-                    $adminUserId,  $teachers_id,
-                    $current_school_year_id, $title, $content,
-                    $student_selected
-                );
+            //         $teachers_id = implode(',', $_POST['selectedTeachers']);
 
-                if($wasSuccess){
-                    Alert::successAutoRedirect("Announcement has been posted.", $back_url);
-                    exit();
-                }
+            //     }
 
-            } else {
-                // No teachers selected
-                // Handle this case if necessary
-            }
+            //     $wasSuccess = $announcement->InsertAdminAnnouncement(
+            //         $adminUserId,  $teachers_id,
+            //         $current_school_year_id, $title, $content,
+            //         $student_selected
+            //     );
+
+            //     if($wasSuccess){
+            //         Alert::successAutoRedirect("Announcement has been posted.", $back_url);
+            //         exit();
+            //     }
+
+            // } else {
+            //     // No teachers selected
+            //     // Handle this case if necessary
+            // }
+
     }
 
 ?>
@@ -132,21 +204,29 @@
                             <?php
 
                                 echo "<br>";
+                                // echo "
+                                //     <input type='checkbox' id='select-all' class='select-all-checkbox'>
+                                //     <span>Teachers: </span> &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp;  &nbsp; 
+                                //     <input name='student_selected' type='checkbox'>&nbsp; <span>Student: </span>
+                                // ";
+
+                                  // foreach ($allActiveTeacher as $teacher) {
+
+                                //     $teacherName = ucwords(htmlspecialchars($teacher['firstname'])) . " " . ucwords(htmlspecialchars($teacher['lastname']));
+                                //     $teacher_id = htmlspecialchars($teacher['teacher_id']);
+                                
+                                //     echo '<input type="checkbox" name="selectedTeachers[]" value="' . $teacher_id . '"> ' . $teacherName . '<br>';
+                                
+                                // }
+
                                 echo "
-                                    <input type='checkbox' id='select-all' class='select-all-checkbox'>
-                                    <span>Teachers: </span> &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp;  &nbsp; 
-                                    <input name='student_selected' type='checkbox'>&nbsp; <span>Student: </span>
+                                    <input name='teacher_selected' type='checkbox'>&nbsp; <span>Teacher &nbsp;</span>
+                                    <input name='student_selected' type='checkbox'>&nbsp;&nbsp; <span>Student: </span>
                                 ";
+
                                 echo "<br>";
 
-                                foreach ($allActiveTeacher as $teacher) {
-
-                                    $teacherName = ucwords(htmlspecialchars($teacher['firstname'])) . " " . ucwords(htmlspecialchars($teacher['lastname']));
-                                    $teacher_id = htmlspecialchars($teacher['teacher_id']);
-                                
-                                    echo '<input type="checkbox" name="selectedTeachers[]" value="' . $teacher_id . '"> ' . $teacherName . '<br>';
-                                
-                                }
+                              
 
                                
 

@@ -103,7 +103,11 @@
                             <!-- If Enrollment Course Id = 0, filter = current enrolled course id -->
                             <!-- If Enrollment Course Id != 0, filter = current enrollment course id -->
 
-                            <label for="chosen_program_course_id" class="mb-2">Available Section</label>
+                            <label for="chosen_program_course_id" class="mb-2">Sections
+
+                                <a id="populateSectionCreate"></a>
+                                    
+                            </label>
 
                             <!-- <select class='form-control' id="chosen_program_course_id" name='chosen_program_course_id'>
                                 <?php
@@ -117,7 +121,6 @@
                                         WHERE t1.program_id !=:program_id
 
                                         AND t1.course_id != :course_id
-                                        -- AND course_level = :course_level
                                         AND t1.active = 'yes'
                                         AND t1.is_full = 'no'
                                         AND t1.is_remove = 0
@@ -139,9 +142,7 @@
                                         
                                         while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
                                             $selected = ""; // Reset the variable for each option
-                                            // if ($row['course_id'] == $course_id) {
-                                            //     $selected = "selected";
-                                            // }
+                                           
                                             echo "<option value='".$row['course_id']."' $selected>".$row['program_section']."</option>";
                                         }
                                     }else{
@@ -201,20 +202,59 @@
             // contentType: false,
             success: function (response) {
                 // var output = response.trim();
-                // console.log(output)
+                console.log(response)
 
-                var options = '<option selected value="">Available Sections</option>';
+                let disabled = '';
+               
+                var createSectionUrl = `../section/createe_section.php?id=${program_id}`;
 
-                $.each(response, function (index, value) {
-                    options +=
-                    '<option value="' +
-                    value.course_id +
-                    '">' +
-                    value.program_section +
-                    '</option>';
-                });
+                var anchorHtml = `
+                    <a style="text-decoration: none; color: inherit" href="${createSectionUrl}" target="_blank">
+                        <i class="fas fa-plus-circle"></i>
+                    </a>
+                `;
 
-                $('#chosen_program_course_id').html(options);
+                $('#populateSectionCreate').html(anchorHtml);
+
+                if (response.length === 0) {
+                    console.log('empty')
+                    options += '<option value="NoSection">No available</option>';
+                    $('#chosen_program_course_id').html(options);
+
+                }else{
+
+                    var options = '<option selected value="">Available Sections</option>';
+
+                    $.each(response, function (index, value) {
+                        var course_id = value.course_id;
+                        var program_section = value.program_section;
+                        var enrollment_capacity = value.enrollment_capacity;
+                        var capacity = value.capacity;
+                        var non_enrolled_count = value.non_enrolled_count;
+                        var program_id = value.program_id;
+
+                        disabled = enrollment_capacity == capacity ? 'disabled' : '';
+
+                        options +=
+                        '<option value="' +
+                        course_id +
+                        '" ' +
+                        disabled +
+                        ' >' +
+                        program_section +
+                        ' &nbsp; Enrolled: ' +
+                        enrollment_capacity +
+                        ' / Capacity: ' +
+                        capacity + // Removed extra '+' here
+                        ', Non-enrolled: ' +
+                        non_enrolled_count +
+                        '</option>';
+                    });
+
+                    $('#chosen_program_course_id').html(options);
+
+                }
+
             },
             error: function(xhr, status, error) {
                 // Handle error response here

@@ -130,8 +130,11 @@
 
         $email = "";
 
-        $lrn = isset($_POST['lrn']) ? Helper::sanitizeFormString($_POST['lrn']) : '';
+        $lrn = isset($_POST['lrn']) ? Helper::sanitizeFormString($_POST['lrn']) : NULL;
+        // $lrn = NULL;
 
+        // var_dump($lrn);
+        // return;
         
         // echo "firstname: $firstname<br>";
         // echo "middle_name: $middle_name<br>";
@@ -251,9 +254,10 @@
                                                     type="text" 
                                                     name="lrn" 
                                                     style="width: 200px" 
-                                                    placeholder="236-736-050-357"
-                                                    value="<?php echo ($lrn != "") ? $lrn : ''; ?>"
-                                                >
+                                                    placeholder="e.g. 236-736-050-357"
+                                                    value="<?php  
+                                                        echo Helper::DisplayText('lrn', $lrn);
+                                                    ?>">
                                             </div>
                                         </span>
                                     </div>

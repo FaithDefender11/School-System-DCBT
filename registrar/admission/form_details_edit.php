@@ -243,8 +243,8 @@
 
                 echo "<br>";
                 // echo "oldValue: $oldValue";
-                echo "field: $field";
-                echo "<br>";
+                // echo "field: $field";
+                // echo "<br>";
 
                 $formatValue = "";
 

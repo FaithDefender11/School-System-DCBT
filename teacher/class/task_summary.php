@@ -250,6 +250,8 @@
                                                     $getAllSubmissionsPointsToSubjectCode = $subjectAssignmentSubmission
                                                         ->GetSubjectSubmissionTotalPoints($subjectCodeAssignmentIds,
                                                             $student_id, $school_year_id);
+
+                                                        // var_dump($subjectCodeAssignmentIds);
                                                     
                                                     $qualifiedMaxScore = $subjectAssignmentSubmission
                                                         ->GetOverscoreFromAssignmentAnswered($subjectCodeAssignmentIds,
@@ -260,13 +262,17 @@
                                                     }
 
                                                     $rounded_equivalent = "";
+
                                                     // $rounded_equivalent = floor($equivalent / 10) * 10;
-                                                    
+                                                    // var_dump($qualifiedMaxScore);
+
                                                     if($qualifiedMaxScore > 0){
                                                         $equivalent = ($student_points / $qualifiedMaxScore) * 100;
                                                         $rounded_equivalent = round($equivalent, 0, PHP_ROUND_HALF_UP);
 
                                                     }
+                                                            // <td>$student_points / $qualifiedMaxScore = $rounded_equivalent% </td>
+
                                                     echo "
                                                         <tr>
                                                              <td style='font-size: 15px'>
@@ -279,7 +285,7 @@
                                                                     </td>
                                                             <td>$firstname</td>
                                                             <td></td>
-                                                            <td>$student_points / $qualifiedMaxScore = $rounded_equivalent% </td>
+                                                            <td>$rounded_equivalent% </td>
                                                         </tr>
                                                     ";
                                                 }
@@ -508,6 +514,7 @@
     }
     ?>
     <script>
+        
         function gradeStudent(student_id, subject_code_assignment_id, max_score, school_year_id){
 
             var student_id = parseInt(student_id);

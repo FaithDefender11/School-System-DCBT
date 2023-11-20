@@ -41,6 +41,8 @@
 
         $enrollment_form_id_url = $_GET['id'];
 
+        // var_dump($enrollment_form_id_url);
+
         $enrollment_form_id = $enrollment->GetEnrollmentFormByFormIdOnly($enrollment_form_id_url);
 
         // var_dump($enrollment_form_id);
@@ -192,6 +194,9 @@
 
         $student_enrollment_form_id = $enrollment->GetEnrollmentFormId($enrollment_form_id_url,
             $student_enrollment_course_id, $current_school_year_id);
+
+        // var_dump($student_enrollment_form_id);
+
 
         $enrollment_form_id = $enrollment->GetEnrollmentFormId($student_id,
             $student_enrollment_course_id, $current_school_year_id);
@@ -1043,8 +1048,11 @@
                                         <tbody>
                                             <?php
 
-                                                $assignSubjects = $student_subject->GetStudentAssignSubjects($enrollment_id,
-                                                    $student_id, $current_school_year_id);
+                                                $assignSubjects = $student_subject->GetStudentAssignSubjects(
+                                                    $enrollment_form_id_url,
+                                                    $student_id);
+
+                                                // var_dump($assignSubjects);
                                              
                                                 foreach ($assignSubjects as $key => $value) {
 
@@ -1257,7 +1265,7 @@
                                                         ?>
                                                             <span>Paid Amount: <span style="font-weight:bold;">₱</span> <?php echo $value['amount_paid']; ?>, &nbsp;</span>
                                                             <span>Transaction Date: <?php echo $date_creation; ?></span>
-                                                            <span>Process by:: <?php echo $cashierName; ?></span>
+                                                            <span>Process by: <?php echo $cashierName; ?></span>
                                                             <br>
                                                         <?php
                                                     }

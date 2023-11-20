@@ -88,13 +88,17 @@ class User {
     }
 
     public function getFirstName() {
-        return $this->sqlData["firstName"];
-        // return isset($this->sqlData['firstName']) ? $this->sqlData["firstName"] : ""; 
+        return isset($this->sqlData['firstName']) ? $this->sqlData["firstName"] : ""; 
+
+    }
+    public function GetUniqueId() {
+        return isset($this->sqlData['unique_id']) ? $this->sqlData["unique_id"] : ""; 
 
     }
 
     public function getLastName() {
-        return $this->sqlData["lastName"];
+        return isset($this->sqlData['lastName']) ? $this->sqlData["lastName"] : ""; 
+
     }
 
     public function GetEmail() {
@@ -279,6 +283,44 @@ class User {
         return false;
 
     }
+
+    public function UserResetPassword($user_id){
+
+        $array = [];
+
+        $new_password =  $this->generateRandomPassword();
+
+        // Hash the new password
+        $hashed_password = password_hash($new_password, PASSWORD_BCRYPT);
+
+        // Update the student's password in the database
+        $query = $this->con->prepare("UPDATE users 
+
+            SET password=:password
+                -- suffix=:suffix
+            WHERE user_id=:user_id
+
+        ");
+
+        $query->bindValue(":password", $hashed_password);
+        // $query->bindValue(":suffix", $new_password);
+
+        $query->bindValue(":user_id", $user_id);
+
+        if($query->execute()){
+            // echo "<br>";
+            // echo "Temporary Password: $new_password";
+            // echo "<br>";
+
+            // Sent via email
+            // return $new_password;
+            array_push($array, $new_password);
+            array_push($array, true);
+        }
+
+        return $array;
+    }
+
 
     public function MarkStudentAsApplicable() {
 

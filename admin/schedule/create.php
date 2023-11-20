@@ -10,6 +10,8 @@
     include_once('../../includes/classes/SubjectPeriodCodeTopicTemplate.php');
     include_once('../../includes/classes/SubjectPeriodCodeTopic.php');
     include_once('../../includes/classes/Room.php');
+    include_once('../../includes/classes/Program.php');
+    include_once('../../includes/classes/Department.php');
 
 
     // var_dump($getAllDefaultTopicTemplate);
@@ -45,6 +47,17 @@
         $section = new Section($con, $url_course_id);
 
         $db_section_capacity = $section->GetSectionCapacity();
+        $section_program_id = $section->GetSectionProgramId($url_course_id);
+
+        $program = new Program($con, $section_program_id);
+
+        $department_id = $program->GetProgramDepartmentId();
+
+        $department = new Department($con, $department_id);
+
+        $departmentName = $department->GetDepartmentName();
+
+        // var_dump($departmentName);
 
         $allSection = $section->GetAllCreatedSectionWithinSYSemester($current_school_year_term);
 
@@ -579,7 +592,15 @@
         <script>
 
             $(document).ready(function() {
-                
+
+                let department_id = `
+                    <?php echo $department_id ?>
+                `;
+
+                department_id = department_id.trim();
+
+                console.log(department_id)
+
                 const searchInputTeacher = $('#searchInputTeacher');
 
                 searchInputTeacher.autocomplete({
@@ -588,7 +609,8 @@
                             url: '../../ajax/schedule/typeahead.php',
                             dataType: 'json',
                             data: {
-                                query: request.term
+                                query: request.term,
+                                department_id
                             },
                             success: function(data) {
                                 response(data);
@@ -665,7 +687,6 @@
                 });
 
             });
-
 
             $('#datetime').datetimepicker({
                 format: 'hh:mm A'

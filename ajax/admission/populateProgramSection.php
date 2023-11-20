@@ -5,12 +5,10 @@
     require_once("../../includes/classes/Student.php");
     require_once("../../includes/classes/Section.php");
 
-    // $school_year = new SchoolYear($con);
+    $school_year = new SchoolYear($con);
 
-    // $school_year_obj = $school_year->GetActiveSchoolYearAndSemester();
-    // $school_year_id = $school_year_obj['school_year_id'];
-    // $current_school_year_semester = $school_year_obj['period'];
-    // $current_school_year_term = $school_year_obj['term'];
+    $school_year_obj = $school_year->GetActiveSchoolYearAndSemester();
+    $school_year_id = $school_year_obj['school_year_id'];
 
     if (isset($_POST['program_id'])
         && isset($_POST['current_school_year_term'])) {
@@ -32,14 +30,27 @@
 
         if($query->rowCount() > 0){
 
+            $section = new Section($con);
+
+
             while($row = $query->fetch(PDO::FETCH_ASSOC)){
 
                 $course_id = $row['course_id'];
                 $program_section = $row['program_section'];
+                $capacity = $row['capacity'];
+
+                $non_enrolled_count = $section->GetEnrollmentCourseIdNonEnrolledCount($course_id,
+                    $school_year_id);
+
+                $enrollment_capacity = $section->GetEnrollmentCourseIdEnrolledCount($course_id,
+                    $school_year_id);
 
                 $data[] = array(
                     'course_id' => $course_id,
-                    'program_section' => $program_section
+                    'program_section' => $program_section,
+                     'capacity' => $capacity,
+                    'enrollment_capacity' => $enrollment_capacity,
+                    'non_enrolled_count' => $non_enrolled_count
                 );
             }
         }

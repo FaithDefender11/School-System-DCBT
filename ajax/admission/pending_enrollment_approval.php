@@ -13,7 +13,7 @@
     $current_school_year_period = $school_year_obj['period'];
     $current_school_year_id = $school_year_obj['school_year_id'];
     
-     if (isset($_POST['type']) &&
+    if (isset($_POST['type']) &&
         isset($_POST['firstname']) && isset($_POST['lastname']) 
         && isset($_POST['middle_name']) && isset($_POST['password']) 
         && isset($_POST['program_id']) && isset($_POST['civil_status']) && isset($_POST['nationality']) && isset($_POST['contact_number']) && isset($_POST['birthday']) && isset($_POST['age']) && isset($_POST['guardian_name']) && isset($_POST['guardian_contact_number']) && isset($_POST['sex']) && isset($_POST['student_status'])
@@ -58,7 +58,7 @@
         $student = new Student($con);
 
         $generateStudentUniqueId = $student->GenerateUniqueStudentNumber();
-        $username = strtolower($lastname) . '.' . $generateStudentUniqueId . '@dcbt.ph';
+        $username = strtolower($lastname) . '.' . $generateStudentUniqueId . 'dcbt.edu.ph';
 
 
         // echo "Type: " . $type . '<br>';

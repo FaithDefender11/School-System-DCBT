@@ -80,6 +80,8 @@ class Student{
         return isset($this->sqlData['is_graduated']) ? $this->sqlData["is_graduated"] : null; 
     }
 
+    
+
     public function CheckIfActive() {
         return isset($this->sqlData['active']) ? $this->sqlData["active"] : null; 
     }
@@ -889,8 +891,46 @@ class Student{
                         
         $username_student_role = "S";
 
-        $username = strtolower($lastname) . '.' . $generateStudentUniqueId . $username_student_role . '@dcbt.edu.ph';
+        $username = strtolower($lastname) . '.' . $generateStudentUniqueId . $username_student_role . 'dcbt.edu.ph';
         return $username;
+    }
+
+    public function StudentResetPassword($student_id){
+
+        $array = [];
+
+
+        $new_password =  $this->generateRandomPassword();
+
+        // Hash the new password
+        $hashed_password = password_hash($new_password, PASSWORD_BCRYPT);
+
+        // Update the student's password in the database
+        $query = $this->con->prepare("UPDATE student 
+
+            SET password=:password
+                -- suffix=:suffix
+            WHERE student_id=:student_id
+
+        ");
+
+        $query->bindValue(":password", $hashed_password);
+        // $query->bindValue(":suffix", $new_password);
+
+        $query->bindValue(":student_id", $student_id);
+
+        if($query->execute()){
+            // echo "<br>";
+            // echo "Temporary Password: $new_password";
+            // echo "<br>";
+
+            // Sent via email
+            // return $new_password;
+            array_push($array, $new_password);
+            array_push($array, true);
+        }
+
+        return $array;
     }
 
     public function CalculateAge($birthdate) {
@@ -987,6 +1027,16 @@ class Student{
 
         
         return false;
+    }
+
+    function GenerateEnrolleePassword($birthday, $lastName) {
+        // Convert birthday to the desired format
+        $formattedBirthday = (new DateTime($birthday))->format('mdY');
+
+        // Create the password by combining the last name and formatted birthday
+        $password = ucfirst($lastName) . $formattedBirthday;
+
+        return trim($password);
     }
 
     public function InsertStudentFromEnrollmentForm($firstname, $lastname,

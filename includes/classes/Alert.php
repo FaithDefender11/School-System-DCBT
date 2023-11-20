@@ -70,7 +70,7 @@ class Alert{
         });
             setTimeout(() => {
                 window.location.href = '$redirectUrl';
-            }, 1500);
+            }, 2100);
         </script>";
     }
 

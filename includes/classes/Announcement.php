@@ -28,6 +28,9 @@
         public function GetForStudents() {
             return isset($this->sqlData['for_student']) ? $this->sqlData["for_student"] : NULL; 
         }
+        public function GetForTeachers() {
+            return isset($this->sqlData['for_teacher']) ? $this->sqlData["for_teacher"] : NULL; 
+        }
 
         public function GetTeachersIds() {
             return isset($this->sqlData['teachers_id']) ? $this->sqlData["teachers_id"] : NULL; 
@@ -72,6 +75,73 @@
             $sql->bindValue(":title", $title);
             $sql->bindValue(":content", $content);
             $sql->bindValue(":subject_code", $subject_code);
+
+            $sql->execute();
+            if($sql->rowCount() > 0){
+                return true;
+            }
+            return false;
+        }
+
+        public function InsertAnnouncementForStudentOnly($users_id, $school_year_id, $title, $content){
+
+            $role = "admin";
+
+            $sql = $this->con->prepare("INSERT INTO announcement
+                (users_id, role, school_year_id, title, content, for_student)
+                VALUES(:users_id, :role, :school_year_id, :title, :content, :for_student)");
+            
+            $sql->bindValue(":users_id", $users_id);
+            $sql->bindValue(":role", $role);
+            $sql->bindValue(":school_year_id", $school_year_id);
+            $sql->bindValue(":title", $title);
+            $sql->bindValue(":content", $content);
+            $sql->bindValue(":for_student", 1);
+
+            $sql->execute();
+            if($sql->rowCount() > 0){
+                return true;
+            }
+            return false;
+        }
+
+        public function InsertAnnouncementForTeacherOnly($users_id, $school_year_id, $title, $content){
+
+            $role = "admin";
+
+            $sql = $this->con->prepare("INSERT INTO announcement
+                (users_id, role, school_year_id, title, content, for_teacher)
+                VALUES(:users_id, :role, :school_year_id, :title, :content, :for_teacher)");
+            
+            $sql->bindValue(":users_id", $users_id);
+            $sql->bindValue(":role", $role);
+            $sql->bindValue(":school_year_id", $school_year_id);
+            $sql->bindValue(":title", $title);
+            $sql->bindValue(":content", $content);
+            $sql->bindValue(":for_teacher", 1);
+
+            $sql->execute();
+            if($sql->rowCount() > 0){
+                return true;
+            }
+            return false;
+        }
+
+        public function InsertAnnouncementForBothStudentAndTeacher($users_id, $school_year_id, $title, $content){
+
+            $role = "admin";
+
+            $sql = $this->con->prepare("INSERT INTO announcement
+                (users_id, role, school_year_id, title, content, for_teacher, for_student)
+                VALUES(:users_id, :role, :school_year_id, :title, :content, :for_teacher, :for_student)");
+            
+            $sql->bindValue(":users_id", $users_id);
+            $sql->bindValue(":role", $role);
+            $sql->bindValue(":school_year_id", $school_year_id);
+            $sql->bindValue(":title", $title);
+            $sql->bindValue(":content", $content);
+            $sql->bindValue(":for_teacher", 1);
+            $sql->bindValue(":for_student", 1);
 
             $sql->execute();
             if($sql->rowCount() > 0){
@@ -151,36 +221,46 @@
         }
 
         public function EditAdminAnnouncement(
-            $announcement_id,$admin_id, $teacher_id,
-            $school_year_id, $title, $content, $student_selected){
+            $announcement_id,$admin_id,
+            $school_year_id, $title, $content, $student_selected, $teacher_selected){
 
             if($student_selected == "on"){
                 $student_selected = 1;
             }else{
                 $student_selected = NULL;
             }
+
+            if($teacher_selected == "on"){
+                $teacher_selected = 1;
+            }else{
+                $teacher_selected = NULL;
+            }
             
+            $now = date("Y-m-d H:i:s");
+
             $role = "admin";
 
             $sql = $this->con->prepare("UPDATE announcement
                 SET role = :role,
-                    teachers_id = :teachers_id,
                     users_id = :users_id,
                     school_year_id = :school_year_id,
                     title = :title,
                     content = :content,
-                    for_student = :for_student
+                    for_student = :for_student,
+                    for_teacher = :for_teacher,
+                    date_creation = :date_now
                 WHERE announcement_id = :announcement_id
             ");
             
             $sql->bindValue(":announcement_id", $announcement_id);
             $sql->bindValue(":role", $role);
-            $sql->bindValue(":teachers_id", $teacher_id);
             $sql->bindValue(":users_id", $admin_id);
             $sql->bindValue(":school_year_id", $school_year_id);
             $sql->bindValue(":title", $title);
             $sql->bindValue(":content", $content);
             $sql->bindValue(":for_student", $student_selected);
+            $sql->bindValue(":for_teacher", $teacher_selected);
+            $sql->bindValue(":date_now", $now);
 
             $sql->execute();
 
@@ -213,18 +293,28 @@
         public function CheckTeacherIdBelongsToAdminAnnouncement(
             $school_year_id, $teacherLoggedInId) {
 
-            // $get = $this->con->prepare("SELECT * FROM announcement
-
-            //     WHERE teachers_id=:teachers_id
-            //     AND school_year_id=:school_year_id
-            //     ");
-
-            // $get->bindValue(":teachers_id", $teacherLoggedInId);
-            // $get->bindValue(":school_year_id", $school_year_id);
-            // $get->execute();
-
             $get = $this->con->prepare("SELECT * FROM announcement
                 WHERE FIND_IN_SET(:teacherLoggedInId, teachers_id)
+                AND school_year_id = :school_year_id");
+
+            $get->bindValue(":teacherLoggedInId", $teacherLoggedInId);
+            $get->bindValue(":school_year_id", $school_year_id);
+            $get->execute();
+
+            if($get->rowCount() > 0){
+
+                return $get->fetchAll(PDO::FETCH_ASSOC);
+            }
+
+            return [];
+
+        }
+
+        public function GetTeacherAdminAnnouncement(
+            $school_year_id, $teacherLoggedInId) {
+
+            $get = $this->con->prepare("SELECT * FROM announcement
+                WHERE announcement IS NOT NULL
                 AND school_year_id = :school_year_id");
 
             $get->bindValue(":teacherLoggedInId", $teacherLoggedInId);

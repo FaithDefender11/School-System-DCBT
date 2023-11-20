@@ -38,95 +38,114 @@
 
                                     $section = new Section($con);
 
-                                    $course_fulled_ids = $section->GetSectionWhoReachedTheMaximumCapacityOnEnrollment($current_school_year_id);
+                                    // $course_fulled_ids = $section->GetSectionWhoReachedTheMaximumCapacityOnEnrollment($current_school_year_id);
 
-                                    # It TAKES ME almost an hour ()
+                                    // # It TAKES ME almost an hour ()
 
-                                    $placeholders = array_map(function ($id) {
-                                        return ":course_id_$id";
-                                    }, $course_fulled_ids);
+                                    // $placeholders = array_map(function ($id) {
+                                    //     return ":course_id_$id";
+                                    // }, $course_fulled_ids);
 
-                                    // print_r($placeholders);
+                                    // // print_r($placeholders);
 
-                                    $query2 = $con->prepare("SELECT * FROM course
+                                    // $query2 = $con->prepare("SELECT * FROM course
 
-                                        WHERE program_id = :program_id
-                                        AND course_id NOT IN (" . implode(',', $placeholders) . ")
+                                    //     WHERE program_id = :program_id
+                                    //     AND course_id NOT IN (" . implode(',', $placeholders) . ")
 
-                                        AND program_section != :program_section
-                                        AND course_level = :course_level
-                                        AND active = 'yes'
-                                        AND is_full = 'no'
-                                        AND school_year_term = :school_year_term
-                                    ");
-
-                                    // Bind each course_id from the array
-
-                                    foreach ($course_fulled_ids as $course_id) {
-                                        $paramName = ":course_id_$course_id";
-                                        $query2->bindValue($paramName, $course_id);
-                                    }
-
-                                    $prev = "ABE1-A";
-
-                                    $query2->bindParam(":program_id", $student_enrollment_program_id);
-                                    // $query2->bindParam(":course_id", $student_enrollment_course_id);
-                                    $query2->bindParam(":program_section", $student_program_section);
-                                    $query2->bindParam(":course_level", $enrollment_course_section_level);
-                                    $query2->bindParam(":school_year_term", $current_school_year_term);
-                                    $query2->execute();
-
-                                    if ($query2->rowCount() > 0) {
-
-                                        $section = new Section($con, $student_enrollment_course_id);
-                                        $sectonName = $section->GetSectionName();
-
-                                        echo "<option value='$student_enrollment_course_id' disabled selected>$sectonName - Current section</option>";
-
-                                        while ($row = $query2->fetch(PDO::FETCH_ASSOC)) {
-
-                                            $selected = ""; // Reset the variable for each option
-                                            // if ($row['course_id'] == $course_id) {
-                                            //     $selected = "selected";
-                                            // }
-                                            
-                                            echo "<option value='".$row['course_id']."' $selected>".$row['program_section']."</option>";
-                                        }
-                                    }
-
-                                    // $query = $con->prepare("SELECT * FROM course
-                                    //     WHERE program_id=:program_id
-                                    //     AND course_id != :course_id
                                     //     AND program_section != :program_section
                                     //     AND course_level = :course_level
                                     //     AND active = 'yes'
                                     //     AND is_full = 'no'
                                     //     AND school_year_term = :school_year_term
+                                    // ");
 
-                                    // "); 
+                                    // // Bind each course_id from the array
 
-                                    // $query->bindParam(":program_id", $student_enrollment_program_id);
-                                    // $query->bindParam(":course_id", $student_enrollment_course_id);
-                                    // $query->bindParam(":program_section", $student_program_section);
-                                    // $query->bindParam(":course_level", $enrollment_course_section_level);
-                                    // $query->bindParam(":school_year_term", $current_school_year_term);
-                                    // $query->execute();
+                                    // foreach ($course_fulled_ids as $course_id) {
+                                    //     $paramName = ":course_id_$course_id";
+                                    //     $query2->bindValue($paramName, $course_id);
+                                    // }
 
-                                    // $section = new Section($con, $student_enrollment_course_id);
+                                    // $prev = "ABE1-A";
 
-                                    // $sectonName = $section->GetSectionName();
+                                    // $query2->bindParam(":program_id", $student_enrollment_program_id);
+                                    // // $query2->bindParam(":course_id", $student_enrollment_course_id);
+                                    // $query2->bindParam(":program_section", $student_program_section);
+                                    // $query2->bindParam(":course_level", $enrollment_course_section_level);
+                                    // $query2->bindParam(":school_year_term", $current_school_year_term);
+                                    // $query2->execute();
 
-                                    // echo "<option value='' disabled selected>$sectonName - Current section</option>";
+                                    // if ($query2->rowCount() > 0) {
 
-                                    // if ($query->rowCount() > 0) {
-                                    //     while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+                                    //     $section = new Section($con, $student_enrollment_course_id);
+                                    //     $sectonName = $section->GetSectionName();
+
+                                    //     echo "<option value='$student_enrollment_course_id' disabled selected>$sectonName - Current section</option>";
+
+                                    //     while ($row = $query2->fetch(PDO::FETCH_ASSOC)) {
+
                                     //         $selected = ""; // Reset the variable for each option
                                     //         // if ($row['course_id'] == $course_id) {
                                     //         //     $selected = "selected";
                                     //         // }
+                                            
                                     //         echo "<option value='".$row['course_id']."' $selected>".$row['program_section']."</option>";
                                     //     }
                                     // }
+
+                                    $query = $con->prepare("SELECT * FROM course
+                                        WHERE program_id=:program_id
+                                        AND course_id != :course_id
+                                        AND program_section != :program_section
+                                        AND course_level = :course_level
+                                        AND active = 'yes'
+                                        AND is_full = 'no'
+                                        AND school_year_term = :school_year_term
+
+                                    "); 
+
+                                    $query->bindParam(":program_id", $student_enrollment_program_id);
+                                    $query->bindParam(":course_id", $student_enrollment_course_id);
+                                    $query->bindParam(":program_section", $student_program_section);
+                                    $query->bindParam(":course_level", $enrollment_course_section_level);
+                                    $query->bindParam(":school_year_term", $current_school_year_term);
+                                    $query->execute();
+
+                                    $section = new Section($con, $student_enrollment_course_id);
+
+                                    $sectonName = $section->GetSectionName();
+
+
+
+                                    echo "<option value='' disabled selected>$sectonName - Current section </option>";
+
+                                    if ($query->rowCount() > 0) {
+
+                                        while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+
+                                            $course_id = $row['course_id'];
+                                            $program_section = $row['program_section'];
+                                            $capacity = $row['capacity'];
+                                            $program_id = $row['program_id'];
+
+                                            
+                                            $non_enrolled_count = $section->GetEnrollmentCourseIdNonEnrolledCount($course_id,
+                                                $current_school_year_id);
+
+                                            $enrollment_capacity = $section->GetEnrollmentCourseIdEnrolledCount($course_id,
+                                                $current_school_year_id);
+
+                                            // if ($row['course_id'] == $course_id) {
+                                            //     $selected = "selected";
+                                            // }
+
+                                            $disabled = $enrollment_capacity == $capacity ? 'disabled' : '';
+
+
+                                            echo "<option $disabled value='$course_id' $selected>$program_section &nbsp; Enrolled: $enrollment_capacity / Capacity $capacity, Non-enrolled: $non_enrolled_count</option>";
+                                        }
+                                    }
 
                                     // echo "student_enrollment_program_id: $student_enrollment_program_id, ";
                                     // echo "<br>";

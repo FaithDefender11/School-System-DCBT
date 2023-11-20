@@ -58,10 +58,10 @@
 
             if(User::IsStudentPendingAuthenticated()){
                
-                $result .= Helper::createNavByIcon("Registration", 
+                $result .= Helper::createNavByIconARC("Registration", 
                     "bi bi-clipboard-data icon", $student_profile, Constants::$navigationClass . Helper::GetActiveClass($page, "registration"));
 
-                $result .= Helper::createNavByIcon("Log Out", 
+                $result .= Helper::createNavByIconARC("Log Out", 
                     "bi bi-box-arrow-right icon", $logout_url, Constants::$navigationClass);
             }
 

@@ -201,7 +201,9 @@
 
                 <?php echo Helper::ProcessStudentCards($student_id, $student_enrollment_form_id,
                     $student_unique_id, $enrollment_creation, $student_new_enrollee,
-                    $student_enrollment_is_new, $student_enrollment_is_transferee, $student_status_st); ?>
+                    $student_enrollment_is_new,
+                    $student_enrollment_is_transferee,
+                    $student_status_st, $student_enrollment_id); ?>
 
             </div>
 
@@ -355,7 +357,7 @@
 
                                             <span>
                                                 <label for="strand">Strand</label>
-                                                <select name="strand" id="strand" 
+                                                <select style="pointer-events: none;" name="strand" id="strand" 
                                                     class="text-center form-select form-control">
                                                     <?php 
                                                     
@@ -441,7 +443,6 @@
                             $regularOldSections = $section->GetIrregularOldSectionList(
                                 $student_program_id, $current_school_year_term);
 
-                            
 
                             if(count($regularOldSections) > 0){
                                 ?>
@@ -451,11 +452,12 @@
                                             <table class="a">
                                                 <thead>
                                                     <tr class="text-center"> 
-                                                        <th rowspan="2">Section Id</th>
+                                                        <!-- <th rowspan="2">Section Id</th> -->
                                                         <th rowspan="2">Section Name</th>
+                                                        <th rowspan="2">Non-enrolled</th>
                                                         <th rowspan="2">Student</th>
                                                         <th rowspan="2">Capacity</th>
-                                                        <th rowspan="2">Term</th>
+                                                        <!-- <th rowspan="2">Term</th> -->
                                                         <th rowspan="2"></th>
                                                     </tr>
                                                 </thead>
@@ -487,6 +489,9 @@
                                                                 $sectionCapacity = $section->GetSectionCapacity();
 
 
+                                                                # Get Non enrolled form placed.
+
+                                                                $nonEnrolledcount = $section->GetEnrollmentCourseIdNonEnrolledCount($course_id, $current_school_year_id);
                                                                 $count = $section->GetEnrollmentCourseIdEnrolledCount($course_id, $current_school_year_id);
 
                                                                 // echo "count: $count";
@@ -500,14 +505,15 @@
 
                                                                 }
 
+                                                                        // <td>$course_id</td>
+                                                                        // <td>$school_year_term</td>
 
                                                                 echo "
                                                                     <tr class='text-center'>
-                                                                        <td>$course_id</td>
                                                                         <td>$program_section</td>
+                                                                        <td>$nonEnrolledcount</td>
                                                                         <td>$totalStudent</td>
                                                                         <td>$capacity</td>
-                                                                        <td>$school_year_term</td>
                                                                         <td>
                                                                             <input $disabled name='find_selected_course_id' class='radio' value='$course_id' 
                                                                             type='radio'" . ($course_id == $student_enrollment_course_id ? " checked" : "") . ">
@@ -598,11 +604,12 @@
                                             <table class="a">
                                                 <thead>
                                                     <tr class="text-center"> 
-                                                        <th rowspan="2">Section Id</th>
+                                                        <!-- <th rowspan="2">Section Id</th> -->
                                                         <th rowspan="2">Section Name</th>
+                                                        <th rowspan="2">Non-enrolled</th>
                                                         <th rowspan="2">Student</th>
                                                         <th rowspan="2">Capacity</th>
-                                                        <th rowspan="2">Term</th>
+                                                        <!-- <th rowspan="2">Term</th> -->
                                                         <th rowspan="2"></th>
                                                     </tr>
                                                 </thead>
@@ -627,13 +634,15 @@
                                                                 $program_id = $section->GetSectionProgramId($course_id);
                                                                 $course_level = $section->GetSectionGradeLevel();
 
+                                                                        // <td>$course_id</td>
+                                                                        // <td>$school_year_term</td>
+
                                                                 echo "
                                                                     <tr class='text-center'>
-                                                                        <td>$course_id</td>
                                                                         <td>$program_section</td>
+                                                                        <td></td>
                                                                         <td>$totalStudent</td>
                                                                         <td>$capacity</td>
-                                                                        <td>$school_year_term</td>
                                                                         <td>
                                                                             <input name='find_selected_course_id' class='radio' value='$course_id' 
                                                                             type='radio'" . ($course_id == $student_enrollment_course_id ? " checked" : "") . ">

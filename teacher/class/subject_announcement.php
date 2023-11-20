@@ -15,11 +15,13 @@
 
         $title = $teacherAnnouncement->GetTitle();
         $content = $teacherAnnouncement->GetContent();
+        $users_id = $teacherAnnouncement->GetUserId();
         $subject_code = $teacherAnnouncement->GetSubjectCode();
         $creation = $teacherAnnouncement->GetDateCreation();
         $creation = date("F d, Y h:i a", strtotime($creation));
 
-        
+
+
 
         // $markAsSViewed = $teacherAnnouncement->StudentAnnouncementAsViewed($teacher_announcement_id, $studentLoggedInId);
 
@@ -33,6 +35,15 @@
                         <div class="title">
                             <h3><?php  echo $title;?></h3>
                             <small><?php echo $creation; ?></small>
+
+                            <?php if($users_id != NULL):?>
+                                <small><?php 
+                                    $user = new User($con, $users_id);
+                                    
+                                    $adminName = ucwords($user->getFirstName()) . " " . ucwords($user->getLastName());
+                                    echo "By: $adminName (Administrator)";
+                                ?></small>
+                            <?php endif;?>
                         </div>
                         <div class="action">
                             <button class="btn btn-sm btn-info">

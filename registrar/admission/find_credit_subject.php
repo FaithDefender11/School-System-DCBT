@@ -13,7 +13,6 @@
     
     echo Helper::RemoveSidebar();
 
-
     ?>
         <header>
             <script src="find_credit_subject_code.js"></script>
@@ -145,7 +144,7 @@
                                             if($student_username == NULL){
 
                                                 ?>
-                                                    <a onclick="window.open('../requirements/view_new_enrollee.php?id=<?= $enrollee_id;?>', '_blank');"
+                                                    <a onclick="window.open('../requirements/view_new_enrollee.php?id=<?= $enrollee_id;?>&clicked=true', '_blank');"
                                                         href="#" class="dropdown-item">
                                                             <i class="bi bi-file-earmark-x"></i>
                                                             View Credentials

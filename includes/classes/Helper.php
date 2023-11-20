@@ -962,6 +962,67 @@ class Helper {
 
     }
 
+    public static function isStrongPassword($password) {
+
+        // Define the password requirements using a regular expression
+        # accepted. StrongP@ssword123
+        # SecurePwd!567
+        # P@ssw0rd!
+
+        # Rejected passwords:
+
+        # Weakpassword
+        # Does not contain an uppercase letter.
+        # 12345678
+        # Does not contain an uppercase letter or special character.
+
+        $pattern = '/^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()])(?!^\s|\s$).{8,}$/';
+        // Use preg_match to check if the password matches the pattern
+        return preg_match($pattern, $password);
+    }
+
+    public static function hasLeadingOrTrailingSpace($password) {
+        // Check for leading or trailing whitespace
+        return $password !== trim($password);
+    }
+
+    public static function ValidatePassword($text, $required) {
+
+        // Check if the field is required and the text is empty
+        if (empty($text)) {
+            array_push(self::$errorArray, Constants::$passwordRequiredField);
+            return;
+        }
+
+        // Check if the text contains only letters and spaces
+        if(!(empty($text))){
+
+          
+
+            # Is NOT strong password
+            
+
+            # has whitespace at first and end.
+            if (self::hasLeadingOrTrailingSpace($text) == true) {
+                array_push(self::$errorArray, Constants::$traillingPassword);
+
+                var_dump($text);
+                return;
+                return;
+            }
+            if (self::isStrongPassword($text) == false) {
+                array_push(self::$errorArray, Constants::$weakPassword);
+                return;
+            }
+
+
+
+            // $text = trim($text);
+            return $text;
+        }
+        return "";
+    }
+
     public static function FormNameValidation($text, $required, $invalidChar,
         $textShort, $textLong, $isRequired = false) {
 
@@ -998,18 +1059,6 @@ class Helper {
 
         }
         return "";
-        
-        // If there are no errors, sanitize the input and return the output
-        // if (empty(self::$errorArray)) {
-        //     $output = self::sanitizeFormString($text);
-        //     return $output;
-        // }
-
-        // if(empty(Helper::$errorArray)) {
-        //     // echo $trimmed;
-        //     $output = Helper::sanitizeFormString($trimmed);
-        //     return $output;
-        // }
     }
 
     public static function getInputValue($name) {
@@ -1615,7 +1664,7 @@ class Helper {
     public static function ProcessStudentCards($student_id, $enrollment_form_id, $student_unique_id,
         $date_creation, $new_enrollee,
         $enrollment_is_new_enrollee, $enrollment_is_transferee,
-            $student_enrollment_student_status){
+            $student_enrollment_student_status, $enrollment_id = null){
 
         // $student = new Student($con);
 
@@ -1671,12 +1720,12 @@ class Helper {
             $updated_type = "SD";
         }
 
-
+       
         return "
             <div class='cards'>
                 <div class='card'>
                     <sup>Form ID</sup>
-                    <sub>$enrollment_form_id</sub>
+                    <sub> <a style='color: #333' href='enrollment_audit.php?id=$enrollment_id'>$enrollment_form_id</a></sub>
                 </div>
                 <div class='card'>
                     <sup>Admission type</sup>
@@ -1963,8 +2012,13 @@ class Helper {
 
         // print_r($studentListSubmittedNotification);
 
-        $adminAnnouncement = $announcement->CheckTeacherIdBelongsToAdminAnnouncement($school_year_id,
-            $teacherLoggedInId);
+        // $adminAnnouncement = $announcement->CheckTeacherIdBelongsToAdminAnnouncement($school_year_id,
+        //     $teacherLoggedInId);
+
+
+        $adminAnnouncement = $notification->GetAdminAnnouncementInTeacherSide(
+            $school_year_id);
+
 
         // var_dump($adminAnnouncement);
 
@@ -1986,9 +2040,6 @@ class Helper {
 
         $notificationCount = count($studentSubmittedAndAdminAnnouncement);
 
-
-        $totalAdminNotifCount = count($adminAnnouncement);
-
         $totalViewedAdminNotificationCount = $notification->GetTeacherViewedNotificationFromAdminCount(
             $adminAnnouncement, $teacherLoggedInId);
 
@@ -1996,8 +2047,6 @@ class Helper {
             $studentListSubmittedNotification, $teacherLoggedInId);
 
         $totalAdminAndTeacherNotifCount = $totalViewedAdminNotificationCount + $totalTeacherViewedCount;
-
-        $totalNotifCount = count($studentSubmittedAndAdminAnnouncement);
 
 
         $totalUnviewed = ($notificationCount - $totalAdminAndTeacherNotifCount);
@@ -2075,10 +2124,16 @@ class Helper {
                                     <i style='color: orange' class='bi bi-x'></i>
                                 ";
 
+                                $announcement_whom = isset($notification['announcement_whom']) ? $notification['announcement_whom'] : '';
+
+
+                                $announcement = new Announcement($con, $announcement_id);
+                                $admin_title = $announcement->GetTitle();
+                                $announcement_user_id = $announcement->GetUserId();
 
                                 $admin_announcement_id = isset($notification['announcement_id']) ? $notification['announcement_id'] : '';
                                 
-                                $admin_title = isset($notification['title']) ? $notification['title'] : '';
+                                // $admin_title = isset($notification['title']) ? $notification['title'] : '';
                                 $admin_content = isset($notification['content']) ? $notification['content'] : '';
                                 
                                 $admin_users_id = isset($notification['users_id']) ? $notification['users_id'] : '';
@@ -2088,13 +2143,13 @@ class Helper {
 
                                 $admin_role = isset($notification['role']) ? $notification['role'] : '';
 
-                                if($admin_announcement_id != NULL && 
-                                    $subject_code == NULL &&
-                                    $admin_users_id != NULL &&
-                                    $admin_role == "admin" ){
+                                if(($announcement_whom == "teacher" 
+                                        || $announcement_whom == "universal")&&
+                                            $sender_role == "admin"
+                                        ){
 
                                    
-                                        $user = new User($con, $admin_users_id);
+                                        $user = new User($con, $announcement_user_id);
 
                                         $sender_name = ucwords($user->getFirstName()) . " " . ucwords($user->getLastName());
 
@@ -2303,7 +2358,27 @@ class Helper {
             $enrolledSubjectList, $school_year_id, $studentLoggedInId);
 
   
+        // $allAdminNotification = $notif->GetAdminAnnouncement($school_year_id);
+
+
         $allAdminNotification = $notif->GetAdminAnnouncement($school_year_id);
+
+        $allTeacherNotification = $notif->GetTeacherAnnouncement(
+            $school_year_id, $enrolledSubjectList);
+
+        $adminTeacherNotification = array_merge($allTeacherNotification, $allAdminNotification);
+
+        usort($adminTeacherNotification, function($a, $b) {
+            $dateA = strtotime($a['date_creation']);
+            $dateB = strtotime($b['date_creation']);
+
+            if ($dateA == $dateB) {
+                return 0;
+            }
+            
+            return ($dateA > $dateB) ? -1 : 1; // Change from 1 to -1 for descending order
+        });
+
 
         // var_dump($school_year_id);
         // print_r($allAdminNotification);
@@ -2312,7 +2387,7 @@ class Helper {
             $enrolledSubjectList, $school_year_id, $studentLoggedInId);
 
         $mergedArray = array_merge($studentEnrolledSubjectAssignmentNotif,
-            $allAdminNotification, $gradedAssignments, $studentsDueDateNotif);
+            $adminTeacherNotification, $gradedAssignments, $studentsDueDateNotif);
 
         // var_dump($mergedArray);
 
@@ -2386,6 +2461,7 @@ class Helper {
                                 // $department_id = $row['department_id'];
                                 
                                 $notification_id = $notification['notification_id'];
+                                $notif_student_id = $notification['student_id'];
 
                                 $notif_exec = new Notification($con, $notification_id);
 
@@ -2394,11 +2470,14 @@ class Helper {
                                 $date_creation = date("M d, Y h:i a", strtotime($date_creation));
 
                                 $sender_role = $notification['sender_role'];
+                                $announcement_whom = $notification['announcement_whom'];
+
+
 
                                 $subject_code = $notification['subject_code'];
  
 
-                               $subject_code_assignment_id = $notification['subject_code_assignment_id'];
+                                $subject_code_assignment_id = $notification['subject_code_assignment_id'];
 
                                 $subjectCodeAssignment = new SubjectCodeAssignment($con, $subject_code_assignment_id);
 
@@ -2432,6 +2511,7 @@ class Helper {
                                 // echo "<br>";
 
                                 if($sender_role === "admin" && 
+                                    ($announcement_whom == "student" || $announcement_whom == "universal") &&
                                     $announcement_id != NULL){
 
                                     $announcement = new Announcement($con, $announcement_id);
@@ -2592,6 +2672,7 @@ class Helper {
                                 $subjectAssignmentSubmission = new SubjectAssignmentSubmission($con, $subject_assignment_submission_id);
                                 $subject_assignment_submission_student_id = $subjectAssignmentSubmission->GetStudentId();
 
+                                # Graded submissons assignments Notification
                                 if($subject_code_assignment_id != NULL && 
                                     $subject_code != NULL &&
                                     $subject_assignment_submission_id != NULL &&
@@ -2636,6 +2717,61 @@ class Helper {
                                     // $assignment_notification_url = "../courses/task_submission.php?sc_id=$subject_code_assignment_id&ss_id=$get_student_subject_id&n_id=$notification_id&notification=true";
 
                                     // $notification_url = "../courses/task_submission.php?sc_id=$subject_code_assignment_id&ss_id=$get_student_subject_id&n_id=$notification_id&notification_due=true";
+
+                                }
+
+                                # Graded non submissons assignments Notification
+                                if($subject_code_assignment_id != NULL && 
+                                    $subject_code != NULL &&
+                                    $subject_assignment_submission_id == NULL &&
+                                    $notif_student_id == $studentLoggedInId &&
+                                    $announcement_id == NULL &&
+                                    $sender_role != "auto"
+
+                                    ){
+
+                                    $assigment = new SubjectCodeAssignment($con, $subject_code_assignment_id);
+                                    $assigment_name = $assigment->GetAssignmentName();
+
+                                    $subjectPeriodCodeTopicId = $assigment->GetSubjectPeriodCodeTopicId();
+
+                                    $subjectPeriodCodeTopic = new SubjectPeriodCodeTopic($con,
+                                        $subjectPeriodCodeTopicId);
+
+                                    
+                                    $teacher_id = $subjectPeriodCodeTopic->GetTeacherId();
+
+                                    // var_dump($teacher_id);
+                                    $teacher = new Teacher($con, $teacher_id);
+
+                                    $sender_name = ucwords($teacher->GetTeacherFirstName()) . " " . ucwords($teacher->GetTeacherLastName());
+                                    $sender_name = trim($sender_name);
+
+                                    $type = "Graded";
+                                    $title = "Assignment: <span style='font-weight: bold;'>$assigment_name</span> on <span style='font-weight: bold;'>$subject_title</span>";
+
+
+                                    $get_student_subject_id = NULL;
+
+                                    if($subject_code != NULL){
+
+                                        $studentSubject = new StudentSubject($con);
+
+                                        $get_student_subject_id = $studentSubject->GetStudentSubjectIdBySectionSubjectCode(
+                                            $subject_code, $studentLoggedInId, $enrollment_id);
+
+                                    }
+
+                                    $notification_url = $coursesPath. "task_submission.php?sc_id=$subject_code_assignment_id&ss_id=$get_student_subject_id&n_id=$notification_id&notification=true";
+
+
+                                    // $assignment_notification_url = "../courses/task_submission.php?sc_id=$subject_code_assignment_id&ss_id=$get_student_subject_id&n_id=$notification_id&notification=true";
+
+                                    // $button_url = "
+                                    //     <button onclick='window.location.href=\"$assignment_notification_url\"' class='btn btn-primary btn-sm'>
+                                    //         View
+                                    //     </button>
+                                    // ";
 
                                 }
 

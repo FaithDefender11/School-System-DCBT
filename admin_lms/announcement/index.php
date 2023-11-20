@@ -116,20 +116,21 @@
 
                                     $for_student = $value['for_student'];
                                     $teachers_id = $value['teachers_id'];
+                                    $for_teacher = $value['for_teacher'];
 
                                     // var_dump($for_student);
                                     // echo "<br>";
 
                                     $text = "";
 
-                                    if($for_student != NULL && $teachers_id != ""){
+                                    if($for_student != NULL && $for_teacher != NULL){
                                         $text = "Teachers and Students";
                                     }
 
-                                    if($for_student != NULL && $teachers_id == ""){
+                                    if($for_student != NULL && $for_teacher == NULL){
                                         $text = "Students";
                                     }
-                                    if($for_student == NULL && $teachers_id != ""){
+                                    if($for_student == NULL && $for_teacher != NULL){
                                         $text = "Teachers";
                                     }
 

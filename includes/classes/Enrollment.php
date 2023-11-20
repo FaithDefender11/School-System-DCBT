@@ -1127,14 +1127,14 @@
         // Check if the enrollment form ID already exists in the database
 
         $sql = $this->con->prepare("SELECT enrollment_form_id FROM enrollment 
-            WHERE course_id = :course_id
-            AND enrollment_id = :enrollment_id
-            AND school_year_id = :school_year_id
+            WHERE enrollment_id = :enrollment_id
+            AND course_id = :course_id
+            -- AND school_year_id = :school_year_id
             
             ");
-        $sql->bindValue(":course_id", $course_id);
         $sql->bindValue(":enrollment_id", $enrollment_id);
-        $sql->bindValue(":school_year_id", $school_year_id);
+        $sql->bindValue(":course_id", $course_id);
+        // $sql->bindValue(":school_year_id", $school_year_id);
         $sql->execute();
         if($sql->rowCount() > 0){
             return $sql->fetchColumn();

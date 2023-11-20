@@ -90,6 +90,10 @@ class Constants {
     public static $LRNRequired = "LRN is required field";
     public static $LRNUnique = "LRN is already in used";
 
+    public static $traillingPassword = "Password has leading and trailing spaces at the start or end";
+    public static $weakPassword = "Please include at least one uppercase letter, one number, and one special character in your password.";
+    public static $passwordRequiredField = "Password is required.";
+
 
     // Father Last Name
     public static $invalidFatherLastNameCharacters = "Invalid Father Last Name";

@@ -98,6 +98,11 @@
 
 
             $now = date("Y-m-d H:i:s");
+
+            // $doesValidForCredentials = $enrollment_is_new == 1 && $student_admission_status === "New";
+
+            $doesValidForCredentials = $enrollment_is_new == 1;
+
             
 
             $html = '
@@ -295,7 +300,6 @@
 
                     // 
 
-                    $doesValidForCredentials = $enrollment_is_new == 1 && $student_admission_status === "New";
 
                     $isEmailSent = $email->SendEnrolledSubjectListViaPdf(
                         $studentEmail,

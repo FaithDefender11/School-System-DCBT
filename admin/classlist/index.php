@@ -129,7 +129,7 @@
         style="background-color: var(--them); color: white"
         onclick="window.location.href = 'class_list_by_section.php';"
       >
-        Class list Per Section 
+        Subjects per Section 
       </button>
       <button
         class="tab"
@@ -137,17 +137,17 @@
         style="background-color: var(--them); color: white"
         onclick="window.location.href = 'student_per_section.php';"
       >
-        Students Per Section 
+        Students per Section 
       </button>
 
-      <button
+      <!-- <button
         class="tab"
         id="shsApproval"
         style="background-color: var(--them); color: white"
         onclick="window.location.href = 'student_per_subject.php';"
       >
         Students Per Subject 
-      </button>
+      </button> -->
        
     </div>
 

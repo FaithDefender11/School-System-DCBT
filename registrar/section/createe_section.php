@@ -138,7 +138,7 @@
 
             if($insert->rowCount() > 0){
 
-                Alert::success("Successfully added section", $back_url);
+                Alert::success("Successfully added section", "");
                 exit();
             }
             
@@ -167,13 +167,13 @@
         ?>
             <div class='content'>
 
-                <nav>
+                <!-- <nav>
                     <a href="<?php echo $back_url;?>">
                         <i class="bi bi-arrow-return-left fa-1x"></i>
                         <h3>Back</h3>
                     </a>
-                </nav>
-
+                </nav> -->
+                <br>
                 <div class='col-md-10 offset-md-1'>
                     <div class='card'>
                         

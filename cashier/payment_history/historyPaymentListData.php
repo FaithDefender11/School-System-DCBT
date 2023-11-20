@@ -355,8 +355,11 @@ if ($row != null) {
 
         $url = "../payment/payment_summary.php?id=$enrollment_id&enrolled_subject=show";
          
+        
         $button_url = "
-            <button onclick=\"window.location.href='$url'\" class='default information'>View</button>
+            <a style='color: inherit;' href='$url'>
+                <button class='default information'>Viewx</button>
+            </a>
         ";
 
         $period_acronym = $period === "First" ? "S1" : ($period==="Second" ? "S2" : "");

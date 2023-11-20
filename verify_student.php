@@ -15,13 +15,14 @@
         
         $checkValidEnrollees = $pending->CheckValidTokenEnrolleeNonActivated($token);
 
+        
         // if($checkValidEnrollees){
         //     echo "valid";
         // }else{
         //     echo "not valid";
         // }
         // var_dump($checkValidEnrollees);
-        // echo $token;
+
 
         if($checkValidEnrollees !== null){
 
@@ -32,27 +33,31 @@
             $firstname = $checkValidEnrollees['firstname'];
             $expiration_time = $checkValidEnrollees['expiration_time'];
 
-            // echo $pending_enrollees_id;
+            // $asd = strtotime($expiration_time);
 
-            if (strtotime($expiration_time) < time()) {
+            // var_dump($checkValidEnrollees);
+            // return;
+            // if (strtotime($expiration_time) < time()) {
                 
-                # If new enrollee reached expiries time (5mins) from the date of
-                # triggering the register. It will removed their enrollee account.
+            //     # If new enrollee reached expiries time (5mins) from the date of
+            //     # triggering the register. It will removed their enrollee account.
                 
-                // Remove the record from the pending_enrollees table
-                $removeInactiveExpires = $pending->RemoveInActivatedEnrollee($token);
+            //     // Remove the record from the pending_enrollees table
+            //     $removeInactiveExpires = $pending->RemoveInActivatedEnrollee($token);
 
+            //     if($removeInactiveExpires){
 
-                if($removeInactiveExpires){
-
-                    $url = LOCAL_BASE_URL . "/index.php";
-                    // header("Location: /school-system-dcbt/student_enrollment.php");
-                    header("Location: $url");
-                    exit();
-                }
-            }
+            //         $url = LOCAL_BASE_URL . "/index.php";
+            //         // header("Location: /school-system-dcbt/student_enrollment.php");
+            //         header("Location: $url");
+            //         exit();
+            //     }
+            // }
             
-            else if(strtotime($expiration_time) >= time()){
+            if(strtotime($expiration_time) >= time()){
+
+                // var_dump($checkValidEnrollees);
+                // return;
 
                 $_SESSION['studentLoggedIn'] = $firstname;
                 $_SESSION['username'] = $firstname;
@@ -86,7 +91,10 @@
         }
         else{
             echo "
-                <h3>Token credentials was wrong. If you have multiple requests of token coming from us, Please Click the latest one.</h3>
+                <div class='col-md-12'>
+                
+                <h3 class='text-primary'>Invalid token credentials or your account has already been activated.</h3>
+                </div>
             ";
             exit();
         }

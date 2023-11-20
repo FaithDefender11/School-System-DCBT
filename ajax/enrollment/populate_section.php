@@ -166,6 +166,7 @@
 
 
             WHERE t1.program_id=:program_id
+            
             AND t1.active= 'yes'
             AND t1.school_year_term=:school_year_term
             -- AND is_full=:is_full
@@ -190,8 +191,13 @@
 
                 // $enrollment_capacity = $row['capacity'];
 
+
+                $non_enrolled_count = $section->GetEnrollmentCourseIdNonEnrolledCount($course_id,
+                    $school_year_id);
+
                 $enrollment_capacity = $section->GetEnrollmentCourseIdEnrolledCount($course_id,
                     $school_year_id);
+
 
                 // $enrollment_capacity = 2;
 
@@ -202,6 +208,8 @@
                     'program_section' => $program_section,
                     'capacity' => $capacity,
                     'enrollment_capacity' => $enrollment_capacity,
+                    'non_enrolled_count' => $non_enrolled_count,
+                    
                     'program_id' => $program_id
                 );
             }

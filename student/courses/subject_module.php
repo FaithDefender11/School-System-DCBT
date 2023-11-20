@@ -140,7 +140,7 @@
                 if($submitted_grade != NULL){
                     
                     $submitted_grade_status = "
-                        <i style='color: green;' class='fas fa-check'></i>
+                        <i style='color: green;' class='bi bi-check'></i>
                     ";
 
                     $totalScore += $submitted_grade;
@@ -258,6 +258,7 @@
             $new_url = str_replace("/student/", "", $base_url);
             $logout_url = "$new_url/lms_logout.php";
         }
+
 ?>
 
             <?php
@@ -314,10 +315,16 @@
                                         <?php
                                             echo "$equivalent_totalProgressAct";
                                         ?>
+
                                     </div>
+
                                 </div>
+
                             </main>
+
                         </a>
+                        <span>Includes all handouts and tasks progress within section</span>
+
                     </div>
                     <div class="floating noOutline">
                         <a href="grade_progress.php?id=<?php echo $student_subject_id; ?>">
@@ -347,6 +354,7 @@
                                 </div>
                             </main>
                         </a>
+                        <span>All tasks scores</span>
                     </div>
                     <div class="floating">
                         <header>
@@ -457,8 +465,16 @@
                                 <header>
                                     <div class="title">
                                         <h3><?= $topic; ?> <em><?= $subject_period_name;?></em></h3>
-                                        <small><?= $description; ?></small>
-                                        <span>( <?= $totalProgress;?> / <?= $sectionModuleItemsCount;?> = <?= $equivalent;?>)</span>
+                                        <small style="font-size: 18px;"><?= $description; ?></small>
+                                        <!-- <span>( <?= $totalProgress;?> / <?= $sectionModuleItemsCount;?> = <?= $equivalent;?>)</span> -->
+                                        <?php 
+                                            if($equivalent != "N/A"){
+                                                ?>
+                                        <span class="mt-2"><?= "Section progress: $equivalent";?></span>
+
+                                                <?php
+                                            }
+                                        ?>
                                     </div>
                                     <div class="action">
                                         <?= $sectionModuleItemsCount; ?> 
@@ -590,14 +606,14 @@
                                                         if($singleHandoutViewed == true){
 
                                                             $submitted_graded_status =  "
-                                                                <i style='color: green;' class='fas fa-check'></i>
+                                                                <i style='color: green;' class='bi bi-check'></i>
                                                             ";
 
                                                         }
                                                         if($statusSubmission !== NULL){
 
                                                             $submitted_status = "
-                                                                <i style='color: green;' class='fas fa-check'></i>
+                                                                <i style='color: green;' class='bi bi-check'></i>
                                                             ";
                                                                 $submitted_graded_status =  $submitted_status;
 

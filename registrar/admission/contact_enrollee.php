@@ -23,6 +23,10 @@
 
         $pending_enrollees_id = $_GET['id'];
 
+        $doesClicked = false;
+        if(isset($_GET['clicked']) && $_GET['clicked'] == "true"){
+            $doesClicked = true;
+        }
 
         $pending = new Pending($con, $pending_enrollees_id);
 
@@ -92,11 +96,20 @@
 
                 <div class='card-header'>
 
-                    <a href="<?php echo $back_url;?>">
-                        <button class="btn btn-primary">
-                            <i class="fas fa-arrow-left"></i>
-                        </button>
-                    </a>
+                    <?php 
+                        if($doesClicked == false){
+                            ?>
+                            <nav>
+                                <a href="<?php echo $back_url;?>">
+                                    <button class="btn btn-primary">
+                                        <i class="fas fa-arrow-left"></i>
+                                    </button>
+                                </a>
+                            </nav>
+                            <?php
+                        }
+                    ?>
+                    
 
                     <h4 class='text-center mb-3'>Contact Enrollee: <span><?php echo $fullname; ?></span></h4>
 

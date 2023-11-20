@@ -5,16 +5,23 @@
     require_once("../../includes/classes/SchoolYear.php");
     require_once("../../includes/classes/SubjectPeriodCodeTopic.php");
     
-    if (isset($_GET["query"])) {
+    if (isset($_GET["query"])
+        && isset($_GET['department_id'])) {
 
         $query = $_GET["query"];
+        $department_id = $_GET["department_id"];
 
+        // echo "department_id: $department_id";
+        // return;
         $stmt = $con->prepare("SELECT teacher_id, firstname, lastname, middle_name
-            FROM teacher 
-            WHERE LOWER(firstname) LIKE :query OR LOWER(lastname) LIKE :query
+            FROM teacher
+            WHERE (LOWER(firstname) LIKE :query OR LOWER(lastname) LIKE :query)
+            AND department_id = :department_id
+            AND teacher_status = 'Active'
         ");
         
         $stmt->bindValue(":query", '%' . $query . '%');
+        $stmt->bindValue(":department_id", $department_id);
         $stmt->execute();
 
         $results = array();

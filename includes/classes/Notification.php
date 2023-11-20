@@ -122,6 +122,52 @@ class Notification{
         return [];
     }
 
+    # Assignment graded by Teacher without submission.
+
+    public function GetStudentAssignmentNotificationNonSubmission(
+        $enrolledSubjectList, $school_year_id, $student_id) {
+
+        if(count($enrolledSubjectList) > 0){
+
+            $inPlaceholders = implode(', ', array_map(function($value, $index) {
+                return ":subject_code$index";
+            }, $enrolledSubjectList, array_keys($enrolledSubjectList)));
+
+            
+            $query = $this->con->prepare("SELECT * 
+                FROM notification 
+                WHERE subject_code IN ($inPlaceholders)
+                AND school_year_id = :school_year_id
+                AND sender_role = 'teacher'
+                AND subject_code_assignment_id IS NOT NULL
+                AND subject_assignment_submission_id IS NULL
+                AND student_id =:student_id
+
+            ");
+
+            // Bind values to named placeholders in the IN clause
+            foreach ($enrolledSubjectList as $index => $subjectCode) {
+                $placeholderName = ":subject_code$index";
+                $query->bindValue($placeholderName, $subjectCode);
+            }
+
+            // Bind the school_year_id
+            $query->bindValue(':school_year_id', $school_year_id, PDO::PARAM_INT); // Assuming school_year_id is an integer
+            $query->bindValue(':student_id', $student_id, PDO::PARAM_INT); // Assuming school_year_id is an integer
+
+            $query->execute();
+
+            if($query->rowCount() > 0){
+                $result = $query->fetchAll(PDO::FETCH_ASSOC);
+                // var_dump($result);
+                return $result;
+            }
+        }
+
+
+        return [];
+    }
+
     # Student assignment by graded by teacher
     public function GetStudentGradedAssignmentNotification(
         $enrolledSubjectList, $school_year_id, $student_id) {
@@ -590,6 +636,68 @@ class Notification{
         if($get->rowCount() > 0){
             return $get->fetchAll(PDO::FETCH_ASSOC);
         }
+
+        return [];
+    }
+
+    public function GetAdminAnnouncementInTeacherSide($school_year_id) {
+
+        $get = $this->con->prepare("SELECT t1.* 
+        
+            FROM notification as t1
+
+            WHERE t1.sender_role=:sender_role
+            AND t1.school_year_id=:school_year_id
+            AND t1.announcement_id IS NOT NULL
+            AND (t1.announcement_whom != 'student')
+            -- AND (t1.announcement_whom != '')
+        ");
+
+        $get->bindValue(":sender_role", "admin");
+        $get->bindValue(":school_year_id", $school_year_id);
+        $get->execute();
+
+        if($get->rowCount() > 0){
+            return $get->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        return [];
+    }
+
+    public function GetTeacherAnnouncement($school_year_id, $enrolledSubjectList) {
+
+        if(count($enrolledSubjectList) > 0){
+
+            $inPlaceholders = implode(', ', array_map(function($value, $index) {
+                return ":subject_code$index";
+            }, $enrolledSubjectList, array_keys($enrolledSubjectList)));
+
+            $get = $this->con->prepare("SELECT t1.* 
+            
+                FROM notification as t1
+
+                WHERE subject_code IN ($inPlaceholders)
+                AND t1.sender_role=:sender_role
+                AND t1.school_year_id=:school_year_id
+                AND t1.announcement_id IS NOT NULL
+
+            ");
+
+            $get->bindValue(":sender_role", "teacher");
+            $get->bindValue(":school_year_id", $school_year_id);
+
+            foreach ($enrolledSubjectList as $index => $subjectCode) {
+                $placeholderName = ":subject_code$index";
+                $get->bindValue($placeholderName, $subjectCode);
+            }
+
+            $get->execute();
+            if($get->rowCount() > 0){
+                return $get->fetchAll(PDO::FETCH_ASSOC);
+            }
+
+        }
+
 
         return [];
     }
@@ -1093,6 +1201,61 @@ class Notification{
         return false;
     }
 
+    public function InsertStudentOnlyNotificationFromAdmin($announcement_id, $school_year_id) {
+
+        $add = $this->con->prepare("INSERT INTO notification
+            (school_year_id, sender_role, announcement_id, announcement_whom)
+            VALUES(:school_year_id, :sender_role, :announcement_id, :announcement_whom)");
+        
+        $add->bindValue(":school_year_id", $school_year_id);
+        $add->bindValue(":sender_role", "admin");
+        $add->bindValue(":announcement_id", $announcement_id);
+        $add->bindValue(":announcement_whom", "student");
+        $add->execute();
+
+        if($add->rowCount() > 0){
+            return true;
+        }
+
+        return false;
+    }
+    public function InsertTeacherOnlyNotificationFromAdmin($announcement_id, $school_year_id) {
+
+        $add = $this->con->prepare("INSERT INTO notification
+            (school_year_id, sender_role, announcement_id, announcement_whom)
+            VALUES(:school_year_id, :sender_role, :announcement_id, :announcement_whom)");
+        
+        $add->bindValue(":school_year_id", $school_year_id);
+        $add->bindValue(":sender_role", "admin");
+        $add->bindValue(":announcement_id", $announcement_id);
+        $add->bindValue(":announcement_whom", "teacher");
+        $add->execute();
+
+        if($add->rowCount() > 0){
+            return true;
+        }
+
+        return false;
+    }
+    public function InsertBothTeacherStudentNotificationFromAdmin($announcement_id, $school_year_id) {
+
+        $add = $this->con->prepare("INSERT INTO notification
+            (school_year_id, sender_role, announcement_id, announcement_whom)
+            VALUES(:school_year_id, :sender_role, :announcement_id, :announcement_whom)");
+        
+        $add->bindValue(":school_year_id", $school_year_id);
+        $add->bindValue(":sender_role", "admin");
+        $add->bindValue(":announcement_id", $announcement_id);
+        $add->bindValue(":announcement_whom", "universal");
+        $add->execute();
+
+        if($add->rowCount() > 0){
+            return true;
+        }
+
+        return false;
+    }
+
     public function TeacherNotificationMarkAsViewed(
         $notification_id, $teacher_id) {
 
@@ -1250,6 +1413,30 @@ class Notification{
         $sql->bindValue(":subject_code", $subject_code);
         $sql->bindValue(":school_year_id", $school_year_id);
         $sql->bindValue(":subject_code_assignment_id", $subject_code_assignment_id);
+
+        $sql->execute();
+
+        if($sql->rowCount() > 0){
+            return true;
+        }
+
+        return false;
+    }
+
+    public function AddNotificationForStudentFromTeacherByGivingAssignmentNoSubmission(
+        $school_year_id, $subject_code_assignment_id, $subject_code, $student_id){
+
+        $sender_role = "teacher";
+
+        $sql = $this->con->prepare("INSERT INTO notification
+            (sender_role, subject_code, school_year_id, subject_code_assignment_id, student_id)
+            VALUES(:sender_role, :subject_code, :school_year_id, :subject_code_assignment_id, :student_id)");
+        
+        $sql->bindValue(":sender_role", $sender_role);
+        $sql->bindValue(":subject_code", $subject_code);
+        $sql->bindValue(":school_year_id", $school_year_id);
+        $sql->bindValue(":subject_code_assignment_id", $subject_code_assignment_id);
+        $sql->bindValue(":student_id", $student_id);
 
         $sql->execute();
 

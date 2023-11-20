@@ -17,8 +17,6 @@
         $email = $_POST['email'];
 
 
-
-
         // echo "im not";
         $new_token = bin2hex(random_bytes(16));
         

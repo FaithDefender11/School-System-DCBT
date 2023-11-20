@@ -17,14 +17,13 @@
 
     $originalValueIsFalse = false;
 
-
-
+    
     $enrollment = new Enrollment($con);
 
     $check = $enrollment->GetAllRegistrarIdIntheEnrollment(
         $current_school_year_id, $registrarUserId);
 
-     $base_url = 'http://' . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . '/';
+    $base_url = 'http://' . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . '/';
 
     $dirname = dirname($_SERVER['PHP_SELF']);
     $after_registrar = substr($dirname, strpos($dirname, 'registrar/') + strlen('registrar/'));

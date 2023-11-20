@@ -53,7 +53,7 @@
     }
 
     public function GetPendingLRN() {
-        return isset($this->sqlData['lrn']) ? $this->sqlData["lrn"] : ""; 
+        return isset($this->sqlData['lrn']) ? $this->sqlData["lrn"] : NULL; 
     }
 
     public function GetPendingEmail() {
@@ -243,7 +243,7 @@
     public function PendingFormEmail($fname, $lname, $mi,
         $password, $email_address, $token, $current_school_year_id){
 
-        $expiration_time = strtotime("+5 minutes");
+        $expiration_time = strtotime("+60 minutes");
         $expiration_time = date('Y-m-d H:i:s', $expiration_time);
 
         $query = $this->con->prepare("INSERT INTO pending_enrollees 
@@ -373,6 +373,8 @@
             religion = :religion
             WHERE pending_enrollees_id = :pending_enrollees_id");
 
+        $lrn = $lrn == "" ? NULL : $lrn;
+        
         $query->bindParam(":firstname", $firstname);
         $query->bindParam(":lastname", $lastname);
         $query->bindParam(":middle_name", $middle_name);
@@ -1710,7 +1712,6 @@
     
     public function CheckValidTokenEnrolleeNonActivated($token) {
  
-
         $sql = $this->con->prepare("SELECT 
 
             expiration_time,
@@ -1745,7 +1746,131 @@
 
     }
 
+    public function CheckEnrolleeEmailAlreadyActivated($email){
 
+        $get = $this->con->prepare("SELECT * FROM pending_enrollees
+
+            WHERE email=:email
+            AND activated = 1
+            AND token != ''
+            -- AND school_year_id = :school_year_id
+        ");
+
+        $get->bindValue(":email", $email);
+        // $get->bindValue(":school_year_id", $school_year_id);
+        $get->execute();
+
+        // if($get->rowCount() > 0){
+
+        //     # Resen
+        // }
+
+
+        return $get->rowCount() > 0;
+    }
+
+     public function CheckEnrolleeEmailIsNotExists($email){
+
+        $get = $this->con->prepare("SELECT * FROM pending_enrollees
+
+            WHERE email=:email
+            -- AND activated = 0
+            -- AND token != ''
+            -- AND school_year_id = :school_year_id
+        ");
+
+        $get->bindValue(":email", $email);
+        // $get->bindValue(":school_year_id", $school_year_id);
+        $get->execute();
+
+        // if($get->rowCount() > 0){
+
+        //     # Resen
+        // }
+
+
+        return $get->rowCount() == 0;
+    }
+
+    public function CheckEnrolleeHasToken($email, $school_year_id){
+
+        $get = $this->con->prepare("SELECT * FROM pending_enrollees
+
+            WHERE email=:email
+            AND activated = 0
+            AND is_finished = 0
+            AND token != ''
+            AND school_year_id = :school_year_id
+        ");
+
+        $get->bindValue(":email", $email);
+        $get->bindValue(":school_year_id", $school_year_id);
+        $get->execute();
+
+        // if($get->rowCount() > 0){
+
+        //     # Resen
+        // }
+
+
+        return $get->rowCount() > 0;
+    }
+
+    public function EnrolleeResetPassword($pending_enrollees_id){
+
+        $array = [];
+
+
+        $new_password =  $this->GenerateRandomPassword();
+
+        // Hash the new password
+        $hashed_password = password_hash($new_password, PASSWORD_BCRYPT);
+
+        // Update the student's password in the database
+        $query = $this->con->prepare("UPDATE pending_enrollees 
+
+            SET password=:password
+            WHERE pending_enrollees_id=:pending_enrollees_id
+
+        ");
+
+        $query->bindValue(":password", $hashed_password);
+
+        $query->bindValue(":pending_enrollees_id", $pending_enrollees_id);
+
+        if($query->execute()){
+            // echo "<br>";
+            // echo "Temporary Password: $new_password";
+            // echo "<br>";
+
+            // Sent via email
+            // return $new_password;
+            array_push($array, $new_password);
+            array_push($array, true);
+        }
+
+        return $array;
+    }
+
+    function GenerateRandomPassword() {
+        $uppercaseLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $lowercaseLetters = 'abcdefghijklmnopqrstuvwxyz';
+        $numbers = '0123456789';
+
+        // Generate the first letter (uppercase)
+        $firstLetter = $uppercaseLetters[rand(0, strlen($uppercaseLetters) - 1)];
+
+        // Generate the next two letters (lowercase)
+        $nextTwoLetters = substr(str_shuffle($lowercaseLetters), 0, 2);
+
+        // Generate 5 random numbers
+        $randomNumbers = substr(str_shuffle($numbers), 0, 5);
+
+        // Concatenate the letters and numbers
+        $password = $firstLetter . $nextTwoLetters . $randomNumbers;
+
+        return $password;
+    }
 
     public function RemoveInActivatedEnrollee($token) {
 
@@ -1819,6 +1944,37 @@
         if($update->rowCount() > 0){
             return true;
         }
+
+        return false;
+    }
+
+    public function UpdateAnotherToken($email, $newToken) {
+        // Fetch the current token
+        $select = $this->con->prepare("SELECT token FROM pending_enrollees WHERE email = :email");
+        $select->bindValue(":email", $email);
+        $select->execute();
+        
+        if($select->rowCount() > 0){
+
+            $currentToken = $select->fetchColumn();
+
+            // Concatenate the current token with the new one
+            $updatedToken = $currentToken . ',' . $newToken;
+
+            // Update the row with the new token
+            $update = $this->con->prepare("UPDATE pending_enrollees
+                SET token = :updatedToken
+                WHERE email = :email");
+
+            $update->bindValue(":updatedToken", $updatedToken);
+            $update->bindValue(":email", $email);
+            $update->execute();
+
+            if ($update->rowCount() > 0) {
+                return true;
+            }
+        }
+
 
         return false;
     }
@@ -1944,6 +2100,15 @@
     }
 
     
+    function isStrongPassword($password) {
+        // Define the password requirements using a regular expression
+        $pattern = '/^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()]).{8,}$/';
+
+        // Use preg_match to check if the password matches the pattern
+        return preg_match($pattern, $password);
+    }
+
+   
 
 }
 

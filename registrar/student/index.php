@@ -104,7 +104,6 @@
                             <th>Section</th>  
                             <th>Status</th>  
                             <th>Type</th>  
-                            <th>Requirements</th>  
                             <th></th>  
                         </tr>
                     </thead>
@@ -175,7 +174,7 @@
                 { data: 'program_section', orderable: false},
                 { data: 'status', orderable: false},
                 { data: 'type', orderable: false},
-                { data: 'requirement', orderable: false},
+                // { data: 'requirement', orderable: false},
                 { data: 'view_button', orderable: false}
             ],
             'ordering': true

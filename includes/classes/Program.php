@@ -65,6 +65,10 @@ class Program{
         return isset($this->sqlData['track']) ? ucfirst($this->sqlData["track"]) : ""; 
     }
 
+    public function GetStatus() {
+        return isset($this->sqlData['status']) ? ucfirst($this->sqlData["status"]) : ""; 
+    }
+
     public function GetProgramAcronym() {
         return isset($this->sqlData['acronym']) ? ucfirst($this->sqlData["acronym"]) : ""; 
     }

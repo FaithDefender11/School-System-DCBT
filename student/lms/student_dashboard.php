@@ -284,7 +284,8 @@
                     </ul>
                 </div>
 
-                <div class="floating">
+                
+                <!-- <div class="floating">
                     
                     <header>
                         <div class="title">
@@ -293,7 +294,7 @@
                     </header>
 
                     <button onclick="window.location.href = 'announcement_index.php?sy_id=<?= $school_year_id;?>'" class="btn btn-sm btn-info">View all</button>
-                </div>
+                </div> -->
 
             </div>
 

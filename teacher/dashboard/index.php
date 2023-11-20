@@ -201,13 +201,13 @@
                 <button
                     class="tab"
                     onclick="window.location.href='index.php'">
-                    Enrolled
+                    Current subject teaching
                 </button>
                 <button
                     class="tab"
                     style="background-color: var(--theme); color: white"
                     onclick="window.location.href='completed_subjects.php'">
-                    Completed
+                    Previous subject teaching
                 </button>
             </div>
 
@@ -220,6 +220,7 @@
                             </div>
                         </header>
                         <button onclick="window.location.href = 'calendar.php'" class="btn btn-info">View assignments</button>
+                        <button onclick="window.location.href = 'teacher_announcement_calendar.php'" class="btn btn-info">View announcements</button>
                     </div>
 
                     <div class="floating">
@@ -307,14 +308,15 @@
                         </ul>
                     </div>
 
-                    <div class="floating">
+                    <!-- <div class="floating">
                         <header>
                             <div class="title">
                                 <h3>Announcements <em>(<?= $teachingSubjectCodeAnnouncementCount;?>)</em></h3>
                             </div>
                         </header>
                         <button onclick="window.location.href = 'announcement_index.php?sy_id=<?= $current_school_year_id;?>'" class="btn btn-info">View all</button>
-                    </div>
+                    </div> -->
+
                 </div>
 
                 <?php if(count($teachingSubjectCode) > 0): ?>

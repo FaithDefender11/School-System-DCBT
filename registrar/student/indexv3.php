@@ -257,7 +257,7 @@
         <div class="content">
 
                 <h4 class="text-primary text-center"><?= $text_output;?></h4>
-
+                            
                 <?php if($text_output != $no_data_found && $selected_student_id_input != ""): ?>
 
                     <form action='print_student_enrollment_forms.php' 
@@ -307,7 +307,6 @@
                         }
 
                         if(count($selectedValuesArr) > 0){
-
 
                             $get2 = $con->prepare("SELECT 
                                     

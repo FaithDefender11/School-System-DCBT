@@ -10,6 +10,8 @@
     include_once('../../includes/classes/Room.php');
     include_once('../../includes/classes/SubjectPeriodCodeTopicTemplate.php');
     include_once('../../includes/classes/SubjectPeriodCodeTopic.php');
+    include_once('../../includes/classes/Department.php');
+    include_once('../../includes/classes/Program.php');
 
     $school_year = new SchoolYear($con, null);
     $schedule = new Schedule($con);
@@ -67,6 +69,8 @@
 
         $section = new Section($con);
 
+
+
         $url_course_id = null;
         $url_sp_id = null;
         $url_t_id = null;
@@ -102,6 +106,18 @@
         $time_from = $schedule->GetTimeFrom();
         $time_to = $schedule->GetTimeTo();
 
+
+        $section = new Section($con, $schedule_course_id);
+
+        $section_program_id = $section->GetSectionProgramId($schedule_course_id);
+
+        $program = new Program($con, $section_program_id);
+
+        $department_id = $program->GetProgramDepartmentId();
+
+        $department = new Department($con, $department_id);
+
+        $departmentName = $department->GetDepartmentName();
 
         // var_dump($schedule_teacher_id);
         $teacher = new Teacher($con, $schedule_teacher_id);
@@ -242,10 +258,16 @@
 
         
             $section = new Section($con, $course_id);
+
+
             $sectionName = $section->GetSectionName();
 
             $section_subject_code = $section->CreateSectionSubjectCode(
                 $sectionName, $get_subject_code);
+
+
+
+
 
             if($checkIfTimeFromIsGreaterPrompt == true){
 
@@ -589,15 +611,26 @@
 <script>
 
     $(document).ready(function() {
+
+        let department_id = `
+            <?php echo $department_id ?>
+        `;
+
+        department_id = department_id.trim();
+
+        console.log(department_id)
+
         const searchInputTeacher = $('#searchInputTeacher');
 
         searchInputTeacher.autocomplete({
+
             source: function(request, response) {
                 $.ajax({
                     url: '../../ajax/schedule/typeahead.php',
                     dataType: 'json',
                     data: {
-                        query: request.term
+                        query: request.term,
+                        department_id
                     },
                     success: function(data) {
                         response(data);
@@ -621,7 +654,6 @@
             searchInputTeacher.autocomplete('search', '');
         });
     });
-
 
 
     $('#course_id').on('change', function() {

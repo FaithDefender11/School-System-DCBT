@@ -18,6 +18,11 @@
 
         $pending_enrollees_id = $_GET['id'];
          
+        $doesClicked = false;
+
+        if(isset($_GET['clicked']) && $_GET['clicked'] == "true"){
+            $doesClicked = true;
+        }
         
         $studentRequirement = new StudentRequirement($con);
 
@@ -57,17 +62,30 @@
 
         $back_url = "index.php";
 
+
+        // $contact_url = "";
         $contact_url = "../admission/contact_enrollee.php?id=$pending_enrollees_id";
+
+        if($doesClicked){
+            $contact_url = "../admission/contact_enrollee.php?id=$pending_enrollees_id&clicked=true";
+        }
 
         ?>
             <div class="content">
 
-                <nav>
-                    <a href="<?php echo $back_url; ?>"
-                    ><i class="bi bi-arrow-return-left fa-1x"></i>
-                    <h3>Back</h3>
-                    </a>
-                </nav>
+                <?php 
+                    if($doesClicked == false){
+                        ?>
+                        <nav>
+                            <a href="<?php echo $back_url; ?>"
+                            ><i class="bi bi-arrow-return-left fa-1x"></i>
+                            <h3>Back</h3>
+                            </a>
+                        </nav>
+                        <?php
+                    }
+                ?>
+
 
                 <main>
                     <div class="floating">

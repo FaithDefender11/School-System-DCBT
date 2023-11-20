@@ -94,6 +94,7 @@
             $student_contact = $student->GetContactNumber();
             $student_address = $student->GetStudentAddress();
             $admission_status = $student->GetAdmissionStatus();
+            $student_student_status = $student->GetStudentStatus();
             $student_civil_status = $student->GetCivilStatus();
             $student_nationality = $student->GetNationality();
             $student_birthday = $student->GetStudentBirthdays();
@@ -107,6 +108,8 @@
 
             // $student_level = 12;
             // $current_semester = "First";
+
+            // var_dump($student_student_status);
 
             $student_level = $student_admission_status == "Old" 
                 && $current_semester == "First" 

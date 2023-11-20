@@ -118,8 +118,10 @@
         </header>
 
         <?php echo Helper::ProcessStudentCards($student_id, $student_enrollment_form_id,
-            $student_unique_id, $enrollment_creation, $student_new_enrollee,
-            $enrollment_is_new_enrollee, $enrollment_is_transferee, $student_status_st); ?>
+            $student_unique_id, $enrollment_creation,
+            $student_new_enrollee,
+            $enrollment_is_new_enrollee,
+            $enrollment_is_transferee, $student_status_st, $student_enrollment_id); ?>
 
     </div>
     
@@ -140,16 +142,15 @@
 
                 <div>
 
-                    <a href="enrollment_audit.php?id=<?= $student_enrollment_id;?>" style="text-decoration: none; color: inherit">
+                    <!-- <a href="enrollment_audit.php?id=<?= $student_enrollment_id;?>" style="text-decoration: none; color: inherit">
                         <button class="btn btn-sm btn-info">
                             <i class="fas fa-clock"></i> History
                         </button>
                     </a>
-                    
 
                     <button onclick="window.location.href='enrollee_file_submission.php?id=<?= $pending_enrollees_id;?>'" class="btn btn-sm btn-primary">
                         <i class="fas fa-file"></i> Files
-                    </button>
+                    </button> -->
 
                 </div>
             </header>

@@ -15,6 +15,13 @@
         $department_name = $teacher->GetDepartmentName();
         $teacher_school_id = $teacher->GetSchoolTeacherId();
         $teacher_status = $teacher->GetStatus();
+        $teacher_status = trim($teacher_status);
+
+        var_dump($teacher_status);
+        echo "<br>";
+        $teacher_status_toggle = $teacher_status == "Inactive" ? "Active" : "Inactive";
+        var_dump($teacher_status_toggle);
+
         $teacher_creation = $teacher->GetCreation();
 
         $firstname = $teacher->GetTeacherFirstName();
@@ -38,6 +45,8 @@
         $current_school_year_period = $school_year_obj['period'];
         $current_school_year_id = $school_year_obj['school_year_id'];
 
+
+        var_dump($teacher_status);
 
         ?>
         <style>
@@ -65,14 +74,14 @@
                                 </button>
 
                                 <div class="dropdown-menu">
-                                    <a onclick="<?php echo "removeTeacher($teacher_id) " ?>" class="dropdown-item" style="color: orange;">
-                                        <i class="bi bi-file-earmark-x"></i>Mark as Inactive</a>
+                                    <a onclick="removeTeacher(<?php echo $teacher_id; ?>, '<?php echo $teacher_status_toggle; ?>')" class="dropdown-item" style="color: orange;">
+                                        <i class="bi bi-file-earmark-x"></i> Mark as <?php echo $teacher_status_toggle; ?>
+                                    </a>
+
                                 
                                  <a onclick="<?php echo "resetTeacherPassword($teacher_id) " ?>" class="dropdown-item" style="color: blue;">
                                         <i class="bi bi-file-earmark-x"></i>Reset password</a>
-                                    </div>
-
-                             
+                                </div>
  
 
                             </div>
@@ -171,20 +180,17 @@
                     }
 
                 });
-
             }
-            
         });
-
     }
 
-    function removeTeacher(teacher_id){
+    function removeTeacher(teacher_id, type){
 
         var teacher_id = parseInt(teacher_id);
 
         Swal.fire({
             icon: 'question',
-            title: `Do you want to set as Inactive the selected teacher`,
+            title: `Do you want to set as ${type} the selected teacher`,
             showCancelButton: true,
             confirmButtonText: 'Yes',
             cancelButtonText: 'Cancel'
@@ -195,7 +201,8 @@
                     url: '../../ajax/teacher/removeTeacher.php',
                     type: 'POST',
                     data: {
-                        teacher_id
+                        teacher_id,
+                        type
                     },
                     success: function(response) {
 
@@ -203,17 +210,20 @@
 
                         console.log(response);
 
+                        if(response == "success"){
+
                             Swal.fire({
                                 icon: 'success',
-                                title: `Selected teacher has been removed.`,
+                                title: `Selected teacher has successfully changed its status.`,
                             });
 
                             setTimeout(() => {
                                 Swal.close();
                                 // location.reload();
                                 window.location.href = "index.php";
-                            }, 1000);
+                            }, 1900);
 
+                        }
 
  
 

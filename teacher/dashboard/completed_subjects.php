@@ -100,12 +100,13 @@
                     class="tab"
                     style="background-color: var(--theme); color: white"
                     onclick="window.location.href='index.php'">
-                    Enrolled
+                    Current subject teaching
+
                 </button>
                 <button
                     class="tab"
                     onclick="window.location.href='completed_subjects.php'">
-                    Completed
+                    Previous subject teaching
                 </button>
             </div>
 

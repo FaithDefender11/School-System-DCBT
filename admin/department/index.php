@@ -40,12 +40,12 @@
                             $Tertiary = "Tertiary";
 
                             $query = $con->prepare("SELECT * FROM department
-                                WHERE department_name =:condition1
-                                OR department_name =:condition2
+                                -- WHERE department_name =:condition1
+                                -- OR department_name =:condition2
                             ");
 
-                            $query->bindParam(":condition1", $SHS);
-                            $query->bindParam(":condition2", $Tertiary);
+                            // $query->bindParam(":condition1", $SHS);
+                            // $query->bindParam(":condition2", $Tertiary);
                             $query->execute();
 
                             if($query->rowCount() > 0){
@@ -54,8 +54,22 @@
 
                                         $department_id = $row['department_id'];
                                         $department_name = $row['department_name'];
+                                        $status = $row['status'];
 
-                                    $removeDepartmentBtn = "removeDepartmentBtn($department_id)";
+                                        $department_status = $status == "active" ? "inactive" : "active";
+
+                                        $enableButton = "";
+
+                                        // if()
+
+                                        $removeDepartmentBtnC = "removeDepartmentBtn($department_id, \"$department_status\")";
+                                        $removeDepartmentBtn = "
+                                            <button onclick='$removeDepartmentBtnC' class='danger'>
+                                                <i class='fas fa-ban'></i>
+                                            </button>
+                                        ";
+                                        $removeDepartmentBtn = "";
+
                                     echo "
                                         <tr>
                                             <td>$department_id</td>
@@ -66,9 +80,7 @@
                                                         <i class='fas fa-pen'></i>
                                                     </button>
                                                 </a>
-                                                <button onclick='$removeDepartmentBtn' class='danger'>
-                                                        <i class='fas fa-trash'></i>
-                                                </button>
+                                                $removeDepartmentBtn
                                             </td>
                                         </tr>
                                     ";
@@ -89,13 +101,16 @@
 
 <script>
     
-    function removeDepartmentBtn(department_id){
+    function removeDepartmentBtn(department_id, department_status){
+
+        console.log(department_status)
+
         Swal.fire({
                 icon: 'question',
-                title: `I agreed to removed Department ID: ${department_id}`,
-                text: 'Please note that this action cannot be undone',
+                title: `I agreed to disabled selected department`,
+                // text: 'Please note that this action cannot be undone',
                 showCancelButton: true,
-                confirmButtonText: 'Yes',
+                confirmButtonText: 'Agree',
                 cancelButtonText: 'Cancel'
 
             }).then((result) => {
@@ -105,7 +120,8 @@
                         url: "../../ajax/department/remove_department.php",
                         type: 'POST',
                         data: {
-                            department_id
+                            department_id,
+                            department_status
                         },
                         success: function(response) {
                             response = response.trim();

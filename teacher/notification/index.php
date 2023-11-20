@@ -51,8 +51,11 @@
 
     // print_r($studentListSubmittedNotification);
 
-    $adminAnnouncement = $announcement->CheckTeacherIdBelongsToAdminAnnouncement($current_school_year_id,
-        $teacherLoggedInId);
+    // $adminAnnouncement = $announcement->CheckTeacherIdBelongsToAdminAnnouncement($current_school_year_id,
+        // $teacherLoggedInId);
+
+    $adminAnnouncement = $notification->GetAdminAnnouncementInTeacherSide(
+        $current_school_year_id);
 
     // var_dump($adminAnnouncement);
 
@@ -60,30 +63,19 @@
         $studentListSubmittedNotification,
         $adminAnnouncement);
     
-    // var_dump($adminAnnouncement);
+    // var_dump($studentListSubmittedNotification);
     // echo "<br>";
     
 
-    $viewedCount = $notification->GetTeacherViewedNotificationCount(
-        $studentListSubmittedNotification, $teacherLoggedInId);
+    // $viewedCount = $notification->GetTeacherViewedNotificationCount(
+    //     $studentListSubmittedNotification, $teacherLoggedInId);
 
-    $unViewedCount = $notification->GetTeacherUnViewedNotificationCount(
-        $studentListSubmittedNotification, $teacherLoggedInId);
+    // $unViewedCount = $notification->GetTeacherUnViewedNotificationCount(
+    //     $studentListSubmittedNotification, $teacherLoggedInId);
 
-        
-
-    $unViewedAdminNotifCount = $notification->GetTeacherViewedNotificationFromAdminCount(
-        $adminAnnouncement, $teacherLoggedInId);
-
-    // echo "<br>";
-    // var_dump($unViewedAdminNotifCount);
-
-
-    // echo "viewedCount: $viewedCount";
-    // echo "<br>";
-
-    // echo "unViewedCount: $unViewedCount";
-    // echo "<br>";
+    // $unViewedAdminNotifCount = $notification->GetTeacherViewedNotificationFromAdminCount(
+    //     $adminAnnouncement, $teacherLoggedInId);
+  
 
     usort($studentSubmittedAndAdminAnnouncement, function($a, $b) {
         $dateA = strtotime($a['date_creation']);
@@ -97,226 +89,249 @@
     });
     
 
-    $back_url = "https://dcbt.online/teacher/dashboard/index.php";
+    // $back_url = "https://dcbt.online/teacher/dashboard/index.php";
+
 ?>
 
-            <nav>
-                <a href="<?= $back_url; ?>">
-                    <i class="bi bi-arrow-return-left"></i>
-                    Back
-                </a>
-            </nav>
+    <!-- <nav>
+        <a href="<?= $back_url; ?>">
+            <i class="bi bi-arrow-return-left"></i>
+            Back
+        </a>
+    </nav> -->
 
-<div class="content">
-    <main>
-        <div class="floating" id="shs-sy">
+    <div class="content">
+        <?php 
+            // echo Helper::lmsTeacherNotificationHeader(
+            //     $con, $teacherLoggedInId,
+            //     $current_school_year_id,
+            //     $teachingSubjects,
+            //     "second",
+            //     "second",
+            //     "second",
+            //     ""
+            //     "first"
+            // );
+            ?>
+        <main>
 
-            <?php if(count($studentSubmittedAndAdminAnnouncement) > 0): ?>
+            <div class="floating" id="shs-sy">
 
-                <header style="pointer-events: none;">
-                    <div class="title">
-                        <h3>Notifications</h3>
-                    </div>
+                <?php if(count($studentSubmittedAndAdminAnnouncement) > 0): ?>
 
-                    <div class="action">
-                        <a href="create.php">
-                            <button type="button" class="clean large success"> Mark all as read</button>
-                        </a>
-                    </div>
+                    <header style="pointer-events: none;">
+                        <div class="title">
+                            <h3>Notifications</h3>
+                        </div>
 
-                </header>
-                
-                <main>
+                        <!-- <div class="action">
+                            <a href="create.php">
+                                <button type="button" class="clean large success"> Mark all as read</button>
+                            </a> -->
+                        <!-- </div> -->
+
+                    </header>
                     
-                <table id="notification_table" class="a" style="margin: 0">
-                    <thead>
-                        <tr>
-                            <th>From</th>
-                            <th>Type</th>
-                            <th>Subject</th>
-                            <th>Sent </th>
-                            <th>Status</th>
-                            <th>Read?</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
+                    <main>
                         
-                            foreach ($studentSubmittedAndAdminAnnouncement as $key => $notification) {
-                                
-                                // $department_id = $row['department_id'];
-                                
-                                $notification_id = isset($notification['notification_id']) ? $notification['notification_id'] : "";
-
-                                $notif_exec = new Notification($con, $notification_id);
-
-                                // $sender_role = $notification['sender_role'];
-                                $sender_role = isset($notification['sender_role']) ? $notification['sender_role'] : '';
-                                
-                                // $date_creation = $notification['date_creation'];
-
-                                $date_creation = isset($notification['date_creation']) ? $notification['date_creation'] : '';
-                                
-
-                                $date_creation = date("M d, Y h:i a", strtotime($date_creation));
-
-                               
-                                // $subject_code = $notification['subject_code'];
-                                $subject_code = isset($notification['subject_code']) ? $notification['subject_code'] : '';
-
-                                // $announcement_id = $notification['announcement_id'];
-                                $announcement_id = isset($notification['announcement_id']) ? $notification['announcement_id'] : '';
-                                
-                                // $subject_assignment_submission_id = $notification['subject_assignment_submission_id'];
-                                $subject_assignment_submission_id = isset($notification['subject_assignment_submission_id']) ? $notification['subject_assignment_submission_id'] : '';
-
-
-                                $subjectAssignmentSubmission = new SubjectAssignmentSubmission($con, $subject_assignment_submission_id);
-                                $subject_code_assignment_id =  $subjectAssignmentSubmission->GetSubjectCodeAssignmentId();
-                                $student_id =  $subjectAssignmentSubmission->GetStudentId();
-
-
-                                $sender_name = "";
-                                $type = "";
-                                $title = "";
-                                $button_url = "";
-
-                                $assignment_notification_url = "";
-
-                                $status = "
-                                    <i style='color: orange' class='fas fa-times'></i>
-                                ";
-                                
-
-                                $admin_announcement_id = isset($notification['announcement_id']) ? $notification['announcement_id'] : '';
-                                
-                                $admin_title = isset($notification['title']) ? $notification['title'] : '';
-                                $admin_content = isset($notification['content']) ? $notification['content'] : '';
-                                
-                                $admin_users_id = isset($notification['users_id']) ? $notification['users_id'] : '';
-                                $admin_date_creation_db = isset($notification['date_creation']) ? $notification['date_creation'] : '';
-
-                                $date_creation = date("M d, Y h:i a", strtotime($admin_date_creation_db));
-
-                                $admin_role = isset($notification['role']) ? $notification['role'] : '';
-
-                                // echo $admin_users_id;
-                                // echo "<br>";
-
-                                if($admin_announcement_id != NULL && 
-                                    $subject_code == NULL &&
-                                    $admin_users_id != NULL &&
+                    <table id="notification_table" class="a" style="margin: 0">
+                        <thead>
+                            <tr>
+                                <th>From</th>
+                                <th>Type</th>
+                                <th>Subject</th>
+                                <th>Sent </th>
+                                <th>Status</th>
+                                <th>Read?</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            
+                                foreach ($studentSubmittedAndAdminAnnouncement as $key => $notification) {
                                     
-                                    $admin_role == "admin"
-                                    ){
+                                    // $department_id = $row['department_id'];
+                                    
+                                    $notification_id = isset($notification['notification_id']) ? $notification['notification_id'] : "";
 
-                                   
-                                        $user = new User($con, $admin_users_id);
+                                    $notif_exec = new Notification($con, $notification_id);
 
-                                        $sender_name = ucwords($user->getFirstName()) . " " . ucwords($user->getLastName());
+                                    // $sender_role = $notification['sender_role'];
+                                    $sender_role = isset($notification['sender_role']) ? $notification['sender_role'] : '';
+                                    $announcement_whom = isset($notification['announcement_whom']) ? $notification['announcement_whom'] : '';
+                                    
+                                    // $date_creation = $notification['date_creation'];
 
+                                    $date_creation = isset($notification['date_creation']) ? $notification['date_creation'] : '';
+                                    
+
+                                    $date_creation = date("M d, Y h:i a", strtotime($date_creation));
+
+                                
+                                    // $subject_code = $notification['subject_code'];
+                                    $subject_code = isset($notification['subject_code']) ? $notification['subject_code'] : '';
+
+                                    // $announcement_id = $notification['announcement_id'];
+                                    $announcement_id = isset($notification['announcement_id']) ? $notification['announcement_id'] : '';
+                                    
+                                    // $subject_assignment_submission_id = $notification['subject_assignment_submission_id'];
+                                    $subject_assignment_submission_id = isset($notification['subject_assignment_submission_id']) ? $notification['subject_assignment_submission_id'] : '';
+
+
+                                    $subjectAssignmentSubmission = new SubjectAssignmentSubmission($con, $subject_assignment_submission_id);
+                                    $subject_code_assignment_id =  $subjectAssignmentSubmission->GetSubjectCodeAssignmentId();
+                                    $student_id =  $subjectAssignmentSubmission->GetStudentId();
+
+                                    $sender_name = "";
+                                    $type = "";
+                                    $title = "";
+                                    $button_url = "";
+
+                                    $assignment_notification_url = "";
+
+                                    $status = "
+                                        <i style='color: orange' class='fas fa-times'></i>
+                                    ";
+                                    
+
+                                    $admin_announcement_id = isset($notification['announcement_id']) ? $notification['announcement_id'] : '';
+                                    $for_teacher = isset($notification['for_teacher']) ? $notification['for_teacher'] : '';
+                                    
+                                    // var_dump($announcement_id);
+
+                                    $announcement = new Announcement($con, $announcement_id);
+                                    $admin_title = $announcement->GetTitle();
+                                    $announcement_user_id = $announcement->GetUserId();
+
+                                    // $admin_title = isset($notification['title']) ? $notification['title'] : '';
+
+                                    $admin_content = isset($notification['content']) ? $notification['content'] : '';
+                                    
+                                    $admin_users_id = isset($notification['users_id']) ? $notification['users_id'] : '';
+                                    $admin_date_creation_db = isset($notification['date_creation']) ? $notification['date_creation'] : '';
+
+                                    $date_creation = date("M d, Y h:i a", strtotime($admin_date_creation_db));
+
+                                    $admin_role = isset($notification['role']) ? $notification['role'] : '';
+
+                                    // echo $admin_users_id;
+                                    // echo "<br>";
+                                            // var_dump($for_teacher);
+
+                                    if(($announcement_whom == "teacher" 
+                                        || $announcement_whom == "universal")&&
+                                            $sender_role == "admin"
+                                        ){
+
+                                            // echo "notification_id: $notification_id";
+                                            // echo "<br>";
+                                            
+                                            $user = new User($con, $announcement_user_id);
+
+                                            $sender_name = ucwords($user->getFirstName()) . " " . ucwords($user->getLastName());
+
+                                            $type = "Announcement";
+                                            $title = "<span style='font-weight: bold;'>$admin_title</span>";
+
+                                            $announcement_url = "announcement_view.php?id=$admin_announcement_id&notification=true";
+
+                                            $button_url = "
+                                                <button onclick='window.location.href=\"$announcement_url\"' class='btn btn-info btn-sm'>
+                                                    <i class='fas fa-eye'></i>
+                                                </button>
+                                            ";
+
+                                            $announcement = new Announcement($con, $admin_announcement_id);
+
+
+                                            $teacherAnnouncementViewed = $announcement->CheckTeacherViewedAnnouncement(
+                                                $admin_announcement_id, $teacherLoggedInId);
+
+                                            if($teacherAnnouncementViewed){
+                                                $status = "
+                                                <i style='color: green' class='fas fa-check'></i>
+                                            ";
+
+                                        }
+                                    }
+
+
+                                    if($subject_assignment_submission_id != NULL && 
+                                        $subject_code != NULL &&
+                                        $sender_role == "student"
+                                        && $announcement_whom == ""){
 
                                     
+                                        $student = new Student($con, $student_id);
+
+                                        $sender_name = ucwords($student->GetFirstName()) . " " . ucwords($student->GetLastName());
+
+
+                                        $assigment = new SubjectCodeAssignment($con, $subject_code_assignment_id);
+                                        $assigment_name = $assigment->GetAssignmentName();
+
                                         // var_dump($assigment_name);
 
-                                        $type = "Announcement";
-                                        $title = "<span style='font-weight: bold;'>$admin_title</span>";
+                                        $type = "Assignment";
+                                        $title = "Submitted $type: <span style='font-weight: bold;'>$assigment_name</span>";
 
-                                        $announcement_url = "announcement_view.php?id=$admin_announcement_id&notification=true";
+                                        $assignment_notification_url = "../class/student_submission_view.php?id=$subject_assignment_submission_id&n_id=$notification_id&notification=true";
 
                                         $button_url = "
-                                            <button onclick='window.location.href=\"$announcement_url\"' class='btn btn-info btn-sm'>
+                                            <button onclick='window.location.href=\"$assignment_notification_url\"' class='btn btn-primary btn-sm'>
                                                 <i class='fas fa-eye'></i>
                                             </button>
                                         ";
+                                    }
+                            
+                                    
+                                    $notif_exec = new Notification($con, $notification_id);
+                                    $studentViewed = $notif_exec->CheckTeacherViewedNotification($notification_id,
+                                        $teacherLoggedInId);
 
-                                        $announcement = new Announcement($con, $admin_announcement_id);
+                                
 
-
-                                        $teacherAnnouncementViewed = $announcement->CheckTeacherViewedAnnouncement(
-                                            $admin_announcement_id, $teacherLoggedInId);
-
-                                        if($teacherAnnouncementViewed){
-                                            $status = "
+                                    if($studentViewed){
+                                        $status = "
                                             <i style='color: green' class='fas fa-check'></i>
                                         ";
-
                                     }
-                                }
 
-                                if($subject_assignment_submission_id != NULL && 
-                                    $subject_code != NULL &&
-                                    $sender_role == "student" ){
+                                    // ($notification_id)
 
-                                   
-                                    $student = new Student($con, $student_id);
-
-                                    $sender_name = ucwords($student->GetFirstName()) . " " . ucwords($student->GetLastName());
-
-
-                                    $assigment = new SubjectCodeAssignment($con, $subject_code_assignment_id);
-                                    $assigment_name = $assigment->GetAssignmentName();
-
-                                    // var_dump($assigment_name);
-
-                                    $type = "Assignment";
-                                    $title = "Submitted $type: <span style='font-weight: bold;'>$assigment_name</span>";
-
-                                    $assignment_notification_url = "../class/student_submission_view.php?id=$subject_assignment_submission_id&n_id=$notification_id&notification=true";
-
-                                    $button_url = "
-                                        <button onclick='window.location.href=\"$assignment_notification_url\"' class='btn btn-primary btn-sm'>
-                                            <i class='fas fa-eye'></i>
-                                        </button>
+                                    echo "
+                                        <tr>
+                                            <td>($notification_id) $sender_name</td>
+                                            <td>$type</td>
+                                            <td>$title</td>
+                                            <td>$date_creation</td>
+                                            <td>$status</td>
+                                            
+                                            <td>$button_url</td>
+                                            
+                                            
+                                        </tr>
                                     ";
-                                }
-                           
-                                
-                                $notif_exec = new Notification($con, $notification_id);
-                                $studentViewed = $notif_exec->CheckTeacherViewedNotification($notification_id,
-                                    $teacherLoggedInId);
 
-                             
-
-                                if($studentViewed){
-                                    $status = "
-                                        <i style='color: green' class='fas fa-check'></i>
-                                    ";
                                 }
 
-                                // ($notification_id)
+                            ?>
 
-                                echo "
-                                    <tr>
-                                        <td>$sender_name</td>
-                                        <td>$type</td>
-                                        <td>$title</td>
-                                        <td>$date_creation</td>
-                                        <td>$status</td>
-                                        
-                                        <td>$button_url</td>
-                                        
-                                        
-                                    </tr>
-                                ";
-
-                            }
-
-                        ?>
-
-                        
-                    </tbody>
-                </table>
+                            
+                        </tbody>
+                    </table>
 
 
 
-            </main>
-            <?php else: ?>
-                <div class="col-md-12">
-                    <h3 class="text-center">No notification found</h3>
-                </div>
-            <?php endif;?>
-        </div>
-    </main>
-</div>
+                </main>
+                <?php else: ?>
+                    <div class="col-md-12">
+                        <h3 class="text-center">No notification found</h3>
+                    </div>
+                <?php endif;?>
+            </div>
+
+        </main>
+
+    </div>
 

@@ -81,7 +81,7 @@
             $imagePath = str_replace('../../', '', $imagePath);
         }
 
-        $username = trim(strtolower($lastname)).".".$newTeacherId."F@dcbt.ph";
+        $username = trim(strtolower($lastname)).".".$newTeacherId."Fdcbt.edu.ph";
 
         $query = "INSERT INTO teacher 
             (password, firstname, middle_name, lastname, suffix, department_id, profilePic, gender, email, contact_number,
@@ -99,7 +99,8 @@
         $statement->bindParam(':firstname', $firstname);
         $statement->bindParam(':middle_name', $middle_name);
         $statement->bindParam(':lastname', $lastname);
-        $statement->bindParam(':suffix', $default_password);
+        $statement->bindParam(':suffix', $suffix);
+        // $statement->bindParam(':suffix', $default_password);
         $statement->bindParam(':department_id', $department_id);
         $statement->bindParam(':profilePic', $imagePath);
         $statement->bindParam(':gender', $gender);
@@ -173,19 +174,19 @@
                         <span>
                             <label for="name">Name</label>
                             <div>
-                                <input type="text" name="firstname" placeholder="">
+                                <input required class="form-control" type="text" name="firstname" placeholder="">
                                 <small>First Name</small>
                             </div>
                             <div>
-                                <input type="text" name="middle_name" placeholder="">
+                                <input required class="form-control" type="text" name="middle_name" placeholder="">
                                 <small>Middle Name</small>
                             </div>
                             <div>
-                                <input type="text" name="lastname" placeholder="">
+                                <input required required class="form-control" type="text" name="lastname" placeholder="">
                                 <small>Last Name</small>
                             </div>
                             <div>
-                                <input type="text" name="suffix" placeholder="">
+                                <input required class="form-control" type="text" name="suffix" placeholder="">
                                 <small>Suffix</small>
                             </div>
                         </span>
@@ -194,7 +195,7 @@
                         <span>
                             <label for="gender">Gender</label>
                             <div>
-                                <select name="gender" id="gender">
+                                <select  required class="form-control" name="gender" id="gender">
                                     <option value="Male">Male</option>
                                     <option value="Female">Female</option>
                                 </select>
@@ -203,13 +204,13 @@
                         <span>
                             <label for="birthday">Birthday</label>
                             <div>
-                                <input type="date" name="birthday" placeholder="">
+                                <input required class="form-control" type="date" name="birthday" placeholder="">
                             </div>
                         </span>
                         <span>
                             <label for="birthplace">Birthplace</label>
                             <div>
-                                <input type="text" name="birthplace" placeholder="">
+                                <input required class="form-control" type="text" name="birthplace" placeholder="">
                             </div>
                         </span>
                     </div>
@@ -217,25 +218,25 @@
                         <span>
                             <label for="email">Email</label>
                             <div>
-                                <input type="email" name="email" placeholder="">
+                                <input required class="form-control" type="email" name="email" placeholder="">
                             </div>
                         </span>
                         <span>
                             <label for="contact">Contact No.</label>
                             <div>
-                                <input type="text" name="contact_number" placeholder="">
+                                <input  required class="form-control" type="text" name="contact_number" placeholder="">
                             </div>
                         </span>
                         <span>
                             <label for="religion">Religion</label>
                             <div>
-                                <input type="text" name="religion" placeholder="">
+                                <input  required class="form-control" type="text" name="religion" placeholder="">
                             </div>
                         </span>
                         <span>
                             <label for="citizenship">Citizenship</label>
                             <div>
-                                <input type="text" name="citizenship" placeholder="">
+                                <input required class="form-control" type="text" name="citizenship" placeholder="">
                             </div>
                         </span>
                     </div>
@@ -243,21 +244,21 @@
                         <span>
                             <label for="address">Address</label>
                             <div>
-                                <input type="text" name="address" placeholder="">
+                                <input  required class="form-control" type="text" name="address" placeholder="">
                             </div>
                         </span>
                     </div>
                     <div class="row">
                         <?php echo $department_selection; ?>
                     </div>
-                    <div class="row">
+                    <!-- <div class="row">
                         <span>
                             <label for="profilePic">Profile Pic</label>
                             <div>
                                 <input type="file" name="profilePic" placeholder="">
                             </div>
                         </span>
-                    </div>
+                    </div> -->
                     <div class="action">
                         <button type="submit" class="clean large" name="create_teacher_btn">Save</button>
                     </div>

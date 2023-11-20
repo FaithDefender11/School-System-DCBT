@@ -19,6 +19,25 @@
 
     $task_type_id = $_GET['task_id'];
 
+    $given = false;
+
+    if(isset($_GET['given'])
+        && $_GET['given'] == true){
+
+        $given = true;
+        
+    }
+
+    $view_only = false;
+
+    if(isset($_GET['view_only'])
+        && $_GET['view_only'] == true){
+
+        $view_only = true;
+        
+    }
+
+
     $taskType = new TaskType($con, $task_type_id);
     $taskName = $taskType->GetTaskName();
 
@@ -92,7 +111,7 @@
         && isset($_POST['edit_assignment_topic_'. $subject_period_code_topic_id])
         && isset($_POST['assignment_name'])
         && isset($_POST['max_score'])
-        && isset($_POST['allow_late_submission'])
+        // && isset($_POST['allow_late_submission'])
         && isset($_POST['due_date'])
         && isset($_POST['max_attempt'])
         
@@ -102,7 +121,7 @@
             $max_score = $_POST['max_score'];
             $max_attempt = $_POST['max_attempt'];
 
-            $allow_late_submission = $_POST['allow_late_submission'];
+            // $allow_late_submission = $_POST['allow_late_submission'];
             $due_date = $_POST['due_date'];
 
             # Not Required field = NULL as default.
@@ -184,7 +203,7 @@
                 $subject_period_code_topic_id,
                 $subject_code_assignment_id,
                 $assignment_name, $description, $max_score, 
-                $allow_late_submission, $due_date, $max_attempt);
+                $due_date, $max_attempt);
 
             if($successEdit || $fileUploadSuccess){
 
@@ -241,14 +260,14 @@
                             </div>
 
 
-                            <div class='form-group mb-2'>
-                                <label>* Allow Late Submission:</label><br>
+                            <!-- <div class='form-group mb-2'>
+                                <label>* Allow Late Submission</label><br>
                                 <input <?php echo $getAllowLateSubmission === "yes" ? "checked" : ""; ?> type="radio" id="late_submission_yes" required name="allow_late_submission" value="yes">
                                 <label for="late_submission_yes">Yes</label> &nbsp;
                                 <input <?php echo $getAllowLateSubmission === "no" ? "checked" : ""; ?> type="radio" id="late_submission_no" required name="allow_late_submission" value="no">
                                 <label for="late_submission_no">No</label><br>
 
-                            </div>
+                            </div> -->
 
                             <div class='form-group mb-2'>
                                 <label for="max_attempt" class='mb-2'>* Submission Count</label>
@@ -373,11 +392,33 @@
                             </div>
                             <br>
 
-                            <div class="action">
-                                <button type="submit" class="clean large" name='edit_assignment_topic_<?php echo $subject_period_code_topic_id; ?>'>
-                                    Save Section
-                                </button>
-                            </div>
+                            <?php 
+                            
+                                if($given == true){
+                                    ?>
+                                        <!-- <div class='form-group mb-2'>
+                                            <label for="given_status" class='mb-2'>* Given Status</label>
+
+                                            <input <?php echo $given == true ? "checked" : ""; ?> type="radio" id="to_give_yes" required name="is_given" value="1">
+                                            <label for="to_give_yes">Yes</label> &nbsp;
+                                            <input <?php echo $given != true ? "checked" : ""; ?> type="radio" id="to_give_no" required name="is_given" value="0">
+                                            <label for="to_give_no">No</label><br>
+
+                                        </div> -->
+                                    <?php
+                                }
+                            ?>
+
+                            <?php if($view_only == false):?>
+                                <div class="action">
+                                    <button type="submit" class="clean large" name='edit_assignment_topic_<?php echo $subject_period_code_topic_id; ?>'>
+                                        Save Section
+                                    </button>
+                                </div>
+                                <?php else:?>
+
+                            <?php endif?>
+                            
                         </form>
                     </main>
                 </div>

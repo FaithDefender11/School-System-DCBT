@@ -61,7 +61,7 @@
         $assignmentsMerge = array_merge($codeAssignmentTemplateList,
             $nonTemplateAssignment);
 
-        // var_dump($codeAssignmentTemplateList);
+        // var_dump($assignmentsMerge);
         
 
         $topic = $subjectPeriodCodeTopic->GetTopic();
@@ -117,9 +117,7 @@
                                             $output_btn = "";
 
                                             $i++;
-
-
-
+ 
                                             # Assignment Template
                                             $subject_code_assignment_template_id = isset($row['subject_code_assignment_template_id']) ? $row['subject_code_assignment_template_id'] : NULL;
                                             
@@ -200,6 +198,7 @@
                                                     $given_status = "
                                                         <i onclick='$ungiveAssignmentTemplate' style='cursor:pointer; color: green;' class='fas fa-check'></i>
                                                     ";
+                                                    
                                                 }
                                                 if($sc_assignment_template_is_given == 0){
                                                     
@@ -224,6 +223,9 @@
                                                 ";
                                             }
 
+                                            $assignment_edit_url = "task_edit.php?id=$nonTemplateSubjectCodeAssignmentId&task_id=$task_type_id";
+
+
                                             # NON TEMPLATE Assignment
                                             if($nonTemplateSubjectCodeAssignmentId !== NULL){
                                                     
@@ -245,6 +247,20 @@
                                                     $given_status = "
                                                         <i onclick='$unGiveMadeAssignment' style='cursor: pointer;color: yellow;' class='fas fa-check'></i>
                                                     ";
+
+                                                    $assignment_view_only_url = "task_edit.php?id=$nonTemplateSubjectCodeAssignmentId&task_id=$task_type_id&view_only=true";
+
+                                                    $output_section = "
+                                                        <a style='color: inherit' href='$assignment_view_only_url'>
+                                                            $nonTemplateSubjectAssignmentName
+                                                        </a>
+                                                    ";
+                                                }else{
+                                                    $output_section = "
+                                                    <a style='color: inherit' href='$assignment_edit_url'>
+                                                        $nonTemplateSubjectAssignmentName
+                                                    </a>
+                                                ";
                                                 }
                                                 if($nonTemplateSubjectAssignmentIsGiven == 0){
 
@@ -265,6 +281,10 @@
                                                         <i onclick='$giveMadeAssignment' style='cursor:pointer; color: yellow;' class='fas fa-times'></i>
                                                     ";
                                                     
+                                                    // $given_status = "
+                                                    //     <i onclick=\"window.location.href = 'task_edit.php?id=104&task_id=$task_type_id&given=true'\" style='cursor:pointer; color: yellow;' class='fas fa-times'></i>
+                                                    // ";
+                                                    
                                                 }
 
                                                 // $output_btn = $handout_btn;
@@ -273,14 +293,17 @@
                                                 ";
 
                                                 // $assignment_edit_url = "assignment_edit.php?id=$nonTemplateSubjectCodeAssignmentId";
-                                                $assignment_edit_url = "task_edit.php?id=$nonTemplateSubjectCodeAssignmentId&task_id=$task_type_id";
                                                 
-                                                $output_section = "
-                                                    <a style='color: inherit' href='$assignment_edit_url'>
-                                                        $nonTemplateSubjectAssignmentName
-                                                    </a>
-                                                ";
+                                                // $assignment_edit_url = "task_edit.php?id=$nonTemplateSubjectCodeAssignmentId&task_id=$task_type_id";
+                                                
+                                                // $output_section = "
+                                                //     <a style='color: inherit' href='$assignment_edit_url'>
+                                                //         $nonTemplateSubjectAssignmentName
+                                                //     </a>
+                                                // ";
                                             }
+
+
 
                                             echo "
                                                 <tr>
@@ -387,11 +410,11 @@
         var teacher_id = parseInt(teacher_id);
 
         Swal.fire({
-                icon: 'question',
-                title: `Do you want to give the selected assignment?`,
-                showCancelButton: true,
-                confirmButtonText: 'Yes',
-                cancelButtonText: 'Cancel'
+    icon: 'question',
+    title: `This action will give the selected file. Please make sure you already check the file.`,
+    showCancelButton: true,
+    confirmButtonText: 'Checked & give now',
+    cancelButtonText: 'Cancel'
 
             }).then((result) => {
                 if (result.isConfirmed) {

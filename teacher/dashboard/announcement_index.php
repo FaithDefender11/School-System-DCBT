@@ -44,10 +44,15 @@
             $teacherLoggedInId,
             $school_year_id);
 
-        $teachingSubjectCodeAnnouncement = $subjectCodeAssignment->GetTeacherTeachingSubjectsWithAnnouncement(
+        $teachingSubjectCodeAnnouncement = $subjectCodeAssignment->GetTeacherTeachingSubjectsWithAnnouncementOnly(
             $teacherLoggedInId,
             $school_year_id);
 
+        // $teacherAnnouncementFromAdmin = $subjectCodeAssignment->GetTeacherAnnouncementFromAdmin(
+        //     $school_year_id);
+
+        // $teacherAnnouncementMerge = array_merge()
+        
         // print_r($teachingSubjectCodeAnnouncement);
 
     
@@ -92,6 +97,7 @@
                                         foreach ($teachingSubjectCodeAnnouncement as $key => $value) {
 
                                             $announcement_id = $value['announcement_id'];
+                                            $users_id = $value['users_id'];
 
                                             $title = $value['title'];
                                             $teacher_id = $value['teacher_id'];

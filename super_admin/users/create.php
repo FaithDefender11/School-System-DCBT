@@ -9,16 +9,15 @@
 
     $back_url = "index.php";
 
-
     $user = new User($con, $superAdminUserId);
+
     // var_dump($superAdminUserId);
+
     $adminName = ucwords($user->getFirstName());
 
     $usersNextUniqueId = $user->generateNextUniqueUserId();
 
     $userRandomPassword = $user->generateRandomPassword();
-
-    // var_dump($userRandomPassword);
 
 
     if($_SERVER['REQUEST_METHOD'] === "POST" &&
@@ -37,6 +36,8 @@
         $userEmail = $_POST['email'];
         $role = $_POST['role'];
 
+        // var_dump($role);
+        // return;
         // $default_password = 123456;
 
         $username = "";
@@ -47,17 +48,17 @@
         # C = Cashier
 
         if($role == "Administrator"){
-            $username = trim(strtolower($lastname)).".".$usersNextUniqueId."A@dcbt.edu.ph";
+            $username = trim(strtolower($lastname)).".".$usersNextUniqueId."Adcbt.edu.ph";
 
         }
 
         if($role == "Cashier"){
-            $username = trim(strtolower($lastname)).".".$usersNextUniqueId."C@dcbt.edu.ph";
+            $username = trim(strtolower($lastname)).".".$usersNextUniqueId."Cdcbt.edu.ph";
             
         }
 
         if($role == "Registrar"){
-            $username = trim(strtolower($lastname)).".".$usersNextUniqueId."R@dcbt.edu.ph";
+            $username = trim(strtolower($lastname)).".".$usersNextUniqueId."Rdcbt.edu.ph";
         }
          
 
@@ -113,7 +114,7 @@
                 if (!empty($userEmail) && filter_var($userEmail, FILTER_VALIDATE_EMAIL)) {
 
                     $isEmailSent = $email->SendUserCredentialsAfterCreation(
-                            $userEmail, $username, $default_password, $adminName);
+                            $userEmail, $username, $default_password, $adminName, $role);
 
                     if ($isEmailSent) {
 

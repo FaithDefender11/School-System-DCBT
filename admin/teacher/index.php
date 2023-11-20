@@ -2,6 +2,7 @@
 
   include_once('../../includes/admin_header.php');
   include_once('../../includes/classes/Teacher.php');
+  include_once('../../includes/classes/Department.php');
  
   $teacher = new Teacher($con, null);
 
@@ -57,8 +58,8 @@
             <tr>
               <th>ID</th>
               <th>Name</th>
-              <th>Subject load</th>
-              <th>Hours per week</th>
+              <th>Teaching Subjects</th>
+              <th>Department</th>
               <th>Status</th>
               <th>Date added</th>
               <th>Action</th>
@@ -76,7 +77,21 @@
                 while($row = $query->fetch(PDO::FETCH_ASSOC)){
 
                   $teacher_id = $row['teacher_id'];
+
+                  $department_id = $row['department_id'];
+
+                  $department = new Department($con, $department_id);
+
+                  $departmentName = $department->GetDepartmentName();
+
+                  if($departmentName == "Senior High School"){
+                    $departmentName = "SHS";
+                  }
+
                   $teacher_status = $row['teacher_status'];
+                  if($teacher_status == "inactive"){
+                    $teacher_status = "In-active";
+                  }
                   $date_creation = $row['date_creation'];
 
                   $date_creation = $date_creation !== NULL ? date('Y-m-d', strtotime($date_creation)) : 'Not Set';
@@ -94,7 +109,7 @@
                         </a>
                       </td>
                       <td>$subject_load_count</td>
-                      <td></td>
+                      <td>$departmentName</td>
                       <td>$teacher_status</td>
                       <td>$date_creation</td>
                       <td>

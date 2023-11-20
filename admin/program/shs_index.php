@@ -64,6 +64,7 @@
                             <th>Program ID</th>
                             <th>Program Name</th>
                             <th>Track</th>
+                            <th>Status</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -89,38 +90,61 @@
                                 $department_name = $row['department_name'];
                                 $track = $row['track'];
 
+                                $status = $row['status'];
+
+                                $output = "
+                                    <i class='fas fa-check' style='color: green'></i>
+                                ";
+
+                                if($status == 0){
+                                   $output = "
+                                    <i class='fas fa-times' style='color: orange'></i>
+                                    "; 
+                                }
+
                                 $removeProgramBtn = "removeProgramBtn($program_id)";
+
+                                // <a class='dropdown-item' href='#'>
+                                //                         <button onclick='$removeProgramBtn' class='btn btn-danger' style='width: 100%;'>
+                                //                             Disable
+                                //                         </button>
+                                //                     </a>
+
+                                // <div class='btn-group dropright'>
+
+                                //     <button class='btn btn-primary dropdown-toggle' type='button' id='dropdownMenuButton' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
+                                //         Actions
+                                //     </button>
+
+                                //     <div class='dropdown-menu'>
+                                //         <a class='dropdown-item' href='edit.php?id=$program_id'>
+                                //             <button class='btn btn-primary'style='width: 100%;'
+                                                
+                                //             >
+                                //                 Edit
+                                //             </button>
+                                //         </a>
+                                        
+                                        
+                                //     </div>
+
+                                // </div>
 
                                 echo "
                                     <tr>
                                         <td>$program_id</td>
                                         <td>$program_name</td>
                                         <td>$track</td>
+                                        <td>$output</td>
 
                                         <td>
-                                            <div class='btn-group dropright'>
-
-                                                <button class='btn btn-primary dropdown-toggle' type='button' id='dropdownMenuButton' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
-                                                    Actions
-                                                </button>
-
-                                                <div class='dropdown-menu'>
-                                                    <a class='dropdown-item' href='edit.php?id=$program_id'>
-                                                        <button class='btn btn-primary'style='width: 100%;'
-                                                            
-                                                        >
-                                                            Edit
-                                                        </button>
-                                                    </a>
-                                                    <a class='dropdown-item' href='#'>
-                                                        <button onclick='$removeProgramBtn' class='btn btn-danger' style='width: 100%;'>
-                                                            Remove
-                                                        </button>
-                                                    </a>
+                                            <a class='dropdown-item' href='edit.php?id=$program_id'>
+                                                <button class='btn btn-primary'style='width: 100%;'
                                                     
-                                                </div>
-
-                                            </div>
+                                                >
+                                                    Edit
+                                                </button>
+                                            </a>
                                         </td>
 
                                     </tr>

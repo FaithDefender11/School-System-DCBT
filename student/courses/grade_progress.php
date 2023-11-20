@@ -42,6 +42,7 @@
 
         $allGivenAssignments = $subjectCodeAssignment->GetSubjectCodeAssignments(
             $subject_code, $school_year_id);
+        
         $back_url = "subject_module.php?id=$student_subject_id";
 ?>
 
@@ -140,7 +141,7 @@
                                                 if($submitted_grade != NULL){
                                                     
                                                     $submitted_grade_status = "
-                                                        <i style='color: green;' class='fas fa-check'></i>
+                                                        <i style='color: green;' class='bi bi-check'></i>
                                                     ";
 
                                                     $totalScore += $submitted_grade;
@@ -155,22 +156,22 @@
 
                                                 if($submitted_grade == NULL && $date_graded == NULL){
                                                     $submitted_grade_status = "
-                                                        <i style='color: orange;' class='fas fa-times'></i>
+                                                        <i style='color: orange;' class='bi bi-x-circle'></i>
                                                     ";
                                                     $score = "??";
                                                 }
 
                                                 $submitted_status = "
-                                                    <i style='color: green;' class='fas fa-check'></i>
+                                                    <i style='color: green;' class='bi bi-check'></i>
                                                 ";
 
                                             }else if($statusSubmission == NULL){
 
                                                 $submitted_status = "
-                                                    <i style='color: red;' class='fas fa-times'></i>
+                                                    <i style='color: red;' class='bi bi-x-circle'></i>
                                                 ";
                                                 $submitted_grade_status = "
-                                                        <i style='color: red;' class='fas fa-times'></i>
+                                                        <i style='color: red;' class='bi bi-x-circle'></i>
                                                 ";
 
                                                 $nowTimestamp = strtotime($now);
@@ -191,10 +192,10 @@
                                                 }else if(strtotime($due_date_db) >  $nowTimestamp){
 
                                                     // $submitted_status = "
-                                                    //     <i style='color: red;' class='fas fa-times'></i>
+                                                    //     <i style='color: red;' class='bi bi-x-circle'></i>
                                                     // ";
                                                     // $submitted_grade_status = "
-                                                    //         <i style='color: red;' class='fas fa-times'></i>
+                                                    //         <i style='color: red;' class='bi bi-x-circle'></i>
                                                     // ";
 
                                                     $submitted_status = "-";
@@ -226,7 +227,7 @@
                                                     $equivalent_total = round($pecentage_equivalent_total, 0, PHP_ROUND_HALF_UP);
                                                     $equivalent_total = $equivalent_total . "%";
 
-                                                echo "$totalScore / $totalOver = $equivalent_total";
+                                                echo "$equivalent_total";
                                             }else{
                                                 echo "??";
                                             }

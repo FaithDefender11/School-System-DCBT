@@ -138,7 +138,8 @@
 
                 <?php echo Helper::ProcessStudentCards($student_id, $student_enrollment_form_id,
                     $student_unique_id, $enrollment_creation, $student_new_enrollee,
-                    $student_enrollment_is_new, $student_enrollment_is_transferee, $student_status_st); ?>
+                    $student_enrollment_is_new,
+                    $student_enrollment_is_transferee, $student_status_st, $student_enrollment_id); ?>
 
             </div>
 
