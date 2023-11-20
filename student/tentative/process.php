@@ -199,8 +199,8 @@
                                 <div class="title">
                                     <h3 style="color: black">What's next?</h3>
                                     <ul>
-                                        <li>Please kindly walk in to registrar for completion your requirements.</li>
-                                        <li>Check your email after you are officially enrolled.</li>
+                                        <li>Please proceed to registrar</li>
+                                        <!-- <li>Check your email after you are officially enrolled.</li> -->
                                     </ul>
                                 </div>
                             </header>
