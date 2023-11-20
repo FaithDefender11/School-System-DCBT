@@ -104,7 +104,7 @@
         </div>
       </div>
       <main>
-        <div class="slide-1" id="admissions">
+        <div class="slide-1" id="admission">
           <div class="carousel">
             <img src="assets/images/home/DCBT-Cover.jpg" alt="Cover" />
           </div>
