@@ -1,84 +1,250 @@
-const wrapper = document.querySelector(".slide-2>main>.wrapper");
-const carousel = document.querySelector(".slide-2>main>.wrapper>.carousel");
-const firstCardWidth = carousel.querySelector(".slide-2>main>.wrapper>.carousel>.card").offsetWidth;
-const arrowBtns = document.querySelectorAll(".slide-2>main>.wrapper>i");
-const carouselChildrens = [...carousel.children];
+document.addEventListener("DOMContentLoaded", function() {
+    // For news silder
+    const initNewsSlider = () => {
+        const newsWrapper = document.querySelector(".slide-2.news>main>.wrapper");
+        const newsCarousel = document.querySelector(".slide-2.news>main>.wrapper>.carousel");
+        const newsfirstCardWidth = newsCarousel.querySelector(".slide-2.news>main>.wrapper>.carousel>.card")?.offsetWidth;
+        const newsarrowBtns = document.querySelectorAll(".slide-2.news>main>.wrapper>i");
+        const newsCarouselChildrens = [...newsCarousel.children];
 
-let isDragging = false, isAutoPlay = true, startX, startScrollLeft, timeoutId;
+        let newsIsDragging = false, newsIsAutoPlay = true, newsStartX, newsStartScrollLeft, newsTimeoutId;
+        
+        // Get the number of cards that can fit in the carousel at once
+        let newsCardPerView = Math.round(newsCarousel.offsetWidth / newsfirstCardWidth);
 
-// Get the number of cards that can fit in the carousel at once
-let cardPerView = Math.round(carousel.offsetWidth / firstCardWidth);
+        // Insert copies of the last few cards to beginning of carousel for infinite scrolling
+        newsCarouselChildrens.slice(-newsCardPerView).reverse().forEach(card => {
+            newsCarousel.insertAdjacentHTML("afterbegin", card.outerHTML);
+        });
 
-// Insert copies of the last few cards to beginning of carousel for infinite scrolling
-carouselChildrens.slice(-cardPerView).reverse().forEach(card => {
-    carousel.insertAdjacentHTML("afterbegin", card.outerHTML);
-});
+        // Scroll the carousel at appropriate postition to hide first few duplicate cards on Firefox
+        newsCarousel.classList.add("no-transition");
+        newsCarousel.scrollLeft = newsCarousel.offsetWidth;
+        newsCarousel.classList.remove("no-transition");
 
-// Insert copies of the first few cards to end of carousel for infinite scrolling
-carouselChildrens.slice(0, cardPerView).forEach(card => {
-    carousel.insertAdjacentHTML("beforeend", card.outerHTML);
-});
+        // Add event listeners for the arrow buttons to scroll the carousel left and right
+        newsarrowBtns.forEach(btn => {
+            btn.addEventListener("click", () => {
+                newsCarousel.scrollLeft += btn.id == "news-left" ? -newsfirstCardWidth : newsfirstCardWidth;
+            });
+        });
 
-// Scroll the carousel at appropriate postition to hide first few duplicate cards on Firefox
-carousel.classList.add("no-transition");
-carousel.scrollLeft = carousel.offsetWidth;
-carousel.classList.remove("no-transition");
-
-// Add event listeners for the arrow buttons to scroll the carousel left and right
-arrowBtns.forEach(btn => {
-    btn.addEventListener("click", () => {
-        carousel.scrollLeft += btn.id == "left" ? -firstCardWidth : firstCardWidth;
-    });
-});
-
-const dragStart = (e) => {
-    isDragging = true;
-    carousel.classList.add("dragging");
-    // Records the initial cursor and scroll position of the carousel
-    startX = e.pageX;
-    startScrollLeft = carousel.scrollLeft;
-}
-
-const dragging = (e) => {
-    if(!isDragging) return; // if isDragging is false return from here
-    // Updates the scroll position of the carousel based on the cursor movement
-    carousel.scrollLeft = startScrollLeft - (e.pageX - startX);
-}
-
-const dragStop = () => {
-    isDragging = false;
-    carousel.classList.remove("dragging");
-}
-
-const infiniteScroll = () => {
-    // If the carousel is at the beginning, scroll to the end
-    if(carousel.scrollLeft === 0) {
-        carousel.classList.add("no-transition");
-        carousel.scrollLeft = carousel.scrollWidth - (2 * carousel.offsetWidth);
-        carousel.classList.remove("no-transition");
+        const newsDragStart = (e) => {
+            newsIsDragging = true;
+            newsCarousel.classList.add("newsDragging");
+            // Records the initial cursor and scroll position of the carousel
+            newsStartX = e.pageX;
+            newsStartScrollLeft = newsCarousel.scrollLeft;
+        }
+        
+        const newsDragging = (e) => {
+            if(!newsIsDragging) return; // if newsIsDragging is false return from here
+            // Updates the scroll position of the carousel based on the cursor movement
+            newsCarousel.scrollLeft = newsStartScrollLeft - (e.pageX - newsStartX);
+        }
+        
+        const newsDragStop = () => {
+            newsIsDragging = false;
+            newsCarousel.classList.remove("newsDragging");
+        }
+        
+        const newsInfiniteScroll = () => {
+            // If the carousel is at the beginning, scroll to the end
+            if(newsCarousel.scrollLeft === 0) {
+                newsCarousel.classList.add("no-transition");
+                newsCarousel.scrollLeft = newsCarousel.scrollWidth - (2 * newsCarousel.offsetWidth);
+                newsCarousel.classList.remove("no-transition");
+            }
+            // If the carousel is at the end, scroll to the beginning
+            else if(Math.ceil(newsCarousel.scrollLeft) === newsCarousel.scrollWidth - newsCarousel.offsetWidth) {
+                newsCarousel.classList.add("no-transition");
+                newsCarousel.scrollLeft = newsCarousel.offsetWidth;
+                newsCarousel.classList.remove("no-transition");
+            }
+        
+            // Clear existing timeout & start newsAutoPlay if mouse is not hovering over carousel
+            clearTimeout(newsTimeoutId);
+            if(!newsWrapper.matches(":hover")) {
+                newsAutoPlay();
+            } 
+        }
+        
+        const newsAutoPlay = () => {
+            if(window.innerWidth < 800 || !newsIsAutoPlay) return; // Return if window is smaller than 800 or newsIsAutoPlay is false
+            // newsAutoPlay the carousel after every 2500 ms
+            newsTimeoutId = setTimeout(() => newsCarousel.scrollLeft += newsfirstCardWidth, 2500);
+        }
+        newsAutoPlay();
+        
+        newsCarousel.addEventListener("mousedown", newsDragStart);
+        newsCarousel.addEventListener("mousemove", newsDragging);
+        document.addEventListener("mouseup", newsDragStop);
+        newsCarousel.addEventListener("scroll", newsInfiniteScroll);
+        newsWrapper.addEventListener("mouseenter", () => clearTimeout(newsTimeoutId));
+        newsWrapper.addEventListener("mouseleave", newsAutoPlay);
     }
-    // If the carousel is at the end, scroll to the beginning
-    else if(Math.ceil(carousel.scrollLeft) === carousel.scrollWidth - carousel.offsetWidth) {
-        carousel.classList.add("no-transition");
-        carousel.scrollLeft = carousel.offsetWidth;
-        carousel.classList.remove("no-transition");
+    initNewsSlider();
+
+    //For facilities slider
+    /*const initFacilitiesSlider =() => {
+        const facilitiesWrapper = document.querySelector(".slide-2.facilities>main>.wrapper");
+        const facilitiesCarousel = document.querySelector(".slide-2.facilities>main>.wrapper>.carousel");
+        const facilitiesFirstCardWidth = facilitiesCarousel.querySelector(".slide-2.facilities>main>.wrapper>.card")?.offsetWidth;
+        const facilitiesArrowBtns = document.querySelectorAll(".slide-2.facilities>main>.wrapper>i");
+        const facilitiesCarouselChildrens = [...facilitiesCarousel.children];
+
+        let facilitiesIsDragging = false, facilitiesIsAutoplay = true, facilitiesStartX, facilitiesStartScrollLeft, facilitiesTimeoutId;
+
+        // Get the number of cards that can fit in the carousel at once
+        let facilitiesCardPerView = Math.round(facilitiesCarousel.offsetWidth / facilitiesFirstCardWidth);
+
+        // Insert copies of the last few cards to beginning of carousel for infinite scrolling
+        facilitiesCarouselChildrens.slice(-facilitiesCardPerView).reverse().forEach(card => {
+            facilitiesCarousel.insertAdjacentHTML("afterbegin", card.outerHTML);
+        });
+
+        // Scroll the carousel at appropriate postition to hide first few duplicate cards on Firefox
+        facilitiesCarousel.classList.add("no-transition");
+        facilitiesCarousel.scrollLeft = facilitiesCarousel.offsetWidth;
+        facilitiesCarousel.classList.remove("no-transition");
+
+        // Add event listeners for the arrow buttons to scroll the carousel left and right
+        facilitiesArrowBtns.forEach(btn => {
+            btn.addEventListener("click", () => {
+                facilitiesCarousel.scrollLeft += btn.id == "facilities-left" ? -facilitiesFirstCardWidth : facilitiesFirstCardWidth;
+            });
+        });
+
+        const facilitiesDragStart = (e) => {
+            facilitiesIsDragging = true;
+            facilitiesCarousel.classList.add("facilitiesDragging");
+            // Records the initial cursor and scroll position of the carousel
+            facilitiesStartX = e.pageX;
+            facilitiesStartScrollLeft = facilitiesCarousel.scrollLeft;
+        }
+
+        const facilitiesDragging = (e) => {
+            if(!facilitiesIsDragging) return; // if facilitiesIsDraggingis false return from here
+            // Updates the scroll position of the carousel based on the cursor movement
+            facilitiesCarousel.scrollLeft = facilitiesStartScrollLeft - (e.pageX - facilitiesStartX);
+        }
+
+        const facilitiesDragStop = () => {
+            facilitiesIsDragging = false;
+            facilitiesCarousel.classList.remove("facilitiesDragging");
+        }
+
+        const facilitiesInfiniteScroll = () => {
+            // If the carousel is at the beginning, scroll to the end
+            if(facilitiesCarousel.scrollLeft === 0) {
+                facilitiesCarousel.classList.add("no-transition");
+                facilitiesCarousel.scrollLeft = facilitiesCarousel.scrollWidth - (2 * facilitiesCarousel.offsetWidth);
+                facilitiesCarousel.classList.remove("no-transition");
+            }
+            // If the carousel is at the end, scroll to the beginning
+            else if(Math.ceil(facilitiesCarousel.scrollLeft) === facilitiesCarousel.scrollWidth - facilitiesCarousel.offsetWidth) {
+                facilitiesCarousel.classList.add("no-transition");
+                facilitiesCarousel.scrollLeft = facilitiesCarousel.offsetWidth;
+                facilitiesCarousel.classList.remove("no-transition");
+            }
+
+            // Clear existing timeout & start facilitiesAutoPlay if mouse is not hovering over carousel
+            clearTimeout(facilitiesTimeoutId);
+            if(!facilitiesWrapper.matches(":hover")) {
+                facilitiesAutoPlay();
+            } 
+        }
+
+        const facilitiesAutoPlay = () => {
+            if(window.innerWidth < 800 || !facilitiesIsAutoplay) return; // Return if window is smaller than 800 or facilitiesIsAutoplay is false
+            // facilitiesAutoPlay the carousel after every 2500 ms
+            facilitiesTimeoutId = setTimeout(() => facilitiesCarousel.scrollLeft += facilitiesFirstCardWidth, 2500);
+        }
+        facilitiesAutoPlay();
+
+        facilitiesCarousel.addEventListener("mousedown", facilitiesDragStart);
+        facilitiesCarousel.addEventListener("mousemove", facilitiesDragging);
+        document.addEventListener("mouseup", facilitiesDragStop);
+        facilitiesCarousel.addEventListener("scroll", facilitiesInfiniteScroll);
+        facilitiesWrapper.addEventListener("mouseenter", () => clearTimeout(facilitiesTimeoutId));
+        facilitiesWrapper.addEventListener("mouseleave", facilitiesAutoPlay);
     }
+    initFacilitiesSlider();*/
 
-    // Clear existing timeout & start autoplay if mouse is not hovering over carousel
-    clearTimeout(timeoutId);
-    if(!wrapper.matches(":hover")) autoPlay();
-}
+    const initFacilitiesSlider =() => {
+        const carousel = document.querySelector(".slide-2>main>.img-wrapper>.img-carousel"),
+        firstImg = carousel.querySelectorAll(".slide-2>main>.img-wrapper>.img-carousel>img")[0],
+        arrowIcons = document.querySelectorAll(".slide-2>main>.img-wrapper>i");
 
-const autoPlay = () => {
-    if(window.innerWidth < 800 || !isAutoPlay) return; // Return if window is smaller than 800 or isAutoPlay is false
-    // Autoplay the carousel after every 2500 ms
-    timeoutId = setTimeout(() => carousel.scrollLeft += firstCardWidth, 2500);
-}
-autoPlay();
+        let isDragStart = false, isDragging = false, prevPageX, prevScrollLeft, positionDiff;
 
-carousel.addEventListener("mousedown", dragStart);
-carousel.addEventListener("mousemove", dragging);
-document.addEventListener("mouseup", dragStop);
-carousel.addEventListener("scroll", infiniteScroll);
-wrapper.addEventListener("mouseenter", () => clearTimeout(timeoutId));
-wrapper.addEventListener("mouseleave", autoPlay);
+        const showHideIcons = () => {
+            // showing and hiding prev/next icon according to carousel scroll left value
+            let scrollWidth = carousel.scrollWidth - carousel.clientWidth; // getting max scrollable width
+            arrowIcons[0].style.display = carousel.scrollLeft == 0 ? "none" : "block";
+            arrowIcons[1].style.display = carousel.scrollLeft == scrollWidth ? "none" : "block";
+        }
+
+        arrowIcons.forEach(icon => {
+            icon.addEventListener("click", () => {
+                let firstImgWidth = firstImg.clientWidth + 14; // getting first img width & adding 14 margin value
+                // if clicked icon is left, reduce width value from the carousel scroll left else add to it
+                carousel.scrollLeft += icon.id == "facilities-left" ? -firstImgWidth : firstImgWidth;
+                setTimeout(() => showHideIcons(), 60); // calling showHideIcons after 60ms
+            });
+        });
+
+        const autoSlide = () => {
+            // if there is no image left to scroll then return from here
+            if(carousel.scrollLeft - (carousel.scrollWidth - carousel.clientWidth) > -1 || carousel.scrollLeft <= 0) return;
+
+            positionDiff = Math.abs(positionDiff); // making positionDiff value to positive
+            let firstImgWidth = firstImg.clientWidth + 14;
+            // getting difference value that needs to add or reduce from carousel left to take middle img center
+            let valDifference = firstImgWidth - positionDiff;
+
+            if(carousel.scrollLeft > prevScrollLeft) { // if user is scrolling to the right
+                return carousel.scrollLeft += positionDiff > firstImgWidth / 3 ? valDifference : -positionDiff;
+            }
+            // if user is scrolling to the left
+            carousel.scrollLeft -= positionDiff > firstImgWidth / 3 ? valDifference : -positionDiff;
+        }
+
+        const dragStart = (e) => {
+            // updatating global variables value on mouse down event
+            isDragStart = true;
+            prevPageX = e.pageX || e.touches[0].pageX;
+            prevScrollLeft = carousel.scrollLeft;
+        }
+
+        const dragging = (e) => {
+            // scrolling images/carousel to left according to mouse pointer
+            if(!isDragStart) return;
+            e.preventDefault();
+            isDragging = true;
+            carousel.classList.add("dragging");
+            positionDiff = (e.pageX || e.touches[0].pageX) - prevPageX;
+            carousel.scrollLeft = prevScrollLeft - positionDiff;
+            showHideIcons();
+        }
+
+        const dragStop = () => {
+            isDragStart = false;
+            carousel.classList.remove("dragging");
+
+            if(!isDragging) return;
+            isDragging = false;
+            autoSlide();
+        }
+
+        carousel.addEventListener("mousedown", dragStart);
+        carousel.addEventListener("touchstart", dragStart);
+
+        document.addEventListener("mousemove", dragging);
+        carousel.addEventListener("touchmove", dragging);
+
+        document.addEventListener("mouseup", dragStop);
+        carousel.addEventListener("touchend", dragStop);
+    }
+    initFacilitiesSlider();
+});
