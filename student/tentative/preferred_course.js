@@ -1,6 +1,10 @@
 //
 //
 $(document).ready(function () {
+  // let school_year_id = school_year_id;
+
+  // console.log(school_year_id);
+
   var checked_admission = document.querySelector(
     'input[name="admission_type"]:checked'
   );
@@ -63,7 +67,7 @@ $(document).ready(function () {
     //
     department_type = $(this).val();
 
-    // console.log(admission_typex);
+    // console.log('qwe');
 
     // console.log(admission_type);
 
@@ -241,6 +245,87 @@ $(document).ready(function () {
     }
   });
 
+  let selected_program_id = null;
+
+  $('#program_id').on('change', function () {
+    selected_program_id = $(this).val();
+    console.log(selected_program_id);
+  });
+
+  $('#choose_level').on('change', function () {
+    let current_level = $(this).val();
+    // console.log(`selected_program_id ${selected_program_id}`);
+    // console.log(`current ${current_level}`);
+
+    if (
+      selected_program_id != null &&
+      current_level != null &&
+      school_year_id != null
+    ) {
+      $.ajax({
+        url: '../../ajax/tentative/populateAvailableSections.php',
+        type: 'POST',
+        data: {
+          current_level,
+          selected_program_id,
+          school_year_id,
+        },
+        dataType: 'json',
+
+        success: function (response) {
+          // response = response.trim();
+          var options = '';
+
+          if (response.length === 0) {
+            // console.log('empty')
+            options += '<option value="NoSection">No Section</option>';
+
+            $('#course_id').html(options);
+
+            return;
+          } else {
+            console.log(response);
+            let options = '';
+
+            let disabled = '';
+
+            $.each(response, function (index, value) {
+              //
+              var course_id = value.course_id;
+              var program_section = value.program_section;
+              var enrollment_capacity = value.enrollment_capacity;
+              var capacity = value.capacity;
+              var non_enrolled_count = value.non_enrolled_count;
+
+              disabled =
+                value.enrollment_capacity == value.capacity ? 'disabled' : '';
+
+              options +=
+                '<option value="' +
+                course_id +
+                '" ' +
+                disabled +
+                ' >' +
+                program_section +
+                ' &nbsp; Enrolled: ' +
+                enrollment_capacity +
+                ' / Capacity: ' +
+                capacity +
+                '</option>';
+
+              //
+            });
+
+            $('#course_id').html(options);
+          }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+          console.log('AJAX Error:', textStatus, errorThrown);
+        },
+      });
+    }
+  });
+
   function UncheckedDepartmentType() {
     var yearLevelRadios = document.querySelectorAll(
       'input[name="department_type"]'
@@ -336,7 +421,7 @@ function PreferredBtn(pending_enrollees_id) {
     console.log(pending_enrollees_id);
 
     $.ajax({
-    url: '../../ajax/tentative/add_preferred_course.php',
+      url: '../../ajax/tentative/add_preferred_course.php',
       type: 'POST',
       data: {
         selected_admission_type,

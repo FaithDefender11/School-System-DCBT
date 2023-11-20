@@ -53,6 +53,7 @@
                             <small>SY <?php echo $current_term; ?> &nbsp; <?php echo $current_semester;?> Semester</small>
                         </div>
                     </header>
+
                     <div class="progress">
                         <span class="dot active"><p>Preferred Course/Strand</p></span>
                         <span class="line inactive"></span>
@@ -62,6 +63,7 @@
                         <span class="line inactive"></span>
                         <span class="dot inactive"> <p>Finished</p></span>
                     </div>
+
                     <main>
                         <form action="">
                             <header>
@@ -196,23 +198,103 @@
                                     </div>
                                 </span>
                             </div>
-                            <header>
-                                <div class="title">
-                                    <h3>Level &nbsp;<span class="errorMessage course_level_error"></span></h3>
-                                </div>
-                            </header>
-                            <div class="row">
-                                <span>
-                                    
-                                        <div>
-                                            <?php
-                                                echo $pending->PendingCourseLevelDropdown($pending_type, 
-                                                $course_level);
-                                            ?>
+
+                            <div class="col-md-12">
+
+                                <div class="row">
+
+                                <div class="col-md-6">
+                                    <header>
+                                        <div class="title">
+                                            <h3>Level &nbsp;<span class="errorMessage course_level_error"></span></h3>
                                         </div>
+                                    </header>
+
+                                    <div class="row">
+                                        <span>
+                                            <div>
+                                                <?php
+                                                    echo $pending->PendingCourseLevelDropdown($pending_type, 
+                                                    $course_level);
+                                                ?>
+                                            </div>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+
+                                    <header>
+                                        <div class="title">
+                                            <h3>Available section</h3>
+                                        </div>
+                                    </header>
+
+                                    <div class="row">
+                                        <span>
+                                            <div>
+                                            <div>
+                                                <select style="width: 550px;" class="form-control" name="course_id" id="course_id">
+                                                    <?php 
+                                                        if($program_id != NULL && $course_level != NULL){
+
+                                                            $query = $con->prepare("SELECT * FROM course
+                                                                WHERE program_id=:program_id
+                                                                AND course_level=:course_level
+                                                            
+                                                            ");
+                    
+                                                            $query->bindParam(":program_id", $program_id);
+                                                            $query->bindParam(":course_level", $course_level);
+                    
+                                                            $query->execute();
+                    
+                                                            if($query->rowCount() > 0){
+                    
+                                                                $output = "";
+                                                                $output .= "
+                                                                    <option value='' selected >Select Available sections </option>
+                                                                ";
+                    
+                                                                while($row = $query->fetch(PDO::FETCH_ASSOC)){
+                    
+                                                                    $db_course_id = $row['course_id'];
+                                                                    $db_program_id = $row['program_id'];
+                                                                    $db_course_level = $row['course_level'];
+                                                                    $acronym = $row['acronym'];
+                                                                    $program_section = $row['program_section'];
+                    
+                                                                    $selected = "";
+                    
+                                                                    if($db_program_id == $program_id && $course_level == $db_course_level ){
+                                                                        $selected = "selected";
+                                                                    }
+                    
+                                                                    $output .= "
+                                                                        <option value='$db_course_id' $selected>$program_section</option>
+                                                                    ";
+                                                                }
+                                                                echo $output;
+                                                            }
+
+                                                        }
+                                                    ?>
+                                                </select>
+                                            </div>
+                                            </div>
+                                        </span>
+                                    </div>
                                     
-                                </span>
+                                </div>
+                                </div>
+
+
                             </div>
+
+                            
+
+                            
+
                         </form>
                     </main>
                     <div class="action">
@@ -234,6 +316,14 @@
                 </div>
             </main>
         </div>
+
+        <script>
+
+            var school_year_id = <?php echo json_encode($school_year_id); ?>;
+            var current_term = <?php echo json_encode($current_term); ?>;
+
+        </script>
+
         <script src="./preferred_course.js"></script>
         <script>
             var acceptance_condition = `

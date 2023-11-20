@@ -12,7 +12,7 @@
 
         $department_id = $department->GetDepartmentIdByName($department_type);
 
-         $query = $con->prepare("SELECT * FROM program
+        $query = $con->prepare("SELECT * FROM program
             WHERE department_id=:department_id
         ");
 

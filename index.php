@@ -41,6 +41,8 @@
       INNER JOIN department as t2 ON t2.department_id=t1.department_id
       WHERE t2.department_name=:department_name
 
+      AND t1.status = 1
+
       GROUP BY t1.track
     ");
 
@@ -182,7 +184,9 @@
 
                       $query = $con->prepare("SELECT * FROM program 
                       
-                        WHERE track=:track");
+                        WHERE track=:track
+                        AND status = 1
+                        ");
 
                       $query->bindValue(":track", $track_shs);
                       $query->execute();
@@ -207,7 +211,7 @@
                             
                               # code...
                               echo "
-                                <p>$acronym ($program_name) </p>
+                                <p>$program_name ($acronym) ()</p>
                               ";
 
                           }
@@ -227,6 +231,7 @@
 
                     INNER JOIN department as t2 ON t2.department_id=t1.department_id
                     WHERE t2.department_name=:department_name
+                    AND t1.status = 1
 
                   ");
 
