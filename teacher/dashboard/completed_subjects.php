@@ -96,12 +96,14 @@
             </div>
 
             <div class="tabs">
+                
                 <button
                     class="tab"
                     style="background-color: var(--theme); color: white"
                     onclick="window.location.href='index.php'">
                     Current subject teaching
                 </button>
+
                 <button
                     class="tab"
                     onclick="window.location.href='completed_subjects.php'">

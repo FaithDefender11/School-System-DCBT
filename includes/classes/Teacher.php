@@ -1007,6 +1007,21 @@
             return $formattedId;
         }
 
+        public function GetAllTeachersCount($teacher_status){
+     
+            $sql = $this->con->prepare("SELECT t1.* 
+            
+                FROM teacher AS t1
+                WHERE teacher_status=:teacher_status
+            ");
+
+            $sql->bindValue(":teacher_status", $teacher_status);
+            $sql->execute();
+
+            return $sql->rowCount();
+
+        }
+
         function generateRandomPassword() {
             $uppercaseLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
             $lowercaseLetters = 'abcdefghijklmnopqrstuvwxyz';

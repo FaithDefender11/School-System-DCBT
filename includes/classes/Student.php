@@ -1575,5 +1575,20 @@ class Student{
     //     return $query->execute();
     // }
 
+    public function GetAllStudentCount($active){
+     
+        $sql = $this->con->prepare("SELECT t1.* 
+        
+            FROM student AS t1
+            WHERE active=:active
+        ");
+
+        $sql->bindValue(":active", $active);
+        $sql->execute();
+
+        return $sql->rowCount();
+
+    }
+
 }
 ?>

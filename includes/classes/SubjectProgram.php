@@ -1069,5 +1069,25 @@ class SubjectProgram{
 
     }
 
+    public function GetAllSubjectCount(){
+     
+        $sql = $this->con->prepare("SELECT t1.subject_program_id 
+        
+            FROM subject_program AS t1
+            -- LIMIT 1
+        ");
+
+        // $sql->bindParam(":subject_title", $subject_title);
+        $sql->execute();
+
+        // if($sql->rowCount() > 0){
+
+        // //    return $sql->fetchAll(PDO::FETCH_ASSOC);
+        //    return $sql->fetchColumn();
+        // }
+
+        return $sql->rowCount();
+    }
+
 }
 ?>

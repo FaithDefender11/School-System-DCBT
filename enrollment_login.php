@@ -294,7 +294,7 @@ function getInputValue($name) {
             <div class="form-element">
               <label for="username">Username</label>
               <div>
-                <input type="text" name="username" id="username" value="atienza.0000003Rdcbt.edu.ph" value="<?php getInputValue('username'); ?>" required />
+                <input type="text" name="username" id="username" value="<?php getInputValue('username'); ?>" required />
               </div>
             </div>
             <div class="form-element">
@@ -304,7 +304,6 @@ function getInputValue($name) {
                   type="password"
                   name="password"
                   id="password"
-                  value="123456"
                   required
                 />
               </div>
