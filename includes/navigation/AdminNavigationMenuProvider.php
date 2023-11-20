@@ -74,8 +74,8 @@
         $sideBarNavigationItem .= Helper::createNavByIconArc("Teacher", 
             "bi bi-person icon ", $teacher_url, Constants::$navigationClass . Helper::GetActiveClass($page, "teacher"));
 
-        $sideBarNavigationItem .= Helper::createNavByIconArc("Grades", 
-            "bi bi-collection", $grade_module_url, Constants::$navigationClass . Helper::GetActiveClass($page, "grade"));
+        // $sideBarNavigationItem .= Helper::createNavByIconArc("Grades", 
+        //     "bi bi-collection", $grade_module_url, Constants::$navigationClass . Helper::GetActiveClass($page, "grade"));
 
         $sideBarNavigationItem .= Helper::createNavByIconArc("Classlist", 
             "bi bi-collection", $class_module_url, Constants::$navigationClass . Helper::GetActiveClass($page, "classlist"));

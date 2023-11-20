@@ -445,5 +445,23 @@ class User {
         return $password;
     }
 
+     public function UpdateUsersStatus($user_id,
+        $status){
+
+        $update = $this->con->prepare("UPDATE users 
+            SET status=:status
+
+            WHERE user_id = :user_id
+        ");
+
+        $update->bindValue(":status", $status);
+        $update->bindValue(":user_id", $user_id);
+        $update->execute();
+
+        if($update->rowCount() > 0){
+            return true;
+        }
+    }
+
 }
 ?>

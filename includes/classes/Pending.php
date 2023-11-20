@@ -354,6 +354,7 @@
         $lrn = null,
         $religion,
         $pending_enrollees_id,
+        $email
     ) {
 
         $query = $this->con->prepare("UPDATE pending_enrollees SET 
@@ -370,7 +371,8 @@
             sex = :sex,
             address = :address,
             lrn = :lrn,
-            religion = :religion
+            religion = :religion,
+            email = :email
             WHERE pending_enrollees_id = :pending_enrollees_id");
 
         $lrn = $lrn == "" ? NULL : $lrn;
@@ -389,6 +391,8 @@
         $query->bindParam(":address", $address);
         $query->bindParam(":lrn", $lrn);
         $query->bindParam(":religion", $religion);
+        $query->bindParam(":email", $email);
+        
         $query->bindParam(":pending_enrollees_id", $pending_enrollees_id);
 
         $query->execute();

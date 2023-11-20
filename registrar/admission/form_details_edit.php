@@ -433,7 +433,7 @@
                 $firstName, $lastName, $middleName, $suffixName,
                 $status, $citizenship, $phone,
                 $student_birthday, $birthplace, null, $gender, $address, $student_lrn,
-                $religion, $get_student_new_pending_id);
+                $religion, $get_student_new_pending_id, $email);
 
             # Update For Student Table.
             $editStudentExec = $pending->UpdateStudentDetails(

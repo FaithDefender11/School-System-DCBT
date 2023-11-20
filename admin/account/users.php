@@ -148,17 +148,25 @@
                                     $username = $row['username'];
                                     $role = $row['role'];
 
+                                    $status = $row['status'];
+
                                     $resetUsers = "
                                         <button type='button' onclick='resetUsers($user_id)'
                                             class='btn btn-sm danger'>Reset password
                                         </button>
                                     ";
 
-                                    // $deactivateAccount = "
-                                    //     <button type='button' onclick='deactivateStudent($student_id)'
-                                    //         class='btn btn-sm btn-outline-warning'>Deactivate
-                                    //     </button>
-                                    // ";
+
+                                    $text = $status == 0 ? "Activate" : "Deactivate";
+                                    $btnColor = $status == 0 ? "btn-outline-primary" : "btn-outline-warning";
+
+                                    $status = $status == 1 ? "Inactive" : "Active";
+
+                                    $deactivateAccount = "
+                                        <button type='button' onclick='changeStatusUser($user_id, \"$status\")'
+                                            class='btn btn-sm $btnColor'>$text
+                                        </button>
+                                    ";
 
 
                                     echo "<tr class='text-center'>";
@@ -169,6 +177,7 @@
                                             <td>$email</td>
                                             <td>
                                                $resetUsers
+                                               $deactivateAccount
                                             </td>
                                         ";
                                     echo "</tr>";
@@ -246,5 +255,68 @@
             }
         });
     }
+
+    function changeStatusUser(user_id, status){
+
+        var user_id = parseInt(user_id);
+
+        Swal.fire({
+            icon: 'question',
+            title: `Do you want to change users into ${status} `,
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'Cancel'
+
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // REFX
+                $.ajax({
+                    url: '../../ajax/student/changeUserStatus.php',
+                    type: 'POST',
+                    data: {
+                        user_id,
+                        userStatus: status
+                    },
+                    success: function(response) {
+
+                        response = response.trim();
+
+                        // console.log(response);
+
+                        if(response == "success_update"){
+
+                            Swal.fire({
+                                icon: 'success',
+                                title: `Selected user status has been changed`,
+                            });
+
+                            setTimeout(() => {
+                                Swal.close();
+                                // location.reload();
+                                window.location.href = "users.php";
+                            }, 1900);
+ 
+                        }
+
+                        // if (response === "success_update") {
+
+                        //     Swal.fire({
+                        //         icon: 'success',
+                        //         title: `Selected form has been rejected.`,
+                        //     });
+                        // } 
+
+                        // else {
+                        //     console.log('Update failed');
+                        // }
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.log('AJAX Error:', textStatus, errorThrown);
+                    }
+                });
+            }
+        });
+    }
+
 
 </script>

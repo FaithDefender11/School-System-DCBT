@@ -210,10 +210,10 @@
                                     Process form
                                 </a>
 
-                                <a href='rejected_enrollees.php' class='dropdown-item' style='color: yellowgreen'>
+                                <!-- <a href='rejected_enrollees.php' class='dropdown-item' style='color: yellowgreen'>
                                     <i class='fas fa-eye'></i>
                                     Previous enrollees
-                                </a>
+                                </a> -->
 
                             </div>
 

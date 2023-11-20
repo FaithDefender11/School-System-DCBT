@@ -156,8 +156,9 @@ class Account {
                     password, student_id
 
                     FROM student
-                    WHERE username=:username
-                    AND active !=:inactive
+                     
+                    WHERE username = :username
+                    AND active != :inactive
 
                     LIMIT 1
                 ");
@@ -222,6 +223,7 @@ class Account {
                 
                     FROM users
                     WHERE username=:username
+                    AND status = 1
                     LIMIT 1
 
                 ");

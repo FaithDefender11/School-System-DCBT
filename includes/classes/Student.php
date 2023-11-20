@@ -1590,5 +1590,25 @@ class Student{
 
     }
 
+    public function UpdateStudentStatus($student_id,
+        $active, $active_search){
+
+        $update = $this->con->prepare("UPDATE student 
+            SET active=:active,
+                active_search=:active_search
+
+            WHERE student_id = :student_id
+        ");
+
+        $update->bindValue(":active", $active);
+        $update->bindValue(":active_search", $active_search);
+        $update->bindValue(":student_id", $student_id);
+        $update->execute();
+
+        if($update->rowCount() > 0){
+            return true;
+        }
+    }
+
 }
 ?>
