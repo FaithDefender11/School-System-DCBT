@@ -126,7 +126,7 @@ use Random\Engine\Secure;
                 <button
                     class="tab"
                     id="shsEvaluation"
-                    style="background-color: var(--them)"
+                    style="background-color: var(--them); color: white"
                     onclick="window.location.href = 'index.php';"
                 >
                     Students per Instructor 
@@ -135,7 +135,7 @@ use Random\Engine\Secure;
                 <button
                     class="tab"
                     id="shsPayment"
-                    style="background-color: var(--them);"
+                    style="background-color: var(--them); color: white"
                     onclick="window.location.href = 'class_list_by_section.php';"
                 >
                     Subjects per Section 
@@ -144,7 +144,7 @@ use Random\Engine\Secure;
                 <button
                     class="tab"
                     id="shsApproval"
-                    style="background-color: var(--mainContentBG); color: white"
+                    style="background-color: var(--mainContentBG)"
                     onclick="window.location.href = 'student_per_section.php';"
                 >
                     Students per Section 
