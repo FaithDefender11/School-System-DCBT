@@ -294,13 +294,18 @@ function getInputValue($name) {
             <div class="form-element">
               <label for="username">Username</label>
               <div>
-                <input type="text" name="username" id="username" value="<?php getInputValue('username'); ?>" required />
+                <input 
+                  autocomplete="off"
+                
+                
+                type="text" name="username" id="username" value="<?php getInputValue('username'); ?>" required />
               </div>
             </div>
             <div class="form-element">
               <label for="password">Password</label>
               <div>
                 <input
+                  autocomplete="off"
                   type="password"
                   name="password"
                   id="password"

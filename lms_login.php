@@ -258,17 +258,21 @@
                             <div class="form-element">
                                 <label for="username">Username</label>
                                 <div>
-                                    <input type="text" name="username" id="username" value="" required />
+                                    <input type="text" 
+                  autocomplete="off"
+                                    
+                                    name="username" id="username" value="" required />
                                 </div>
                             </div>
                             <div class="form-element">
                                 <label for="password">Password</label>
                                 <div>
                                     <input
+                                    value="123456"
+
                                     type="password"
                                     name="password"
                                     id="password"
-                                    value="123456"
                                     required
                                     />
                                 </div>
