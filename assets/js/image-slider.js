@@ -1,4 +1,4 @@
-
+document.addEventListener("DOMContentLoaded", function() {
     // For news silder
     const initNewsSlider = () => {
         const newsWrapper = document.querySelector(".slide-2.news>main>.wrapper");
@@ -162,3 +162,4 @@
         carousel.addEventListener("touchend", dragStop);
     }
     initFacilitiesSlider();
+});
