@@ -52,6 +52,7 @@ form .row>span>div>input {
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: transparent;
   padding: 0px 10% 30px 10%;
   height: 70px;
 }
