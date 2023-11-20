@@ -101,7 +101,6 @@
                     style="background-color: var(--theme); color: white"
                     onclick="window.location.href='index.php'">
                     Current subject teaching
-
                 </button>
                 <button
                     class="tab"
