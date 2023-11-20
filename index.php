@@ -443,6 +443,7 @@
 
       document.querySelector("#admission-tab").addEventListener("click", function () {
         document.querySelector("nav > ul").classList.add("active");
+        document.querySelector("nav > ul").classList.remove("active");
       });
     </script>
     <script>
