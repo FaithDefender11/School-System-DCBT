@@ -83,7 +83,7 @@
       </label>
       <label class="logo">
         <a href="index.php">
-          <img src="assets/images/home/DCBT-Logo.png" alt="DCBT" />
+          <img src="assets/images/icons/DCBT-Logo.png" alt="DCBT" />
         </a>
       </label>
       <ul>
@@ -97,7 +97,7 @@
     <div class="content">
       <div class="content-header">
         <div class="logo-title">
-          <img src="assets/images/home/DCBT-Logo.jpg" alt="DCBT" />
+          <img src="assets/images/icons/DCBT-Logo.png" alt="DCBT" />
         </div>
         <div class="title">
           <h2>DAEHAN COLLEGE OF BUSINESS AND TECHNOLOGY</h2>
@@ -106,7 +106,7 @@
       <main>
         <div class="slide-1" id="admission">
           <div class="carousel">
-            <img src="assets/images/home/DCBT-Cover.png" alt="Cover" />
+            <img src="assets/images/home/DCBT-Cover.jpg" alt="Cover" />
           </div>
           <div class="carousel">
             <h2>Be a DAEHAN student TODAY!</h2>
