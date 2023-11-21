@@ -384,16 +384,18 @@
             </div>
           </header>
           <main>
-              <div class="img-wrapper">
-                <div class="img-carousel">
-                  <img src="assets/images/home/slide-1.jpg" alt="" draggable="false" />
-                  <img src="assets/images/home/slide-2.jpg" alt="" draggable="false" />
-                  <img src="assets/images/home/slide-3.jpg" alt="" draggable="false" />
-                  <img src="assets/images/home/slide-4.jpg" alt="" draggable="false" />
-                  <img src="assets/images/home/slide-5.jpg" alt="" draggable="false" />
-                  <img src="assets/images/home/slide-6.jpg" alt="" draggable="false" />
-                </div>
+            <div class="img-wrapper">
+              <i id="left" class="fa-solid fa-angle-left"></i>
+              <div class="img-carousel">
+                <img src="assets/images/home/slide-1.jpg" alt="" draggable="false" />
+                <img src="assets/images/home/slide-2.jpg" alt="" draggable="false" />
+                <img src="assets/images/home/slide-3.jpg" alt="" draggable="false" />
+                <img src="assets/images/home/slide-4.jpg" alt="" draggable="false" />
+                <img src="assets/images/home/slide-5.jpg" alt="" draggable="false" />
+                <img src="assets/images/home/slide-6.jpg" alt="" draggable="false" />
               </div>
+              <i id="right" class="fa-solid fa-angle-right"></i>
+            </div>
           </main>
         </div>
         <div class="footer">
