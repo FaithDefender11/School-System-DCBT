@@ -10,7 +10,7 @@
 
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Resend Token</title>
+        <title>ELMS Sign in</title>
         <!-- Include jQuery -->
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <!-- SweetAlert -->
@@ -41,7 +41,7 @@
         rel="stylesheet"
         />
         <!-- Modify the Logo of DCBT Here and Please apply some styling -->
-        <link rel="icon" href="assets/images/icons/DCBT-Logo.jpg" type="image/png">
+        <link rel="icon" href="assets/images/icons/DCBT-Logo.png" type="image/png">
         <link rel="stylesheet" type="text/css" href="assets/css/home.css">
 
     </head>

@@ -81,7 +81,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
         <!-- Custom Logo -->
-        <link rel="icon" href="../../assets/images/icons/DCBT-Logo.jpg" type="image/png">
+        <link rel="icon" href="../../assets/images/icons/DCBT-Logo.png" type="image/png">
 
         <!-- SweetAlert2 -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.24/sweetalert2.all.js"></script>

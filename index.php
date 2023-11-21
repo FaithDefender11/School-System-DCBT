@@ -49,7 +49,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, inital-scale=1" />
-    <link rel="icon" href="assets/images/icons/DCBT-Logo.jpg" type="image/png">
+    <link rel="icon" href="assets/images/icons/DCBT-Logo.png" type="image/png">
     <title>Daehan College of Business & Technology</title>
     <!--Link JavaScript-->
     <script src="assets/js/image-slider.js" async defer></script>
@@ -83,7 +83,7 @@
       </label>
       <label class="logo">
         <a href="index.php">
-          <img src="assets/images/home/DCBT-Logo.jpg" alt="DCBT" />
+          <img src="assets/images/icons/DCBT-Logo.png" alt="DCBT" />
         </a>
       </label>
       <ul>
@@ -97,7 +97,7 @@
     <div class="content">
       <div class="content-header">
         <div class="logo-title">
-          <img src="assets/images/home/DCBT-Logo.jpg" alt="DCBT" />
+          <img src="assets/images/icons/DCBT-Logo.png" alt="DCBT" />
         </div>
         <div class="title">
           <h2>DAEHAN COLLEGE OF BUSINESS AND TECHNOLOGY</h2>
@@ -384,16 +384,16 @@
             </div>
           </header>
           <main>
-              <div class="img-wrapper">
-                <div class="img-carousel">
-                  <img src="assets/images/home/slide-1.jpg" alt="" draggable="false" />
-                  <img src="assets/images/home/slide-2.jpg" alt="" draggable="false" />
-                  <img src="assets/images/home/slide-3.jpg" alt="" draggable="false" />
-                  <img src="assets/images/home/slide-4.jpg" alt="" draggable="false" />
-                  <img src="assets/images/home/slide-5.jpg" alt="" draggable="false" />
-                  <img src="assets/images/home/slide-6.jpg" alt="" draggable="false" />
-                </div>
+            <div class="img-wrapper">
+              <div class="img-carousel">
+                <img src="assets/images/home/slide-1.jpg" alt="" draggable="false" />
+                <img src="assets/images/home/slide-2.jpg" alt="" draggable="false" />
+                <img src="assets/images/home/slide-3.jpg" alt="" draggable="false" />
+                <img src="assets/images/home/slide-4.jpg" alt="" draggable="false" />
+                <img src="assets/images/home/slide-5.jpg" alt="" draggable="false" />
+                <img src="assets/images/home/slide-6.jpg" alt="" draggable="false" />
               </div>
+            </div>
           </main>
         </div>
         <div class="footer">
