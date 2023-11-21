@@ -68,7 +68,7 @@ class Account {
         $logs = new UserLog($this->con);
 
 
-        if (strpos($pending_email, "@gmail.com") !== false || strpos($pending_email, "@") !== false) {
+        if (strpos($pending_email, "@gmail.com") !== false) {
 
             // echo "hey";
             // Username contains "@gmail.com"
@@ -137,7 +137,7 @@ class Account {
         }
 
         else if (count($enrolled_username_parts) == 2 
-            && strpos($pending_email, "@gmail.com") === false || count($enrolled_username_parts) == 2 && strpos($pending_email, "@") === false) {
+            && strpos($pending_email, "@gmail.com") === false) {
 
             // Get the last character and make it uppercase
             $char_before_at = strtoupper(substr($enrolled_username_parts[0], -1)); 
@@ -320,7 +320,7 @@ class Account {
         
         $pending_email = strtolower($username);
 
-        if (strpos($pending_email, "@gmail.com") !== false || strpos($pending_email, "@") !== false) {
+        if (strpos($pending_email, "@gmail.com") !== false) {
 
             // Username contains "@gmail.com"
             // echo "Username contains '@gmail.com'";
