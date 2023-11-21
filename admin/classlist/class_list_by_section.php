@@ -132,7 +132,7 @@
             <button
                 class="tab"
                 id="shsEvaluation"
-                style="background-color: var(--them)"
+                style="background-color: var(--them); color: white"
                 onclick="window.location.href = 'index.php';"
             >
                 Students per Instructor 

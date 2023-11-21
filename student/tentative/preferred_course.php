@@ -238,7 +238,7 @@
                                         <span>
                                             <div>
                                             <div>
-                                                <select style="width: 550px;" class="form-control" name="course_id" id="course_id">
+                                                <select style="width: 200px;" class="form-control" name="course_id" id="course_id">
                                                     <?php 
                                                         if($program_id != NULL && $course_level != NULL){
 

@@ -434,78 +434,78 @@
                                         echo Helper::DisplayText('birthplace', $birthplace);
                                     ?>">
 
+                                    </div>
+                                </span>
                             </div>
-                        </span>
-                    </div>
-                    <div class="row">
-                        <span>
-                            <?php
-                                Helper::EchoErrorField(
-                                    Constants::$addressRequired,
-                                    Constants::$invalidAddressCharacters,
-                                    Constants::$addressIsTooShort,
-                                    Constants::$addressIsTooLong);
-                                ?>
-                            <label for="address">Address <span class="red">*</span></label>
-                            <div>
-                                <input autocomplete="offpro" style="text-align: start;" type="text" 
-                                id="address" name="address" placeholder="House No Street Name Barangay City/Municipality"
-                                class="form-control" 
-                                value="<?php
-                                    echo Helper::DisplayText('address', $address);
-                                ?>">
+                            <div class="row">
+                                <span>
+                                    <?php
+                                        Helper::EchoErrorField(
+                                            Constants::$addressRequired,
+                                            Constants::$invalidAddressCharacters,
+                                            Constants::$addressIsTooShort,
+                                            Constants::$addressIsTooLong);
+                                        ?>
+                                    <label for="address">Address <span class="red">*</span></label>
+                                    <div>
+                                        <input autocomplete="offpro" style="text-align: start;" type="text" 
+                                        id="address" name="address" placeholder="House No Street Name Barangay City/Municipality"
+                                        class="form-control" 
+                                        value="<?php
+                                            echo Helper::DisplayText('address', $address);
+                                        ?>">
+                                    </div>
+                                </span>
                             </div>
-                        </span>
-                    </div>
-                    <div class="row">
-                        <span>
-                            <?php
-                                echo Helper::getError(Constants::$ContactNumberRequired);
-                                echo Helper::getError(Constants::$invalidContactNumberCharacters);
-                                echo Helper::getError(Constants::$invalidContactNumber2Characters);
-                            ?>
-                            <label for="phone">Contact no. <span class="red">*</span></label>
-                            <div>
-                                <input type="tel" id="contact_number"
-                                    name="contact_number" class="form-control"
-                                    placeholder="09151516123"
-                                    value="<?php
-                                        echo Helper::DisplayText('contact_number', $contact_number);
-                                    ?>">
+                            <div class="row">
+                                <span>
+                                    <?php
+                                        echo Helper::getError(Constants::$ContactNumberRequired);
+                                        echo Helper::getError(Constants::$invalidContactNumberCharacters);
+                                        echo Helper::getError(Constants::$invalidContactNumber2Characters);
+                                    ?>
+                                    <label for="phone">Contact no. <span class="red">*</span></label>
+                                    <div>
+                                        <input type="tel" id="contact_number"
+                                            name="contact_number" class="form-control"
+                                            placeholder="09151516123"
+                                            value="<?php
+                                                echo Helper::DisplayText('contact_number', $contact_number);
+                                            ?>">
+                                    </div>
+                                </span>
+                                <span>
+                                    <?php
+                                        echo Helper::getError(Constants::$EmailRequired);
+                                        echo Helper::getError(Constants::$invalidEmailCharacters);
+                                    ?>
+                                    <label for="email">Email <span class="red">*</span></label>
+                                    <div>
+                                        <input disabled autocomplete="off" type="email" id="email" name="email" 
+                                        class=" form-control" 
+                                        value="<?php 
+                                            echo Helper::DisplayText('email', $email);
+                                        ?>">
+                                    </div>
+                                </span>
                             </div>
-                        </span>
-                        <span>
-                            <?php
-                                echo Helper::getError(Constants::$EmailRequired);
-                                echo Helper::getError(Constants::$invalidEmailCharacters);
-                            ?>
-                            <label for="email">Email <span class="red">*</span></label>
-                            <div>
-                                <input disabled autocomplete="off" type="email" id="email" name="email" 
-                                class=" form-control" 
-                                value="<?php 
-                                    echo Helper::DisplayText('email', $email);
-                                ?>">
+                            <div class="action">
+                                <button
+                                    type="button"
+                                    class="default large"
+                                    onclick="window.location.href = 'process.php?new_student=true&step=preferred_course';"
+                                >
+                                    Return
+                                </button>
+                                <button
+                                    class="clean large"
+                                    name="student_details_btn_<?php echo $pending_enrollees_id ?>" 
+                                    type="submit"
+                                    >
+                                    Proceed
+                                </button>
                             </div>
-                        </span>
-                    </div>
-                    <div class="action">
-                        <button
-                            type="button"
-                            class="default large"
-                            onclick="window.location.href = 'process.php?new_student=true&step=preferred_course';"
-                        >
-                            Return
-                        </button>
-                        <button
-                            class="clean large"
-                            name="student_details_btn_<?php echo $pending_enrollees_id ?>" 
-                            type="submit"
-                            >
-                            Proceed
-                        </button>
-                    </div>
-                </form>
+                        </form>
+                    </main>
+                </div>
             </main>
-        </div>
-    </main>

@@ -186,7 +186,7 @@
                                 <small>Last Name</small>
                             </div>
                             <div>
-                                <input required class="form-control" type="text" name="suffix" placeholder="">
+                                <input class="form-control" type="text" name="suffix" placeholder="">
                                 <small>Suffix</small>
                             </div>
                         </span>

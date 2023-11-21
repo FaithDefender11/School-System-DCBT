@@ -657,7 +657,7 @@
         $output = "";
         if ($pending_type == "SHS") {
             $output .= "
-                <select style='width: 450px' required class='form-control' name='choose_level' id='choose_level'>
+                <select style='width: 200px' required class='form-control' name='choose_level' id='choose_level'>
 
                     <option value='' selected disabled>Choose Academic level</option>
                     <option value='11' " . ($course_level == '11' ? 'selected' : '') . ">Grade 11</option>
@@ -667,7 +667,7 @@
         } else if ($pending_type == "Tertiary") {
 
             $output .= "
-                <select required style='width: 450px' class='form-control' name='choose_level' id='choose_level'>
+                <select required style='width: 200px' class='form-control' name='choose_level' id='choose_level'>
                     <option value='1' " . ($course_level == '1' ? 'selected' : '') . ">1st Year</option>
                     <option value='2' " . ($course_level == '2' ? 'selected' : '') . ">2nd Year</option>
                     <option value='3' " . ($course_level == '3' ? 'selected' : '') . ">3rd Year</option>
@@ -676,7 +676,7 @@
             ";
         }else{
             $output .= "
-                <select style='width: 450px' class='form-control' name='choose_level' id='choose_level'>
+                <select style='width: 200px' class='form-control' name='choose_level' id='choose_level'>
                 </select>
             ";
         }
