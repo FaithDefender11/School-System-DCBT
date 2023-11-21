@@ -43,19 +43,19 @@
                             Constants::$lastNameIsTooShort, Constants::$lastNameIsTooLong
                         );
                     ?>
-                    <input class="read_only form-control" type="text"
+                    <input  autocomplete="off" required class="read_only form-control" type="text"
                         name="lastname" id="lastName"  placeholder="" 
                         value="<?php  
                             echo Helper::DisplayText('lastname', $lastname);
                         ?>">
-                    <small>Last name</small>
+                    <small>Last name *</small>
                 </div>
             <div>
                 <?php 
                     Helper::EchoErrorField(Constants::$firstNameRequired, Constants::$invalidFirstNameCharacters,
                         Constants::$firstNameIsTooShort, Constants::$firstNameIsTooLong);
                 ?>
-                <input class="read_only form-control"
+                <input  autocomplete="off" required class="read_only form-control"
                     type="text" name="firstname" 
                     placeholder=""
                     id="firstName" 
@@ -63,7 +63,7 @@
                         echo Helper::DisplayText('firstname', $firstname);
                     ?>"
                     >
-                <small>First name</small>
+                <small>First name *</small>
             </div>
 
             <div>
@@ -74,7 +74,7 @@
                         Constants::$middleNameIsTooShort,
                         Constants::$middleNameIsTooLong);
                 ?>
-                <input class="read_only form-control" type="text" name="middle_name" id="middleName" 
+                <input  autocomplete="off" class="read_only form-control" type="text" name="middle_name" id="middleName" 
                     placeholder=""
                     value="<?php
                         echo Helper::DisplayText('middle_name', $middle_name);
@@ -101,14 +101,14 @@
                     echo Helper::getError(Constants::$civilStatusRequired);
                     echo Helper::getError(Constants::$invalidCivilStatusCharacters);
                 ?>
-                <label for="civil_status">Status</label>
+                <label for="civil_status">Status *</label>
                 <div>
                     <!-- <select class="form-control" id="civil_status" name="civil_status" class="form-control">
                         <option value="Single">Single</option>
                         <option value="Married">Married</option>
                     </select> -->
 
-                    <select class="form-control" name="civil_status" id="civil_status">
+                    <select  class="form-control" name="civil_status" id="civil_status">
                         <option value="Single" <?php getSelectValue('civil_status', 'Single'); ?>>Single</option>
                         <option value="Married" <?php getSelectValue('civil_status', 'Married'); ?>>Married</option>
                     </select>
@@ -122,9 +122,9 @@
                     echo Helper::getError(Constants::$invalidNationalityCharacters);
                 ?>
                 
-                <label for="citizenship">Citizenship</label>
+                <label for="citizenship">Citizenship *</label>
                 <div>
-                    <input class="form-control" style="width: 220px;" 
+                    <input  autocomplete="off" class="form-control" style="width: 220px;" 
                         type="text" name="nationality" 
                         id="nationality"
                         value="<?php 
@@ -137,7 +137,7 @@
                     echo Helper::getError(Constants::$genderRequired);
                     echo Helper::getError(Constants::$invalidGenderCharacters);
                 ?>
-                <label for="sex">Gender</label>
+                <label for="sex">Gender *</label>
                 <div>
                     <select class="form-control" name="sex" id="sex">
                         <option value="Male" <?php getSelectValue('sex', 'Male'); ?>>Male</option>
@@ -149,9 +149,9 @@
 
         <div class="row">
             <span>
-            <label for="birthdate">Birthdate</label>
+            <label for="birthdate">Birthdate *</label>
                 <div>
-                    <input type="date" id="birthday"
+                    <input  autocomplete="off" type="date" id="birthday"
                         name="birthday" class="form-control" required
                         value="<?php 
                             echo Helper::DisplayText('birthday', $birthday);
@@ -171,7 +171,7 @@
                         <option value="Christian">Christian</option>
                         <option value="Other">Other</option>
                     </select> -->
-                    <input type="text" id="religion" placeholder="e.g. Catholic, Christian, Other" name="religion" class="form-control"
+                    <input  autocomplete="off" type="text" id="religion" placeholder="e.g. Catholic, Christian, Other" name="religion" class="form-control"
                         value="<?php
                             echo Helper::DisplayText('religion', $religion);
                         ?>">
@@ -186,9 +186,9 @@
                         Constants::$birthPlaceIsTooLong
                     );
                 ?>
-                <label for="birthplace">Birthplace</label>
+                <label for="birthplace">Birthplace *</label>
                 <div>
-                    <input type="text" id="birthplace" name="birthplace" 
+                    <input required autocomplete="off" type="text" id="birthplace" name="birthplace" 
                         class="form-control"  
                         value="<?php 
                             echo Helper::DisplayText('birthplace', $birthplace);
@@ -207,9 +207,9 @@
                         Constants::$addressIsTooShort,
                         Constants::$addressIsTooLong);
                     ?>
-                <label for="address">Address</label>
+                <label for="address">Current Address *</label>
                 <div>
-                    <input style="text-align: start;" type="text" 
+                    <input  required autocomplete="off" style="text-align: start;" type="text" 
                     id="address" name="address" placeholder="House No, Street Name Barangay City/Municipality"
                     class="form-control" 
                     value="<?php
@@ -227,9 +227,9 @@
                     echo Helper::getError(Constants::$invalidContactNumberCharacters);
                     echo Helper::getError(Constants::$invalidContactNumber2Characters);
                 ?>
-                <label for="phone">Contact no.</label>
+                <label for="phone">Contact no. *</label>
                 <div>
-                    <input type="tel" id="contact_number"
+                    <input autocomplete="off" required type="tel" id="contact_number"
                         name="contact_number" class="form-control" placeholder="09XXXXXX123"
                         value="<?php
                             echo Helper::DisplayText('contact_number', $contact_number);
@@ -238,14 +238,14 @@
             </span>
             <span>
                
-                <label for="email">Email</label>
+                <label for="email">Email *</label>
                 <?php 
                     echo Helper::getError(Constants::$EmailRequired);
                     echo Helper::getError(Constants::$EmailUnique);
                     echo Helper::getError(Constants::$invalidEmailCharacters);
                 ?>
                 <div>
-                    <input type="email" id="email" name="email" 
+                    <input required autocomplete="off" type="email" id="email" name="email" 
                     class="read_only form-control" placeholder="sample15@gmail.com"
                     value="<?php 
                         echo Helper::DisplayText('email', $email);
@@ -277,7 +277,7 @@
                     ?>
                     <label for="school_name">School Name <span class="red">*</span></label>
                     <div>
-                        <input placeholder="Sta Lucia High School" required type="text" id="school_name" name="school_name" class="form-control" 
+                        <input  autocomplete="off" placeholder="Sta Lucia High School" required type="text" id="school_name" name="school_name" class="form-control" 
                         value="<?php
                                 echo Helper::DisplayText('school_name', $school_name);
                             ?>">
@@ -296,7 +296,7 @@
                     ?>
                     <label for="school_address">Address <span class="red">*</span></label>
                     <div>
-                        <input required type="text" id="school_address" name="school_address"
+                        <input  autocomplete="off" required type="text" id="school_address" name="school_address"
                         class="form-control" placeholder="House No Street Name Barangay City/Municipality" value="<?php
                             echo Helper::DisplayText('school_address', $school_address);
                         ?>">
@@ -583,7 +583,7 @@
                         echo Helper::getError(Constants::$guardianLastNameIsTooShort);
                         echo Helper::getError(Constants::$guardianLastNameIsTooLong);
                     ?>
-                    <input type="text" name="parent_lastname" class="form-control"
+                    <input autocomplete="off" type="text" name="parent_lastname" class="form-control"
                         value="<?php 
                             echo Helper::DisplayText('parent_lastname', $parent_lastname); 
                         ?>">
@@ -597,7 +597,7 @@
                         echo Helper::getError(Constants::$guardianFirstNameIsTooShort);
                         echo Helper::getError(Constants::$guardianFirstNameIsTooLong);
                     ?>
-                    <input type="text" name="parent_firstname" class="form-control" 
+                    <input autocomplete="off" type="text" name="parent_firstname" class="form-control" 
                         value="<?php 
                             echo Helper::DisplayText('parent_firstname',  $parent_firstname); 
                         ?>">
@@ -612,7 +612,7 @@
                         echo Helper::getError(Constants::$guardianMiddleNameIsTooShort);
                         echo Helper::getError(Constants::$guardianMiddleNameIsTooLong);
                     ?>
-                    <input type="text" name="parent_middle_name" class="form-control" 
+                    <input autocomplete="off" type="text" name="parent_middle_name" class="form-control" 
                         value="<?php 
                             echo Helper::DisplayText('parent_middle_name', $parent_middle_name); 
                         ?>">
@@ -622,7 +622,7 @@
                     <?php
                         echo Helper::getError(Constants::$invalidGuardianSuffixNameCharacters);
                     ?>
-                    <input type="text" name="parent_suffix" class="form-control"
+                    <input autocomplete="off" type="text" name="parent_suffix" class="form-control"
                         maxlength="3" 
                         value="<?php 
                             echo Helper::DisplayText('parent_suffix', $parent_suffix); 
@@ -641,7 +641,7 @@
                     ?>
                     
                     <div>
-                        <input type="tel" id="parent_contact_number" name="parent_contact_number" class="form-control"
+                        <input autocomplete="off" type="tel" id="parent_contact_number" name="parent_contact_number" class="form-control"
                             value="<?php 
                                 echo Helper::DisplayText('parent_contact_number', $parent_contact_number); 
                             ?>">
@@ -657,7 +657,7 @@
                             echo Helper::getError(Constants::$guardianOccupationIsTooLong);
                         ?>
                     <div>
-                        <input type="text" id="parent_occupation" name="parent_occupation" class="form-control"
+                        <input autocomplete="off" type="text" id="parent_occupation" name="parent_occupation" class="form-control"
                             value="<?php 
                                 echo Helper::DisplayText('parent_occupation', $parent_occupation); 
 
@@ -673,7 +673,7 @@
                                 Constants::$guardianRelationshipIsTooLong
                             );
                         ?>
-                        <input class="form-control"
+                        <input autocomplete="off" class="form-control"
                             type="text"  name="parent_relationship"
                             id="parent_relationship"
                            

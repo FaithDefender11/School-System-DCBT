@@ -856,6 +856,7 @@
 
                         FROM users
                         WHERE username=:username
+                        AND status= 1
                         LIMIT 1");
                 
                     $query_admin->bindParam(":username", $username);

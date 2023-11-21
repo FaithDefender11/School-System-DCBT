@@ -223,12 +223,12 @@ class Helper {
         
     }
 
-    public static function ValidateMiddlename($text) {
+    public static function ValidateMiddlename($text, $isRequired = true) {
         return self::FormNameValidation($text,
             Constants::$middleNameRequired,
             Constants::$invalidMiddleNameCharacters,
             Constants::$middleNameIsTooShort,
-            Constants::$middleNameIsTooLong, true);
+            Constants::$middleNameIsTooLong, $isRequired);
         
     }
 
@@ -462,16 +462,18 @@ class Helper {
 
         // echo $userEmail;
         $student = new Student($con);
+        $pending = new Pending($con);
             
         $student_unique_email = $student->CheckUniqueStudentEmail($userEmail);
+        $does_pending_unique_email = $pending->CheckUniqueEnrolleeEmailv2($userEmail);
         // $student_unique_email = true;
         
-        // var_dump($student_unique_email);
+        // var_dump($does_pending_unique_email);
 
         // echo "qwe";
         // echo "<br>";
 
-        if($student_unique_email == false){
+        if($student_unique_email == false || $does_pending_unique_email == false){
             array_push(self::$errorArray, Constants::$EmailUnique);
             return;
         }

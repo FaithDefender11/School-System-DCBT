@@ -12,6 +12,8 @@
             $school_year_id);
         
     }
+
+    // echo $doesManuallyOperated;
 ?>
 
             <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static">
@@ -75,10 +77,11 @@
                             </header>
                             <div class="row">
                                 <span>
-                                    <div class="form-element">
+                                    <div <?= $doesManuallyOperated; ?> class="form-element">
                                         <label for="new">New Student</label>
                                         <div>
                                         <input
+                                            <?= $doesManuallyOperated; ?>
                                             type="radio"
                                             name="admission_type"
                                             id="new"
@@ -87,10 +90,11 @@
                                         />
                                         </div>
                                     </div>
-                                    <div class="form-element">
+                                    <div <?= $doesManuallyOperated; ?> class="form-element">
                                         <label for="transferee">Transferee</label>
                                         <div>
                                             <input
+                                                <?= $doesManuallyOperated; ?>
                                                 type="radio"
                                                 name="admission_type"
                                                 id="transferee"
@@ -110,7 +114,7 @@
                             </header>
                             <div class="row">
                                 <span>
-                                    <div class="form-element">
+                                    <div <?= $doesManuallyOperated; ?> class="form-element">
                                         <label for="shs">Senior High</label>
                                         <div>
                                             <input
@@ -124,9 +128,9 @@
                                             />
                                         </div>
                                     </div>
-                                    <div class="form-element">
+                                    <div <?= $doesManuallyOperated; ?> class="form-element">
                                         <label for="tertiary">College</label>
-                                        <div>
+                                        <div >
                                             <input
                                                 type="radio"
                                                 name="department_type"
@@ -147,7 +151,7 @@
                             </header>
                             <div class="row">
                                 <span>
-                                    <div class="form-element courseStrand">
+                                    <div <?= $doesManuallyOperated; ?> class="form-element courseStrand">
                                         <div>
                                             <select name="program_id" id="program_id">
                                                 <?php
@@ -205,14 +209,14 @@
 
                                 <div class="col-md-6">
                                     <header>
-                                        <div class="title">
+                                        <div  class="title">
                                             <h3>Level &nbsp;<span class="errorMessage course_level_error"></span></h3>
                                         </div>
                                     </header>
 
                                     <div class="row">
                                         <span>
-                                            <div>
+                                            <div <?= $doesManuallyOperated; ?>>
                                                 <?php
                                                     echo $pending->PendingCourseLevelDropdown($pending_type, 
                                                     $course_level);
@@ -222,7 +226,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-6">
+                                <div style="display: none;" class="col-md-6">
 
                                     <header>
                                         <div class="title">
@@ -286,6 +290,7 @@
                                     </div>
                                     
                                 </div>
+
                                 </div>
 
 

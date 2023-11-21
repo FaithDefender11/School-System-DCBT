@@ -113,8 +113,12 @@
                     // exit();
                 }
 
-                
+                // echo "qwe";
                 $pending = new Pending($con, $pending_enrollees_id);
+                $does_enrollee_form_manual_enrollment = $pending->GetPendingManual();
+                // $doesManuallyOperated = $does_enrollee_form_manual_enrollment == 1 ? "
+                //     style='pointer-events: none;'
+                // " : "";
 
                 $department = new Department($con);
 
@@ -124,8 +128,13 @@
                 $program_id = $pending->GetPendingProgramId();
                 $acceptance_condition = $pending->GetAcceptanceCondition();
                 $does_enrollee_finished_input = $pending->GetIsFinished();
+                $enrollee_status = $pending->GetEnrolleeStatus();
 
-                // echo $acceptance_condition;
+                $doesManuallyOperated = $enrollee_status == "APPROVED" ? "
+                    style='pointer-events: none;'
+                " : "";
+
+                // echo $enrollee_status;
 
                 // Student Info -> Parent -> Review -> Student Requiremnts Upload
 

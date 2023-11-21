@@ -50,7 +50,7 @@ class Alert{
 
             setTimeout(() => {
                 window.location.href = '$redirectUrl';
-            }, 2000);
+            }, 2500);
 
         </script>";
     }

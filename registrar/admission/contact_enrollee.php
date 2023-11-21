@@ -5,6 +5,7 @@
   include_once('../../includes/classes/Section.php');
   include_once('../../includes/classes/SchoolYear.php');
   include_once('../../includes/classes/Email.php');
+  include_once('../../includes/classes/Program.php');
 
     ?>
         <head>
@@ -30,9 +31,15 @@
 
         $pending = new Pending($con, $pending_enrollees_id);
 
-        $fullname = ucfirst($pending->GetPendingFirstName()) . " " . ucfirst($pending->GetPendingLastName());
+        $fullname = ucfirst($pending->GetPendingFirstName()) . " " . ucfirst($pending->GetPendingMiddleName()) . " " . ucfirst($pending->GetPendingLastName());
 
         $email_address = $pending->GetPendingEmail();
+        $program_id = $pending->GetPendingProgramId();
+
+        $program = new Program($con, $program_id);
+
+        $acronym = $program->GetProgramAcronym();
+        $course_level = $pending->GetCourseLevel();
 
 
         // $back_url = "process_enrollment.php?enrollee_details=true&id=$pending_enrollees_id";
@@ -112,7 +119,7 @@
                     
 
                     <h4 class='text-center mb-3'>Contact Enrollee: <span><?php echo $fullname; ?></span></h4>
-
+                    <span>Applying for:  <?php echo $acronym . "-" . $course_level ?> </span>
                 </div>
 
                 <div class='card-body'>

@@ -32,8 +32,8 @@
 
         <link href='https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css' rel='stylesheet' type='text/css'>
         <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-
       </head>
+
 
     <?php
 
@@ -56,7 +56,7 @@
                   <div class="content-header">
         <header>
           <div class="title">
-            <h1>Enrollment form <em>SHS</em></h1>
+            <h1>Enrollment payment</h1>
             <small
               >Note: Numbers on tabs only count current school year and
               semester</small
@@ -84,8 +84,8 @@
                     <tr>
                         <th>Student No</th>  
                         <th>Name</th>
-                        <!-- <th>Email</th> -->
-                        <th>Type</th>  
+                        <th>Email</th>
+                        <!-- <th>Type</th>   -->
                         <th>Strand</th>
                         <!-- <th>Waitlist</th> -->
                         <th>Date Submitted</th>
@@ -136,7 +136,7 @@
               { data: 'student_id', orderable: false },  
               { data: 'name', orderable: false },  
               // { data: 'email', orderable: true },
-              { data: 'type', orderable: false },
+              { data: 'email', orderable: false },
               { data: 'acronym', orderable: false },  
               // { data: 'waiting_result', orderable: false },  
               { data: 'registrar_confirmation_date', orderable: false },

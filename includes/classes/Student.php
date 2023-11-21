@@ -387,6 +387,8 @@ class Student{
         $birthday, $birthplace, $religion, $address, $contact_number,
         $email, $lrn = null) {
 
+        $lrn = $lrn == "" ? NULL : $lrn;
+
         $query = $this->con->prepare("UPDATE student 
             SET firstname=:firstname,
                 lastname=:lastname,

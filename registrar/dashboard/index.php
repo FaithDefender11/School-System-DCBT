@@ -156,16 +156,152 @@
         "shs_index", "tertiary_index");?> -->
 
     <main>
+
         <div class="floating" id="shs-sy">
 
             <header>
+
                 <div class="title">
                     <!-- <h3 style="font-weight: bold;">My processed conflict section enrollment form</h3> -->
                     <h3 style="font-weight: bold;">Dashboard</h3>
                 </div>
+
             </header>
 
             <main>
+
+                <table id="shs_program_table"
+                    class="a" style="margin: 0;  ">
+                    <thead>
+                        <tr>
+                            <th>Enrollment ID</th>
+                            <th>Registrar Inside</th>
+                            <th>Cashier Inside</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <?php
+
+                            $query = $con->prepare("SELECT t1.* FROM enrollment as t1 
+
+                                WHERE t1.school_year_id = :school_year_id
+                                AND ( t1.currently_registrar_id IS NOT NULL
+                                    OR t1.currently_cashier_id IS NOT NULL
+                                )
+
+                            ");
+
+                            $query->bindValue(":school_year_id", $current_school_year_id);
+                            $query->execute();
+
+                            if($query->rowCount() > 0){
+
+                                while($row = $query->fetch(PDO::FETCH_ASSOC)){
+
+                                    $course_id = $row['course_id'];
+                                    $enrollment_id = $row['enrollment_id'];
+                                    $enrollment_form_id = $row['enrollment_form_id'];
+                                    $school_year_id = $row['school_year_id'];
+                                    $currently_registrar_id = $row['currently_registrar_id'];
+                                    $currently_cashier_id = $row['currently_cashier_id'];
+
+
+                                    $hasUserInIt = "
+                                        <i class='fas fa-times'></i>
+                                    ";
+
+                                    // var_dump($currently_registrar_id);
+                                    // echo "<br>";
+                                    // var_dump($currently_cashier_id);
+                                    // echo "<br>";
+
+
+                                    $section = new Section($con, $course_id);
+                                    $sectionCapacity = $section->GetSectionCapacity();
+
+                                    // $count = $section->GetEnrollmentCourseIdEnrolledCount($course_id, $school_year_id);
+                                    // if($sectionCapacity == $count){
+                                    //     array_push($reachedMaxEnrollmentArr, $row);
+                                    // }
+
+                                    
+                                    $removeCurrentRegistrarIdBtn = "";
+                                    $removeCurrentCashierIdBtn = "";
+
+                                    if($currently_registrar_id != NULL || $currently_cashier_id != NULL){
+
+                                        // echo "currently_registrar_id: not null";
+                                        // echo "<br>";
+                                        // echo "currently_cashier_id: not null";
+                                        // echo "<br>";
+
+                                        $registrarUser = new User($con, $currently_registrar_id);
+                                        $cashierUser = new User($con, $currently_cashier_id);
+
+                                        $removeCurrentRegistrarIdBtn = "removeCurrentRegistrarIdBtn($currently_registrar_id)";
+                                        $removeCurrentCashierIdBtn = "removeCurrentCashierIdBtn($currently_cashier_id)";
+
+                                        $registName = ucwords($registrarUser->getFirstName()) . " " . ucwords($registrarUser->getLastName());
+                                        $cashierName = ucwords($cashierUser->getFirstName()) . " " . ucwords($cashierUser->getLastName());
+
+                                        // $hasUserInIt = "
+                                        //     <i class='fas fa-check'></i>
+                                        // ";
+
+                                    }else{
+                                        $cashierName = "N/A";
+                                        $registName = "N/A";
+                                    }
+
+                                    // else if($currently_registrar_id == NULL 
+                                    //     || $currently_cashier_id == NULL){
+
+                                    //     echo "currently_registrar_id:  null";
+                                    //     echo "<br>";
+                                    //     echo "currently_cashier_id:  null";
+                                    //     echo "<br>";
+                                    // }
+
+                                    var_dump($registName);
+                                    var_dump($cashierName);
+
+
+                                    echo "
+                                        <tr>
+                                            <td>$enrollment_form_id</td>
+                                            <td>
+                                                <a onclick='$removeCurrentRegistrarIdBtn' style='color: gray' href='#'>
+                                                    $registName
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <a onclick='$removeCurrentCashierIdBtn' style='color: gray' href='#'>
+                                                        $cashierName
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <a href=''>
+                                                    <button class='btn-sm btn btn-primary'>
+                                                        <i class='fas fa-pencil'></i>
+                                                    </button>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    ";
+
+                                }
+                            }
+
+                           
+
+                        ?>
+                    </tbody>
+                </table>
+
+
+
                 <table id="shs_program_table"
                     class="a" style="margin: 0; display: none">
                     <thead>
@@ -233,7 +369,11 @@
                         ?>
                     </tbody>
                 </table>
+
+
+
             </main>
+
         </div>
     </main>
 
@@ -243,6 +383,121 @@
 
  
 <script>
+
+    function removeCurrentRegistrarIdBtn(registrarId){
+
+        var registrarId = parseInt(registrarId);
+
+        Swal.fire({
+            icon: 'question',
+            title: 'This will remove registrar ID in the form?',
+            text: 'Important! This action cannot be undone.',
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "../../ajax/super_admin/removeRegistrarCurrentlyId.php",
+                    type: 'POST',
+                    data: {
+                        registrarId: registrarId // Make sure you pass the data in the correct format
+                    },
+                    dataType: 'text', // Specify the expected response data type
+                    success: function (response) {
+                        response = response.trim();
+                        console.log(response);
+
+                        if (response === "success_update") {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Selected registrar id has been pulled out.',
+                                showConfirmButton: false,
+                                timer: 1500, // Adjust the duration of the toast message in milliseconds (e.g., 3000 = 3 seconds)
+                                toast: true,
+                                position: 'top-end',
+                                showClass: {
+                                    popup: 'swal2-noanimation',
+                                    backdrop: 'swal2-noanimation'
+                                },
+                                hideClass: {
+                                    popup: '',
+                                    backdrop: ''
+                                }
+                            }).then((result) => {
+                                location.reload();
+                            });
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        // Handle any errors here
+                    }
+                });
+            } else {
+                // User clicked "No," perform alternative action or do nothing
+            }
+        });
+
+        
+    }
+
+    function removeCurrentCashierIdBtn(cashierId){
+
+        var cashierId = parseInt(cashierId);
+
+        Swal.fire({
+            icon: 'question',
+            title: 'This will remove cashier ID in the form?',
+            text: 'Important! This action cannot be undone.',
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'Cancel'
+
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "../../ajax/super_admin/removeCashierCurrentlyId.php",
+                    type: 'POST',
+                    data: {
+                        cashierId: cashierId // Make sure you pass the data in the correct format
+                    },
+                    dataType: 'text', // Specify the expected response data type
+                    success: function (response) {
+                        response = response.trim();
+                        console.log(response);
+
+                        if (response === "success_update") {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Selected registrar id has been pulled out.',
+                                showConfirmButton: false,
+                                timer: 1500, // Adjust the duration of the toast message in milliseconds (e.g., 3000 = 3 seconds)
+                                toast: true,
+                                position: 'top-end',
+                                showClass: {
+                                    popup: 'swal2-noanimation',
+                                    backdrop: 'swal2-noanimation'
+                                },
+                                hideClass: {
+                                    popup: '',
+                                    backdrop: ''
+                                }
+                            }).then((result) => {
+                                location.reload();
+                            });
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        // Handle any errors here
+                    }
+                });
+            } else {
+                // User clicked "No," perform alternative action or do nothing
+            }
+        });
+
+        
+    }
 
     // document.addEventListener('DOMContentLoaded', function() {
     //     var validNavigation = false;

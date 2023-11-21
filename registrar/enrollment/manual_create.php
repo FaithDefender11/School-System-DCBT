@@ -162,6 +162,9 @@
 
         // var_dump($check);
 
+            // $email = Helper::ValidateEmail("hypersirios15@gmail.com", false, $con);
+
+
         if($_SERVER['REQUEST_METHOD'] === 'POST' &&
             isset($_POST['enrollment_btn_' . $enrollment_form_id])
             && isset($_POST['admission_type'])
@@ -196,7 +199,9 @@
 
             $lastname = Helper::ValidateLastname($_POST['lastname']);
             $firstname = Helper::ValidateFirstname($_POST['firstname']);
-            $middle_name = Helper::ValidateMiddlename($_POST['middle_name']);
+
+            $middle_name = Helper::ValidateMiddlename($_POST['middle_name'], false);
+
             $suffix = isset($_POST['suffix']) ? Helper::ValidateSuffix($_POST['suffix']) : '';
             $civil_status = Helper::ValidateCivilStatus($_POST['civil_status']);
             $nationality = Helper::ValidateNationality($_POST['nationality']);

@@ -27,7 +27,7 @@ $columnNames = array(
     'student_id',
     'name',
     'email',
-    'type',
+    // 'type',
     'acronym',
     'registrar_confirmation_date',
 );
@@ -40,10 +40,34 @@ $sortOrder = strtoupper($columnSortOrder) === 'DESC' ? 'DESC' : 'ASC';
 ## Search
 $searchQuery = "";
 if ($searchValue != '') {
+
     $searchValue = trim(strtolower($searchValue)); // Convert search value to lowercase
-    $searchQuery = " AND (firstname LIKE '%" . $searchValue . "%' OR 
-        student_unique_id LIKE '%" . $searchValue . "%' OR
-        email LIKE '%" . $searchValue . "%'
+    
+    $names = explode(" ", $searchValue);
+    // $firstName = $names[0];
+    // $lastName = isset($names[1]) ? $names[1] : "";
+
+
+    if (count($names) > 1) {
+        $lastName = array_pop($names); // Remove the last element and assign it to the last name
+        $firstName = implode(" ", $names); // The remaining parts are considered the first name
+    } else {
+        $firstName = $names[0]; // Only one part, so it's the first name
+        $lastName = ""; // No last name provided
+    }
+
+    $firstName = trim(strtolower($firstName));
+    $lastName = trim(strtolower($lastName));
+    
+    
+    $searchQuery = " AND (
+        
+        (t1.firstname LIKE '%" . $firstName . "%' AND t1.lastname LIKE '%" . $lastName . "%') OR 
+        t1.firstname LIKE '%" . $searchValue . "%' OR 
+        t1.lastname LIKE '%" . $searchValue . "%' OR 
+
+        t1.student_unique_id LIKE '%" . $searchValue . "%' OR
+        t1.email LIKE '%" . $searchValue . "%'
     )";
 }
 
@@ -135,6 +159,7 @@ if ($row != null) {
         t1.username,
         t1.student_unique_id,
         t1.lastname,
+        t1.middle_name,
         t1.email,
         t1.course_level,
         t1.admission_status,
@@ -193,7 +218,7 @@ if ($row != null) {
 
         $enrollement_student_id = $row['student_id'];
         $enrollment_id = $row['enrollment_id'];
-        $fullname = ucfirst($row['firstname']) . " " . ucfirst($row['lastname']);
+        $fullname = ucfirst($row['firstname']) ." " . ucfirst($row['middle_name'])  . " " . ucfirst($row['lastname']);
 
         $enrollment_date = $row['enrollment_date'];
         // $waiting_list = $row['waiting_list'];
@@ -203,6 +228,7 @@ if ($row != null) {
 
         $standing = $row['course_level'];
         $course_id = $row['course_id'];
+        $email = $row['email'];
         $enrollment_course_id = $row['enrollment_course_id'];
 
         $registrar_confirmation_date = $row['registrar_confirmation_date'];
@@ -336,7 +362,7 @@ if ($row != null) {
         $data[] = array(
             "student_id" => $row['student_unique_id'],
             "name" => $fullname,
-            "type" => $updated_type,
+            "email" => $email,
             "acronym" => $sectionAcronym,
             "registrar_confirmation_date" => $registrar_confirmation_date,
             "button_url" => $button_url,

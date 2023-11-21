@@ -2,6 +2,7 @@
     $pending = new Pending($con, $pending_enrollees_id);
 
     $doesEnrolleeHasSchoolHistoryMade = $pending->CheckEnrolleeHasSchoolHistory($pending_enrollees_id);
+    $does_enrollee_form_manual_enrollment = $pending->GetPendingManual();
 
     // var_dump($pending_enrollees_id);
 
@@ -31,7 +32,9 @@
 
     // var_dump($address);
 
-
+    // $doesManuallyOperated = $does_enrollee_form_manual_enrollment == 1 ? "
+    //     style='pointer-events: none;'
+    // " : "";
 
     if($_SERVER["REQUEST_METHOD"] === "POST"
         && isset($_POST['student_school_history_btn_' . $pending_enrollees_id])
@@ -191,7 +194,7 @@
                                     ?>
                                     <label for="school_name">School Name <span class="red">*</span></label>
                                     <div>
-                                        <input placeholder="Sta Lucia High School" required type="text" id="school_name" name="school_name" class="form-control" 
+                                        <input <?= $doesManuallyOperated; ?> placeholder="Sta Lucia High School" required type="text" id="school_name" name="school_name" class="form-control" 
                                         value="<?php
                                                 echo Helper::DisplayText('school_name', $school_name);
                                             ?>">
@@ -210,7 +213,7 @@
                                     ?>
                                     <label for="address">Address <span class="red">*</span></label>
                                     <div>
-                                        <input required type="text" id="address" name="address"
+                                        <input <?= $doesManuallyOperated; ?> required type="text" id="address" name="address"
                                         class="form-control" placeholder="House No Street Name Barangay City/Municipality" value="<?php
                                             echo Helper::DisplayText('address', $address);
                                         ?>">
@@ -225,7 +228,7 @@
                                             class="form-control" value="<?php
                                             echo Helper::DisplayText('year_started', $year_started);
                                         ?>"> -->
-                                        <input autocomplete="off" maxlength="4" required type="text" id="year_started" name="year_started"
+                                        <input <?= $doesManuallyOperated; ?> autocomplete="off" maxlength="4" required type="text" id="year_started" name="year_started"
                                             class="form-control" placeholder="e.g. 2020" value="<?php
                                             echo Helper::DisplayText('year_started', $year_started);
                                         ?>">
@@ -239,7 +242,7 @@
                                         class="form-control" value="<?php
                                             echo Helper::DisplayText('year_started', $year_ended);
                                         ?>"> -->
-                                        <input autocomplete="off" maxlength="4" required type="text" id="year_ended" name="year_ended"
+                                        <input <?= $doesManuallyOperated; ?> autocomplete="off" maxlength="4" required type="text" id="year_ended" name="year_ended"
                                             class="form-control" placeholder="e.g. 2022" value="<?php
                                             echo Helper::DisplayText('year_ended', $year_ended);
                                         ?>">

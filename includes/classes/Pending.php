@@ -115,6 +115,10 @@
         return isset($this->sqlData['birthplace']) ? ucfirst($this->sqlData["birthplace"]) : ""; 
     }
 
+    public function GetPendingManual() {
+        return isset($this->sqlData['is_manual']) ? ucfirst($this->sqlData["is_manual"]) : NULL; 
+    }
+
     public function GetPendingReligion() {
         return isset($this->sqlData['religion']) ? ucfirst($this->sqlData["religion"]) : ""; 
     }
@@ -289,12 +293,12 @@
             (firstname, lastname, middle_name, password, email, civil_status, nationality,
                 contact_number, birthday, birthplace, sex, religion, lrn, suffix, program_id, course_level,
                 type, admission_status, school_year_id, activated, is_finished, condition_acceptance,
-                student_status, enrollment_status, address) 
+                student_status, enrollment_status, address, is_manual) 
 
             VALUES (:firstname, :lastname, :middle_name, :password, :email, :civil_status, :nationality,
                 :contact_number, :birthday, :birthplace, :sex, :religion, :lrn, :suffix, :program_id, :course_level,
                 :type, :admission_status, :school_year_id, :activated, :is_finished, :condition_acceptance,
-                :student_status, :enrollment_status, :address)");
+                :student_status, :enrollment_status, :address, :is_manual)");
         
         $hash_password = password_hash($password, PASSWORD_BCRYPT);
 
@@ -328,6 +332,7 @@
         $query->bindValue(":student_status", "APPROVED");
         $query->bindValue(":enrollment_status", $enrollment_status);
         $query->bindValue(":address", $address);
+        $query->bindValue(":is_manual", 1);
         
 
 
@@ -335,6 +340,78 @@
         if($query->rowCount() > 0){
             return true;
         }
+        return false;
+    }
+
+    public function UpdateStudentInformationv2(
+        $firstname,
+        $lastname,
+        $middle_name,
+        $suffix,
+        $civil_status,
+        $nationality,
+        $contact_number,
+        $birthday,
+        $birthplace,
+        $age,
+        $sex,
+        $address,
+        $lrn = null,
+        $religion,
+        $pending_enrollees_id,
+    ) {
+
+        // $email_query = "";
+
+        // if($email != NULL){
+        //     $email_query = ",email = :email";
+        // }
+
+        // var_dump($email_query);
+        // return;
+        
+        $query = $this->con->prepare("UPDATE pending_enrollees SET 
+            firstname = :firstname,
+            lastname = :lastname,
+            middle_name = :middle_name,
+            suffix = :suffix,
+            civil_status = :civil_status,
+            nationality = :nationality,
+            contact_number = :contact_number,
+            birthday = :birthday,
+            birthplace = :birthplace,
+            sex = :sex,
+            address = :address,
+            lrn = :lrn,
+            religion = :religion
+            WHERE pending_enrollees_id = :pending_enrollees_id");
+
+        $lrn = $lrn == "" ? NULL : $lrn;
+        
+        $query->bindParam(":firstname", $firstname);
+        $query->bindParam(":lastname", $lastname);
+        $query->bindParam(":middle_name", $middle_name);
+        $query->bindParam(":suffix", $suffix);
+        $query->bindParam(":civil_status", $civil_status);
+        $query->bindParam(":nationality", $nationality);
+        $query->bindParam(":contact_number", $contact_number);
+        $query->bindParam(":birthday", $birthday);
+        $query->bindParam(":birthplace", $birthplace);
+        // $query->bindParam(":age", $age);
+        $query->bindParam(":sex", $sex);
+        $query->bindParam(":address", $address);
+        $query->bindParam(":lrn", $lrn);
+        $query->bindParam(":religion", $religion);
+       
+        
+        $query->bindParam(":pending_enrollees_id", $pending_enrollees_id);
+
+        $query->execute();
+
+        if($query->rowCount() > 0){
+            return true;
+        }
+
         return false;
     }
 
@@ -354,8 +431,17 @@
         $lrn = null,
         $religion,
         $pending_enrollees_id,
-        $email
+        $email = NULL
     ) {
+
+        $email_query = "";
+
+        if($email != NULL){
+            $email_query = ",email = :email";
+        }
+
+        // var_dump($email_query);
+        // return;
 
         $query = $this->con->prepare("UPDATE pending_enrollees SET 
             firstname = :firstname,
@@ -367,12 +453,11 @@
             contact_number = :contact_number,
             birthday = :birthday,
             birthplace = :birthplace,
-            -- age = :age,
             sex = :sex,
             address = :address,
             lrn = :lrn,
-            religion = :religion,
-            email = :email
+            religion = :religion
+            $email_query
             WHERE pending_enrollees_id = :pending_enrollees_id");
 
         $lrn = $lrn == "" ? NULL : $lrn;
@@ -386,12 +471,14 @@
         $query->bindParam(":contact_number", $contact_number);
         $query->bindParam(":birthday", $birthday);
         $query->bindParam(":birthplace", $birthplace);
-        // $query->bindParam(":age", $age);
         $query->bindParam(":sex", $sex);
         $query->bindParam(":address", $address);
         $query->bindParam(":lrn", $lrn);
         $query->bindParam(":religion", $religion);
-        $query->bindParam(":email", $email);
+
+        if($email != NULL){
+            $query->bindValue(":email", $email);
+        }
         
         $query->bindParam(":pending_enrollees_id", $pending_enrollees_id);
 
@@ -1123,6 +1210,23 @@
             // echo "false CheckUniqueStudentEmail";
             return false;
 
+        }
+
+        return true;
+    }
+
+    public function CheckUniqueEnrolleeEmailv2($email){
+
+        $query = $this->con->prepare("SELECT * FROM pending_enrollees
+            WHERE email = :email
+            
+            ");
+
+        $query->bindParam(":email", $email);
+        $query->execute();
+        
+        if($query->rowCount() > 0){
+            return false;
         }
 
         return true;

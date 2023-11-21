@@ -33,7 +33,9 @@
         $current_term = $school_year_obj['term'];
 
         $pending = new Pending($con, $enrollee_id);
-        // echo $username;
+        $does_enrollee_form_manual_enrollment = $pending->GetPendingManual();
+
+        // echo $does_enrollee_form_manual_enrollment;
 
         $sql = $con->prepare("SELECT * FROM pending_enrollees
             -- 
@@ -108,8 +110,25 @@
                         </header>
                         <header>
                             <div class="title">
-                                <h3>Successfully filled-up the form</h3>
-                                <p>Please walk-in for registrar accomodation.</p>
+                                <?php 
+                                    if($does_enrollee_form_manual_enrollment == 0 && $isFinished == 1){
+                                        echo "
+                                            <h3>You have successfully filled-up the form</h3>
+                                            <p>Please go to registrar.</p>
+
+                                        ";
+                                    }
+                                    if($does_enrollee_form_manual_enrollment == 1 && $isFinished == 1){
+                                        echo "
+                                            <h3>Registrar have successfully filled-up your enrollment form</h3>
+                                        ";
+                                    } 
+                                ?>
+                                
+                                <span>Please note that after your enrollment form has approved from evaluation, certain fields will no longer editable.</span>
+                                
+                                <!-- Logic that if student has been given a section (Enrollment form) -->
+                                <!-- Then, it should have a notice. -->
                             </div>
                         </header>
                     </div>

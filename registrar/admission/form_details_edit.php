@@ -396,6 +396,10 @@
             $guardianRelationship = $_POST['guardian_relationship'];
             $guardianOccupation = $_POST['guardian_occupation'];
             
+
+            // var_dump($email);
+            // return;
+
             // echo "LRN: " . $student_lrn . "<br>";
 
             // echo "Last Name: " . $_POST['lastName'] . "<br>";
@@ -434,6 +438,7 @@
                 $status, $citizenship, $phone,
                 $student_birthday, $birthplace, null, $gender, $address, $student_lrn,
                 $religion, $get_student_new_pending_id, $email);
+
 
             # Update For Student Table.
             $editStudentExec = $pending->UpdateStudentDetails(
