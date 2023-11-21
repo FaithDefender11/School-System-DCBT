@@ -1008,9 +1008,8 @@ class SubjectCodeAssignment{
                     // var_dump($interval->d);
                     // var_dump($subject_code_assignment_id);
 
-                    // The due_date is less than 1 day from today`s day
-                    if ($interval->d < 1) {
-
+                    // The due_date is less than 3 day from today`s day
+                    if ($interval->d < 3) {
                         
                         // $isDueSoon = true;
                         // echo "subject_code_assignment_id: $subject_code_assignment_id";

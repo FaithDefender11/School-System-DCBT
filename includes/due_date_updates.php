@@ -17,8 +17,6 @@
         && isset($_GET['enrollment_id'])
         ){
 
-     
-
             $school_year = new SchoolYear($con);
             $school_year_obj = $school_year->GetActiveSchoolYearAndSemester();
 
