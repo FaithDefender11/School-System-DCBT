@@ -214,7 +214,7 @@
                                                 ";
 
 
-                                                $edit_given_template_assignment_url = "edit.php?id=$template_subject_code_assignment_id";
+                                                $edit_given_template_assignment_url = "task_edit.php?id=$template_subject_code_assignment_id&task_id=$task_type_id&view_only=true";
                                                 
                                                 $output_section = "
                                                     <a style='color: inherit;' href='$edit_given_template_assignment_url'>
@@ -301,6 +301,7 @@
                                                 //         $nonTemplateSubjectAssignmentName
                                                 //     </a>
                                                 // ";
+
                                             }
 
 
@@ -401,7 +402,7 @@
         }
 
         // MADE Assignment
-        function giveMadeAssignment(subject_code_assignment_id,
+    function giveMadeAssignment(subject_code_assignment_id,
         subject_period_code_topic_id, teacher_id){
 
             
@@ -474,147 +475,146 @@
         }
 
         function unGiveMadeAssignment(subject_code_assignment_id,
-        subject_period_code_topic_id, teacher_id){
+            subject_period_code_topic_id, teacher_id){
 
-            
-        var subject_code_assignment_id = parseInt(subject_code_assignment_id);
-        var subject_period_code_topic_id = parseInt(subject_period_code_topic_id);
-        var teacher_id = parseInt(teacher_id);
+                
+            var subject_code_assignment_id = parseInt(subject_code_assignment_id);
+            var subject_period_code_topic_id = parseInt(subject_period_code_topic_id);
+            var teacher_id = parseInt(teacher_id);
 
-        Swal.fire({
-                icon: 'question',
-                title: `Do you want to un-give the selected assignment?`,
-                showCancelButton: true,
-                confirmButtonText: 'Yes',
-                cancelButtonText: 'Cancel'
+            Swal.fire({
+                    icon: 'question',
+                    title: `Do you want to un-give the selected assignment?`,
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes',
+                    cancelButtonText: 'Cancel'
 
-            }).then((result) => {
-                if (result.isConfirmed) {
+                }).then((result) => {
+                    if (result.isConfirmed) {
 
-                    $.ajax({
-                    url: "../../ajax/class/unGiveMadeAssignment.php",
-                        type: 'POST',
-                        data: {
-                            subject_code_assignment_id,
-                            subject_period_code_topic_id,
-                            teacher_id
-                        },
-                        success: function(response) {
+                        $.ajax({
+                        url: "../../ajax/class/unGiveMadeAssignment.php",
+                            type: 'POST',
+                            data: {
+                                subject_code_assignment_id,
+                                subject_period_code_topic_id,
+                                teacher_id
+                            },
+                            success: function(response) {
 
-                            response = response.trim();
+                                response = response.trim();
 
-                            console.log(response);
+                                console.log(response);
 
-                            if(response == "success"){
-                                Swal.fire({
-                                icon: 'success',
-                                title: `Assignment has been successfully reverted`,
-                                showConfirmButton: false,
-                                timer: 1200, // Adjust the duration of the toast message in milliseconds (e.g., 3000 = 3 seconds)
-                                toast: true,
-                                position: 'top-end',
-                                showClass: {
-                                popup: 'swal2-noanimation',
-                                backdrop: 'swal2-noanimation'
-                                },
-                                hideClass: {
-                                popup: '',
-                                backdrop: ''
-                                }
-                            }).then((result) => {
+                                if(response == "success"){
+                                    Swal.fire({
+                                    icon: 'success',
+                                    title: `Assignment has been successfully reverted`,
+                                    showConfirmButton: false,
+                                    timer: 1200, // Adjust the duration of the toast message in milliseconds (e.g., 3000 = 3 seconds)
+                                    toast: true,
+                                    position: 'top-end',
+                                    showClass: {
+                                    popup: 'swal2-noanimation',
+                                    backdrop: 'swal2-noanimation'
+                                    },
+                                    hideClass: {
+                                    popup: '',
+                                    backdrop: ''
+                                    }
+                                }).then((result) => {
 
-                                $('#assignments_table').load(
-                                    location.href + ' #assignments_table'
-                                );
+                                    $('#assignments_table').load(
+                                        location.href + ' #assignments_table'
+                                    );
 
-                                // location.reload();
-                            });}
+                                    // location.reload();
+                                });}
 
-                        },
-                        error: function(xhr, status, error) {
-                            // handle any errors here
-                            console.error('Error:', error);
-                            console.log('Status:', status);
-                            console.log('Response Text:', xhr.responseText);
-                            console.log('Response Code:', xhr.status);
-                        }
-                    });
-                } else {
-                    // User clicked "No," perform alternative action or do nothing
-                }
-        });
+                            },
+                            error: function(xhr, status, error) {
+                                // handle any errors here
+                                console.error('Error:', error);
+                                console.log('Status:', status);
+                                console.log('Response Text:', xhr.responseText);
+                                console.log('Response Code:', xhr.status);
+                            }
+                        });
+                    } else {
+                        // User clicked "No," perform alternative action or do nothing
+                    }
+            });
         }
 
         function removeMadeAssignment(subject_code_assignment_id,
-        subject_period_code_topic_id, teacher_id){
+            subject_period_code_topic_id, teacher_id){
 
-            
-        var subject_code_assignment_id = parseInt(subject_code_assignment_id);
-        var subject_period_code_topic_id = parseInt(subject_period_code_topic_id);
-        var teacher_id = parseInt(teacher_id);
+            var subject_code_assignment_id = parseInt(subject_code_assignment_id);
+            var subject_period_code_topic_id = parseInt(subject_period_code_topic_id);
+            var teacher_id = parseInt(teacher_id);
 
-        Swal.fire({
-                icon: 'question',
-                title: `Do you want to remove the selected assignment?`,
-                text: 'Important! This action cannot be undone',
-                showCancelButton: true,
-                confirmButtonText: 'Yes',
-                cancelButtonText: 'Cancel'
+            Swal.fire({
+                    icon: 'question',
+                    title: `Do you want to remove the selected assignment?`,
+                    text: 'Important! This action cannot be undone',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes',
+                    cancelButtonText: 'Cancel'
 
-            }).then((result) => {
-                if (result.isConfirmed) {
+                }).then((result) => {
+                    if (result.isConfirmed) {
 
-                    $.ajax({
-                    url: "../../ajax/class/removeMadeAssignment.php",
-                        type: 'POST',
-                        data: {
-                            subject_code_assignment_id,
-                            subject_period_code_topic_id,
-                            teacher_id
-                        },
-                        success: function(response) {
+                        $.ajax({
+                        url: "../../ajax/class/removeMadeAssignment.php",
+                            type: 'POST',
+                            data: {
+                                subject_code_assignment_id,
+                                subject_period_code_topic_id,
+                                teacher_id
+                            },
+                            success: function(response) {
 
-                            response = response.trim();
+                                response = response.trim();
 
-                            console.log(response);
+                                console.log(response);
 
-                            if(response == "success"){
-                                Swal.fire({
-                                icon: 'success',
-                                title: `Assignment has been removed`,
-                                showConfirmButton: false,
-                                timer: 1200, // Adjust the duration of the toast message in milliseconds (e.g., 3000 = 3 seconds)
-                                toast: true,
-                                position: 'top-end',
-                                showClass: {
-                                popup: 'swal2-noanimation',
-                                backdrop: 'swal2-noanimation'
-                                },
-                                hideClass: {
-                                popup: '',
-                                backdrop: ''
-                                }
-                            }).then((result) => {
+                                if(response == "success"){
+                                    Swal.fire({
+                                    icon: 'success',
+                                    title: `Assignment has been removed`,
+                                    showConfirmButton: false,
+                                    timer: 1200, // Adjust the duration of the toast message in milliseconds (e.g., 3000 = 3 seconds)
+                                    toast: true,
+                                    position: 'top-end',
+                                    showClass: {
+                                    popup: 'swal2-noanimation',
+                                    backdrop: 'swal2-noanimation'
+                                    },
+                                    hideClass: {
+                                    popup: '',
+                                    backdrop: ''
+                                    }
+                                }).then((result) => {
 
-                                $('#assignments_table').load(
-                                    location.href + ' #assignments_table'
-                                );
+                                    $('#assignments_table').load(
+                                        location.href + ' #assignments_table'
+                                    );
 
-                                // location.reload();
-                            });}
-                        },
-                        error: function(xhr, status, error) {
-                            // handle any errors here
-                            console.error('Error:', error);
-                            console.log('Status:', status);
-                            console.log('Response Text:', xhr.responseText);
-                            console.log('Response Code:', xhr.status);
-                        }
-                    });
-                } else {
-                    // User clicked "No," perform alternative action or do nothing
-                }
-        });
+                                    // location.reload();
+                                });}
+                            },
+                            error: function(xhr, status, error) {
+                                // handle any errors here
+                                console.error('Error:', error);
+                                console.log('Status:', status);
+                                console.log('Response Text:', xhr.responseText);
+                                console.log('Response Code:', xhr.status);
+                            }
+                        });
+                    } else {
+                        // User clicked "No," perform alternative action or do nothing
+                    }
+            });
         }
     </script>
     </body>

@@ -138,7 +138,7 @@
                       $setting_btn = "";
 
                      
-
+                      $statusResult = "";
                       if($statuses === "Active"){
 
                           $output_Status = "
@@ -146,6 +146,9 @@
                                 $statuses
                             </button>
                           ";
+                        $statusResult = "Active";
+                        
+
 
                           $setting_btn = "
                             <button class='btn-sm btn btn-dark'>
@@ -163,10 +166,17 @@
                               <i class='fas fa-pen'></i>
                           </button>
                         ";
+                      $statusResult = "In-active";
 
-                        $output_Status = "
+
+                        // $output_Status = "
+                        //   <button class='btn-sm btn btn-danger'>
+                        //         $statuses
+                        //   </button>
+                        // ";
+                         $output_Status = "
                           <button class='btn-sm btn btn-danger'>
-                                $statuses
+                                $statusResult
                           </button>
                         ";
 

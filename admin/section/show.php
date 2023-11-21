@@ -171,13 +171,16 @@
                             <!-- Hidden input field to preserve the 'id' parameter -->
                             <input type="hidden" name="id" value="<?php echo $_GET['id']; ?>">
                             <input type="hidden" name="term" value="<?php echo $_GET['term']; ?>">
-                            <label for="per_semester">Choose Semester:</label>
+                            <input type="hidden" name="type" value="<?php echo $_GET['type']; ?>">
+                            <label for="per_semester">Choose Semester </label>
                             <?php echo $recordsPerPageDropdown; ?>
                         </form>
                     </div>
                     
                     <?php echo Helper::RevealStudentTypePending($type); ?>
+
                     <header style="margin-top: -45px;">
+                        
                         <div class="title">
                             <h1><?php echo $section_name?></h1> 
                         </div>

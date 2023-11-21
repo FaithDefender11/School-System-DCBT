@@ -1036,100 +1036,100 @@
             $schedule_subject_code_id_got = NULL;
             $teacher_id_conflict_id_got = NULL;
             
-            $test = $this->CheckWithTeacherConflictForTwoOrMoreSubjectGroupSchedule(
-                $subject_code, $teacher_id, $school_year_id
-            );
+            // $test = $this->CheckWithTeacherConflictForTwoOrMoreSubjectGroupSchedule(
+            //     $subject_code, $teacher_id, $school_year_id
+            // );
 
             // var_dump($test);
             // echo "<br>";
             // echo "<br>";
             // return;
 
-            if(count($test) > 0){
+            // if(count($test) > 0){
 
-                $schedule_subject_code_id_got = $test[0];
-                $teacher_id_conflict_id_got = $test[1];
-                $check_teacher_id_conflict = $teacher_id_conflict_id_got;
+            //     $schedule_subject_code_id_got = $test[0];
+            //     $teacher_id_conflict_id_got = $test[1];
+            //     $check_teacher_id_conflict = $teacher_id_conflict_id_got;
 
-                $teacherScheduleConflict = new Schedule($this->con,
-                    $teacher_id_conflict_id_got);
+            //     $teacherScheduleConflict = new Schedule($this->con,
+            //         $teacher_id_conflict_id_got);
 
-                $time_from_teacher = $teacherScheduleConflict->GetTimeFrom();
-                $time_from_teacher = $this->convertTo12HourFormat($time_from_teacher);
+            //     $time_from_teacher = $teacherScheduleConflict->GetTimeFrom();
+            //     $time_from_teacher = $this->convertTo12HourFormat($time_from_teacher);
 
-                $time_to_teacher = $teacherScheduleConflict->GetTimeTo();
-                $time_to_teacher = $this->convertTo12HourFormat($time_to_teacher);
+            //     $time_to_teacher = $teacherScheduleConflict->GetTimeTo();
+            //     $time_to_teacher = $this->convertTo12HourFormat($time_to_teacher);
 
-                $time_from_meridian_military_teacher = $this->convertTo12HourFormat($time_from_teacher);
-                $time_to_meridian_military_teacher = $this->convertTo12HourFormat($time_to_teacher);
+            //     $time_from_meridian_military_teacher = $this->convertTo12HourFormat($time_from_teacher);
+            //     $time_to_meridian_military_teacher = $this->convertTo12HourFormat($time_to_teacher);
                 
 
-                $day_teacher = $teacherScheduleConflict->GetScheduleDay();
-                $subject_code_teacher = $teacherScheduleConflict->GetSubjectCode();
-                $room_conflicted_id = $teacherScheduleConflict->GetRoomId();
+            //     $day_teacher = $teacherScheduleConflict->GetScheduleDay();
+            //     $subject_code_teacher = $teacherScheduleConflict->GetSubjectCode();
+            //     $room_conflicted_id = $teacherScheduleConflict->GetRoomId();
 
-                $room_conflict = new Room($this->con, $room_conflicted_id);
-                $room_number = $room_conflict->GetRoomNumber();
+            //     $room_conflict = new Room($this->con, $room_conflicted_id);
+            //     $room_number = $room_conflict->GetRoomNumber();
 
-                if($room_number == NULL){
-                    $room_number = "N/A";
-                }
+            //     if($room_number == NULL){
+            //         $room_number = "N/A";
+            //     }
 
 
 
-                $subjectProgramConflictIdTeacher = $teacherScheduleConflict->GetSubjectProgramId();
+            //     $subjectProgramConflictIdTeacher = $teacherScheduleConflict->GetSubjectProgramId();
 
-                $subjectProgramConflict = new SubjectProgram($this->con, $subjectProgramConflictIdTeacher);
+            //     $subjectProgramConflict = new SubjectProgram($this->con, $subjectProgramConflictIdTeacher);
 
-                $title_conflict_teacher = $subjectProgramConflict->GetTitle();
+            //     $title_conflict_teacher = $subjectProgramConflict->GetTitle();
 
                 
-                ###
+            //     ###
 
-                $scheduleConflictOther = new Schedule($this->con,
-                    $schedule_subject_code_id_got);
+            //     $scheduleConflictOther = new Schedule($this->con,
+            //         $schedule_subject_code_id_got);
 
-                $time_from_other = $scheduleConflictOther->GetTimeFrom();
-                $time_from_other = $this->convertTo12HourFormat($time_from_other);
+            //     $time_from_other = $scheduleConflictOther->GetTimeFrom();
+            //     $time_from_other = $this->convertTo12HourFormat($time_from_other);
 
-                $time_to_other = $scheduleConflictOther->GetTimeTo();
-                $time_to_other = $this->convertTo12HourFormat($time_to_other);
+            //     $time_to_other = $scheduleConflictOther->GetTimeTo();
+            //     $time_to_other = $this->convertTo12HourFormat($time_to_other);
 
-                $schedule_day_other = $scheduleConflictOther->GetScheduleDay();
-                $room_conflicted_id_other = $scheduleConflictOther->GetRoomId();
+            //     $schedule_day_other = $scheduleConflictOther->GetScheduleDay();
+            //     $room_conflicted_id_other = $scheduleConflictOther->GetRoomId();
 
-                $subjectCodeOther = $scheduleConflictOther->GetSubjectCode();
+            //     $subjectCodeOther = $scheduleConflictOther->GetSubjectCode();
 
-                $room_conflict = new Room($this->con, $room_conflicted_id_other);
-                $room_number_other = $room_conflict->GetRoomNumber();
+            //     $room_conflict = new Room($this->con, $room_conflicted_id_other);
+            //     $room_number_other = $room_conflict->GetRoomNumber();
 
-                if($room_number_other == NULL){
-                    $room_number_other = "N/A";
-                }
+            //     if($room_number_other == NULL){
+            //         $room_number_other = "N/A";
+            //     }
 
 
-                ###
+            //     ###
   
-                $time_from_meridian_military_other = $this->convertTo12HourFormat($time_from_other);
-                $time_to_meridian_military_other = $this->convertTo12HourFormat($time_to_other);
+            //     $time_from_meridian_military_other = $this->convertTo12HourFormat($time_from_other);
+            //     $time_to_meridian_military_other = $this->convertTo12HourFormat($time_to_other);
                 
-                $subjectProgramConflictIdOther = $scheduleConflictOther->GetSubjectProgramId();
+            //     $subjectProgramConflictIdOther = $scheduleConflictOther->GetSubjectProgramId();
 
-                $subjectProgramConflictOther = new SubjectProgram($this->con, $subjectProgramConflictIdOther);
+            //     $subjectProgramConflictOther = new SubjectProgram($this->con, $subjectProgramConflictIdOther);
 
-                $title_conflict_teacher_other = $subjectProgramConflictOther->GetTitle();
-                $title_conflict_teacher_other = $subjectProgramConflictOther->GetTitle();
+            //     $title_conflict_teacher_other = $subjectProgramConflictOther->GetTitle();
+            //     $title_conflict_teacher_other = $subjectProgramConflictOther->GetTitle();
                 
-                // echo "subject_code_teacher: $time_from_meridian_military_teacher";
-                // echo "subjectCodeOther: $time_from_meridian_military_other";
+            //     // echo "subject_code_teacher: $time_from_meridian_military_teacher";
+            //     // echo "subjectCodeOther: $time_from_meridian_military_other";
                 
-                Alert::conflictedMessage(
-                    "Teacher Conflicted Schedule: $time_from_meridian_military_teacher - $time_to_meridian_military_teacher <br> ( $day_teacher ) Room:  <br> Subject: $title_conflict_teacher ($subject_code_teacher)",
-                    "LOGIC 1 $subjectCodeOther together schedule : $time_from_meridian_military_other - $time_to_meridian_military_other <br> ( $schedule_day_other ) Room:  <br> Subject: $title_conflict_teacher_other ($subjectCodeOther)", "");
+            //     Alert::conflictedMessage(
+            //         "Teacher Conflicted Schedule: $time_from_meridian_military_teacher - $time_to_meridian_military_teacher <br> ( $day_teacher ) Room:  <br> Subject: $title_conflict_teacher ($subject_code_teacher)",
+            //         "LOGIC 1 $subjectCodeOther together schedule : $time_from_meridian_military_other - $time_to_meridian_military_other <br> ( $schedule_day_other ) Room:  <br> Subject: $title_conflict_teacher_other ($subjectCodeOther)", "");
                 
-                exit();  
+            //     exit();  
 
-            }
+            // }
 
             # TEACHER 
             $check_teacher_id_conflict = $this->CheckTeacherScheduleConflicted(
@@ -1718,7 +1718,6 @@
         if($course_id != NULL && $room_id == NULL && $teacher_id != NULL){
 
             ## Editing with the same teacher, but not modifying the subject_code.
-
             ## FROM TBA to chosen teacher_id
             
             # 1. Can be one or more TBA subject codes to selected teacher.
@@ -1729,99 +1728,99 @@
             $teacher_id_conflict_id_got = NULL;
             
             # For 2 or more subject code together
-            $test = $this->CheckWithTeacherConflictForTwoOrMoreSubjectGroupSchedule(
-                $subject_code, $teacher_id, $school_year_id
-            );
+            // $test = $this->CheckWithTeacherConflictForTwoOrMoreSubjectGroupSchedule(
+            //     $subject_code, $teacher_id, $school_year_id
+            // );
 
             // var_dump($test);
             // echo "<br>";
             // echo "<br>";
             // return;
 
-            if(count($test) > 0){
+            // if(count($test) > 0){
 
-                $schedule_subject_code_id_got = $test[0];
-                $teacher_id_conflict_id_got = $test[1];
-                $check_teacher_id_conflict = $teacher_id_conflict_id_got;
+            //     $schedule_subject_code_id_got = $test[0];
+            //     $teacher_id_conflict_id_got = $test[1];
+            //     $check_teacher_id_conflict = $teacher_id_conflict_id_got;
 
-                $teacherScheduleConflict = new Schedule($this->con,
-                    $teacher_id_conflict_id_got);
+            //     $teacherScheduleConflict = new Schedule($this->con,
+            //         $teacher_id_conflict_id_got);
 
-                $time_from_teacher = $teacherScheduleConflict->GetTimeFrom();
-                $time_from_teacher = $this->convertTo12HourFormat($time_from_teacher);
+            //     $time_from_teacher = $teacherScheduleConflict->GetTimeFrom();
+            //     $time_from_teacher = $this->convertTo12HourFormat($time_from_teacher);
 
-                $time_to_teacher = $teacherScheduleConflict->GetTimeTo();
-                $time_to_teacher = $this->convertTo12HourFormat($time_to_teacher);
+            //     $time_to_teacher = $teacherScheduleConflict->GetTimeTo();
+            //     $time_to_teacher = $this->convertTo12HourFormat($time_to_teacher);
 
-                $time_from_meridian_military_teacher = $this->convertTo12HourFormat($time_from_teacher);
-                $time_to_meridian_military_teacher = $this->convertTo12HourFormat($time_to_teacher);
+            //     $time_from_meridian_military_teacher = $this->convertTo12HourFormat($time_from_teacher);
+            //     $time_to_meridian_military_teacher = $this->convertTo12HourFormat($time_to_teacher);
                 
 
-                $day_teacher = $teacherScheduleConflict->GetScheduleDay();
-                $subject_code_teacher = $teacherScheduleConflict->GetSubjectCode();
-                $room_conflicted_id = $teacherScheduleConflict->GetRoomId();
+            //     $day_teacher = $teacherScheduleConflict->GetScheduleDay();
+            //     $subject_code_teacher = $teacherScheduleConflict->GetSubjectCode();
+            //     $room_conflicted_id = $teacherScheduleConflict->GetRoomId();
 
-                $room_conflict = new Room($this->con, $room_conflicted_id);
-                $room_number_teacher = $room_conflict->GetRoomNumber();
+            //     $room_conflict = new Room($this->con, $room_conflicted_id);
+            //     $room_number_teacher = $room_conflict->GetRoomNumber();
 
-                if($room_number_teacher == NULL){
-                    $room_number_teacher = "N/A";
-                }
+            //     if($room_number_teacher == NULL){
+            //         $room_number_teacher = "N/A";
+            //     }
 
 
-                $subjectProgramConflictIdTeacher = $teacherScheduleConflict->GetSubjectProgramId();
+            //     $subjectProgramConflictIdTeacher = $teacherScheduleConflict->GetSubjectProgramId();
 
-                $subjectProgramConflict = new SubjectProgram($this->con, $subjectProgramConflictIdTeacher);
+            //     $subjectProgramConflict = new SubjectProgram($this->con, $subjectProgramConflictIdTeacher);
 
-                $title_conflict_teacher = $subjectProgramConflict->GetTitle();
+            //     $title_conflict_teacher = $subjectProgramConflict->GetTitle();
 
                 
-                ###
+            //     ###
 
-                $scheduleConflictOther = new Schedule($this->con,
-                    $schedule_subject_code_id_got);
+            //     $scheduleConflictOther = new Schedule($this->con,
+            //         $schedule_subject_code_id_got);
 
-                $time_from_other = $scheduleConflictOther->GetTimeFrom();
-                $time_from_other = $this->convertTo12HourFormat($time_from_other);
+            //     $time_from_other = $scheduleConflictOther->GetTimeFrom();
+            //     $time_from_other = $this->convertTo12HourFormat($time_from_other);
 
-                $time_to_other = $scheduleConflictOther->GetTimeTo();
-                $time_to_other = $this->convertTo12HourFormat($time_to_other);
+            //     $time_to_other = $scheduleConflictOther->GetTimeTo();
+            //     $time_to_other = $this->convertTo12HourFormat($time_to_other);
 
-                $schedule_day_other = $scheduleConflictOther->GetScheduleDay();
-                $room_conflicted_id_other = $scheduleConflictOther->GetRoomId();
+            //     $schedule_day_other = $scheduleConflictOther->GetScheduleDay();
+            //     $room_conflicted_id_other = $scheduleConflictOther->GetRoomId();
 
-                $subjectCodeOther = $scheduleConflictOther->GetSubjectCode();
+            //     $subjectCodeOther = $scheduleConflictOther->GetSubjectCode();
 
-                $room_conflict = new Room($this->con, $room_conflicted_id_other);
-                $room_number_other = $room_conflict->GetRoomNumber();
+            //     $room_conflict = new Room($this->con, $room_conflicted_id_other);
+            //     $room_number_other = $room_conflict->GetRoomNumber();
 
-                if($room_number_other == NULL){
-                    $room_number_other = "N/A";
-                }
+            //     if($room_number_other == NULL){
+            //         $room_number_other = "N/A";
+            //     }
 
 
-                ###
+            //     ###
   
-                $time_from_meridian_military_other = $this->convertTo12HourFormat($time_from_other);
-                $time_to_meridian_military_other = $this->convertTo12HourFormat($time_to_other);
+            //     $time_from_meridian_military_other = $this->convertTo12HourFormat($time_from_other);
+            //     $time_to_meridian_military_other = $this->convertTo12HourFormat($time_to_other);
                 
-                $subjectProgramConflictIdOther = $scheduleConflictOther->GetSubjectProgramId();
+            //     $subjectProgramConflictIdOther = $scheduleConflictOther->GetSubjectProgramId();
 
-                $subjectProgramConflictOther = new SubjectProgram($this->con, $subjectProgramConflictIdOther);
+            //     $subjectProgramConflictOther = new SubjectProgram($this->con, $subjectProgramConflictIdOther);
 
-                $title_conflict_teacher_other = $subjectProgramConflictOther->GetTitle();
-                $title_conflict_teacher_other = $subjectProgramConflictOther->GetTitle();
+            //     $title_conflict_teacher_other = $subjectProgramConflictOther->GetTitle();
+            //     $title_conflict_teacher_other = $subjectProgramConflictOther->GetTitle();
                 
-                // echo "subject_code_teacher: $time_from_meridian_military_teacher";
-                // echo "subjectCodeOther: $time_from_meridian_military_other";
+            //     // echo "subject_code_teacher: $time_from_meridian_military_teacher";
+            //     // echo "subjectCodeOther: $time_from_meridian_military_other";
                 
-                Alert::conflictedMessage(
-                    "Teacher Conflicted Schedule: $time_from_meridian_military_teacher - $time_to_meridian_military_teacher <br> ( $day_teacher ) Room: $room_number_teacher <br> Subject: $title_conflict_teacher ($subject_code_teacher)",
-                    "LOGIC 3 $subjectCodeOther together schedule : $time_from_meridian_military_other - $time_to_meridian_military_other <br> ( $schedule_day_other ) Room: $room_number_other <br> Subject: $title_conflict_teacher_other ($subjectCodeOther)", "");
+            //     Alert::conflictedMessage(
+            //         "Teacher Conflicted Schedule: $time_from_meridian_military_teacher - $time_to_meridian_military_teacher <br> ( $day_teacher ) Room: $room_number_teacher <br> Subject: $title_conflict_teacher ($subject_code_teacher)",
+            //         "LOGIC 3 $subjectCodeOther together schedule : $time_from_meridian_military_other - $time_to_meridian_military_other <br> ( $schedule_day_other ) Room: $room_number_other <br> Subject: $title_conflict_teacher_other ($subjectCodeOther)", "");
                 
-                exit();  
+            //     exit();  
 
-            }
+            // }
 
             $check_teacher_id_conflict = $this->CheckTeacherScheduleConflicted(
                 $time_from, $time_to, $schedule_day,
@@ -2119,6 +2118,9 @@
         # LOGIC 4
         if($course_id != NULL && $teacher_id == NULL && $room_id == NULL){
 
+            // var_dump($teacher_id);
+            // return;
+
             $schedule_course_id_conflict = $this->CheckScheduleDayConflictWithinSection(
                 $time_from, $time_to,
                 $schedule_day, $current_school_year_id,
@@ -2184,7 +2186,6 @@
             if($existing_teacher_id != NULL){
 
                 // var_dump($existing_teacher_id);
-
                 // return;
                 
                 # 1. Nulling the teacher with changing the schedule
@@ -2364,593 +2365,593 @@
 
 
 
-        return;
+        // return;
 
 
         // 2. Has Room, Not Has T
-        if($room_id !== NULL){
+        // if($room_id !== NULL){
 
 
-            $room_schedule_id_conflict = $this->CheckScheduleDayWithRoomConflict(
-                $time_from, $time_to,
-                $schedule_day, $school_year_id,
-                $room_id, $subject_schedule_id);
+        //     $room_schedule_id_conflict = $this->CheckScheduleDayWithRoomConflict(
+        //         $time_from, $time_to,
+        //         $schedule_day, $school_year_id,
+        //         $room_id, $subject_schedule_id);
 
-            // var_dump($room_schedule_id_conflict);
-            // return;
+        //     // var_dump($room_schedule_id_conflict);
+        //     // return;
           
-            if($room_schedule_id_conflict !== NULL){
+        //     if($room_schedule_id_conflict !== NULL){
 
-                // var_dump($room_schedule_id_conflict);
-                // return;
-                $scheduleConflict = new Schedule($this->con, $room_schedule_id_conflict);
+        //         // var_dump($room_schedule_id_conflict);
+        //         // return;
+        //         $scheduleConflict = new Schedule($this->con, $room_schedule_id_conflict);
 
-                $time_from = $scheduleConflict->GetTimeFrom();
-                $time_from = $this->convertTo12HourFormat($time_from);
+        //         $time_from = $scheduleConflict->GetTimeFrom();
+        //         $time_from = $this->convertTo12HourFormat($time_from);
 
-                $time_to = $scheduleConflict->GetTimeTo();
-                $time_to = $this->convertTo12HourFormat($time_to);
+        //         $time_to = $scheduleConflict->GetTimeTo();
+        //         $time_to = $this->convertTo12HourFormat($time_to);
 
-                $day = $scheduleConflict->GetScheduleDay();
-                $room_conflicted_id = $scheduleConflict->GetRoomId();
+        //         $day = $scheduleConflict->GetScheduleDay();
+        //         $room_conflicted_id = $scheduleConflict->GetRoomId();
 
-                $room_conflict = new Room($this->con, $room_conflicted_id);
-                $room_number = $room_conflict->GetRoomNumber();
+        //         $room_conflict = new Room($this->con, $room_conflicted_id);
+        //         $room_number = $room_conflict->GetRoomNumber();
 
-                // var_dump($room_number);
-                // return;
+        //         // var_dump($room_number);
+        //         // return;
 
-                if($room_number == NULL){
-                    $room_number = "N/A";
-                }
+        //         if($room_number == NULL){
+        //             $room_number = "N/A";
+        //         }
 
-                $room_inserted = new Room($this->con, $room_id);
-                $room_inserted_number = $room_inserted->GetRoomNumber();
+        //         $room_inserted = new Room($this->con, $room_id);
+        //         $room_inserted_number = $room_inserted->GetRoomNumber();
 
 
-                // $time_from_meridian_military = $this->convertTo12HourFormat($time_from_meridian_military);
-                // $time_to_meridian_military = $this->convertTo12HourFormat($time_to_meridian_military);
+        //         // $time_from_meridian_military = $this->convertTo12HourFormat($time_from_meridian_military);
+        //         // $time_to_meridian_military = $this->convertTo12HourFormat($time_to_meridian_military);
 
-                $subject_code_conflict = $scheduleConflict->GetSubjectCode();
-                $subjectProgramConflictId = $scheduleConflict->GetSubjectProgramId();
+        //         $subject_code_conflict = $scheduleConflict->GetSubjectCode();
+        //         $subjectProgramConflictId = $scheduleConflict->GetSubjectProgramId();
 
-                $subjectProgramConflict = new SubjectProgram($this->con, $subjectProgramConflictId);
+        //         $subjectProgramConflict = new SubjectProgram($this->con, $subjectProgramConflictId);
 
-                $title_conflict = $subjectProgramConflict->GetTitle();
+        //         $title_conflict = $subjectProgramConflict->GetTitle();
                 
 
-                $time_from_meridian_military = $this->convertTo12HourFormat($raw_time_from);
-                $time_to_meridian_military = $this->convertTo12HourFormat($raw_time_to);
+        //         $time_from_meridian_military = $this->convertTo12HourFormat($raw_time_from);
+        //         $time_to_meridian_military = $this->convertTo12HourFormat($raw_time_to);
 
-                Alert::conflictedMessage("Room Conflicted Schedule: $time_from - $time_to <br> ( $day ) Room: $room_number <br> Subject: $title_conflict ($subject_code_conflict)",
-                    "Desired Schedule: $time_from_meridian_military - $time_to_meridian_military <br> ($schedule_day) Room: $room_inserted_number <br> Subject: $selected_title ($existing_subject_code)", "");
+        //         Alert::conflictedMessage("Room Conflicted Schedule: $time_from - $time_to <br> ( $day ) Room: $room_number <br> Subject: $title_conflict ($subject_code_conflict)",
+        //             "Desired Schedule: $time_from_meridian_military - $time_to_meridian_military <br> ($schedule_day) Room: $room_inserted_number <br> Subject: $selected_title ($existing_subject_code)", "");
 
                 
 
-                // Alert::conflictedMessage("Conflicted Schedule: $time_from - $time_to <br> ($day) Room: $room_number",
-                //     "Desired Schedule: $time_from_meridian_military - $time_to_meridian_military <br> ($schedule_day) Room: $room_inserted_number", "");
+        //         // Alert::conflictedMessage("Conflicted Schedule: $time_from - $time_to <br> ($day) Room: $room_number",
+        //         //     "Desired Schedule: $time_from_meridian_military - $time_to_meridian_military <br> ($schedule_day) Room: $room_inserted_number", "");
                 
-                // Alert::errorToast("Schedule day with time has conflicted with selected room.", "");
-                exit();
+        //         // Alert::errorToast("Schedule day with time has conflicted with selected room.", "");
+        //         exit();
 
-            }   
+        //     }   
 
-            if($room_schedule_id_conflict == NULL){
+        //     if($room_schedule_id_conflict == NULL){
 
-                $sql = $this->con->prepare("UPDATE subject_schedule
-                    SET schedule_day = :schedule_day,
-                        time_from = :time_from,
-                        time_to = :time_to,
-                        school_year_id = :school_year_id,
-                        course_id = :course_id,
-                        teacher_id = :teacher_id,
-                        subject_code = :subject_code,
-                        subject_program_id = :subject_program_id,
-                        day_count = :day_count,
-                        room_id = :room_id,
-                        schedule_time = :schedule_time
+        //         $sql = $this->con->prepare("UPDATE subject_schedule
+        //             SET schedule_day = :schedule_day,
+        //                 time_from = :time_from,
+        //                 time_to = :time_to,
+        //                 school_year_id = :school_year_id,
+        //                 course_id = :course_id,
+        //                 teacher_id = :teacher_id,
+        //                 subject_code = :subject_code,
+        //                 subject_program_id = :subject_program_id,
+        //                 day_count = :day_count,
+        //                 room_id = :room_id,
+        //                 schedule_time = :schedule_time
 
-                    WHERE subject_schedule_id = :subject_schedule_id
-                ");
+        //             WHERE subject_schedule_id = :subject_schedule_id
+        //         ");
 
-                // Concatenate time_from and time_to for schedule_time
-                if(true){
+        //         // Concatenate time_from and time_to for schedule_time
+        //         if(true){
 
-                    $schedule_time = $raw_time_from . ' - ' . $raw_time_to;
+        //             $schedule_time = $raw_time_from . ' - ' . $raw_time_to;
                     
-                    // $schedule_time = $time_from . ' - ' . $time_to;
+        //             // $schedule_time = $time_from . ' - ' . $time_to;
 
-                    // Bind parameters
-                    $sql->bindParam(":subject_schedule_id", $subject_schedule_id);
-                    $sql->bindParam(":schedule_day", $schedule_day);
-                    $sql->bindParam(":schedule_time", $schedule_time);
-                    $sql->bindParam(":time_from", $time_from);
-                    $sql->bindParam(":time_to", $time_to);
-                    $sql->bindParam(":school_year_id", $school_year_id);
-                    $sql->bindParam(":course_id", $course_id);
-                    $sql->bindParam(":teacher_id", $teacher_id);
-                    $sql->bindParam(":subject_code", $subject_code);
-                    $sql->bindParam(":subject_program_id", $subject_program_id);
-                    $sql->bindParam(":day_count", $day_count);
-                    $sql->bindParam(":room_id", $room_id);
+        //             // Bind parameters
+        //             $sql->bindParam(":subject_schedule_id", $subject_schedule_id);
+        //             $sql->bindParam(":schedule_day", $schedule_day);
+        //             $sql->bindParam(":schedule_time", $schedule_time);
+        //             $sql->bindParam(":time_from", $time_from);
+        //             $sql->bindParam(":time_to", $time_to);
+        //             $sql->bindParam(":school_year_id", $school_year_id);
+        //             $sql->bindParam(":course_id", $course_id);
+        //             $sql->bindParam(":teacher_id", $teacher_id);
+        //             $sql->bindParam(":subject_code", $subject_code);
+        //             $sql->bindParam(":subject_program_id", $subject_program_id);
+        //             $sql->bindParam(":day_count", $day_count);
+        //             $sql->bindParam(":room_id", $room_id);
 
-                    $sql->execute();
+        //             $sql->execute();
 
-                    if ($sql->rowCount() > 0) {
-                        Alert::success("Schedule has been updated successfully.", $back_url);
-                        exit();
-                    } 
-                }
-            }
-        }
+        //             if ($sql->rowCount() > 0) {
+        //                 Alert::success("Schedule has been updated successfully.", $back_url);
+        //                 exit();
+        //             } 
+        //         }
+        //     }
+        // }
 
-        // 3. Has T Not Has Room
-        if($teacher_id !== NULL){
+        // // 3. Has T Not Has Room
+        // if($teacher_id !== NULL){
 
-            $check_teacher_id_conflict = $this->CheckTeacherScheduleConflicted(
-                $time_from, $time_to, $schedule_day,
-                $teacher_id, $school_year_id,
-                $subject_schedule_id
-            );
+        //     $check_teacher_id_conflict = $this->CheckTeacherScheduleConflicted(
+        //         $time_from, $time_to, $schedule_day,
+        //         $teacher_id, $school_year_id,
+        //         $subject_schedule_id
+        //     );
 
-            # Get all 
+        //     # Get all 
 
-            // var_dump($check_subject_schedule_assigned_teacher_id);
-            // echo "<br>";
-            // var_dump($check_assigned_subject_topic_teacher_id);
-            // echo "<br>";
+        //     // var_dump($check_subject_schedule_assigned_teacher_id);
+        //     // echo "<br>";
+        //     // var_dump($check_assigned_subject_topic_teacher_id);
+        //     // echo "<br>";
 
-            // var_dump($teacher_id);
+        //     // var_dump($teacher_id);
 
-            // return;
+        //     // return;
             
-            # Teacher Schedule Conflict Section.
+        //     # Teacher Schedule Conflict Section.
 
-            if($check_teacher_id_conflict != NULL){
+        //     if($check_teacher_id_conflict != NULL){
 
-                // var_dump($check_teacher_id_conflict);
-                // return;
+        //         // var_dump($check_teacher_id_conflict);
+        //         // return;
 
-                $scheduleConflict = new Schedule($this->con, $check_teacher_id_conflict);
+        //         $scheduleConflict = new Schedule($this->con, $check_teacher_id_conflict);
 
-                $time_from = $scheduleConflict->GetTimeFrom();
-                $time_from = $this->convertTo12HourFormat($time_from);
+        //         $time_from = $scheduleConflict->GetTimeFrom();
+        //         $time_from = $this->convertTo12HourFormat($time_from);
 
-                $time_to = $scheduleConflict->GetTimeTo();
-                $time_to = $this->convertTo12HourFormat($time_to);
+        //         $time_to = $scheduleConflict->GetTimeTo();
+        //         $time_to = $this->convertTo12HourFormat($time_to);
 
-                $day = $scheduleConflict->GetScheduleDay();
-                $room_conflicted_id = $scheduleConflict->GetRoomId();
+        //         $day = $scheduleConflict->GetScheduleDay();
+        //         $room_conflicted_id = $scheduleConflict->GetRoomId();
 
-                $room_conflict = new Room($this->con, $room_conflicted_id);
-                $room_number = $room_conflict->GetRoomNumber();
-                if($room_number == NULL){
-                    $room_number = "N/A";
-                }
-                $room_inserted = new Room($this->con, $room_id);
+        //         $room_conflict = new Room($this->con, $room_conflicted_id);
+        //         $room_number = $room_conflict->GetRoomNumber();
+        //         if($room_number == NULL){
+        //             $room_number = "N/A";
+        //         }
+        //         $room_inserted = new Room($this->con, $room_id);
 
-                $room_inserted_number = $room_inserted->GetRoomNumber();
+        //         $room_inserted_number = $room_inserted->GetRoomNumber();
 
-                if($room_inserted_number == NULL){
-                    $room_inserted_number = "N/A";
-                }
+        //         if($room_inserted_number == NULL){
+        //             $room_inserted_number = "N/A";
+        //         }
 
-                if($room_inserted_number == NULL){
-                    $room_inserted_number = "N/A";
-                }
+        //         if($room_inserted_number == NULL){
+        //             $room_inserted_number = "N/A";
+        //         }
 
-                $subject_code_conflict = $scheduleConflict->GetSubjectCode();
+        //         $subject_code_conflict = $scheduleConflict->GetSubjectCode();
 
-                // $time_from_meridian_military = $this->convertTo12HourFormat($time_from_meridian_military);
-                // $time_to_meridian_military = $this->convertTo12HourFormat($time_to_meridian_military);
+        //         // $time_from_meridian_military = $this->convertTo12HourFormat($time_from_meridian_military);
+        //         // $time_to_meridian_military = $this->convertTo12HourFormat($time_to_meridian_military);
 
-                $time_from_meridian_military = $this->convertTo12HourFormat($raw_time_from);
-                $time_to_meridian_military = $this->convertTo12HourFormat($raw_time_to);
+        //         $time_from_meridian_military = $this->convertTo12HourFormat($raw_time_from);
+        //         $time_to_meridian_military = $this->convertTo12HourFormat($raw_time_to);
                 
-                $subjectProgramConflictId = $scheduleConflict->GetSubjectProgramId();
+        //         $subjectProgramConflictId = $scheduleConflict->GetSubjectProgramId();
 
-                $subjectProgramConflict = new SubjectProgram($this->con, $subjectProgramConflictId);
+        //         $subjectProgramConflict = new SubjectProgram($this->con, $subjectProgramConflictId);
 
-                $title_conflict = $subjectProgramConflict->GetTitle();
+        //         $title_conflict = $subjectProgramConflict->GetTitle();
                 
        
-                // Alert::conflictedMessage("Teacher Conflicted Schedule: $time_from - $time_to <br> ( $day ) Room: $room_number <br> Subject: $title_conflict ($subject_code_conflict)",
-                //     "Desired Schedule: $time_from_meridian_military - $time_to_meridian_military <br> ( $schedule_day ) Room: $room_inserted_number <br> Subject: $selected_title ($section_subject_code)", "");
+        //         // Alert::conflictedMessage("Teacher Conflicted Schedule: $time_from - $time_to <br> ( $day ) Room: $room_number <br> Subject: $title_conflict ($subject_code_conflict)",
+        //         //     "Desired Schedule: $time_from_meridian_military - $time_to_meridian_military <br> ( $schedule_day ) Room: $room_inserted_number <br> Subject: $selected_title ($section_subject_code)", "");
                 
 
                 
-                Alert::conflictedMessage(
-                    "Teacher Conflicted Schedule: $time_from - $time_to <br> ( $day ) Room: $room_number <br> Subject: $title_conflict ($subject_code_conflict)",
-                    "Desired Schedule: $time_from_meridian_military - $time_to_meridian_military <br> ( $schedule_day ) Room: $room_inserted_number <br> Subject: $selected_title ($existing_subject_code)", "");
-                exit();  
+        //         Alert::conflictedMessage(
+        //             "Teacher Conflicted Schedule: $time_from - $time_to <br> ( $day ) Room: $room_number <br> Subject: $title_conflict ($subject_code_conflict)",
+        //             "Desired Schedule: $time_from_meridian_military - $time_to_meridian_military <br> ( $schedule_day ) Room: $room_inserted_number <br> Subject: $selected_title ($existing_subject_code)", "");
+        //         exit();  
                     
-                // Alert::error("Selected schedule day along with time for teacher is conflicted", "");
-                // exit();  
+        //         // Alert::error("Selected schedule day along with time for teacher is conflicted", "");
+        //         // exit();  
 
-            }
+        //     }
 
-            # Changing subject_schedule and adjustment of subject_period_code_topic (teacher id)
+        //     # Changing subject_schedule and adjustment of subject_period_code_topic (teacher id)
 
-            if($check_assigned_subject_topic_teacher_id != NULL
-                && $check_assigned_subject_topic_teacher_id != $teacher_id 
-                && $getTeacherScheduleCount <= 1){
+        //     if($check_assigned_subject_topic_teacher_id != NULL
+        //         && $check_assigned_subject_topic_teacher_id != $teacher_id 
+        //         && $getTeacherScheduleCount <= 1){
 
-                    // echo "hey";
-                    // return;
+        //             // echo "hey";
+        //             // return;
 
-                # Remove all subject_period_code_topic 
-                # based on subject_code, current_school_year_id, check_assigned_subject_topic_teacher_id
+        //         # Remove all subject_period_code_topic 
+        //         # based on subject_code, current_school_year_id, check_assigned_subject_topic_teacher_id
 
-                // $doesAllRemoved = $subjectPeriodCodeTopic->RemovingTeachingCodeTopic(
-                //     $check_assigned_subject_topic_teacher_id,
-                //     $subject_code,
-                //     $current_school_year_id);
+        //         // $doesAllRemoved = $subjectPeriodCodeTopic->RemovingTeachingCodeTopic(
+        //         //     $check_assigned_subject_topic_teacher_id,
+        //         //     $subject_code,
+        //         //     $current_school_year_id);
                 
-                # Add appropriate subject code topic
+        //         # Add appropriate subject code topic
 
-                $doesFinish = false;
+        //         $doesFinish = false;
 
-                // if($doesAllRemoved){
+        //         // if($doesAllRemoved){
 
-                //     $subjectPeriodCodeTopicTemplate = new SubjectPeriodCodeTopicTemplate($this->con);
+        //         //     $subjectPeriodCodeTopicTemplate = new SubjectPeriodCodeTopicTemplate($this->con);
                 
-                //     $subjectPeriodCodeTopic = new SubjectPeriodCodeTopic($this->con);
+        //         //     $subjectPeriodCodeTopic = new SubjectPeriodCodeTopic($this->con);
 
-                //     $getAllDefaultTopicTemplate = $subjectPeriodCodeTopicTemplate->GetTopicTemplateDefaultTopics($rawCode);
+        //         //     $getAllDefaultTopicTemplate = $subjectPeriodCodeTopicTemplate->GetTopicTemplateDefaultTopics($rawCode);
  
-                //     if(count($getAllDefaultTopicTemplate) > 0){
+        //         //     if(count($getAllDefaultTopicTemplate) > 0){
 
-                //         foreach ($getAllDefaultTopicTemplate as $key => $row) {
+        //         //         foreach ($getAllDefaultTopicTemplate as $key => $row) {
 
-                //             $topic = $row['topic'];
-                //             $description = $row['description'];
-                //             $subject_period_name = $row['subject_period_name'];
-                //             $program_code = $row['program_code'];
+        //         //             $topic = $row['topic'];
+        //         //             $description = $row['description'];
+        //         //             $subject_period_name = $row['subject_period_name'];
+        //         //             $program_code = $row['program_code'];
 
-                //             # Populate default topic to the chosen teacher
-                //             $wasSuccess = $subjectPeriodCodeTopic->AddTopic(
-                //                 $course_id, $teacher_id, $current_school_year_id,
-                //                 $topic, $description,
-                //                 $subject_period_name, $subject_code,
-                //                 $program_code, $subject_program_id);
+        //         //             # Populate default topic to the chosen teacher
+        //         //             $wasSuccess = $subjectPeriodCodeTopic->AddTopic(
+        //         //                 $course_id, $teacher_id, $current_school_year_id,
+        //         //                 $topic, $description,
+        //         //                 $subject_period_name, $subject_code,
+        //         //                 $program_code, $subject_program_id);
                             
-                //             if($wasSuccess){
-                //                 $doesFinish = true;
-                //             }
-                //         }
-                //     }
-                // }
+        //         //             if($wasSuccess){
+        //         //                 $doesFinish = true;
+        //         //             }
+        //         //         }
+        //         //     }
+        //         // }
 
-                # subject_period_code_topic adjustment
+        //         # subject_period_code_topic adjustment
 
-                $subjectTopicUpdatingSuccess = $subjectPeriodCodeTopic
-                    ->AdjustmentOfAssignTeacherOnSubjectCodeTopic(
-                        $existing_course_id, $teacher_id, $current_school_year_id,
-                        $subject_code, $existing_subject_code, $existing_program_code);
+        //         $subjectTopicUpdatingSuccess = $subjectPeriodCodeTopic
+        //             ->AdjustmentOfAssignTeacherOnSubjectCodeTopic(
+        //                 $existing_course_id, $teacher_id, $current_school_year_id,
+        //                 $subject_code, $existing_subject_code, $existing_program_code);
 
-                # subject_schedule adjustment
-                // if($doesFinish == true){
-                if($subjectTopicUpdatingSuccess == true){
+        //         # subject_schedule adjustment
+        //         // if($doesFinish == true){
+        //         if($subjectTopicUpdatingSuccess == true){
 
-                    $updateS = $this->con->prepare("UPDATE subject_schedule
-                        SET schedule_day = :schedule_day,
-                            time_from = :time_from,
-                            time_to = :time_to,
-                            school_year_id = :school_year_id,
-                            course_id = :course_id,
-                            teacher_id = :teacher_id,
-                            subject_code = :subject_code,
-                            subject_program_id = :subject_program_id,
-                            day_count = :day_count,
-                            room_id = :room_id,
-                            schedule_time = :schedule_time
-                        WHERE subject_schedule_id = :subject_schedule_id
-                    ");
+        //             $updateS = $this->con->prepare("UPDATE subject_schedule
+        //                 SET schedule_day = :schedule_day,
+        //                     time_from = :time_from,
+        //                     time_to = :time_to,
+        //                     school_year_id = :school_year_id,
+        //                     course_id = :course_id,
+        //                     teacher_id = :teacher_id,
+        //                     subject_code = :subject_code,
+        //                     subject_program_id = :subject_program_id,
+        //                     day_count = :day_count,
+        //                     room_id = :room_id,
+        //                     schedule_time = :schedule_time
+        //                 WHERE subject_schedule_id = :subject_schedule_id
+        //             ");
 
-                    // Concatenate time_from and time_to for schedule_time
+        //             // Concatenate time_from and time_to for schedule_time
 
-                    $schedule_time = $raw_time_from . ' - ' . $raw_time_to;
+        //             $schedule_time = $raw_time_from . ' - ' . $raw_time_to;
 
-                    // Bind parameters
-                    $updateS->bindParam(":subject_schedule_id", $subject_schedule_id);
-                    $updateS->bindParam(":schedule_day", $schedule_day);
-                    $updateS->bindParam(":schedule_time", $schedule_time);
-                    $updateS->bindParam(":time_from", $time_from);
-                    $updateS->bindParam(":time_to", $time_to);
-                    $updateS->bindParam(":school_year_id", $school_year_id);
-                    $updateS->bindParam(":course_id", $course_id);
-                    $updateS->bindParam(":teacher_id", $teacher_id);
-                    $updateS->bindParam(":subject_code", $subject_code);
-                    $updateS->bindParam(":subject_program_id", $subject_program_id);
-                    $updateS->bindParam(":day_count", $day_count);
-                    $updateS->bindParam(":room_id", $room_id);
+        //             // Bind parameters
+        //             $updateS->bindParam(":subject_schedule_id", $subject_schedule_id);
+        //             $updateS->bindParam(":schedule_day", $schedule_day);
+        //             $updateS->bindParam(":schedule_time", $schedule_time);
+        //             $updateS->bindParam(":time_from", $time_from);
+        //             $updateS->bindParam(":time_to", $time_to);
+        //             $updateS->bindParam(":school_year_id", $school_year_id);
+        //             $updateS->bindParam(":course_id", $course_id);
+        //             $updateS->bindParam(":teacher_id", $teacher_id);
+        //             $updateS->bindParam(":subject_code", $subject_code);
+        //             $updateS->bindParam(":subject_program_id", $subject_program_id);
+        //             $updateS->bindParam(":day_count", $day_count);
+        //             $updateS->bindParam(":room_id", $room_id);
 
-                    $updateS->execute();
+        //             $updateS->execute();
 
-                    if ($updateS->rowCount() > 0) {
+        //             if ($updateS->rowCount() > 0) {
 
-                        Alert::success("Schedule has been update & LMS subject code has been placed to selected teacher.", $back_url);
-                        exit();
+        //                 Alert::success("Schedule has been update & LMS subject code has been placed to selected teacher.", $back_url);
+        //                 exit();
 
-                    }
-                }
+        //             }
+        //         }
 
-            }
+        //     }
 
 
-            if($check_assigned_subject_topic_teacher_id != NULL
-                && $check_assigned_subject_topic_teacher_id != $teacher_id 
-                && $getTeacherScheduleCount > 1){
+        //     if($check_assigned_subject_topic_teacher_id != NULL
+        //         && $check_assigned_subject_topic_teacher_id != $teacher_id 
+        //         && $getTeacherScheduleCount > 1){
                 
-                Alert::error("There`s a scheduled teacher under of selected $subject_code code", "");
-                exit(); 
-            }
+        //         Alert::error("There`s a scheduled teacher under of selected $subject_code code", "");
+        //         exit(); 
+        //     }
  
-            $subject_schedule = new Schedule($this->con, $subject_schedule_id);
-            $subject_schedule_teacher_id = $subject_schedule->GetScheduleTeacherId();
+        //     $subject_schedule = new Schedule($this->con, $subject_schedule_id);
+        //     $subject_schedule_teacher_id = $subject_schedule->GetScheduleTeacherId();
 
-            // echo "subject_schedule_teacher_id: $subject_schedule_teacher_id";
-            // echo "<br>";
+        //     // echo "subject_schedule_teacher_id: $subject_schedule_teacher_id";
+        //     // echo "<br>";
 
-            // var_dump($subject_schedule_teacher_id);
-            // echo "selected_teacher_id: $teacher_id";
-            // echo "<br>";
-            // return;
+        //     // var_dump($subject_schedule_teacher_id);
+        //     // echo "selected_teacher_id: $teacher_id";
+        //     // echo "<br>";
+        //     // return;
             
-            $doesTeacherTheSame = $subject_schedule_teacher_id == $teacher_id;
-            $doesTheSameSubjectCode = $existing_subject_code == $subject_code;
+        //     $doesTeacherTheSame = $subject_schedule_teacher_id == $teacher_id;
+        //     $doesTheSameSubjectCode = $existing_subject_code == $subject_code;
 
-            # * SHOULD ADAPT BY ROOM ID
+        //     # * SHOULD ADAPT BY ROOM ID
 
-            # Editing with the same teacher, but not modifying the subject_code.
+        //     # Editing with the same teacher, but not modifying the subject_code.
 
-            if($check_teacher_id_conflict == NULL 
-                && $subject_schedule_teacher_id != NULL
-                && $doesTheSameSubjectCode == true
-                && $doesTeacherTheSame == true){
+        //     if($check_teacher_id_conflict == NULL 
+        //         && $subject_schedule_teacher_id != NULL
+        //         && $doesTheSameSubjectCode == true
+        //         && $doesTeacherTheSame == true){
 
-                // echo "same teacher";
-                // return;
+        //         // echo "same teacher";
+        //         // return;
 
-                $sql = $this->con->prepare("UPDATE subject_schedule
-                    SET schedule_day = :schedule_day,
-                        time_from = :time_from,
-                        time_to = :time_to,
-                        school_year_id = :school_year_id,
-                        course_id = :course_id,
-                        teacher_id = :teacher_id,
-                        subject_code = :subject_code,
-                        subject_program_id = :subject_program_id,
-                        day_count = :day_count,
-                        room_id = :room_id,
-                        schedule_time = :schedule_time
+        //         $sql = $this->con->prepare("UPDATE subject_schedule
+        //             SET schedule_day = :schedule_day,
+        //                 time_from = :time_from,
+        //                 time_to = :time_to,
+        //                 school_year_id = :school_year_id,
+        //                 course_id = :course_id,
+        //                 teacher_id = :teacher_id,
+        //                 subject_code = :subject_code,
+        //                 subject_program_id = :subject_program_id,
+        //                 day_count = :day_count,
+        //                 room_id = :room_id,
+        //                 schedule_time = :schedule_time
 
-                    WHERE subject_schedule_id = :subject_schedule_id
-                ");
-                if(true){
+        //             WHERE subject_schedule_id = :subject_schedule_id
+        //         ");
+        //         if(true){
 
-                    $schedule_time = $raw_time_from . ' - ' . $raw_time_to;
+        //             $schedule_time = $raw_time_from . ' - ' . $raw_time_to;
                     
-                    // $schedule_time = $time_from . ' - ' . $time_to;
+        //             // $schedule_time = $time_from . ' - ' . $time_to;
 
-                    // Bind parameters
-                    $sql->bindParam(":subject_schedule_id", $subject_schedule_id);
-                    $sql->bindParam(":schedule_day", $schedule_day);
-                    $sql->bindParam(":schedule_time", $schedule_time);
-                    $sql->bindParam(":time_from", $time_from);
-                    $sql->bindParam(":time_to", $time_to);
-                    $sql->bindParam(":school_year_id", $school_year_id);
-                    $sql->bindParam(":course_id", $course_id);
-                    $sql->bindParam(":teacher_id", $teacher_id);
-                    $sql->bindParam(":subject_code", $subject_code);
-                    $sql->bindParam(":subject_program_id", $subject_program_id);
-                    $sql->bindParam(":day_count", $day_count);
-                    $sql->bindParam(":room_id", $room_id);
+        //             // Bind parameters
+        //             $sql->bindParam(":subject_schedule_id", $subject_schedule_id);
+        //             $sql->bindParam(":schedule_day", $schedule_day);
+        //             $sql->bindParam(":schedule_time", $schedule_time);
+        //             $sql->bindParam(":time_from", $time_from);
+        //             $sql->bindParam(":time_to", $time_to);
+        //             $sql->bindParam(":school_year_id", $school_year_id);
+        //             $sql->bindParam(":course_id", $course_id);
+        //             $sql->bindParam(":teacher_id", $teacher_id);
+        //             $sql->bindParam(":subject_code", $subject_code);
+        //             $sql->bindParam(":subject_program_id", $subject_program_id);
+        //             $sql->bindParam(":day_count", $day_count);
+        //             $sql->bindParam(":room_id", $room_id);
 
-                    $sql->execute();
+        //             $sql->execute();
 
-                    if ($sql->rowCount() > 0) {
-                        Alert::success("Schedule with the same teacher has been updated successfully.", $back_url);
-                        exit();
-                    } 
-                }
+        //             if ($sql->rowCount() > 0) {
+        //                 Alert::success("Schedule with the same teacher has been updated successfully.", $back_url);
+        //                 exit();
+        //             } 
+        //         }
 
-            }
+        //     }
 
-            # * SHOULD ADAPT BY ROOM ID
+        //     # * SHOULD ADAPT BY ROOM ID
             
-            # FROM TBA to chosen teacher_id
-            # 1. Can be one or more TBA subject codes to selected teacher.
-            # 2. and update subject topic to assign teacher
+        //     # FROM TBA to chosen teacher_id
+        //     # 1. Can be one or more TBA subject codes to selected teacher.
+        //     # 2. and update subject topic to assign teacher
 
-            if($check_teacher_id_conflict == NULL 
-                && $subject_schedule_teacher_id == NULL){
+        //     if($check_teacher_id_conflict == NULL 
+        //         && $subject_schedule_teacher_id == NULL){
 
-                // echo "hey";
-                // return;
-                # Get all data of subject codes and placed the teacher to that collected subject codes
+        //         // echo "hey";
+        //         // return;
+        //         # Get all data of subject codes and placed the teacher to that collected subject codes
 
-                $doesPlacedAll = $this->GetAllScheduleWithinSubjectCodesAndPlaceTeacher(
-                    $course_id, $subject_code,
-                    $current_school_year_id, $teacher_id);
+        //         $doesPlacedAll = $this->GetAllScheduleWithinSubjectCodesAndPlaceTeacher(
+        //             $course_id, $subject_code,
+        //             $current_school_year_id, $teacher_id);
 
-                // var_dump($doesPlacedAll);
-                // return;
+        //         // var_dump($doesPlacedAll);
+        //         // return;
 
-                // echo "hey";
+        //         // echo "hey";
 
-                # From Non subject code teacher assigned to 
-                # Insert the default topic for subject assigned teacher
+        //         # From Non subject code teacher assigned to 
+        //         # Insert the default topic for subject assigned teacher
 
-                # Subject Code OCC -> Prelim, Midterm etc Topics for LMS
+        //         # Subject Code OCC -> Prelim, Midterm etc Topics for LMS
 
-                $doesChoosingTeacherFinish = false;
+        //         $doesChoosingTeacherFinish = false;
 
-                $subjectPeriodCodeTopicTemplate = new SubjectPeriodCodeTopicTemplate($this->con);
+        //         $subjectPeriodCodeTopicTemplate = new SubjectPeriodCodeTopicTemplate($this->con);
                 
-                $subjectPeriodCodeTopic = new SubjectPeriodCodeTopic($this->con);
+        //         $subjectPeriodCodeTopic = new SubjectPeriodCodeTopic($this->con);
 
-                $getAllDefaultTopicTemplate = $subjectPeriodCodeTopicTemplate
-                    ->GetTopicTemplateDefaultTopics($rawCode);
+        //         $getAllDefaultTopicTemplate = $subjectPeriodCodeTopicTemplate
+        //             ->GetTopicTemplateDefaultTopics($rawCode);
 
-                // var_dump($getAllDefaultTopicTemplate);
-                // return;
+        //         // var_dump($getAllDefaultTopicTemplate);
+        //         // return;
 
-                $subject_schedule = new Schedule($this->con, $subject_schedule_id);
-                $subjectProgramId = $subject_schedule->GetSubjectProgramId();
+        //         $subject_schedule = new Schedule($this->con, $subject_schedule_id);
+        //         $subjectProgramId = $subject_schedule->GetSubjectProgramId();
 
-                if(count($getAllDefaultTopicTemplate) > 0 && $doesPlacedAll){
+        //         if(count($getAllDefaultTopicTemplate) > 0 && $doesPlacedAll){
 
-                    foreach ($getAllDefaultTopicTemplate as $key => $row) {
+        //             foreach ($getAllDefaultTopicTemplate as $key => $row) {
 
-                        $topic = $row['topic'];
-                        $description = $row['description'];
-                        $subject_period_name = $row['subject_period_name'];
-                        $program_code = $row['program_code'];
+        //                 $topic = $row['topic'];
+        //                 $description = $row['description'];
+        //                 $subject_period_name = $row['subject_period_name'];
+        //                 $program_code = $row['program_code'];
 
-                        # Populate default topic to the chosen teacher
-                        $wasSuccess = $subjectPeriodCodeTopic->AddTopic(
-                            $course_id, $teacher_id, $current_school_year_id,
-                            $topic, $description,
-                            $subject_period_name, $subject_code,
-                            $program_code, $subjectProgramId);
+        //                 # Populate default topic to the chosen teacher
+        //                 $wasSuccess = $subjectPeriodCodeTopic->AddTopic(
+        //                     $course_id, $teacher_id, $current_school_year_id,
+        //                     $topic, $description,
+        //                     $subject_period_name, $subject_code,
+        //                     $program_code, $subjectProgramId);
                         
-                        if($wasSuccess){
+        //                 if($wasSuccess){
 
-                            $doesChoosingTeacherFinish = true;
-                        }
-                    }
+        //                     $doesChoosingTeacherFinish = true;
+        //                 }
+        //             }
 
-                }
+        //         }
 
-                // var_dump($doesChoosingTeacherFinish);
-                // return;
+        //         // var_dump($doesChoosingTeacherFinish);
+        //         // return;
 
-                if($doesChoosingTeacherFinish){
+        //         if($doesChoosingTeacherFinish){
 
-                    Alert::success("Schedule successfully updating selected $subject_code are all now assigned to selected teacher. LMS subject topic has been added.", "$back_url");
-                    exit();
+        //             Alert::success("Schedule successfully updating selected $subject_code are all now assigned to selected teacher. LMS subject topic has been added.", "$back_url");
+        //             exit();
 
-                    // $sql = $this->con->prepare("UPDATE subject_schedule
-                    //     SET schedule_day = :schedule_day,
-                    //         time_from = :time_from,
-                    //         time_to = :time_to,
-                    //         school_year_id = :school_year_id,
-                    //         course_id = :course_id,
-                    //         teacher_id = :teacher_id,
-                    //         subject_code = :subject_code,
-                    //         subject_program_id = :subject_program_id,
-                    //         day_count = :day_count,
-                    //         room_id = :room_id,
-                    //         schedule_time = :schedule_time
-                    //     WHERE subject_schedule_id = :subject_schedule_id
-                    // ");
+        //             // $sql = $this->con->prepare("UPDATE subject_schedule
+        //             //     SET schedule_day = :schedule_day,
+        //             //         time_from = :time_from,
+        //             //         time_to = :time_to,
+        //             //         school_year_id = :school_year_id,
+        //             //         course_id = :course_id,
+        //             //         teacher_id = :teacher_id,
+        //             //         subject_code = :subject_code,
+        //             //         subject_program_id = :subject_program_id,
+        //             //         day_count = :day_count,
+        //             //         room_id = :room_id,
+        //             //         schedule_time = :schedule_time
+        //             //     WHERE subject_schedule_id = :subject_schedule_id
+        //             // ");
 
-                    // // Concatenate time_from and time_to for schedule_time
+        //             // // Concatenate time_from and time_to for schedule_time
 
-                    // $schedule_time = $raw_time_from . ' - ' . $raw_time_to;
+        //             // $schedule_time = $raw_time_from . ' - ' . $raw_time_to;
 
-                    // // Bind parameters
-                    // $sql->bindParam(":subject_schedule_id", $subject_schedule_id);
-                    // $sql->bindParam(":schedule_day", $schedule_day);
-                    // $sql->bindParam(":schedule_time", $schedule_time);
-                    // $sql->bindParam(":time_from", $time_from);
-                    // $sql->bindParam(":time_to", $time_to);
-                    // $sql->bindParam(":school_year_id", $school_year_id);
-                    // $sql->bindParam(":course_id", $course_id);
-                    // $sql->bindParam(":teacher_id", $teacher_id);
-                    // $sql->bindParam(":subject_code", $subject_code);
-                    // $sql->bindParam(":subject_program_id", $subject_program_id);
-                    // $sql->bindParam(":day_count", $day_count);
-                    // $sql->bindParam(":room_id", $room_id);
+        //             // // Bind parameters
+        //             // $sql->bindParam(":subject_schedule_id", $subject_schedule_id);
+        //             // $sql->bindParam(":schedule_day", $schedule_day);
+        //             // $sql->bindParam(":schedule_time", $schedule_time);
+        //             // $sql->bindParam(":time_from", $time_from);
+        //             // $sql->bindParam(":time_to", $time_to);
+        //             // $sql->bindParam(":school_year_id", $school_year_id);
+        //             // $sql->bindParam(":course_id", $course_id);
+        //             // $sql->bindParam(":teacher_id", $teacher_id);
+        //             // $sql->bindParam(":subject_code", $subject_code);
+        //             // $sql->bindParam(":subject_program_id", $subject_program_id);
+        //             // $sql->bindParam(":day_count", $day_count);
+        //             // $sql->bindParam(":room_id", $room_id);
 
-                    // $sql->execute();
+        //             // $sql->execute();
 
-                    // if ($sql->rowCount() > 0) {
-                    //     Alert::success("Schedule successfully updating from TBA to selected teacher. LMS subject topic has been added.", "$back_url");
-                    //     exit();
-                    // } 
+        //             // if ($sql->rowCount() > 0) {
+        //             //     Alert::success("Schedule successfully updating from TBA to selected teacher. LMS subject topic has been added.", "$back_url");
+        //             //     exit();
+        //             // } 
 
-                }
+        //         }
 
-            }
+        //     }
             
 
-        }
+        // }
 
-        if($teacher_id === NULL){
+        // if($teacher_id === NULL){
 
-            if($existing_teacher_id != NULL){
+        //     if($existing_teacher_id != NULL){
 
-                // var_dump($existing_teacher_id);
+        //         // var_dump($existing_teacher_id);
 
-                // return;
+        //         // return;
 
-                # All of teachers handle to the selected subject would be TBA.
-                # we dont have this.
+        //         # All of teachers handle to the selected subject would be TBA.
+        //         # we dont have this.
 
-                # Taekwondo 2 -> Kick Butowskie
-                # Taekwondo 2 -> TBA
+        //         # Taekwondo 2 -> Kick Butowskie
+        //         # Taekwondo 2 -> TBA
 
-                $doesTBAOperationSuccess = $this->GetAllSubjectCodeUnderTeacherIdsIntoTBA(
-                    $existing_teacher_id, $course_id,
-                    $subject_code, $current_school_year_id);
+        //         $doesTBAOperationSuccess = $this->GetAllSubjectCodeUnderTeacherIdsIntoTBA(
+        //             $existing_teacher_id, $course_id,
+        //             $subject_code, $current_school_year_id);
 
                 
-                if($doesTBAOperationSuccess == true){
+        //         if($doesTBAOperationSuccess == true){
                     
-                // if(true){
+        //         // if(true){
 
-                    $subject_schedule = new Schedule($this->con, $subject_schedule_id);
-                    $subject_schedule_teacher_id = $subject_schedule->GetScheduleTeacherId();
-                    $subject_code_db = $subject_schedule->GetSubjectCode();
+        //             $subject_schedule = new Schedule($this->con, $subject_schedule_id);
+        //             $subject_schedule_teacher_id = $subject_schedule->GetScheduleTeacherId();
+        //             $subject_code_db = $subject_schedule->GetSubjectCode();
 
-                    $doesTBAFinishProcess = false;
+        //             $doesTBAFinishProcess = false;
 
-                    $subjectPeriodCodeTopic = new SubjectPeriodCodeTopic($this->con);
+        //             $subjectPeriodCodeTopic = new SubjectPeriodCodeTopic($this->con);
 
-                    # Check if it has given default subject topics using Raw Code
-                    $checkTeacherGivenDefaultTopicsBySubjectCode = $subjectPeriodCodeTopic
-                        ->CheckTeacherHasGivenSubjectCodeDefaultTopics(
-                            $subject_code, $existing_teacher_id,
-                            $current_school_year_id
-                        );
+        //             # Check if it has given default subject topics using Raw Code
+        //             $checkTeacherGivenDefaultTopicsBySubjectCode = $subjectPeriodCodeTopic
+        //                 ->CheckTeacherHasGivenSubjectCodeDefaultTopics(
+        //                     $subject_code, $existing_teacher_id,
+        //                     $current_school_year_id
+        //                 );
                     
-                    // var_dump($checkTeacherGivenDefaultTopicsBySubjectCode);
-                    // return;
+        //             // var_dump($checkTeacherGivenDefaultTopicsBySubjectCode);
+        //             // return;
 
                         
-                    if(count($checkTeacherGivenDefaultTopicsBySubjectCode) > 0){
-                        // echo "check success";
+        //             if(count($checkTeacherGivenDefaultTopicsBySubjectCode) > 0){
+        //                 // echo "check success";
 
-                        foreach ($checkTeacherGivenDefaultTopicsBySubjectCode as $key => $value) {
+        //                 foreach ($checkTeacherGivenDefaultTopicsBySubjectCode as $key => $value) {
 
-                            $subject_period_code_topic_id = $value['subject_period_code_topic_id'];
+        //                     $subject_period_code_topic_id = $value['subject_period_code_topic_id'];
                             
-                            $defaultTopicRemoval = $subjectPeriodCodeTopic
-                                ->RemovalOfDefaultSubjectCodeTopics(
-                                    $subject_period_code_topic_id);
+        //                     $defaultTopicRemoval = $subjectPeriodCodeTopic
+        //                         ->RemovalOfDefaultSubjectCodeTopics(
+        //                             $subject_period_code_topic_id);
                         
-                            if($defaultTopicRemoval){
-                                $doesTBAFinishProcess = true;
-                            }
-                            # code...
-                        }
+        //                     if($defaultTopicRemoval){
+        //                         $doesTBAFinishProcess = true;
+        //                     }
+        //                     # code...
+        //                 }
 
-                        // var_dump($doesTBAFinishProcess);
-                        // return;
+        //                 // var_dump($doesTBAFinishProcess);
+        //                 // return;
 
-                        if($doesTBAFinishProcess){
+        //                 if($doesTBAFinishProcess){
 
-                            Alert::success("$subject_code subjects of selected teacher were all now TBA. LMS subject topics has been removed.", "$back_url");
-                            exit();
-                        }
-                    }
+        //                     Alert::success("$subject_code subjects of selected teacher were all now TBA. LMS subject topics has been removed.", "$back_url");
+        //                     exit();
+        //                 }
+        //             }
 
-                }
-            }
+        //         }
+        //     }
 
-        }
+        // }
 
         
 

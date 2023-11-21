@@ -97,20 +97,20 @@
         && isset($_POST['start_enrollment_date'])
         && isset($_POST['end_enrollment_date'])
 
-        && isset($_POST['prelim_exam_startdate'])
-        && isset($_POST['prelim_exam_enddate'])
+        // && isset($_POST['prelim_exam_startdate'])
+        // && isset($_POST['prelim_exam_enddate'])
 
-        && isset($_POST['midterm_exam_startdate'])
-        && isset($_POST['midterm_exam_enddate'])
+        // && isset($_POST['midterm_exam_startdate'])
+        // && isset($_POST['midterm_exam_enddate'])
 
-        && isset($_POST['prefinal_exam_startdate'])
-        && isset($_POST['prefinal_exam_enddate'])
+        // && isset($_POST['prefinal_exam_startdate'])
+        // && isset($_POST['prefinal_exam_enddate'])
 
-        && isset($_POST['final_exam_startdate'])
-        && isset($_POST['final_exam_enddate'])
+        // && isset($_POST['final_exam_startdate'])
+        // && isset($_POST['final_exam_enddate'])
 
-        && isset($_POST['break_startdate'])
-        && isset($_POST['break_enddate'])
+        // && isset($_POST['break_startdate'])
+        // && isset($_POST['break_enddate'])
         
         ){
 
@@ -123,25 +123,25 @@
 
 
         # PRELIM
-        $prelim_exam_startdate = $_POST['prelim_exam_startdate'];
-        $prelim_exam_enddate = $_POST['prelim_exam_enddate'];
+        // $prelim_exam_startdate = $_POST['prelim_exam_startdate'];
+        // $prelim_exam_enddate = $_POST['prelim_exam_enddate'];
 
-        # MIDTERM
-        $midterm_exam_startdate = $_POST['midterm_exam_startdate'];
-        $midterm_exam_enddate = $_POST['midterm_exam_enddate'];
+        // # MIDTERM
+        // $midterm_exam_startdate = $_POST['midterm_exam_startdate'];
+        // $midterm_exam_enddate = $_POST['midterm_exam_enddate'];
 
-        # PREFINAL
-        $prefinal_exam_startdate = $_POST['prefinal_exam_startdate'];
-        $prefinal_exam_enddate = $_POST['prefinal_exam_enddate'];
+        // # PREFINAL
+        // $prefinal_exam_startdate = $_POST['prefinal_exam_startdate'];
+        // $prefinal_exam_enddate = $_POST['prefinal_exam_enddate'];
 
 
-        # FINAL
-        $final_exam_startdate = $_POST['final_exam_startdate'];
-        $final_exam_enddate = $_POST['final_exam_enddate'];
+        // # FINAL
+        // $final_exam_startdate = $_POST['final_exam_startdate'];
+        // $final_exam_enddate = $_POST['final_exam_enddate'];
 
-        # FINAL
-        $break_startdate = $_POST['break_startdate'];
-        $break_enddate = $_POST['break_enddate'];
+        // # FINAL
+        // $break_startdate = $_POST['break_startdate'];
+        // $break_enddate = $_POST['break_enddate'];
 
         // echo "term: " . $term . "<br>";
         // echo "period: " . $period . "<br>";
@@ -169,17 +169,18 @@
                 period = :period,
                 statuses = :statuses,
                 start_enrollment_date = :start_enrollment_date,
-                end_enrollment_date = :end_enrollment_date,
-                prelim_exam_startdate = :prelim_exam_startdate,
-                prelim_exam_enddate = :prelim_exam_enddate,
-                midterm_exam_startdate = :midterm_exam_startdate,
-                midterm_exam_enddate = :midterm_exam_enddate,
-                prefinal_exam_startdate = :prefinal_exam_startdate,
-                prefinal_exam_enddate = :prefinal_exam_enddate,
-                final_exam_startdate = :final_exam_startdate,
-                final_exam_enddate = :final_exam_enddate,
-                break_startdate = :break_startdate,
-                break_enddate = :break_enddate
+                end_enrollment_date = :end_enrollment_date
+
+                -- prelim_exam_startdate = :prelim_exam_startdate,
+                -- prelim_exam_enddate = :prelim_exam_enddate,
+                -- midterm_exam_startdate = :midterm_exam_startdate,
+                -- midterm_exam_enddate = :midterm_exam_enddate,
+                -- prefinal_exam_startdate = :prefinal_exam_startdate,
+                -- prefinal_exam_enddate = :prefinal_exam_enddate,
+                -- final_exam_startdate = :final_exam_startdate,
+                -- final_exam_enddate = :final_exam_enddate,
+                -- break_startdate = :break_startdate,
+                -- break_enddate = :break_enddate
 
             WHERE school_year_id = :school_year_id");
 
@@ -190,20 +191,20 @@
         $update->bindParam(":start_enrollment_date", $start_enrollment_date);
         $update->bindParam(":end_enrollment_date", $end_enrollment_date);
 
-        $update->bindParam(":prelim_exam_startdate", $prelim_exam_startdate);
-        $update->bindParam(":prelim_exam_enddate", $prelim_exam_enddate);
+        // $update->bindParam(":prelim_exam_startdate", $prelim_exam_startdate);
+        // $update->bindParam(":prelim_exam_enddate", $prelim_exam_enddate);
 
-        $update->bindParam(":midterm_exam_startdate", $midterm_exam_startdate);
-        $update->bindParam(":midterm_exam_enddate", $midterm_exam_enddate);
+        // $update->bindParam(":midterm_exam_startdate", $midterm_exam_startdate);
+        // $update->bindParam(":midterm_exam_enddate", $midterm_exam_enddate);
 
-        $update->bindParam(":prefinal_exam_startdate", $prefinal_exam_startdate);
-        $update->bindParam(":prefinal_exam_enddate", $prefinal_exam_enddate);
+        // $update->bindParam(":prefinal_exam_startdate", $prefinal_exam_startdate);
+        // $update->bindParam(":prefinal_exam_enddate", $prefinal_exam_enddate);
 
-        $update->bindParam(":final_exam_startdate", $final_exam_startdate);
-        $update->bindParam(":final_exam_enddate", $final_exam_enddate);
+        // $update->bindParam(":final_exam_startdate", $final_exam_startdate);
+        // $update->bindParam(":final_exam_enddate", $final_exam_enddate);
 
-        $update->bindParam(":break_startdate", $break_startdate);
-        $update->bindParam(":break_enddate", $break_enddate);
+        // $update->bindParam(":break_startdate", $break_startdate);
+        // $update->bindParam(":break_enddate", $break_enddate);
 
         $update->bindParam(":school_year_id", $school_year_id);
 
@@ -294,130 +295,6 @@
                                 required type='datetime-local' placeholder='' 
                                 name='end_enrollment_date'>
 
-                        </div>
-
-                        <!-- Pre-Mid Exam  -->
-                        <header>
-                            <div class="title mb-3">
-                                <h4 class="">Pre-Mid Exam</h4>
-                            </div>
-                        </header>
-                        <div class='form-group mb-2'>
-                            <label for=''>* Start Date</label>
-                          
-                            <!-- <input class='form-control' value="<?php echo date('Y-m-d', strtotime($prelim_exam_startdate)); ?>" required type='date' placeholder='' name='prelim_exam_startdate'> -->
-                            <input class='form-control' value="<?php echo $prelim_exam_startdate; ?>"
-                                required type='datetime-local' placeholder='' 
-                                name='prelim_exam_startdate'>
-                        </div>
-
-                        <div class='form-group mb-2'>
-                            <label for=''>* End Date</label>
-
-                           <!-- <input class='form-control' value="<?php echo date('Y-m-d', strtotime($prelim_exam_enddate)); ?>" required type='date' placeholder='' name='prelim_exam_enddate'> -->
-                            <input class='form-control' value="<?php echo $prelim_exam_enddate; ?>"
-                                    required type='datetime-local' placeholder='' 
-                                    name='prelim_exam_enddate'>
-                        </div>
-
-
-                        <!-- Midterm Exam  -->
-                        <header>
-                            <div class="title mb-3">
-                                <h4 class="">Midterm Exam</h4>
-                            </div>
-                        </header>
-                        <div class='form-group mb-2'>
-                            <label for=''>* Start Date</label>
-                         
-                            <!-- <input class='form-control' value="<?php echo date('Y-m-d', strtotime($midterm_exam_startdate)); ?>" required type='date' placeholder='' name='midterm_exam_startdate'> -->
-                            <input class='form-control' value="<?php echo $midterm_exam_startdate; ?>"
-                                    required type='datetime-local' placeholder='' 
-                                    name='midterm_exam_startdate'>
-                        </div>
-
-                        <div class='form-group mb-2'>
-                            <label for=''>* End Date</label>
-                      
-                            <!-- <input class='form-control' value="<?php echo date('Y-m-d', strtotime($midterm_exam_enddate)); ?>" required type='date' placeholder='' name='midterm_exam_enddate'> -->
-                            <input class='form-control' value="<?php echo $midterm_exam_enddate; ?>"
-                                    required type='datetime-local' placeholder='' 
-                                    name='midterm_exam_enddate'>
-                        </div>
-
-
-                        <!-- Pre Final Exam  -->
-                        <header>
-                            <div class="title mb-3">
-                                <h4 class="">Pre-Final Exam</h4>
-                            </div>
-                        </header>
-                        <div class='form-group mb-2'>
-                            <label for=''>* Start Date</label>
-                         
-                            <!-- <input class='form-control' value="<?php echo date('Y-m-d', strtotime($prefinal_exam_startdate)); ?>" required type='date' placeholder='' name='prefinal_exam_startdate'> -->
-                            <input class='form-control' value="<?php echo $prefinal_exam_startdate; ?>"
-                                    required type='datetime-local' placeholder='' 
-                                    name='prefinal_exam_startdate'>
-                        </div>
-
-                        <div class='form-group mb-2'>
-                            <label for=''>* End Date</label>
-                          
-
-                            <!-- <input class='form-control' value="<?php echo date('Y-m-d', strtotime($prefinal_exam_enddate)); ?>" required type='date' placeholder='' name='prefinal_exam_enddate'> -->
-                            <input class='form-control' value="<?php echo $prefinal_exam_enddate; ?>"
-                                    required type='datetime-local' placeholder='' 
-                                    name='prefinal_exam_enddate'>
-                        </div>
-
-
-                        <!-- Final Exam  -->
-                        <header>
-                            <div class="title mb-3">
-                                <h4 class="">Final Exam</h4>
-                            </div>
-                        </header>
-                        <div class='form-group mb-2'>
-                            <label for=''>* Start Date</label>
-                          
-                            <!-- <input class='form-control' value="<?php echo date('Y-m-d', strtotime($final_exam_startdate)); ?>" required type='date' placeholder='' name='final_exam_startdate'> -->
-                            <input class='form-control' value="<?php echo $final_exam_startdate; ?>"
-                                    required type='datetime-local' placeholder='' 
-                                    name='final_exam_startdate'>
-                        </div>
-
-                        <div class='form-group mb-2'>
-                            <label for=''>* End Date</label>
-                         
-                            <!-- <input class='form-control' value="<?php echo date('Y-m-d', strtotime($final_exam_enddate)); ?>" required type='date' placeholder='' name='final_exam_enddate'> -->
-                            <input class='form-control' value="<?php echo $final_exam_enddate; ?>"
-                                    required type='datetime-local' placeholder='' 
-                                    name='final_exam_enddate'>
-                        </div>
-
-                        <!-- Break Period  -->
-                        <header>
-                            <div class="title mb-3">
-                                <h4 class="">Break Period</h4>
-                            </div>
-                        </header>
-                        <div class='form-group mb-2'>
-                            <label for=''>* Start Date</label>
-                            
-                            <!-- <input class='form-control' value="<?php echo date('Y-m-d', strtotime($break_startdate)); ?>" required type='date' placeholder='' name='break_startdate'> -->
-                            <input class='form-control' value="<?php echo $break_startdate; ?>"
-                                    required type='datetime-local' placeholder='' 
-                                    name='break_startdate'>
-                        </div>
-
-                        <div class='form-group mb-2'>
-                            <label for=''>* End Date</label>
-                            
-                            <!-- <input class='form-control' value="<?php echo date('Y-m-d', strtotime($break_enddate)); ?>" required type='date' placeholder='' name='break_enddate'> -->
-                            <input class='form-control' value="<?php echo $break_enddate; ?>"
-                                    required type='datetime-local' placeholder='' 
-                                    name='break_enddate'>
                         </div>
 
                     </main>

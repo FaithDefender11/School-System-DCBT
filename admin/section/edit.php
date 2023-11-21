@@ -39,6 +39,7 @@
 
         $department_name = $department->GetDepartmentName();
 
+        // var_dump($department_name);
 
         $section = new Section($con, $course_id);
 
@@ -101,8 +102,8 @@
             isset($_POST['program_id']) &&
             isset($_POST['min_student']) &&
             isset($_POST['capacity']) &&
-            isset($_POST['is_full']) &&
-            isset($_POST['active_status']) &&
+            // isset($_POST['is_full']) &&
+            // isset($_POST['active_status']) &&
             
             // isset($_POST['adviser_teacher_id']) &&
             // isset($_POST['room_id']) &&
@@ -117,10 +118,11 @@
             $program_id = $_POST['program_id'];
             $capacity = $_POST['capacity'];
             $min_student = $_POST['min_student'];
-            $is_full = $_POST['is_full'];
-            $active_status = $_POST['active_status'];
 
-            // echo $is_full;
+            // $is_full = $_POST['is_full'] ?? "no";
+            // $active_status = $_POST['active_status'] ?? "yes";
+
+            // var_dump($is_full);
             // return;
 
             $adviser_teacher_id = isset($_POST['adviser_teacher_id']) 
@@ -215,9 +217,9 @@
                 adviser_teacher_id = :adviser_teacher_id,
                 -- second_period_room_id = :second_period_room_id,
                 course_level = :course_level,
-                min_student = :min_student,
-                is_full = :is_full,
-                active = :active
+                min_student = :min_student
+                -- is_full = :is_full,
+                -- active = :active
                 
                 WHERE course_id = :course_id
             ");
@@ -228,8 +230,8 @@
             $update->bindParam(":course_level", $course_level, PDO::PARAM_INT);
             $update->bindParam(":min_student", $min_student, PDO::PARAM_INT);
             $update->bindParam(":course_id", $course_id, PDO::PARAM_INT);
-            $update->bindParam(":is_full", $is_full, PDO::PARAM_STR);
-            $update->bindParam(":active", $active_status, PDO::PARAM_STR);
+            // $update->bindParam(":is_full", $is_full, PDO::PARAM_STR);
+            // $update->bindValue(":active", "yes");
             
             $update->execute();
 
@@ -296,39 +298,45 @@
                                     <label class='mb-2'>Max Capacity</label>
                                     <input required class='form-control' value="<?php echo $db_capacity; ?>" type='number' placeholder='Maximum Capacity' name='capacity'>
                                 </div>
- 
-                                <div class='form-group mb-2'>
-                                    <label class='mb-2'>Advisery Name</label>
-
-                                    <select class="form-control" name="adviser_teacher_id" id="adviser_teacher_id">
-                                        <?php
-                                            $query = $con->prepare("SELECT * FROM teacher");
-                                            $query->execute();
-
-                                            $output = "";
-                                            
-                                            $output .= "<option value='' disabled selected>Choose Teacher</option>";
-                                            // $output .= "<option value='' disabled selected>Choose Teacher</option>";
-                                            $output .= "<option value='0'>Clear</option>";
-
-
-                                            if ($query->rowCount() > 0) {
-                                                while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
-                                                    $selected = "";  
-
-                                                    // Add condition to check if the option should be selected
-                                                    if ($row['teacher_id'] == $db_advisery_id) {
-                                                        $selected = "selected";
-                                                    }
-                                                    $output .= "<option value='" . $row['teacher_id'] . "' $selected>" . $row['firstname'] . " " . $row['lastname'] . "</option>";
-                                                }
-                                            }
-                                            echo $output;
+                                <!-- BAE -->
+                                <?php 
+                                    if($department_name != "Tertiary"){
                                         ?>
-                                    </select>
-                                </div>
+                                            <div class='form-group mb-2'>
+                                                <label class='mb-2'>Advisery Name</label>
 
-                                <div class="form-group">
+                                                <select class="form-control" name="adviser_teacher_id" id="adviser_teacher_id">
+                                                    <?php
+                                                        $query = $con->prepare("SELECT * FROM teacher");
+                                                        $query->execute();
+
+                                                        $output = "";
+                                                        
+                                                        $output .= "<option value='' disabled selected>Choose Teacher</option>";
+                                                        // $output .= "<option value='' disabled selected>Choose Teacher</option>";
+                                                        $output .= "<option value='0'>Clear</option>";
+
+
+                                                        if ($query->rowCount() > 0) {
+                                                            while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+                                                                $selected = "";  
+
+                                                                // Add condition to check if the option should be selected
+                                                                if ($row['teacher_id'] == $db_advisery_id) {
+                                                                    $selected = "selected";
+                                                                }
+                                                                $output .= "<option value='" . $row['teacher_id'] . "' $selected>" . $row['firstname'] . " " . $row['lastname'] . "</option>";
+                                                            }
+                                                        }
+                                                        echo $output;
+                                                    ?>
+                                                </select>
+                                            </div>
+                                        <?php
+                                    }
+                                ?>
+
+                                <!-- <div class="form-group">
                                     <label for="active_status">Active Status</label>
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" <?php echo $db_isActive === "yes" ? "checked" : "" ?> name="active_status" id="active_yes" value="yes">
@@ -358,7 +366,7 @@
                                             Not Full
                                         </label>
                                     </div>
-                                </div>
+                                </div> -->
 
 
 

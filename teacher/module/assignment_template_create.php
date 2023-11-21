@@ -83,7 +83,7 @@
             && isset($_POST['add_assignment_topic_template_'. $subject_code_assignment_template_id])
             && isset($_POST['assignment_name'])
             && isset($_POST['max_score'])
-            && isset($_POST['allow_late_submission'])
+            // && isset($_POST['allow_late_submission'])
             && isset($_POST['type'])
             && isset($_POST['max_attempt'])
             && isset($_POST['due_date'])){
@@ -92,7 +92,7 @@
                 $assignment_name = $_POST['assignment_name'];
                 $max_score = $_POST['max_score'];
 
-                $allow_late_submission = $_POST['allow_late_submission'];
+                // $allow_late_submission = $_POST['allow_late_submission'];
                 $due_date = $_POST['due_date'];
 
                 $max_attempt = $_POST['max_attempt'];
@@ -139,7 +139,7 @@
                     $subject_period_code_topic_id,
                     $subject_code_assignment_template_id,
                     $assignment_name, $description, $max_score, 
-                    $allow_late_submission, $due_date, $type, $max_attempt);
+                    "no", $due_date, $type, $max_attempt);
  
                 if($successCreate){
 
@@ -192,40 +192,6 @@
                                     class="form-control">   
                             </div>
 
-                            <?php if (count($getTemplateUploadFiles) > 0 && $assignment_type == "upload"): ?>
-                                <div class='form-group mb-2'>
-                                    <label for="assignment_images" class='mb-2'>Files</label>
-                                    <br>
-                                    <?php foreach ($getTemplateUploadFiles as $key => $photo): ?>
-                                        <?php 
-                                            $uploadFile = $photo['image'];
-                                            $extension = pathinfo($uploadFile, PATHINFO_EXTENSION);
-
-                                            $parts = explode('_', $uploadFile);
-
-                                            $original_file_name = end($parts);
-
-                                            if (in_array(strtolower($extension), ['jpg', 'jpeg', 'png'])) {
-                                                ?>
-                                                    <a title="View File" href='<?php echo "../../".  $photo['image'] ?>' target='__blank' rel='noopener noreferrer'>
-                                                        <img style="margin-left:8px; width: 120px;" 
-                                                            src='<?php echo "../../".$photo['image']; ?>' alt='Given Photo' class='preview-image'>
-                                                    </a>
-                                                    <br>
-                                                <?php
-                                            } elseif (in_array(strtolower($extension), ['pdf', 'docx', 'doc'])) {
-                                                ?>
-                                                    <a title="View File" href='<?php echo "../../".  $photo['image'] ?>' target='__blank' rel='noopener noreferrer'>
-                                                        <?php echo $original_file_name; ?>
-                                                    </a>
-                                                    <br>
-                                                <?php
-                                            }
-                                        ?>
-                                    <?php endforeach; ?>
-                                </div>
-                            <?php endif; ?>
-
                             <div class='form-group mb-2'>
                                 <label for="description" class='mb-2'>Instructions <span style="font-size: 12px"></span></label>
 
@@ -243,17 +209,33 @@
                             <?php if ($subject_period_code_topic_template_id !== NULL &&
                                     count($getAllTemplateUploadFiles) > 0): ?>
                                 <div class='form-group mb-2'>
-                                        <label for="assignment_images" class='mb-2'>Files</label>
+                                        <label for="assignment_images" class='mb-2'>Filees</label>
                                         <br>
                                         <?php foreach ($getAllTemplateUploadFiles as $key => $photo): ?>
                                             <?php 
 
+                                                // $uploadFile = $photo['image'];
+                                                // $extension = pathinfo($uploadFile, PATHINFO_EXTENSION);
+
+                                                // $parts = explode('_', $uploadFile);
+
+                                                // $original_file_name = end($parts);
+
                                                 $uploadFile = $photo['image'];
+
                                                 $extension = pathinfo($uploadFile, PATHINFO_EXTENSION);
 
-                                                $parts = explode('_', $uploadFile);
+                                                // $parts = explode('_', $uploadFile);
+                                                // $original_file_name = end($parts);
 
-                                                $original_file_name = end($parts);
+                                                $pos = strpos($uploadFile, "img_");
+
+                                                $original_file_name = "";
+
+                                                // Check if "img_" was found
+                                                if ($pos !== false) {
+                                                    $original_file_name = substr($uploadFile, $pos + strlen("img_"));
+                                                }
 
                                                 if (in_array(strtolower($extension), ['jpg', 'jpeg', 'png'])) {
                                                     ?>
@@ -284,7 +266,7 @@
                                         type="datetime-local" id="due_date" name="due_date">
                                 </div>
 
-
+<!-- 
                                 <div class='form-group mb-2'>
 
                                     <label>* Allow Late Submission</label><br>
@@ -294,7 +276,7 @@
                                     <input type="radio" checked id="late_submission_no" required name="allow_late_submission" value="no">
                                     
                                     <label for="late_submission_no">No</label><br>
-                                </div>
+                                </div> -->
 
                                 <div class='form-group mb-2'>
                                     <label for="type" class='mb-2'>* Type</label>

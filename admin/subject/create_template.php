@@ -35,14 +35,20 @@
             && isset($_POST['unit'])
             && isset($_POST['description'])
             && isset($_POST['subject_code'])
-            && isset($_POST['pre_requisite_title'])
+            // && isset($_POST['pre_requisite_title'])
             
         ){
 
             $program_type = $type === "shs" ? 0 : ($type === "tertiary" ? 1 : "");
 
-            $pre_requisite_title = $_POST['pre_requisite_title'];
+            $pre_requisite_title = $_POST['pre_requisite_title'] ?? "";
+
+            // var_dump($pre_requisite_title);
+
+            // return;
+
             $subject_title = $_POST['subject_title'];
+            
             $subject_type = $_POST['subject_type'];
             $unit = $_POST['unit'];
             $description = $_POST['description'];
@@ -111,7 +117,7 @@
                     
                             <div class='form-group mb-2'>
                                 <label for=''>Pre-requisite</label>
-                                <input  required class='form-control' type='text' placeholder='Pre-Requisite' name='pre_requisite_title'>
+                                <input  class='form-control' type='text' placeholder='Pre-Requisite' name='pre_requisite_title'>
                             </div>
         
                             <div class='form-group mb-2'>
@@ -247,7 +253,7 @@
                     
                             <div class='form-group mb-2'>
                                 <label for=''>Pre-requisite</label>
-                                <input required class='form-control' type='text' placeholder='Pre-Requisite' name='pre_requisite_title'>
+                                <input class='form-control' type='text' placeholder='Pre-Requisite' name='pre_requisite_title'>
                             </div>
         
                             <div class='form-group mb-2'>

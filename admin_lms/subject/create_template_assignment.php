@@ -112,7 +112,7 @@
 
                 if($successCreate){
 
-                    Alert::success("Success: ", $back_url);
+                    Alert::success("Successfully creation of template task ", $back_url);
                     exit();
                 }
             }

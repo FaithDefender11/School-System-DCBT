@@ -227,6 +227,7 @@
             // $room_id = isset($_POST['room_id']) && $_POST['room_id'] == 0 ? NULL : intval($_POST['room_id']);
             
             // $selectedTeacherId = $_POST['selectedTeacherId'] == 0 ? NULL : intval($_POST['selectedTeacherId']);
+            
             $selectedTeacherId = !isset($_POST['selectedTeacherId']) ? NULL : intval($_POST['selectedTeacherId']);
             $selectedTeacherId = $selectedTeacherId == 0 ? NULL : $selectedTeacherId;
             
@@ -267,6 +268,10 @@
 
 
 
+                // echo "selected: ";
+                // var_dump($selectedTeacherId);
+
+                // return;
 
 
             if($checkIfTimeFromIsGreaterPrompt == true){
@@ -502,7 +507,7 @@
                                             <label for="">Teacher</label>
 
                                             <select style="<?= $disabled; ?>" class="form-control" 
-                                                name="searchInputTeacher" id="">
+                                                name="selectedTeacherId" id="">
 
                                                 <?php
                                                     $query = $con->prepare("SELECT * FROM teacher

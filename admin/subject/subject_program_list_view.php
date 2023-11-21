@@ -5,9 +5,9 @@
     include_once('../../includes/classes/SubjectTemplate.php');
     include_once('../../includes/classes/Section.php');
     include_once('../../includes/classes/SubjectProgram.php');
+    include_once('../../includes/classes/Program.php');
 
     $templateUrl = directoryPath . "template.php";
-
         
     ?>
         <head>
@@ -48,6 +48,7 @@
         </style>
     <?php
 
+
     if(isset($_GET['id'])){
 
         $program_id = $_GET['id'];
@@ -79,7 +80,11 @@
         $strand_name = $section->GetAcronymByProgramId($program_id);
 
         $subject_template = new SubjectTemplate($con);
+
+        $program = new Program($con, $program_id);
         
+        $programName= $program->GetProgramName();
+
         $subject_program = new SubjectProgram($con);
 
         $selectSubjectTitle = $subject_template->SelectTemplateSubjectTitle(
@@ -167,7 +172,7 @@
 
                         <header>
                             <div class="title">
-                                <h3><?php echo $strand_name;?> Subjects</h3>
+                                <h3><?php echo "$programName ($strand_name)";?> Subjects</h3>
                             </div>
 
                             <div class="action">

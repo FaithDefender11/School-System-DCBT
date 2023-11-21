@@ -25,7 +25,6 @@
         && $_GET['given'] == true){
 
         $given = true;
-        
     }
 
     $view_only = false;

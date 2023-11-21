@@ -139,14 +139,21 @@
 
                 if(output == "success"){
 
-                    $('#strand_subject_view_table').load(location.href + " #strand_subject_view_table");
-                    $('#subjectAddModal').modal('hide');
-                    $('#saveStudent')[0].reset();
+                    // $('#table_list').load(location.href + " #table_list");
+                    // $('#subjectAddModal').modal('hide');
+                    // $('#saveStudent')[0].reset();
 
                     Swal.fire({
                         icon: 'success',
                         title: 'Success',
                         text: 'Subject added successfully!',
+                    }).then((result) => {
+                        // This code will be executed after the alert is closed.
+                        if (result.isConfirmed) {
+                            
+                            // You can perform additional actions here if the user clicked "OK".
+                            location.reload();
+                        }
                     });
                 }
 

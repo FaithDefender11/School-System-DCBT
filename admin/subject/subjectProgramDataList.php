@@ -180,9 +180,10 @@ if ($row != null) {
         ";
         
  
+        // ($subject_program_id)
         
         $data[] = array(
-            "description" => "($subject_program_id) $subject_title",
+            "description" => "$subject_title",
             "code" => $subject_code,
             "unit" => $unit,
             "requisite" => $pre_req_subject_title,
