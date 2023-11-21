@@ -129,6 +129,7 @@ class Account {
                     array_push($array, $is_finished); // [6]
                 }else{
                     // echo "not cocrrect pending";
+                    array_push($this->errorArray, Constants::$loginFailed);
                 }
             }else{
                 array_push($this->errorArray, Constants::$loginFailed);
