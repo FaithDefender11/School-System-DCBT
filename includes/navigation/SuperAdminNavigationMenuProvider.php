@@ -32,7 +32,7 @@
 
         $dashboard_url = $base_url .  "dashboard/index.php";
         $account_url = $base_url .  "users/index.php";
-        $account_url = $base_url .  "form/index.php";
+        $form_url = $base_url .  "form/index.php";
 
         $sideBarNavigationItem = Helper::createNavByIconARC("Dashboard", 
             "bi bi-clipboard-data icon ", $dashboard_url, Constants::$navigationClass . Helper::GetActiveClass($page, "dashboard"));
@@ -42,7 +42,7 @@
 
 
         $sideBarNavigationItem .= Helper::createNavByIconARC("Form", 
-            "bi bi-file", $account_url, Constants::$navigationClass . Helper::GetActiveClass($page, "form"));
+            "bi bi-file", $form_url, Constants::$navigationClass . Helper::GetActiveClass($page, "form"));
 
         if(User::isSuperAdminLoggedIn()) {
             $sideBarNavigationItem .= Helper::createNavByIconARC("Log Out", 

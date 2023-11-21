@@ -239,8 +239,8 @@
                                     //     echo "<br>";
                                     // }
 
-                                    var_dump($registName);
-                                    var_dump($cashierName);
+                                    // var_dump($registName);
+                                    // var_dump($cashierName);
 
 
                                     echo "
