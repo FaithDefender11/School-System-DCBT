@@ -574,6 +574,7 @@
     public function CreateRegisterStrand($program_id = null){
 
         $query = $this->con->prepare("SELECT * FROM program
+            WHERE status = 1
             -- WHERE department_id != 1
             ");
 

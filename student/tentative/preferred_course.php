@@ -165,7 +165,10 @@
                                                     // echo $deparment_id;
                                                 
                                                     $query = $con->prepare("SELECT * FROM program
-                                                        WHERE department_id=:department_id");
+                                                        WHERE department_id=:department_id
+                                                        AND status = 1
+                                                        
+                                                    ");
             
                                                     $query->bindParam(":department_id", $department_id);
             

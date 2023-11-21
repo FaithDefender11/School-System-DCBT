@@ -807,12 +807,12 @@
 
                         FROM student
                         WHERE username=:username
-                        AND active !=:inactive
+                        AND active = 1
 
                         LIMIT 1");
                 
                     $query_student->bindParam(":username", $username);
-                    $query_student->bindParam(":inactive", $in_active);
+                    // $query_student->bindParam(":inactive", $in_active);
                     $query_student->execute();
 
                     if($query_student->rowCount() > 0){
