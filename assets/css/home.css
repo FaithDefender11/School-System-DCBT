@@ -164,9 +164,9 @@ nav>ul>li>a:hover {
 }
 
 .content-header>.title>h2 {
-  font-family: 'IM Fell Double Pica', serif;
+  font-family: 'Lato', sans-serif;
   color: #fff;
-  font-weight: 400;
+  font-weight: 700;
 }
 
 .content>main {
