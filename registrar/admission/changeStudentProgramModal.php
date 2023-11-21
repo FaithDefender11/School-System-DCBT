@@ -61,6 +61,9 @@
                                     if($proper_program_id != 0){
 
                                         $query = $con->prepare("SELECT * FROM program as t1
+
+                                        WHERE t1.status = 1
+
                                             -- WHERE t1.department_id=:student_current_department_id
                                             -- AND t1.program_id !=:program_id
                                         ");
@@ -69,7 +72,10 @@
                                         // $query->bindParam(":program_id", $proper_program_id);
                                     }
                                     if($proper_program_id == 0){
-                                        $query = $con->prepare("SELECT * FROM program");
+                                        $query = $con->prepare("SELECT * FROM program
+                                        WHERE status = 1
+
+                                        ");
                                     }
 
                                     $query->execute();
