@@ -807,7 +807,7 @@
 
                         FROM student
                         WHERE username=:username
-                        AND active !=:inactive
+                        AND active = 1
 
                         LIMIT 1");
                 

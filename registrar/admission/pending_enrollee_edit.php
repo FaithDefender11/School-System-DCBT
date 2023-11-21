@@ -372,23 +372,23 @@
             $mother_occupation = $_POST['mother_occupation'] ?? "";
 
 
-            echo "Father Information:<br>";
-            echo "First Name: " . $father_firstname . "<br>";
-            echo "Last Name: " . $father_lastname . "<br>";
-            echo "Middle Name: " . $father_middle . "<br>";
-            echo "Suffix: " . $father_suffix . "<br>";
-            echo "Contact Number: " . $father_contact_number . "<br>";
-            echo "Email: " . $father_email . "<br>";
-            echo "Occupation: " . $father_occupation . "<br>";
+            // echo "Father Information:<br>";
+            // echo "First Name: " . $father_firstname . "<br>";
+            // echo "Last Name: " . $father_lastname . "<br>";
+            // echo "Middle Name: " . $father_middle . "<br>";
+            // echo "Suffix: " . $father_suffix . "<br>";
+            // echo "Contact Number: " . $father_contact_number . "<br>";
+            // echo "Email: " . $father_email . "<br>";
+            // echo "Occupation: " . $father_occupation . "<br>";
 
-            echo "<br>Mother Information:<br>";
-            echo "First Name: " . $mother_firstname . "<br>";
-            echo "Last Name: " . $mother_lastname . "<br>";
-            echo "Middle Name: " . $mother_middle . "<br>";
-            echo "Suffix: " . $mother_suffix . "<br>";
-            echo "Contact Number: " . $mother_contact_number . "<br>";
-            echo "Email: " . $mother_email . "<br>";
-            echo "Occupation: " . $mother_occupation . "<br>";
+            // echo "<br>Mother Information:<br>";
+            // echo "First Name: " . $mother_firstname . "<br>";
+            // echo "Last Name: " . $mother_lastname . "<br>";
+            // echo "Middle Name: " . $mother_middle . "<br>";
+            // echo "Suffix: " . $mother_suffix . "<br>";
+            // echo "Contact Number: " . $mother_contact_number . "<br>";
+            // echo "Email: " . $mother_email . "<br>";
+            // echo "Occupation: " . $mother_occupation . "<br>";
 
             // return;
 
