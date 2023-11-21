@@ -60,7 +60,7 @@
         <!-- SweetAlert -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.24/sweetalert2.all.js"></script>
         <!-- Modify the Logo of DCBT Here and Please apply some styling -->
-        <link rel="icon" href="../../assets/images/icons/DCBT-Logo.jpg" type="image/png">
+        <link rel="icon" href="../../assets/images/icons/DCBT-Logo.png" type="image/png">
         <!-- Bootstrap 4 JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
         <!-- SUMMER NOTE SCRIPT -->

@@ -8,7 +8,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, inital-scale=1" />
-    <link rel="icon" href="assets/images/icons/DCBT-Logo.jpg" type="image/png">
+    <link rel="icon" href="assets/images/icons/DCBT-Logo.png" type="image/png">
     <title>Daehan College of Business & Technology</title>
     <!--Link stylesheets-->
     <link rel="stylesheet" href="assets/css/home.css" />
@@ -87,13 +87,10 @@
           <div class="contact">
             <h4>DAEHAN COLLEGE OF BUSINESS AND TECHNOLOGY</h4>
             <p>
-              Nicanor Reyes Street, Sampaloc, Manila Tel No: +63 (2)-87777-338
-              (trunkline)
+              Siwang San Juan Floodway Road 20, Taytay, Philippines 
+              (0916 330 6989)
             </p>
             <p>Terms and condition | Privacy Policy</p>
-          </div>
-          <div class="copyright">
-            <h4>Copyright © 2019. All Rights Reserved</h4>
           </div>
         </div>
       </main>
