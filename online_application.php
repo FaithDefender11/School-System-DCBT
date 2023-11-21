@@ -58,12 +58,12 @@
         <header>
           <div class="title">
             <h2>Online Application</h2>
-            <small
-              >Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Consequatur quam optio explicabo asperiores eius qui? Itaque, nemo
-              autem optio iure obcaecati ipsa animi harum inventore, possimus
-              neque rerum quod deserunt.</small
-            >
+            <small>
+              Welcome to Daehan College of Business and Technology, where junior high school completers, 
+              senior high school graduates, and college transferees embark on a journey 
+              of learning and growth, surrounded by a warm and inclusive community 
+              dedicated to their success.
+            </small>
           </div>
         </header>
         <header>
