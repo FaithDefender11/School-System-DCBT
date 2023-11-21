@@ -141,19 +141,15 @@ nav>ul>li>a:hover {
 }
 
 .content-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   background: url(others/DCBT-Building.jpg) no-repeat;
   background-size: cover;
   margin: 20px;
   margin-top: 100px;
   height: calc(100vh - 200px);
-}
-
-.content-header>.logo-title {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  padding-top: 150px;
 }
 
 .content-header>.logo-title>img {
@@ -164,11 +160,7 @@ nav>ul>li>a:hover {
 }
 
 .content-header>.title {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  padding: 30px;
+  margin-top: 20px;
 }
 
 .content-header>.title>h2 {
@@ -738,12 +730,7 @@ nav>ul.active {
 
 @media (max-width: 1080px) {
   .content-header {
-    flex-direction: row;
     height: calc(100vh - 220px);
-  }
-
-  .content-header>.logo-title {
-    padding-top: 160px;
   }
 
   .content-header>.logo-title>img {
@@ -876,7 +863,6 @@ nav>ul.active {
 
 @media (max-width: 400px) {
   .content-header {
-    flex-direction: row;
     height: calc(100vh - 200px);
   }
 
