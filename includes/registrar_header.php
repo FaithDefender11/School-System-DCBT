@@ -169,10 +169,10 @@
                         // || $file_name === "subject_insertion_summary.php" 
                         
                         ){
-                            echo " You`re outside of the enrollment process of registrar ($file_name).";
-                            echo "<br>";
-                            echo "All Enrollment form that are link to your id will be RESET ";
-                            echo "<br>";
+                            // echo " You`re outside of the enrollment process of registrar ($file_name).";
+                            // echo "<br>";
+                            // echo "All Enrollment form that are link to your id will be RESET ";
+                            // echo "<br>";
 
                             $enrollment = new Enrollment($con);
 
@@ -198,7 +198,7 @@
                         }
                         else{
                             
-                            echo " You`re within the enrollment process Page.";
+                            // echo " You`re within the enrollment process Page.";
                         }   
                 
                      

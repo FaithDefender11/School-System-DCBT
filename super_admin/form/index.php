@@ -242,7 +242,6 @@
                                     // var_dump($registName);
                                     // var_dump($cashierName);
 
-
                                     echo "
                                         <tr>
                                             <td>$enrollment_form_id</td>
