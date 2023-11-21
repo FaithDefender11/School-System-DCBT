@@ -352,7 +352,7 @@
                                                                         Un-enroll Form
                                                                     </a> -->
 
-                                                                    <form  action='enrolled_subject_print.php' method='POST'>
+                                                                    <form style="display: none;" action='enrolled_subject_print.php' method='POST'>
 
                                                                         <input type="hidden" name="enrollment_id" id="enrollment_id" value="<?php echo $enrollment_id;?>">
                                                                         <input type="hidden" name="student_id" id="student_id" value="<?php echo $student_id;?>">
@@ -366,7 +366,7 @@
                                                                         </button>
                                                                     </form>
 
-                                                                    <form style="text-align: right;display: block;"
+                                                                    <form style="text-align: right;display: none;"
                                                                         action="../admission/print_enrolled_subject.php" method="POST" id="printForm">
 
                                                                         <input type="hidden" name="enrollment_id" id="enrollment_id" value="<?php echo $enrollment_id;?>">
