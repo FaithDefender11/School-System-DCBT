@@ -142,8 +142,11 @@
 
                     <body>
 
-                        <span style="margin-bottom: 5px">Date printed: '.$now.'</span>
-
+                        <span style="margin-bottom: 5px">Date enrolled: '.$now.'</span>
+                        <br>
+                        <span style="margin-top: 5px; margin-bottom: 5px">Section: <span style="font-weight: bold;">'.$programName.'</span></span>
+                        <br>
+                            
                         <table class="a">
                             <thead>
                                 <tr>
