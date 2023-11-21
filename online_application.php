@@ -74,10 +74,10 @@
         <main>
           
           <div class="action">
-            <a href="#" onclick="newStudentURL()">New register</a>
+            <a href="#" onclick="newStudentURL()">New student</a>
           </div>
           <div class="action">
-            <a href="#" onclick="enrolledStudentURL()">Sign in</a>
+            <a href="#" onclick="enrolledStudentURL()">Old/Pre-enrollee student</a>
           </div>
 
         </main>
