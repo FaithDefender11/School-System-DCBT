@@ -352,18 +352,25 @@
           </header>
           <main>
             <div class="item">
-              <h3>Mission</h3>
               <div>
                 <p>
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quod
-                  corrupti nam, dolores aliquam maxime accusantium quia?
-                  Laboriosam, quisquam. Laborum ea facilis similique tempore
-                  repudiandae necessitatibus fugit temporibus nesciunt incidunt
-                  labore!
+                To promote, establish, and operate training centers 
+                and or institution in the field of Science, Technology, Vocational, 
+                and other apprentice able trade and occupations in which qualified 
+                and deserving persons may be taught, developed and trained in a well 
+                rounded, theoretical and practical method including on the job training 
+                so as to instill in them the right sense of professionalism in the performance 
+                of their work; to conduct and sponsor other allied cultural and vocational 
+                human development courses as may be best suited to the current situation and 
+                needs of the Philippines, finally to acquire by construction, purchase, exchange 
+                and other means, thereafter to won, lease, maintain and carry on, and to sell, 
+                transfer, convey or otherwise dispose of training center facilities and establishment
+                 suitable or proper for the operation or conduct of a training institute or institutes 
+                 devoted to training and instructions of technical and vocational learning.
                 </p>
               </div>
             </div>
-            <div class="item">
+            <div class="item" style="display: none">
               <h3>Vision</h3>
               <div>
                 <p>
