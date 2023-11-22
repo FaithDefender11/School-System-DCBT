@@ -352,6 +352,7 @@
           </header>
           <main>
             <div class="item">
+              <h3>Mission and Vision</h3>
               <div>
                 <p>
                 To promote, establish, and operate training centers 
