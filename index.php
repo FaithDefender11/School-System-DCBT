@@ -257,89 +257,70 @@
           </header>
           <main>
             <div class="wrapper">
-            <i id="news-left" class="fa-solid fa-angle-left"></i>
+              <i id="news-left" class="fa-solid fa-angle-left"></i>
               <ul class="carousel">
                 <div class="card">
                   <div class="img">
-                    <div class="fb-post" data-href="https://www.facebook.com/daehanedu/posts/pfbid02WjTuSCkDyqszAym3WwBs2bk86ZjCBWxsz4sEj5vy778CEadZ7YZyHZdHLouWECgEl" data-width="350px" data-show-text="false" draggable="false">
-                      <blockquote cite="https://www.facebook.com/daehanedu/posts/776227644507072" class="fb-xfbml-parse-ignore">
-                      <p>Happy Wednesday and Happy 1st Day of Academics! 
-                        Enjoy your class everyone!
-                        Thank you!
-                        #daehan &#064;dcbt
-                      </p>Posted by <a href="https://www.facebook.com/daehanedu">Daehan College of Business &amp; Technology - DCBT</a> on&nbsp;<a href="https://www.facebook.com/daehanedu/posts/776227644507072">Tuesday, August 8, 2023</a>
-                      </blockquote>
+                    <div class="fb-post" 
+                      data-href="https://www.facebook.com/dcbt2015/posts/pfbid033Wcgof7yz8smoicTZt6sgzji5Fw42hPZiH5iiTTwro2LJMG41bUwWifxYYj1m2Wpl" 
+                      data-width="350px" 
+                      data-show-text="false" 
+                      draggable="false">
                     </div>
                   </div>
                 </div>
                 <div class="card">
                   <div class="img">
-                    <div class="fb-post" data-href="https://www.facebook.com/daehanedu/posts/pfbid02zDc2EYcTPdqWop8smjHaPDNzEoKPGfeV5Y5i7QRpQf61JZQw9aCad9RYV6GaZYDml" data-width="350px" data-show-text="false" draggable="false">
-                      <blockquote cite="https://www.facebook.com/daehanedu/posts/775584574571379" class="fb-xfbml-parse-ignore">
-                      <p>Senior High School and College 
-                        Enrollment is open until August 25, 2023 
-                        Please PM us for details.
-                        Thank you! 
-                        #daehan #dcbt #enrollment #admission
-                      </p>Posted by <a href="https://www.facebook.com/daehanedu">Daehan College of Business &amp; Technology - DCBT</a> on&nbsp;<a href="https://www.facebook.com/daehanedu/posts/775584574571379">Tuesday, August 8, 2023</a>
-                      </blockquote>
+                    <div class="fb-post" 
+                      data-href="https://www.facebook.com/dcbt2015/posts/pfbid031Jx2JjqSiqb63MfxnvqyePoUyfjp18ebtUvKn41Vd7Yzo85cqs2fF15q9HZKqp53l" 
+                      data-width="350px" 
+                      data-show-text="false" 
+                      draggable="false">
                     </div>
                   </div>
                 </div>
                 <div class="card">
                   <div class="img">
-                    <div class="fb-post" data-href="https://www.facebook.com/daehanedu/posts/pfbid02CVDe4MN65Yx2y9Pvjrtsim7ytM3G7grDhqJRfdiA1uL8sKG3cKTEebQ577WNb759l" data-width="350px" data-show-text="false" draggable="false">
-                      <blockquote cite="https://www.facebook.com/daehanedu/posts/775566544573182" class="fb-xfbml-parse-ignore">
-                      <p>First day of School Year 2023-2024 
-                        Orientation 5th batch!
-                        *feel free tag yourselves and tag our school Daehan College of Business &amp; Technology - DCBT
-                        #dcbt #daehan #orientation #SSG
-                      </p>Posted by <a href="https://www.facebook.com/daehanedu">Daehan College of Business &amp; Technology - DCBT</a> on&nbsp;<a href="https://www.facebook.com/daehanedu/posts/775566544573182">Tuesday, August 8, 2023</a>
-                      </blockquote>
+                    <div class="fb-post" 
+                      data-href="https://www.facebook.com/dcbt2015/posts/pfbid0BkdYHBPrKe3yfgF6ZYUQHk9YKr3YjoYDdnVce8bK41sSS43MrmynYa14YNo2ijK6l" 
+                      data-width="350px" 
+                      data-show-text="false" 
+                      draggable="false">
                     </div>
                   </div>
                 </div>
                 <div class="card">
                   <div class="img">
-                    <div class="fb-post" data-href="https://www.facebook.com/daehanedu/posts/pfbid0CjXUg88j8L1dibexg1zssRJVHtkwSD8pJLyp3pXKWr7H9ux91ZF9LmdYAfvqtHRZl" data-width="350px" data-show-text="false" draggable="false">
-                      <blockquote cite="https://www.facebook.com/daehanedu/posts/775531921243311" class="fb-xfbml-parse-ignore">
-                      <p>First day of School Year 2023-2024 
-                        Orientation 5th batch!
-                        *feel free tag yourselves and tag our school Daehan College of Business &amp; Technology - DCBT
-                        #dcbt #daehan #orientation
-                      </p>Posted by <a href="https://www.facebook.com/daehanedu">Daehan College of Business &amp; Technology - DCBT</a> on&nbsp;<a href="https://www.facebook.com/daehanedu/posts/775531921243311">Monday, August 7, 2023</a>
-                      </blockquote>
+                    <div class="fb-post" 
+                      data-href="https://www.facebook.com/dcbt2015/posts/pfbid0MekMgc34m48DxxSHXuc2EwRFSsowBT7kn9N1kQKLZsZiVpcbUz3p1RRZNXQ1JJ9Gl" 
+                      data-width="350px" 
+                      data-show-text="false" 
+                      draggable="false">
                     </div>
                   </div>
                 </div>
                 <div class="card">
                   <div class="img">
-                    <div class="fb-post" data-href="https://www.facebook.com/daehanedu/posts/pfbid02ScBgGvUv5peCfHhFXQUhV8qmmwcxRRCJLgpSxm8dF5gLoCLLe6T3AdcXxTixAL3wl" data-width="350px" data-show-text="false" draggable="false">
-                      <blockquote cite="https://www.facebook.com/daehanedu/posts/775458454583991" class="fb-xfbml-parse-ignore">
-                      <p>First day of School Year 2023-2024 
-                        Orientation 4th batch!
-                        *feel free tag yourselves and tag our school Daehan College of Business &amp; Technology - DCBT
-                        #dcbt #daehan #orientation
-                      </p>Posted by <a href="https://www.facebook.com/daehanedu">Daehan College of Business &amp; Technology - DCBT</a> on&nbsp;<a href="https://www.facebook.com/daehanedu/posts/775458454583991">Monday, August 7, 2023</a>
-                      </blockquote>
+                    <div class="fb-post" 
+                      data-href="https://www.facebook.com/dcbt2015/posts/pfbid02S2zHPCAEaC9p9Yd6YuWxHBUd7k9Dsa8Qv5KtXsuyiz55mHjNGF9tXr2EunTqx32Pl" 
+                      data-width="350px" 
+                      data-show-text="false" 
+                      draggable="false">
                     </div>
                   </div>
                 </div>
                 <div class="card">
                   <div class="img">
-                    <div class="fb-post" data-href="https://www.facebook.com/daehanedu/posts/pfbid0sQhe3gkTzrw5E2Lwj4Pw3UCMLqwWGGjrQfRjGtCq4xouJBPiZTL6ju2Fgf5yNZ5Rl" data-width="350px" data-show-text="false" draggable="false">
-                      <blockquote cite="https://www.facebook.com/daehanedu/posts/774848394644997" class="fb-xfbml-parse-ignore">
-                      <p>First day of School Year 2023-2024 
-                        Orientation 3rd batch!
-                        *feel free tag yourselves and tag our school Daehan College of Business &amp; Technology - DCBT
-                        #dcbt #daehan #orientation
-                      </p>Posted by <a href="https://www.facebook.com/daehanedu">Daehan College of Business &amp; Technology - DCBT</a> on&nbsp;<a href="https://www.facebook.com/daehanedu/posts/774848394644997">Sunday, August 6, 2023</a>
-                      </blockquote>
+                    <div class="fb-post" 
+                      data-href="https://www.facebook.com/dcbt2015/posts/pfbid0gcAcNrxEf9Xif6y8q2t2AKdRv7tWxY8xfW729PpiRHtu54VpsFWjSieDg4dBTaUPl" 
+                      data-width="350px" 
+                      data-show-text="false" 
+                      draggable="false">
                     </div>
                   </div>
                 </div>
               </ul>
-            <i id="news-right" class="fa-solid fa-angle-right"></i>
+              <i id="news-right" class="fa-solid fa-angle-right"></i>
             </div>
           </main>
         </div>
