@@ -401,7 +401,7 @@
             && $assignmentEnded == false
             && $doesSchoolYearMatch
             ) {
-            $buttontext = "Prepare answer";
+            $buttontext = "Submit answer";
             $button_type = "submit";
             $button_name = "insert_assignment_btn_$subject_code_assignment_id" . '_user_' . $studentLoggedInId;
             $file_input_does_display = true;
@@ -614,7 +614,7 @@
                             <main>
                                 <?php if($submission_remark_percentage != NULL):?>
                                     <div class="progress" style="position: relative; height: 20px">
-                                        <div class="progress-bar" style="position: absolute; top:0; height: 30px;  width: <?= $submission_remark_percentage;?>px"><?=$submission_remark_percentage;?>%</div>
+                                        <div class="progress-bar" style="position: absolute; top:0; height: 20px;  width: <?= $submission_remark_percentage;?>%"><?=$submission_remark_percentage;?>%</div>
                                     </div>
                                 <?php endif;?>
                             </main>
