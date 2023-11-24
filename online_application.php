@@ -42,7 +42,7 @@
       </label>
       <label class="logo">
         <a href="index.php">
-          <img src="assets/images/home/DCBT-Logo.jpg" alt="DCBT" />
+          <img src="assets/images/icons/DCBT-Logo.png" alt="DCBT" />
         </a>
       </label>
       <ul>
@@ -74,10 +74,10 @@
         <main>
           
           <div class="action">
-            <a href="#" onclick="newStudentURL()">New student</a>
+            <a href="#" onclick="newStudentURL()">New register</a>
           </div>
           <div class="action">
-            <a href="#" onclick="enrolledStudentURL()">Old/Pre-enrollee student</a>
+            <a href="#" onclick="enrolledStudentURL()">Sign in</a>
           </div>
 
         </main>

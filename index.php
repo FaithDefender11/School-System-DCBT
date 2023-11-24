@@ -88,19 +88,20 @@
       </label>
       <ul>
         <li><a href="#admission" id="admission-tab">ADMISSION</a></li>
-        <li><a href="#academics">ACADEMICS</a></li>
-        <li><a href="#about">ABOUT</a></li>
+        <li><a href="#academics" id="academics-tab">ACADEMICS</a></li>
+        <li><a href="#about" id="about-tab">ABOUT</a></li>
         <li><a href="#" id="show-login">LOGIN</a></li>
       </ul>
     </nav>
 
     <div class="content">
       <div class="content-header">
-        <div class="logo-title">
-          <img src="assets/images/icons/DCBT-Logo.png" alt="DCBT" />
-        </div>
-        <div class="title">
-          <h2>DAEHAN COLLEGE OF BUSINESS AND TECHNOLOGY</h2>
+        <div class="img-header-container">
+          <img src="assets/images/home/DCBT-Building.jpg" alt="DCBT Background Image">
+          <div class="logo-title-container">
+            <img src="assets/images/icons/DCBT-Logo.png" alt="DCBT Logo">
+            <h1>DAEHAN COLLEGE OF BUSINESS AND TECHNOLOGY</h1>
+          </div>
         </div>
       </div>
       <main>
@@ -336,30 +337,19 @@
               <h3>Mission and Vision</h3>
               <div>
                 <p>
-                To promote, establish, and operate training centers 
-                and or institution in the field of Science, Technology, Vocational, 
-                and other apprentice able trade and occupations in which qualified 
-                and deserving persons may be taught, developed and trained in a well 
-                rounded, theoretical and practical method including on the job training 
-                so as to instill in them the right sense of professionalism in the performance 
-                of their work; to conduct and sponsor other allied cultural and vocational 
-                human development courses as may be best suited to the current situation and 
-                needs of the Philippines, finally to acquire by construction, purchase, exchange 
-                and other means, thereafter to won, lease, maintain and carry on, and to sell, 
-                transfer, convey or otherwise dispose of training center facilities and establishment
-                 suitable or proper for the operation or conduct of a training institute or institutes 
-                 devoted to training and instructions of technical and vocational learning.
-                </p>
-              </div>
-            </div>
-            <div class="item" style="display: none">
-              <h3>Vision</h3>
-              <div>
-                <p>
-                  Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                  Architecto, laudantium dicta laboriosam sit delectus ipsa
-                  explicabo porro placeat quam tenetur, labore rem debitis
-                  consequuntur dolore tempora necessitatibus earum. Sunt, ad?
+                  To promote, establish, and operate training centers 
+                  and or institution in the field of Science, Technology, Vocational, 
+                  and other apprentice able trade and occupations in which qualified 
+                  and deserving persons may be taught, developed and trained in a well 
+                  rounded, theoretical and practical method including on the job training 
+                  so as to instill in them the right sense of professionalism in the performance 
+                  of their work; to conduct and sponsor other allied cultural and vocational 
+                  human development courses as may be best suited to the current situation and 
+                  needs of the Philippines, finally to acquire by construction, purchase, exchange 
+                  and other means, thereafter to won, lease, maintain and carry on, and to sell, 
+                  transfer, convey or otherwise dispose of training center facilities and establishment
+                  suitable or proper for the operation or conduct of a training institute or institutes 
+                  devoted to training and instructions of technical and vocational learning.
                 </p>
               </div>
             </div>
@@ -420,19 +410,27 @@
     <script>
       document.querySelector("#show-login").addEventListener("click", function () {
           document.querySelector("#login-form").classList.add("active");
-          document.querySelector("nav > ul").classList.add("active");
+          document.querySelector(".content").classList.add("active");
+          document.querySelector("#check").checked = false;
           document.body.classList.add("no-scroll");
         });
 
       document.querySelector("#login-form .close-btn").addEventListener("click", function () {
           document.querySelector("#login-form").classList.remove("active");
-          document.querySelector("nav > ul").classList.remove("active");
+          document.querySelector("#check").checked = false;
           document.body.classList.remove("no-scroll");
         });
 
       document.querySelector("#admission-tab").addEventListener("click", function () {
-        document.querySelector("nav > ul").classList.add("active");
-        document.querySelector("nav > ul").classList.remove("active");
+        document.querySelector("#check").checked = false;
+      });
+
+      document.querySelector("#academics-tab").addEventListener("click", function () {
+        document.querySelector("#check").checked = false;
+      });
+
+      document.querySelector("#about-tab").addEventListener("click", function () {
+        document.querySelector("#check").checked = false;
       });
     </script>
     <script>
