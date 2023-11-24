@@ -23,17 +23,6 @@
     
 ?>
 
-            <?php 
-                echo Helper::lmsTeacherNotificationHeader(
-                    $con, $teacherLoggedInId,
-                    $school_year_id,
-                    $teachingSubjects,
-                    "second",
-                    "second",
-                    "second",
-                    "second"
-                );
-            ?>
 
             <main>
                 <div class="floating profile">
