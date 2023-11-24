@@ -59,7 +59,7 @@
                     </a>
                 </nav>
 
-                <main>
+                <main style="overflow-x: auto">
                 
                     <div class="floating" id="shs-sy">
 

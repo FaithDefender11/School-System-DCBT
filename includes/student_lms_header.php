@@ -55,7 +55,6 @@
         <script src="../../assets/js/elms-sidebar.js" defer></script>
         <script src="../../assets/js/elms-dropdown.js" defer></script>
         <script src="../../assets/js/table-dropdown.js" defer></script>
-        <script src="../../assets/js/student-calendar.js" defer></script>
         <!--Link styleshets-->
         <link rel="stylesheet" href="../../assets/css/sidebar.css" />
         <link rel="stylesheet" href="../../assets/css/fonts.css" />

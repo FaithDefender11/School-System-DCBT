@@ -132,7 +132,7 @@
 
                     </header>
                     
-                    <main>
+                    <main style="overflow-x: auto">
                         
                     <table id="notification_table" class="a" style="margin: 0">
                         <thead>
