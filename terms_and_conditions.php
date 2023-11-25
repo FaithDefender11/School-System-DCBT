@@ -39,9 +39,9 @@
         </a>
       </label>
       <ul>
-        <li><a href="#admission" id="admission-tab">ADMISSION</a></li>
-        <li><a href="#academics" id="academics-tab">ACADEMICS</a></li>
-        <li><a href="#about" id="about-tab">ABOUT</a></li>
+        <li><a href="index.php#admission" id="admission-tab">ADMISSION</a></li>
+        <li><a href="index.php#academics" id="academics-tab">ACADEMICS</a></li>
+        <li><a href="index.php#about" id="about-tab">ABOUT</a></li>
         <li><a href="#" id="show-login">LOGIN</a></li>
       </ul>
     </nav>
