@@ -425,6 +425,7 @@ nav>ul>li>a:hover {
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   gap: 16px;
+  height: 500px;
   scroll-behavior: smooth;
   scrollbar-width: none;
 }
