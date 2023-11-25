@@ -773,12 +773,6 @@ nav>ul>li>a:hover {
   }
 }
 
-@media (max-width: 1050px) {
-  .slide-3 {
-    height: auto;
-  }
-}
-
 @media (max-width: 952px) {
   .slide-1>.carousel>h2 {
     font-size: 26px;
