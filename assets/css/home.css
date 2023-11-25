@@ -935,8 +935,9 @@ nav>ul>li>a:hover {
     display: none;
   }
 
+  .slide-3,
   .slide-4 {
-    padding: 100px 10px;
+    padding: 100px 20px;
   }
 }
 
