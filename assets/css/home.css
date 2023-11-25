@@ -266,7 +266,8 @@ nav>ul>li>a:hover {
   font-size: 22px;
 }
 
-.slide-3>main .slide-4>main {
+.slide-3>main,
+.slide-4>main {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
