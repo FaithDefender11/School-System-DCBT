@@ -48,7 +48,7 @@
 
     <div class="content">
         <main>
-            <div class="slide-3">
+            <div class="slide-4">
                 <header>
                     <div class="title">
                         <h2>Terms & Conditions</h2>
