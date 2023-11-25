@@ -334,7 +334,7 @@
           </header>
           <main>
             <div class="item">
-              <h3>Mission and Vision</h3>
+              <h3>Mission</h3>
               <div>
                 <p>
                   To promote, establish, and operate training centers 
@@ -364,6 +364,7 @@
           </header>
           <main>
             <div class="img-wrapper">
+              <i id="facilities-left" class="fa-solid fa-angle-left"></i>
               <div class="img-carousel">
                 <img src="assets/images/home/slide-1.jpg" alt="" draggable="false" />
                 <img src="assets/images/home/slide-2.jpg" alt="" draggable="false" />
@@ -372,6 +373,7 @@
                 <img src="assets/images/home/slide-5.jpg" alt="" draggable="false" />
                 <img src="assets/images/home/slide-6.jpg" alt="" draggable="false" />
               </div>
+              <i id="facilities-right" class="fa-solid fa-angle-right"></i>
             </div>
           </main>
         </div>
@@ -382,7 +384,7 @@
               Siwang San Juan Floodway Road 20, Taytay, Philippines 
               (0916 330 6989)
             </p>
-            <p>Terms and condition | Privacy Policy</p>
+            <p><a href="terms_and_conditions.php">Terms and Condition</a></p>
           </div>
         </div>
       </main>

@@ -48,7 +48,7 @@
                         </div>
                     </header>
                     <main style="overflow-x: auto">
-                        <table class="a" id="department_table">
+                        <table class="a" id="department_table" style="min-width: 1000px;">
                             <thead>
                                 <tr>
                                     <th>Subject</th>  

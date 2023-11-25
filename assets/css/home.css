@@ -385,15 +385,18 @@ nav>ul>li>a:hover {
   transform: translateY(-50%) scale(0.85);
 }
 
-.slide-2>main>.wrapper>i:hover {
+.slide-2>main>.wrapper>i:hover,
+.slide-2>main>.img-wrapper>i:hover {
   background: #f2f2f2;
 }
 
-.slide-2>main>.wrapper>i:first-child {
+.slide-2>main>.wrapper>i:first-child,
+.slide-2>main>.img-wrapper>i:first-child {
   left: -22px;
 }
 
-.slide-2>main>.wrapper>i:last-child {
+.slide-2>main>.wrapper>i:last-child,
+.slide-2>main>.img-wrapper>i:last-child {
   right: -22px;
 }
 
@@ -560,6 +563,14 @@ nav>ul>li>a:hover {
   gap: 4px;
 }
 
+.content>main>.footer>.contact>p>a {
+  text-decoration: none;
+  color: white;
+  font-family: IM FELL Double Pica;
+  font-style: normal;
+  font-weight: 400;
+}
+
 .content>main>.footer>.copyright {
   display: flex;
   justify-content: center;
@@ -570,13 +581,6 @@ nav>ul>li>a:hover {
 
 .content>main>.footer>.contact>h4,
 .content>main>.footer>.copyright>h4 {
-  font-family: IM FELL Double Pica;
-  font-style: normal;
-  font-weight: 400;
-  color: #fff;
-}
-
-.content>main>.footer>.contact>p {
   font-family: IM FELL Double Pica;
   font-style: normal;
   font-weight: 400;
@@ -901,10 +905,9 @@ nav>ul>li>a:hover {
   .content-header>.img-header-container>.logo-title-container>h1 {
     font-size: 16px;
   }
-}
 
-@media screen and (max-width: 424px) {
-  .slide-2>main>.wrapper>i {
+  .slide-2>main>.wrapper>i,
+  .slide-2>main>.img-wrapper>i {
     display: none;
   }
 }

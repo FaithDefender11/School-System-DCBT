@@ -208,12 +208,6 @@ table.c>tbody>tr>td>.task-beige {
 
 
 /*RESPONSIVE*/
-@media only screen and (max-width: 1000px) {
-  .floating>main>table.a {
-    width: 1200px;
-  }
-}
-
 @media only screen and (max-width: 768px) {
   table.a>tbody>tr>td>a>.bi-check-lg {
     display: inline-flex;

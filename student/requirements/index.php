@@ -350,7 +350,6 @@
                             <?php foreach ($universalRequirements as $key => $value): ?>
                                 <div class="card-body">
                                     <h5 class="card-title"><?= $value['requirement_name']; ?> <span class="red">*</span></h5>
-                                    <hr>
                                     <input multiple class="form-control" type="file" name="<?= $value['acronym']; ?>[]">
 
                                     <?php
@@ -388,7 +387,6 @@
                                                 <a title="View File" href='<?php echo "../../".  $value['file'] ?>' target='__blank' rel='noopener noreferrer'>
                                                     <?php echo $original_file_name; ?>
                                                 </a>
-                                                <br>
                                                 <?php
                                             }
         
@@ -404,7 +402,6 @@
                                                 <a title="View File" href='<?php echo "../../".  $value['file'] ?>' target='__blank' rel='noopener noreferrer'>
                                                     <?php echo $original_file_name; ?>
                                                 </a>
-                                                <br>
                                                 <?php
                                             }
                                         }
@@ -418,7 +415,6 @@
                                         || $value['education_type'] == "Universal"): ?>
                                         <div class="card-body">
                                             <h5 class="card-title"><?= $value['requirement_name']; ?> <span class="red">*</span></h5>
-                                            <hr>
                                             <input multiple class="form-control" type="file" name="<?= $value['acronym']; ?>[]">
 
                                             <?php
@@ -455,7 +451,6 @@
                                                             <a title="View File" href='<?php echo "../../".  $value['file'] ?>' target='__blank' rel='noopener noreferrer'>
                                                                 <?php echo $original_file_name; ?>
                                                             </a>
-                                                            <br>
         
                                                         <?php
                                                     }
@@ -470,8 +465,6 @@
                                                             <a title="View File" href='<?php echo "../../".  $value['file'] ?>' target='__blank' rel='noopener noreferrer'>
                                                                 <?php echo $original_file_name; ?>
                                                             </a>
-                                                            
-                                                            <br>
                                                         <?php
                                                     }
                                                 }
@@ -495,7 +488,6 @@
 
                                         <div class="card-body">
                                             <h5 class="card-title"><?= $value['requirement_name']; ?> <span class="red">*</span></h5>
-                                            <hr>
                                             <input  multiple class="form-control" type="file" name="<?= $value['acronym']; ?>[]">
 
                                             <?php
@@ -532,7 +524,6 @@
                                                             <a title="View File" href='<?php echo "../../".  $value['file'] ?>' target='__blank' rel='noopener noreferrer'>
                                                                 <?php echo $original_file_name; ?>
                                                             </a>
-                                                            <br>
         
                                                         <?php
                                                     }
@@ -547,8 +538,6 @@
                                                             <a title="View File" href='<?php echo "../../".  $value['file'] ?>' target='__blank' rel='noopener noreferrer'>
                                                                 <?php echo $original_file_name; ?>
                                                             </a>
-                                                            
-                                                            <br>
                                                         <?php
                                                     }
                                                 }

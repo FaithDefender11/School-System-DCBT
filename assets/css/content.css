@@ -843,10 +843,6 @@ ul>.task-yellow {
 
 /*RESPONSIVE*/
 @media only screen and (max-width: 768px) {
-  .content>.icons>.username {
-    display: none;
-  }
-
   .bars {
     flex-direction: column;
   }

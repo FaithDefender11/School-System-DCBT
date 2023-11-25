@@ -77,7 +77,7 @@
             <a href="#" onclick="newStudentURL()">New student</a>
           </div>
           <div class="action">
-            <a href="#" onclick="enrolledStudentURL()">Old/Pre-enrollee student</a>
+            <a href="#" onclick="enrolledStudentURL()">Old/Pre-enrollee student login</a>
           </div>
 
         </main>
@@ -90,7 +90,7 @@
               Siwang San Juan Floodway Road 20, Taytay, Philippines 
               (0916 330 6989)
             </p>
-            <p>Terms and condition | Privacy Policy</p>
+            <p><a href="terms_and_conditions.php">Terms and Condition</a></p>
           </div>
         </div>
       </main>
@@ -116,18 +116,16 @@
     </div>
 
     <script>
-      document
-        .querySelector("#show-login")
-        .addEventListener("click", function () {
+      document.querySelector("#show-login").addEventListener("click", function () {
           document.querySelector("#login-form").classList.add("active");
-          document.querySelector("nav > ul").classList.add("active");
+          document.querySelector(".content").classList.add("active");
+          document.querySelector("#check").checked = false;
           document.body.classList.add("no-scroll");
         });
-      document
-        .querySelector("#login-form .close-btn")
-        .addEventListener("click", function () {
+
+      document.querySelector("#login-form .close-btn").addEventListener("click", function () {
           document.querySelector("#login-form").classList.remove("active");
-          document.querySelector("nav > ul").classList.remove("active");
+          document.querySelector("#check").checked = false;
           document.body.classList.remove("no-scroll");
         });
     </script>
