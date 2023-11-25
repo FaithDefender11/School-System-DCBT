@@ -57,119 +57,87 @@
                 <header>
                     <div class="title">
                         <h3>1. Acceptance of Terms</h3>
-                    </div>
-                </header>
-                <main>
-                    <div>
-                        <p>
+                        <small>
                             By accessing or using [Your Company Name] ("the Company") 
                             services, you agree to comply with and be bound by the 
                             following Terms and Conditions. If you do not agree to 
                             these Terms and Conditions, please do not use our services.
-                        </p>
+                        </small>
                     </div>
-                </main>
+                </header>
                 <header>
                     <div class="title">
                         <h3>2. Changes to Terms</h3>
-                    </div>
-                </header>
-                <main>
-                    <div>
-                        <p>
+                        <small>
                             The Company reserves the right to modify or revise these Terms 
                             and Conditions at any time. Your continued use of the services 
                             following any changes constitutes your acceptance of such changes. 
                             It is your responsibility to review these Terms and Conditions regularly.
-                        </p>
+                        </small>
                     </div>
-                </main>
+                </header>
                 <header>
                     <div class="title">
                         <h3>3. User Responsibilities</h3>
-                    </div>
-                </header>
-                <main>
-                    <div>
-                        <p>
+                        <small>
                             You agree to use the services provided by the Company responsibly. 
                             You will not engage in any activity that interferes with or disrupts 
                             our services, networks, or systems. You also agree not to access, reproduce, 
                             or distribute any part of our services without the Company's explicit 
                             written consent.
-                        </p>
+                        </small>
                     </div>
-                </main>
+                </header>
                 <header>
                     <div class="title">
                         <h3>4. Privacy Policy</h3>
-                    </div>
-                </header>
-                <main>
-                    <div>
-                        <p>
+                        <small>
                             Your use of our services is also governed by our Privacy Policy, 
                             which outlines how we collect, use, and protect your personal information. 
                             By using our services, you consent to the terms of our Privacy Policy.
-                        </p>
+                        </small>
                     </div>
-                </main>
+                </header>
                 <header>
                     <div class="title">
                         <h3>5. Intellectual Property</h3>
-                    </div>
-                </header>
-                <main>
-                    <div>
-                        <p>
+                        <small>
                             All content, trademarks, and intellectual property on our services are 
                             owned by or licensed to the Company. You may not use, reproduce, or 
                             distribute any content from our services without the Company's express 
-                            permission.
-                        </p>
+                            permission. 
+                        </small>
                     </div>
-                </main>
+                </header>
                 <header>
                     <div class="title">
                         <h3>6. Limitation of Liability</h3>
-                    </div>
-                </header>
-                <main>
-                    <div>
-                        <p>
+                        <small>
                             The Company is not liable for any direct, indirect, incidental, special, 
                             or consequential damages that result from your use of or inability to use 
                             our services.
-                        </p>
+                        </small>
                     </div>
-                </main>
+                </header>
                 <header>
                     <div class="title">
                         <h3>7. Governing Law</h3>
-                    </div>
-                </header>
-                <main>
-                    <div>
-                        <p>
+                        <small>
                             These Terms and Conditions are governed by and construed in accordance with the 
                             laws of [Your Jurisdiction]. Any disputes arising out of these terms will be 
                             subject to the exclusive jurisdiction of the courts of [Your Jurisdiction].
-                        </p>
+                        </small>
                     </div>
-                </main>
+                </header>
                 <header>
                     <div class="title">
                         <h3>8. Contact Information</h3>
+                        <small>
+                            If you have any questions or concerns about these Terms and Conditions, please 
+                            contact us at [Your Contact Information]. 
+                        </small>
                     </div>
                 </header>
-                <main>
-                    <div>
-                        <p>
-                            If you have any questions or concerns about these Terms and Conditions, please 
-                            contact us at [Your Contact Information].
-                        </p>
-                    </div>
-                </main>
             </div>
 
             <div class="footer">
