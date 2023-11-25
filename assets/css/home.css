@@ -934,6 +934,10 @@ nav>ul>li>a:hover {
   .slide-2>main>.img-wrapper>i {
     display: none;
   }
+
+  .slide-4 {
+    padding: 100px 10px;
+  }
 }
 
 @media (max-width: 400px) {
