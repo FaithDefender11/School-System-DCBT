@@ -106,6 +106,7 @@
 
         $student_unique_id = $student->GetStudentUniqueId();
 
+        // var_dump($student_unique_id);
         # Getting pending email.
 
         $student_pending_enrollee_id = $student->GetPendingEnrolleeId($student_email, $current_school_year_id);
@@ -1309,10 +1310,14 @@
                                                 <?php
                                         }
 
-                                        if($isSectionFull == false 
-                                            && $checkIfCashierEvaluated == true
-                                            && $checkIfRegistrarEvaluated == true
-                                            && $doesStudentEnrolled == false){
+                                        # LOGIC DEPRECATED.
+                                        # The Approve Enrollment is now change to Cashier side.
+                                        if(false
+                                        // if($isSectionFull == false 
+                                        //     && $checkIfCashierEvaluated == true
+                                        //     && $checkIfRegistrarEvaluated == true
+                                            // && $doesStudentEnrolled == false
+                                        ){
 
                                             $getPreviousEnrolledFormId = $enrollment->GetStudentPreviousEnrolledForm(
                                                 $student_id, $current_school_year_id

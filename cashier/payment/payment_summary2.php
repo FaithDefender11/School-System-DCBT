@@ -345,7 +345,7 @@
                                 <button class='tab' 
                                     id='studentDetailsButton'
                                     style='background-color: var(--mainContentBG); color: black'
-                                    onclick=\"window.location.href = 'payment_summary.php?id=$enrollment_form_id_url&student_details=show';\">
+                                    onclick=\"window.location.href = 'payment_summary2.php?id=$enrollment_form_id_url&student_details=show';\">
                                     Student Details
                                 </button>
                             ";
@@ -354,7 +354,7 @@
                                 <button class='tab' 
                                     id='enrolledSubjectsButton'
                                     style='background-color: var(--them); color: white'
-                                    onclick=\"window.location.href = 'payment_summary.php?id=$enrollment_form_id_url&enrolled_subject=show';\">
+                                    onclick=\"window.location.href = 'payment_summary2.php?id=$enrollment_form_id_url&enrolled_subject=show';\">
                                     Enrolled Subjects
                                 </button>
                             ";
@@ -645,7 +645,7 @@
                             );
                             
 
-                            Alert::success("Enrollment Form ID: $student_enrollment_form_id. has been approved and payment is fully settled.", "payment_summary.php?id=$enrollment_id&enrolled_subject=show");
+                            Alert::success("Enrollment Form ID: $student_enrollment_form_id. has been approved and payment is fully settled.", "payment_summary2.php?id=$enrollment_id&enrolled_subject=show");
                             exit();
                         }
 
@@ -682,7 +682,7 @@
                             // var_dump($doesAuditInserted);
                             // return;
 
-                            Alert::success("Enrollment Form ID: $student_enrollment_form_id. has been approved with remaining balance.", "payment_summary.php?id=$enrollment_id&enrolled_subject=show");
+                            Alert::success("Enrollment Form ID: $student_enrollment_form_id. has been approved with remaining balance.", "payment_summary.php2?id=$enrollment_id&enrolled_subject=show");
                             exit();
                         }
 
@@ -706,7 +706,7 @@
                                 $description, $current_school_year_id, $cashierUserId
                             );
 
-                            Alert::success("Enrollment Form ID: $student_enrollment_form_id. has been approved and payment is fully settled.", "payment_summary.php?id=$enrollment_id&enrolled_subject=show");
+                            Alert::success("Enrollment Form ID: $student_enrollment_form_id. has been approved and payment is fully settled.", "payment_summary2.php?id=$enrollment_id&enrolled_subject=show");
                             exit();
 
                         }
@@ -778,7 +778,7 @@
                             echo "
                                 <button class='tab' 
                                     style='background-color: var(--them); color: white'
-                                    onclick=\"window.location.href = 'payment_summary.php?id=$enrollment_form_id_url&student_details=show';\">
+                                    onclick=\"window.location.href = 'payment_summary2.php?id=$enrollment_form_id_url&student_details=show';\">
                                     Student Details
                                 </button>
                             ";
@@ -787,7 +787,7 @@
                                 <button class='tab' 
                                     id='shsPayment'
                                     style='background-color: var(--mainContentBG); color: black'
-                                    onclick=\"window.location.href = 'payment_summary.php?id=$enrollment_form_id_url&enrolled_subject=show';\">
+                                    onclick=\"window.location.href = 'payment_summary2.php?id=$enrollment_form_id_url&enrolled_subject=show';\">
                                     Enrolled Subjects
                                 </button>
                             ";
@@ -1169,7 +1169,7 @@
                                         $wasSuccessCashPayment = $enrollment->SetEnrollmentApprovedByCashierViaFullCash(
                                             $enrollment_id, $current_school_year_id);
 
-                                        if($wasSuccwasSuccessCashPaymentess){
+                                        if($wasSuccessCashPayment){
                                             $wasSuccessPayment = true;
                                         }
                                     }

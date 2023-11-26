@@ -11,6 +11,7 @@
     include_once('../../includes/classes/StudentSubject.php');
     include_once('../../includes/classes/SchoolYear.php');
     include_once('../../includes/classes/Schedule.php');
+    include_once('../../includes/classes/PendingParent.php');
 
     // echo Helper::RemoveSidebar();
 
@@ -83,7 +84,10 @@
         $student_unique_id = $student->GetStudentUniqueId();
         $student_admission_status = $student->GetAdmissionStatus();
         $student_active_status = $student->CheckIfActive();
+        $type_status = $student->GetIsTertiary();
+        $student_lrn = $student->GetStudentLRN();
 
+        // var_dump($student_lrn);
         // echo $student_active_status;
         
         $email = $student->GetEmail();

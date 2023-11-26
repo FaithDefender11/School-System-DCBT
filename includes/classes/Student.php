@@ -252,7 +252,7 @@ class Student{
 
     public function GetStudentUniqueId(){
 
-        return isset($this->sqlData['student_unique_id']) ? $this->sqlData["student_unique_id"] : "N/A"; 
+        return isset($this->sqlData['student_unique_id']) ? $this->sqlData["student_unique_id"] : NULL;; 
     }
 
     public function GetStudentStatus(){

@@ -64,6 +64,22 @@
         return isset($this->sqlData['email']) ? $this->sqlData["email"] : ""; 
     }
 
+    public function GetSchoolName() {
+        return isset($this->sqlData['school_name']) ? $this->sqlData["school_name"] : ""; 
+    }
+
+    public function GetSchoolAddress() {
+        return isset($this->sqlData['school_address']) ? $this->sqlData["school_address"] : ""; 
+    }
+
+    public function GetSchoolYearStarted() {
+        return isset($this->sqlData['year_started']) ? $this->sqlData["year_started"] : ""; 
+    }
+
+    public function GetSchoolYearEnded() {
+        return isset($this->sqlData['year_ended']) ? $this->sqlData["year_ended"] : ""; 
+    }
+
     public function GetFatherFirstName() {
         return isset($this->sqlData['father_firstname']) ? $this->sqlData["father_firstname"] : ""; 
     }
@@ -133,8 +149,12 @@
         $mother_suffix,
         $mother_contact_number,
         $mother_email,
-        $mother_occupation)
-         {
+        $mother_occupation,
+        $school_name,
+        $school_address,
+        $year_started,
+        $year_ended
+        ) {
  
 
         $query = $this->con->prepare("UPDATE parent 
@@ -164,7 +184,12 @@
                 mother_suffix=:mother_suffix,
                 mother_contact_number=:mother_contact_number,
                 mother_email=:mother_email,
-                mother_occupation=:mother_occupation
+                mother_occupation=:mother_occupation,
+
+                school_name=:school_name,
+                school_address=:school_address,
+                year_started=:year_started,
+                year_ended=:year_ended
 
                 
             WHERE student_id=:student_id
@@ -200,6 +225,11 @@
         $query->bindParam(":mother_contact_number", $mother_contact_number);
         $query->bindParam(":mother_email", $mother_email);
         $query->bindParam(":mother_occupation", $mother_occupation);
+
+        $query->bindParam(":school_name", $school_name);
+        $query->bindParam(":school_address", $school_address);
+        $query->bindParam(":year_started", $year_started);
+        $query->bindParam(":year_ended", $year_ended);
 
  
         $query->bindParam(":parent_id", $parent_id);

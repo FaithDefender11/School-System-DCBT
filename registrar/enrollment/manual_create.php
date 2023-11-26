@@ -44,6 +44,10 @@
 
         $enrollment = new Enrollment($con);
 
+        $user = new User($con, $registrarUserId);
+
+        $registrarName = ucfirst($user->getFirstName()) . " " . ucfirst($user->getLastName());
+
         $generateFormId = $enrollment->GenerateEnrollmentFormId($current_school_year_id);
         $enrollment_form_id = $enrollment->CheckEnrollmentFormIdExists($generateFormId);
         
@@ -189,6 +193,7 @@
             $stored_admission_type_id = $admission_type;
             
             // echo $admission_type;
+            // var_dump($admission_type);
             // return;
 
             $course_id = intval($_POST['course_id'] ?? 0);
@@ -805,13 +810,13 @@
                                                 if (!empty($email) && filter_var($email, FILTER_VALIDATE_EMAIL)) {
 
                                                     $isEmailSent = $emailSent->SendNewEnrolleeCredentialsAfterCreation(
-                                                            $email, $password, "Gerlie Atienza");
+                                                        $email, $password, $registrarName);
 
                                                     if ($isEmailSent) {
 
                                                         // Alert::success("Teacher credentials has been delivered to teacher provided email: $teacher_email", "index.php");
                                                         // exit();
-                                                        Alert::successAutoRedirect("Proceeding to Subject Review. Enrollee credentials has been sent to: $email", 
+                                                        Alert::successAutoRedirect("Proceeding to Subject Review. Standard Enrollee credentials has been sent to: $email", 
                                                             "$url");
 
                                                         exit();
@@ -832,6 +837,7 @@
                                                 }
                                                     
                                             }
+
                                         }   
 
                                     // $url = "../admission/process_enrollment.php?subject_review=show&st_id=$student_id&selected_course_id=$course_id";
@@ -848,6 +854,7 @@
                                     $url = "../admission/process_enrollment.php?find_section=show&st_id=$student_id&c_id=$course_id";
                                     
                                     try {
+
                                         $emailSent = new Email();
 
                                         // Assuming $url and $email are defined somewhere in your code
@@ -856,12 +863,13 @@
                                         if (!empty($email) && filter_var($email, FILTER_VALIDATE_EMAIL)) {
 
                                             $isEmailSent = $emailSent->SendNewEnrolleeCredentialsAfterCreation(
-                                                $email, $password, "Gerlie Atienza"
+                                                $email, $password, $registrarName
                                             );
 
                                             if ($isEmailSent) {
                                                 // If the email is sent successfully, redirect to the specified URL
-                                                Alert::successAutoRedirect("Proceeding to Subject Review", $url);
+                                                Alert::successAutoRedirect("Proceeding to Subject Review. Transferee Enrollee credentials has been sent to: $email", 
+                                                    "$url");
                                                 exit();
                                             } else {
                                                 echo "Sending credentials via email went wrong";
