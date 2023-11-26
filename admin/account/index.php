@@ -129,9 +129,6 @@
 
         </div> -->
 
-        <div class="floating" id="shs-sy">
-
-            <main>
                 <div class="floating" id="shs-sy">
                     <header>
                         <div class="title">
@@ -185,9 +182,6 @@
                     </main>
 
                 </div>
-            </main>
-
-        </div>
     </main>
 </div>
 
