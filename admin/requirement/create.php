@@ -18,15 +18,20 @@
         isset($_POST['create_requirement_btn']) &&
         isset($_POST['requirement_name']) &&
         isset($_POST['status']) &&
+        isset($_POST['education_type']) &&
+        
         isset($_POST['is_enabled'])
     ){
 
         $requirement_name = $_POST['requirement_name'];
         $status = $_POST['status'];
         $is_enabled = $_POST['is_enabled'];
+        $education_type = $_POST['education_type'];
+
+
 
         $createdSuccess = $studentRequirement->InsertRequirement(
-            $requirement_name, $status, $is_enabled);
+            $requirement_name, $status, $is_enabled, $education_type);
  
         if ($createdSuccess == true) {
 
@@ -55,19 +60,33 @@
                         <span>
                             <div class="form-group">
                                 <label for="requirement_name">* File Name</label>
-                                <input required class="form-control" type="text" name="requirement_name" id="requirement_name" placeholder="e.g Psa, Form137">
+                                <input required class="form-control" type="text" name="requirement_name" id="requirement_name" placeholder="e.g. Psa, Form137">
                             </div>
                         </span>
                     </div>
                     <div class="row">
                         <span>
                             <div class="form-group">
-                            <label for="status">* Status</label>
+                            <label for="status">* Student Type</label>
 
                                 <select required class="form-control" id="status" name="status">
+                                    <option value="Universal">Universal</option>
+                                    <option value="Standard">Standard</option>
+                                    <option value="Transferee">Transferee</option>
+                                </select>
+                            </div>
+                        </span>
+                    </div>
+
+                    <div class="row">
+                        <span>
+                            <div class="form-group">
+                            <label for="education_type">* Education Type</label>
+
+                                <select required class="form-control" id="education_type" name="education_type">
                                     <option value="universal">Universal</option>
-                                    <option value="standard">Standard</option>
-                                    <option value="transferee">Transferee</option>
+                                    <option value="Tertiary">Tertiary</option>
+                                    <option value="SHS">SHS</option>
                                 </select>
                             </div>
                         </span>

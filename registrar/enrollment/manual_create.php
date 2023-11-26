@@ -110,7 +110,7 @@
         // $email = Helper::ValidateEmail($_POST['email'], false, $con);
         // $lrn = Helper::ValidateLRN($_POST['lrn'], false, $con);
 
-        $lrn = "";
+        $lrn = NULL;
         $firstname = "";
         $lastname = "";
         $middle_name = "";
@@ -217,6 +217,9 @@
             $email = Helper::ValidateEmail($_POST['email'], false, $con);
             // $lrn = Helper::ValidateLRN($_POST['lrn'], false, $con);
             $lrn = isset($_POST['lrn']) ? $_POST['lrn'] : NULL;
+
+            // var_dump($lrn);
+            // return;
 
             $school_name = isset($_POST['school_name']) ? $_POST['school_name'] : "";
             $school_address = isset($_POST['school_address']) ? $_POST['school_address'] : "";
@@ -786,7 +789,11 @@
 
                                         if($wasStudentSubjectPopulated){
 
-                                            $url = "../admission/process_enrollment.php?subject_review=show&st_id=$student_id&selected_course_id=$course_id";
+                                            # Route after Selecting section page.
+
+                                            // $url = "../admission/process_enrollment.php?subject_review=show&st_id=$student_id&selected_course_id=$course_id";
+
+                                            $url = "../admission/process_enrollment.php?find_section=show&st_id=$student_id&c_id=$course_id";
                                             // Alert::successAutoRedirect("Proceeding to Subject Review", 
                                             //     "$url");
                                             // exit();
@@ -825,7 +832,6 @@
                                                 }
                                                     
                                             }
-
                                         }   
 
                                     // $url = "../admission/process_enrollment.php?subject_review=show&st_id=$student_id&selected_course_id=$course_id";
@@ -838,8 +844,8 @@
                                 
                                 if($admission_type == 2){
                                     
-                                    $url = "../admission/process_enrollment.php?subject_review=show&st_id=$student_id&selected_course_id=$course_id";
-                                    
+                                    // $url = "../admission/process_enrollment.php?subject_review=show&st_id=$student_id&selected_course_id=$course_id";
+                                    $url = "../admission/process_enrollment.php?find_section=show&st_id=$student_id&c_id=$course_id";
                                     
                                     try {
                                         $emailSent = new Email();

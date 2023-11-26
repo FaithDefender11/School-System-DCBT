@@ -88,6 +88,28 @@
 
         } 
 
+        public function CheckTeacherExistsBasedOnFirstLastMiddleEmail(
+            $firstname,$lastname,$middle_name,$email) {
+
+            $sql = $this->con->prepare("SELECT teacher_id FROM teacher
+                WHERE LOWER(firstname) = :firstname
+                AND LOWER(lastname) = :lastname
+                AND LOWER(middle_name) = :middle_name
+                AND LOWER(email) = :email");
+            
+            $sql->bindValue(":firstname", $firstname);
+            $sql->bindValue(":lastname", $lastname);
+            $sql->bindValue(":middle_name", $middle_name);
+            $sql->bindValue(":email", $email);
+            $sql->execute();
+            if($sql->rowCount() > 0){
+
+               return true;
+            }
+            
+            return false;
+        } 
+
         public function GetTeacherFullName() {
            $firstname = $this->GetTeacherFirstName();
            $lastname = $this->GetTeacherLastName();

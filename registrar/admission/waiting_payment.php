@@ -123,14 +123,14 @@
         >
           Waiting payment (<?php echo $waitingPaymentEnrollmentCount;?>)
         </button>
-        <button
+        <!-- <button
           class="tab"
           id="shsApproval"
           style="background-color: var(--them); color: white"
           onclick="window.location.href = 'waiting_approval.php';"
         >
           Waiting approval (<?php echo $waitingApprovalEnrollmentCount;?>)
-        </button>
+        </button> -->
         <button
           class="tab"
           id="shsEnrolled"

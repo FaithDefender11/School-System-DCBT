@@ -58,13 +58,6 @@
 
         $student_id = $enrollment_form_student_id;
 
-        // echo $student_id;
-        // echo $student_id;
-
-        // echo $enrollment_form_id_url;
-
-        // return;
-
         $checkRequirementExists = $requirement->CheckStudentExisted($student_id);
         
 
@@ -147,8 +140,6 @@
 
         // var_dump($registrarName);
         // var_dump($student_enrollment_status);
-
-
 
         $student_enrollment_made_date = $enrollment->GetEnrollmentMadeDateForm($student_id,
             $enrollment_id, $current_school_year_id);
@@ -337,9 +328,6 @@
 
         // echo $student_enrollment_form_id;
 
-
-
- 
 
         include_once('./changeEnrolledStudentProgramModal.php');
         
@@ -805,7 +793,6 @@
                                     if(isset($_POST['subject_load_btn']) 
                                         && isset($_POST['unique_enrollment_form_id'])){
                                        
-                                    
                                         $array_success = [];
 
                                         $unique_enrollment_form_id = $_POST['unique_enrollment_form_id'];
@@ -816,6 +803,7 @@
                                             $current_school_year_id);
 
                                         $isAllFinalized = false;
+
                                         $successEnrollmentEnrolled = false;
 
                                         $successEnrollmentEnrolled = $enrollment->EnrollmentFormMarkAsEnrolled(
@@ -825,8 +813,6 @@
                                                 $student_enrollment_form_id,
                                                 $student_enrollment_student_status);
                                         
-                                        $grade = new StudentSubjectGrade($con);
-
                                         if($successEnrollmentEnrolled){
 
                                             $section_exec = new Section($con, $student_enrollment_course_id);
@@ -834,8 +820,6 @@
                                             $latestStudentNumberInSection = $section_exec->
                                                 GetTotalNumberOfStudentInSection($student_enrollment_course_id,
                                                     $current_school_year_id);
-                                            
-                                            
 
                                             foreach ($assignedSubjects as $key => $value) {
 
@@ -858,226 +842,218 @@
 
                                             if($isAllFinalized == true){
 
-                                                # Check if student has enrolled form, if has removed the form
-                                                # and enrolled the new tentative form
+                                                # Update latest section to the student & username, student_unique_id creation
+
+                                                // $created_student_unique_id = $student->GenerateUniqueStudentHexaDecimalNumber();
                                                 
-                                                // $checkPreviousEnrolled = $enrollment->CheckStudentHasEnrolledFormAndRemove(
-                                                //     $student_id, $current_school_year_id);
+                                                # FROM 000001 to 999999, and 1000000 and so on again,
+                                                
+                                                $created_student_unique_id = $student->generateNexStudentUniqueId();
+                                                // $created_student_unique_id = "123123";
 
-                                                // if(($markEnrolled) == true){
+                                                $created_student_username = $student->GenerateStudentUsername(
+                                                    $student_lastname,
+                                                    $created_student_unique_id);
 
-                                                    // $change_student_course_id_success = $student->UpdateStudentCourseId($student_id,
-                                                    //     $student_course_id, $student_enrollment_course_id,
-                                                    //     $enrollment_course_section_level, $student_enrollment_student_status);
-                                                    
-                                                    # Update latest section to the student & username, student_unique_id creation
+                                                $generate_password = $student->GenerateRandomPassword();
 
-                                                    // $created_student_unique_id = $student->GenerateUniqueStudentHexaDecimalNumber();
-                                                    
-                                                    # FROM 000001 to 999999, and 1000000 and so on again,
-                                                    
-                                                    $created_student_unique_id = $student->generateNexStudentUniqueId();
-                                                    // $created_student_unique_id = "123123";
+                                                $updateStudentEnrollmentFormBasedSuccess = false;
 
-                                                    $created_student_username = $student->GenerateStudentUsername(
-                                                        $student_lastname,
-                                                        $created_student_unique_id);
+                                                if($enrollment_is_new == 1 && $student_admission_status === "New"){
 
-                                                    $generate_password = $student->GenerateRandomPassword();
+                                                    $updateStudentEnrollmentFormBasedSuccess = $student->UpdateStudentEnrollmentFormBased(
+                                                        $student_id,
+                                                        $enrollment_course_section_level,
+                                                        $student_enrollment_course_id,
+                                                        $student_enrollment_student_status,
+                                                        $created_student_unique_id,
+                                                        $created_student_username,
+                                                        $generate_password);
 
-                                                    $updateStudentEnrollmentFormBasedSuccess = false;
+                                                    # Create the Student Requirement Table
+                                                    # Enrollment New Form.
+                                                    if($updateStudentEnrollmentFormBasedSuccess == true){
 
-                                                    if($enrollment_is_new == 1 && $student_admission_status === "New"){
+                                                        # If student has Pending Table, Removed as it was created and officially
+                                                        # enrolled in the Student Table.
 
-                                                        $updateStudentEnrollmentFormBasedSuccess = $student->UpdateStudentEnrollmentFormBased(
-                                                            $student_id,
-                                                            $enrollment_course_section_level,
-                                                            $student_enrollment_course_id,
-                                                            $student_enrollment_student_status,
-                                                            $created_student_unique_id,
-                                                            $created_student_username,
-                                                            $generate_password);
+                                                        $get_student_new_pending_id = $pending->GetPendingAccountByStudentTable(
+                                                            $student_email, $student_firstname, $student_lastname);
 
-                                                        # Create the Student Requirement Table
-                                                        # Enrollment New Form.
-                                                        if($updateStudentEnrollmentFormBasedSuccess == true){
-
-                                                            # If student has Pending Table, Removed as it was created and officially
-                                                            # enrolled in the Student Table.
-
-                                                            $get_student_new_pending_id = $pending->GetPendingAccountByStudentTable(
-                                                                $student_email, $student_firstname, $student_lastname);
-
-                                                            if($get_student_new_pending_id !== NULL){
+                                                        if($get_student_new_pending_id !== NULL){
 
 
-                                                                // $processEnrolled = true;
+                                                            // $processEnrolled = true;
+                                                        
+                                                            # Once officially enrolled,
+                                                            # 1. Pending Enrollee Account -> Removed.
+                                                            # 2. Parent Pending Enrollee Id -> NULL, Student_Id (Updated)
+                                                            # 3. Student School History Pending Enrollee Id -> NULL, Student_Id (Updated)
+
+                                                            $parent = new PendingParent($con);
+
+                                                            $parentEnrolleeRemovalSuccess = $parent->PendingEnrolleeSetAsNull(
+                                                                $get_student_new_pending_id, $student_id);
+
+                                                            # Set School History Pending Id to Null (Because Pending enrollee is now enrolled (Student Table generated))
+                                                            $studentHistoryEnrolleeRemovalSuccess = $pending->SchoolHistoryEnrolleeSetAsNullAndStudentIdUpdated(
+                                                                $get_student_new_pending_id, $student_id);
+
+                                                            # Pending Mark as Enrolled
+                                                            $successRejected = $pending->MarkAsEnrolled($get_student_new_pending_id);
                                                             
-                                                                # Once officially enrolled,
-                                                                # 1. Pending Enrollee Account -> Removed.
-                                                                # 2. Parent Pending Enrollee Id -> NULL, Student_Id (Updated)
-                                                                # 3. Student School History Pending Enrollee Id -> NULL, Student_Id (Updated)
+                                                            # Pending Removal if it he was being enrolled.
+                                                            // $pendingSuccessRemoval = $pending->RemoveNewEnrollee($get_student_new_pending_id);
 
-                                                                $parent = new PendingParent($con);
-
-                                                                $parentEnrolleeRemovalSuccess = $parent->PendingEnrolleeSetAsNull(
-                                                                    $get_student_new_pending_id, $student_id);
-
-                                                                # Set School History Pending Id to Null (Because Pending enrollee is now enrolled (Student Table generated))
-                                                                $studentHistoryEnrolleeRemovalSuccess = $pending->SchoolHistoryEnrolleeSetAsNullAndStudentIdUpdated(
-                                                                    $get_student_new_pending_id, $student_id);
-
-                                                                # Pending Mark as Enrolled
-                                                                $successRejected = $pending->MarkAsEnrolled($get_student_new_pending_id);
-                                                                
-                                                                # Pending Removal if it he was being enrolled.
-                                                                // $pendingSuccessRemoval = $pending->RemoveNewEnrollee($get_student_new_pending_id);
-
-                                                            }
-                                                        
-                                                            if($student_pending_enrollee_id != NULL){
-
-                                                                $updateStudentIdOnRequirement = $requirement->UpdateStudentIdOnRequirement(
-                                                                    $student_id, $student_pending_enrollee_id);
-                                                            }
                                                         }
-
-                                                    }
-
-                                                    # RFR
-                                                    if($enrollment_is_new == 0 && $student_admission_status === "Old"){
-
-                                                        # Updating Student Course Id Scenario is Either on
-                                                        # 1. Ongoing student decided to change program
-                                                        # 2. Moving Up to Higher Program Level (STEM11-A -> STEM12-A)
-                                                        # 3. Has previous regular form but now is Irregular
-                                                        
-                                                        $wasSuccess = $student->UpdateOldStudentEnrollmentForm(
-                                                            $student_id,
-                                                            $enrollment_course_section_level,
-                                                            $student_enrollment_course_id,
-                                                            $student_enrollment_student_status);
-
-                                                        // if($wasSuccess){
-                                                        //     $updateStudentEnrollmentFormBasedSuccess = true;
-                                                        // }
-                                                    }
                                                     
+                                                        if($student_pending_enrollee_id != NULL){
 
-                                                    $capacity = $section->GetSectionCapacity();
-                                                    $course_program_id = $section->GetSectionProgramId($student_enrollment_course_id);
-                                                    $course_level = $section->GetSectionGradeLevel();
-                                                    $program_section = $section->GetSectionName();
+                                                            $updateStudentIdOnRequirement = $requirement->UpdateStudentIdOnRequirement(
+                                                                $student_id, $student_pending_enrollee_id);
+                                                        }
+                                                    }
 
-                                                    $successCreateNewSection = false;
+                                                }
 
-                                                    $checkNextActiveSectionIfExistNotFull = $section->CheckNextActiveSectionIfExistNotFull($program_section,
-                                                        $current_school_year_term);
+                                                # Old Student
+                                                if($enrollment_is_new == 0 && $student_admission_status === "Old"){
 
-                                                    $checkNextActiveSectionIfExist = $section->CheckNextActiveSectionIfExist($program_section,
-                                                        $current_school_year_term);
+                                                    # Updating Student Course Id Scenario is Either on
+                                                    # 1. Ongoing student decided to change program
+                                                    # 2. Moving Up to Higher Program Level (STEM11-A -> STEM12-A)
+                                                    # 3. Has previous regular form but now is Irregular
+                                                    
+                                                    $wasSuccess = $student->UpdateOldStudentEnrollmentForm(
+                                                        $student_id,
+                                                        $enrollment_course_section_level,
+                                                        $student_enrollment_course_id,
+                                                        $student_enrollment_student_status);
 
-                                                    # HUMMS11-A = 2 / 3
-                                                    # 3 / 3, 
-                                                    # if next created same program & level section is not full it should not create HUMMS11-B
-                                                    # if next created same program & level section is full it should create HUMMS11-C
-                                                    # HUMMS11-B (NOT FULL)
-                                                    # HUMMS11-B (FULL)
-
-                                                    # This will automatically active the inactive section (if there any existing section)
-                                                    // $checkNextInActiveSectionIfExistAndUpdateToActive = $section
-                                                    //     ->CheckNextInActiveSectionIfExistAndUpdateToActive($program_section,
-                                                    //     $current_school_year_term);
-
-                                                    // $updateInActivePreviousSectionToActive = false;
-
-                                                    // if($checkNextInActiveSectionIfExistAndUpdateToActive){
-                                                    //     $updateInActivePreviousSectionToActive = true;
+                                                    // if($wasSuccess){
+                                                    //     $updateStudentEnrollmentFormBasedSuccess = true;
                                                     // }
+                                                }
+                                                
 
+                                                $capacity = $section->GetSectionCapacity();
+                                                $course_program_id = $section->GetSectionProgramId($student_enrollment_course_id);
+                                                $course_level = $section->GetSectionGradeLevel();
+                                                $program_section = $section->GetSectionName();
 
-                                                    // $section_exec = new Section($con, $student_enrollment_course_id);
-                                                    // $latestStudentNumberInSection = $section_exec->
-                                                    //     GetTotalNumberOfStudentInSection($student_enrollment_course_id,
-                                                    //         $current_school_year_id);
+                                                $successCreateNewSection = false;
 
-                                                    
-                                                    if ($latestStudentNumberInSection >= $capacity &&
-                                                        count($hasAvailableRoomWithinSemester) > 0
-                                                        && (($checkNextActiveSectionIfExist && !$checkNextActiveSectionIfExistNotFull) 
-                                                                || !$checkNextActiveSectionIfExist)){
+                                                $checkNextActiveSectionIfExistNotFull = $section->CheckNextActiveSectionIfExistNotFull($program_section,
+                                                    $current_school_year_term);
 
-                                                        # Update Previous Section into Is FULL.
-                                                        $update_isfull = $section->SetSectionIsFull($student_enrollment_course_id);
-                                                        
-                                                        $new_program_section = $section->AutoCreateAnotherSection($program_section);
+                                                $checkNextActiveSectionIfExist = $section->CheckNextActiveSectionIfExist($program_section,
+                                                    $current_school_year_term);
 
-                                                        # Create New Section
-                                                        $createNewSection = $section->CreateNewSection($new_program_section, 
-                                                            $course_program_id, $course_level,
-                                                            $current_school_year_term);
+                                                # HUMMS11-A = 2 / 3
+                                                # 3 / 3, 
+                                                # if next created same program & level section is not full it should not create HUMMS11-B
+                                                # if next created same program & level section is full it should create HUMMS11-C
+                                                # HUMMS11-B (NOT FULL)
+                                                # HUMMS11-B (FULL)
 
-                                                        if($createNewSection == true){
+                                                # This will automatically active the inactive section (if there any existing section)
+                                                // $checkNextInActiveSectionIfExistAndUpdateToActive = $section
+                                                //     ->CheckNextInActiveSectionIfExistAndUpdateToActive($program_section,
+                                                //     $current_school_year_term);
 
-                                                            $successCreateNewSection = true;
+                                                // $updateInActivePreviousSectionToActive = false;
 
-                                                            if($successCreateNewSection == true){
-
-                                                                // Alert::success("Enrollment Form ID: $student_enrollment_form_id is now enrolled. This section is now full,
-                                                                //     System has created new section.", "../student/record_details.php?id=$student_id&enrolled_subject=show");
-                                                                // $processEnrolled = true;
-
-                                                                // Alert::success("Enrollment Form ID: $student_enrollment_form_id is now enrolled and New section has been created.", "../student/record_details.php?id=$student_id&enrolled_subject=show");
-                                                                
-                                                                Alert::successEnrollment("Enrollment Form ID: $student_enrollment_form_id is now enrolled and New section has been created.", "");
-                                                                $student_subject->SendingEmailAfterSuccessfulEnrollment(
-                                                                    $processEnrolled, $generate_password);
-                                                                
-                                                                // exit();
-                                                            
-                                                            }
-                                                        }
-                                                        
-                                                    }
-
-                                                    if($successCreateNewSection == false){
-
-                                                        // Alert::success("Enrollment Form ID: $student_enrollment_form_id is now enrolled.", "../student/record_details.php?id=$student_id&enrolled_subject=show");
-                                                    
-                                                        $enrollmentAudit = new EnrollmentAudit($con);
-
-                                                        $registrarName = "";
-                                                        if($registrarUserId != ""){
-                                                            $user = new User($con, $registrarUserId);
-                                                            $registrarName = ucwords($user->getFirstName()) . " " . ucwords($user->getLastName());
-                                                        }
-                                                        
-                                                        $now = date("Y-m-d H:i:s");
-                                                        $date_creation = date("M d, Y h:i a", strtotime($now));
-
-                                                        $description = "Registrar '$registrarName' has approved the enrollment form '$enrollment_form_id_real' and placed into section '$enrollment_course_section_name' on $date_creation";
-
-                                                        $doesAuditInserted = $enrollmentAudit->EnrollmentAuditInsert(
-                                                            $enrollment_form_id_url,
-                                                            $description, $current_school_year_id, $registrarUserId
-                                                        );
-
-                                                        Alert::successEnrollment("Enrollment Form ID: $student_enrollment_form_id is now enrolled.", "../student/record_details.php?id=$student_id&enrolled_subject=show");
-                                                        
-                                                        #approvestate
-                                                        # Check if enrollment form is new, the it should have 
-                                                        # the generate password only for new enrollee
-                                                        $student_subject->SendingEmailAfterSuccessfulEnrollment(
-                                                            $processEnrolled,  $generate_password);
-
-                                                    }
-
+                                                // if($checkNextInActiveSectionIfExistAndUpdateToActive){
+                                                //     $updateInActivePreviousSectionToActive = true;
                                                 // }
+
+
+                                                // $section_exec = new Section($con, $student_enrollment_course_id);
+                                                // $latestStudentNumberInSection = $section_exec->
+                                                //     GetTotalNumberOfStudentInSection($student_enrollment_course_id,
+                                                //         $current_school_year_id);
+
+                                                
+                                                if ($latestStudentNumberInSection >= $capacity &&
+                                                    count($hasAvailableRoomWithinSemester) > 0
+                                                    && (($checkNextActiveSectionIfExist && !$checkNextActiveSectionIfExistNotFull) 
+                                                            || !$checkNextActiveSectionIfExist)){
+
+                                                    # Update Previous Section into Is FULL.
+                                                    $update_isfull = $section->SetSectionIsFull($student_enrollment_course_id);
+                                                    
+                                                    $new_program_section = $section->AutoCreateAnotherSection($program_section);
+
+                                                    # Create New Section
+                                                    $createNewSection = $section->CreateNewSection($new_program_section, 
+                                                        $course_program_id, $course_level,
+                                                        $current_school_year_term);
+
+                                                    if($createNewSection == true){
+
+                                                        $successCreateNewSection = true;
+
+                                                        if($successCreateNewSection == true){
+
+                                                            // Alert::success("Enrollment Form ID: $student_enrollment_form_id is now enrolled. This section is now full,
+                                                            //     System has created new section.", "../student/record_details.php?id=$student_id&enrolled_subject=show");
+                                                            // $processEnrolled = true;
+
+                                                            // Alert::success("Enrollment Form ID: $student_enrollment_form_id is now enrolled and New section has been created.", "../student/record_details.php?id=$student_id&enrolled_subject=show");
+                                                            
+                                                            Alert::successEnrollment("Enrollment Form ID: $student_enrollment_form_id is now enrolled and New section has been created.", "");
+                                                            
+                                                            $student_subject->SendingEmailAfterSuccessfulEnrollment(
+                                                                $processEnrolled, $generate_password);
+                                                            
+                                                            // exit();
+                                                        
+                                                        }
+                                                    }
+                                                    
+                                                }
+
+                                                if($successCreateNewSection == false){
+
+                                                    // Alert::success("Enrollment Form ID: $student_enrollment_form_id is now enrolled.", "../student/record_details.php?id=$student_id&enrolled_subject=show");
+                                                
+                                                    $enrollmentAudit = new EnrollmentAudit($con);
+
+                                                    $registrarName = "";
+
+                                                    if($registrarUserId != ""){
+                                                        $user = new User($con, $registrarUserId);
+                                                        $registrarName = ucwords($user->getFirstName()) . " " . ucwords($user->getLastName());
+                                                    }
+                                                    
+                                                    $now = date("Y-m-d H:i:s");
+                                                    $date_creation = date("M d, Y h:i a", strtotime($now));
+
+                                                    $description = "Registrar '$registrarName' has approved the enrollment form '$enrollment_form_id_real' and placed into section '$enrollment_course_section_name' on $date_creation";
+
+                                                    $doesAuditInserted = $enrollmentAudit->EnrollmentAuditInsert(
+                                                        $enrollment_form_id_url,
+                                                        $description, $current_school_year_id, $registrarUserId
+                                                    );
+
+                                                    Alert::successEnrollment("Enrollment Form ID: $student_enrollment_form_id is now enrolled.", "../student/record_details.php?id=$student_id&enrolled_subject=show");
+                                                    
+                                                    #approvestate
+                                                    # Check if enrollment form is new, the it should have 
+                                                    # the generate password only for new enrollee
+                                                    $student_subject->SendingEmailAfterSuccessfulEnrollment(
+                                                        $processEnrolled,  $generate_password);
+
+                                                }
+
+                                            // }
                                             }
 
                                         }
                                     }
 
+                                    ## END OF $_POST  
+                                    ## 
                                     $student_enrollment_program_id = $section->
                                         GetSectionProgramId($student_enrollment_course_id);
 

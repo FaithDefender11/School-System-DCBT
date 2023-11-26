@@ -110,6 +110,7 @@
         $section = new Section($con, $schedule_course_id);
 
         $section_program_id = $section->GetSectionProgramId($schedule_course_id);
+        $db_section_capacity = $section->GetSectionCapacity();
 
         $program = new Program($con, $section_program_id);
 
@@ -182,7 +183,11 @@
             && isset($_POST['subject_program_id'])
             && isset($_POST['time_from'])
             && isset($_POST['time_to'])
-            && isset($_POST['schedule_day'])){
+            && isset($_POST['schedule_day'])
+            && isset($_POST['schedule_room_capacity'])
+            
+            
+            ){
 
 
             $course_id = $_POST['course_id'];
@@ -192,6 +197,7 @@
             $raw_time_from = $_POST['time_from'];
             $raw_time_to = $_POST['time_to'];
 
+            $schedule_room_capacity = intval($_POST['schedule_room_capacity']);
 
             $time_from = date("H:i", strtotime($_POST['time_from']));
             // $time_from = str_replace(["AM", "PM"], "", $time_from);
@@ -201,8 +207,7 @@
             $checkIfTimeIsEqualPrompt = $schedule->CheckIfTimeIsEqual($time_from,
                 $time_to);
 
-            $checkIfTimeFromIsGreaterPrompt = $schedule->CheckIfTimeFromIsGreater($time_from,
-                $time_to);
+
 
             // var_dump($checkIfTimeFromIsGreaterPrompt);
             
@@ -266,15 +271,34 @@
             $section_subject_code = $section->CreateSectionSubjectCode(
                 $sectionName, $get_subject_code);
 
-
-
                 // echo "selected: ";
                 // var_dump($selectedTeacherId);
 
                 // return;
 
+            $hasNoError = true;
 
-            if($checkIfTimeFromIsGreaterPrompt == true){
+            $checkIfTimeFromIsGreaterPrompt = $schedule->CheckIfTimeFromIsGreater($time_from,
+                $time_to);
+
+
+            if($checkIfTimeFromIsGreaterPrompt == false){
+
+                $hasNoError = false;
+            }
+            
+
+
+            if($room_id != NULL){
+
+                $room = new Room($con, $room_id);
+                $selected_room_capacity = $room->GetRoomCapacity();
+
+                $hasNoError = $schedule->CheckScheduleRoom($schedule_room_capacity,
+                    $selected_room_capacity);
+            }
+
+            if($hasNoError == true){
 
                 $wasSuccessUpdate = $schedule->UpdateSubjectSchedule($subject_schedule_id,
                     $schedule_day, $time_from, $time_to, $raw_time_from, $raw_time_to,
@@ -346,6 +370,11 @@
                                     <!-- <input type="hidden" id="subject_program_id" name="subject_program_id"> -->
                                 </div>
 
+                                <div class="mb-3">
+                                    <label for="schedule_room_capacity">* Capacity</label>
+                                    <input style="pointer-events: none;" value="<?= $db_section_capacity?>" required name="schedule_room_capacity" id="schedule_room_capacity" class="form-control" />
+                                </div>
+
                                 <div class="form-group mb-3">
 
                                     <!-- <label for="room_id">* Room</label> -->
@@ -374,17 +403,20 @@
 
                                                     $room_id = $row['room_id'];
                                                     $room_number = $row['room_number'];
+                                                    $room_capacity = $row['room_capacity'];
 
                                                     // $teacher = new Teacher($con, $teacher_id);
                                                     // $fullname = $teacher->GetTeacherFullName();
                                                     
                                                     $selected = "";
 
-                                                    if($schedule_room_id === $room_id){
+                                                    if($schedule_room_id == $room_id){
                                                         $selected = "selected";
                                                     }
 
-                                                    echo "<option $selected value='$room_id'>$room_number</option>";
+                                                    // echo "<option $selected value='$room_id'>$room_number</option>";
+                                                    echo "<option $selected value='$room_id'>Room: $room_number &nbsp; &nbsp; Capacity: $room_capacity</option>";
+
                                                 }
                                             }else{
                                                 echo "<option value=''>No available room.</option>";

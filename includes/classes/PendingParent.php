@@ -1536,14 +1536,14 @@
 
             $update = $this->con->prepare("UPDATE parent
 
-                SET student_id=:set_student_id,
-                    pending_enrollees_id =:set_pending_enrollee_id
+                SET student_id=:set_student_id
+                    -- pending_enrollees_id =:set_pending_enrollee_id
                 WHERE parent_id=:parent_id
             
                 ");
             
             $update->bindValue(":set_student_id", $student_id);
-            $update->bindValue(":set_pending_enrollee_id", NULL);
+            // $update->bindValue(":set_pending_enrollee_id", NULL);
             $update->bindValue(":parent_id", $parent_id);
             $update->execute();
 

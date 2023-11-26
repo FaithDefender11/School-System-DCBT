@@ -143,7 +143,19 @@
             $enrollee_enrollment_status = $row['enrollment_status'];
             $pending_course_level = $row['course_level'];
             $new_enrollee_enrollment_status = $row['enrollment_status'];
+            $new_enrollee_program_id = $row['program_id'];
 
+            // var_dump($new_enrollee_program_id);
+
+            $program = new Program($con, $new_enrollee_program_id);
+
+            $enrollee_department_id = $program->GetProgramDepartmentId();
+
+            $department = new Department($con, $enrollee_department_id);
+
+            $enrollee_department_name = $department->GetDepartmentName();
+
+            // var_dump($enrollee_department_name);
 
             // echo $new_enrollee_enrollment_status;    
 
@@ -434,9 +446,9 @@
                              <?php echo Helper::RevealStudentTypePending($type); ?>
 
                             <header>
-                            <div class="title">
-                                <h1>Enrollment form</h1>
-                            </div>
+                                <div class="title">
+                                    <h1>Enrollment form</h1>
+                                </div>
                             <div class="action">
                                 <div class="dropdown">
                                 <button class="icon">
@@ -701,6 +713,7 @@
 
     // Return button (Find Section), student table is now dependent not the pending table.
 
+    # STID
     if(isset($_GET['st_id'])){
 
         $student_id = $_GET['st_id'];
@@ -870,6 +883,7 @@
         // echo $student_enrollment_form_id;
         
         $section = new Section($con, $student_enrollment_course_id);
+
         // Enrollment form course Based
         $student_program_section = $section->GetSectionName();
         $section_capacity = $section->GetSectionCapacity();
@@ -877,6 +891,11 @@
         $section_program_id = $section->GetSectionProgramId($student_enrollment_course_id);
         $section_department_id = $section->GetDepartmentIdByProgramId($section_program_id);
 
+        $department = new Department($con, $section_department_id);
+
+        
+        $student_department_name = $department->GetDepartmentName();
+        # QQ
         // echo $section_department_id;
 
 

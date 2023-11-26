@@ -610,6 +610,118 @@
         return [];
     }
 
+    public function GetStandardRequirementsForEducationType($status, $educ_type = null) {
+
+        $educ_type_query = "";
+
+        if($educ_type != NULL){
+            if($educ_type == "SHS"){
+                $educ_type_query = "AND education_type='SHS'";
+            }
+
+            if($educ_type == "Tertiary"){
+                $educ_type_query = "AND education_type='Tertiary'";
+            }
+        }
+
+        $query = $this->con->prepare("SELECT * FROM requirement
+          
+            WHERE 
+                (status=:status
+                AND is_enabled=:is_enabled
+                $educ_type_query
+            )
+
+            
+            
+            GROUP BY requirement_name
+        ");
+     
+        $query->bindValue(":status", $status);
+        $query->bindValue(":is_enabled", 1);
+        $query->execute();
+
+        if($query->rowCount() > 0){
+           return $query->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        return [];
+    }
+
+    public function GetRequirementsForStandardUniversal() {
+
+         
+        $query = $this->con->prepare("SELECT * FROM requirement
+          
+            WHERE 
+                (status=:status
+                AND is_enabled=:is_enabled
+                AND education_type= 'Universal'
+            )
+
+            GROUP BY requirement_name
+        ");
+     
+        $query->bindValue(":status", "Standard");
+        $query->bindValue(":is_enabled", 1);
+        $query->execute();
+
+        if($query->rowCount() > 0){
+           return $query->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        return [];
+    }
+
+    public function GetRequirementsForTransfereeUniversal() {
+         
+        $query = $this->con->prepare("SELECT * FROM requirement
+          
+            WHERE 
+                (status=:status
+                AND is_enabled=:is_enabled
+                AND education_type= 'Universal'
+            )
+
+            GROUP BY requirement_name
+        ");
+     
+        $query->bindValue(":status", "Transferee");
+        $query->bindValue(":is_enabled", 1);
+        $query->execute();
+
+        if($query->rowCount() > 0){
+           return $query->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        return [];
+    }
+
+    public function GetRequirementsForEducationTypeTransferee($education_type) {
+         
+        $query = $this->con->prepare("SELECT * FROM requirement
+          
+            WHERE 
+                (status=:status
+                AND is_enabled=:is_enabled
+                AND education_type= '$education_type'
+            )
+
+            GROUP BY requirement_name
+        ");
+     
+        $query->bindValue(":status", "Transferee");
+        $query->bindValue(":is_enabled", 1);
+        $query->execute();
+
+        if($query->rowCount() > 0){
+           return $query->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        return [];
+    }
+
+ 
 
     # Get EnrolleeRequirement
     public function GetStudentRequirement($pending_enrollees_id, $school_year_id) {
@@ -708,18 +820,55 @@
     }
 
     public function InsertRequirement($requirement_name,
-        $status, $is_enabled) {
+        $status, $is_enabled, $education_type) {
 
-        $statement = $this->con->prepare("INSERT INTO requirement (requirement_name, status, is_enabled) VALUES (:requirement_name, :status, :is_enabled)");
+        $acronym = str_replace(' ', '_', strtolower($requirement_name));
 
-        $statement->bindParam(":requirement_name", $requirement_name);
-        $statement->bindParam(":status", $status);
-        $statement->bindParam(":is_enabled", $is_enabled);
+        $statement = $this->con->prepare("INSERT INTO requirement 
+            (requirement_name, status, is_enabled, education_type, acronym)
+            VALUES (:requirement_name, :status, :is_enabled, :education_type, :acronym)
+        ");
+
+        $statement->bindValue(":requirement_name", $requirement_name);
+        $statement->bindValue(":status", $status);
+        $statement->bindValue(":is_enabled", $is_enabled);
+        $statement->bindValue(":education_type", $education_type);
+        $statement->bindValue(":acronym", $acronym);
 
         if ($statement->execute()) {
             return true; // Insert was successful
         } else {
             return false; // Insert failed
+        }
+    }
+
+    public function UpdateRequirement(
+        $requirement_id, $requirement_name,
+        $status, $education_type, $is_enabled) {
+
+        $acronym = str_replace(' ', '_', strtolower($requirement_name));
+
+        $statement = $this->con->prepare("UPDATE requirement 
+            SET requirement_name = :requirement_name, 
+                status = :status, 
+                education_type = :education_type, 
+                acronym = :acronym,
+                is_enabled = :is_enabled 
+            WHERE requirement_id = :requirement_id
+        ");
+
+        $statement->bindValue(":requirement_id", $requirement_id);
+        $statement->bindValue(":requirement_name", $requirement_name);
+        $statement->bindValue(":status", $status);
+        $statement->bindValue(":education_type", $education_type);
+        $statement->bindValue(":acronym", $acronym);
+        $statement->bindValue(":is_enabled", $is_enabled);
+
+
+        if ($statement->execute()) {
+            return true; // Update was successful
+        } else {
+            return false; // Update failed
         }
     }
 

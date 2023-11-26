@@ -1132,20 +1132,20 @@
             // }
 
             # TEACHER 
-            $check_teacher_id_conflict = $this->CheckTeacherScheduleConflicted(
-                $time_from, $time_to, $schedule_day,
-                $teacher_id, $school_year_id,
-                null
-            );
+            // $check_teacher_id_conflict = $this->CheckTeacherScheduleConflicted(
+            //     $time_from, $time_to, $schedule_day,
+            //     $teacher_id, $school_year_id,
+            //     null
+            // );
 
             // var_dump($check_teacher_id_conflict);
             // return;
 
-            // $check_teacher_id_conflict = $this->CheckTeacherScheduleConflicted(
-            //     $time_from, $time_to, $schedule_day,
-            //     $teacher_id, $school_year_id,
-            //     $subject_schedule_id
-            // );
+            $check_teacher_id_conflict = $this->CheckTeacherScheduleConflicted(
+                $time_from, $time_to, $schedule_day,
+                $teacher_id, $school_year_id,
+                $subject_schedule_id
+            );
 
             
             # Teacher Schedule Conflict Section. ( Only 1 selected subject_code )
@@ -1201,6 +1201,7 @@
                     "LOGIC 1 Desired Schedule: $time_from_meridian_military - $time_to_meridian_military <br> ( $schedule_day ) Room: $room_inserted_number <br> Subject: $selected_title ($existing_subject_code)", "");
                 exit();  
             }
+            
 
             # Changing subject_schedule and adjustment of subject_period_code_topic (teacher id)
 

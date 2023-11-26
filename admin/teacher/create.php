@@ -23,6 +23,8 @@
 
     // echo $teacherRandomPassword;
 
+        // var_dump($chech);
+
     if(isset($_POST['create_teacher_btn'])){
 
         $firstname = $_POST['firstname'];
@@ -39,8 +41,21 @@
         $birthday = $_POST['birthday'];
         $religion = $_POST['religion'];
 
+        $hasError = false;
+        
+        $chech = $teacher->CheckTeacherExistsBasedOnFirstLastMiddleEmail(
+            $firstname,$lastname,$middle_name, $teacher_email);
 
-        $status = "active";
+        if($chech == true){
+            $hasError = true;
+
+            Alert::error("Teacher already exists with the provided credentials", "");
+            // exit();
+        }
+
+        # Firstname, Lastname, Email
+
+        $status = "Active";
 
         $password = "2023-11-12";
 
@@ -65,94 +80,99 @@
             mkdir('../../assets/images/teacher_profiles');
         }
 
-        if ($image && $image['tmp_name']) {
+        if($hasError == false){
 
-            $uploadDirectory = '../../assets/images/teacher_profiles/';
-            $originalFilename = $image['name'];
+            if ($image && $image['tmp_name']) {
 
-            $uniqueFilename = uniqid() . '_' . time() . '_' . $originalFilename;
-            $targetPath = $uploadDirectory . $uniqueFilename;
+                $uploadDirectory = '../../assets/images/teacher_profiles/';
+                $originalFilename = $image['name'];
 
-            move_uploaded_file($image['tmp_name'], $targetPath);
+                $uniqueFilename = uniqid() . '_' . time() . '_' . $originalFilename;
+                $targetPath = $uploadDirectory . $uniqueFilename;
 
-            $imagePath = $targetPath;
+                move_uploaded_file($image['tmp_name'], $targetPath);
 
-            // Remove Directory Path in the Database.
-            $imagePath = str_replace('../../', '', $imagePath);
-        }
+                $imagePath = $targetPath;
 
-        $username = trim(strtolower($lastname)).".".$newTeacherId."Fdcbt.edu.ph";
-
-        $query = "INSERT INTO teacher 
-            (password, firstname, middle_name, lastname, suffix, department_id, profilePic, gender, email, contact_number,
-            address, citizenship, birthplace, birthday, religion,
-            teacher_status, school_teacher_id, username) 
-
-            VALUES (:password, :firstname, :middle_name, :lastname, :suffix, :department_id, :profilePic, :gender, :email, :contact_number,
-            :address, :citizenship, :birthplace, :birthday, :religion, 
-            :teacher_status, :school_teacher_id, :username)
-        ";
-
-        $statement = $con->prepare($query);
-
-        $statement->bindParam(':password', $hash_password);
-        $statement->bindParam(':firstname', $firstname);
-        $statement->bindParam(':middle_name', $middle_name);
-        $statement->bindParam(':lastname', $lastname);
-        $statement->bindParam(':suffix', $suffix);
-        // $statement->bindParam(':suffix', $default_password);
-        $statement->bindParam(':department_id', $department_id);
-        $statement->bindParam(':profilePic', $imagePath);
-        $statement->bindParam(':gender', $gender);
-        $statement->bindParam(':email', $teacher_email);
-        $statement->bindParam(':contact_number', $contact_number);
-        $statement->bindParam(':address', $address);
-        $statement->bindParam(':citizenship', $citizenship);
-        $statement->bindParam(':birthplace', $birthplace);
-        $statement->bindParam(':birthday', $birthday);
-        $statement->bindParam(':religion', $religion);
-        $statement->bindParam(':teacher_status', $status);
-        $statement->bindParam(':school_teacher_id', $newTeacherId);
-        $statement->bindParam(':username', $username);
-
-        if ($statement->execute()) {
-
-            # Send teacher credentials.
-
-            try {
-
-                $email = new Email();
-
-
-                if (!empty($teacher_email) && filter_var($teacher_email, FILTER_VALIDATE_EMAIL)) {
-
-                    $isEmailSent = $email->SendTeacherCredentialsAfterCreation(
-                            $teacher_email, $username, $default_password, $adminName);
-
-                    if ($isEmailSent) {
-                        Alert::success("Teacher credentials has been delivered to teacher provided email: $teacher_email", "index.php");
-                        exit();
-
-                    } else {
-                        echo "Sending credentials via email went wrong";
-                    }
-
-                } 
-                else {
-                    echo "Invalid teacher provided email address";
-                }
-
-            } catch (Exception $e) {
-                // Handle PHPMailer exceptions
-                echo 'Message could not be sent. PHPMailer Error: ' . $e->getMessage();
-                // Handle other exceptions as needed
+                // Remove Directory Path in the Database.
+                $imagePath = str_replace('../../', '', $imagePath);
             }
 
+            $username = trim(strtolower($lastname)).".".$newTeacherId."Fdcbt.edu.ph";
 
-            // Alert::success("Successfully Created", "index.php");
-            // exit();
+            $query = "INSERT INTO teacher 
+                (password, firstname, middle_name, lastname, suffix, department_id, profilePic, gender, email, contact_number,
+                address, citizenship, birthplace, birthday, religion,
+                teacher_status, school_teacher_id, username) 
+
+                VALUES (:password, :firstname, :middle_name, :lastname, :suffix, :department_id, :profilePic, :gender, :email, :contact_number,
+                :address, :citizenship, :birthplace, :birthday, :religion, 
+                :teacher_status, :school_teacher_id, :username)
+            ";
+
+            $statement = $con->prepare($query);
+
+            $statement->bindParam(':password', $hash_password);
+            $statement->bindParam(':firstname', $firstname);
+            $statement->bindParam(':middle_name', $middle_name);
+            $statement->bindParam(':lastname', $lastname);
+            $statement->bindParam(':suffix', $suffix);
+            // $statement->bindParam(':suffix', $default_password);
+            $statement->bindParam(':department_id', $department_id);
+            $statement->bindParam(':profilePic', $imagePath);
+            $statement->bindParam(':gender', $gender);
+            $statement->bindParam(':email', $teacher_email);
+            $statement->bindParam(':contact_number', $contact_number);
+            $statement->bindParam(':address', $address);
+            $statement->bindParam(':citizenship', $citizenship);
+            $statement->bindParam(':birthplace', $birthplace);
+            $statement->bindParam(':birthday', $birthday);
+            $statement->bindParam(':religion', $religion);
+            $statement->bindParam(':teacher_status', $status);
+            $statement->bindParam(':school_teacher_id', $newTeacherId);
+            $statement->bindParam(':username', $username);
+
+            if ($statement->execute()) {
+
+                # Send teacher credentials.
+
+                try {
+
+                    $email = new Email();
+
+
+                    if (!empty($teacher_email) && filter_var($teacher_email, FILTER_VALIDATE_EMAIL)) {
+
+                        $isEmailSent = $email->SendTeacherCredentialsAfterCreation(
+                                $teacher_email, $username, $default_password, $adminName);
+
+                        if ($isEmailSent) {
+                            Alert::success("Teacher credentials has been delivered to teacher provided email: $teacher_email", "index.php");
+                            exit();
+
+                        } else {
+                            echo "Sending credentials via email went wrong";
+                        }
+
+                    } 
+                    else {
+                        echo "Invalid teacher provided email address";
+                    }
+
+                } catch (Exception $e) {
+                    // Handle PHPMailer exceptions
+                    echo 'Message could not be sent. PHPMailer Error: ' . $e->getMessage();
+                    // Handle other exceptions as needed
+                }
+
+
+                // Alert::success("Successfully Created", "index.php");
+                // exit();
+
+            }
 
         }
+
         //  else {
         //     Alert::error("Error Occured", "index.php");
         //     exit();

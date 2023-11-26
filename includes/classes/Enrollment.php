@@ -288,6 +288,40 @@
         return $returnBool;
     }
 
+
+    public function CheckStudentWasEnrolled(
+        $enrollment_id,
+        $school_year_id){
+
+        $returnBool = false;
+
+        $sql = $this->con->prepare("SELECT enrollment_status FROM enrollment 
+            -- AND course_id = :course_id
+            WHERE enrollment_id = :enrollment_id
+            AND school_year_id = :school_year_id
+            -- AND enrollment_status = :enrollment_status
+            ORDER BY enrollment_id DESC
+            LIMIT 1
+            ");
+
+        $sql->bindParam(":enrollment_id", $enrollment_id);
+        $sql->bindParam(":school_year_id", $school_year_id);
+        $sql->execute();
+
+        if($sql->rowCount() > 0){
+            $enrollment_status = $sql->fetchColumn();
+
+            if($enrollment_status == "enrolled"){
+                $returnBool = true;
+            }
+            if($enrollment_status == "tentative"){
+                $returnBool = false;
+            }
+        }
+
+        return $returnBool;
+    }
+
     public function GetStudentPreviousEnrolledForm(
         $student_id, $school_year_id){
 
@@ -1535,6 +1569,23 @@
 
         return $student_status;
     }
+    public function GetEnrollmentTotalToPayment($enrollment_id){
+
+        $query = $this->con->prepare("SELECT enrollment_payment 
+        
+            FROM enrollment
+            WHERE enrollment_id=:enrollment_id
+        ");
+
+        $query->bindValue(":enrollment_id", $enrollment_id);
+        $query->execute();
+
+        if($query->rowCount() > 0){
+            return $query->fetchColumn();
+        }
+
+        return NULL;
+    }
     
     public function EnrollmentPaymentCompleted(
         $enrollment_id){
@@ -1549,6 +1600,61 @@
 
 
         $sql->bindValue(":payment_status", $COMPLETE_PAYMENT);
+        $sql->bindValue(":enrollment_id", $enrollment_id);
+        $sql->execute();
+
+        if($sql->rowCount() > 0){
+            return true;
+        }
+            
+        return false;
+    }
+
+    public function SetEnrollmentPaymentMethodIntoCash(
+        $enrollment_id){
+
+        $CASH = "Cash";
+
+        $now = date("Y-m-d H:i:s");
+
+        $sql = $this->con->prepare("UPDATE enrollment
+            SET payment_method=:payment_method,
+                cashier_evaluated=:cashier_evaluated,
+                cashier_confirmation_date=:cashier_confirmation_date
+            WHERE enrollment_id=:enrollment_id
+
+        ");
+
+        $sql->bindValue(":payment_method", $CASH);
+        $sql->bindValue(":cashier_evaluated", "yes");
+        $sql->bindValue(":cashier_confirmation_date", $now);
+
+        $sql->bindValue(":enrollment_id", $enrollment_id);
+        $sql->execute();
+
+        if($sql->rowCount() > 0){
+            return true;
+        }
+            
+        return false;
+    }
+
+    public function EnrollmentSetAsPartialAndIncomplete(
+        $enrollment_id){
+
+        $INCOMPLETE_PAYMENT = "Incomplete";
+        $payment_method = "Partial";
+
+        $sql = $this->con->prepare("UPDATE enrollment
+            SET payment_status=:payment_status,
+                payment_method=:payment_method
+            WHERE enrollment_id=:enrollment_id
+
+        ");
+
+
+        $sql->bindValue(":payment_status", $INCOMPLETE_PAYMENT);
+        $sql->bindValue(":payment_method", $payment_method);
         $sql->bindValue(":enrollment_id", $enrollment_id);
         $sql->execute();
 
@@ -1716,7 +1822,29 @@
     public function GetEnrollmentTotalPayment($student_id,
         $enrollment_id) {
 
+        $student_status = NULL;
+
         $sql = $this->con->prepare("SELECT enrollment_payment FROM enrollment 
+            WHERE enrollment_id = :enrollment_id
+            AND student_id = :student_id
+        ");
+ 
+        $sql->bindValue(":enrollment_id", $enrollment_id);
+        $sql->bindValue(":student_id", $student_id);
+        $sql->execute();
+
+        if($sql->rowCount() > 0){
+            $student_status = $sql->fetchColumn();
+        }
+
+        return $student_status;
+
+    }
+
+    public function GetEnrollmentInstallmentCount($student_id,
+        $enrollment_id) {
+
+        $sql = $this->con->prepare("SELECT installment_count FROM enrollment 
             WHERE enrollment_id = :enrollment_id
             AND student_id = :student_id
         ");
@@ -2006,17 +2134,17 @@
             AND t1.enrollment_status=:enrollment_status
             AND t1.school_year_id=:school_year_id
             AND t1.registrar_evaluated=:registrar_evaluated
-            AND t1.cashier_evaluated=:cashier_evaluated
+            -- AND t1.cashier_evaluated=:cashier_evaluated
             ");
 
         $registrar_side->bindValue(":is_new_enrollee", $is_new_enrollee);
         $registrar_side->bindValue(":is_new_enrollee2", 0);
         $registrar_side->bindValue(":is_transferee", 1);
         $registrar_side->bindValue(":is_transferee2", "0");
-        $registrar_side->bindValue(":enrollment_status", $enrollment_status);
+        $registrar_side->bindValue(":enrollment_status", "tentative");
         $registrar_side->bindValue(":school_year_id", $current_school_year_id);
-        $registrar_side->bindValue(":registrar_evaluated", $registrar_evaluated);
-        $registrar_side->bindValue(":cashier_evaluated", "no");
+        $registrar_side->bindValue(":registrar_evaluated", "yes");
+        // $registrar_side->bindValue(":cashier_evaluated", "no");
         $registrar_side->execute();
 
         if($registrar_side->rowCount() > 0){
@@ -2230,6 +2358,142 @@
         $update_tentative->bindValue(":school_year_id", $current_school_year_id);
         return $update_tentative->execute(); 
       
+    }
+
+    public function UpdatePaymentMethodAndStatusIntoPartial(
+        $enrollment_id, $installment_count, $school_year_id){
+
+        $payment_status = "Incomplete";
+        $payment_method = "Partial";
+        $now = date("Y-m-d H:i:s");
+
+        $update_tentative = $this->con->prepare("UPDATE enrollment
+            SET 
+                -- payment_status=:payment_status,
+                payment_method=:payment_method,
+                installment_count=:installment_count,
+                cashier_evaluated=:cashier_evaluated,
+                cashier_confirmation_date=:cashier_confirmation_date
+                -- enrollment_approve=:enrollment_approve,
+                -- enrollment_status=:enrollment_status
+            
+            WHERE school_year_id=:school_year_id
+            AND enrollment_id=:enrollment_id
+            
+            ");
+
+        // $update_tentative->bindValue(":payment_status", $payment_status);
+        $update_tentative->bindValue(":payment_method", $payment_method);
+        $update_tentative->bindValue(":installment_count", $installment_count);
+
+        $update_tentative->bindValue(":cashier_evaluated", "yes");
+        $update_tentative->bindValue(":cashier_confirmation_date", $now);
+
+        // $update_tentative->bindValue(":enrollment_approve", $now);
+        // $update_tentative->bindValue(":enrollment_status", "enrolled");
+
+        
+        $update_tentative->bindValue(":school_year_id", $school_year_id);
+        $update_tentative->bindValue(":enrollment_id", $enrollment_id);
+
+        $update_tentative->execute();
+
+        return $update_tentative->rowCount() > 0; 
+        
+    }
+
+    public function UpdatePaymentMethodAndStatusIntoPartialIncomplete(
+        $enrollment_id, $school_year_id){
+
+        $payment_status = "Incomplete";
+        $payment_method = "Partial";
+        $now = date("Y-m-d H:i:s");
+
+        $update_tentative = $this->con->prepare("UPDATE enrollment
+            SET 
+                payment_status=:payment_status,
+                -- payment_method=:payment_method,
+                -- installment_count=:installment_count,
+                -- cashier_evaluated=:cashier_evaluated,
+                -- cashier_confirmation_date=:cashier_confirmation_date
+                enrollment_approve=:enrollment_approve,
+                enrollment_status=:enrollment_status
+            
+            WHERE school_year_id=:school_year_id
+            AND enrollment_id=:enrollment_id
+            
+            ");
+
+        $update_tentative->bindValue(":payment_status", $payment_status);
+        // $update_tentative->bindValue(":payment_method", $payment_method);
+        // $update_tentative->bindValue(":installment_count", $installment_count);
+
+        // $update_tentative->bindValue(":cashier_evaluated", "yes");
+        // $update_tentative->bindValue(":cashier_confirmation_date", $now);
+
+        $update_tentative->bindValue(":enrollment_approve", $now);
+        $update_tentative->bindValue(":enrollment_status", "enrolled");
+
+        
+        $update_tentative->bindValue(":school_year_id", $school_year_id);
+        $update_tentative->bindValue(":enrollment_id", $enrollment_id);
+
+        $update_tentative->execute();
+
+        return $update_tentative->rowCount() > 0; 
+    }
+
+    public function UpdateEnrollmentInstallmentCount(
+        $enrollment_id, $installment_count, $school_year_id){
+
+        $update_payment = $this->con->prepare("UPDATE enrollment
+            SET installment_count=:installment_count
+            
+            WHERE school_year_id=:school_year_id
+            AND enrollment_id=:enrollment_id
+            
+            ");
+
+        $update_payment->bindValue(":installment_count", $installment_count);
+
+        $update_payment->bindValue(":school_year_id", $school_year_id);
+        $update_payment->bindValue(":enrollment_id", $enrollment_id);
+        $update_payment->execute(); 
+
+        return $update_payment->rowCount() > 0;
+    }
+
+    public function SetEnrollmentApprovedByCashierViaFullCash(
+        $enrollment_id, $school_year_id){
+
+        $now = date("Y-m-d H:i:s");
+        
+        $update_payment = $this->con->prepare("UPDATE enrollment
+            SET cashier_evaluated=:cashier_evaluated,
+                cashier_confirmation_date=:cashier_confirmation_date,
+                enrollment_status=:enrollment_status,
+                enrollment_approve=:enrollment_approve,
+                payment_status=:payment_status,
+                payment_method=:payment_method
+
+            WHERE school_year_id=:school_year_id
+            AND enrollment_id=:enrollment_id
+            
+        ");
+
+        $update_payment->bindValue(":cashier_evaluated", "yes");
+        $update_payment->bindValue(":cashier_confirmation_date", $now);
+        $update_payment->bindValue(":enrollment_status", "enrolled");
+        $update_payment->bindValue(":enrollment_approve", $now);
+
+        $update_payment->bindValue(":payment_status", "Complete");
+        $update_payment->bindValue(":payment_method", "Cash");
+
+        $update_payment->bindValue(":school_year_id", $school_year_id);
+        $update_payment->bindValue(":enrollment_id", $enrollment_id);
+        $update_payment->execute(); 
+
+        return $update_payment->rowCount() > 0;
     }
 
     public function ChangeEnrollmentProgramCourseId($current_school_year_id,
@@ -2788,6 +3052,7 @@
         return $sql->rowCount() > 0;
     }
 
+
     public function CheckEnrollmentEnrolledStatus($student_id,
         $school_year_id, $student_enrollment_id) {
 
@@ -2808,6 +3073,43 @@
             return $sql->fetchColumn();
         }
         return "";
+    }
+    public function CheckEnrollmentHasPaymentMethod(
+        $school_year_id, $enrollment_id) {
+
+            // var_dump($enrol\lment_id);
+        // Check if the enrollment form ID already exists in the database
+
+        $sql = $this->con->prepare("SELECT * FROM enrollment
+
+            WHERE school_year_id = :school_year_id
+            AND enrollment_id = :enrollment_id
+            AND payment_method IS NOT NULL
+        ");
+
+        $sql->bindParam(":school_year_id", $school_year_id);
+        $sql->bindParam(":enrollment_id", $enrollment_id);
+        $sql->execute();
+
+        return $sql->rowCount() > 0;
+    }
+
+    public function GetEnrollmentTotalPaymentFormIdOnly(
+        $enrollment_id) {
+
+        $enrollment_payment = NULL;
+        $sql = $this->con->prepare("SELECT enrollment_payment FROM enrollment 
+            WHERE enrollment_id = :enrollment_id
+        ");
+ 
+        $sql->bindValue(":enrollment_id", $enrollment_id);
+        $sql->execute();
+
+        if($sql->rowCount() > 0){
+            $enrollment_payment = $sql->fetchColumn();
+        }
+        return $enrollment_payment;
+
     }
 
     public function GetCourseIdByEnrollmentForm($student_id,

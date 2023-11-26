@@ -107,7 +107,7 @@
         // && isset($_POST['prefinal_exam_enddate'])
 
         // && isset($_POST['final_exam_startdate'])
-        // && isset($_POST['final_exam_enddate'])
+        && isset($_POST['final_exam_enddate'])
 
         // && isset($_POST['break_startdate'])
         // && isset($_POST['break_enddate'])
@@ -121,6 +121,8 @@
         $start_enrollment_date = $_POST['start_enrollment_date'];
         $end_enrollment_date = $_POST['end_enrollment_date'];
 
+
+        $final_exam_enddate = $_POST['final_exam_enddate'];
 
         # PRELIM
         // $prelim_exam_startdate = $_POST['prelim_exam_startdate'];
@@ -169,7 +171,9 @@
                 period = :period,
                 statuses = :statuses,
                 start_enrollment_date = :start_enrollment_date,
-                end_enrollment_date = :end_enrollment_date
+                end_enrollment_date = :end_enrollment_date,
+
+                final_exam_enddate = :final_exam_enddate
 
                 -- prelim_exam_startdate = :prelim_exam_startdate,
                 -- prelim_exam_enddate = :prelim_exam_enddate,
@@ -191,6 +195,8 @@
         $update->bindParam(":start_enrollment_date", $start_enrollment_date);
         $update->bindParam(":end_enrollment_date", $end_enrollment_date);
 
+        $update->bindParam(":final_exam_enddate", $final_exam_enddate);
+
         // $update->bindParam(":prelim_exam_startdate", $prelim_exam_startdate);
         // $update->bindParam(":prelim_exam_enddate", $prelim_exam_enddate);
 
@@ -211,7 +217,7 @@
         $update->execute();
 
         if($update->rowCount() > 0){
-            Alert::success("Successfully edited.", "timeframe.php?term=$term");
+            Alert::success("School year has been successfully modified.", "timeframe.php?term=$term");
             exit();
         }
 
@@ -295,6 +301,18 @@
                                 required type='datetime-local' placeholder='' 
                                 name='end_enrollment_date'>
 
+                        </div>
+
+                        <header>
+                            <div class="title mb-3">
+                                <h4 class="">* Finals End Term</h4>
+                            </div>
+                        </header>
+
+                        <div class='form-group mb-2'>
+                            <input class='form-control' value="<?php echo $final_exam_enddate; ?>"
+                                required type='datetime-local' placeholder='' 
+                                name='final_exam_enddate'>
                         </div>
 
                     </main>

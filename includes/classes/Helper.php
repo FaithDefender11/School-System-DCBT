@@ -1634,6 +1634,12 @@ class Helper {
 
         $date = new DateTime($date_creation);
         $formattedDate = $date->format('m/d/Y H:i');
+        
+        # F1
+        // Create a DateTime object from the string
+        $date = DateTime::createFromFormat('m/d/Y H:i', $formattedDate);
+        // Format the date as 'mm/dd/yyyy hh:mm AM/PM'
+        $formattedDate = $date->format('m/d/Y h:i a');
 
         $admission_status = $admission_status == "Standard" ? "New" : ($admission_status == "Transferee" ? "Transferee" : "");
 
@@ -1674,7 +1680,14 @@ class Helper {
 
 
         $date = new DateTime($date_creation);
-        $formattedDate = $date->format('m/d/Y');
+        $formattedDate = $date->format('m/d/Y H:i');
+
+        $date = DateTime::createFromFormat('m/d/Y H:i', $formattedDate);
+        // Format the date as 'mm/dd/yyyy hh:mm AM/PM'
+        $formattedDate = $date->format('m/d/Y h:i a');
+
+        # f2
+        // $formattedDate = "";
 
         // $admission_status = $new_enrollee == 1 ? "New" : ($new_enrollee == 0 ? "Old" : "");
 
@@ -1848,19 +1861,11 @@ class Helper {
                             </button>
 
                             <div class='dropdown-menu'>
-                                
-
                                 $enrollee_enroll_status
                                 $enrollee_admission_status
                                 $extra
-
-                               
-
                             </div>
-
-
                         </div>
-
                     </div>
                 </header>
             ";

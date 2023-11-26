@@ -29,6 +29,37 @@
         $current_school_year_term = $current_school_year->GetTerm();
         $current_school_year_period = $current_school_year->GetPeriod();
 
+        $now = date("Y-m-d H:i:s");
+
+        #
+        $selected_year_end_term_date = $school_year->GetfinalEndDate();
+
+        # Check if selected A.Y Semester End term is lower than todays date.
+
+        $selected_year_end_term_date = new DateTime($selected_year_end_term_date);
+        $now = new DateTime(); // This defaults to the current date and time
+
+        // echo "end_term_date: $end_term_date";
+        // var_dump($now);
+        // echo "<br>";
+        // var_dump($selected_year_end_term_date);
+        // echo "<br>";
+
+        if ($selected_year_end_term_date > $now) {
+
+            echo "school_year_changing_invalid";
+            return;
+        }
+        // elseif ($selected_year_end_term_date < $now) {
+        //     echo "selected_year_end_term_date is in the past.";
+        // }
+        // else {
+        //     echo "selected_year_end_term_date is equal to the current date.";
+        // }
+
+
+
+        // return;
 
         // echo $current_school_year_period;
 

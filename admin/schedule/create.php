@@ -376,12 +376,13 @@
                             <div class="mb-3">
                                 <label for="schedule_room_capacity">* Capacity</label>
                                 <input style="pointer-events: none;" value="<?= $db_section_capacity?>" required name="schedule_room_capacity" id="schedule_room_capacity" class="form-control" />
-                            
                             </div>
 
 
                             <div class="form-group mb-3">
+                                
                                 <label for="room_id">* Room ( Note: Leave it blank serves as TBA )</label>
+                                
                                 <select name="room_id" id="room_id" class="form-control">
                                     
                                     <?php

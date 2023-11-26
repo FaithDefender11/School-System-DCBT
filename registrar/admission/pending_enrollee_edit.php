@@ -17,12 +17,10 @@
 
         $student_parent = new StudentParent($con, $pending_enrollees_id);
 
-                $enrollmentAudit= new EnrollmentAudit($con);
-
+        $enrollmentAudit= new EnrollmentAudit($con);
 
         $parent_id = $parent->GetParentID();
 
-        
         $firstname = $pending->GetPendingFirstName();
         $lastname = $pending->GetPendingLastName();
         $middle_name = $pending->GetPendingMiddleName();
@@ -325,6 +323,23 @@
 
             // return;
 
+            $student_lrn = isset($_POST['student_lrn'])  ? $_POST['student_lrn'] : NULL;
+            $student_lrn = $student_lrn == "" ? NULL : $student_lrn;
+
+            if ($student_lrn !== NULL) {
+                // Validate the LRN format using a regular expression
+                $lrn_pattern = '/^\d{12}$/';
+                if (preg_match($lrn_pattern, $student_lrn) == false) {
+                    // LRN is valid
+                    // echo 'LRN is valid: ' . $student_lrn;
+                    Alert::error("LRN is invalid format. It should consists of 12 digits ", "");
+                    exit();
+                }
+            }
+
+            // var_dump($student_lrn);
+            // return;
+
             $firstname = $_POST['firstname'];
             $lastname = $_POST['lastname'];
             $middle_name = $_POST['middle_name'];
@@ -348,6 +363,9 @@
             // $guardian_email = $_POST['guardian_email'] ?? "";
             $guardian_occupation = $_POST['guardian_occupation'] ?? "";
             $guardian_relationship = $_POST['guardian_relationship'] ?? "";
+
+
+
 
           
 
@@ -406,7 +424,8 @@
                 $religion,
                 $address,
                 $contact_number,
-                $email);
+                $email,
+                $student_lrn);
 
             $editParentExec = $parent->UpdatePendingParent(
                 $pending_enrollees_id, $parent_id, $guardian_firstname, $guardian_lastname,
@@ -461,10 +480,17 @@
 
                             <?php if($type_status == "SHS"):?>
 
-                                <div class="row">
-                                    <span style="margin-left: 470px;">
 
-                                        <label for="student_lrn">LRN</label>
+                                <?php if(isset($_GET['update_lrn'])
+                                    && $_GET['update_lrn'] == "true"
+                                    ):?>
+                                    <span>* Please fill up LRN to enable process student of form.</span>
+
+                                <?php endif;?>
+
+                                <div class="row">
+                                    <span style="margin-left: 460px;">
+                                        <label for="student_lrn">LRN *</label>
                                         <input class="form-control" placeholder="" style="width: 250px;" id="student_lrn" type="text" name="student_lrn" value="<?php echo $student_lrn;?>">
                                     </span>
                                 </div>

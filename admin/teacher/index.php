@@ -77,6 +77,7 @@
                 while($row = $query->fetch(PDO::FETCH_ASSOC)){
 
                   $teacher_id = $row['teacher_id'];
+                  $school_teacher_id = $row['school_teacher_id'];
 
                   $department_id = $row['department_id'];
 
@@ -102,7 +103,7 @@
 
                   echo "
                     <tr>
-                      <td>$teacher_id</td>
+                      <td>$school_teacher_id</td>
                       <td>
                         <a style='color: black;' href='edit.php?id=$teacher_id'>
                           $fullname

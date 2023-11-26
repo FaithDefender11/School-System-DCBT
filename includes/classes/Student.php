@@ -382,6 +382,24 @@ class Student{
         return false;
     }
 
+    public function CheckEnrolleeLRNCompleted($student_id){
+
+        $query = $this->con->prepare("SELECT * FROM student as t1
+
+            WHERE student_id = :student_id
+            AND lrn IS NOT NULL
+        ");
+
+        $query->bindParam(":student_id", $student_id);
+        $query->execute();
+        
+        if($query->rowCount() > 0){
+            return true;
+        }
+
+        return false;
+    }
+
     public function UpdateStudentDetails($student_id, $firstname, $lastname,
         $middle_name, $suffix, $civil_status, $nationality, $sex,
         $birthday, $birthplace, $religion, $address, $contact_number,
@@ -1047,7 +1065,8 @@ class Student{
         $student_unique_id, $course_level, $username, $address, $lrn,
         $religion, $birthplace, $email, $is_tertiary, $new_enrollee, $suffix = "") {
 
-        $lrn = $lrn ?? "";
+        $lrn = $lrn == "" ? NULL : $lrn;
+
         $hash_password = password_hash($password, PASSWORD_BCRYPT);
 
         $student_statusv2 = "";

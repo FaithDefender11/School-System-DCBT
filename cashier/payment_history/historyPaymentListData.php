@@ -353,7 +353,7 @@ if ($row != null) {
         $payment_status = $row['payment_status'];
         $payment_method = $row['payment_method'];
 
-        $url = "../payment/payment_summary.php?id=$enrollment_id&enrolled_subject=show";
+        $url = "../payment/payment_summary2.php?id=$enrollment_id&enrolled_subject=show";
          
         
         $button_url = "

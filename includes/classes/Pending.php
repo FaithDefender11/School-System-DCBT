@@ -622,6 +622,24 @@
         return true;
     }
 
+    public function CheckEnrolleeLRNCompleted($pending_enrollees_id){
+
+        $query = $this->con->prepare("SELECT * FROM pending_enrollees as t1
+
+            WHERE pending_enrollees_id = :pending_enrollees_id
+            AND lrn IS NOT NULL
+        ");
+
+        $query->bindParam(":pending_enrollees_id", $pending_enrollees_id);
+        $query->execute();
+        
+        if($query->rowCount() > 0){
+            return true;
+        }
+
+        return false;
+    }
+
     public function UpdatePendingNewStep1($admission_status, $type,
             $program_id, $pending_enrollees_id){
         
@@ -756,7 +774,16 @@
         $religion,
         $address,
         $contact_number,
-        $email) {
+        $email,
+        $lrn = NULL) {
+
+        $update_lrn = "";
+
+        // if($lrn != NULL){
+
+        //     $update_lrn = ",lrn=:lrn";
+
+        // }
 
     $query = $this->con->prepare("UPDATE pending_enrollees
         SET firstname=:firstname,
@@ -771,7 +798,9 @@
             religion=:religion,
             address=:address,
             contact_number=:contact_number,
-            email=:email
+            email=:email,
+            lrn=:lrn
+            -- $update_lrn
             
         WHERE pending_enrollees_id=:pending_enrollees_id");
 
@@ -788,6 +817,12 @@
         $query->bindParam(":address", $address);
         $query->bindParam(":contact_number", $contact_number);
         $query->bindParam(":email", $email);
+
+        // if($lrn != NULL){
+
+            $query->bindValue(":lrn", $lrn);
+        // }
+
         
         $query->bindParam(":pending_enrollees_id", $pending_enrollees_id);
         $query->execute();

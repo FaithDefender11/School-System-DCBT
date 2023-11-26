@@ -22,6 +22,7 @@
 
             // $room_name = $_POST['room_name'];
             $room_number = $_POST['room_number'];
+            $room_capacity = $_POST['room_capacity'];
 
             $statement = $con->prepare("UPDATE room 
                 SET room_number = :new_room_number,
@@ -62,7 +63,7 @@
                         <div class="row">
                             <label for="room_capacity">* Room Capacity</label>
                             <div>
-                                <input class="form-control" type="text" name="room_capacity" id="room_capacity" placeholder="" value="<?php echo $room_id; ?>">
+                                <input class="form-control" type="text" name="room_capacity" id="room_capacity" placeholder="" value="<?php echo $room_capacity; ?>">
                             </div>
                         </div>
                         <div class="action">

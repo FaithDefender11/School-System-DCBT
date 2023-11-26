@@ -4,23 +4,18 @@
 
     include_once('../../includes/admin_header.php');
 
+
 ?>
 
 
 <div class="content">
     <main>
+
         <div class="floating" id="shs-sy">
             <header>
                 <div class="title">
-                    <h3>Requirement</h3>
+                    <h3>Requirements Overview &nbsp; <span style="font-size: 16px;" class="text-primary">SHS <a style="color: inherit;" href='shs_standard.php'>Standard</a> , <a style="color: inherit;" href="shs_transferee.php">Transferee</a> | Tertiary <a style="color: inherit;" href="tertiary_standard.php">Standard</a>, <a style="color: inherit;" href="tertiary_transferee.php">Transferee</a></span></h3>
                 </div>
-
-                <div class="action">
-                    <a href="create.php">
-                        <button type="button" class="default large">+ Add new</button>
-                    </a>
-                </div>
-
             </header>
             
             <main>
@@ -30,7 +25,8 @@
                         <tr>
                             <th>File</th>
                             <th>Type</th>
-                            <th>Status</th>
+                            <th>Department</th>
+                            <!-- <th>Status</th> -->
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -53,6 +49,7 @@
                                 $requirement_id = $row['requirement_id'];
                                 $requirement_name = $row['requirement_name'];
                                 $status = $row['status'];
+                                $education_type = $row['education_type'];
                                 $is_enabled = $row['is_enabled'];
 
                                 $removeSelectedRequirement = "removeSelectedRequirement($requirement_id, \"$requirement_name\")";
@@ -80,16 +77,18 @@
                                 }
 
 
-                                $url = "edit.php?id=";
+                                $url = "edit.php?id=$requirement_id";
+
+                                    // <td>$is_enabled_output</td>
 
                                 echo "
                                 <tr>
                                     <td>$requirement_name</td>
                                     <td>$status</td>
-                                    <td>$is_enabled_output</td>
+                                    <td>$education_type</td>
                                     <td>
 
-                                        <a href='#'>
+                                        <a href='$url'>
                                             <button class='btn btn-sm btn-primary'>
                                                 <i class='fas fa-pen'></i>
                                             </button>

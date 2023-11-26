@@ -75,6 +75,9 @@
                                     $room_assigned = $room_assigned ?? "-";
                                             // <td>$room_id</td>
                                     
+                                            // <button onclick='$removeRoomBtn' class='btn btn-danger btn-sm'>
+                                            //             <i class='fas fa-trash'></i>
+                                            //     </button>
                                     echo "
                                         <tr>
                                             <td>$room_number</td>
@@ -85,9 +88,7 @@
                                                         <i class='fas fa-pen'></i>
                                                     </button>
                                                 </a>
-                                                <button onclick='$removeRoomBtn' class='btn btn-danger btn-sm'>
-                                                        <i class='fas fa-trash'></i>
-                                                </button>
+                                                
                                             </td>
                                         </tr>
                                     ";

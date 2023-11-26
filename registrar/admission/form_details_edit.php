@@ -49,6 +49,10 @@
 
         $student_lrn = $pending->GetStudentLRN();
 
+        // $student_lrn = "123456789123";
+
+
+
         // var_dump($student_lrn);
 
         $get_student_new_pending_id = $pendingEnroleee->GetPendingAccountByStudentTable(
@@ -365,11 +369,19 @@
 
             }
 
-            // return;
-
-            // $student_lrn = isset($_POST['lrn']) ? $_POST['lrn'] : NULL;
-
             $student_lrn = isset($_POST['student_lrn']) ? $_POST['student_lrn'] : NULL;
+            $student_lrn = $student_lrn == "" ? NULL : $student_lrn;
+
+            if ($student_lrn !== NULL) {
+                // Validate the LRN format using a regular expression
+                $lrn_pattern = '/^\d{12}$/';
+                if (preg_match($lrn_pattern, $student_lrn) == false) {
+                    // LRN is valid
+                    // echo 'LRN is valid: ' . $student_lrn;
+                    Alert::error("LRN is invalid format. It should consists of 12 digits ", "");
+                    exit();
+                }
+            }
 
             // var_dump($student_lrn);
             // return;
@@ -509,10 +521,18 @@
 
                                 <?php if($type_status == 0):?>
 
-                                    <div class="row">
-                                        <span style="margin-left: 470px;">
+                                    <?php if(isset($_GET['update_lrn'])
+                                        && $_GET['update_lrn'] == "true"
+                                        ):?>
 
-                                            <label for="student_lrn">LRN</label>
+                                        <span>* Please fill up LRN to enable process of student form.</span>
+
+                                    <?php endif;?>
+                                    
+                                    <div class="row">
+                                        <span style="margin-left: 460px;">
+
+                                            <label for="student_lrn">LRN *</label>
                                             <input class="form-control" placeholder="" style="width: 250px;" id="student_lrn" type="text" name="student_lrn" value="<?php echo $student_lrn;?>">
                                         </span>
                                     </div>

@@ -39,11 +39,13 @@
 
         $dashboard_url = $base_url .  "dashboard/index.php";
         $payments_url = $base_url .  "payment/index.php";
+        $installment_url = $base_url .  "installment/index.php";
         $payment_history_url = $base_url .  "payment_history/index.php";
 
         $sideBarNavigationItem = Helper::createNavByIconARC("Dashboard", 
             "bi bi-clipboard-data icon", $dashboard_url, Constants::$navigationClass . Helper::GetActiveClass($page, "dashboard"));
 
+        
 
         $sideBarNavigationItem .= Helper::createNavByIconARC("Payment", 
                 "bi bi-credit-card", $payments_url, Constants::$navigationClass . Helper::GetActiveClass($page, "payment"));
@@ -51,7 +53,8 @@
         $sideBarNavigationItem .= Helper::createNavByIconARC("Payment History", 
             "bi bi-clock-history icon", $payment_history_url, Constants::$navigationClass . Helper::GetActiveClass($page, "payment_history"));
 
-     
+        $sideBarNavigationItem .= Helper::createNavByIconARC("Installment", 
+            "bi bi-cash-stack", $installment_url, Constants::$navigationClass . Helper::GetActiveClass($page, "installment"));
 
         // $sideBarNavigationItem = $this->createNavByIconARC("Dashboard", 
         //     "bi bi-clipboard-data icon", $dashboard_url);

@@ -37,7 +37,7 @@
         // && isset($_POST['prefinal_exam_enddate'])
 
         // && isset($_POST['final_exam_startdate'])
-        // && isset($_POST['final_exam_enddate'])
+        && isset($_POST['final_exam_enddate'])
 
         // && isset($_POST['break_startdate'])
         // && isset($_POST['break_enddate'])
@@ -50,6 +50,8 @@
         $statuses = $_POST['statuses'];
         $start_enrollment_date = $_POST['start_enrollment_date'];
         $end_enrollment_date = $_POST['end_enrollment_date'];
+
+        $final_exam_enddate = $_POST['final_exam_enddate'];
 
 
         // # PRELIM
@@ -96,8 +98,8 @@
         // echo "break_enddate: " . $break_enddate . "<br>";
 
         $add = $con->prepare("INSERT INTO school_year
-            (term, period, statuses, start_enrollment_date, end_enrollment_date
-
+            (term, period, statuses, start_enrollment_date, end_enrollment_date,
+                final_exam_enddate
                 -- prelim_exam_startdate, prelim_exam_enddate,
                 -- midterm_exam_startdate, midterm_exam_enddate,
                 -- prefinal_exam_startdate, prefinal_exam_enddate,
@@ -105,7 +107,7 @@
                 -- break_startdate, break_enddate
             )
 
-            VALUES (:term, :period, :statuses, :start_enrollment_date, :end_enrollment_date
+            VALUES (:term, :period, :statuses, :start_enrollment_date, :end_enrollment_date, :final_exam_enddate
 
                 -- :prelim_exam_startdate, :prelim_exam_enddate,
                 -- :midterm_exam_startdate, :midterm_exam_enddate,
@@ -120,6 +122,8 @@
 
         $add->bindParam(":start_enrollment_date", $start_enrollment_date);
         $add->bindParam(":end_enrollment_date", $end_enrollment_date);
+
+        $add->bindParam(":final_exam_enddate", $final_exam_enddate);
 
         // $add->bindParam(":prelim_exam_startdate", $prelim_exam_startdate);
         // $add->bindParam(":prelim_exam_enddate", $prelim_exam_enddate);
@@ -215,7 +219,15 @@
                         <input class='form-control' required type='date' placeholder='' name='end_enrollment_date'>
                     </div>
 
-                    <!-- Pre-Mid Exam  -->
+                    <header>
+                        <div class="title mb-3">
+                            <h4 class="">* Finals End Term</h4>
+                        </div>
+                    </header>
+
+                    <div class='form-group mb-2'>
+                        <input class='form-control' required type='date' placeholder='' name='final_exam_enddate'>
+                    </div>
 
                 </main>
                 <div style="margin-bottom: -20px; margin-top: 20px;" class="action modal-footer">

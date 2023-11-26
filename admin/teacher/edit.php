@@ -54,6 +54,18 @@
 
         $teacher_status = $_POST['teacher_status'];
 
+        $hasError = false;
+
+        $chech = $teacher->CheckTeacherExistsBasedOnFirstLastMiddleEmail(
+            $firstname, $lastname, $middle_name, $email);
+
+        if($chech == true){
+            $hasError = true;
+
+            Alert::error("Teacher already exists with the provided credentials", "");
+            // exit();
+        }
+
         // var_dump($teacher_status);
         // return;
         // echo $status;
@@ -72,76 +84,80 @@
         //     mkdir('../../assets/images/teacher_profiles');
         // }
 
-        $image = $_FILES['profilePic'] ?? null;
-        
-        // var_dump($image);
+        if($hasError == false){
 
-        $db_image = "../../" . $profilePic;
+            $image = $_FILES['profilePic'] ?? null;
+            
+            // var_dump($image);
 
-        $imagePath = '';
+            $db_image = "../../" . $profilePic;
 
-        if ($image && $image['tmp_name']) {
+            $imagePath = '';
 
-            $uploadDirectory = '../../assets/images/teacher_profiles/';
-            $originalFilename = $image['name'];
-            $uniqueFilename = uniqid() . '_' . time() . '_' . $originalFilename;
-            $targetPath = $uploadDirectory . $uniqueFilename;
+            if ($image && $image['tmp_name']) {
 
-            // Delete the existing file
-            if (file_exists($db_image)) {
+                $uploadDirectory = '../../assets/images/teacher_profiles/';
+                $originalFilename = $image['name'];
+                $uniqueFilename = uniqid() . '_' . time() . '_' . $originalFilename;
+                $targetPath = $uploadDirectory . $uniqueFilename;
 
-                // echo $db_image;
-                unlink($db_image);
+                // Delete the existing file
+                if (file_exists($db_image)) {
+
+                    // echo $db_image;
+                    unlink($db_image);
+                }
+
+                // Upload the new file
+                move_uploaded_file($image['tmp_name'], $targetPath);
+                $imagePath = $targetPath;
+                $imagePath = str_replace('../../', '', $imagePath);
             }
 
-            // Upload the new file
-            move_uploaded_file($image['tmp_name'], $targetPath);
-            $imagePath = $targetPath;
-            $imagePath = str_replace('../../', '', $imagePath);
+            $query = "UPDATE teacher SET 
+                firstname = :firstname,
+                middle_name = :middle_name,
+                lastname = :lastname,
+                suffix = :suffix,
+                department_id = :department_id,
+                profilePic = :profilePic,
+                gender = :gender,
+                email = :email,
+                contact_number = :contact_number,
+                address = :address,
+                citizenship = :citizenship,
+                birthplace = :birthplace,
+                birthday = :birthday,
+                religion = :religion,
+                teacher_status = :teacher_status
+
+            WHERE teacher_id = :teacher_id";
+
+            $update = $con->prepare($query);
+
+            $update->bindParam(':firstname', $firstname);
+            $update->bindParam(':middle_name', $middle_name);
+            $update->bindParam(':lastname', $lastname);
+            $update->bindParam(':suffix', $suffix);
+            $update->bindParam(':department_id', $department_id);
+            $update->bindParam(':profilePic', $imagePath);
+            $update->bindParam(':gender', $gender);
+            $update->bindParam(':email', $email);
+            $update->bindParam(':contact_number', $contact_number);
+            $update->bindParam(':address', $address);
+            $update->bindParam(':citizenship', $citizenship);
+            $update->bindParam(':birthplace', $birthplace);
+            $update->bindParam(':birthday', $birthday);
+            $update->bindParam(':religion', $religion);
+            $update->bindParam(':teacher_status', $teacher_status);
+            $update->bindParam(':teacher_id', $teacher_id);
+
+            if ($update->execute()) {
+                Alert::success("Teacher successfully modified", "index.php");
+                exit();
+            }
         }
 
-        $query = "UPDATE teacher SET 
-            firstname = :firstname,
-            middle_name = :middle_name,
-            lastname = :lastname,
-            suffix = :suffix,
-            department_id = :department_id,
-            profilePic = :profilePic,
-            gender = :gender,
-            email = :email,
-            contact_number = :contact_number,
-            address = :address,
-            citizenship = :citizenship,
-            birthplace = :birthplace,
-            birthday = :birthday,
-            religion = :religion,
-            teacher_status = :teacher_status
-
-        WHERE teacher_id = :teacher_id";
-
-        $update = $con->prepare($query);
-
-        $update->bindParam(':firstname', $firstname);
-        $update->bindParam(':middle_name', $middle_name);
-        $update->bindParam(':lastname', $lastname);
-        $update->bindParam(':suffix', $suffix);
-        $update->bindParam(':department_id', $department_id);
-        $update->bindParam(':profilePic', $imagePath);
-        $update->bindParam(':gender', $gender);
-        $update->bindParam(':email', $email);
-        $update->bindParam(':contact_number', $contact_number);
-        $update->bindParam(':address', $address);
-        $update->bindParam(':citizenship', $citizenship);
-        $update->bindParam(':birthplace', $birthplace);
-        $update->bindParam(':birthday', $birthday);
-        $update->bindParam(':religion', $religion);
-        $update->bindParam(':teacher_status', $teacher_status);
-        $update->bindParam(':teacher_id', $teacher_id);
-
-        if ($update->execute()) {
-            Alert::success("Teacher successfully modified", "index.php");
-            exit();
-        }
     }
 
     $department_selection = $teacher->CreateTeacherDepartmentSelection($department_id);

@@ -312,6 +312,8 @@
                         </div>
 
                         <div class="form-element">
+                            <span style="font-size: 13px;">Non-customized Gmail only (e.g johndoe@gmail.com)</span>
+                            <br>
                             <label for="email">Email</label>
                             
                             <div>

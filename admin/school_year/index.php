@@ -119,12 +119,19 @@
 
                 if($query->rowCount() > 0){
 
+                  $now = date("Y-m-d H:i:s");
+                  $now = new DateTime(); // This defaults to the current date and time
+
                   while($row = $query->fetch(PDO::FETCH_ASSOC)){
 
                       $term = $row['term'];
                       $period = $row['period'];
                       $school_year_id = $row['school_year_id'];
                       $statuses = $row['statuses'];
+
+                      $final_exam_enddate = $row['final_exam_enddate'];
+
+                      // var_dump($final_exam_enddate);
 
                       $period = $period === "First" ? "1ST" : ($period === "Second" ? "2ND" : "");
 
@@ -133,12 +140,12 @@
 
                         
                       $output_Status = "";
-                      
 
                       $setting_btn = "";
 
                      
                       $statusResult = "";
+
                       if($statuses === "Active"){
 
                           $output_Status = "
@@ -146,9 +153,10 @@
                                 $statuses
                             </button>
                           ";
-                        $statusResult = "Active";
-                        
 
+                          $statusResult = "Active";
+
+                          
 
                           $setting_btn = "
                             <button class='btn-sm btn btn-dark'>
@@ -160,21 +168,26 @@
 
                         $changeSchoolYear = "changeSchoolYear($school_year_id, $current_school_year_id)";
 
-                        $setting_btn = "
-                           
-                          <button onclick='$changeSchoolYear' class='btn-sm btn btn-primary'>
-                              <i class='fas fa-pen'></i>
-                          </button>
-                        ";
-                      $statusResult = "In-active";
+                        $selected_year_end_term_date = new DateTime($final_exam_enddate);
+
+                        if($final_exam_enddate == NULL || $selected_year_end_term_date > $now){
+                            $setting_btn = "
+                            <button disabled onclick='' class='btn-sm btn btn-primary'>
+                                <i class='fas fa-pen'></i>
+                            </button>
+                          ";
+                        }else{
+                          $setting_btn = "
+                            <button onclick='$changeSchoolYear' class='btn-sm btn btn-primary'>
+                                <i class='fas fa-pen'></i>
+                            </button>
+                          ";
+                        }
 
 
-                        // $output_Status = "
-                        //   <button class='btn-sm btn btn-danger'>
-                        //         $statuses
-                        //   </button>
-                        // ";
-                         $output_Status = "
+                        $statusResult = "In-active";
+ 
+                        $output_Status = "
                           <button class='btn-sm btn btn-danger'>
                                 $statusResult
                           </button>
@@ -187,7 +200,11 @@
                             <td>
                                $setting_btn
                             <td>$term</td>
-                            <td>$period</td>
+                            <td>
+                              <a style='color: inherit' href='timeframe.php?term=$term'>
+                                $period
+                              </a>
+                            </td>
                             <td>
                                $output_Status
                             </td>
@@ -213,12 +230,14 @@
     var selected_school_year_id = parseInt(selected_school_year_id);
 
     Swal.fire({
-        icon: 'question',
-        title: `Change School Year?`,
-        text: 'Important! Please review your decision',
-        showCancelButton: true,
-        confirmButtonText: 'Yes',
-        cancelButtonText: 'Cancel'
+
+      icon: 'question',
+      title: `Change School Year?`,
+      text: 'Important! Please review your decision',
+      showCancelButton: true,
+      confirmButtonText: 'Yes',
+      cancelButtonText: 'Cancel'
+
     }).then((result) => {
         if (result.isConfirmed) {
 
@@ -234,12 +253,12 @@
 
                     console.log(response);
 
-                    if (response == "success_update") {
+                    if (response == "school_year_changing_invalid") {
                         Swal.fire({
-                            icon: 'success',
-                            title: `Successfully Updated`,
+                            icon: 'error',
+                            title: `Selected School Year End term should be higher than todays date.`,
                             showConfirmButton: false,
-                            timer: 1000, // Adjust the duration of the toast message in milliseconds (e.g., 3000 = 3 seconds)
+                            timer: 4900, // Adjust the duration of the toast message in milliseconds (e.g., 3000 = 3 seconds)
                             toast: true,
                             position: 'top-end',
                             showClass: {
@@ -257,6 +276,31 @@
                             location.reload();
                         });
                     }
+
+                    if (response == "success_update") {
+                        Swal.fire({
+                            icon: 'success',
+                            title: `School year has been successfully modified.`,
+                            showConfirmButton: false,
+                            timer: 2500, // Adjust the duration of the toast message in milliseconds (e.g., 3000 = 3 seconds)
+                            toast: true,
+                            position: 'top-end',
+                            showClass: {
+                                popup: 'swal2-noanimation',
+                                backdrop: 'swal2-noanimation'
+                            },
+                            hideClass: {
+                                popup: '',
+                                backdrop: ''
+                            }
+                        }).then((result) => {
+                            // $('#shs_program_table').load(
+                            //     location.href + ' #shs_program_table'
+                            // );
+                            location.reload();
+                        });
+                    }
+
                 },
                 error: function (xhr, status, error) {
                     // handle any errors here

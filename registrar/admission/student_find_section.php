@@ -5,6 +5,8 @@
 
     // var_dump($student_enrollment_course_level);
     
+    $edit_url =  "form_details_edit.php?id=$student_id&update_lrn=true";
+
     $checkSectionAlreadyAssigned = $student_subject->
         CheckStudentSectionSubjectAssignedWithinSY($student_enrollment_id,
             $student_enrollment_course_id, $student_id, $current_school_year_id);
@@ -544,10 +546,48 @@
                                                 onclick="window.location.href = 'process_enrollment.php?details=show&st_id=<?php echo $student_id; ?>'">
                                                 Return
                                             </button>
-                                            <button class="default large success"
-                                                name="student_choose_section" type="submit">
-                                                Proceed
-                                            </button>
+
+
+                                            <?php 
+
+                                                $shsHasLRN = $student->CheckEnrolleeLRNCompleted($student_id);
+                                                      
+                                                // var_dump($shsHasLRN);
+
+                                                if($student_department_name == "Senior High School" 
+                                                    && $shsHasLRN){
+
+                                                    ?>
+                                                        <button class="default large success"
+                                                            name="student_choose_section" type="submit">
+                                                            Proceed
+                                                        </button>
+                                                    <?php
+                                                }
+                                                if($student_department_name == "Senior High School" 
+                                                    && $shsHasLRN == false){
+                                                    ?>
+                                                        <button onclick="window.location.href = '<?=$edit_url?>'"
+                                                                class="default large warning" type="button">
+                                                                
+                                                            Update Student LRN
+                                                        </button>
+                                                    <?php
+                                                }
+                                                if($student_department_name != "Senior High School"){
+
+                                                    ?>
+                                                        <button class="default large success"
+                                                            name="student_choose_section" type="submit">
+                                                            Proceed
+                                                        </button>
+                                                    <?php
+                                                }
+                                            ?>
+
+                                            
+
+
                                         </div>
                                     </form>
                                 <?php

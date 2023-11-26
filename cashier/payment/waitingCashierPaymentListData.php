@@ -90,7 +90,7 @@ $stmt = $con->prepare("SELECT COUNT(*) AS allcount
 
     WHERE (t2.is_new_enrollee = :is_new_enrollee OR t2.is_new_enrollee = :is_new_enrollee2)
     AND t2.registrar_evaluated = :registrar_evaluated
-    AND t2.cashier_evaluated = :cashier_evaluated
+    -- AND t2.cashier_evaluated = :cashier_evaluated
     AND t2.school_year_id = :school_year_id
     
     ");
@@ -98,8 +98,8 @@ $stmt = $con->prepare("SELECT COUNT(*) AS allcount
 
 $stmt->bindValue(":is_new_enrollee", $is_new_enrollee);
 $stmt->bindValue(":is_new_enrollee2", 0);
-$stmt->bindValue(":registrar_evaluated", $registrar_evaluated);
-$stmt->bindValue(":cashier_evaluated", "no");
+$stmt->bindValue(":registrar_evaluated", "yes");
+// $stmt->bindValue(":cashier_evaluated", "no");
 $stmt->bindValue(":school_year_id", $current_school_year_id);
 
 $stmt->execute();
@@ -109,21 +109,21 @@ $totalRecords = $records['allcount'];
 
 
 ## Total number of records with filtering
+    // AND t2.cashier_evaluated = :cashier_evaluated
+
 $stmt = $con->prepare("SELECT COUNT(*) AS allcount 
     FROM student AS t1
     INNER JOIN enrollment AS t2 ON t1.student_id = t2.student_id
     WHERE 1 " . $searchQuery . " 
     AND (t2.is_new_enrollee = :is_new_enrollee OR t2.is_new_enrollee = :is_new_enrollee2)
     AND t2.registrar_evaluated = :registrar_evaluated
-    AND t2.cashier_evaluated = :cashier_evaluated
     AND t2.school_year_id = :school_year_id
-    
-    ");
+");
 
 $stmt->bindValue(":is_new_enrollee", $is_new_enrollee);
 $stmt->bindValue(":is_new_enrollee2", 0);
-$stmt->bindValue(":registrar_evaluated", $registrar_evaluated);
-$stmt->bindValue(":cashier_evaluated", "no");
+$stmt->bindValue(":registrar_evaluated", "yes");
+// $stmt->bindValue(":cashier_evaluated", "no");
 $stmt->bindValue(":school_year_id", $current_school_year_id);
 
 $stmt->execute();
@@ -193,7 +193,7 @@ if ($row != null) {
         AND t2.enrollment_status = :enrollment_status
         AND t2.school_year_id = :school_year_id
         AND t2.registrar_evaluated = :registrar_evaluated
-        AND t2.cashier_evaluated = :cashier_evaluated
+        -- AND t2.cashier_evaluated = :cashier_evaluated
 
         ORDER BY $sortBy $sortOrder
         
@@ -206,10 +206,10 @@ if ($row != null) {
     $stmt->bindValue(":is_new_enrollee2", 0);
     $stmt->bindValue(":is_transferee", $is_transferee);
     $stmt->bindValue(":is_transferee2", "0");
-    $stmt->bindValue(":enrollment_status", $enrollment_status);
+    $stmt->bindValue(":enrollment_status", "tentative");
     $stmt->bindValue(":school_year_id", $current_school_year_id);
     $stmt->bindValue(":registrar_evaluated", "yes");
-    $stmt->bindValue(":cashier_evaluated", "no");
+    // $stmt->bindValue(":cashier_evaluated", "no");
     $stmt->execute();
 
     $data = array();
@@ -261,7 +261,7 @@ if ($row != null) {
         // $is_transferee = $row['is_transferee'];
 
         $process_url = "";
-        $waiting_payment_url = "payment_summary.php?id=$enrollment_id&enrolled_subject=show&clicked=true";
+        $waiting_payment_url = "payment_summary2.php?id=$enrollment_id&enrolled_subject=show&clicked=true";
 
         $student_status_pending = "";
 

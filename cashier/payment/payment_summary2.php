@@ -15,6 +15,10 @@
     include_once('../../includes/classes/User.php');
     include_once('../../includes/classes/EnrollmentAudit.php');
 
+    require_once("../../includes/classes/PendingParent.php");
+    require_once("../../includes/classes/Pending.php");
+
+
     $department = new Department($con, null);
 
     $school_year = new SchoolYear($con, null);
@@ -38,6 +42,7 @@
         $totalBalance  = NULL;
         // echo $SHS_REGULAR_TUITION_FEE;
 
+        $processEnrolled = false;
 
         $enrollment_form_id_url = $_GET['id'];
 
@@ -85,7 +90,11 @@
 
         $enrollmentPayment = new EnrollmentPayment($con);
 
-        $paymentEnrollmentList = $enrollmentPayment->GetPaymentHistory($enrollment_form_id_url);
+        // $paymentEnrollmentList = $enrollmentPayment->GetPaymentHistory(
+        //     $enrollment_form_id_url);
+
+        $paymentEnrollmentList = $enrollmentPayment->GetPaymentHistoryExceptDownPayment(
+            $enrollment_form_id_url);
 
         // var_dump($paymentEnrollmentList);
 
@@ -101,9 +110,16 @@
         $enrollmentFormPaymentStatus = $enrollment->GetEnrollmentPaymentStatus(
             $enrollment_form_student_id, $enrollment_form_id_url);
 
+        // var_dump($enrollmentFormPaymentStatus);
+        
+
         $enrollmentTotalPayment = $enrollment->GetEnrollmentTotalPayment(
             $enrollment_form_student_id, $enrollment_form_id_url);
 
+        $enrollmentInstallmentCount = $enrollment->GetEnrollmentInstallmentCount(
+            $enrollment_form_student_id, $enrollment_form_id_url);
+
+            // var_dump($enrollmentInstallmentCount);
         // $totalBalance = $enrollmentTotalPayment;
         
 
@@ -668,7 +684,6 @@
 
                             Alert::success("Enrollment Form ID: $student_enrollment_form_id. has been approved with remaining balance.", "payment_summary.php?id=$enrollment_id&enrolled_subject=show");
                             exit();
-
                         }
 
                         if($wasSuccessPayment === "payment_completed_enrollment_payment_success"){
@@ -987,9 +1002,18 @@
                                 <div class="title">
 
                                     <?php if($enrollmentFormPaymentMethod === "Cash"
-                                        && $enrollmentFormPaymentStatus === "Complete"):?>
+                                        && $enrollmentFormPaymentStatus == NULL):?>
+                                        <span style="font-weight: bold;width: 217px; height: 27px" class="text-center bg-success">Payment Method: Cash</span>
+
+                                    <?php elseif($enrollmentFormPaymentMethod === "Cash"
+                                        && $enrollmentFormPaymentStatus == "Complete"):?>
                                         <span style="font-weight: bold;width: 217px; height: 27px" class="text-center bg-success">Payment Completed via Cash</span>
                                     
+                                    <?php elseif($enrollmentFormPaymentMethod === "Partial"
+                                        && $enrollmentFormPaymentStatus == NULL):?>
+                                        <span style="font-weight: bold;width: 228px; height: 27px" class="text-center bg-info">Payment Mehod: Partial</span>
+
+
                                     <?php elseif($enrollmentFormPaymentMethod === "Partial"
                                         && $enrollmentFormPaymentStatus === "Complete"):?>
                                         <span style="font-weight: bold;width: 228px; height: 27px" class="text-center bg-success">Payment Completed via Partial</span>
@@ -999,6 +1023,8 @@
                                         <span style="font-weight: bold;width: 233px; height: 27px" class="text-center bg-info">Payment Incomplete via Partial</span>
 
                                     <?php endif;?>
+
+
 
                                     <span style="font-size: 13px; font-weight: bold;" class="mt-0 mb-0 text-right">
                                         <?php 
@@ -1016,7 +1042,57 @@
                                             }
                                         ?>
                                     </span>
-                                    <h4><?php echo $enrollment_course_section_name; ?></h4>
+
+                                    <form style="text-align: right;display: none;"
+                                        action="cashier_print_enrolled_subject.php" method="POST" id="printForm">
+
+                                        <input type="hidden" name="enrollment_id" id="enrollment_id" value="<?php echo $enrollment_id;?>">
+                                        <input type="hidden" name="student_id" id="student_id" value="<?php echo $student_id;?>">
+                                        <input type="hidden" name="school_year_id" id="school_year_id" value="<?php echo $current_school_year_id;?>">
+                                        <input type="hidden" name="generated_password" id="generated_password"">
+                                        
+                                        <button name="print_enrolled_subject" id="toClickButton" class="btn btn btn-sm btn-primary">Send email</button>
+
+                                    </form>
+
+                                     <span style="font-weight: bold;" class="mb-2">Total to pay amount: ₱ <?= $enrollmentTotalPayment; ?></span>
+
+
+                                    <?php 
+
+                                        $hasPaymentMethod = $enrollment->CheckEnrollmentHasPaymentMethod
+                                            ($current_school_year_id, $enrollment_form_id_url);
+                                        
+                                        // var_dump($hasPaymentMethod);
+                                        
+                                        if($hasPaymentMethod == false){
+
+                                            ?>
+                                                <span>Choose mode of payment: </span>
+
+                                                <div class="action">
+
+                                                    <div class="dropdown">
+                                                        <button class="icon">
+                                                            <i class="bi bi-three-dots-vertical"></i>
+                                                        </button>
+
+                                                        <div class="dropdown-menu">
+                                                            <a onclick="<?php echo "markAsFullCash($enrollment_form_id_url, $cashierUserId)"; ?>" href="#" class="dropdown-item" style="color: #333">
+                                                                <i class="bi bi-cash-stack">&nbsp; </i>Full Cash
+                                                            </a>
+                                                            <a href="installment_selection.php?id=<?= $enrollment_form_id_url;?>" class="dropdown-item" style="color: #333">
+                                                                <i class="bi bi-file-earmark-x">&nbsp; </i>Installment
+                                                            </a>
+                                                        </div>
+                                                    
+                                                    </div>
+                                                </div>
+                                            <?php
+                                        }
+                                    ?>
+
+
                                 </div>
                             </header>
 
@@ -1027,8 +1103,296 @@
                                 ?> / <?php echo $section_capacity;?>
                             </span> -->
 
-                            <form method="POST">
+                            <!-- $_POST -->
 
+                            <?php 
+                            
+                                if($_SERVER['REQUEST_METHOD'] === "POST"
+                                    && isset($_POST['cashier_enrollment_btn_' . $enrollment_id])){
+
+                                    
+                                    // $enrollment_id = $_POST['enrollment_id'];
+
+                                    $enrollment = new Enrollment($con);
+                                    $enrollmentPayment = new EnrollmentPayment($con);
+                                    $requirement = new StudentRequirement($con);
+
+                                    $student_id = $enrollment->GetStudentIdByEnrollmentId(
+                                        $enrollment_id, $current_school_year_id);
+
+                                    $student = new Student($con, $student_id);
+
+                                    $student_email = $student->GetEmail();
+                                    $student_course_level = $student->GetStudentLevel($student_id);
+                                    $student_fullname = $student->GetFullName();
+                                    $student_firstname = $student->GetFirstName();
+                                    $student_lastname = $student->GetLastName();
+
+                                    $student_admission_status = $student->GetStudentAdmissionStatus();
+                                    $student_status_db = $student->GetStudentStatus();
+
+
+
+                                    $student_enrollment_course_id = $enrollment->GetEnrollmentFormCourseId($student_id,
+                                        $enrollment_id, $current_school_year_id);
+
+                                    $student_enrollment_student_status = $enrollment->GetEnrollmentFormStudentStatus($student_id,
+                                        $enrollment_id, $current_school_year_id);
+
+                                    $enrollment_form_id_real = $enrollment->GetEnrollmentFormByFormIdOnly($enrollment_id);   
+                                    
+
+                                    $enrollment_is_new = $enrollment->GetEnrollmentIsNewEnrollee($enrollment_id,
+                                        $student_enrollment_course_id, $current_school_year_id);
+                                    
+                                    $enrollment_course_section = new Section($con, $student_enrollment_course_id);
+
+                                    $enrollment_course_section_name = $enrollment_course_section->GetSectionName();
+                                    $enrollment_course_section_level = $enrollment_course_section->GetSectionGradeLevel();
+                                    $student_current_program_section = $enrollment_course_section->GetSectionName();
+
+                                    $process_date = date("Y-m-d H:i:s");
+
+
+                                    $wasSuccessPayment = false;
+
+                                    if($enrollmentFormPaymentMethod == "Partial"){
+
+                                        $wasSuccessUpdate = $enrollment->UpdatePaymentMethodAndStatusIntoPartialIncomplete(
+                                            $enrollment_id, $current_school_year_id);
+
+                                        if($wasSuccessUpdate){
+                                            $wasSuccessPayment = true;
+                                        }
+                                    }
+                                    else if($enrollmentFormPaymentMethod == "Cash"){
+                                        $wasSuccessCashPayment = $enrollment->SetEnrollmentApprovedByCashierViaFullCash(
+                                            $enrollment_id, $current_school_year_id);
+
+                                        if($wasSuccwasSuccessCashPaymentess){
+                                            $wasSuccessPayment = true;
+                                        }
+                                    }
+
+                                    
+                                    
+                                    if($wasSuccessPayment){
+
+                                        $amount_paid = (float) $enrollment->GetEnrollmentTotalPaymentFormIdOnly($enrollment_id);
+
+                                        ##
+                                        if($enrollmentFormPaymentMethod == "Cash"){
+
+                                            $fullCashPaymentSuccess = $enrollmentPayment->InsertPaymentFullCash(
+                                                $enrollment_id, $cashierUserId, $amount_paid);
+
+                                        }
+                                        
+                                        
+                                        $student_subject = new StudentSubject($con);
+                                        
+                                        $assignedSubjects = $student_subject->GetStudentAssignSubjects(
+                                            $enrollment_id, 
+                                            $student_id,
+                                            $current_school_year_id);
+                                        
+                                        $isAllFinalized = false;
+                                        
+                                        foreach ($assignedSubjects as $key => $value) {
+
+                                            $enrollment_id = $value['enrollment_id'];
+                                            $is_transferee = $value['is_transferee'];
+                                            $student_id = $value['student_id'];
+                                            $student_subject_id = $value['student_subject_id'];
+
+                                            if($is_transferee == 0 && $enrollment_id != NULL){
+
+                                                // Mark as Enrolled Subject in the Student_Subject DB.
+                                                if($student_subject->StudentSubjectMarkAsFinal($enrollment_id,
+                                                    // $student_enrollment_course_id, 
+                                                    $student_id, $current_school_year_id) == true){
+                                                    
+                                                    $isAllFinalized = true;
+                                                }
+                                            }
+                                        }
+
+                                        if($isAllFinalized == true){
+
+                                            $pending = new Pending($con);
+                                                
+                                            $created_student_unique_id = $student->generateNexStudentUniqueId();
+                                            // $created_student_unique_id = "123123";
+
+                                            $created_student_username = $student->GenerateStudentUsername(
+                                                $student_lastname,
+                                                $created_student_unique_id);
+
+                                            $generate_password = $student->GenerateRandomPassword();
+
+                                            $updateStudentEnrollmentFormBasedSuccess = false;
+
+                                            if($enrollment_is_new == 1 && $student_admission_status === "New"){
+
+                                                $updateStudentEnrollmentFormBasedSuccess = $student->UpdateStudentEnrollmentFormBased(
+                                                    $student_id,
+                                                    $enrollment_course_section_level,
+                                                    $student_enrollment_course_id,
+                                                    $student_enrollment_student_status,
+                                                    $created_student_unique_id,
+                                                    $created_student_username,
+                                                    $generate_password);
+
+                                                # Create the Student Requirement Table
+                                                # Enrollment New Form.
+
+                                                if($updateStudentEnrollmentFormBasedSuccess == true){
+
+                                                    $get_student_new_pending_id = $pending->GetPendingAccountByStudentTable(
+                                                        $student_email, $student_firstname, $student_lastname);
+
+                                                    if($get_student_new_pending_id !== NULL){
+
+                                                        // $processEnrolled = true;
+                                                    
+                                                        # Once officially enrolled,
+                                                        # 1. Pending Enrollee Account -> Removed.
+                                                        # 2. Parent Pending Enrollee Id -> NULL, Student_Id (Updated)
+                                                        # 3. Student School History Pending Enrollee Id -> NULL, Student_Id (Updated)
+
+                                                        $parent = new PendingParent($con);
+
+                                                        $parentEnrolleeRemovalSuccess = $parent->PendingEnrolleeSetAsNull(
+                                                            $get_student_new_pending_id, $student_id);
+                            
+                                                        # Pending Mark as Enrolled
+                                                        $successPendingEnrolled = $pending->MarkAsEnrolled(
+                                                            $get_student_new_pending_id);
+                                                        
+                                                        # Initialized Student ID in the Student Requirement Table. 
+                                                        $updateStudentIdOnRequirement = $requirement->UpdateStudentIdOnRequirement(
+                                                            $student_id, $get_student_new_pending_id);
+                                                        
+                                                    }
+                                                    
+                                                }
+
+                                            }
+
+                                            # OLD STUDENT
+                                            if($enrollment_is_new == 0 && $student_admission_status === "Old"){
+
+                                                # Updating Student Course Id Scenario is Either on
+                                                # 1. Ongoing student decided to change program
+                                                # 2. Moving Up to Higher Program Level (STEM11-A -> STEM12-A)
+                                                # 3. Has previous regular form but now is Irregular
+                                                    
+                                                $wasSuccess = $student->UpdateOldStudentEnrollmentForm(
+                                                    $student_id,
+                                                    $enrollment_course_section_level,
+                                                    $student_enrollment_course_id,
+                                                    $student_enrollment_student_status);
+                                            }
+
+                                            $successCreateNewSection = false;
+
+                                            #
+                                            $section_exec = new Section($con, $student_enrollment_course_id);
+
+                                            $latestStudentNumberInSection = $section_exec->
+                                                GetTotalNumberOfStudentInSection($student_enrollment_course_id,
+                                                    $current_school_year_id);
+
+                                            #
+                                            $capacity = $section->GetSectionCapacity();
+                                                $course_program_id = $section->GetSectionProgramId($student_enrollment_course_id);
+                                                $course_level = $section->GetSectionGradeLevel();
+                                                $program_section = $section->GetSectionName();
+
+
+                                            $checkNextActiveSectionIfExistNotFull = $section->CheckNextActiveSectionIfExistNotFull($program_section,
+                                                $current_school_year_term);
+
+                                            $checkNextActiveSectionIfExist = $section->CheckNextActiveSectionIfExist($program_section,
+                                                $current_school_year_term);
+
+                                            if ($latestStudentNumberInSection >= $capacity
+                                                && (($checkNextActiveSectionIfExist && !$checkNextActiveSectionIfExistNotFull) 
+                                                || !$checkNextActiveSectionIfExist)){
+
+                                                # Update Previous Section into Is FULL.
+                                                $update_isfull = $section->SetSectionIsFull($student_enrollment_course_id);
+                                                
+                                                $new_program_section = $section->AutoCreateAnotherSection($program_section);
+
+                                                # Create New Section
+                                                $createNewSection = $section->CreateNewSection($new_program_section, 
+                                                    $course_program_id, $course_level,
+                                                    $current_school_year_term);
+
+                                                if($createNewSection == true){
+
+                                                    $successCreateNewSection = true;
+
+                                                    if($successCreateNewSection == true){
+
+                                                        // Alert::success("Enrollment Form ID: $student_enrollment_form_id is now enrolled. This section is now full,
+                                                        //     System has created new section.", "../student/record_details.php?id=$student_id&enrolled_subject=show");
+                                                        // $processEnrolled = true;
+
+                                                        // Alert::success("Enrollment Form ID: $student_enrollment_form_id is now enrolled and New section has been created.", "../student/record_details.php?id=$student_id&enrolled_subject=show");
+                                                        
+                                                        Alert::successEnrollment("Enrollment Form ID: $student_enrollment_form_id is now enrolled and New section has been created.", "");
+                                                        $student_subject->SendingEmailAfterSuccessfulEnrollment(
+                                                            $processEnrolled, $generate_password);
+                                                        // exit();
+                                                    }
+                                                }
+                                            }
+
+                                            if($successCreateNewSection == false){
+
+                                                // Alert::success("Enrollment Form ID: $student_enrollment_form_id is now enrolled.", "../student/record_details.php?id=$student_id&enrolled_subject=show");
+                                            
+                                                $enrollmentAudit = new EnrollmentAudit($con);
+
+                                                $registrarName = "";
+
+                                                if($cashierUserId != ""){
+                                                    $user = new User($con, $cashierUserId);
+                                                    $registrarName = ucwords($user->getFirstName()) . " " . ucwords($user->getLastName());
+                                                }
+                                                
+                                                $now = date("Y-m-d H:i:s");
+                                                $date_creation = date("M d, Y h:i a", strtotime($now));
+
+                                                $description = "Cashier '$registrarName' has approved the enrollment form '$enrollment_form_id_real' and placed into section '$enrollment_course_section_name' on $date_creation";
+
+                                                $doesAuditInserted = $enrollmentAudit->EnrollmentAuditInsert(
+                                                    $enrollment_id,
+                                                    $description, $current_school_year_id, $cashierUserId
+                                                );
+
+                                                Alert::successEnrollment("Enrollment Form ID: $student_enrollment_form_id is now enrolled.", "../student/record_details.php?id=$student_id&enrolled_subject=show");
+                                                
+                                                #approvestate
+                                                # Check if enrollment form is new, the it should have 
+                                                # the generate password only for new enrollee
+
+                                                $student_subject->SendingEmailAfterSuccessfulEnrollment(
+                                                    $processEnrolled,  $generate_password);
+
+                                            }
+
+                                        }
+                                        
+                                        // echo "success";
+                                        // return;
+
+                                    }
+                                }
+                            ?>
+                            <form method="POST">
                                 <main>
                                     <table id="subjectLoadTablex" class="a" style="margin: 0">
                                         <thead>
@@ -1170,157 +1534,367 @@
                                     $doesStudentEnrolled = $enrollment->CheckStudentEnrolled($enrollment_form_id_url,
                                         $student_enrollment_course_id, $current_school_year_id);
 
+                                    $doesEnrollmentStudentEnrolled = $enrollment->CheckStudentWasEnrolled(
+                                        $enrollment_form_id_url,
+                                        $current_school_year_id);
+
                                     $checkIfCashierEvaluated = $enrollment->CheckEnrollmentCashierApproved($enrollment_form_id_url,
                                         $student_enrollment_course_id, $current_school_year_id);
                                         
-                                    $checkIfRegistrarEvaluated = $enrollment->CheckEnrollmentRegistrarApproved($enrollment_form_id_url,
+                                    $checkIfRegistrarEvaluated = $enrollment->CheckEnrollmentRegistrarApproved(
+                                        $enrollment_form_id_url,
                                         $student_enrollment_course_id, $current_school_year_id);
-                              
-                                    if($checkIfCashierEvaluated == false
-                                            && $checkIfRegistrarEvaluated == false
-                                            && $doesStudentEnrolled == false){
-                                            ?>
-                                                <div style="margin-top: 20px;" class="action">
-                                                    <button
-                                                        class="default large"
-                                                        name="pending_choose_section"
-                                                        type="submit">
-                                                        Waiting
-                                                    </button>
-                                                </div>
-                                            <?php
-                                    }
+                                    
 
                                     ?>
                                         <div class="form-group">
-
-                                            <span>Total Amount: ₱ <?= $enrollmentTotalPayment; ?></span>
-                                            <br>
                                             <br>
 
+                                           
+                                          
                                             <?php if(
                                                 $enrollmentFormPaymentMethod === "Partial" &&
                                                 count($paymentEnrollmentList) > 0):?>
 
-                                                <h3>Transaction History:</h3>
-                                                <br>
                                                 <?php 
-                                                    $i=0;
 
-                                                    foreach ($paymentEnrollmentList as $key => $value) {
-                                                        $i++;
-                                                        $total_amount += $value['amount_paid'];
+                                                    $downPayment = $enrollmentPayment->GetDownPayment($enrollment_form_id_url);
+                                                    $excessPaymentValue = $enrollmentTotalPayment - $downPayment;
 
-                                                        $date_creation = $value['date_creation'];
+                                                    $editInstallmentUrl = "";
 
-                                                        $date_to_pay_db = $value['date_to_pay'];
+                                                    $paymentCanEdit = "";
 
-                                                        $cashier_id = $value['cashier_id'];
-                                                        # code...
-                                                        $date_creation = date("M d, Y h:i a", strtotime($date_creation));
-                                                        $date_to_pay = date("M d, Y h:i a", strtotime($date_to_pay_db));
+                                                    $hasPaidTheSchedulePayment = $enrollmentPayment->HasPaidThePaymentSchedule(
+                                                        $enrollment_id);
 
-                                                        
-                                                        $user = new User($con, $cashier_id);
+                                                    // var_dump($hasPaidTheSchedulePayment);
+                                                    
+                                                    if($hasPaidTheSchedulePayment == false && $doesEnrollmentStudentEnrolled == false){
+                                                        $paymentCanEdit = "
+                                                            <button type='button' onclick=\"window.location.href = 'edit_installment_selection.php?id=$enrollment_form_id_url'\"
+                                                            class='btn-primary btn btn-sm'><i class='fas fa-pen'></i></button>
+                                                        ";
 
-                                                        $cashierName = $user->getName();
+                                                    } 
 
-                                                        ?>
-                                                            <span><?= $i; ?>. Paid Amount: <span style="font-weight:bold;">₱</span> <?php echo $value['amount_paid']; ?>, &nbsp;</span>
-                                                            <span>Transaction Date: <?php echo $date_creation; ?></span>,
-                                                            <em>Process by: <?php echo $cashierName; ?></em>
-                                                            
-                                                            <br>
-                                                        <?php
-                                                    }
-                                                    $totalBalance = $enrollmentTotalPayment - $total_amount;
+                                                    
+
+
                                                 ?>
-                                                
-                                                <?php if (($totalBalance > 0 || $totalBalance === NULL) && $enrollmentFormPaymentStatus !== "Complete"): ?>
-                                                    <span>Amount to pay: ₱ <?= $totalBalance; ?></span>
+
+                                                <h3 style="font-weight: bold;" class="text-center text-primary">Payment Schedule &nbsp;&nbsp; <?= $paymentCanEdit; ?></h3>
+                                                <span style="font-weight: bold;" class="text-muted">Down Payment: <span class="text-dark">₱<?= $downPayment; ?></span></span>
+                                                <br>
+                                                <br>
+
+                                                <div class="table-responsive">
+                                                    <table class="a">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>#</th>
+                                                                <th>Amount to pay</th>
+                                                                <th>To pay Date</th>
+                                                                <th>Processed by</th>
+                                                                <th>Processed Date</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <?php
+
+                                                            $i = 0;
+
+                                                            foreach ($paymentEnrollmentList as $key => $value) {
+
+                                                                $i++;
+
+                                                                $amountPaid = $value['amount_paid'];
+                                                                $enrollment_id_db = $value['enrollment_id'];
+                                                                $enrollment_payment_id = $value['enrollment_payment_id'];
+
+                                                                // var_dump($amountPaid);
+
+                                                                $total_amount += $value['amount_paid'];
+
+                                                                $date_creation = $value['date_creation'];
+                                                                
+                                                                $cashierUserIdDB = $value['cashier_id'];
+
+                                                                $date_creation = date("M d, Y h:i a", strtotime($date_creation));
+
+                                                                $date_to_pay_db = $value['date_to_pay'];
+                                                                $date_to_pay = date("M d, Y", strtotime($date_to_pay_db));
+
+                                                                $process_date = $value['process_date'];
+
+                                                                $process_date_db = "-";
+
+                                                                if($process_date != NULL){
+                                                                    $process_date_db = date("M d, Y", strtotime($process_date));
+
+                                                                }
+
+                                                                $cashierName = "-";
+                                                                if($cashierUserIdDB != NULL){
+                                                                    $user = new User($con, $cashierUserIdDB);
+                                                                    $cashierName = $user->getName();
+
+                                                                }
+
+                                                                $markAsPaidBtn = "";
+                                                                $payAmountReflect = "";
+
+                                                                // var_dump($doesStudentEnrolled);
+
+                                                                
+                                                                $to_pay_amount = number_format($excessPaymentValue / $enrollmentInstallmentCount, 2);
+
+                                                                if($amountPaid == NULL && $doesEnrollmentStudentEnrolled == true){
+
+                                                                    $markAsPaidBtn = "markAsPaidBtn($enrollment_id_db, $cashierUserId, \"$to_pay_amount\", $enrollment_payment_id)";
+                                                                    
+                                                                    $payAmountReflect = "
+                                                                        <button type='button' style='cursor:pointer;color: blue' onclick='$markAsPaidBtn'>
+                                                                            <span style='font-weight:bold;'>₱$to_pay_amount</span>
+                                                                        </button>
+                                                                    ";
+
+                                                                }
+                                                                if($amountPaid == NULL && $doesEnrollmentStudentEnrolled == false){
+
+
+                                                                    $markAsPaidBtn = "markAsPaidBtn($enrollment_id_db, $cashierUserId, \"$to_pay_amount\", $enrollment_payment_id)";
+                                                                    
+                                                                    $payAmountReflect = "
+                                                                        <span style='font-weight:bold;'>₱$to_pay_amount</span>
+                                                                    ";
+
+                                                                }
+                                                                if($amountPaid != NULL){
+                                                                    $payAmountReflect = "
+                                                                        <span style='color: green;font-weight:bold;'>₱$to_pay_amount</span>
+                                                                    ";
+                                                                }
+
+                                                                // $to_pay_amount = ($enrollmentTotalPayment / $enrollmentInstallmentCount);
+
+                                                            ?>
+                                                                <tr>
+                                                                    <td><?= $i; ?></td>
+                                                                    <td>
+                                                                        <?= $payAmountReflect;?>
+                                                                    </td>
+                                                                    <td><?= $date_to_pay; ?></td>
+                                                                    <td><?= $cashierName; ?></td>
+                                                                    <td><?= $process_date_db; ?></td>
+                                                                    
+                                                                </tr>
+
+                                                            <?php
+                                                            }
+
+                                                            // var_dump($total_amount);
+
+                                                                $to_pay_amount = number_format($excessPaymentValue / $enrollmentInstallmentCount, 2);
+
+                                                                $totalBalance =  ($enrollmentTotalPayment - ($total_amount + $downPayment));
+
+                                                                $totalBalance =  number_format($totalBalance, 2);
+
+                                                                // echo "totalBalance: $totalBalance";
+
+                                                                if("0.00" == 0.00){
+                                                                    // echo "he";
+                                                                }
+                                                                // var_dump($totalBalance);
+                                                            ?>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <br>
+                                               <?php if (($totalBalance > 0 || $totalBalance === NULL) && $enrollmentFormPaymentStatus !== "Complete"): ?>
+                                                    <span>Total Outstanding Balance: ₱ <?= $totalBalance; ?></span>
                                                 <?php endif; ?>
+
                                             <?php endif; ?>
 
-
-                                            <?php if(
-                                                $enrollmentFormPaymentMethod === "Cash" &&
-                                                count($paymentEnrollmentList) > 0):?>
-
-                                                <h3>Transaction History:</h3>
-                                                <br>
-                                                <?php 
-                                                    $i=0;
-
-                                                    foreach ($paymentEnrollmentList as $key => $value) {
-                                                        $i++;
-                                                        $total_amount += $value['amount_paid'];
-
-                                                        $date_creation = $value['date_creation'];
-
-                                                        $cashier_id = $value['cashier_id'];
-
-                                                        $user = new User($con, $cashier_id);
-
-                                                        $cashierName = $user->getName();
-
-                                                        # code...
-                                                        $date_creation = date("M d, Y h:i a", strtotime($date_creation));
-
-                                                        ?>
-                                                            <span>Paid Amount: <span style="font-weight:bold;">₱</span> <?php echo $value['amount_paid']; ?>, &nbsp;</span>
-                                                            <span>Transaction Date: <?php echo $date_creation; ?></span>
-                                                            <span>Process by: <?php echo $cashierName; ?></span>
-                                                            <br>
-                                                        <?php
-                                                    }
-                                                    $totalBalance = $enrollmentTotalPayment - $total_amount;
-
-                                                    // var_dump($totalBalance);
-                                                ?>
-                                            <?php endif;?>
-
                                         </div>
-
-                                        <?php if($totalBalance !== 0 || $enrollmentFormPaymentStatus !== "Complete"):?>
-
-                                            <div style="margin-top: 20px;" class="action">
-
-                                                <input type="hidden" name="unique_enrollment_form_id" value="<?php echo $student_enrollment_form_id;?>">
-                                                
-                                                <input type="hidden" name="total_balance" value="<?php
-                                                    if(count($paymentEnrollmentList) == 0 && $totalBalance == NULL){
-                                                        echo $enrollmentTotalPayment;
-                                                    }
-                                                    if(count($paymentEnrollmentList) > 0 && $totalBalance != NULL){
-                                                        echo $totalBalance;
-                                                    }
-                                                ?>">
-
-                                                <input style="margin-right: 5px; width: 200px;" 
-                                                    class="form-control" type="text"
-                                                    maxlength="9" name="enrollment_payment" id="enrollment_payment">
-                                            
-                                                
-                                                <button type="submit" name="subject_load_btn_<?php echo $enrollment_form_id_url ?>" 
-                                                        class="default large clean"
-                                                        onclick="return confirm('Are you sure to insert the inserted amount ?')">
-                                                    
-                                                        Confirm
-                                                    <!-- Mark as Paid -->
-                                                </button>
-                                            </div>
-
-                                        <?php endif;?>
-
-                                        
+ 
                                     <?php
-                                ?>
+
+                                        // var_dump($checkIfCashierEvaluated);
+                                        // var_dump($checkIfRegistrarEvaluated);
+                                        // var_dump($doesEnrollmentStudentEnrolled);
+
+
+                                        if($checkIfCashierEvaluated == true
+                                            && $checkIfRegistrarEvaluated == true
+                                            && $doesEnrollmentStudentEnrolled == false
+                                            && $enrollmentFormPaymentStatus == NULL
+                                            ){
+                                            ?>
+                                                <div style="margin-top: 20px;" class="action">
+                                                    <button
+                                                        class="default"
+                                                        name="cashier_enrollment_btn_<?= $enrollment_id; ?>"
+                                                        type="submit"
+                                                        onclick='return confirm("This action will enroll the enrollment form with provided payment method. Are you sure you want to approve enrollment?");'
+                                                        >
+                                                        Approve Enrollment
+                                                    </button>
+                                                </div>
+                                            <?php
+                                        }
+                                  
+                                        if($checkIfCashierEvaluated == true
+                                            && $checkIfRegistrarEvaluated == true
+                                            && $doesEnrollmentStudentEnrolled == true
+                                            ){
+                                            ?>
+                                                <div style="margin-top: 20px;" class="action">
+                                                    <button style="pointer-events: none;"
+                                                        class="default success"
+                                                        type="button">
+                                                        Enrolled
+                                                    </button>
+                                                </div>
+                                            <?php
+                                        }
+                                        
+                                    ?>
 
                             </form>
 
+                            <script>
+
+                                var dropBtns = document.querySelectorAll(".icon");
+
+                                dropBtns.forEach(btn => {
+                                    btn.addEventListener("click", (e) => {
+                                        const dropMenu = e.currentTarget.nextElementSibling;
+                                        if (dropMenu.classList.contains("show")) {
+                                            dropMenu.classList.toggle("show");
+                                        } else {
+                                            document.querySelectorAll(".dropdown-menu").forEach(item => item.classList.remove("show"));
+                                            dropMenu.classList.add("show");
+                                        }
+                                    });
+                                });
+
+                                
+
+                                function markAsFullCash(enrollment_id, cashier_id){
+
+                                    var enrollment_id = parseInt(enrollment_id);
+                                    var cashier_id = parseInt(cashier_id);
+
+                                    // console.log(to_pay_amount)
+                                    Swal.fire({
+                                        icon: 'question',
+                                        title: `The will set the enrollment payment method as Full Cash. Are you sure?`,
+                                        text: 'Note: This action cannot be undone.',
+                                        showCancelButton: true,
+                                        confirmButtonText: 'Yes',
+                                        cancelButtonText: 'Cancel'
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            // REFX
+                                            $.ajax({
+                                                url: '../../ajax/admission/markAsFullCash.php',
+                                                type: 'POST',
+                                                data: {
+                                                    enrollment_id, cashier_id
+                                                },
+                                                success: function(response) {
+
+                                                    response = response.trim();
+
+                                                    console.log(response);
+
+                                                    if(response == "success"){
+
+                                                        Swal.fire({
+                                                            icon: 'success',
+                                                            title: `Full cash payment method has been successfully applied. Enrollment form is now enrolled.`,
+                                                            backdrop: false,
+                                                            allowEscapeKey: false,
+                                                        });
+
+                                                        setTimeout(() => {
+                                                            // Swal.close();
+                                                            location.reload();
+                                                            // window.location.href = "evaluation.php";
+                                                        }, 1500);
+
+                                                    }
+                                                
+                                                },
+
+                                                error: function(jqXHR, textStatus, errorThrown) {
+                                                    console.log('AJAX Error:', textStatus, errorThrown);
+                                                }
+                                            });
+                                        }
+                                    });
+
+                                }
+                                function markAsPaidBtn(enrollment_id, cashier_id, to_pay_amount, enrollment_payment_id){
+
+                                    var enrollment_id = parseInt(enrollment_id);
+                                    var cashier_id = parseInt(cashier_id);
+
+                                    // console.log(to_pay_amount)
+                                    Swal.fire({
+                                        icon: 'question',
+                                        title: `This will mark the selected installment as PAID?`,
+                                        text: 'Note: This action cannot be undone.',
+                                        showCancelButton: true,
+                                        confirmButtonText: 'Yes',
+                                        cancelButtonText: 'Cancel'
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            // REFX
+                                            $.ajax({
+                                                url: '../../ajax/admission/installmentMarkAsPaid.php',
+                                                type: 'POST',
+                                                data: {
+                                                    enrollment_id, cashier_id, to_pay_amount, enrollment_payment_id
+                                                },
+                                                success: function(response) {
+
+                                                    response = response.trim();
+
+                                                    console.log(response);
+
+                                                    if(response == "success"){
+
+                                                        Swal.fire({
+                                                            icon: 'success',
+                                                            title: `Payment amount has been successfully sinked into the system.`,
+                                                        });
+
+                                                        setTimeout(() => {
+                                                            // Swal.close();
+                                                            location.reload();
+                                                            // window.location.href = "evaluation.php";
+                                                        }, 1500);
+
+                                                    }
+                                                
+                                                },
+
+                                                error: function(jqXHR, textStatus, errorThrown) {
+                                                    console.log('AJAX Error:', textStatus, errorThrown);
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+                            </script>
                         </div>
                     </main>
                 </div>
+
 
             <?php
         }
@@ -1329,72 +1903,7 @@
 ?>
 
 
-<script>
 
-    var dropBtns = document.querySelectorAll(".icon");
-
-    dropBtns.forEach(btn => {
-        btn.addEventListener("click", (e) => {
-            const dropMenu = e.currentTarget.nextElementSibling;
-            if (dropMenu.classList.contains("show")) {
-                dropMenu.classList.toggle("show");
-            } else {
-                document.querySelectorAll(".dropdown-menu").forEach(item => item.classList.remove("show"));
-                dropMenu.classList.add("show");
-            }
-        });
-    });
-
-    function studentRemoveForm(student_id, enrollment_id, school_year_id){
-
-        var student_id = parseInt(student_id);
-        var enrollment_id = parseInt(enrollment_id);
-        var school_year_id = parseInt(school_year_id);
-
-        Swal.fire({
-            icon: 'question',
-            title: `Are you sure to remove this enrollment form?`,
-            text: 'Note: This action cannot be undone.',
-            showCancelButton: true,
-            confirmButtonText: 'Yes',
-            cancelButtonText: 'Cancel'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // REFX
-                $.ajax({
-                    url: '../../ajax/admission/removeEnrollmentForm.php',
-                    type: 'POST',
-                    data: {
-                        student_id, enrollment_id, school_year_id
-                    },
-                    success: function(response) {
-
-                        response = response.trim();
-
-                        console.log(response);
-
-                        Swal.fire({
-                            icon: 'success',
-                            title: `Enrollment Form has been removed..`,
-                        });
-
-                        setTimeout(() => {
-                            Swal.close();
-                            // location.reload();
-                            window.location.href = "evaluation.php";
-                        }, 1000);
-                    },
-
-                    error: function(jqXHR, textStatus, errorThrown) {
-                        console.log('AJAX Error:', textStatus, errorThrown);
-                    }
-                });
-            }
-        });
-    }
-
-
-</script>
 
 <?php include_once('../../includes/footer.php') ?>
 

@@ -48,7 +48,7 @@
                       <span>
                           <label for="name">Name</label>
                           <div>
-                          <input type="text" name="lastname" id="lastname" value="<?php echo $firstname;?>" class="form-control" />
+                          <input type="text" name="lastname" id="lastname" value="<?php echo $lastname;?>" class="form-control" />
                           <small>Last name</small>
                           </div>
                           <div>

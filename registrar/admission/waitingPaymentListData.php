@@ -169,6 +169,7 @@ $stmt = $con->prepare("SELECT COUNT(*) AS allcount
         // $regular_Status = "Regular";
         // $enrollment_status = "tentative";
         // $registrar_evaluated = "yes";
+            // AND t2.cashier_evaluated = :cashier_evaluated
 
         $empQuery = "SELECT 
             t2.student_id,
@@ -219,7 +220,6 @@ $stmt = $con->prepare("SELECT COUNT(*) AS allcount
             AND t2.enrollment_status = :enrollment_status
             AND t2.school_year_id = :school_year_id
             AND t2.registrar_evaluated = :registrar_evaluated
-            AND t2.cashier_evaluated = :cashier_evaluated
 
             AND t2.school_year_id = :school_year_id
             $student_admission_status_filtering
@@ -235,10 +235,10 @@ $stmt = $con->prepare("SELECT COUNT(*) AS allcount
         $stmt->bindValue(":is_new_enrollee2", 0);
         $stmt->bindValue(":is_transferee", $is_transferee);
         $stmt->bindValue(":is_transferee2", "0");
-        $stmt->bindValue(":enrollment_status", $enrollment_status);
+        $stmt->bindValue(":enrollment_status", "tentative");
         $stmt->bindValue(":school_year_id", $current_school_year_id);
-        $stmt->bindValue(":registrar_evaluated", $registrar_evaluated);
-        $stmt->bindValue(":cashier_evaluated", "no");
+        $stmt->bindValue(":registrar_evaluated", "yes");
+        // $stmt->bindValue(":cashier_evaluated", "no");
 
         if($student_admission_status_filtering !== ""){
             $stmt->bindValue(":admission_status", $admission_type_filter);

@@ -5,6 +5,12 @@
     // $check = $enrollment->changeYearFormat("2021-2022");
     // var_dump($check);
 
+
+    $shsHasLRN = $pending->CheckEnrolleeLRNCompleted($pending_enrollees_id);
+
+
+    // var_dump($shsHasLRN);
+    $edit_url =  "pending_enrollee_edit.php?id=$pending_enrollees_id&update_lrn=true";
  
     if(isset($_POST['pending_choose_section_' . $pending_enrollees_id]) && isset($_POST['selected_course_id'])){
 
@@ -460,10 +466,39 @@
                                     onclick="window.location.href = 'process_enrollment.php?enrollee_details=true&id=<?php echo $pending_enrollees_id; ?>'">
                                     Return
                                 </button>
-                                <button class="default large success"
-                                    name="pending_choose_section_<?php echo $pending_enrollees_id ?>" type="submit">
-                                    Proceed
-                                </button>
+
+                                <?php 
+                                    if($enrollee_department_name == "Senior High School" 
+                                        && $shsHasLRN){
+
+                                        ?>
+                                            <button class="default large success"
+                                                name="pending_choose_section_<?php echo $pending_enrollees_id ?>" type="submit">
+                                                Proceed
+                                            </button>
+                                        <?php
+                                    }
+                                    if($enrollee_department_name == "Senior High School" 
+                                        && $shsHasLRN == false){
+                                        ?>
+                                            <button onclick="window.location.href = '<?=$edit_url?>'"
+                                                    class="default large warning" type="button">
+
+                                                Update Enrollee LRN
+                                            </button>
+                                        <?php
+                                    }
+                                    if($enrollee_department_name != "Senior High School"){
+
+                                        ?>
+                                            <button class="default large success"
+                                                name="pending_choose_section_<?php echo $pending_enrollees_id ?>" type="submit">
+                                                Proceed
+                                            </button>
+                                        <?php
+                                    }
+                                ?>
+                                
                             </div>
 
                         </form>
