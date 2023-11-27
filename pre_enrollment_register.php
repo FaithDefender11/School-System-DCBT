@@ -109,7 +109,7 @@
 
         $pending_lastname = Helper::ValidateLastName($_POST['pending_lastname']);
 
-        $pending_mi = Helper::ValidateMiddlename($_POST['pending_mi']);
+        $pending_mi = Helper::ValidateMiddlename($_POST['pending_mi'], false);
 
         $pending_password = Helper::ValidatePassword($_POST['pending_password'], true);
         // $pending_password = Helper::ValidatePassword($password, true);
@@ -292,7 +292,6 @@
                             <label for="middle_name">Middle Name</label>
                             <div>
                                 <input  
-                                    required
                                     type="text" 
                                     id="middle_name"
                                     name="pending_mi"

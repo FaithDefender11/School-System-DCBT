@@ -214,9 +214,7 @@
                                     <i class='fas fa-eye'></i>
                                     Previous enrollees
                                 </a> -->
-
                             </div>
-
                         </div>
     
                   

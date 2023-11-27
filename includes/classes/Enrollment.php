@@ -298,14 +298,14 @@
         $sql = $this->con->prepare("SELECT enrollment_status FROM enrollment 
             -- AND course_id = :course_id
             WHERE enrollment_id = :enrollment_id
-            AND school_year_id = :school_year_id
+            -- AND school_year_id = :school_year_id
             -- AND enrollment_status = :enrollment_status
             ORDER BY enrollment_id DESC
             LIMIT 1
             ");
 
         $sql->bindParam(":enrollment_id", $enrollment_id);
-        $sql->bindParam(":school_year_id", $school_year_id);
+        // $sql->bindParam(":school_year_id", $school_year_id);
         $sql->execute();
 
         if($sql->rowCount() > 0){
@@ -3082,12 +3082,12 @@
 
         $sql = $this->con->prepare("SELECT * FROM enrollment
 
-            WHERE school_year_id = :school_year_id
-            AND enrollment_id = :enrollment_id
+            -- WHERE school_year_id = :school_year_id
+            WHERE enrollment_id = :enrollment_id
             AND payment_method IS NOT NULL
         ");
 
-        $sql->bindParam(":school_year_id", $school_year_id);
+        // $sql->bindParam(":school_year_id", $school_year_id);
         $sql->bindParam(":enrollment_id", $enrollment_id);
         $sql->execute();
 

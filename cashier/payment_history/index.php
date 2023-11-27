@@ -381,7 +381,7 @@
                                 <th>Section</th>
                                 <th>Status</th>
                                 <th>Method</th>
-                                <th>Date Confirmed</th>
+                                <th>Date Evaluated</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -621,10 +621,10 @@
                 { data: 'section', orderable: false },  
                 { data: 'status', orderable: false },  
                 { data: 'method', orderable: false },  
-                { data: 'cashier_confirmation_date', orderable: true },
+                { data: 'cashier_confirmation_date', orderable: false },
                 { data: 'button_url', orderable: false }
             ],
-            'ordering': true
+            'ordering': false
         });
     });
 

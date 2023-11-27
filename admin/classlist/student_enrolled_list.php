@@ -8,24 +8,87 @@
     include_once('../../includes/classes/SchoolYear.php');
     include_once('../../includes/classes/Enrollment.php');
 
- 
     if(isset($_GET['id'])){
 
 
         $student_id = $_GET['id'];
 
         $student = new Student($con, $student_id);
+        $student_unique_id = $student->GetStudentUniqueId();
+        $student_address = $student->GetStudentAddress();
 
         $studentName = ucwords($student->GetFirstName()) . " " . ucwords($student->GetLastName());
+
+
+        $student_course_id = $student->GetStudentCurrentCourseId();
+        $section = new Section($con, $student_course_id);
+
+        $student_program_id = $section->GetSectionProgramId($student_course_id);
+        $student_course_level = $section->GetSectionGradeLevel();
+
+        $program = new Program($con, $student_program_id);
+
+        $student_program = $program->GetProgramAcronym();
 
         ?>
  
             <div class="col-lg-12">
 
+                <div class="text-left col-md-6">
+                    <form action='print_student_enrolled_list.php' 
+                        method='POST'>
+
+                        <input type="hidden" name="student_id" id="student_id" value="<?php echo $student_id;?>">
+                    
+                        <button title="Export as pdf" style="cursor: pointer;"
+                            type='submit' 
+                            
+                            href='#' name="print_classlist_by_section"
+                            class='btn-sm btn btn-primary'>
+                            <i class='bi bi-file-earmark-x'></i>&nbsp Print
+                        </button>
+
+                    </form>
+                </div>
                 
                 <div class="content">
                         <main>
 
+                            <h4 class="text-center">Daehan College of Business & Technology - DCBT</h4>
+                            <h6 style="margin-top: -15px;" class="text-center">Sitio Siwang Westbank Damayan Road 20 , Taytay, Philippines</h6>
+                            <span style="margin-top: -20px;"  class="text-center">Contact Address. gerlie.arquiza@yahoo.com</span>
+
+                            <div class="container">
+                                <table style="max-width:100%"   class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                <label>Student ID :</label>
+                                            </th>
+                                            <th>
+                                                <label><?= "$student_unique_id";?></label></th> 
+                                            <th></th>
+                                            <th>
+                                                <label>Program: <?= "$student_program";?></label>
+                                            </th>
+                                        </tr>
+                                    </thead>
+
+                                    <thead> 
+                                        <tr>
+                                            <th>
+                                                <label>Student Name :</label>
+                                            </th>
+                                            <th>
+                                                <label><?= "$studentName";?></label></th> 
+                                            <th></th>
+                                            <th>
+                                                <!-- <label>Level: <?= ""?></label> -->
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
                             <h4 class="text-primary text-center"><?php echo "$studentName"; ?> Enrolled List</h4>
 
                             <?php 
@@ -62,6 +125,13 @@
                                         $enrollment_enrollment_form_id = $value['enrollment_form_id'];
                                         $enrollment_school_year_id = $value['school_year_id'];
 
+                                        $enrollment_course_id = $value['course_id'];
+
+                                        $sectionExec = new Section($con, $enrollment_course_id);
+
+                                        $enrolled_section = $sectionExec->GetSectionName();
+
+                                        
                                         ?>
 
                                             <div class="floating"> 
@@ -69,7 +139,9 @@
                                                 <header>
 
                                                     <div class="title">     
-                                                        <h4>Enrollment Form <?= "$enrollment_enrollment_form_id";?></h4>
+                                                        <h6>Enrollment Form <?= "$enrollment_enrollment_form_id";?></h6>
+                                                        <h6>Section - <?= "$enrolled_section";?> </h6>
+
                                                     </div>
 
                                                 </header>
@@ -221,8 +293,7 @@
                                                                         ";
 
                                                                     }
-                                                                }else{
-                                                                    echo "nothing";
+
                                                                 }
                                                             ?>
                                                         </tbody>

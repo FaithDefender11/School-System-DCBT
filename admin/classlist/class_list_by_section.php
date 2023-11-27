@@ -1,5 +1,3 @@
-
-
 <?php
 
  
@@ -353,13 +351,13 @@
                                                         <i class='bi bi-file-earmark-x'></i>&nbsp Print
                                                     </button>
 
-                                                    <button style="cursor: pointer;"
+                                                    <!-- <button style="cursor: pointer;"
                                                         type='submit' 
                                                         title="Export as excel"
                                                         href='#' name="print_excel"
                                                         class='btn-sm btn btn-success'>
                                                         <i class='bi bi-file-earmark-x'></i>&nbsp Excel
-                                                    </button>
+                                                    </button> -->
 
                                                 </form>
                                             <?php

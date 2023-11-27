@@ -29,13 +29,12 @@
                 $base_url = 'http://' . $_SERVER['HTTP_HOST'] . '/student/';
             }
 
-            $logout_url = 'http://localhost/school-system-dcbt/enrollee_logout.php';
+            $logout_url = 'http://localhost/school-system-dcbt/logout.php';
             // $logout_url = "http://localhost/school-system-dcbt/logout.php";
 
             if ($_SERVER['SERVER_NAME'] !== 'localhost') {
                 $new_url = str_replace("/student/", "", $base_url);
-                $logout_url = "$new_url/enrollee_logout.php";
-
+                $logout_url = "$new_url/logout.php";
             }
 
             // Set the dynamic part of the URL using a global variable

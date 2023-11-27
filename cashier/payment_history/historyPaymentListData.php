@@ -283,7 +283,8 @@ if ($row != null) {
         $course_id_filtering
         $course_level_filtering
 
-        ORDER BY $sortBy $sortOrder
+        -- ORDER BY $sortBy $sortOrder
+        ORDER BY t2.enrollment_id DESC
         
         LIMIT " . $row . "," . $rowperpage;
 

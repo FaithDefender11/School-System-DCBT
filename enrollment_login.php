@@ -88,6 +88,7 @@ if(isset($_POST["enrollment_log_in_btn"])) {
         $_SESSION["enrollee_id"] = $wasSuccessful[4];
         $_SESSION["email"] = $wasSuccessful[5];
         $_SESSION["studentLoggedIn"] = $wasSuccessful[1];
+        $_SESSION["role"] = "enrollee";
 
         $isFinished = $wasSuccessful[6];
         
@@ -119,7 +120,8 @@ if(isset($_POST["enrollment_log_in_btn"])) {
 
         $_SESSION["studentLoggedIn"] = $username;
         $_SESSION["studentLoggedInId"] = $wasSuccessful[4];
-        $_SESSION["role"] = $wasSuccessful[5];
+        // $_SESSION["role"] = $wasSuccessful[5];
+        $_SESSION["role"] = "student";
 
         header("Location: student/registration/index.php");
         exit();
@@ -305,6 +307,7 @@ function getInputValue($name) {
               <label for="password">Password</label>
               <div>
                 <input
+                  value="123456"
                   autocomplete="off"
                   type="password"
                   name="password"

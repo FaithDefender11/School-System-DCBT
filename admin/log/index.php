@@ -17,6 +17,40 @@
     $current_school_year_period = $school_year->getSchoolYearValue($school_year_obj, 'period');
     $current_school_year_id = $school_year->getSchoolYearValue($school_year_obj, 'school_year_id');
   
+    
+    ?>
+
+        <head>
+
+            <style>
+                .show_search{
+                    position: relative;
+                    /* margin-top: -38px;
+                    margin-left: 215px; */
+                }
+                div.dataTables_length {
+                    display: none;
+                }
+
+                #enrolled_students_table_filter{
+                margin-top: 12px;
+                width: 100%;
+                display: flex;
+                flex-direction: row;
+                justify-content: start;
+                }
+
+                #enrolled_students_table_filter input{
+                width: 250px;
+                }
+            </style>
+
+            <link href='https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css' rel='stylesheet' type='text/css'>
+            <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+
+        </head>
+
+    <?php
 ?>
   
 
@@ -35,7 +69,7 @@
 
             <main>
 
-                <table id="" class="a" style="margin: 0">
+                <table id="user_logs_table" class="a" style="margin: 0">
 
                     <thead>
                         <tr class="text-center"> 
@@ -45,35 +79,39 @@
                     </thead>
 
                     <tbody>
+
                         <?php 
 
-                            $query = $con->prepare("SELECT t1.* 
+                            // $query = $con->prepare("SELECT t1.* 
                             
-                                FROM users_log AS t1
-                            ");
+                            //     FROM users_log AS t1
 
-                            $query->execute();
+                            //     ORDER BY t1.users_log_id DESC
+                            // ");
 
-                            if($query->rowCount() > 0){
+                            // $query->execute();
+
+                            // if($query->rowCount() > 0){
                                 
-                                $enrollment = new Enrollment($con);
+                            //     $enrollment = new Enrollment($con);
 
-                                while($row = $query->fetch(PDO::FETCH_ASSOC)){
+                            //     while($row = $query->fetch(PDO::FETCH_ASSOC)){
 
-                                    $role = $row['role'];
-                                    $users_log_id = $row['users_log_id'];
-                                    $description = $row['description'];
+                            //         $role = $row['role'];
+                            //         $users_log_id = $row['users_log_id'];
+                            //         $description = $row['description'];
 
                                   
 
-                                    echo "
-                                        <tr>
-                                            <td>$role</td>
-                                            <td>$description</td>
-                                        </tr>
-                                    ";
-                                }
-                            }
+                            //         echo "
+                            //             <tr>
+                            //                 <td>$role</td>
+                            //                 <td>$description</td>
+                            //             </tr>
+                            //         ";
+                            //     }
+                            // }
+
                         ?>
                     </tbody>
                 </table>
@@ -83,3 +121,38 @@
     </main>
 </div>
 
+
+
+<script>
+
+
+    $(document).ready(function() {
+
+        var table = $('#user_logs_table').DataTable({
+            'processing': true,
+            'serverSide': true,
+            'serverMethod': 'POST',
+            'ajax': {
+                'url': 'userLogsDataList.php',
+                'error': function(xhr, status, error) {
+                    // Handle error response here
+                    console.error('Error:', error);
+                    console.log('Status:', status);
+                    console.log('Response Text:', xhr.responseText);
+                    console.log('Response Code:', xhr.status);
+                }
+            },
+            'pageLength': 15,
+            'language': {
+                'infoFiltered': '',
+                'processing': '<i class="fas fa-spinner fa-spin"></i> Processing...',
+                'emptyTable': "No available user logs data."
+            },
+            'columns': [
+                { data: 'role', orderable: false },  
+                { data: 'description', orderable: false }
+            ],
+            'ordering': true
+        });
+    });
+</script>

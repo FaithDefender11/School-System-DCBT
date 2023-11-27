@@ -49,7 +49,6 @@ class Account {
         # If is_enrolled = 1, then that new pending enrollee has been
         # officially enrolled.
 
-        
         $pending_email = strtolower($username);
 
         $enrolled_username = strtolower($username);
@@ -116,8 +115,23 @@ class Account {
                 $email = $userPending['email'];
                 $firstname = $userPending['firstname'];
                 $is_finished = $userPending['is_finished'];
+                $pending_enrollees_id = $userPending['pending_enrollees_id'];
                 
                 if($userPending && password_verify($password, $user_password)) {
+
+
+                    $pending = new Pending($this->con, $pending_enrollees_id);
+
+                    $enrolleName = ucwords($pending->GetPendingFirstName()) . " " . ucwords($pending->GetPendingMiddleName()) . " " . ucwords($pending->GetPendingLastName());
+
+                    # Add Logs.
+
+                    $now = date("Y-m-d H:i:s");
+                    $date_creation = date("M d, Y h:i a", strtotime($now));
+
+                    $description = "Enrollee ID: $pending_enrollees_id $enrolleName has logged in the enrollment at $date_creation";
+                    $addStudentLogs = $logs->AddUserLogs("Enrollee", $description, $school_year_id);
+
                     
                     // Password is correct, log in the user
                     array_push($array, "un_enrolled_new_enrollee"); // [0]

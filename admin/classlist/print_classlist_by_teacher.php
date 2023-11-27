@@ -110,6 +110,7 @@
 
 
         $tableTop = '
+        
             <div class="container">
                 <table style="max-width:100%" cellpadding="4" cellspacing="7" class="table">
                     <thead>
@@ -172,7 +173,9 @@
                             </th>
                         </tr>
                     </thead>
+
                 </table>
+
             </div>
         ';
 

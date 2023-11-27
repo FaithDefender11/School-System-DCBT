@@ -110,8 +110,6 @@
 
                 foreach ($sectionsByProgramList as $key => $value) {
 
-                    # code...
-
                     $enrolled_course_id = $value['course_id'];
                     $section = new Section($con, $enrolled_course_id);
 

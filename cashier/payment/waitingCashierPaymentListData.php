@@ -196,6 +196,7 @@ if ($row != null) {
         -- AND t2.cashier_evaluated = :cashier_evaluated
 
         ORDER BY $sortBy $sortOrder
+        -- ORDER BY t2.enrollment_id DESC
         
         LIMIT " . $row . "," . $rowperpage;
 

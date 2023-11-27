@@ -71,7 +71,7 @@
                             AND t1.course_id=:course_id
                             AND t1.program_code=:program_code
 
-                            -- GROUP BY t1.course_id
+                            GROUP BY t1.course_id
                         ");
 
                         $get->bindValue(":school_year_id", $school_year_id);

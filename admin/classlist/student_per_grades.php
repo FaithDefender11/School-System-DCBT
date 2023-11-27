@@ -32,8 +32,6 @@
 
         $selected_student_id = $_GET['id'];
 
-        $selected_school_year_id = "";
-
         $schedule = new Schedule($con);
 
         $student_program_id = "";
@@ -41,10 +39,15 @@
 
         $student = new Student($con, $selected_student_id);
 
-        $studentName = ucwords($student->GetFirstName()) . " " . ucwords($student->GetLastName());
+        $studentName = ucwords($student->GetFirstName()) . ", " . ucwords($student->GetMiddleName()) . " " . ucwords($student->GetLastName());
+
+        $student_unique_id = $student->GetStudentUniqueId();
+        $student_address = $student->GetStudentAddress();
+
+        // var_dump($student_address);
 
         $student_course_id = $student->GetStudentCurrentCourseId();
-
+        
         $section = new Section($con, $student_course_id);
 
         $student_program_id = $section->GetSectionProgramId($student_course_id);
@@ -57,21 +60,72 @@
 
         ?>
             <div class="col-lg-12">
-                
+
+                <div class="text-left col-md-6">
+                    <form action='print_student_per_grades.php' 
+                        method='POST'>
+
+                        <input type="hidden" name="student_program_id" id="student_program_id" value="<?php echo $student_program_id;?>">
+                        <input type="hidden" name="selected_student_id" id="selected_student_id" value="<?php echo $selected_student_id;?>">
+                    
+                        <button title="Export as pdf" style="cursor: pointer;"
+                            type='submit' 
+                            
+                            href='#' name="print_classlist_by_section"
+                            class='btn-sm btn btn-primary'>
+                            <i class='bi bi-file-earmark-x'></i>&nbsp Print
+                        </button>
+
+                    </form>
+                </div>
+
                 <div class="content">
 
                     <main>
 
-                        <h4 class="text-primary text-center"><?php echo "$studentName"; ?> Grade Records</h4>
+                        <h4 class="text-center">Daehan College of Business & Technology - DCBT</h4>
+                        <h6 style="margin-top: -15px;" class="text-center">Sitio Siwang Westbank Damayan Road 20 , Taytay, Philippines</h6>
+                        <span style="margin-top: -20px;"  class="text-center">Contact address. gerlie.arquiza@yahoo.com</span>
+                        <h4 style="font-weight: bold;" class="text-muted text-center">Student Checklist</h4>
 
-                        <h3>Course: <?php echo $student_program; ?> Curriculum </h3>
+                        <!-- <h3 style="font-weight: bold;">Course: <?php echo $student_program; ?> Curriculum </h3> -->
+
+                        <div style="margin-bottom: -40px;" class="container">
+                            <table style="max-width:100%"   class="table">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <label>Student ID :</label>
+                                        </th>
+                                        <th>
+                                            <label><?= "$student_unique_id";?></label></th> 
+                                        <th></th>
+                                        <th>
+                                            <label>Address: <?= "$student_address";?></label>
+                                        </th>
+                                    </tr>
+                                </thead>
+
+                                <thead> 
+                                    <tr>
+                                        <th>
+                                            <label>Student Name :</label>
+                                        </th>
+                                        <th>
+                                            <label><?= "$studentName";?></label></th> 
+                                        <th></th>
+                                        <th>
+                                            <label>Course: <?= "$student_program Curriculum";?></label>
+                                        </th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+
+                       
+
                         <?php 
 
-                            $school_year_id_query = "";
-
-                            if($selected_school_year_id != ""){
-                                $school_year_id_query = "AND t2.school_year_id = :school_year_id";
-                            }
 
                             $get = $con->prepare("SELECT 
                                 
@@ -90,10 +144,6 @@
                                 
                             $get->bindValue(":program_id", $student_program_id);
                                         
-                            // if($selected_school_year_id != ""){
-                            //     $get->bindValue(":school_year_id", $selected_school_year_id);
-                            // }
-
                             $get->execute();
 
                             if($get->rowCount() > 0){
@@ -103,15 +153,11 @@
 
                                 foreach ($getAll as $key => $value) {
                                     # code...
-
-                                    // $enrollment_student_id = $value['student_id'];
-                                    // $enrollment_enrollment_form_id = $value['enrollment_form_id'];
-                                    // $enrollment_school_year_id = $value['school_year_id'];
-
                                     $program_course_level = $value['course_level'];
                                     $program_semester = $value['semester'];
 
                                     $outputLevel = "";
+
                                     if($program_course_level == 11){
                                         $outputLevel = "Grade 11,";
                                     }
@@ -197,10 +243,7 @@
                                                             $sql->bindValue(":course_level", $program_course_level);
                                                             $sql->bindValue(":semester", $program_semester);
                                                             $sql->bindValue(":program_id", $student_program_id);
-                                                                        
-                                                            // if($selected_school_year_id != ""){
-                                                            //     $sql->bindValue(":school_year_id", $selected_school_year_id);
-                                                            // }
+                                                           
 
                                                             $sql->execute();
 
@@ -256,10 +299,10 @@
                                                                     // $term = "Term taken";
                                                                     $grade = "5";
 
-                                                                    $format = "";
+                                                                    $format = "-";
 
                                                                     if($taken_school_year_id != NULL){
-                                                                        $format = $term . $period_short;
+                                                                        $format = "SY" . $term . $period_short;
 
                                                                     }
 
@@ -271,7 +314,7 @@
                                                                             <td>$average</td>
                                                                             <td>$earned</td>
                                                                             <td>$pre_req_subject_title</td>
-                                                                            <td>SY$format</td>
+                                                                            <td>$format</td>
                                                                         </tr>
                                                                     ";
 
