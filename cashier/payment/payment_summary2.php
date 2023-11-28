@@ -819,7 +819,7 @@
                         <div class="floating">
                             <header>
                                 <div class="title">
-                                    <h3>Enrollment details</h3>
+                                    <h3 style="font-weight: bold;">Enrollment details</h3>
                                 </div>
                             </header>
 

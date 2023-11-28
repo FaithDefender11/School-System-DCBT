@@ -184,7 +184,7 @@
                                 $FIRST_YEAR, $FIRST_SEMESTER);
 
                             $subject_program->GradeRecordsSHSBody($enrolledSubjectsGradeLevelSemesterBased,
-                                $checkEnrollmentEnrolled, $student_id);
+                                $checkEnrollmentEnrolled, $student_id, $current_school_year_id);
                         ?>
                     </tbody>
                 </table>
@@ -245,7 +245,7 @@
                                 // var_dump($enrolledSubjectsGradeLevelSemesterBased);
 
                             $subject_program->GradeRecordsSHSBody($enrolledSubjectsGradeLevelSemesterBased,
-                                $checkEnrollmentEnrolled, $student_id);
+                                $checkEnrollmentEnrolled, $student_id, $current_school_year_id);
                         ?>
                     </tbody>
                 </table>
@@ -305,7 +305,7 @@
                                 $SECOND_YEAR, $FIRST_SEMESTER);
 
                             $subject_program->GradeRecordsSHSBody($enrolledSubjectsGradeLevelSemesterBased,
-                                $checkEnrollmentEnrolled, $student_id);
+                                $checkEnrollmentEnrolled, $student_id, $current_school_year_id);
                         ?>
                     </tbody>
                 </table>
@@ -364,7 +364,7 @@
                                 $SECOND_YEAR, $SECOND_SEMESTER);
 
                             $subject_program->GradeRecordsSHSBody($enrolledSubjectsGradeLevelSemesterBased,
-                                $checkEnrollmentEnrolled, $student_id);
+                                $checkEnrollmentEnrolled, $student_id, $current_school_year_id);
                         ?>
                     </tbody>
                 </table>
@@ -423,7 +423,7 @@
                                 $THIRD_YEAR, $FIRST_SEMESTER);
 
                             $subject_program->GradeRecordsSHSBody($enrolledSubjectsGradeLevelSemesterBased,
-                                $checkEnrollmentEnrolled, $student_id);
+                                $checkEnrollmentEnrolled, $student_id, $current_school_year_id);
                         ?>
                     </tbody>
                 </table>
@@ -482,7 +482,7 @@
                                 $THIRD_YEAR, $SECOND_SEMESTER);
 
                             $subject_program->GradeRecordsSHSBody($enrolledSubjectsGradeLevelSemesterBased,
-                                $checkEnrollmentEnrolled, $student_id);
+                                $checkEnrollmentEnrolled, $student_id, $current_school_year_id);
                         ?>
                     </tbody>
                 </table>
@@ -541,7 +541,7 @@
                                 $FOURTH_YEAR, $FIRST_SEMESTER);
 
                             $subject_program->GradeRecordsSHSBody($enrolledSubjectsGradeLevelSemesterBased,
-                                $checkEnrollmentEnrolled, $student_id);
+                                $checkEnrollmentEnrolled, $student_id, $current_school_year_id);
                         ?>
                     </tbody>
                 </table>
@@ -600,7 +600,7 @@
                                 $FOURTH_YEAR, $SECOND_SEMESTER);
 
                             $subject_program->GradeRecordsSHSBody($enrolledSubjectsGradeLevelSemesterBased,
-                                $checkEnrollmentEnrolled, $student_id);
+                                $checkEnrollmentEnrolled, $student_id, $current_school_year_id);
                         ?>
                     </tbody>
                 </table>

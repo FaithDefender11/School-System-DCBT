@@ -182,7 +182,7 @@
                                         $GRADE_ELEVEN, $FIRST_SEMESTER);
 
                                     $subject_program->GradeRecordsSHSBody($enrolledSubjectsGradeLevelSemesterBased,
-                                        $checkEnrollmentEnrolled, $student_id);
+                                        $checkEnrollmentEnrolled, $student_id, $current_school_year_id);
                                 ?>
                             </tbody>
                         </table>
@@ -292,7 +292,7 @@
                                             $GRADE_ELEVEN, $SECOND_SEMESTER);
 
                                     $subject_program->GradeRecordsSHSBody($enrolledSubjectsGradeLevelSemesterBased,
-                                        $checkEnrollmentEnrolled, $student_id);
+                                        $checkEnrollmentEnrolled, $student_id, $current_school_year_id);
                                 ?>
                             </tbody>
                         </table>
@@ -402,7 +402,7 @@
                                         $GRADE_TWELVE, $FIRST_SEMESTER);
 
                                     $subject_program->GradeRecordsSHSBody($enrolledSubjectsGradeLevelSemesterBased,
-                                        $checkEnrollmentEnrolled, $student_id);
+                                        $checkEnrollmentEnrolled, $student_id, $current_school_year_id);
                                         
                                 ?>
                             </tbody>
@@ -510,7 +510,7 @@
                                         $GRADE_TWELVE, $SECOND_SEMESTER);
 
                                     $subject_program->GradeRecordsSHSBody($enrolledSubjectsGradeLevelSemesterBased,
-                                        $checkEnrollmentEnrolled, $student_id);
+                                        $checkEnrollmentEnrolled, $student_id, $current_school_year_id);
                                 ?>
                             </tbody>
                         </table>

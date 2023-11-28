@@ -249,7 +249,7 @@
                 icon: 'success',
                 title: `Subject: ${subject_title} remarked as Passed.`,
                 showConfirmButton: false,
-                timer: 800, // Adjust the duration of the toast message in milliseconds (e.g., 3000 = 3 seconds)
+                timer: 2500, // Adjust the duration of the toast message in milliseconds (e.g., 3000 = 3 seconds)
                 toast: true,
                 position: 'top-end',
                 showClass: {
@@ -267,12 +267,13 @@
         });
     }
 
-    function RemarkAsPassed(student_subject_id, student_id, remarks, subject_title){
+    function RemarkAsPassed(student_subject_id, student_id,
+        remarks, subject_title, school_year_id){
 
         console.log('click');
 
         $.post('../../ajax/subject/grading_temporary.php', {
-           student_subject_id, student_id, remarks
+           student_subject_id, student_id, remarks, school_year_id
 
         }).done(function (data) {
             // console.log(data)

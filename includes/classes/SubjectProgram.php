@@ -366,7 +366,7 @@ class SubjectProgram{
 
     public function GradeRecordsSHSBody(
         $enrolledSubjectsGradeLevelSemesterBased,
-        $checkEnrollmentEnrolled, $student_id) {
+        $checkEnrollmentEnrolled, $student_id, $school_year_id = null) {
 
         foreach ($enrolledSubjectsGradeLevelSemesterBased as $key => $value) {
 
@@ -447,7 +447,7 @@ class SubjectProgram{
                 if ($student_subject_id != $graded_student_subject_id 
                     && $checkEnrollmentEnrolled == true) {
 
-                    $remarkAsPassed = "RemarkAsPassed($student_subject_id, $student_id, \"Passed\", \"$subject_title\")";
+                    $remarkAsPassed = "RemarkAsPassed($student_subject_id, $student_id, \"Passed\", \"$subject_title\", $school_year_id)";
 
                     $remarks_url = "
                         <i style='color:blue; cursor:pointer;' onclick='$remarkAsPassed' class='fas fa-marker'></i>

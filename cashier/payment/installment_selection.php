@@ -112,13 +112,16 @@
                                         <?php
                                             $query = $con->prepare("SELECT * FROM installment
                                                 WHERE enable = 1
-                                                GROUP BY option");
+                                                GROUP BY option
+                                            ");
                                             $query->execute();
                                             
                                             echo "<option value='' disabled selected>Choose Installment</option>";
 
                                             if ($query->rowCount() > 0) {
+
                                                 $i = 0;
+
                                                 while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
 
                                                     $transformedString = ucwords(str_replace('_', ' ', ucfirst($row['option'])));
@@ -129,6 +132,7 @@
                                                     echo "<option value='" . $row['option'] . "'>" .$transformedString . "</option>";
                                                 }
                                             }
+                                            
                                         ?>
                                     </select>
                                 </div>

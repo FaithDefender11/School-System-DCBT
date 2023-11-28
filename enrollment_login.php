@@ -307,7 +307,6 @@ function getInputValue($name) {
               <label for="password">Password</label>
               <div>
                 <input
-                  value="123456"
                   autocomplete="off"
                   type="password"
                   name="password"

@@ -16,7 +16,8 @@
             
             FROM installment as t1
 
-            WHERE t1.option=:option
+            WHERE enable = 1
+            AND t1.option=:option
 
         ");
 
