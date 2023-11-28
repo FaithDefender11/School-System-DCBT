@@ -1957,6 +1957,28 @@
         return $sql->fetchColumn();
     }
 
+    public function GetEnrollmentDateByEnrollmentId($enrollment_id) {
+
+        $result = NULL;
+        // Check if the enrollment form ID already exists in the database
+        $sql = $this->con->prepare("SELECT enrollment_date FROM enrollment 
+
+            WHERE enrollment_id = :enrollment_id
+            
+        ");
+
+        $sql->bindValue(":enrollment_id", $enrollment_id);
+        $sql->execute();
+
+        if($sql->rowCount() > 0){
+
+            $result = $sql->fetchColumn();
+        }
+
+        return $result;
+
+    }
+
     public function GetEnrollmentIsNewEnrollee($enrollment_id, 
         $course_id, $school_year_id = null) {
         

@@ -121,7 +121,8 @@
             $student_unique_id, $enrollment_creation,
             $student_new_enrollee,
             $enrollment_is_new_enrollee,
-            $enrollment_is_transferee, $student_status_st, $student_enrollment_id); ?>
+            $enrollment_is_transferee, $student_status_st,
+            $student_enrollment_id); ?>
 
     </div>
     
