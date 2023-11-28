@@ -929,6 +929,7 @@
         //     $student_course_id, $current_school_year_id);
 
 
+        // $enrollment_creation = $enrollment->GetEnrollmentDateByEnrollmentId($student_enrollment_id);
         $enrollment_creation = $enrollment->GetEnrollmentDateByEnrollmentId($student_enrollment_id);
         
         var_dump($enrollment_creation);
