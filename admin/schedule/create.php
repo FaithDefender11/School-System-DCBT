@@ -100,6 +100,8 @@
 
             $course_id = $_POST['course_id']; 
 
+            // echo "hey";
+            // return;
 
             // $course_id = 1253;
 

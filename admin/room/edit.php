@@ -2,15 +2,42 @@
 
     include_once('../../includes/admin_header.php');
     include_once('../../includes/classes/Room.php');
+    include_once('../../includes/classes/SchoolYear.php');
+    include_once('../../includes/classes/Schedule.php');
+
+
+
 
     if(isset($_GET['id'])){
 
         $room_id = $_GET['id'];
 
+        $button_text = "Save";
+        $disabled = "";
+        $not_allowed_cursor = "pointer";
 
         $room = new Room($con, $room_id);
 
+
+
+        $school_year = new SchoolYear($con, null);
+        $schedule = new Schedule($con);
+        $school_year_obj = $school_year->GetActiveSchoolYearAndSemester();
+
+        $current_school_year_term = $school_year_obj['term'];
+        $current_school_year_period = $school_year_obj['period'];
+        $current_school_year_id = $school_year_obj['school_year_id'];
+
+
         $check = $room->CheckIdExists($room_id);
+
+        if($room->CheckRoomHasAttachedSubjectWithinSYSemester(
+            $room_id, $current_school_year_id) > 0){
+            // echo "Has";
+            $button_text = "Has room attached";
+            $disabled = "disabled";
+            $not_allowed_cursor = "not-allowed";
+        } 
 
         $room_name = $room->GetRoomName();
         $room_number = $room->GetRoomNumber();
@@ -54,6 +81,14 @@
                 </nav>
                 <main>
                     <form method="POST">
+                        <span>
+
+                            <?php 
+
+                                
+                            
+                            ?>
+                        </span>
                         <div class="row">
                             <label for="room_number">* Room number</label>
                             <div>
@@ -67,7 +102,7 @@
                             </div>
                         </div>
                         <div class="action">
-                            <button type="submit" class="clean large" name="edit_room_btn_<?php echo $room_id; ?>">Save</button>
+                            <button style="cursor: <?php echo $not_allowed_cursor;?>;" disabled type="submit"  class="clean large" name="edit_room_btn_<?php echo $room_id; ?>"><?= $button_text; ?></button>
                         </div>
                     </form>
                 </main>

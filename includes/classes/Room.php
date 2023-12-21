@@ -47,6 +47,24 @@
             }
         }
 
+        public function CheckRoomHasAttachedSubjectWithinSYSemester(
+            $room_id, $school_year_id) {
+
+            $query = $this->con->prepare("SELECT * FROM room AS t1
+                INNER JOIN subject_schedule AS t2 ON t2.room_id = t1.room_id
+                AND t2.school_year_id=:school_year_id
+
+                WHERE T1.room_id=:room_id
+            ");
+
+            $query->bindParam(":room_id", $room_id);
+            $query->bindParam(":school_year_id", $school_year_id);
+            $query->execute();
+            
+            return $query->rowCount() > 0;
+
+        }
+
         public function DeleteSectionRoomUnreachedMinStudent($period,
             $course_id) {
 

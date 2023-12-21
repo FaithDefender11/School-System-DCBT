@@ -18,16 +18,17 @@
         isset($_POST['create_requirement_btn']) &&
         isset($_POST['requirement_name']) &&
         isset($_POST['status']) &&
-        isset($_POST['education_type']) &&
+        isset($_POST['education_type']) 
         
-        isset($_POST['is_enabled'])
+        // && isset($_POST['is_enabled'])
     ){
 
         $requirement_name = $_POST['requirement_name'];
         $status = $_POST['status'];
-        $is_enabled = $_POST['is_enabled'];
+        // $is_enabled = $_POST['is_enabled'];
         $education_type = $_POST['education_type'];
 
+        $is_enabled = 1;
 
 
         $createdSuccess = $studentRequirement->InsertRequirement(
@@ -93,7 +94,7 @@
                     </div>
 
 
-                    <div class="row">
+                    <!-- <div class="row">
                         <span>
                             <label>Enabled:</label>
                             <input type="radio" id="enabled-yes" name="is_enabled" value="1">
@@ -101,7 +102,7 @@
                             <input type="radio" checked id="enabled-no" name="is_enabled" value="0">
                             <label for="enabled-no">No</label>
                         </span>
-                    </div>
+                    </div> -->
 
 
                     <div class="action">

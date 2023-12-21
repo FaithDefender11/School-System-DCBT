@@ -30,14 +30,17 @@
             isset($_POST['create_requirement_btn']) &&
             isset($_POST['requirement_name']) &&
             isset($_POST['status']) &&
-            isset($_POST['education_type']) &&
-            isset($_POST['is_enabled'])){
+            isset($_POST['education_type']) 
+            // &&isset($_POST['is_enabled'])
+            
+            ){
 
             $requirement_name = $_POST['requirement_name'];
             $status = $_POST['status'];
-            $is_enabled = $_POST['is_enabled'];
+            // $is_enabled = $_POST['is_enabled'];
             $education_type = $_POST['education_type'];
 
+            $is_enabled = 1;
 
             // var_dump($is_enabled);
             // return;
@@ -105,7 +108,7 @@
                                 </span>
                             </div>
 
-
+<!-- 
                             <div class="row">
                                 <span>
                                     <label>Enabled:</label>
@@ -114,7 +117,7 @@
                                     <input <?= $is_enabled == 0 ? "checked" : ""; ?> type="radio" id="enabled-no" name="is_enabled" value="0">
                                     <label for="enabled-no">No</label>
                                 </span>
-                            </div>
+                            </div> -->
 
 
                             <div class="action">

@@ -46,12 +46,25 @@
         $chech = $teacher->CheckTeacherExistsBasedOnFirstLastMiddleEmail(
             $firstname,$lastname,$middle_name, $teacher_email);
 
+        
+
         if($chech == true){
             $hasError = true;
-
             Alert::error("Teacher already exists with the provided credentials", "");
             // exit();
         }
+
+        $checkTeacherEmailUnique = $teacher->CheckTeacherCreationExistsEmail(
+           $teacher_email);
+
+        if($checkTeacherEmailUnique == true){
+            $hasError = true;
+            Alert::error("Teacher provided email: $teacher_email is already exists.", "");
+            // exit();
+        }
+
+
+
 
         # Firstname, Lastname, Email
 
@@ -198,7 +211,7 @@
                                 <small>First Name</small>
                             </div>
                             <div>
-                                <input required class="form-control" type="text" name="middle_name" placeholder="">
+                                <input class="form-control" type="text" name="middle_name" placeholder="">
                                 <small>Middle Name</small>
                             </div>
                             <div>

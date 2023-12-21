@@ -196,6 +196,7 @@
 
         if($course_id !== NULL && $teacher_id == NULL){
             
+           
             $schedule_course_id_conflict = $this->CheckScheduleDayConflictWithinSection(
                 $time_from_meridian_military, $time_to_meridian_military,
                 $schedule_day, $current_school_year_id, $course_id, null, $section_subject_code);
@@ -261,12 +262,14 @@
         }
 
         if($room_id !== NULL){
-
+            // echo "Hey";
+            // return;
             # OOp
             $room_schedule_id_conflict = $this->CheckScheduleDayWithRoomConflict(
                 $time_from_meridian_military, $time_to_meridian_military,
                 $schedule_day, $current_school_year_id, $room_id);
 
+                // var_dump($room_schedule_id_conflict);
                 // var_dump($room_id);
                 // return;
             
@@ -306,12 +309,16 @@
                 exit();
             }
 
+            
         }
 
         // return;
 
 
         if($teacher_id !== NULL){
+
+            // echo "teacher";
+            // return;
 
             $check_teacher_id_conflict = $this->CheckTeacherScheduleConflicted(
                 $time_from_meridian_military, $time_to_meridian_military,
@@ -327,6 +334,10 @@
             $check_assigned_subject_topic_teacher_id = $subjectPeriodCodeTopic
                 ->GetAssignedSectionCodeTeacherId($section_subject_code,
                 $current_school_year_id);
+
+
+
+
 
             # UPDATED SCHEDULE CONFLICT PROMPT
             if($check_teacher_id_conflict !== NULL){
@@ -378,19 +389,24 @@
 
             }
 
+            # Add only teacher Id without Room ID
+            # It should create LMS Teaching subjectsad
+
+
+
+
             if($check_assigned_subject_topic_teacher_id != NULL &&
                 $check_subject_schedule_assigned_teacher_id != NULL &&
                 $check_assigned_subject_topic_teacher_id != $teacher_id &&
                 $check_subject_schedule_assigned_teacher_id != $teacher_id
                 ){
                 
-                
                 # You`re about to place a other teacher to the subject_code,
                 # considering there`s a previous selected teacher to that subject_code
                 Alert::error("You`re about to place an another teacher under the selected subject_code", "");
                 exit();  
             }
- 
+            
   
 
             # STEM201 -> Albert Eistein. - OK, 2021-2022 2nd SEM
@@ -404,6 +420,9 @@
 
 
             if($check_teacher_id_conflict == NULL){
+
+                // echo "teacher";
+                // return;
 
                 # If selected teacher is the previous subject_schedule_assigned_teacher
                 # if subject_topic_teacher is the subject_schedule_assigned_teacher
@@ -420,6 +439,7 @@
                     # and same previously assigned subject schedule teacher
 
                     if(true){
+
 
                         $sql = $this->con->prepare("INSERT INTO subject_schedule
                             (schedule_day, time_from, time_to, schedule_time,
@@ -483,6 +503,9 @@
                         $schedule_day, $current_school_year_id, $course_id, null, $section_subject_code);
 
                 
+                        // var_dump($schedule_course_id_conflict);
+                        // return;
+                        
                     if($schedule_course_id_conflict !== NULL){
 
                         // var_dump($schedule_course_id_conflict);
@@ -554,7 +577,7 @@
                     if($schedule_course_id_conflict == NULL){
 
                         # Check if chosen subject code doesnt have a teacher
-                        # Placing selected teachers to those tba subject codes.
+                        # Placing selected teachers to those tba subject codesfd.
                         $doesPlacedAll = $this->GetAllScheduleWithinSubjectCodesAndPlaceTeacher(
                             $course_id, $section_subject_code,
                             $current_school_year_id, $teacher_id);
@@ -573,7 +596,8 @@
                         # Insert the default topic for subject assigned teacher
                         # Subject Code OCC -> Prelim, Midterm etc Topics for LMS
 
-                        $subjectPeriodCodeTopicTemplate = new SubjectPeriodCodeTopicTemplate($this->con);
+                        $subjectPeriodCodeTopicTemplate = new SubjectPeriodCodeTopicTemplate(
+                            $this->con);
                         
                         $doesFinish = false;
 
@@ -581,6 +605,8 @@
                             ->GetTopicTemplateDefaultTopics($rawCode);
 
                         // var_dump($rawCode);
+                        // var_dump($getAllDefaultTopicTemplate);
+                        // return;
 
                         
                         if(count($getAllDefaultTopicTemplate) > 0){
@@ -607,6 +633,9 @@
                                     $doesFinish = true;
                                 }
                             }
+                        }else{
+                            Alert::error("No default subject template for the $rawCode. Please add before the system populate its LMS Subject Topics to the selected teacher.", "");
+                            exit();
                         }
 
                         if($doesFinish){
@@ -701,6 +730,8 @@
             
 
         }
+
+        
 
         // $sql = $this->con->prepare("INSERT INTO subject_schedule
         //     (schedule_day, time_from, time_to, schedule_time,

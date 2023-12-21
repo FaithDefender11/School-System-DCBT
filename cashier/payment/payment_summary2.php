@@ -907,7 +907,7 @@
                                     
                                     <?php elseif($enrollmentFormPaymentMethod === "Partial"
                                         && $enrollmentFormPaymentStatus == NULL):?>
-                                        <span style="font-weight: bold;width: 228px; height: 27px" class="text-center bg-info">Payment Mehod: Partial</span>
+                                        <span style="font-weight: bold;width: 228px; height: 27px" class="text-center bg-info">Payment Method: Partial</span>
 
 
                                     <?php elseif($enrollmentFormPaymentMethod === "Partial"

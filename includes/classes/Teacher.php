@@ -95,15 +95,74 @@
                 WHERE LOWER(firstname) = :firstname
                 AND LOWER(lastname) = :lastname
                 AND LOWER(middle_name) = :middle_name
-                AND LOWER(email) = :email");
+                -- AND LOWER(email) = :email
+                ");
             
             $sql->bindValue(":firstname", $firstname);
             $sql->bindValue(":lastname", $lastname);
             $sql->bindValue(":middle_name", $middle_name);
-            $sql->bindValue(":email", $email);
+            // $sql->bindValue(":email", $email);
+
             $sql->execute();
             if($sql->rowCount() > 0){
 
+               return true;
+            }
+            
+            return false;
+        } 
+
+        public function CheckTeacherEditExistsBasedOnFirstLastMiddle(
+            $firstname,$lastname,$middle_name, $teacher_id) {
+
+            $sql = $this->con->prepare("SELECT teacher_id FROM teacher
+                WHERE LOWER(firstname) = :firstname
+                AND LOWER(lastname) = :lastname
+                AND LOWER(middle_name) = :middle_name
+                AND teacher_id != :teacher_id
+                ");
+            
+            $sql->bindValue(":firstname", $firstname);
+            $sql->bindValue(":lastname", $lastname);
+            $sql->bindValue(":middle_name", $middle_name);
+            $sql->bindValue(":teacher_id", $teacher_id);
+
+            $sql->execute();
+            if($sql->rowCount() > 0){
+
+               return true;
+            }
+            
+            return false;
+        }
+
+        public function CheckTeacherCreationExistsEmail($email) {
+
+            $sql = $this->con->prepare("SELECT teacher_id FROM teacher
+                WHERE LOWER(email) = :email
+            ");
+            
+            $sql->bindValue(":email", $email);
+            
+            $sql->execute();
+            if($sql->rowCount() > 0){
+               return true;
+            }
+            
+            return false;
+        } 
+        public function CheckTeacherEditExistsEmail($email, $teacher_id) {
+
+            $sql = $this->con->prepare("SELECT teacher_id FROM teacher
+                WHERE LOWER(email) = :email
+                AND teacher_id !=:teacher_id 
+            ");
+            
+            $sql->bindValue(":email", $email);
+            $sql->bindValue(":teacher_id", $teacher_id);
+            
+            $sql->execute();
+            if($sql->rowCount() > 0){
                return true;
             }
             

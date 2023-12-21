@@ -78,6 +78,10 @@
                                             // <button onclick='$removeRoomBtn' class='btn btn-danger btn-sm'>
                                             //             <i class='fas fa-trash'></i>
                                             //     </button>
+
+                                    # Check if there`s any subject code attachment to the room
+                                    
+
                                     echo "
                                         <tr>
                                             <td>$room_number</td>

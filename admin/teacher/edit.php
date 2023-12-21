@@ -56,13 +56,23 @@
 
         $hasError = false;
 
-        $chech = $teacher->CheckTeacherExistsBasedOnFirstLastMiddleEmail(
-            $firstname, $lastname, $middle_name, $email);
+        $checkTeacherFullNameExists = $teacher
+            ->CheckTeacherEditExistsBasedOnFirstLastMiddle(
+            $firstname, $lastname, $middle_name,$teacher_id);
 
-        if($chech == true){
+        if($checkTeacherFullNameExists == true){
             $hasError = true;
 
-            Alert::error("Teacher already exists with the provided credentials", "");
+            Alert::error("Teacher is already existed with the provided credentials", "");
+            // exit();
+        }
+
+        $checkTeacherEmailUnique = $teacher->CheckTeacherEditExistsEmail(
+           $email, $teacher_id);
+
+        if($checkTeacherEmailUnique == true){
+            $hasError = true;
+            Alert::error("Teacher provided email: $email is already exists.", "");
             // exit();
         }
 

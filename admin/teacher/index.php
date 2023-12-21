@@ -97,7 +97,7 @@
 
                   $date_creation = $date_creation !== NULL ? date('Y-m-d', strtotime($date_creation)) : 'Not Set';
 
-                  $fullname = $row['firstname'] . " " . $row['lastname'];
+                  $fullname = $row['firstname'] . " " . $row['middle_name'] . " " . $row['lastname'];
 
                   $subject_load_count = $teacher->GetTeacherSubjectLoad($teacher_id);
 

@@ -170,7 +170,12 @@
 
                         $selected_year_end_term_date = new DateTime($final_exam_enddate);
 
-                        if($final_exam_enddate == NULL || $selected_year_end_term_date > $now){
+
+
+
+                        if($final_exam_enddate == NULL 
+                          || $selected_year_end_term_date > $now
+                          || $current_school_year_id > $school_year_id){
                             $setting_btn = "
                             <button disabled onclick='' class='btn-sm btn btn-primary'>
                                 <i class='fas fa-pen'></i>
