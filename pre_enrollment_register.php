@@ -89,6 +89,9 @@
     //     echo 'Password is valid.';
     // }
 
+    $date_now = date("Y-m-d H:i:s");
+
+    echo "date_now: $date_now";
 
     if(
         $_SERVER['REQUEST_METHOD'] === 'POST' &&
@@ -100,8 +103,7 @@
         isset($_POST['pending_mi']) &&
         isset($_POST['email_address']) &&
         isset($_POST['pending_password'])
-        
-        ){
+    ){
         
 
 
