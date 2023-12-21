@@ -250,11 +250,14 @@
         $expiration_time = strtotime("+60 minutes");
         $expiration_time = date('Y-m-d H:i:s', $expiration_time);
 
+        $date_now = date("Y-m-d H:i:s");
+
+
         $query = $this->con->prepare("INSERT INTO pending_enrollees 
             (firstname, lastname, middle_name, password, email,
-                token, expiration_time, school_year_id) 
+                token, expiration_time, school_year_id, date_creation) 
             VALUES (:firstname, :lastname, :middle_name, :password, :email,
-                :token, :expiration_time, :school_year_id)");
+                :token, :expiration_time, :school_year_id, :date_creation)");
         
         $hash_password = password_hash($password, PASSWORD_BCRYPT);
 
@@ -270,6 +273,7 @@
         $query->bindValue(":token", $token);
         $query->bindValue(":expiration_time", $expiration_time);
         $query->bindValue(":school_year_id", $current_school_year_id);
+        $query->bindValue(":date_creation", $date_now);
 
         $query->execute();
         if($query->rowCount() > 0){

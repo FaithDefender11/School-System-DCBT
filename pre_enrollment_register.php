@@ -91,7 +91,7 @@
 
     $date_now = date("Y-m-d H:i:s");
 
-    echo "date_now: $date_now";
+    // echo "date_now: $date_now";
 
     if(
         $_SERVER['REQUEST_METHOD'] === 'POST' &&
